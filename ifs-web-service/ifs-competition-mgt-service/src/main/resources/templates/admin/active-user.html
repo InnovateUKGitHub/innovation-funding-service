@@ -39,8 +39,8 @@
                          th:errorclass="govuk-input--error"
                          th:field="*{firstName}"
                          pattern="\D{2,}"
-                         th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
-                                  data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                         th:attr="data-minlength-errormessage=#{validation.invite.firstname.length.min(null,null,2)},
+                                  data-maxlength-errormessage=#{validation.invite.firstname.length.max},
                                   data-pattern-errormessage=#{validation.standard.firstname.invalid},
                                   data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
@@ -60,8 +60,8 @@
                          th:errorclass="govuk-input--error"
                          th:field="*{lastName}"
                          pattern="\D{2,}"
-                         th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                  data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                         th:attr="data-minlength-errormessage=#{validation.invite.lastname.length.min(null,null,2)},
+                                  data-maxlength-errormessage=#{validation.invite.lastname.length.max},
                                   data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                   data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
@@ -79,6 +79,26 @@
                 </th:block>
             </dl>
             <th:block th:unless="${model.readOnly}">
+
+                <div th:if="${model.organisationVisible}" class="govuk-form-group" th:classappend="${#fields.hasErrors('organisation')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="organisation">
+                        Organisation
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('organisation')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('organisation')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-one-half"
+                           id="organisation"
+                           name="organisation"
+                           th:errorclass="govuk-input--error"
+                           type="organisation"
+                           th:field="*{organisation}"
+                           th:value="*{organisation}"
+                           maxlength="256"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.organisationinternal.required}" />
+                </div>
+
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="email">
                         Email
@@ -101,6 +121,11 @@
                 <dl class="govuk-list">
                     <dt>Email address</dt>
                     <dd th:text="${model.user.email}">email@email.com</dd>
+                </dl>
+
+                <dl th:if="${model.organisationVisible}" class="govuk-list">
+                    <dt>Organisation</dt>
+                    <dd th:text="${form.organisation}">email@email.com</dd>
                 </dl>
             </th:block>
             <th:block th:if="${model.canEditUserDetails}">
@@ -148,7 +173,7 @@
             </th:block>
 
             <p th:if="${model.linkVisibleToIfsAdmin}" class="govuk-body">
-                <a th:href="@{/admin/user/{userId}/external-role(userId=${model.user.id})}">Add a new external role profile</a>
+                <a th:href="@{/admin/user/{userId}/select(userId=${model.user.id})}">Add a new external role profile</a>
             </p>
 
             <dl class="govuk-list govuk-!-margin-top-6">

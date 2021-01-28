@@ -123,7 +123,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
                 .withEmail("email@example.com")
-                .withPassword("Passw0rd123")
+                .withPassword("Passw0rd1357123")
                 .withAddress(addressResource)
                 .withRole(Role.ASSESSOR)
                 .build();
@@ -146,11 +146,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(profileRepositoryMock.findById(userToCreate.getProfileId())).thenReturn(Optional.of(userProfile));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(userProfile);
-        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("Passw0rd1357123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
         when(userMapperMock.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
         when(addressMapperMock.mapToDomain(userToCreateResource.getAddress())).thenReturn(
                 newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build());
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
+        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd1357123")).thenReturn(serviceSuccess("new-uid"));
 
         User userToSave = createLambdaMatcher(user -> {
             assertNull(user.getId());
@@ -279,7 +279,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.COLLABORATOR);
+        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.APPLICANT);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));

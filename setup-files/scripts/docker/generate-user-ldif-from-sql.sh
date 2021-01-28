@@ -18,14 +18,14 @@
 # objectClass: inetOrgPerson
 # objectClass: person
 # objectClass: top
-# userPassword:: e1NTSEF9b2lRZUF1OHNrR0VqQmhweUpmV01hOFF3M0dNK2xRd2Q=
+# userPassword:: e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM=
 # structuralObjectClass: inetOrgPerson
 # employeeType: active
 
 domain="dc=nodomain"
 
 # The infamous user password: Passw0rd
-password="e1NTSEF9b2lRZUF1OHNrR0VqQmhweUpmV01hOFF3M0dNK2xRd2Q="
+password="e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM="
 
 [ $# -ne 1 ] && {
   echo "Was expecting 1 arg: <sql-file>."

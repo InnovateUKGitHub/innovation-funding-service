@@ -25,7 +25,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/application-service:${applicationServiceVersion}
+            - image: innovateuk/application-service:${nexusVersion}
               name: application-svc
               livenessProbe:
                 httpGet:
@@ -47,6 +47,11 @@ items:
                 failureThreshold: 1
               imagePullPolicy: Always
               env:
+                - name: IFS_NEW_ORGANISATION_SEARCH_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_NEW_ORGANISATION_SEARCH_ENABLED
                 - name: SPRING_APPLICATION_JSON
                   valueFrom:
                     configMapKeyRef:
@@ -97,6 +102,16 @@ items:
                     configMapKeyRef:
                       name: web-config
                       key: IFS_EARLY_METRICS_URL
+                - name: IFS_WEB_VIRTUALASSISTANT_BOTSECRET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_VIRTUALASSISTANT_BOTSECRET
+                - name: IFS_WEB_VIRTUALASSISTANT_BOTID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_VIRTUALASSISTANT_BOTID
                 - name: NEW_RELIC_LICENSE_KEY
                   valueFrom:
                     configMapKeyRef:

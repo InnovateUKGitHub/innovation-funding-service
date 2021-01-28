@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.1.1 r1855137">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -383,6 +383,10 @@
               <stringProp name="RegexExtractor.default"></stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
             </RegexExtractor>
+            <hashTree/>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+              <stringProp name="ConstantTimer.delay">60000</stringProp>
+            </ConstantTimer>
             <hashTree/>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Project" enabled="true">
@@ -783,7 +787,7 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload document" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="testing.pdf" elementType="HTTPFileArg">
+                <elementProp name="resources/testing.pdf" elementType="HTTPFileArg">
                   <stringProp name="File.path">resources/testing.pdf</stringProp>
                   <stringProp name="File.paramname">document</stringProp>
                   <stringProp name="File.mimetype">application/pdf</stringProp>
@@ -1835,7 +1839,7 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload GOL" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="testing.pdf" elementType="HTTPFileArg">
+                <elementProp name="resources/testing.pdf" elementType="HTTPFileArg">
                   <stringProp name="File.path">resources/testing.pdf</stringProp>
                   <stringProp name="File.paramname">grantOfferLetter</stringProp>
                   <stringProp name="File.mimetype">application/pdf</stringProp>
@@ -2022,7 +2026,7 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Upload signed GOL" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="testing.pdf" elementType="HTTPFileArg">
+                <elementProp name="resources/testing.pdf" elementType="HTTPFileArg">
                   <stringProp name="File.path">resources/testing.pdf</stringProp>
                   <stringProp name="File.paramname">signedGrantOfferLetter</stringProp>
                   <stringProp name="File.mimetype">application/pdf</stringProp>

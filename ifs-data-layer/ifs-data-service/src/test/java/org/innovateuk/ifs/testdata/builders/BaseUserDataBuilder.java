@@ -18,12 +18,12 @@ import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreation
  */
 public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends BaseDataBuilder<T, S> {
 
-    public abstract S registerUser(String firstName, String lastName, String emailAddress, String phoneNumber);
+    public abstract S registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, String organisation);
 
-    protected void registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, T data) {
+    protected void registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, String hash, T data) {
 
         doAs(systemRegistrar(), () -> {
-            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, phoneNumber, role, data);
+            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, phoneNumber, role, hash, data);
         });
     }
 
@@ -53,12 +53,38 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         });
     }
 
+    public S activateUser() {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                UserResource user = data.getUser();
+                registrationService.activateUser(user.getId());
+            });
+        });
+    }
+
+    public S addAdditionalRoles(List<Role> roles) {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                roles.forEach(role -> {
+                    long id = data.getUser().getId();
+                    userRepository.findById(id).ifPresent(
+                            user -> {
+                                user.addRole(role);
+                                userRepository.save(user);
+                            }
+                    );
+                });
+            });
+        });
+    }
+
+
     private void updateUserInUserData(T data, Long userId) {
         UserResource user = baseUserService.getUserById(userId).getSuccess();
         data.setUser(user);
     }
 
-    private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, Role role) {
+    private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, String hash) {
 
         UserResource created = registrationService.createUser(anUserCreationResource().
                 withFirstName(firstName).
@@ -66,16 +92,17 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withEmail(emailAddress).
                 withPhoneNumber(phoneNumber).
                 withRole(role).
-                withPassword("Passw0rd").
+                withPassword("Passw0rd1357").
                 withAgreedTerms(true).
+                withInviteHash(hash).
                 build()).
                 getSuccess();
 
         return created;
     }
 
-    private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, T data) {
-        UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, phoneNumber, role);
+    private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, String hash, T data) {
+        UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, phoneNumber, role, hash);
         updateUserInUserData(data, registeredUser.getId());
     }
 

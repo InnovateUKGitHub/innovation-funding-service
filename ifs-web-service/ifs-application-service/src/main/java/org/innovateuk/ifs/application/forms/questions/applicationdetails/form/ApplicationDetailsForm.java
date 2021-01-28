@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.form;
 
-import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
@@ -19,6 +18,7 @@ import java.util.function.BiPredicate;
  * Form for application details.
  */
 @FieldRequiredIf(required = "startDate", argument = "ktpCompetition", predicate = false, message = "{validation.project.start.date.is.valid.date}")
+@FieldRequiredIf(required = "resubmission", argument = "canResubmit", predicate = true, message = "{validation.application.must.indicate.resubmission.or.not}")
 @FieldComparison(
         firstField = "startDate",
         secondField = "ktpCompetition",
@@ -33,10 +33,8 @@ public class ApplicationDetailsForm {
     private LocalDate startDate;
 
     @NotNull
-    @Range(min = 1, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
-    @NotNull(message = "{validation.application.must.indicate.resubmission.or.not}")
     private Boolean resubmission;
 
     private String previousApplicationNumber;
@@ -52,6 +50,8 @@ public class ApplicationDetailsForm {
     private Object innovationAreaErrorHolder;
 
     private Boolean ktpCompetition;
+
+    private Boolean canResubmit;
 
     public void populateForm(ApplicationResource application) {
         this.name = application.getName();
@@ -151,6 +151,14 @@ public class ApplicationDetailsForm {
 
     public void setKtpCompetition(boolean ktpCompetition) {
         this.ktpCompetition = ktpCompetition;
+    }
+
+    public Boolean getCanResubmit() {
+        return canResubmit;
+    }
+
+    public void setCanResubmit(Boolean canResubmit) {
+        this.canResubmit = canResubmit;
     }
 
     public static class FutureLocalDatePredicateProvider implements BiPredicateProvider<LocalDate, Boolean> {

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.After;
 import org.junit.Before;
@@ -50,6 +51,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
         processRoles.get(0).setUser(user);
+        user.addRole(Role.APPLICANT);
         swapOutForUser(userMapper.mapToResource(user));
     }
 
@@ -140,7 +142,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     public void testGetApplicationsByCompetitionIdAndUserId() {
         Long competitionId = 1L;
         Long userId = 1L ;
-        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, Role.LEADAPPLICANT).getSuccess();
+        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, ProcessRoleType.LEADAPPLICANT).getSuccess();
 
         assertEquals(6, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();

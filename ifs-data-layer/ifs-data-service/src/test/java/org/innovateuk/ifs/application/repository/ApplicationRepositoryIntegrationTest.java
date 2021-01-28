@@ -10,6 +10,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
@@ -18,14 +19,14 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -357,7 +358,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withUser(userRepository.findById(getSteveSmith().getId()).get())
                 .withOrganisationId(lead.getId())
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(withoutProject)
                 .build();
 
@@ -464,28 +465,28 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         ProcessRole leadRole = newProcessRole()
                 .with(id(null))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(leadApp)
                 .withUser(user)
                 .build();
 
         ProcessRole collaboratorRole = newProcessRole()
                 .with(id(null))
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(collabApp)
                 .withUser(user)
                 .build();
 
         ProcessRole assessorRole = newProcessRole()
                 .with(id(null))
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(assessorApp)
                 .withUser(user)
                 .build();
 
         ProcessRole appRoleButNotOnProject = newProcessRole()
                 .with(id(null))
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(userOnAppButNotProject)
                 .withUser(user)
                 .build();
@@ -522,12 +523,68 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         ProcessRole ktaRole = newProcessRole()
                 .with(id(null))
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
                 .withApplication(ktaApp)
                 .withUser(user)
                 .build();
 
         processRoleRepository.save(ktaRole);
+
+        List<Application> applications = repository.findApplicationsForDashboard(user.getId());
+
+        assertEquals(1, applications.size());
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(ktaApp.getId())));
+    }
+
+    @Test
+    public void findOnlyUncompleteKTPApplicationsForKtaDashboard() {
+        loginCompAdmin();
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .with(id(null))
+                .build();
+        User user = new User("Kta", "Kta", "kta@gmail.com", "", "456abc");
+
+        Application ktaApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("ktaApp")
+                .build();
+
+        Application ktaClosedApp = newApplication()
+                .with(id(1L))
+                .withCompetition(competition)
+                .withName("KtaClosedApp")
+                .build();
+
+        Project project = projectRepository.save(newProject()
+                .withApplication(ktaClosedApp)
+                .withId(17L)
+                .withName("Project Name")
+                .build()
+        );
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.save(ktaApp);
+        applicationRepository.save(ktaClosedApp);
+
+        ProcessRole ktaRole = newProcessRole()
+                .with(id(null))
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(ktaApp)
+                .withUser(user)
+                .build();
+        ProcessRole ktaClosedRole = newProcessRole()
+                .with(id(null))
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(ktaClosedApp)
+                .withUser(user)
+                .build();
+
+        processRoleRepository.save(ktaRole);
+        processRoleRepository.save(ktaClosedRole);
 
         List<Application> applications = repository.findApplicationsForDashboard(user.getId());
 

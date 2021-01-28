@@ -206,7 +206,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     private void markQuestionAsComplete(CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm, Long competitionId) {
         if (CompetitionSetupSubsection.QUESTIONS.equals(subsection) ||
-                CompetitionSetupSubsection.PROJECT_DETAILS.equals(subsection)) {
+                CompetitionSetupSubsection.PROJECT_DETAILS.equals(subsection) ||
+                CompetitionSetupSubsection.KTP_ASSESSMENT.equals(subsection)) {
             AbstractQuestionForm form = (AbstractQuestionForm) competitionSetupForm;
             questionSetupRestService.markQuestionSetupComplete(competitionId, CompetitionSetupSection.APPLICATION_FORM, form.getQuestion().getQuestionId());
         }
@@ -289,6 +290,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
         requiredSections.add(PROJECT_ELIGIBILITY);
         requiredSections.add(ORGANISATIONAL_ELIGIBILITY);
+        requiredSections.add(FUNDING_ELIGIBILITY);
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);

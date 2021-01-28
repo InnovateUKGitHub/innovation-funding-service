@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.assertj.core.util.Lists;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.resource.Role;
@@ -10,12 +11,14 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.function.UnaryOperator;
 
-import static java.util.Collections.singletonList;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate User data.  While
@@ -49,7 +52,11 @@ public class UserDataBuilderService extends BaseDataBuilderService {
     }
 
     public void createExternalUser(CsvUtils.ExternalUserLine line) {
-        createUser(externalUserBuilder, line);
+        testService.doWithinTransaction(() -> {
+
+            externalUserBuilder.withRole(line.role);
+            createUser(externalUserBuilder, line, line.role, line.organisationName, line.additionalRoles);
+        });
     }
 
     public void createInternalUser(CsvUtils.InternalUserLine line) {
@@ -62,23 +69,33 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.withRole(role);
 
-            createUser(baseBuilder, line);
+            createUser(baseBuilder, line, role, null, Lists.emptyList());
         });
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, Role role, String organisation, List<Role> additionalRoles) {
 
-        UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber);
+        UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber, role, organisation);
 
-        UnaryOperator<S> verifyEmail = BaseUserDataBuilder::verifyEmail;
+        UnaryOperator<S> verifyEmail = UnaryOperator.identity();
+        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, MONITORING_OFFICER, STAKEHOLDER).contains(role)) {
+            verifyEmail = BaseUserDataBuilder::verifyEmail;
+        }
+
+        UnaryOperator<S> activateUser = UnaryOperator.identity();
+        if (newArrayList(MONITORING_OFFICER, STAKEHOLDER).contains(role)){
+            activateUser = BaseUserDataBuilder::activateUser;
+        }
+
+        UnaryOperator<S> addRoles = builder -> builder.addAdditionalRoles(additionalRoles);
 
         UnaryOperator<S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 
-        registerUserIfNecessary.andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
+        registerUserIfNecessary.andThen(verifyEmail).andThen(activateUser).andThen(addRoles).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private void setDefaultSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.SYSTEM_REGISTRATION_USER).build());
         testService.doWithinTransaction(() ->
                 setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );

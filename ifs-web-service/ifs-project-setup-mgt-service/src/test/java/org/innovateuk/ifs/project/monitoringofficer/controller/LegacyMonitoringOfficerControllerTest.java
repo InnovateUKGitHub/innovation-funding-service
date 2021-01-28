@@ -4,14 +4,16 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficerForm;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -43,7 +45,6 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -102,7 +103,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
     @Before
     public void logInCompAdminUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
     }
 
     @Test
@@ -121,7 +122,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -141,15 +142,15 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     }
 
     private void checkEditableFlagIsSetCorrectlyForSupportUser(String url, boolean post) throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.SUPPORT).build());
         MvcResult result = mockMvc.perform(post ? post(url) : get(url)).andReturn();
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
         assertFalse(model.isEditable());
     }
 
     @Test
-    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficer() throws Exception {
+    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficerNonKtp() throws Exception {
 
         ProjectResource project = projectBuilder.build();
 
@@ -160,7 +161,27 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         String url = "/project/123/monitoring-officer";
 
         mockMvc.perform(get(url)).
-                andExpect(redirectedUrl("/monitoring-officer/view-all")).
+                andExpect(redirectedUrl("/monitoring-officer/view-all?ktp=false")).
+                andReturn();
+    }
+
+    @Test
+    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficerKtp() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+
+        boolean existingMonitoringOfficer = false;
+
+
+        setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(
+                newCompetitionResource().withFundingType(FundingType.KTP).build()));
+
+        String url = "/project/123/monitoring-officer";
+
+        mockMvc.perform(get(url)).
+                andExpect(redirectedUrl("/monitoring-officer/view-all?ktp=true")).
                 andReturn();
     }
 
@@ -193,12 +214,12 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         when(projectService.getLeadOrganisation(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1").build());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").
-                withRole(PROJECT_MANAGER).build(1);
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).build(1);
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(LegacyMonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());

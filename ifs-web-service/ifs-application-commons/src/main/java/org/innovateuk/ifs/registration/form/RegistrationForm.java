@@ -19,7 +19,6 @@ import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreation
  * injected into a RegistrationForm instance, so it is easy to use and you don't need to
  * read all the request attributes to get to the form data.
  */
-
 public class RegistrationForm extends BaseBindingResultTarget {
     public interface PhoneNumberValidationGroup {}
     public interface TermsValidationGroup {}
@@ -30,7 +29,7 @@ public class RegistrationForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.password.required}")
     @Size.List ({
-        @Size(min=8, message="{validation.standard.password.length.min}"),
+        @Size(min=12, message="{validation.standard.password.length.min}"),
     })
     private String password;
 

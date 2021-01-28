@@ -127,14 +127,14 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
     Given the user reads his email and clicks the link              ${email}  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                             jQuery = .govuk-button:contains("Create account")
-    And the use should see the validation error summary             Password must be at least 8 characters
+    And the use should see the validation error summary             Password must be at least 12 characters
     When the internal user enters the details to create account
     And Set Focus To Element                                        css = #lastName
     Then the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
-    Given the user enters text to a text field             id = password  PASSWORD123
+    Given the user enters text to a text field             id = password  PASSWORD1357123
     When The user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error     Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field       css = #password  ${short_password}
@@ -191,7 +191,7 @@ Deactivate external user
 
 Deactivated internal user cannot login until activated
     [Documentation]  IFS-6380
-    Given the user cannot login with their new details            ${adminChangeEmailNew}  Passw0rd
+    Given the user cannot login with their new details            ${adminChangeEmailNew}  Passw0rd1357
     When Logging in and Error Checking                            &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details     ${adminChangeEmailNew}  inactive
     And the IFS admin reactivate the user                         ${adminChangeEmailNew}
@@ -249,7 +249,7 @@ the external user removes the pending parter invitation
 the user removes the pending organisation invitation
     [Arguments]  ${pageToRemoveFrom}
     the user navigates to the page      ${pageToRemoveFrom}
-    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove organisation")
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove")
     the user clicks the button/link     jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
 
 the internal user isnt able to update an existing users email with a pending email
@@ -282,7 +282,7 @@ the user navigates to the View internal user details
     the user clicks the button/link          jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link     jQuery = button:contains("Resend invite")     #Resend invite
+    the user clicks the button/link     jQuery = button:contains("Resend invitation")     #Resend invite
     the user clicks the button/link     jQuery = button:contains("Resend")
     the user reads his email            ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -299,7 +299,7 @@ the IFS admin send invite to internal user
     the user enters text to a text field                    id = lastName  ${last_name}
     the user enters text to a text field                    id = emailAddress  ${email}
     the user selects the option from the drop-down menu     ${user_role}  id = role
-    the user clicks the button/link                         jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Send invitation")
 
 the IFS admin edit internal user details
     the user enters text to a text field                    id = firstName  Innovation

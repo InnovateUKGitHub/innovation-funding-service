@@ -14,8 +14,9 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -64,7 +66,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private SectionStatusRestService sectionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private YourProjectCostsFormValidator yourFundingFormValidator;
@@ -72,6 +74,10 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Test
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
+
+        OrganisationResource organisationResource = newOrganisationResource()
+                .withId(ORGANISATION_ID)
+                .build();
 
         when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
 
@@ -110,7 +116,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     @Test
     public void edit() throws Exception {
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess());
 
@@ -129,7 +135,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void complete() throws Exception {
         ProcessRoleResource processRole = newProcessRoleResource().withId(PROCESS_ROLE_ID).build();
         when(saver.save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 
@@ -147,6 +153,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Test
     public void complete_error() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
+
         doAnswer((invocationOnMock) -> {
             ((ValidationHandler) invocationOnMock.getArguments()[2]).addAnyErrors(new ValidationMessages(fieldError("requestingFunding", "something", "error")));
             return Void.class;
@@ -170,7 +177,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("add_cost", type.name()))
+                .param("add_row", type.name()))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -185,7 +192,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("remove_cost", rowToRemove))
+                .param("remove_row", rowToRemove))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());

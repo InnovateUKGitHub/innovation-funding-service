@@ -9,11 +9,15 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
+import org.innovateuk.ifs.procurement.milestone.domain.ProjectProcurementMilestone;
+import org.innovateuk.ifs.procurement.milestone.repository.ProjectProcurementMilestoneRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,6 +61,9 @@ public class FinanceChecksGenerator {
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
@@ -70,6 +77,9 @@ public class FinanceChecksGenerator {
 
     @Autowired
     private KtpFinancialYearsRepository ktpFinancialYearsRepository;
+
+    @Autowired
+    private ProjectProcurementMilestoneRepository projectProcurementMilestoneRepository;
 
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
@@ -97,17 +107,28 @@ public class FinanceChecksGenerator {
         if (ktpFinancialYears != null) {
             ktpFinancialYears = ktpFinancialYearsRepository.save(new KtpFinancialYears(ktpFinancialYears));
         }
-        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover, ktpFinancialYears);
+
+        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover, ktpFinancialYears, applicationFinanceForOrganisation.getNorthernIrelandDeclaration());
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
-        if(competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+        if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
         }
 
+        if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
+            PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
+            eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
+        }
+
         ProjectFinance projectFinanceForOrganisation =
                 projectFinanceRepository.save(projectFinance);
+
+        List<ApplicationProcurementMilestone> applicationProcurementMilestones = applicationFinanceForOrganisation.getMilestones();
+        if (applicationProcurementMilestones != null && !applicationProcurementMilestones.isEmpty()) {
+            projectFinance.setMilestones(copyMilestones(applicationProcurementMilestones, projectFinanceForOrganisation));
+        }
 
         List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
 
@@ -136,6 +157,14 @@ public class FinanceChecksGenerator {
             });
         });
         return serviceSuccess(projectFinance);
+    }
+
+    private List<ProjectProcurementMilestone> copyMilestones(List<ApplicationProcurementMilestone> applicationProcurementMilestones, ProjectFinance projectFinance) {
+        List<ProjectProcurementMilestone> projectProcurementMilestones = new ArrayList<>();
+        applicationProcurementMilestones.forEach(milestone ->
+                projectProcurementMilestones.add(projectProcurementMilestoneRepository.save(new ProjectProcurementMilestone(milestone, projectFinance)))
+        );
+        return projectProcurementMilestones;
     }
 
     private FinanceCheck createMvpFinanceCheckEmptyCosts(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {

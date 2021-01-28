@@ -18,9 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.transactional.RemovePartnerNotificationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 
 @Service
@@ -80,7 +79,7 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
         notificationArguments.put("organisationName", organisation.getName());
         notificationArguments.put("projectTeamLink", getProjectTeamLink(project.getId()));
 
-        Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
+        Notification notification = new Notification(from, to, REMOVE_PROJECT_ORGANISATION, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 

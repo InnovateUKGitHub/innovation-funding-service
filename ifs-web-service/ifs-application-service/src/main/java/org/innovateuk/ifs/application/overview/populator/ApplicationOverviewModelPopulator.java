@@ -14,11 +14,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final CompetitionRestService competitionRestService;
     private final SectionRestService sectionRestService;
     private final QuestionRestService questionRestService;
-    private final UserRestService userRestService;
+    private final ProcessRoleRestService processRoleRestService;
     private final MessageSource messageSource;
     private final OrganisationRestService organisationRestService;
     private final QuestionStatusRestService questionStatusRestService;
@@ -53,7 +54,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
     public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
                                              SectionRestService sectionRestService, QuestionRestService questionRestService,
-                                             UserRestService userRestService, MessageSource messageSource,
+                                             ProcessRoleRestService processRoleRestService, MessageSource messageSource,
                                              OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
                                              SectionStatusRestService sectionStatusRestService,
                                              QuestionService questionService) {
@@ -61,7 +62,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         this.competitionRestService = competitionRestService;
         this.sectionRestService = sectionRestService;
         this.questionRestService = questionRestService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.messageSource = messageSource;
         this.organisationRestService = organisationRestService;
         this.questionStatusRestService = questionStatusRestService;
@@ -74,7 +75,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
         Future<List<SectionResource>> sections = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
         Future<List<QuestionResource>> questions = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
-        Future<List<ProcessRoleResource>> processRoles = async(() -> userRestService.findProcessRole(application.getId()).getSuccess());
+        Future<List<ProcessRoleResource>> processRoles = async(() -> processRoleRestService.findProcessRole(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> statuses = async(() -> questionStatusRestService.findByApplicationAndOrganisation(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<List<Long>> completedSectionIds = async(() -> sectionStatusRestService.getCompletedSectionIds(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<Map<Long, Set<Long>>> completedSectionsByOrganisation = async(() -> sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess());
@@ -93,6 +94,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .stream()
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
+                .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 

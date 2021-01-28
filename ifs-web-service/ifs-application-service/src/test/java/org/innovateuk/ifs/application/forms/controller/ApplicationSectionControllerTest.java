@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -37,7 +37,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     private static final ProcessRoleResource PROCESS_ROLE = newProcessRoleResource().withApplication(APPLICATION_ID).withOrganisation(ORGANISATION_ID).build();
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private ApplicationUrlHelper applicationUrlHelper;
@@ -67,7 +67,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     public void redirectToSection() throws Exception {
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(APPLICATION));
         when(sectionRestService.getSectionsByCompetitionIdAndType(COMPETITION_ID, SECTION_TYPE)).thenReturn(restSuccess(singletonList(SECTION)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), APPLICATION_ID)).thenReturn(restSuccess(PROCESS_ROLE));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), APPLICATION_ID)).thenReturn(restSuccess(PROCESS_ROLE));
         when(applicationUrlHelper.getSectionUrl(SECTION_TYPE, SECTION_ID, APPLICATION_ID, ORGANISATION_ID, COMPETITION_ID)).thenReturn(Optional.of("redirectUrl"));
 
         mockMvc.perform(get("/application/{applicationId}/form/{sectionType}", APPLICATION_ID, PROJECT_LOCATION.name()))
@@ -78,7 +78,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     public void getSectionApplicant() throws Exception {
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(APPLICATION));
         when(sectionRestService.getById(SECTION_ID)).thenReturn(restSuccess(SECTION));
-        when(userRestService.findProcessRole(loggedInUser.getId(), APPLICATION_ID)).thenReturn(restSuccess(PROCESS_ROLE));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), APPLICATION_ID)).thenReturn(restSuccess(PROCESS_ROLE));
         when(applicationUrlHelper.getSectionUrl(SECTION_TYPE, SECTION_ID, APPLICATION_ID, ORGANISATION_ID, COMPETITION_ID)).thenReturn(Optional.of("redirectUrl"));
 
         mockMvc.perform(get("/application/{applicationId}/form/section/{sectionId}", APPLICATION_ID, SECTION_ID))
@@ -89,7 +89,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     public void getSectionInternalUser() throws Exception {
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(APPLICATION));
         when(sectionRestService.getById(SECTION_ID)).thenReturn(restSuccess(SECTION));
-        when(userRestService.findProcessRole(loggedInUser.getId(), APPLICATION_ID)).thenReturn(restSuccess(PROCESS_ROLE));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), APPLICATION_ID)).thenReturn(restSuccess(PROCESS_ROLE));
         when(applicationUrlHelper.getSectionUrl(SECTION_TYPE, SECTION_ID, APPLICATION_ID, ORGANISATION_ID, COMPETITION_ID)).thenReturn(Optional.of("redirectUrl"));
 
         mockMvc.perform(get("/application/{applicationId}/form/section/{sectionId}/{organisationId}", APPLICATION_ID, SECTION_ID, ORGANISATION_ID))

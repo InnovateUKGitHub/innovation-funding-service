@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
@@ -37,8 +38,12 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     private static final String EMAIL_THAT_EXISTS_FOR_USER = "sample@me.com";
 
     private static final String EMAIL_THAT_EXISTS_FOR_USER_BUT_CAUSES_OTHER_ERROR = "i-am-bad@me.com";
+
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
 
     private Role roleResource;
     private Long applicationId;
@@ -103,12 +108,12 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         Long competitionId = 2L;
         Boolean expected = true;
 
-        when(userRestService.userHasApplicationForCompetition(userId, competitionId)).thenReturn(restSuccess(expected));
+        when(processRoleRestService.userHasApplicationForCompetition(userId, competitionId)).thenReturn(restSuccess(expected));
 
         Boolean response = service.userHasApplicationForCompetition(userId, competitionId);
         assertEquals(expected, response);
 
-        verify(userRestService, only()).userHasApplicationForCompetition(userId, competitionId);
+        verify(processRoleRestService, only()).userHasApplicationForCompetition(userId, competitionId);
     }
 
     @Test
@@ -117,7 +122,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         roleResource = COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
+                .withRoleGlobal(roleResource)
                 .build();
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
@@ -128,10 +133,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        roleResource = Role.FINANCE_CONTACT;
+        roleResource = APPLICANT;
         UserResource userResource = newUserResource()
                 .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
+                .withRoleGlobal(roleResource)
                 .build();
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
@@ -151,42 +156,42 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void isLeadApplicant() {
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         assertTrue(service.isLeadApplicant(leadUser.getId(), application));
     }
 
     @Test
     public void getLeadApplicantProcessRole() {
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         assertEquals(processRoles.get(0), service.getLeadApplicantProcessRole(applicationId));
     }
 
     @Test
     public void getOrganisationProcessRoles() {
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         List<ProcessRoleResource> result = service.getOrganisationProcessRoles(application, 13L);
 
-        verify(userRestService, times(1)).findProcessRole(applicationId);
+        verify(processRoleRestService, times(1)).findProcessRole(applicationId);
         verifyNoMoreInteractions(userRestService);
         assertEquals(singletonList(processRoles.get(0)), result);
     }
 
     @Test
     public void getLeadPartnerOrganisationProcessRoles() {
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         List<ProcessRoleResource> result = service.getLeadPartnerOrganisationProcessRoles(application);
 
-        verify(userRestService, times(2)).findProcessRole(applicationId);
+        verify(processRoleRestService, times(2)).findProcessRole(applicationId);
         verifyNoMoreInteractions(userRestService);
         assertEquals(singletonList(processRoles.get(0)), result);
     }
 
     @Test
     public void getUserOrganisationId() {
-        when(userRestService.findProcessRole(leadUser.getId(), applicationId)).thenReturn(restSuccess(processRoles.get(0)));
+        when(processRoleRestService.findProcessRole(leadUser.getId(), applicationId)).thenReturn(restSuccess(processRoles.get(0)));
         Long result = service.getUserOrganisationId(leadUser.getId(), applicationId);
 
-        verify(userRestService, times(1)).findProcessRole(leadUser.getId(), applicationId);
+        verify(processRoleRestService, times(1)).findProcessRole(leadUser.getId(), applicationId);
         verifyNoMoreInteractions(userRestService);
         assertEquals(processRoles.get(0).getOrganisationId(), result);
     }

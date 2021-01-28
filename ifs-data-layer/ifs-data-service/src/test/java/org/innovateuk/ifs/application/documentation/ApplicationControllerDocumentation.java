@@ -16,7 +16,7 @@ import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.documentation.ResearchCategoryResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -60,7 +60,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
     }
-
 
     @Test
     public void getApplicationById() throws Exception {
@@ -213,7 +212,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long competitionId = 1L;
         Long userId = 1L;
         List<ApplicationResource> applicationResources = applicationResourceBuilder.build(2);
-        Role role= Role.LEADAPPLICANT;
+        ProcessRoleType role = ProcessRoleType.LEADAPPLICANT;
 
         when(applicationServiceMock.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 

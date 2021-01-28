@@ -12,10 +12,14 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -72,6 +76,10 @@ public class CsvUtils {
 
     public static List<CompetitionOrganisationConfigLine> readCompetitionOrganisationConfig() {
         return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
+    }
+
+    public static List<AssessmentPeriodLine> readCompetitionAssessmentPeriods() {
+        return simpleMapWithIndex(readCsvLines("assessment-periods"), AssessmentPeriodLine::new);
     }
 
     public static List<CompetitionFunderLine> readCompetitionFunders() {
@@ -424,7 +432,7 @@ public class CsvUtils {
         public String applicationName;
         public String assessorEmail;
         public String shortName;
-        public String description;
+        public FormInputType formInputType;
         public boolean isResearchCategory;
         public String value;
 
@@ -434,17 +442,17 @@ public class CsvUtils {
             applicationName = line.get(i++);
             assessorEmail = line.get(i++);
             shortName = line.get(i++);
-            description = line.get(i++);
+            formInputType = nullableEnum(line.get(i++), FormInputType::valueOf);
             isResearchCategory = nullableBoolean(line.get(i++));
             value = line.get(i++);
         }
 
-        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, String description, boolean isResearchCategory, String value) {
+        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, FormInputType formInputType, boolean isResearchCategory, String value) {
             this.competitionName = competitionName;
             this.applicationName = applicationName;
             this.assessorEmail = assessorEmail;
             this.shortName = shortName;
-            this.description = description;
+            this.formInputType = formInputType;
             this.isResearchCategory = isResearchCategory;
             this.value = value;
         }
@@ -492,6 +500,8 @@ public class CsvUtils {
         public ApplicationFinanceType applicationFinanceType;
         public Boolean includeProjectGrowth;
         public Boolean includeYourOrganisation;
+        public FundingRules fundingRules;
+        public Boolean alwaysOpen;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -536,6 +546,8 @@ public class CsvUtils {
             applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
             includeProjectGrowth = nullableBoolean(line.get(i++));
             includeYourOrganisation = nullableBoolean(line.get(i++));
+            fundingRules = FundingRules.valueOf(line.get(i++));
+            alwaysOpen = nullableBoolean(line.get(i++));
         }
     }
 
@@ -635,6 +647,11 @@ public class CsvUtils {
         public String companyRegistrationNumber;
         public Boolean isInternational;
         public String internationalRegistrationNumber;
+        public LocalDate dateOfIncorporation;
+        public List<OrganisationSicCodeResource> sicCodes;
+        public String organisationNumber;
+        public List<OrganisationExecutiveOfficerResource> executiveOfficers;
+        public String businessType;
 
         private OrganisationLine(List<String> line) {
 
@@ -654,6 +671,17 @@ public class CsvUtils {
             companyRegistrationNumber = nullable(line.get(i++));
             isInternational = nullableBoolean(line.get(i++));
             internationalRegistrationNumber = nullable(line.get(i++));
+            dateOfIncorporation = nullableDate(line.get(i++));
+            String sicCodesLine = nullable(line.get(i++));
+            sicCodes = sicCodesLine != null ?
+                    simpleMap(asList(sicCodesLine.split(",")), OrganisationSicCodeResource::new) :
+                    emptyList();
+            organisationNumber = nullable(line.get(i++));
+            String executiveOfficersLine = nullable(line.get(i++));
+            executiveOfficers = executiveOfficersLine != null ?
+                    simpleMap(asList(executiveOfficersLine.split(",")), OrganisationExecutiveOfficerResource::new) :
+                    emptyList();
+            businessType  = nullable(line.get(i++));
         }
     }
 
@@ -747,13 +775,16 @@ public class CsvUtils {
     }
 
     public static class ExternalUserLine extends UserLine {
+        public Role role;
+        public List<Role> additionalRoles;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
 
         @Override
         protected void processLine(List<String> line, int i) {
-
+            this.role = nullableEnum(line.get(i++), Role::valueOf);
+            this.additionalRoles = nullableSplitOnNewLines(line.get(i++)).stream().map(Role::valueOf).collect(Collectors.toList());
         }
 
     }
@@ -769,6 +800,47 @@ public class CsvUtils {
         @Override
         protected void processLine(List<String> line, int i) {
             this.role = nullable(line.get(i++));
+        }
+    }
+
+    public static class SicCodesLine {
+        public String sicCode;
+        public String organisationName;
+
+        private SicCodesLine(List<String> line) {
+            int i = 0;
+            sicCode = nullable(line.get(i++));
+            organisationName = nullable(line.get(i++));
+        }
+    }
+
+    public static class ExecutiveOfficersLine {
+        public String name;
+        public String organisationName;
+
+        private ExecutiveOfficersLine(List<String> line) {
+            int i = 0;
+            name = nullable(line.get(i++));
+            organisationName = nullable(line.get(i++));
+        }
+    }
+
+    public static class AssessmentPeriodLine {
+        public int lineNumber;
+        public String competition;
+        public int index;
+        public ZonedDateTime assessorBriefing;
+        public ZonedDateTime assessorAccepts;
+        public ZonedDateTime assessorDeadline;
+
+        private AssessmentPeriodLine(List<String> line , int lineNumber) {
+            this.lineNumber = lineNumber;
+            int i = 0;
+            competition = nullable(line.get(i++));
+            index = nullableInteger(line.get(i++));
+            assessorBriefing = nullableDateTime(line.get(i++));
+            assessorAccepts  = nullableDateTime(line.get(i++));
+            assessorDeadline = nullableDateTime(line.get(i++));
         }
     }
 

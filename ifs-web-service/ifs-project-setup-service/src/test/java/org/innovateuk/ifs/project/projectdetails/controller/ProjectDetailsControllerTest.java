@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -90,9 +90,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectDetails() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -104,7 +102,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -152,7 +150,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
                 .withFundingType(FundingType.KTP)
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -164,7 +161,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -209,9 +206,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectDetailsReadOnlyView() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -223,7 +218,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -266,10 +261,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectDetailsKtpCompetitionReadOnlyView() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
                 .withFundingType(FundingType.KTP)
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -281,7 +274,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -389,9 +382,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectManagerAndAddressCannotBeChangedWhenGOLAlreadyGenerated() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -403,7 +394,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().

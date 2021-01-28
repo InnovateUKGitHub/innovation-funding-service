@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +43,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     private static final List<MilestoneType> HORIZON_PUBLIC_MILESTONES =
             asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE);
+
+    private static final List<MilestoneType> ALWAYS_OPEN_PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE);
 
     @Autowired
     private MilestoneRepository milestoneRepository;
@@ -75,13 +76,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             if (isNonIfs) {
                 milestonesRequired= PUBLIC_MILESTONES.stream()
-                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, true))
                         .collect(toList());
             } else {
-                milestonesRequired = PUBLIC_MILESTONES.stream()
-                        .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
-                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                        .collect(toList());
+                milestonesRequired = ifsAllPublicDatesComplete(competition);
             }
 
             List<Milestone> milestones = milestoneRepository
@@ -89,6 +87,23 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             return hasRequiredMilestones(milestones, milestonesRequired);
         });
+    }
+
+    private List<MilestoneType> ifsAllPublicDatesComplete(Competition competition) {
+        List<MilestoneType> milestonesRequired;
+
+        if (competition.isAlwaysOpen()) {
+            milestonesRequired = ALWAYS_OPEN_PUBLIC_MILESTONES.stream()
+                    .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                    .collect(toList());
+        } else {
+            milestonesRequired = PUBLIC_MILESTONES.stream()
+                    .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                    .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, false))
+                    .collect(toList());
+        }
+
+        return milestonesRequired;
     }
 
     private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {

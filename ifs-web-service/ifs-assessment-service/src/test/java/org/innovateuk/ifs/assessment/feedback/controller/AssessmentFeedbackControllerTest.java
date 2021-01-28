@@ -31,9 +31,9 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -142,7 +142,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
     private FormInputResponseService formInputResponseService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private InviteService inviteService;
@@ -391,8 +391,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .thenReturn(questionResource);
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
-        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
-                newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
+        when(processRoleRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
+                newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build(3)));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
@@ -463,8 +463,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .thenReturn(questionResource);
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
-        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
-                newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
+        when(processRoleRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
+                newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build(3)));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));

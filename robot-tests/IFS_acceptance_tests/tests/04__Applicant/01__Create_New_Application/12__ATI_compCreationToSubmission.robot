@@ -17,6 +17,12 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-7647 MO visibility of submitted applications
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...               IFS-8729 ATI Assessor 'doesn't have the right permissions' to access appendices
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -32,12 +38,16 @@ ${technicalApproach_question}         5. Technical approach
 ${answerToSelect}                     answer2
 ${partnerEmail}                       test1@test.com
 ${fundingSoughtValidationMessage}     Your total funding sought exceed
+${assessor1_to_add}                   Addison Shannon
+${assessor2_to_add}                   Alexis Colon
+${assessor1_email}                    addison.shannon@gmail.com
+${assessor2_email}                    alexis.colon@gmail.com
+
 *** Test Cases ***
 Comp Admin creates an ATI competition
-    [Documentation]  IFS-2396
+    [Documentation]  IFS-2396  IFS-8779
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  PROJECT_SETUP  yes  1  true  collaborative
-    And user fills in funding overide
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
@@ -106,6 +116,14 @@ Comp admin can see the ATI application submitted
     When the user navigates to the page      ${server}/management/competition/${competitionId}/applications/submitted
     Then the user should see the element     jQuery = td:contains("${ATIapplicationTitle}")
 
+Comp admin amends the assessment panel and interview stage options
+    [Documentation]  IFS-8729
+    Given the user navigates to the page       ${server}/management/competition/setup/${competitionId}/section/assessors
+    When the user clicks the button/link       jQuery = button:contains("Edit")
+    Then the user selects the radio button     hasAssessmentPanel  1
+    And the user selects the radio button      hasInterviewStage  1
+    And the user clicks the button/link        jQuery = button:contains("Done")
+
 Collaborator cannot reopen the application
     [Documentation]  IFS-7547
     Given log in as a different user             &{collaborator1_credentials}
@@ -154,10 +172,27 @@ Lead does not see reopen when the comp is closed
     And log in as a different user               &{lead_applicant_credentials}
     Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
 
+Comp admin assigns assessors to the competition and assigns the application to an assessor
+    [Documentation]  IFS-8729
+    [Setup]  log in as a different user                                      &{Comp_admin1_credentials}
+    Given the user navigates to the page                                     ${server}/management/competition/${competitionId}/assessors/find
+    When the user invites assessors to assess the ATI competition
+    And the assessors accept the invitation to assess the ATI competition
+    Then the application is assigned to a assessor
+
+Comp admin invites a different assessor through interview panel and assign the application
+    [Documentation]  IFS-8729
+    [Setup]  log in as a different user                          &{Comp_admin1_credentials}
+    Given the user navigates to the page                         ${server}/management/competition/${competitionId}
+    And the user clicks the button/link                          jQuery = button:contains("Close assessment")
+    When the user invites an assessor through interview panel
+    And the user assigns the application to the assessor
+    Then the assessor checks the appendices
+
 Internal user marks ATI application to successful
     [Documentation]  IFS-2332
-    Given Log in as a different user                     &{internal_finance_credentials}
-    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
+    Given Log in as a different user                                        &{internal_finance_credentials}
+    Then making the application a successful project from correct state     ${competitionId}  ${ATIapplicationTitle}
 
 MO can see application summary page for the ATI application in project setup before releasing the feedback
     [Documentation]  IFS-7647
@@ -168,13 +203,13 @@ MO can see application summary page for the ATI application in project setup bef
     And the user should see the element                        jQuery = h1:contains("Application overview")
 
 Internal user add new partner orgnisation after moving competition to project setup
-    [Documentation]  IFS-6725
+    [Documentation]  IFS-6725  IFS-7723
     [Setup]  Requesting Project ID of this Project
     Given Log in as a different user                             &{internal_finance_credentials}
     And moving competition to Project Setup                      ${competitionId}
     When the user navigates to the page                          ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
     And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
-    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  innovate  INNOVATE LTD  ${atiApplicationID}  ${ATIapplicationTitle}
+    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  ROYAL  ROYAL MAIL PLC  ${atiApplicationID}  ${ATIapplicationTitle}
 
 New partner orgination checks for funding level guidance
     [Documentation]  IFS-6725
@@ -233,38 +268,16 @@ the user completes the application
     the user clicks the button/link                                                          link = Your project finances
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
-    the user checks the override value is applied
     the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
 the partner selects new answer choice
-     input text                                         id = multipleChoiceOptionId  ${answerToSelect}
-     the user clicks the button/link                    jQuery = ul li:contains("${answerToSelect}")
      the user clicks the button/link                    name = removeAppendix
      the user can remove file with multiple uploads     removeAppendix    ${valid_pdf}
+     input text                                         id = multipleChoiceOptionId  ${answerToSelect}
+     the user clicks the button/link                    jQuery = ul li:contains("${answerToSelect}")
      the user clicks the button/link                    jQuery = button:contains("Assign to lead for review")
      the user should see the element                    jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
-
-User fills in funding overide
-    the user clicks the button/link                      link = ${ATIcompetitionTitle}
-    the user clicks the button/link                      link = View and update competition details
-    the user clicks the button/link                      link = Project eligibility
-    the user clicks the button/link                      css = .govuk-button[type=submit]
-    the user clicks the button twice                     css = label[for="comp-overrideFundingRules-yes"]
-    the user enters text to a text field                 id = fundingLevelPercentageOverride  100
-    the user clicks the button/link                      jQuery = button:contains("Done")
-    the user should see the element                      jQuery = dt:contains("Funding level") ~ dd:contains("100%")
-    the user clicks the button/link                      link = Competition details
-    the user clicks the button/link                      jQuery = a:contains("Complete")
-    the user clicks the button/link                      css = button[type="submit"]
-
-the user checks the override value is applied
-    the user clicks the button/link     link = Your project finances
-    the user clicks the button/link     link = Your funding
-    the user clicks the button/link     jQuery = button:contains("Edit your funding")
-    the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
-    the user clicks the button/link     jQuery = button:contains("Mark as complete")
-    the user clicks the button/link     link = Back to application overview
 
 the finance overview is marked as incomplete
     the user clicks the button/link    link = Finances overview
@@ -306,3 +319,72 @@ the user should see the finances overview as complete
     the user should not see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
     the user clicks the button/link          link = Application overview
     Then the user should see the element     jQuery = li:contains("Finances overview") .task-status-complete
+
+the user invites assessors to assess the ATI competition
+    the user clicks the button/link     link = 1 to 20
+    the user selects the checkbox       assessor-row-1
+    the user selects the checkbox       assessor-row-2
+    the user clicks the button/link     jQuery = button:contains("Add selected to invite list")
+    the user should see the element     jQuery = td:contains("${assessor1_to_add}")
+    the user should see the element     jQuery = td:contains("${assessor2_to_add}")
+    the user clicks the button/link     jQuery = a:contains("Review and send invites")
+    the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
+
+the assessors accept the invitation to assess the ATI competition
+    log in as a different user                            ${assessor1_email}   ${short_password}
+    the user clicks the assessment tile if displayed
+    the user clicks the button/link                       link = ATI Competition
+    the user selects the radio button                     acceptInvitation   true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
+    log in as a different user                            ${assessor2_email}   ${short_password}
+    the user clicks the assessment tile if displayed
+    the user clicks the button/link                       link = ATI Competition
+    the user selects the radio button                     acceptInvitation   true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
+
+the application is assigned to a assessor
+    log in as a different user            &{Comp_admin1_credentials}
+    the user navigates to the page        ${server}/management/assessment/competition/${competitionId}/applications
+    the user clicks the button/link       link = Assign
+    the user selects the checkbox         assessor-row-1
+    the user clicks the button/link       jQuery = button:contains("Add to application")
+    the user navigates to the page        ${server}/management/competition/${competitionId}
+    the user clicks the button/link       jQuery = button:contains("Notify assessors")
+    log in as a different user            ${assessor1_email}   ${short_password}
+    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${competitionId}
+    the user clicks the button/link       link = ${ATIapplicationTitle}
+    the user selects the radio button     assessmentAccept  true
+    the user clicks the button/link       jQuery = button:contains("Confirm")
+
+The user invites an assessor through interview panel
+    the user clicks the button/link       link = Manage interview panel
+    the user clicks the button/link       link = Invite assessors
+    the user selects the checkbox         assessor-row-2
+    the user clicks the button/link       jQuery = button:contains("Add selected to invite list")
+    the user clicks the button/link       link = Review and send invites
+    the user clicks the button/link       jQuery = button:contains("Send invite")
+    log in as a different user            ${assessor2_email}   ${short_password}
+    the user navigates to the page        ${server}/assessment/assessor/dashboard
+    the user clicks the button/link       link = ATI Competition
+    the user selects the radio button     acceptInvitation  true
+    the user clicks the button/link       jQuery = button:contains("Confirm")
+
+the user assigns the application to the assessor
+    log in as a different user            &{Comp_admin1_credentials}
+    the user navigates to the page        ${server}/management/assessment/interview/competition/${competitionId}/applications/find
+    the user selects the checkbox         assessor-row-1
+    the user clicks the button/link       jQuery = button:contains("Add selected to invite list")
+    the user clicks the button/link       link = Review and send invites
+    the user clicks the button/link       jQuery = button:contains("Send invite")
+    the user navigates to the page        ${server}/management/assessment/interview/competition/${competitionId}/assessors/allocate-assessors
+    the user clicks the button/link       jQuery = a:contains("Allocate")
+    the user selects the checkbox         assessor-row-1
+    the user clicks the button/link       jQuery = button:contains("Allocate")
+    the user clicks the button/link       css = input[value='Notify']
+
+the assessor checks the appendices
+    log in as a different user          ${assessor2_email}   ${short_password}
+    the user navigates to the page      ${server}/assessment/assessor/dashboard/competition/${competitionId}/interview
+    the user clicks the button/link     link = ATI application
+    the user clicks the button/link     jQuery = button:contains("5. Technical approach")
+    open pdf link                       jQuery = a:contains("testing.pdf (opens in a new window)")

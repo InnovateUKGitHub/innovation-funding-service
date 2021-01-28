@@ -5,6 +5,8 @@ Documentation   IFS-2688 As a Portfolio manager I am able to create a Prince's T
 ...
 ...             IFS-7718 EDI question - application form
 ...
+...             IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -15,11 +17,10 @@ Resource        ../../../resources/common/Competition_Commons.robot
 *** Variables ***
 ${comp_name}         The Prince Trust competition
 ${application_name}  The Prince Trust Application
-${comp_type}         The Prince's Trust
 
 *** Test Cases ***
 Comp Admin creates The Prince's Trust type competition
-    [Documentation]  IFS-2688
+    [Documentation]  IFS-2688  IFS-8779
     [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
     Then the competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince
@@ -49,14 +50,15 @@ The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${comp_type}  2  GRANT
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_PT}  SUBSIDY_CONTROL  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  false  single-or-collaborative  # 1 means 30%
+    the user fills in the CS funding eligibility            false   ${compType_PT}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     RELEASE_FEEDBACK   ${month}   ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      GRANT
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
@@ -79,7 +81,7 @@ the user marks the Application as done(Prince's Trust comp)
     the assessed questions are marked complete(EOI type)
     the user opts no finances for EOI comp
     the user clicks the button/link                          jQuery=button:contains("Done")
-    the user clicks the button/link                          link=Competition details
+    the user clicks the button/link                          link = Back to competition details
     the user should see the element                          jQuery=div:contains("Application") ~ .task-status-complete
 
 the lead applicant answers the four sections as complete

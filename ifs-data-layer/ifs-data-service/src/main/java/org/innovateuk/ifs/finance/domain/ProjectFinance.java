@@ -3,15 +3,17 @@ package org.innovateuk.ifs.finance.domain;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.procurement.milestone.domain.ProjectProcurementMilestone;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 
 import javax.persistence.*;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
@@ -33,6 +35,9 @@ public class ProjectFinance extends Finance {
     @Enumerated(EnumType.STRING)
     private EligibilityRagStatus eligibilityStatus = EligibilityRagStatus.UNSET;
 
+    @OneToMany(mappedBy="projectFinance")
+    private List<ProjectProcurementMilestone> milestones;
+
     public ProjectFinance() {
     }
 
@@ -41,13 +46,13 @@ public class ProjectFinance extends Finance {
         this.project = project;
     }
 
-    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears) {
-        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears);
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration) {
+        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears, northernIrelandDeclaration);
         this.project = project;
     }
 
     public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
-        this(organisation, organisationSize, project, null, null, null);
+        this(organisation, organisationSize, project, null, null, null, null);
     }
 
     public Project getProject() {
@@ -76,6 +81,14 @@ public class ProjectFinance extends Finance {
 
     public void setEligibilityStatus(EligibilityRagStatus eligibilityStatus) {
         this.eligibilityStatus = eligibilityStatus;
+    }
+
+    public List<ProjectProcurementMilestone> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<ProjectProcurementMilestone> milestones) {
+        this.milestones = milestones;
     }
 
     public boolean isPartner(Long userId) {

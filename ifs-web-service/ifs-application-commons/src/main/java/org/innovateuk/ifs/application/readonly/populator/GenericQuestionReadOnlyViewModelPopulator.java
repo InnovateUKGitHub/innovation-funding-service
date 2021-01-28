@@ -22,7 +22,8 @@ import static java.util.Optional.ofNullable;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
@@ -160,9 +161,10 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     private String urlForFormInputDownload(long formInputId, long fileEntryId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean isApplicant = data.getUsersProcessRole().map(pr -> applicantProcessRoles().contains(pr.getRole())).orElse(false);
-        boolean isKta = data.getUsersProcessRole().map(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER).orElse(false);
+        boolean isKta = data.getUsersProcessRole().map(pr -> pr.getRole().isKta()).orElse(false);
         boolean isAssessor = data.getUsersProcessRole().map(pr -> pr.getRole() == ASSESSOR).orElse(false);
-        if (isApplicant || isKta || data.getUser().hasRole(Role.MONITORING_OFFICER)) {
+        boolean isInterviewAssessor = data.getUsersProcessRole().map(pr -> pr.getRole() == INTERVIEW_ASSESSOR).orElse(false);
+        if (isApplicant || isKta || isInterviewAssessor || data.getUser().hasRole(Role.MONITORING_OFFICER) || data.getUser().hasRole(Role.SUPPORTER)) {
             return String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", data.getApplication().getId(), question.getId(), formInputId, fileEntryId);
         } else if (isAssessor && settings.isIncludeAssessment()) {
             return String.format("/assessment/%d/application/%d/formInput/%d/file/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId, fileEntryId);
@@ -179,6 +181,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION);
+        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT);
     }
 }

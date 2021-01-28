@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.management.admin.controller;
 
-import org.innovateuk.ifs.management.admin.form.InviteUserForm;
-import org.innovateuk.ifs.management.admin.form.InviteUserView;
-import org.innovateuk.ifs.management.admin.form.validation.Primary;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.management.admin.form.InviteUserForm;
+import org.innovateuk.ifs.management.admin.form.InviteUserView;
+import org.innovateuk.ifs.management.admin.form.SelectExternalRoleForm;
+import org.innovateuk.ifs.management.admin.form.validation.Primary;
 import org.innovateuk.ifs.management.admin.viewmodel.InviteUserViewModel;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -19,10 +20,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.KTA_USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
@@ -42,6 +45,28 @@ public class InviteUserController {
     @Autowired
     private InviteUserService inviteUserService;
 
+    @GetMapping("/select-external-role")
+    public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
+                             Model model) {
+
+        model.addAttribute("roles", Role.externalRolesToInvite());
+        return "admin/select-external-role";
+    }
+
+    @PostMapping("/select-external-role")
+    public String selectedRole(@ModelAttribute(name = "form") @Valid SelectExternalRoleForm form,
+                               BindingResult bindingResult,
+                               ValidationHandler validationHandler,
+                               Model model) {
+
+        Supplier<String> failureView = () -> selectRole(form, model);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToInviteExternalUserPage(form.getRole()));
+    }
+
+    private String redirectToInviteExternalUserPage(Role role) {
+        return String.format("redirect:/admin/invite-external-user?role=%s", role.toString());
+    }
+
     @GetMapping("/invite-user")
     public String inviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
@@ -50,10 +75,11 @@ public class InviteUserController {
     }
 
     @GetMapping("/invite-external-user")
-    public String inviteNewExternalUser(Model model) {
+    public String inviteNewExternalUser(@RequestParam(value = "role") Role role,
+                                        Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role));
     }
 
     private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
@@ -91,7 +117,7 @@ public class InviteUserController {
     public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()));
 
         return saveInvite(form, validationHandler, failureView);
     }
@@ -111,6 +137,6 @@ public class InviteUserController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
 
-        return new InviteUserResource(invitedUser, form.getRole());
+        return new InviteUserResource(invitedUser, form.getOrganisation(), form.getRole());
     }
 }

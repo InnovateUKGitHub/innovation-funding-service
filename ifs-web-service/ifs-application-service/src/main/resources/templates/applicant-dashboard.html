@@ -50,6 +50,11 @@
                 </div>
             </section>
 
+            <div class="govuk-body"
+                 th:if="${model.euGrantTransfers.empty} and ${model.inProgress.empty} and ${model.previous.empty} and ${model.projects.empty}">
+                You have no applications in progress.
+            </div>
+
             <section class="h2020" th:unless="${model.euGrantTransfers.empty}">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Horizon 2020 grant transfers</h2>
@@ -69,7 +74,7 @@
                                     <span class="status-msg msg-progress" th:text="${euGrantTransfer.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </th:block>
                                 <th:block th:if="${euGrantTransfer.submitted}">
-                                    <span class="status-msg msg-progress">Application submitted</span>
+                                    <span class="status-msg msg-progress">Submitted</span>
                                 </th:block>
                                 <th:block th:if="${euGrantTransfer.successful}">
                                     <span class="status-msg msg-progress">Project in setup</span>
@@ -136,7 +141,7 @@
                                             <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
                                         </th:block>
                                         <span class="status-msg msg-progress">
-                                            Application submitted
+                                            Submitted
                                             <th:block th:if="${inProgressView.showReopenLink}">
                                                 <br/>
                                                 <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link govuk-body reopen-application-link">Reopen</a>
@@ -148,6 +153,7 @@
                         </li>
                     </ul>
                 </div>
+
             </section>
 
             <section class="previous" th:unless="${model.previous.empty}">

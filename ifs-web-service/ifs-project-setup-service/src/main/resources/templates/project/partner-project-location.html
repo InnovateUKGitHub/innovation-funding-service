@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to project details',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='govuk-heading-xl'" />
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <p class="govuk-body">We will assign a Monitoring Officer who will visit your project location.</p>
+        <p class="govuk-body">We will assign a monitoring officer who will visit your project location.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
             <div th:if="${model.international}" class="govuk-form-group" th:classappend="${#fields.hasErrors('town')} ? 'govuk-form-group--error'" >

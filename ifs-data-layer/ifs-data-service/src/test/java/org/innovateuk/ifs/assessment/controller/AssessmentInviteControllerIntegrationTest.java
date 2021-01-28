@@ -12,6 +12,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -25,7 +26,10 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.ProfileRole;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +58,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
@@ -109,6 +114,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     private RoleProfileStatusRepository roleProfileStatusRepository;
 
     private Competition competition;
+    private Competition ktpCompetition;
 
     private User paulPlum;
     private User felixWilson;
@@ -132,6 +138,12 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         felixWilson.setProfileId(savedProfiles.get(1).getId());
 
         userRepository.saveAll(asList(paulPlum, felixWilson));
+
+        ktpCompetition = competitionRepository.save(newCompetition()
+                .withId(null)
+                .withFundingType(FundingType.KTP)
+                .withAlwaysOpen(false)
+                .build());
     }
 
     @Test
@@ -917,6 +929,30 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     }
 
     @Test
+    public void getAvailableAssessors_ktp() {
+        loginCompAdmin();
+
+        addTestKtas();
+
+        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(ktpCompetition.getId(), pageable, "")
+                .getSuccess();
+
+        assertEquals(20, availableAssessorPageResource.getSize());
+        assertEquals(0, availableAssessorPageResource.getNumber());
+        assertEquals(1, availableAssessorPageResource.getTotalPages());
+        assertEquals(4, availableAssessorPageResource.getTotalElements());
+
+        List<AvailableAssessorResource> availableAssessorResources = availableAssessorPageResource.getContent();
+
+        assertEquals(4, availableAssessorResources.size());
+        assertEquals("Andrew Marr", availableAssessorResources.get(0).getName());
+        assertEquals("James Blake", availableAssessorResources.get(1).getName());
+        assertEquals("Jessica Alba", availableAssessorResources.get(2).getName());
+        assertEquals("Victoria Beckham", availableAssessorResources.get(3).getName());
+    }
+
+    @Test
     public void getAvailableAssessors_nextPage() {
         loginCompAdmin();
         String assessorFilter = "";
@@ -1036,6 +1072,33 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         assertEquals(6, availableAssessorIds.size());
     }
 
+    private void addTestKtas() {
+        InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.saveAll(profiles));
+
+        Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid1", "uid2", "uid3", "uid4")
+                .withFirstName("Victoria", "James", "Jessica", "Andrew")
+                .withLastName("Beckham", "Blake", "Alba", "Marr")
+                .withRoles(singleton(Role.KNOWLEDGE_TRANSFER_ADVISER))
+                .withStatus(ACTIVE)
+                .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
+                .build(4);
+
+        userRepository.saveAll(users);
+
+        flushAndClearSession();
+
+    }
     private void addTestAssessors() {
         InnovationArea innovationArea = innovationAreaRepository.findById(INNOVATION_AREA_ID).get();
 

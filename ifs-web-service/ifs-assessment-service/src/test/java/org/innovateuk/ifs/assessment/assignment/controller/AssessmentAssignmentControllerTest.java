@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.assignment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
@@ -12,7 +11,9 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
+import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static java.lang.String.format;
 import static java.util.Collections.nCopies;
@@ -43,7 +47,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -76,7 +81,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private OrganisationService organisationService;
@@ -106,7 +111,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                         leadOrganisation.getId(),
                         collaboratorOrganisation2.getId(),
                         otherOrganisation.getId())
-                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ASSESSOR)
+                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ProcessRoleType.ASSESSOR)
                 .build(4);
 
         partners = new TreeSet<>(comparingLong(OrganisationResource::getId));
@@ -114,7 +119,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         partners.add(leadOrganisation);
         partners.add(collaboratorOrganisation2);
 
-        when(userRestService.findProcessRole(APPLICATION_ID)).thenReturn(restSuccess(processRoleResources));
+        when(processRoleRestService.findProcessRole(APPLICATION_ID)).thenReturn(restSuccess(processRoleResources));
         when(organisationService.getApplicationOrganisations(processRoleResources)).thenReturn(partners);
         when(organisationService.getApplicationLeadOrganisation(processRoleResources)).thenReturn(Optional.ofNullable(leadOrganisation));
 
@@ -141,10 +146,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/assessment-invitation")).andReturn();
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, userRestService, organisationService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleRestService, organisationService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
+        inOrder.verify(processRoleRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(processRoleResources);
         inOrder.verify(organisationService).getApplicationLeadOrganisation(processRoleResources);
 
@@ -256,12 +261,12 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals(0, bindingResult.getFieldErrorCount());
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, userRestService, organisationService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleRestService, organisationService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
+        inOrder.verify(processRoleRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(processRoleResources);
         inOrder.verify(organisationService).getApplicationLeadOrganisation(processRoleResources);
         inOrder.verifyNoMoreInteractions();
@@ -316,10 +321,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("rejectReasonValid"));
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReasonValid").getDefaultMessage());
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, userRestService, organisationService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleRestService, organisationService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
+        inOrder.verify(processRoleRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(processRoleResources);
         inOrder.verify(organisationService).getApplicationLeadOrganisation(processRoleResources);
         inOrder.verifyNoMoreInteractions();
@@ -369,10 +374,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("assessmentAccept"));
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("assessmentAccept").getDefaultMessage());
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, userRestService, organisationService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleRestService, organisationService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
+        inOrder.verify(processRoleRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(processRoleResources);
         inOrder.verify(organisationService).getApplicationLeadOrganisation(processRoleResources);
         inOrder.verifyNoMoreInteractions();
@@ -430,10 +435,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, userRestService, organisationService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleRestService, organisationService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
+        inOrder.verify(processRoleRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(processRoleResources);
         inOrder.verify(organisationService).getApplicationLeadOrganisation(processRoleResources);
         inOrder.verifyNoMoreInteractions();
@@ -491,10 +496,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, userRestService, organisationService);
+        InOrder inOrder = inOrder(assessmentService, formInputResponseRestService, processRoleRestService, organisationService);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionSetupType(APPLICATION_ID, PROJECT_SUMMARY);
-        inOrder.verify(userRestService).findProcessRole(APPLICATION_ID);
+        inOrder.verify(processRoleRestService).findProcessRole(APPLICATION_ID);
         inOrder.verify(organisationService).getApplicationOrganisations(processRoleResources);
         inOrder.verify(organisationService).getApplicationLeadOrganisation(processRoleResources);
         inOrder.verifyNoMoreInteractions();

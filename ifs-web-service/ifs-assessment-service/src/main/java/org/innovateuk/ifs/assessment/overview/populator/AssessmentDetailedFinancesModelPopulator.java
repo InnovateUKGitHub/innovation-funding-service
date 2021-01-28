@@ -26,10 +26,10 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -51,7 +51,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     @Autowired
     private AssessmentRestService assessmentRestService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     @Autowired
     private OrganisationRestService organisationRestService;
     @Autowired
@@ -78,13 +78,13 @@ public class AssessmentDetailedFinancesModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        List<ProcessRoleResource> applicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> applicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
 
         boolean academic = isAcademicFinance(organisation.getOrganisationType(), competition);
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competition.getId(), PROJECT_COST_FINANCES).get(0);
 
         if (academic) {
-            addAcademicFinance(model, applicationId, costSection.getId(), organisationId);
+            addAcademicFinance(model, applicationId, costSection.getId(), organisationId, user);
         } else {
             addIndustrialFinance(model, applicationId, costSection.getId(), organisationId, user);
         }
@@ -96,8 +96,8 @@ public class AssessmentDetailedFinancesModelPopulator {
                 application.getName(), academic);
     }
 
-    private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId) {
-        AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, false);
+    private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {
+        AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
         AcademicCostForm form = new AcademicCostForm();
         applicationAcademicCostFormPopulator.populate(form, applicationId, organisationId);
 
@@ -141,7 +141,7 @@ public class AssessmentDetailedFinancesModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
-                .filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName()))
+                .filter(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT)
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }

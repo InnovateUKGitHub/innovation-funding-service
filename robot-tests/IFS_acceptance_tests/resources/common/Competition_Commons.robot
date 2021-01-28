@@ -9,20 +9,21 @@ ${Non_Ifs_Comp}      Webtest Non IFS Comp 20
 
 *** Keywords ***
 The competition admin creates competition
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility            ${researchCategory}  ${compType}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
@@ -66,22 +67,22 @@ the user sees the correct read only view of the question
     the user should not see the element      jQuery = dt:contains("5-6") ~ dd:contains("The business opportunity is plausible")
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
-    the user clicks the button/link                      link = Initial details
-    the user enters text to a text field                 css = #title  ${compTitle}
-    the user selects the radio button                    fundingType  ${fundingType}
-    the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
-    the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
-    the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
-    the user enters text to a text field                 css = #openingDateDay  1
-    the user enters text to a text field                 css = #openingDateMonth  ${month}
-    the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
-    the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
-    the user clicks the button twice                     css = label[for="stateAid${stateAid}"]
-    the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition details
-    the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
+    the user clicks the button/link                         link = Initial details
+    the user enters text to a text field                    css = #title  ${compTitle}
+    the user selects the radio button                       fundingType  ${fundingType}
+    the user selects the option from the drop-down menu     ${compType}  id = competitionTypeId
+    the user selects the radio button                       fundingRule  ${fundingRule}
+    the user selects the option from the drop-down menu     Emerging and enabling  id = innovationSectorCategoryId
+    the user selects the option from the drop-down menu     Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
+    the user enters text to a text field                    css = #openingDateDay  1
+    the user enters text to a text field                    css = #openingDateMonth  ${month}
+    the user enters text to a text field                    css = #openingDateYear  ${nextyear}
+    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  r  Robert Johnson
+    the user clicks the button/link                         jQuery = button:contains("Done")
+    the user clicks the button/link                         link = Back to competition details
+    the user should see the element                         jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the user selects procurement Terms and Conditions
     the user clicks the button/link                                     link = Terms and conditions
@@ -89,7 +90,7 @@ the user selects procurement Terms and Conditions
     the user performs procurement Terms and Conditions validations
     the user uploads the file                                           css = .inputfile  ${valid_pdf}
     the user clicks the button/link                                     jQuery = button:contains("Done")
-    the user clicks the button/link                                     link = Competition details
+    the user clicks the button/link                                     link = Back to competition details
     the user should see the element                                     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user performs procurement Terms and Conditions validations
@@ -101,7 +102,7 @@ the user performs procurement Terms and Conditions validations
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
     the user clicks the button/link      jQuery = button:contains("Done")
-    the user clicks the button/link      link = Competition details
+    the user clicks the button/link      link = Back to competition details
     the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user fills in the CS Funding Information
@@ -112,27 +113,80 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
     the user enters text to a text field  id = activityCode  133t
-    textfield should contain              css = input[name="competitionCode"]  21
+    ${nextYearInTwoDigits}=               get next year in two digits
+    textfield should contain              css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link       jQuery = button:contains("Done")
-    the user clicks the button/link       link = Competition details
+    the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link       link = Project eligibility
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
-    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
     ...   ELSE   run keywords     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     ...   AND    the user selects Research Participation if required   ${researchParticipation}
     the user selects the radio button     resubmission  yes
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link       jQuery = button:contains("Done")
-    the user clicks the button/link       link = Competition details
+    the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
-    #Elements in this page need double clicking
+
+the user fills in the CS funding eligibility
+    [Arguments]   ${researchCategory}  ${compType}
+    the user clicks the button/link       link = Funding eligibility
+    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
+    Run Keyword If   '${researchCategory}' == 'true' and "${compType}" == "Expression of interest"    the user selects the checkbox     research-categories-33  #Feasibility
+    ...   ELSE IF    '${researchCategory}' == 'true'       run keywords     the user selects the checkbox     research-categories-33  #Feasibility
+    ...                                   AND              the user selects the checkbox     research-categories-34  #Industrial
+    ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
+    the user clicks the button/link       jQuery = button:contains("Done")
+    Run Keyword If  "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
+    ...  ELSE IF    '${researchCategory}' == 'false'       run keywords                        the user fills in maximum funding level percentage
+    ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                   AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
+    ...                                   AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+    ...  ELSE                                              run keywords                        the user fills funding level percentages     ${compType}
+    ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                   AND              the user should see the element     jQuery = button:contains("Edit")
+    the user clicks the button/link       link = Return to setup overview
+    the user should see the element       jQuery = div:contains("Funding eligibility") ~ .task-status-complete
+
+the user fills funding level percentages
+    [Arguments]   ${compType}
+    the user should see the element          jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
+    the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+    the user should see the element          jQuery = td:contains("Micro or small")
+    the user should see the element          jQuery = td:contains("Medium")
+    the user should see the element          jQuery = td:contains("Large")
+    # if the organisation funding values are different, while completing the application user can see research category validation in your funding page
+    # if funding level are same , user can see competition rules link in your funding
+    Run Keyword If  "${compType}" == "${compType_ATI}"     run keywords     the user enters text to a text field     maximums[0][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  75
+    ...  ELSE                                              run keywords     the user enters text to a text field     maximums[0][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][0].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[1][1].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[1][2].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[2][0].maximum  35
+    ...                                                    AND              the user enters text to a text field     maximums[2][1].maximum  35
+    ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  35
+
+the user fills in maximum funding level percentage
+    the user enters text to a text field     id = maximums[0][0].maximum  10
+    the user should see the element          jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
+    the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+
+the user should see read only funding level page
+    the user should see the element         jQuery = p:contains("Competition does not request applicants finance details.")
+    the user should not see the element     jQuery = button:contains("Edit")
 
 the user selects Research Participation if required
     [Arguments]  ${percentage}
@@ -154,7 +208,7 @@ the user fills in the CS Milestones
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
       \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link              jQuery = button:contains("Done")
-    the user clicks the button/link              link = Competition details
+    the user clicks the button/link              link = Back to competition details
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
 the user fills in the CS Documents in other projects
@@ -166,7 +220,7 @@ the user fills in the CS Documents in other projects
     the user enters text to a text field     css = .editor    Guidance test.
     the user clicks the button/link          jQuery = button:contains('Done')
     the user should see the element          jQuery = span:contains("Test document type")
-    the user clicks the button/link          link = Competition details
+    the user clicks the button/link          link = Back to competition details
 
 the user marks the procurement application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -198,20 +252,32 @@ the user marks the Assessed questions as complete
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
+    Run Keyword If  '${comp_type}' == '${compType_ATI}'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
-    the user clicks the button/link  link = Competition details
+    the user clicks the button/link  link = Back to competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
 the user marks the KTP Assessed questions as complete with no assessment score or feedback
     the user should not see assessment score or feedback settings in assessment questions
     the assessment questions are marked complete for other programme type competitions
     the user fills in the Finances questions without growth table                             false  true
+    the user marks the score guidance section as complete
     the user clicks the button/link                                                           jQuery = button:contains("Done")
-    the user clicks the button/link                                                           link = Competition details
+    the user clicks the button/link                                                           link = Back to competition details
     the user should see the element                                                           jQuery = div:contains("Application") ~ .task-status-complete
+
+the user marks the score guidance section as complete
+    the user clicks the button/link    jQuery = a:contains('Impact')
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    link = Innovation
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    jQuery = a:contains('Challenge')
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+    the user clicks the button/link    jQuery = a:contains('Cohesiveness')
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
 
 the user should not see assessment score or feedback settings in assessment questions
     :FOR   ${ELEMENT}   IN    @{programme_questions}
@@ -222,7 +288,7 @@ the user checks every KTP Assessment question
     the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
     the user should not see the element     jQuery = h2:contains("Assessment of this question")
     the user should not see the element     jQuery = h2:contains("Written feedback")
-    the user clicks the button/link         link = Application
+    the user clicks the button/link         link = Back to application
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
@@ -237,7 +303,7 @@ the user fills in the CS Application section with custom questions
     the user marks the Finance section as complete if it's present    ${growthTable}
     the user should see the element    jQuery = h1:contains("Application process")  # to check i am on the right page
     the user clicks the button/link    jQuery = button:contains("Done")
-    the user clicks the button/link    link = Competition details
+    the user clicks the button/link    link = Back to competition details
     the user should see the element    jQuery = div:contains("Application") ~ .task-status-complete
 
 the user marks the Finance section as complete if it's present
@@ -304,7 +370,7 @@ the assessed questions are marked as complete(procurement)
      the user should see the element                                jQuery = button:contains("Add question")
      the user fills in the Finances questions                       ${growthTable}  false  true
      the user clicks the button/link                                jQuery = button:contains("Done")
-     the user clicks the button/link                                link = Competition details
+     the user clicks the button/link                                link = Back to competition details
 
 the user marks each procurement question as complete
     [Arguments]  ${question_link}
@@ -355,15 +421,16 @@ the user fills in the Finances questions without growth table
     the user should see the element       jQuery = li:contains("Finances") .task-status-complete
 
 the user fills in the CS Assessors
+    [Arguments]   ${fundingType}
     the user clicks the button/link    link = Assessors
     the user clicks the button twice   jQuery = label[for^="assessors"]:contains("3")
-    the user should see the element    css = #assessorPay[value="100"]
+    Run Keyword If  '${fundingType}' != 'KTP'      the user should see the element   css = #assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user selects the radio button  averageAssessorScore  0
     the user clicks the button/link    jQuery = button:contains("Done")
     the user should see the element    jQuery = dt:contains("How many") + dd:contains("3")
-    the user clicks the button/link    link = Competition details
+    the user clicks the button/link    link = Back to competition details
     the user should see the element    jQuery = div:contains("Assessors") ~ .task-status-complete
 
 the user fills in the Public content and publishes
@@ -514,6 +581,11 @@ making the application a successful project
     Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css = button[type="submit"][formaction$="notify-assessors"]
     ...    AND  the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
     run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
+    making the application a successful project from correct state      ${compID}       ${appTitle}
+
+making the application a successful project from correct state
+    [Arguments]  ${compID}  ${appTitle}
+    the user navigates to the page      ${server}/management/competition/${compID}
     the user clicks the button/link  link = Input and review funding decision
     the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
     the user clicks the button/link  css = [type="submit"][value="FUNDED"]
@@ -521,6 +593,7 @@ making the application a successful project
     the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
     the user clicks the button/link  css = [name="write-and-send-email"]
     the internal sends the descision notification email to all applicants  Successful!
+    the user refreshes until element appears on page         jQuery = td:contains("${appTitle}") ~ td:contains("Sent")
 
 moving competition to Project Setup
     [Arguments]   ${compID}
@@ -549,7 +622,7 @@ the user selects the organisational eligibility
     the user clicks the button/link         jQuery = button:contains("Save and continue")
     the user selects the radio button       leadInternationalOrganisationsApplicable  ${CanInternationalOrganisationsLead}
     the user clicks the button/link         jQuery = button:contains("Save and continue")
-    the user clicks the button/link         link = Competition details
+    the user clicks the button/link         link = Back to competition details
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 the user selects the organisational eligibility to no
@@ -557,7 +630,7 @@ the user selects the organisational eligibility to no
     the user clicks the button/link         link = ${organisationalEligibilityTitle}
     the user selects the radio button       internationalOrganisationsApplicable       ${organisationEligibilityOption}
     the user clicks the button/link         jQuery = button:contains("Save and continue")
-    the user clicks the button/link         link = Competition details
+    the user clicks the button/link         link = Back to competition details
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 the user should see the correct inputs in the Milestones form
@@ -591,3 +664,68 @@ comp admin enters more than 9 answer options
          \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link          id = remove-multiple-choice-row-10
     the user should not see the element      id = question.choices[10].text
+
+ifs admin invites a KTA user to IFS
+    [Arguments]   ${email}
+    the user clicks the button/link                        link = Manage users
+    the user clicks the button/link                        link = Invite a new external user
+    the user selects a new external user role              KNOWLEDGE_TRANSFER_ADVISER
+    the user fills invite a new external user fields       Amy  Colin  ${email}
+    the user clicks the button/link                        jQuery = button:contains("Send invitation")
+    Logout as user
+
+KTA user creates an account and signed in to IFS
+    [Arguments]   ${email}
+    the user reads his email and clicks the link           ${email}   You have been invited to become a knowledge transfer adviser   You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
+    the user should see the element                        jQuery = h1:contains("Create knowledge transfer adviser account")
+    the KTA user enters the details to create account      Amy  Colin
+    the user clicks the button/link                        name = create-account
+    the user should see the element                        jQuery = h1:contains("Your account has been created")
+    the user clicks the button/link                        link = Sign into your account
+    logging in and error checking                          ${email}  ${short_password}
+
+the user fills invite a new external user fields
+    [Arguments]  ${firstName}  ${lastName}  ${emailAddress}
+    the user enters text to a text field     id = firstName      ${firstName}
+    the user enters text to a text field     id = lastName       ${lastName}
+    the user enters text to a text field     id = emailAddress   ${emailAddress}
+
+the KTA user enters the details to create account
+    [Arguments]  ${firstName}  ${lastName}
+    the user enters text to a text field                   name = firstName  ${firstName}
+    the user enters text to a text field                   name = lastName  ${lastName}
+    the user enters text to a text field                   name = password  ${short_password}
+    the user enters text to a text field                   id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link                        id = postcode-lookup
+    the user selects the index from the drop-down menu     1  id=addressForm.selectedPostcodeIndex
+    the user enters text to a text field                   name = phoneNumber  98765637474
+    the user enters text to a text field                   name = password   ${short_password}
+    the user selects the checkbox                          termsAndConditions
+
+assign the KTA role to an existing user
+    [Arguments]   ${ktaEmail}
+    log in as a different user                    &{ifs_admin_user_credentials}
+    the user clicks the button/link               link = Manage users
+    the user enters text to a text field          id = filter   ${ktaEmail}
+    the user clicks the button/link               css = [class="btn"]
+    the user clicks the button/link               jQuery = a:contains("Edit")
+    the user clicks the button/link               link = Add a new external role profile
+    the user selects a new external user role     KNOWLEDGE_TRANSFER_ADVISER
+    the user clicks the button/link               jQuery = button:contains("Confirm role profile")
+    the user clicks the button/link               jQuery = button:contains("Save and return")
+
+the user selects a new external user role
+    [Arguments]   ${userRole}
+    the user selects the radio button     role  ${userRole}
+    the user clicks the button/link       jQuery = button:contains("Save and continue")
+
+the user search for an existing user
+    [Arguments]   ${name}
+    the user enters text to a text field     id = filter   ${name}
+    the user clicks the button/link          css = input[type="submit"]
+
+the user select stakeholder and add to competition
+    the user clicks the button/link           css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       jQuery = a:contains("Added to competition")
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")

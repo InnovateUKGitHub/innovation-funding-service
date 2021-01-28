@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -172,7 +171,7 @@ class ApplicationInviteNotificationService {
 
         notificationArguments.put("participationAction", getParticipationAction(invite));
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
@@ -188,7 +187,7 @@ class ApplicationInviteNotificationService {
         }
         notificationArguments.put("applicationId", invite.getTarget().getId());
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.REMOVE_KTA, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.REMOVE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
@@ -205,7 +204,7 @@ class ApplicationInviteNotificationService {
         notificationArguments.put("applicationId", invite.getTarget().getId());
         notificationArguments.put("inviteUrl", getKtaInviteUrl(baseUrl, invite.getHash()));
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_KTA, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.INVITE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 

@@ -22,6 +22,8 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-3603 - IFS-3746 GDS - Satisfaction survey
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-8044 "Is this application a resubmission" question visible even when set to No in Comp set up
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant
@@ -40,11 +42,15 @@ Submit button disabled when application is incomplete
     And the user clicks the button/link                link = Back to application overview
     And the user clicks the button/link                jQuery = .govuk-button:contains("Review and submit")
     Then the submit button should be disabled
-    When the user clicks the button/link               jQuery = button:contains("Application details")
-    Then the user should see the element               jQuery = #accordion-questions-content-1-2 button:contains("Mark as complete")+button:contains("Return and edit")
+
+Application details validation message check
+    [Documentation]    IFS-8044
+    And the user clicks the button/link                link = Application overview
+    When the user clicks the button/link               link = Application details
     When the user clicks the button/link               jQuery = button:contains("Mark as complete")
     Then the user should see the element               jQuery = h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
+    And the user should see a field and summary error  This field cannot be left blank.
     And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 RTO lead has read only view after submission
@@ -117,7 +123,7 @@ Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]
     When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    Then the user should see the element  jQuery = .in-progress li:contains("${application_rto_name}") .msg-progress:contains("Application submitted")
+    Then the user should see the element  jQuery = .in-progress li:contains("${application_rto_name}") .msg-progress:contains("Submitted")
     And the user clicks the button/link   link = ${application_rto_name}
     And the user should see the element   link = View application
     And the user should see the element   link = Print application

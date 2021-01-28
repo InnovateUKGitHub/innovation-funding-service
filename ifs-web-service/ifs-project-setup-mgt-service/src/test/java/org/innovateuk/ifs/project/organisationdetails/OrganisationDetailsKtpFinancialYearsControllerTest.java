@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
@@ -75,6 +76,9 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
     @Mock
     private CompaniesHouseRestService companiesHouseRestService;
 
+    @Mock
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     @Override
     protected OrganisationDetailsKtpFinancialYearsController supplyControllerUnderTest() {
         return new OrganisationDetailsKtpFinancialYearsController();
@@ -94,6 +98,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
         project = getProject();
         organisation = getOrganisation();
         competition = new CompetitionResource();
+        competition.setId(competitionId);
 
         OrganisationFinancesKtpYearsResource finances = getFinances();
         form = getForm();
@@ -113,6 +118,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
         when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionId)).thenReturn(restSuccess(false));
     }
 
     private MvcResult callEndpoint() throws Exception {

@@ -8,9 +8,10 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,14 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'supporter')")
 public class ApplicationDownloadController {
 
     @Autowired
     private FinanceService financeService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -57,20 +58,20 @@ public class ApplicationDownloadController {
             @PathVariable("formInputId") final Long formInputId,
             @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) {
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
         ProcessRoleResource processRole = processRoles.stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()
-                .orElseGet(() -> leadRoleIfUserIsMonitoringOfficer(processRoles, user));
+                .orElseGet(() -> impersonateLeadRole(processRoles, user));
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-    private ProcessRoleResource leadRoleIfUserIsMonitoringOfficer(List<ProcessRoleResource> processRoles, UserResource user) {
-        if (user.hasRole(Role.MONITORING_OFFICER)) {
+    private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
+        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER)) {
                 return processRoles.stream()
-                        .filter(pr -> pr.getRole().equals(Role.LEADAPPLICANT))
+                        .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
                         .findFirst()
                         .orElseThrow(this::roleNotFound);
         } else {

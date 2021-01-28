@@ -32,6 +32,9 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6486 - Activity Logs for Partner Changes
 ...
 ...             IFS-6492 - Accept Terms & Conditions for New Partners in Project Setup
+...
+...             IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/common/PS_Common.robot
@@ -200,11 +203,11 @@ Project finance is able to remove a partner organisation
     Then the relevant users recieve an email notification  Red Planet
 
 Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  ROYAL  ROYAL MAIL PLC
 
 IFS admin checks for staus update after new org added
     [Documentation]  IFS-6783
@@ -212,11 +215,11 @@ IFS admin checks for staus update after new org added
     Then the internal user checks for status after new org added/removed
 
 Two organisations with the same name are not able to join
-    [Documentation]  IFS-6485  IFS-6505  IFS-6724
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
-    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  innovate  INNOVATE LTD
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  ROYAL  ROYAL MAIL PLC
     [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
@@ -236,11 +239,11 @@ Ifs Admin is able to remove a pending partner organisation
     Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite   FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    Then a new organisation is able to accept project invite   FName  Surname  ${intFinanceAddOrgEmail}  FIRSTGROUP  FIRSTGROUP PLC
     And log in as a different user                             &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
@@ -260,7 +263,7 @@ The new partner cannot complete funding without organisation
 The new partner can complete Your organisation
     [Documentation]  IFS-6491
     Given the user clicks the button/link    link = your organisation
-    And the user should see the element      jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.")
+    And the user should see the element      jQuery = p:contains("You must tell us the size of your organisation to determine the level of funding you are eligible for.")
     When the user completes your organisation
     Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
 
@@ -288,8 +291,8 @@ New partner can join project
     Then the user can join the project
 
 New partner can provide bank details
-    [Documentation]  IFS-6871
-    ${organisationId} =  get organisation id by name  NOMENSA LTD
+    [Documentation]  IFS-6871  IFS-7723
+    ${organisationId} =  get organisation id by name  FIRSTGROUP PLC
     Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
     When the applicant fills in bank details
     Then internal and external users see correct status
@@ -392,12 +395,12 @@ Non lead partners complete the Project team section
     log in as a different user                &{collaborator2_alternative_user_credentials}
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
-    the user clicks the button/link           link = Set up your project
+    the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
     log in as a different user                &{collaborator1_credentials}
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
-    the user clicks the button/link           link = Set up your project
+    the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 Lead partner completes the Project team section
@@ -408,10 +411,10 @@ Lead partner completes the Project team section
     the user clicks the button/link                                    link = Project team
     the user selects their finance contact                             financeContact2
     the user clicks the button/link                                    link = Project manager
-    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+    the user should see project manager/finance contact validations    Save and continue   You need to select a Project Manager before you can continue.
     the user selects the radio button                                  projectManager   projectManager2
-    the user clicks the button/link                                    jQuery = button:contains("Save project manager")
-    the user clicks the button/link                                    link = Set up your project
+    the user clicks the button/link                                    jQuery = button:contains("Save and continue")
+    the user clicks the button/link                                    link = Back to project setup
     the user should see the element                                    jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user
@@ -509,7 +512,7 @@ the internal user checks for status after new org added/removed
 
 internal user should see entries in activity log after partner org added/removed
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/activity-log
-    the user should see the element       jQuery = li div span:contains("NOMENSA LTD") strong:contains("Organisation added:")
+    the user should see the element       jQuery = li div span:contains("FIRSTGROUP PLC") strong:contains("Organisation added:")
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId6}/project/${addNewPartnerOrgProjID6}/activity-log
     the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View bank details")
     the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View finance viability")
@@ -538,11 +541,11 @@ Custom suite teardown
 the internal partner does not see link for added partner
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
     the user clicks the button/link       css = .action ~ .action a
-    the user clicks the button/link       jQuery = tr:contains("NOMENSA LTD") td:nth-child(4)
+    the user clicks the button/link       jQuery = tr:contains("FIRSTGROUP PLC") td:nth-child(4)
     the user should not see the element   link = Review all changes to project finances
 
 the internal patner does see link for existing partner
-    the user clicks the button/link       link = Finance checks
+    the user clicks the button/link       link = Back to finance checks
     the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
     the user should see the element       link = Review all changes to project finances
 
@@ -554,7 +557,7 @@ the user can join the project
     the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
 the applicant fills in bank details
-    the user clicks the button/link                      link = Return to setup your project
+    the user clicks the button/link                      link = Return to set up your project
     the user clicks the button/link                      link = Bank details
     the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
     the user clicks the button/link                      id = postcode-lookup
@@ -568,7 +571,7 @@ internal and external users see correct status
     the user clicks the button/link                     link = View the status of partners
     the user navigates to the page                      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team-status
     the user should see the element                     jQuery = h1:contains("Project team status")
-    the user should see the element                     css = #table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+    the user should see the element                     css = #table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
     log in as a different user                          &{internal_finance_credentials}
     the user navigates to the page                      ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status
     the user should see the element                     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action

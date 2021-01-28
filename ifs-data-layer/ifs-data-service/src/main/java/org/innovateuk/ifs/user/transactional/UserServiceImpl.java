@@ -89,7 +89,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    @Value("${ifs.system.external.user.email.domain}")
+    @Value("${ifs.system.kta.user.email.domain}")
     private String externalUserEmailDomain;
 
     @Autowired
@@ -166,7 +166,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
-                .filter(r -> "leadapplicant".equals(r.getRole().getName()) || "collaborator".equals(r.getRole().getName()))
+                .filter(r -> ProcessRoleType.LEADAPPLICANT == r.getRole() || ProcessRoleType.COLLABORATOR == r.getRole())
                 .map(ProcessRole::getUser)
                 .map(userMapper::mapToResource)
                 .collect(toSet());
@@ -199,10 +199,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
-            Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
+            Notification notification = new Notification(from, to, Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotificationWithFlush(notification, EMAIL);
-        } else if (userIsExternalNotOnlyAssessor(user) &&
-                userNotYetVerified(user)) {
+        } else if (userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
         } else {
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
@@ -240,8 +239,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("newEmail", newEmail);
 
-        Notification oldNotification = new Notification(from, singletonList(oldEmailTarget), Notifications.EMAIL_CHANGE_OLD, notificationArguments);
-        Notification newNotification = new Notification(from, singletonList(newEmailTarget), Notifications.EMAIL_CHANGE_NEW, notificationArguments);
+        Notification oldNotification = new Notification(from, oldEmailTarget, Notifications.EMAIL_CHANGE_OLD, notificationArguments);
+        Notification newNotification = new Notification(from, newEmailTarget, Notifications.EMAIL_CHANGE_NEW, notificationArguments);
         ServiceResult<Void> oldResult = notificationService.sendNotificationWithFlush(oldNotification, EMAIL);
         ServiceResult<Void> newResult = notificationService.sendNotificationWithFlush(newNotification, EMAIL);
         return aggregate(oldResult, newResult).andOnSuccessReturnVoid();
@@ -288,18 +287,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 && tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId()).isPresent();
     }
 
-    private boolean userIsExternalNotOnlyAssessor(UserResource user) {
-        return user
-                .getRoles()
-                .stream()
-                .anyMatch(r -> COLLABORATOR == r ||
-                             APPLICANT == r ||
-                             FINANCE_CONTACT == r ||
-                             LEADAPPLICANT == r ||
-                             PARTNER == r ||
-                             PROJECT_MANAGER == r);
-    }
-
     @Override
     public ServiceResult<ManageUserPageResource> findActive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
@@ -323,7 +310,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private ServiceResult<ManageUserPageResource> findExternalUserPageResource(String filter, Pageable pageable, UserStatus userStatus) {
-        Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
+        Page<User> pagedResult = userRepository.findDistinctByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
                 externalRoles()

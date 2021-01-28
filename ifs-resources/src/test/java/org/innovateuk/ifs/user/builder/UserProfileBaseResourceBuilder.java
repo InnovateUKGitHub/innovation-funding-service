@@ -36,6 +36,10 @@ public abstract class UserProfileBaseResourceBuilder<T extends UserProfileBaseRe
         return withArraySetFieldByReflection("address", addresses);
     }
 
+    public S withSimpleOrganisation(String... simpleOrganisations) {
+        return withArraySetFieldByReflection("simpleOrganisation", simpleOrganisations);
+    }
+
     public S withEmail(String... emails) {
         return withArraySetFieldByReflection("email", emails);
     }

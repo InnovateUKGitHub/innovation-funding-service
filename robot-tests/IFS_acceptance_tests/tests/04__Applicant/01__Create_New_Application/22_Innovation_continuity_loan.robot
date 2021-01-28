@@ -1,6 +1,10 @@
 *** Settings ***
 Documentation     IFS-8002  New set of T&Cs for innovation continuity loan
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...               IFS-9071 Subsidy Control - Update Innovation Continuity Loan T&Cs
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -16,16 +20,16 @@ ${continuityLoanPSCompId}            ${competition_ids["${continuityLoanPSCompNa
 ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplication}"]}
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
-${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
+${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity loan from
 ${continuityLoanT&C'sTitle}          Loans terms and conditions
-${continuityLoanT&CLink}             Innovation Continuity Loan
+${continuityLoanT&CLink}             Innovation Continuity Loan (opens in a new window)
 ${applicationT&CLink}                Award terms and conditions
 
 
 
 *** Test Cases ***
 Innovation continuity loan T&C's can be confirmed
-    [Documentation]  IFS-8002
+    [Documentation]  IFS-8002  IFS-8779
     Given the user fills in initial details
     When the user clicks the button/link             link = Terms and conditions
     And the user confirmed terms and conditions
@@ -35,14 +39,17 @@ Innovation continuity loan T&C's can be confirmed
 Innovation continuity loan T&C's can be edited
     [Documentation]  IFS-8002
     Given the user clicks the button/link       jQuery = button:contains("Edit")
-    When the user selects the radio button      termsAndConditionsId  termsAndConditionsId12
+    When the user selects the radio button      termsAndConditionsId  43
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${continuityLoanT&CLink}
 
 Internal user is able to see correct T&C's
     [Documentation]  IFS-8002
     Given the user clicks the button/link     link = ${continuityLoanT&CLink}
+    And select window                         title = Loans terms and conditions - Innovation Funding Service
     Then the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And close window
+    And select window                         title = Competition terms and conditions - Innovation Funding Service
 
 Lead applicant is able to see correct T&C's
     [Documentation]  IFS-8002
@@ -106,14 +113,14 @@ Custom Suite teardown
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     Innovation continuity comp  ${month}  ${nextyear}  ${compType_Programme}  1  GRANT
+    the user fills in the CS Initial details     Innovation continuity comp  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")
-    the user clicks the button/link             link = Competition details
+    the user clicks the button/link             link = Back to competition details
 
 the user confirmed terms and conditions
-    the user selects the radio button     termsAndConditionsId  termsAndConditionsId12
+    the user selects the radio button     termsAndConditionsId  43
     the user clicks the button/link       jQuery = button:contains("Done")
 
 the user completes the competition setup

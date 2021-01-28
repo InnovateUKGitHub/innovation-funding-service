@@ -1,19 +1,17 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
-import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
-import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,30 +31,21 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isVa
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
 
 @RequestMapping("/organisation/select")
-@SecuredBySpring(value = "Controller", description = "An existing applicant can pick a previous organisation." +
-        " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
-        securedType = OrganisationSelectionController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
 @Controller
 public class OrganisationSelectionController extends AbstractOrganisationCreationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private RegistrationCookieService registrationCookieService;
-
-    @Autowired
     private OrganisationSelectionViewModelPopulator organisationSelectionViewModelPopulator;
-
-    @Autowired
-    private OrganisationJourneyEnd organisationJourneyEnd;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Value("${ifs.new.organisation.search.enabled:false}")
+    private Boolean newOrganisationSearchEnabled;
+
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
                                             @ModelAttribute(FORM_ATTR_NAME) OrganisationSelectionForm form,
@@ -84,6 +73,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         return "registration/organisation/select-organisation";
     }
 
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping
     public String selectOrganisation(HttpServletRequest request,
                                      HttpServletResponse response,
@@ -119,8 +109,21 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                 }
             }
 
+            if (newOrganisationSearchEnabled && verifyOrganisationDetailsEnteredManually(form)) {
+                return "redirect:" + BASE_URL + "/" + EXISTING_ORGANISATION + "/" + form.getSelectedOrganisationId();
+            }
+
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());
         };
+    }
+
+    private boolean verifyOrganisationDetailsEnteredManually(OrganisationSelectionForm form) {
+        OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+
+        return selectedOrganisation.getCompaniesHouseNumber() == null
+                && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.RESEARCH
+                && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.KNOWLEDGE_BASE
+                && !selectedOrganisation.isInternational();
     }
 
     private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
@@ -132,7 +135,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         } else {
             return isValidCollaborator(organisation.getOrganisationType());
         }
-
     }
 
     private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {

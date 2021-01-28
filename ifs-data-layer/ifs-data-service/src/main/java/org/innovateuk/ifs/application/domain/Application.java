@@ -6,16 +6,20 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -23,9 +27,9 @@ import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -81,6 +85,10 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="assessment_period_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
+
     private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
@@ -98,6 +106,9 @@ public class Application implements ProcessActivity {
 
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private Project project;
+
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    private ProjectToBeCreated projectToBeCreated;
 
     public Application() {
     }
@@ -237,6 +248,12 @@ public class Application implements ProcessActivity {
         return this.processRoles.stream()
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)
                 .collect(toList());
+    }
+
+    public List<ProcessRole> getProcessRolesByRoles(Set<ProcessRoleType> roles) {
+        return this.processRoles.stream()
+                .filter(processRole -> roles.contains(processRole.getRole()))
+                .collect(Collectors.toList());
     }
 
     public User getLeadApplicant() {
@@ -442,5 +459,25 @@ public class Application implements ProcessActivity {
 
     public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
         this.companyPrimaryFocus = companyPrimaryFocus;
+    }
+
+    public ProjectToBeCreated getProjectToBeCreated() {
+        return projectToBeCreated;
+    }
+
+    public void setProjectToBeCreated(ProjectToBeCreated projectToBeCreated) {
+        this.projectToBeCreated = projectToBeCreated;
+    }
+
+    public Optional<Integer> getMaxMilestoneMonth(){
+        Optional<Integer> max = Optional.of(getApplicationFinances())
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .map(ApplicationFinance::getMilestones)
+                .flatMap(Collection::stream)
+                .map(ProcurementMilestone::getMonth)
+                .filter(Objects::nonNull)
+                .max(Integer::compareTo);
+        return max;
     }
 }

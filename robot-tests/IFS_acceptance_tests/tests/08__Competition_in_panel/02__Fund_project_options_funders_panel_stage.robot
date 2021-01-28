@@ -196,8 +196,8 @@ the internal user sends an email notification
     the user should not see the element     jQuery = p:contains("Average assessor score")
     the user enters text to a text field    css = .editor  ${message}
     the user clicks the button/link         jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
-    the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
-    the user should see the element         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
+    the user clicks the button/link                          jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    the user refreshes until element appears on page         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 the external user reads his email and can see the correct status
     [Arguments]  ${decision}  ${subject}  ${message}  ${application}  ${mail}
@@ -256,7 +256,7 @@ the user filter applications by sent email status
 external lead applicant reads his email and checks status on his dashboard
     verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
     log in as a different user                      ${test_mailbox_one}+fundsuccess@gmail.com   ${short_password}
-    the user should see the element                 jQuery = .task:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ .status:contains("Application submitted")
+    the user should see the element                 jQuery = .task:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ .status:contains("Submitted")
 
 external collaborators read their email
     verify the user has received the on hold email    ${lead_applicant}
@@ -267,7 +267,7 @@ external collaborators read their email
     verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
 
 Assess the application and move to in notification
-    the user clicks the button/link    link = Competition details
+    the user clicks the button/link    link = Back to competition details
     the user clicks the button/link    link = Competition
     the user clicks the button/link    id = close-assessment-button
     the user clicks the button/link    link = Input and review funding decision

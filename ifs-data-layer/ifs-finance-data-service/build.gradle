@@ -1,6 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
@@ -16,11 +16,11 @@ apply plugin: 'idea'
 group 'innovateuk'
 version project.version
 
-project.version = financeDataServiceVersion
-tagDocker.tag = financeDataServiceVersion
-osStageRemote.tag = financeDataServiceVersion
-tagDockerLocal.tag = financeDataServiceVersion
-osStageLocal.tag = financeDataServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.finance-data-service.pull.nexus.image') ? project.property('ifs.finance-data-service.pull.nexus.image').toBoolean() : false
@@ -69,7 +69,6 @@ ext {
 }
 
 buildDocker.dependsOn prepareDockerInput
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
@@ -91,7 +90,7 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
+    compile "org.mariadb.jdbc:mariadb-java-client"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
@@ -105,8 +104,6 @@ dependencies {
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
-
-    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
 
 test {

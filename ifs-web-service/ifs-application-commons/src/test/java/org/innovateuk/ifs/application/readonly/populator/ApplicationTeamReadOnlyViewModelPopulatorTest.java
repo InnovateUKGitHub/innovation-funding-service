@@ -17,9 +17,11 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +62,9 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
     private UserRestService userRestService;
 
     @Mock
+    private ProcessRoleRestService processRoleRestService;
+
+    @Mock
     private OrganisationRestService organisationRestService;
 
     @Mock
@@ -78,13 +83,13 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
                 .build();
 
         ProcessRoleResource leadRole = newProcessRoleResource()
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(leadOrganisation.getId())
                 .withUser(user)
                 .build();
 
         ProcessRoleResource collaboratorRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .withOrganisation(collaboratorOrganisation.getId())
                 .withUser(collaborator)
                 .build();
@@ -122,12 +127,13 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
 
         AddressResource address = newAddressResource().build();
 
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
         when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").build()));
         when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         ApplicationTeamReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 

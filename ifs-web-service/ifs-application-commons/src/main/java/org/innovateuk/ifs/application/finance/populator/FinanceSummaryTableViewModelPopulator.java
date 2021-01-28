@@ -36,8 +36,8 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 
 @Component
 public class FinanceSummaryTableViewModelPopulator {
@@ -170,7 +170,7 @@ public class FinanceSummaryTableViewModelPopulator {
 
     private long leadOrganisationId(List<ProcessRoleResource> processRoles) {
         return processRoles.stream()
-                .filter(role -> LEADAPPLICANT.equals(role.getRole()))
+                .filter(role -> LEADAPPLICANT == role.getRole())
                 .findFirst()
                 .orElseThrow(ObjectNotFoundException::new)
                 .getOrganisationId();
@@ -240,8 +240,8 @@ public class FinanceSummaryTableViewModelPopulator {
             }
         } else {
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
-        }    }
-
+        }
+    }
 
     private String organisationText(ApplicationResource application, boolean lead) {
         if (!application.isCollaborativeProject()) {

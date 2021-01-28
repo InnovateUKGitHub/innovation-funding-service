@@ -15,9 +15,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -39,6 +41,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/application-details")
@@ -51,11 +54,16 @@ public class ApplicationDetailsController {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
+
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
+
     @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
@@ -71,7 +79,7 @@ public class ApplicationDetailsController {
         ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(application, questionId, user);
         form.populateForm(application);
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-            return "application/questions/application-details";
+        return "application/questions/application-details";
     }
 
     @PostMapping
@@ -130,7 +138,7 @@ public class ApplicationDetailsController {
 
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> {
-                        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+                        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
                         questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess().forEach(validationHandler::addAnyErrors);
                         return validationHandler.failNowOrSucceedWith(failureView, successView);
                     });
@@ -164,7 +172,7 @@ public class ApplicationDetailsController {
                        @PathVariable long applicationId,
                        @PathVariable long questionId,
                        UserResource user) {
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId()).getSuccess();
 
         return viewDetails(form, bindingResult, model, applicationId, questionId, user);
@@ -178,7 +186,7 @@ public class ApplicationDetailsController {
                 ? TimeZoneUtil.toUkTimeZone(competition.getEndDate()).plusMonths(12).toLocalDate()
                 : convertMinLocalDateToNull(form.getStartDate());
 
-        application.setName(form.getName());
+        application.setName(getName(form));
         application.setStartDate(projectStartDate);
         application.setDurationInMonths(form.getDurationInMonths());
         application.setResubmission(form.getResubmission());
@@ -189,6 +197,10 @@ public class ApplicationDetailsController {
         application.setCompanyPrimaryFocus(form.getCompanyPrimaryFocus());
 
         return applicationRestService.saveApplication(application).toServiceResult();
+    }
+
+    private String getName(ApplicationDetailsForm form) {
+        return !form.getName().trim().isEmpty() ? form.getName() : "";
     }
 
     private void validate(ApplicationDetailsForm form, long applicationId, BindingResult bindingResult) {
@@ -217,6 +229,20 @@ public class ApplicationDetailsController {
         if (competition.getInnovationAreas().size() > 1 && !application.getNoInnovationAreaApplicable()) {
             if (application.getInnovationArea() == null) {
                 bindingResult.rejectValue("innovationAreaErrorHolder", "validation.application.innovationarea.category.required");
+            }
+        }
+
+        if (!isEmpty(form.getDurationInMonths())) {
+            Optional<Integer> maxMilestoneMonth = applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId).getSuccess();
+            int maxMonths = competition.getMaxProjectDuration();
+            int minMonths = Math.max(maxMilestoneMonth.orElse(0), competition.getMinProjectDuration());
+            boolean minDictatedByCompetition = minMonths == competition.getMinProjectDuration();
+            if (form.getDurationInMonths() > maxMonths ||
+                    (minDictatedByCompetition && form.getDurationInMonths() < minMonths)) {
+                bindingResult.rejectValue("durationInMonths", "validation.project.duration.input.invalid", new Object[]{minMonths, maxMonths}, "validation.project.duration.input.invalid");
+            }
+            else if (form.getDurationInMonths() < minMonths) {
+                bindingResult.rejectValue("durationInMonths", "validation.project.duration.must.be.greater.than.milestones");
             }
         }
     }

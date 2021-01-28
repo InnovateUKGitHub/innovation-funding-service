@@ -15,7 +15,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,44 +122,44 @@ public class InterviewRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
         ProcessRole assessorRole1 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.INTERVIEW_ASSESSOR)
+                .withRole(ProcessRoleType.INTERVIEW_ASSESSOR)
                 .withUser(assessor)
                 .withApplication(application1)
                 .build();
         ProcessRole assessorRole2 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.INTERVIEW_ASSESSOR)
+                .withRole(ProcessRoleType.INTERVIEW_ASSESSOR)
                 .withUser(assessor)
                 .withApplication(application2)
                 .build();
         ProcessRole assessorRole3 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.INTERVIEW_ASSESSOR)
+                .withRole(ProcessRoleType.INTERVIEW_ASSESSOR)
                 .withUser(assessor)
                 .withApplication(application2)
                 .build();
         ProcessRole otherAssessorRole1 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.INTERVIEW_ASSESSOR)
+                .withRole(ProcessRoleType.INTERVIEW_ASSESSOR)
                 .withUser(otherAssessor)
                 .withApplication(application1)
                 .build();
         ProcessRole otherAssessorRole2 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.INTERVIEW_ASSESSOR)
+                .withRole(ProcessRoleType.INTERVIEW_ASSESSOR)
                 .withUser(otherAssessor)
                 .withApplication(application2)
                 .build();
         ProcessRole lead1 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(application1)
                 .withOrganisationId(organisation.getId())
                 .withUser(applicant)
                 .build();
         ProcessRole lead2 = newProcessRole()
                 .with(id(null))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(application2)
                 .withOrganisationId(organisation.getId())
                 .withUser(otherApplicant)

@@ -25,7 +25,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/competition-mgt-service:${competitionMgtServiceVersion}
+            - image: innovateuk/competition-mgt-service:${nexusVersion}
               name: competition-mgt-svc
               livenessProbe:
                 httpGet:
@@ -78,6 +78,8 @@ items:
                   value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-competition-mgt-service (${openshiftEnv})"
+                - name: IFS_SUBSIDY_CONTROL_ENABLED
+                  value: "${IFS_SUBSIDY_CONTROL_ENABLED}"
               ports:
                 - containerPort: 8080
               resources:

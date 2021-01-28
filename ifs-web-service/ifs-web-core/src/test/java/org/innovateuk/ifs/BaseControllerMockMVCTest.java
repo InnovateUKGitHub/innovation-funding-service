@@ -36,7 +36,6 @@ import java.lang.reflect.Method;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
@@ -63,28 +62,28 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withFirstName("James")
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
-            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withRoleGlobal(Role.APPLICANT)
             .withUID("2aerg234-aegaeb-23aer").build();
 
     protected UserResource assessor = newUserResource().withId(3L)
             .withFirstName("Clark")
             .withLastName("Baker")
             .withEmail("clark.baker@email.co.uk")
-            .withRolesGlobal(singletonList(Role.ASSESSOR))
+            .withRoleGlobal(Role.ASSESSOR)
             .withUID("2522-34y34ah-hrt4420").build();
 
     protected UserResource stakeholder = newUserResource().withId(3L)
             .withFirstName("Troy")
             .withLastName("Perez")
             .withEmail("troy.perez@email.co.uk")
-            .withRolesGlobal(singletonList(Role.STAKEHOLDER))
+            .withRoleGlobal(Role.STAKEHOLDER)
             .withUID("2522-34y34ah-hrt4420").build();
 
     protected UserResource knowledgeTransferAdvisor = newUserResource().withId(3L)
             .withFirstName("Itsame")
             .withLastName("Mario")
             .withEmail("Itsame@gmail.com")
-            .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER))
+            .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER)
             .withUID("2522-34y34ah-hrt4420").build();
 
     protected UserResource assessorAndApplicant = newUserResource().withId(4L)
@@ -133,29 +132,43 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withFirstName("John")
             .withLastName("Patricks")
             .withEmail("john.patricks@email.co.uk")
-            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withRoleGlobal(Role.APPLICANT)
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource support = newUserResource().withId(2L)
             .withFirstName("Support")
             .withLastName("Support")
             .withEmail("support@email.co.uk")
-            .withRolesGlobal(singletonList(Role.SUPPORT))
+            .withRoleGlobal(Role.SUPPORT)
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource admin = newUserResource().withId(2L)
             .withFirstName("Admin")
             .withLastName("Admin")
             .withEmail("admin@email.co.uk")
-            .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+            .withRoleGlobal(Role.IFS_ADMINISTRATOR)
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource kta = newUserResource().withId(2L)
             .withFirstName("kta")
             .withLastName("kta")
             .withEmail("kta@email.co.uk")
-            .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER))
+            .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER)
             .withUID("6573ag-aeg32aeb-23aerr").build();
+
+    protected UserResource supporter = newUserResource().withId(2L)
+            .withFirstName("kta")
+            .withLastName("kta")
+            .withEmail("kta@email.co.uk")
+            .withRoleGlobal(Role.SUPPORTER)
+            .withUID("6573ag-aeg32aeb-23aerr").build();
+
+    protected UserResource applicantAndSupporter = newUserResource().withId(4L)
+            .withFirstName("Kit")
+            .withLastName("Fisto")
+            .withEmail("kit.fisto@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.SUPPORTER))
+            .withUID("1234-abcdefgh-abc1234").build();
 
     protected UserResource loggedInUser = applicant;
 

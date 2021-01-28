@@ -19,7 +19,7 @@ import java.util.function.UnaryOperator;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
 import static org.innovateuk.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -78,7 +78,8 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
             IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
-                    withCompetition(data.getCompetition());
+                    withCompetition(data.getCompetition()).
+                    withOrganisation(data.getOrganisation());
 
             costBuilderFn.apply(baseFinanceBuilder).build();
         });

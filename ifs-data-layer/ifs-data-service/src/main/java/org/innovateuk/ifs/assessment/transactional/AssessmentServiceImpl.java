@@ -17,7 +17,7 @@ import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -230,10 +229,10 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
-        return getAssessor(assessmentCreateResource.getAssessorId())
+        return getUser(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application ->  createAssessment(assessor, application, ASSESSOR))
+                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR))
                 );
     }
 
@@ -246,7 +245,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
 
-    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, Role role) {
+    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role) {
 
         ProcessRole processRole = getExistingOrCreateNewProcessRole(assessor, application, role);
 
@@ -256,18 +255,14 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 .andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
-    private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, Role role) {
-        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(assessor.getId(), EnumSet.of(ASSESSOR), application.getId());
+    private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, ProcessRoleType role) {
+        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(assessor.getId(), EnumSet.of(ProcessRoleType.ASSESSOR), application.getId());
 
         if (processRole == null) {
             processRole = processRoleRepository.save(new ProcessRole(assessor, application.getId(), role));
         }
 
         return processRole;
-    }
-
-    private ServiceResult<User> getAssessor(Long assessorId) {
-        return find(userRepository.findByIdAndRoles(assessorId, ASSESSOR), notFoundError(User.class, ASSESSOR, assessorId));
     }
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {

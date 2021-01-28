@@ -2,17 +2,15 @@ package org.innovateuk.ifs.finance.domain;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
-
 import java.math.BigDecimal;
-import java.util.Set;
 
-import static java.util.stream.Collectors.toSet;
 import static javax.persistence.CascadeType.REMOVE;
 
 /**
@@ -44,12 +42,15 @@ public abstract class Finance {
     @JoinColumn(name = "ktpFinancialYearsId")
     private KtpFinancialYears ktpFinancialYears;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears) {
+    private Boolean northernIrelandDeclaration;
+
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
         this.employeesAndTurnover = employeesAndTurnover;
         this.ktpFinancialYears = ktpFinancialYears;
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
     }
 
     public Finance(Organisation organisation) {
@@ -125,6 +126,14 @@ public abstract class Finance {
         this.ktpFinancialYears = ktpFinancialYears;
     }
 
+    public Boolean getNorthernIrelandDeclaration() {
+        return northernIrelandDeclaration;
+    }
+
+    public void setNorthernIrelandDeclaration(Boolean northernIrelandDeclaration) {
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
+    }
+
     public Competition getCompetition() {
         return getApplication().getCompetition();
     }
@@ -140,9 +149,18 @@ public abstract class Finance {
             return FundingLevel.HUNDRED.getPercentage();
         }
 
-        if (isMaximumFundingLevelOverridden()) {
-            // The same maximum funding level is set for all GrantClaimMaximums when overriding
-            return getCompetition().getGrantClaimMaximums().stream().findAny().map(GrantClaimMaximum::getMaximum).get();
+        boolean allMaximumsTheSame =
+                getCompetition().getGrantClaimMaximums().stream()
+                .filter(this::isMatchingFundingRules)
+                .map(GrantClaimMaximum::getMaximum)
+                .distinct()
+                .count() == 1;
+        if (allMaximumsTheSame) {
+            return getCompetition().getGrantClaimMaximums().stream()
+                    .filter(this::isMatchingFundingRules)
+                    .findFirst()
+                    .map(GrantClaimMaximum::getMaximum)
+                    .orElse(0);
         }
 
         return getCompetition().getGrantClaimMaximums()
@@ -158,7 +176,15 @@ public abstract class Finance {
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
-        return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum);
+        return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum)
+                && isMatchingFundingRules(grantClaimMaximum);
+    }
+
+    private boolean isMatchingFundingRules(GrantClaimMaximum grantClaimMaximum) {
+        FundingRules ruleThatApplies = northernIrelandDeclaration == Boolean.TRUE && getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL
+                ? FundingRules.STATE_AID
+                : getCompetition().getFundingRules();
+        return grantClaimMaximum.getFundingRules() == null || grantClaimMaximum.getFundingRules() == ruleThatApplies;
     }
 
     private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
@@ -177,14 +203,4 @@ public abstract class Finance {
     private boolean isBusinessOrganisationType() {
         return getOrganisation().getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId());
     }
-
-    private boolean isMaximumFundingLevelOverridden() {
-        Set<Long> competitionGrantClaimMaximumIds = getCompetition().getGrantClaimMaximums().stream()
-                .map(GrantClaimMaximum::getId)
-                .collect(toSet());
-        Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
-                .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
-        return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
-    }
-
 }

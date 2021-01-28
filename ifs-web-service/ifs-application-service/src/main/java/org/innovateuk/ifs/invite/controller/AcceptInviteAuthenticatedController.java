@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
@@ -29,9 +28,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
-@SecuredBySpring(value="Controller", description = "Applicants, assessors, stakeholders and monitoring officers can accept invites to an application." +
-        " assessors, stakeholders and monitoring officers will become applicants by accepting", securedType = AcceptInviteAuthenticatedController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
 public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteController {
 
     private InviteRestService inviteRestService;
@@ -55,6 +51,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         this.organisationConfigRestService = organisationConfigRestService;
     }
 
+    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
     public String existingUserAndOrganisation(HttpServletResponse response,
                                               HttpServletRequest request,
@@ -80,11 +77,12 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         return view.getSuccess();
     }
 
+    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
     public String confirmExistingUserAndOrganisation(HttpServletResponse response,
-                                  HttpServletRequest request,
-                                  UserResource loggedInUser,
-                                  Model model) {
+                                                     HttpServletRequest request,
+                                                     UserResource loggedInUser,
+                                                     Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
                     String validateView = validate(invite, response, loggedInUser, model);
@@ -105,11 +103,12 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         return view.getSuccess();
     }
 
+    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @GetMapping("/accept-invite-authenticated/confirm-new-organisation")
     public String existingUserAndNewOrganisation(HttpServletResponse response,
-                                    HttpServletRequest request,
-                                    UserResource loggedInUser,
-                                    Model model) {
+                                                 HttpServletRequest request,
+                                                 UserResource loggedInUser,
+                                                 Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
                     String validateView = validate(invite, response, loggedInUser, model);

@@ -64,7 +64,6 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -501,7 +500,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification1 = new Notification(
                 systemNotificationSource,
-                singletonList(recipients.get(0)),
+                recipients.get(0),
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", users.get(0).getName(),
@@ -513,7 +512,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification2 = new Notification(
                 systemNotificationSource,
-                singletonList(recipients.get(1)),
+                recipients.get(1),
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", users.get(1).getName(),
@@ -578,7 +577,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", user.getName(),

@@ -185,6 +185,10 @@ span {
   &.status {
     &.na {
       background:govuk-colour("light-grey");
+
+      a {
+        padding-top: 0;
+      }
     }
 
     &.ok {

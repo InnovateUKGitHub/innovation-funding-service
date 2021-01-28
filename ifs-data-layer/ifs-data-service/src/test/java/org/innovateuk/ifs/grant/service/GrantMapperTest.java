@@ -60,7 +60,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -108,9 +108,9 @@ public class GrantMapperTest {
 
         Project project = parameter.createProject();
 
-        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Project summary"))
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(project.getApplication().getId(), "Project summary"))
                 .thenReturn(parameter.projectSummaryResponse());
-        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Public description"))
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(project.getApplication().getId(), "Public description"))
                 .thenReturn(parameter.publicDescriptionResponse());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
                 .thenAnswer(i -> Optional.of(parameter.createSpendProfile(project)));

@@ -15,6 +15,14 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-7718 EDI question - application form
 ...
+...             IFS-7596 Print Preview Format
+...
+...             IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...             IFS-8938 SBRI Milestones - Non JS Milestones Page - Application
+...
+...             IFS-8940 SBRI Milestones - Edit project duration in application
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -33,9 +41,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  SUBSIDY_CONTROL  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
@@ -59,11 +67,36 @@ Applicant fills in project costs with VAT
     When the user checks the VAT calculations
     Then the user enters the project location
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                 link = Back to application overview
-    And the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant fills in payment milestones
+    [Documentation]  IFS-8938
+    Given the user clicks the button/link                           link = Your payment milestones
+    And the user clicks the button/link                             jQuery = button:contains("Open all")
+    When applicant fills in payment milestone                       accordion-finances-content  2  Milestone 1  £72,839  taskOrActivity 1  deliverable 1  successCriteria 1
+    And the user clicks the button/link                             id = mark-all-as-complete
+    Then applicant views saved payment milestones                   2  £72,839  Milestone 1  100%  £72,839  100%
+    And applicant views readonly payment milestones subsections     taskOrActivity 1  deliverable 1  successCriteria 1
+    And the user should see the element                             jQuery = li:contains("Your payment milestones") > .task-status-complete
+    And the user clicks the button/link                             link = Back to application overview
+    And the user should see the element                             jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant is shown a validation message when the project duration is less than allowed
+    [Documentation]  IFS-8940
+    Given the user clicks the button/link                     link = Application details
+    And the user clicks the button/link                       id = edit-application-details-button
+    When the user enters text to a text field                 id = durationInMonths  1
+    And the user clicks the button/link                       id = application-question-complete
+    Then the user should see a field error                    This cannot be less than your stated payment milestones. You will need to adjust these to change the duration.
+
+Applicant can edit the project duration before application submission
+    [Documentation]  IFS-8940
+    Given the user enters text to a text field                id = durationInMonths  3
+    When the user clicks the button/link                      id = application-question-complete
+    Then the user should see the element                      jQuery = dd:contains("3 months")
+    And the user clicks the button/link                       link = Back to application overview
 
 Applicant submits the application
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
     [Setup]  get application id by name and set as suite variable  ${appl_name}
     Given the user accept the procurement terms and conditions
     When the user selects research category                      Feasibility studies
@@ -82,7 +115,7 @@ Invite a registered assessor
     And the user clicks the button/link                       link = Invite
     And the user clicks the button/link                       link = Review and send invites
     And the user enters text to a text field                  id = message    This is custom text
-    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invite")
+    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invitation")
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
@@ -291,7 +324,7 @@ internal user generate SP
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link          css = #confirm-button
     the user clicks the button/link          css = [name="confirm-viability"]
-    the user clicks the button/link         link = Finance checks
+    the user clicks the button/link         link = Back to finance checks
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating

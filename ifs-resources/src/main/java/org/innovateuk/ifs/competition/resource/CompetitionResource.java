@@ -3,16 +3,15 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
@@ -65,6 +63,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Integer academicGrantPercentage;
     private Long competitionType;
     private String competitionTypeName;
+    private CompetitionTypeEnum competitionTypeEnum;
     private Long executive;
     private String executiveName;
     private Long leadTechnologist;
@@ -91,8 +90,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
-    private boolean locationPerPartner = true;
-    private Boolean stateAid;
+    private GolTemplateResource golTemplate;
+    private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
     private Set<Long> grantClaimMaximums;
     private ApplicationFinanceType applicationFinanceType;
@@ -108,7 +107,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
+    private boolean procurementMilestones;
     private CovidType covidType;
+    private boolean alwaysOpen;
 
     public CompetitionResource() {
     }
@@ -137,12 +138,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isH2020() {
-        return H2020_TYPE_NAME.equals(competitionTypeName);
+        return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
     }
 
     @JsonIgnore
     public boolean isExpressionOfInterest() {
-        return EXPRESSION_OF_INTEREST_TYPE_NAME.equals(competitionTypeName);
+        return competitionTypeEnum == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
     }
 
     @JsonIgnore
@@ -336,6 +337,22 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return competitionTypeEnum;
+    }
+
+    public void setCompetitionTypeEnum(CompetitionTypeEnum competitionTypeEnum) {
+        this.competitionTypeEnum = competitionTypeEnum;
+    }
+
+    public GolTemplateResource getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplateResource golTemplate) {
+        this.golTemplate = golTemplate;
     }
 
     @JsonIgnore
@@ -643,14 +660,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
-    }
-
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
-    }
-
     public Integer getMinProjectDuration() {
         return minProjectDuration;
     }
@@ -667,12 +676,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(final Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -779,6 +788,23 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public void setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
+
+    @Override
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
+    }
+
+    public void setProcurementMilestones(boolean procurementMilestones) {
+        this.procurementMilestones = procurementMilestones;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -799,7 +825,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return new EqualsBuilder()
                 .append(setupComplete, that.setupComplete)
                 .append(nonIfs, that.nonIfs)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -844,7 +869,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(stateAid, that.stateAid)
+                .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
@@ -855,6 +880,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
+                .append(alwaysOpen, that.alwaysOpen)
                 .isEquals();
     }
 
@@ -907,8 +933,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
-                .append(locationPerPartner)
-                .append(stateAid)
+                .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
@@ -919,6 +944,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn)
                 .append(modifiedBy)
                 .append(modifiedOn)
+                .append(alwaysOpen)
                 .toHashCode();
     }
 
@@ -946,5 +972,4 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public boolean isSbriPilot() {
         return SBRI_PILOT.equals(name);
     }
-
 }

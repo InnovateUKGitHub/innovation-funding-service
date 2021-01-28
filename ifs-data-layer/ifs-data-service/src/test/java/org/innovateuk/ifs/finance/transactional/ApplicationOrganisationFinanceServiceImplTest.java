@@ -10,11 +10,13 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.junit.Test;
@@ -58,6 +60,8 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     private ApplicationRepository applicationRepository;
     @Mock
     private AuthenticationHelper authenticationHelper;
+    @Mock
+    private OrganisationService organisationService;
 
     @Test
     public void getOrganisationWithGrowthTable() {
@@ -168,8 +172,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void updateOrganisationWithGrowthTable() {
 
-        boolean stateAid = true;
-        Competition competition = newCompetition().withStateAid(stateAid).build();
+        Competition competition = newCompetition().withFundingRules(FundingRules.STATE_AID).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
         Application application = newApplication().withCompetition(competition).build();
         Organisation organisation = newOrganisation().build();
@@ -198,9 +201,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void updateOrganisationWithoutGrowthTable() {
 
-        boolean stateAid = true;
-
-        Competition competition = newCompetition().withStateAid(stateAid).build();
+        Competition competition = newCompetition().withFundingRules(FundingRules.STATE_AID).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
         Application application = newApplication().withCompetition(competition).build();
         Organisation organisation = newOrganisation().build();
@@ -224,28 +225,6 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
 
         assertEquals(organisationFinancesWithoutGrowthTableResource.getHeadCount(), employeesAndTurnover.getEmployees());
         assertEquals(organisationFinancesWithoutGrowthTableResource.getTurnover(), employeesAndTurnover.getTurnover());
-    }
-
-    @Test
-    public void isShowStateAidAgreement() {
-
-        boolean stateAid = true;
-
-        Competition competition = newCompetition().withStateAid(stateAid).build();
-        CompetitionResource competitionResource = newCompetitionResource().build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        User loggedInUser = newUser().build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(authenticationHelper.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competitionResource));
-        when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
-                .thenReturn(serviceSuccess(applicationFinanceResource));
-
-        service.isShowStateAidAgreement(application.getId(), organisation.getId()).getSuccess();
     }
 
     @Override

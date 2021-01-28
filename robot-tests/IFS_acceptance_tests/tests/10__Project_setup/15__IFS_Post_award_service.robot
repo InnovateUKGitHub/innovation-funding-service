@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     IFS-6454  Ability to push projects through to ACC
 ...
-...               IFS- 7017  Update notifications & IFS when a project is live to point them to ACC instead of _Connect
+...               IFS-7017  Update notifications & IFS when a project is live to point them to ACC instead of _Connect
 ...
 ...               IFS-8108  Default post award service to IFS PA
 ...
@@ -43,13 +43,13 @@ ${postAwardServiceUrl}                         ${server}/live-projects-landing-p
 Competition Setup - Post award service link should not display for any other funding type except grant funding
      [Documentation]   IFS-6454
      Given the user clicks create a competition button
-     When the user fills in the CS Initial details         ${nonPostAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  KTP
+     When the user fills in the CS Initial details         ${nonPostAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
      Then the user should not see the element              link = ${postAwardServiceLink}
 
 Competition Setup - Ifs admin can access post award service form details for grant funding type competition
      [Documentation]   IFS-6454   IFS-8108
      Given the user clicks create a competition button
-     When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      And the user clicks the button/link                     link = ${postAwardServiceLink}
      Then the user check for post award service fields
      And the user sees that the radio button is selected     postAwardService  IFS_POST_AWARD
@@ -104,7 +104,7 @@ Project Setup - Post award service link should not display for any other fund ty
 Emails - Project manager and finance contacts should receive an email notification stating project is live with a link to setup project page
      [Documentation]   IFS-7017
      [Setup]  Request a project id of post award service application
-     When the internal user approve the GOL                                            ${postAwardServiceProjectID}
+     Given the internal user approve the GOL                                           ${postAwardServiceProjectID}
      Then project manager and finance contact should receive an email notification
 
 Applicant - Other team members should see message project is live on GOL approval
@@ -148,7 +148,7 @@ Applicant - User should be redirected to grant application service on click revi
      When the internal user edits the form with connect option     CONNECT
      And the internal user approve the GOL                         ${connectServiceProjectID}
      And applicant clicks review its progress link                 ${connectServiceProjectID}
-     Then the user should see the element                          link = _connect
+#     Currently __connect system is being redirected to IFS and the work is in progress. Once redirected, please add 'then' statement to check the IFS redirection
 
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017

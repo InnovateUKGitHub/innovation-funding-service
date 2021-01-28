@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -45,6 +46,8 @@ public class YourProjectCostsForm {
     private Map<String, KtpTravelRowForm> ktpTravelCostRows = new LinkedHashMap<>();
 
     private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
+
+    private JustificationForm justificationForm = new JustificationForm();
 
     private Boolean eligibleAgreement;
 
@@ -192,6 +195,14 @@ public class YourProjectCostsForm {
         this.ktpTravelCostRows = ktpTravelCostRows;
     }
 
+    public JustificationForm getJustificationForm() {
+        return justificationForm;
+    }
+
+    public void setJustificationForm(JustificationForm justificationForm) {
+        this.justificationForm = justificationForm;
+    }
+
     /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
@@ -302,7 +313,8 @@ public class YourProjectCostsForm {
                 .map(AbstractCostRowForm::getTotal)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO);
+                .orElse(BigDecimal.ZERO)
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     public void recalculateTotals() {

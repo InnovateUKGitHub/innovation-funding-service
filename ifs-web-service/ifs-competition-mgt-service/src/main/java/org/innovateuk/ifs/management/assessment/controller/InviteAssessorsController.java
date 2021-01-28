@@ -50,7 +50,6 @@ public class InviteAssessorsController extends CompetitionManagementCookieContro
 
     private static final Log LOG = LogFactory.getLog(InviteAssessorsController.class);
 
-    private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
     private static final String SELECTION_FORM = "assessorSelectionForm";
 

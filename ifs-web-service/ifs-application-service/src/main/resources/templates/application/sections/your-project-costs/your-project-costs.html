@@ -58,7 +58,7 @@
             <th:block th:if="${model.isKtpCompetition()}">
                 <p class="govuk-body"><span>We recommend you
                 <a target="_blank"
-                   href="https://www.gov.uk/guidance/knowledge-transfer-partnerships"
+                   href="https://www.gov.uk/guidance/costs-guidance-for-knowledge-transfer-partnership-projects"
                    class="govuk-link"
                    aria-describedby="project-costs-hint">read our detailed guidance on KTP project costs (opens in a new window)</a> before completing this section.
                 </span></p>
@@ -83,11 +83,13 @@
                            class="govuk-heading-m alignright"
                            data-calculation-fields="[id*=section-total]"
                            data-calculation-operations="+"
-                           th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                           th:value="'£' + ${#ifsUtil.formatInteger(form.organisationFinanceTotal)}"/>
                 </div>
             </div>
 
             <th:block th:insert="application/your-project-costs-fragments :: vat"/>
+
+            <th:block th:insert="application/your-project-costs-fragments :: justification"/>
 
             <th:block th:insert="application/your-project-costs-fragments :: additional_company_costs"/>
 

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm"*/-->
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.ApplicationProcurementMilestonesViewModel"*/-->
+<head>
+    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Payment milestones - ${applicationName}|" />
+    </th:block>
+</head>
+<body class="govuk-template__body finance-row-form overheads">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST"
+              th:attr="data-autosave=@{__${#ifsUtil.formPostUri(#httpServletRequest)}__/auto-save},
+                       data-row-operation-url=@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <input type="hidden" id="cacheTest" value=""/>
+
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.displayProjectCostsBanner}">
+                <p class="govuk-body">Your project costs of £<th:block th:text="${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></th:block> have not been marked as complete.</p>
+            </div>
+
+            <th:block th:unless="${model.hasDurations}">
+                <p class="govuk-body">Before you can supply your payment milestones you must:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>provide a project duration on the <a class="govuk-link" th:href="@{${model.applicationDetailsUrl}}">application details</a> page</li>
+                </ul>
+            </th:block>
+            <th:block th:if="${model.hasDurations}">
+                <dl class="govuk-list">
+                    <dt>Total project costs</dt>
+                    <dd th:text="'£' + ${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></dd>
+                </dl>
+
+                <th:block th:unless="${model.readOnly}">
+                    <p class="govuk-body">Enter the milestone and deliverable information. Where appropriate, link with a payment request.</p>
+
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">What should I put as a payment milestone?</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">Information provided here will form your preferred payment schedule.</p>
+                            <p class="govuk-body">These milestones can mark the completion of a major phase of work, and you can choose to create a milestone
+                            to indicate a big task, deliverable or more.</p>
+                            <p class="govuk-body">The month at which you want to set your milestones might vary depending on your project, your organisation,
+                            and other factors.</p>
+                            <p class="govuk-body">Your milestones must be:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>clear.</li>
+                                <li>defined using SMART (specific, measurable, achievable, realistic and time-bound) criteria.</li>
+                                <li>associated with the appropriate deliverables and payments.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </th:block>
+
+                <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
+            </th:block>
+
+
+            <div class="form-footer" th:if="${model.open}">
+                <div class="form-footer__actions">
+                    <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
+                            class="button-clear" value="true">Mark as complete
+                    </button>
+                    <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear" value="true">
+                        Edit your payment milestones
+                    </button>
+                </div>
+            </div>
+            <div>
+                <a th:href="${model.financesUrl}"
+                   th:if="${model.readOnly}"
+                   class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
+                </a>
+                <button type="submit" th:unless="${model.readOnly}"
+                        class="govuk-!-margin-top-6 govuk-button">
+                    Save and return to project finances
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

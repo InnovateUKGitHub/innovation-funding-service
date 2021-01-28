@@ -133,7 +133,7 @@
                     <div>
                         <button type="submit"
                                 data-repeatable-rowcontainer="#labour-costs-table tbody"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear">Add another role
                         </button>
@@ -235,7 +235,7 @@
         </td>
         <td class="govuk-table__cell buttoncolumn alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -672,7 +672,7 @@
                         <p class="alignright">
                             <button type="submit"
                                     data-repeatable-rowcontainer="#procurement-overheads-costs-table tbody"
-                                    name="add_cost"
+                                    name="add_row"
                                     th:value="${financeRowType}"
                                     class="button-clear">Add another overhead
                             </button>
@@ -774,7 +774,7 @@
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -895,7 +895,7 @@
                     <p class="alignright">
                         <button type="submit"
                                 data-repeatable-rowcontainer="#material-costs-table tbody"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear">Add another materials cost
                         </button>
@@ -1032,7 +1032,7 @@
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -1131,7 +1131,7 @@
                 </div>
                 <p class="alignright">
                     <button type="submit"
-                            name="add_cost"
+                            name="add_row"
                             data-repeatable-rowcontainer="#capital-usage"
                             th:value="${financeRowType}"
                             class="button-clear">Add another asset
@@ -1191,10 +1191,9 @@
 
 <th:block th:fragment="capital_usage_row (id, row)">
     <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
-         th:id="${path}"
-         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+         th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.item')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s"
                    th:for="__${path}__.item">
                 <span>Item description</span>
@@ -1211,9 +1210,9 @@
                 required="required">
                                 </textarea>
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.newItem')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <legend th:id="__${path}__.newItem" class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h3 class="govuk-fieldset__heading">New or existing item</h3>
                 </legend>
                 <th:block
@@ -1248,7 +1247,7 @@
                 </div>
             </fieldset>
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.deprecation')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.deprecation" class="govuk-label govuk-label--s">
                 Depreciation period (months)
             </label>
@@ -1267,7 +1266,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
             />
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.netValue')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.netValue" class="govuk-label govuk-label--s">
                 Net present value at the start of your project or the price you bought it for (&pound;)
             </label>
@@ -1286,7 +1285,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
 
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.residualValue')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.residualValue" class="govuk-label govuk-label--s">
                 Residual value at end of project (&pound;)
             </label>
@@ -1305,7 +1304,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.utilisation')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.utilisation" class="govuk-label govuk-label--s">
                 Utilisation (&percnt;)
             </label>
@@ -1336,7 +1335,7 @@
             />
         </div>
         <button type="submit"
-                th:name="remove_cost"
+                th:name="remove_row"
                 th:value="${id}"
                 class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
         </button>
@@ -1450,7 +1449,7 @@
                 </div>
                 <p class="alignright">
                     <button type="submit"
-                            name="add_cost"
+                            name="add_row"
                             th:value="${financeRowType}"
                             class="button-clear"
                             data-repeatable-rowcontainer="#subcontracting">Add another subcontractor
@@ -1517,7 +1516,7 @@
     <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
          th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.name')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
                 Subcontractor name
             </label>
@@ -1531,7 +1530,7 @@
                    maxlength="255"
                    required="required"/>
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.country')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.country">
                 Country where the subcontractor will work
             </label>
@@ -1546,7 +1545,7 @@
                    required="required"/>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.role')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.role">
                 Role of the subcontractor in the project and description of the work they’ll do
             </label>
@@ -1563,7 +1562,7 @@
                                 </textarea>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.cost')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.cost">
                 Cost
             </label>
@@ -1582,7 +1581,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </div>
         <button type="submit"
-                th:name="remove_cost"
+                th:name="remove_row"
                 th:value="${id}"
                 class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
         </button>
@@ -1722,7 +1721,7 @@
 
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#travel-costs-table tbody">Add another travel cost
@@ -1824,7 +1823,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -1940,7 +1939,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#other-costs-table tbody">Add another cost
@@ -2014,7 +2013,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -2115,7 +2114,7 @@
                                 <label id="vat-total" class="govuk-heading-m"
                                        data-calculation-fields="#total-cost,0.2"
                                        data-calculation-operations="*"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
+                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getVatTotal())}">£120</label>
                             </div>
                             <div class="govuk-grid-column-one-half alignleft">
                                 <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
@@ -2124,7 +2123,7 @@
                                 <label for="total-cost" class="govuk-heading-m"
                                        data-calculation-fields="#vat-total,#total-cost"
                                        data-calculation-operations="+"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
+                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getProjectVatTotal())}">£120</label>
                             </div>
                         </div>
                     </div>
@@ -2583,7 +2582,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#associate-support-table tbody">Add another cost
@@ -2656,7 +2655,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -2765,7 +2764,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#estate-costs-table tbody">Add another cost
@@ -2840,7 +2839,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -2968,7 +2967,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#ktp-travel-table tbody">Add another cost
@@ -3120,7 +3119,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -3269,7 +3268,7 @@
                     <p class="alignright">
                         <button type="submit"
                                 data-repeatable-rowcontainer="#material-costs-table tbody"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear">Add another consumables cost
                         </button>
@@ -3369,7 +3368,7 @@
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -3481,7 +3480,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#knowledge-base-table tbody"
@@ -3556,7 +3555,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -3598,6 +3597,98 @@
             </tr>
             </tfoot>
         </table>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            JUSTIFICATION
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="justification" th:if="${model.showJustificationForm}">
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('justificationForm.*')} ? 'govuk-form-group--error'">
+        <fieldset class="govuk-fieldset">
+            <legend id="justificationForm.exceedAllowedLimit" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Do your project costs exceed the allowed limit?
+            </legend>
+            <th:block th:unless="${model.complete}">
+                <span class="govuk-hint">Provide detailed explanations for all costs that exceed the allowable limits.
+                    Please read the specific guidance for justifications in the Associate employment, Associate development and Associate estates cost sections.</span>
+
+                <th:block th:if="${#fields.hasErrors('justificationForm.exceedAllowedLimit')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('justificationForm.exceedAllowedLimit')}"
+                                      th:text="${err}">
+                                </span>
+                </th:block>
+
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item" data-target="justification-text"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="exceed-limit-yes"
+                               type="radio"
+                               th:checked="${justificationForm == null ? false : justificationForm.exceedAllowedLimit}"
+                               th:field="*{justificationForm.exceedAllowedLimit}"
+                               value="true"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.ktp.project.costs.exceeded.required}"/>
+                        <label class="govuk-label govuk-radios__label" for="exceed-limit-yes">
+                            Yes
+                        </label>
+                    </div>
+
+                    <div id="justification-text" class="panel">
+                        <th:block th:if="${#fields.hasErrors('justificationForm.justification')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('justificationForm.justification')}"
+                                      th:text="${err}">
+                                </span>
+                        </th:block>
+                        <div id="justificationForm.justification" class="textarea-wrapped word-count"
+                             th:classappend="${#fields.hasErrors('justificationForm.justification')} ? 'govuk-form-group--error'">
+                                    <textarea required="required"
+                                              data-editor="html"
+                                              th:field="*{justificationForm.justification}"
+                                              name="justificationForm.justification"
+                                              class="govuk-textarea"
+                                              th:attr="data-max_words=750,
+                                               data-maxwordslength=750,
+                                               data-maxwordslength-errormessage=#{validation.field.max.word.count(null,750)},
+                                               data-required-errormessage=#{validation.ktp.project.costs.justification.required}"
+                                              th:errorclass="govuk-textarea--error"></textarea>
+                            <div class="textarea-footer" th:with="justification=*{justificationForm.justification}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=750, currentWordsLeft=${#ifsUtil.wordsRemaining(750, justification)})" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-radios__item"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="exceed-limit-no"
+                               th:checked="${justificationForm == null ? false : justificationForm.exceedAllowedLimit}"
+                               type="radio"
+                               th:field="*{justificationForm.exceedAllowedLimit}"
+                               value="false"
+                               required="required"
+                               th:attr=
+                                   "data-required-errormessage=#{validation.ktp.project.costs.exceeded.required}">
+                        <label class="govuk-label govuk-radios__label" for="exceed-limit-no">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${model.complete}">
+                <div class="govuk-body">
+                    <p th:text="*{justificationForm.exceedAllowedLimit != null ? 'Yes' : 'No'}">yes</p>
+                    <div class="govuk-body wysiwyg-styles" ifs:utext="*{justificationForm.justification}">I am very bad with money</div>
+                </div>
+            </th:block>
+        </fieldset>
     </div>
 </th:block>
 <!--/*</editor-fold>*/-->
@@ -3809,7 +3900,7 @@
     <label th:for="stateAidAgreed" class="govuk-label govuk-checkboxes__label">
         Tick this box to confirm that the project costs you’re submitting with this application are eligible for funding, as defined in the
         <a target="_blank"
-           href="https://www.gov.uk/guidance/knowledge-transfer-partnerships"
+           href="https://www.gov.uk/guidance/costs-guidance-for-knowledge-transfer-partnership-projects"
            class="govuk-link"
            aria-describedby="project-costs-hint">KTP project costs guidance (opens in a new window)</a>.
     </label>

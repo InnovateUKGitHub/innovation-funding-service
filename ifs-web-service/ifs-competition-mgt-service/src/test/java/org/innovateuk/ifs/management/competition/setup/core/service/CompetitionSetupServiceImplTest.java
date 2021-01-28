@@ -88,7 +88,8 @@ public class CompetitionSetupServiceImplTest {
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(INITIAL_DETAILS);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(INITIAL_DETAILS, competition),
-                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false));
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false,
+                        true));
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionSetupSection section = INITIAL_DETAILS;
@@ -238,7 +239,8 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
                 CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
-                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE)
+                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE)
         );
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
@@ -293,6 +295,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -432,7 +435,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
-        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, false, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
         generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
         generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, CompetitionStatus.COMPETITION_SETUP));
 

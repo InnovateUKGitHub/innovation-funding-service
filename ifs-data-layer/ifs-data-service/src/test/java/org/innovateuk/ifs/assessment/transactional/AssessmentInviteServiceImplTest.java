@@ -44,7 +44,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -101,9 +100,8 @@ import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -195,6 +193,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Competition competition = newCompetition().withName("my competition")
                 .withMilestones(milestones)
                 .withSetupComplete(true)
+                .withAlwaysOpen(false)
                 .build();
 
         innovationArea = newInnovationArea().build();
@@ -230,6 +229,66 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
+    public void getAlwaysOpenInvitesToSend(){
+        List<String> emails = asList("john@email.com", "peter@email.com");
+        List<String> names = asList("John Barnes", "Peter Jones");
+
+        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
+
+        Competition competition = newCompetition()
+                .withName("my competition")
+                .withId(1L)
+                .withAssessorAcceptsDate(acceptsDate)
+                .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(true)
+                .build();
+
+        List<AssessmentInvite> invites = newAssessmentInvite()
+                .withCompetition(competition)
+                .withEmail(emails.get(0), emails.get(1))
+                .withHash(Invite.generateInviteHash())
+                .withInnovationArea(innovationArea)
+                .withName(names.get(0), names.get(1))
+                .withStatus(CREATED)
+                .withUser(user)
+                .build(2);
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "competitionName", competition.getName(),
+                "acceptsDate", acceptsDate.format(inviteFormatter),
+                "deadlineDate", deadlineDate.format(inviteFormatter)
+        );
+
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
+
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_preview_text.txt";
+
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
+        when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
+                expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
+
+        AssessorInvitesToSendResource expectedAssessorInviteToSendResource = newAssessorInvitesToSendResource()
+                .withContent("content")
+                .withCompetitionId(competition.getId())
+                .withCompetitionName(competition.getName())
+                .withRecipients(names)
+                .build();
+
+        AssessorInvitesToSendResource result = service.getAllInvitesToSend(competition.getId()).getSuccess();
+        assertEquals(expectedAssessorInviteToSendResource, result);
+
+        InOrder inOrder = inOrder(competitionRepositoryMock,
+                assessmentInviteRepositoryMock, notificationTemplateRendererMock);
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
+        inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
+                templatePath, expectedNotificationArguments);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void getAllInvitesToSend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
@@ -241,6 +300,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -300,6 +360,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -358,6 +419,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         AssessmentInvite invite = setUpCompetitionInvite(competition, email, name, CREATED, innovationArea, null);
@@ -365,6 +427,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Map<String, Object> expectedNotificationArguments = asMap(
                 "name", name,
                 "competitionName", "my competition",
+                "competitionId", competition.getId(),
                 "acceptsDate", acceptsDate.format(inviteFormatter),
                 "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
@@ -406,6 +469,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         AssessmentInvite invite = setUpCompetitionInvite(competition, email, name, SENT, innovationArea, null);
@@ -413,6 +477,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Map<String, Object> expectedNotificationArguments = asMap(
                 "name", name,
                 "competitionName", "my competition",
+                "competitionId", competition.getId(),
                 "acceptsDate", acceptsDate.format(inviteFormatter),
                 "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
@@ -887,6 +952,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -905,6 +971,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
+                "competitionId", invites.get(0).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(0).getHash(),
@@ -915,6 +982,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
+                "competitionId", invites.get(1).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(1).getHash(),
@@ -929,7 +997,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
                 .withMessageKey(INVITE_ASSESSOR_GROUP, INVITE_ASSESSOR_GROUP)
-                .withTargets(singletonList(to1), singletonList(to2))
+                .withTargets(singletonList(new NotificationMessage(to1)), singletonList(new NotificationMessage(to2)))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 
@@ -969,6 +1037,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -996,6 +1065,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
+                "competitionId", invites.get(0).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(0).getHash(),
@@ -1006,6 +1076,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
+                "competitionId", invites.get(1).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(1).getHash(),
@@ -1020,7 +1091,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
                 .withMessageKey(INVITE_ASSESSOR_GROUP, INVITE_ASSESSOR_GROUP)
-                .withTargets(singletonList(to1), singletonList(to2))
+                .withTargets(singletonList(new NotificationMessage(to1)), singletonList(new NotificationMessage(to2)))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 
@@ -1051,6 +1122,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .withAlwaysOpen(false)
                 .build();
 
         List<User> existingUsers = newUser()
@@ -1121,7 +1193,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to = new UserNotificationTarget(name, email);
-        Notification notification = new Notification(from, singletonList(to), AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
+        Notification notification = new Notification(from, to, AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(assessmentParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);
         when(assessmentInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));
@@ -1533,6 +1605,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Competition competition = newCompetition()
                 .withName("competition name")
+                .withAlwaysOpen(false)
                 .build();
 
         ExistingUserStagedInviteResource existingAssessor = newExistingUserStagedInviteResource()
@@ -1581,6 +1654,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Competition competition = newCompetition()
                 .withName("competition name")
+                .withAlwaysOpen(false)
                 .build();
 
         List<ExistingUserStagedInviteResource> existingAssessors = newExistingUserStagedInviteResource()
@@ -1611,7 +1685,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         String newAssessorName = "tom baldwin";
         String newAssessorEmail = "tom@poly.io";
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition()
+                .withAlwaysOpen(false)
+                .build();
 
         InnovationArea innovationArea = newInnovationArea()
                 .withName("machine learning")

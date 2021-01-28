@@ -183,6 +183,10 @@ public class UserResource implements Serializable {
         return roles.contains(role);
     }
 
+    public boolean hasAuthority(String auth) {
+        return roles.stream().flatMap(r -> r.getAuthorities().stream()).anyMatch(a -> a.equals(auth));
+    }
+
     @JsonIgnore
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(internalRoles(), roles);
@@ -190,7 +194,7 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public boolean isExternalUser() {
-        return CollectionUtils.containsAny(externalApplicantRoles(), roles);
+        return CollectionUtils.containsAny(externalRoles(), roles);
     }
 
     public boolean hasAnyRoles(Role... acceptedRoles) {

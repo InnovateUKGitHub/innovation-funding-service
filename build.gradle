@@ -7,6 +7,8 @@ apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
 apply from: "gradle-support/gradle-versions.gradle"
 apply from: "gradle-support/dependency-check.gradle"
+apply from: "gradle-support/pull-all-base-images.gradle"
+apply from: "gradle-support/stage-base-images.gradle"
 
 if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
     apply from: "gradle-support/zipkin.gradle"
@@ -49,7 +51,7 @@ buildscript {
 
     repositories {
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-        maven { url "http://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
 
     }
@@ -92,10 +94,13 @@ wrapper {
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
 
+def nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository').toString() : ""
+
 apply plugin: 'maven-publish'
 
 def osFileMap = [
         [name:'cache-config', type: 'config-maps'],
+        [name:'feature-toggle-config', type: 'config-maps'],
         [name:'data-service-config', type: 'config-maps'],
         [name:'db-config', type: 'config-maps'],
         [name:'docusign-config', type: 'config-maps'],
@@ -120,6 +125,12 @@ def osFileMap = [
         [name:'10-gluster-svc', type: 'gluster'],
         [name:'11-gluster-endpoints', type: 'gluster'],
         [name:'12-file-upload-claim', type: 'gluster'],
+
+        [name:'12-ifs-demo-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-perf-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-prod-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-sysint-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-uat-file-upload-claim', type: 'gluster'],
 
         [name:'4-application-service', type: 'ifs-services'],
         [name:'5-front-door-service', type: 'ifs-services'],
@@ -179,10 +190,15 @@ publishing {
     repositories {
         maven {
             credentials {
-                username project.findProperty("nexus_username")
-                password project.findProperty("nexus_password")
+                username project.findProperty("nexusUsername")
+                password project.findProperty("nexusPassword")
             }
-            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"
+
+            if (nexusRepository.equals("snapshots")) {
+                url "https://devops.innovateuk.org/binaries/repository/ifs-config-snapshots/"
+            } else {
+                url "https://devops.innovateuk.org/binaries/repository/ifs-config-releases/"
+            }
         }
     }
 }

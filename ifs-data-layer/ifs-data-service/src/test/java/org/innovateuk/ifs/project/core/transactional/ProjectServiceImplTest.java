@@ -3,11 +3,14 @@ package org.innovateuk.ifs.project.core.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.Section;
@@ -16,11 +19,13 @@ import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -32,17 +37,20 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -55,27 +63,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
+import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
@@ -84,9 +99,16 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
+
+    @Mock
+    private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
+
+    @Mock
+    private FinanceChecksGenerator financeChecksGeneratorMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -161,7 +183,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ProcessRole leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
-                withRole(Role.LEADAPPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -262,6 +284,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                         build()).
                 build();
 
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
+                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess(null));
+
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -276,6 +304,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertEquals(newProjectResource, project.getSuccess());
         assertNotNull(competition.getProjectSetupStarted());
 
+        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
+        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
+        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
+
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
@@ -285,6 +317,87 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(activityLogService).recordActivityByApplicationId(applicationId, ActivityType.APPLICATION_INTO_PROJECT_SETUP);
     }
 
+    @Test
+    public void createProjectFromApplication_KTP() {
+        competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .withSections(newSection().withSectionType(SectionType.FINANCE).build(1))
+                .build();
+        application.setCompetition(competition);
+        OrganisationAddress kbAddress = newOrganisationAddress()
+                .withAddressType(newAddressType().withId(OrganisationAddressType.KNOWLEDGE_BASE.getId()).build())
+                .withAddress(newAddress().withAddressLine1("address").build())
+                .build();
+
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build());
+        organisation.setAddresses(newArrayList(kbAddress));
+
+        Organisation partner = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        when(organisationRepositoryMock.findById(partner.getId())).thenReturn(Optional.of(partner));
+
+        ProcessRole partnerProcessRole = newProcessRole().
+                withOrganisationId(partner.getId()).
+                withRole(ProcessRoleType.LEADAPPLICANT).
+                withUser(newUser().build()).
+                build();
+
+        ProcessRole ktaRole = newProcessRole().
+                withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).
+                withUser(newUser().build()).
+                build();
+
+        application.getProcessRoles().add(partnerProcessRole);
+        application.getProcessRoles().add(ktaRole);
+
+        when(projectRepositoryMock.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        when(projectDetailsWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(viabilityWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(eligibilityWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(golWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(projectWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(spendProfileWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(projectMapperMock.mapToResource(project)).thenReturn(new ProjectResource());
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
+
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(any(),
+                any())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(any(), any(), eq(costCategoryTypeForOrganisation))).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(any(), any())).thenReturn(serviceSuccess(null));
+        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(any(), any())).thenReturn(true);
+
+        ServiceResult<ProjectResource> result = service.createProjectFromApplication(applicationId);
+        assertTrue(result.isSuccess());
+
+        verify(projectDetailsWorkflowHandlerMock).projectAddressAdded(any(), any());
+
+        Predicate<Project> matcher = p -> {
+            assertThat(p.getProjectUsers().size(), equalTo(5));
+            ProjectUser projectManager = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_MANAGER).findAny().get();
+            assertThat(projectManager.getUser().getId(), equalTo(leadPartnerProjectUser.getUser().getId()));
+
+            ProjectUser financeContact1 = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_FINANCE_CONTACT && pu.getOrganisation().getId().equals(organisation.getId())).findAny().get();
+            assertThat(financeContact1.getUser().getId(), equalTo(leadPartnerProjectUser.getUser().getId()));
+
+            ProjectUser financeContact2 = p.getProjectUsers().stream().filter(pu -> pu.getRole() == PROJECT_FINANCE_CONTACT && pu.getOrganisation().getId().equals(partner.getId())).findAny().get();
+            assertThat(financeContact2.getUser().getId(), equalTo(partnerProcessRole.getUser().getId()));
+
+            MonitoringOfficer monitoringOfficer = p.getProjectMonitoringOfficer().get();
+            assertThat(monitoringOfficer.getUser().getId(), equalTo(ktaRole.getUser().getId()));
+
+            Address address = p.getAddress();
+            assertThat(address, equalTo(kbAddress.getAddress()));
+            return true;
+        };
+        verify(projectMapperMock).mapToResource(argThat(lambdaMatches(matcher)));
+    }
     @Test
     public void createProjectFromApplication_alreadyExists() {
 
@@ -301,6 +414,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectRepositoryMock).findOneByApplicationId(applicationId);
         verify(projectMapperMock).mapToResource(existingProject);
 
+        verify(costCategoryTypeStrategyMock, never()).getOrCreateCostCategoryTypeForSpendProfile(any(Long.class), any(Long.class));
+        verify(financeChecksGeneratorMock, never()).createMvpFinanceChecksFigures(any(Project.class), any(Organisation.class), any(CostCategoryType.class));
+        verify(financeChecksGeneratorMock, never()).createFinanceChecksFigures(any(Project.class), any(Organisation.class));
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
@@ -425,6 +541,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                         build()).
                 build();
 
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
+                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess(null));
+
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -440,6 +562,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertNotNull(competition.getProjectSetupStarted());
 
+        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
+        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
+        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
@@ -461,7 +586,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             service.createProjectsFromFundingDecisions(fundingDecisions);
             assertThat("Service failed to throw expected exception.", false);
         } catch (Exception e) {
-            assertEquals(e.getCause().getCause().getMessage(),"dummy constraint violation");
+            assertEquals(e.getCause().getMessage(),"dummy constraint violation");
         }
     }
 
@@ -519,7 +644,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
-                assertEquals(Role.PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
+                assertEquals(ProjectParticipantRole.PROJECT_PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
 

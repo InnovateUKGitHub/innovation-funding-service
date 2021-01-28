@@ -11,7 +11,9 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +35,8 @@ public class YourProjectCostsViewModelPopulator {
     private SectionService sectionService;
     @Autowired
     private UserRestService userRestService;
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
 
 
     public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
@@ -42,7 +46,7 @@ public class YourProjectCostsViewModelPopulator {
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
-        boolean userCanEdit = !(user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && processRoleRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .orElse(false);
         boolean open = userCanEdit && application.isOpen() && competition.isOpen();
@@ -66,7 +70,8 @@ public class YourProjectCostsViewModelPopulator {
                 FundingType.KTP == competition.getFundingType(),
                 competition.getFinanceRowTypes(),
                 competition.isOverheadsAlwaysTwenty(),
-                CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()));
+                CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
+                organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()));
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId) {

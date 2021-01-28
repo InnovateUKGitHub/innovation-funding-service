@@ -43,6 +43,7 @@ IFS.core.formValidation = (function () {
         fields: '[type="email"]:not([readonly])',
         messageInvalid: {
           invalid: 'Please enter a valid email address.',
+          ktpInvalid: 'You must enter a valid Knowledge Transfer Network email address.',
           duplicate: 'The email address is already registered with us. Please sign into your account.'
         }
       },
@@ -255,10 +256,14 @@ IFS.core.formValidation = (function () {
     checkEmail: function (field) {
       // checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
       var email = field.val()
+      var external = (field.attr('kta-user') == null) ? 'false' : field.attr('external-user')
+      console.log(external)
       var invalidEmailAttribute = 'email-invalid'
+      var invalidKtpEmailAttribute = 'email-ktpInvalid'
       var duplicateEmailAttribute = 'email-duplicate'
       // disabled escape js-standard message, we might want to solve this in the future by cleaning up the regex
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(field, invalidEmailAttribute)
+      var invalidKtpErrorMessage = IFS.core.formValidation.getErrorMessage(field, invalidKtpEmailAttribute)
       var duplicateErrorMessage = IFS.core.formValidation.getErrorMessage(field, duplicateEmailAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, 'email')
       var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
@@ -269,16 +274,16 @@ IFS.core.formValidation = (function () {
 
         // check if email address is invalid
         if (!validEmail) {
-          IFS.core.formValidation.setInvalid(field, invalidErrorMessage, displayValidationMessages)
+          IFS.core.formValidation.setInvalid(field, (external === 'true') ? invalidKtpErrorMessage : invalidErrorMessage, displayValidationMessages)
           return false
         } else {
-          IFS.core.formValidation.setValid(field, invalidErrorMessage, displayValidationMessages)
+          IFS.core.formValidation.setValid(field, (external === 'true') ? invalidKtpErrorMessage : invalidErrorMessage, displayValidationMessages)
           // also set the duplicate email field to valid
           IFS.core.formValidation.setValid(field, duplicateErrorMessage, displayValidationMessages)
           return true
         }
       } else {
-        IFS.core.formValidation.setValid(field, invalidErrorMessage, displayValidationMessages)
+        IFS.core.formValidation.setValid(field, (external === 'true') ? invalidKtpErrorMessage : invalidErrorMessage, displayValidationMessages)
         // also set the duplicate email field to valid
         IFS.core.formValidation.setValid(field, duplicateErrorMessage, displayValidationMessages)
         return true
@@ -913,6 +918,7 @@ IFS.core.formValidation = (function () {
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
       var accordion = field.closest('.govuk-accordion__section')
+      var errorIcon = field.siblings('.error-heading-icon')
       var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
@@ -932,6 +938,8 @@ IFS.core.formValidation = (function () {
         if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
+          field.removeClass('govuk-textarea--error')
+          field.removeClass('govuk-select--error')
           if (formInTable && formInTableErrors === 0) {
             field.closest('.form-in-table').removeClass('govuk-form-group--error')
           }
@@ -943,6 +951,11 @@ IFS.core.formValidation = (function () {
       }
       if (formGroupRowValidated.length && formGroupRowValidated.find('.govuk-input--error').length === 0) {
         formGroupRowValidated.removeClass('govuk-form-group--error')
+      }
+
+      if (errorIcon.length) {
+        errorIcon.removeClass('error-heading-icon')
+        field.siblings('.govuk-error-message:contains("' + message + '")').remove()
       }
 
       // If the input is within a table cell check to see if there are validation messages within the column header. If there are: clear it and all the cells in the same column
@@ -1135,9 +1148,12 @@ IFS.core.formValidation = (function () {
       var closedAccordion = target.closest('.govuk-accordion__section').not('.govuk-accordion__section--expanded')
       var closedDetails = target.closest('.govuk-details__text').not('[aria-hidden="false"]')
       var formGroupRow = target.closest('.form-group-row')
-      if (targetVisible && formGroupRow.length) {
+      var milestonesTable = target.closest('.milestones-table')
+      if (targetVisible && milestonesTable.length) {
         // it is part a date group so don't put focus on the time select
         IFS.core.formValidation.scrollToElement(formGroupRow.find('input[type!=hidden]').first())
+      } else if (targetVisible && formGroupRow.length) {
+        IFS.core.formValidation.scrollToElement(target.first())
       } else if (targetVisible) {
         IFS.core.formValidation.scrollToElement(target.first())
       } else if (closedAccordion.length) {

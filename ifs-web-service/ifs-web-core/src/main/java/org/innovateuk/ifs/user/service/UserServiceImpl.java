@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,26 +30,29 @@ import static java.util.Collections.emptyList;
 public class UserServiceImpl implements UserService {
 
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
+
     @Autowired
     private UserRestService userRestService;
 
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
+
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
-        return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
-                .equals(Role.LEADAPPLICANT.getName()) && uar.getUser().equals(userId));
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
+        return userApplicationRoles.stream().anyMatch(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT && uar.getUser().equals(userId));
 
     }
 
     @Override
     public ProcessRoleResource getLeadApplicantProcessRole(Long applicationId) {
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
-        return userApplicationRoles.stream().filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName())).findFirst().orElseThrow(() -> new ObjectNotFoundException("Lead applicant not found for application " + applicationId, emptyList()));
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
+        return userApplicationRoles.stream().filter(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT).findFirst().orElseThrow(() -> new ObjectNotFoundException("Lead applicant not found for application " + applicationId, emptyList()));
     }
 
     @Override
     public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         return userApplicationRoles.stream()
                 .filter(prr -> organisation.equals(prr.getOrganisationId()))
                 .collect(Collectors.toList());
@@ -60,7 +64,7 @@ public class UserServiceImpl implements UserService {
         if (leadProcessRole == null) {
             return new ArrayList<>();
         }
-        return userRestService.findProcessRole(application.getId()).getSuccess().stream()
+        return processRoleRestService.findProcessRole(application.getId()).getSuccess().stream()
                 .filter(pr -> leadProcessRole.getOrganisationId().equals(pr.getOrganisationId()))
                 .collect(Collectors.toList());
     }
@@ -72,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long getUserOrganisationId(Long userId, Long applicationId) {
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        ProcessRoleResource userApplicationRole = processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
         return userApplicationRole.getOrganisationId();
     }
 
@@ -88,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean userHasApplicationForCompetition(Long userId, Long competitionId) {
-        return userRestService.userHasApplicationForCompetition(userId, competitionId).getSuccess();
+        return processRoleRestService.userHasApplicationForCompetition(userId, competitionId).getSuccess();
     }
 
     @Override

@@ -39,7 +39,6 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +93,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private FinanceCheckService financeCheckService;
 
     @Override
-    @Transactional //Write transaction for first time creation of project finances.
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findById(projectId).get();
         PartnerOrganisation lead = project.getLeadOrganisation().get();
@@ -292,10 +290,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean projectLocationsCompletedIfNecessary(final Project project) {
-        boolean locationsRequired = project.getApplication().getCompetition().isLocationPerPartner();
-        if(!locationsRequired) {
-            return true;
-        }
         return project.getPartnerOrganisations()
                 .stream()
                 .noneMatch(org -> {

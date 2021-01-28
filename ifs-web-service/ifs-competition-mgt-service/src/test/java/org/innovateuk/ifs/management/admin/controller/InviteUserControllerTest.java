@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.management.admin.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.management.admin.form.InviteUserForm;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.management.admin.form.InviteUserView;
+import org.innovateuk.ifs.management.admin.form.InviteUserForm;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,10 +36,26 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     public void inviteExternalNewUser() throws Exception {
         InviteUserForm expectedUserForm = new InviteUserForm();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-external-user"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-external-user")
+                .param("role", SUPPORTER.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"))
                 .andExpect(model().attribute("form", expectedUserForm));
+    }
+
+    @Test
+    public void selectExternalRole() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/select-external-role"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/select-external-role"));
+    }
+
+    @Test
+    public void selectedRole() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/select-external-role")
+                .param("role", SUPPORTER.toString()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/admin/invite-external-user?role=%s", SUPPORTER.toString())));
     }
 
     @Test

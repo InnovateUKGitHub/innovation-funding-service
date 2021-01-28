@@ -11,6 +11,8 @@ Documentation     IFS-7365 DocuSign Integration
 ...
 ...               IFS-7440 Allow applicants to edit a submitted application
 ...
+...               IFS-9009  Always open competitions: invite assessors to competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -92,7 +94,7 @@ Lead can resubmit the application
     Given the user can submit the application
 
 Internal user can invite to assesment
-    [Documentation]  IFS-7441
+    [Documentation]  IFS-7441  IFS-9009
     [Setup]  get application id by name and set as suite variable   ${COVIDdeminimusapplicationTitle1}
     Given Log in as a different user       &{Comp_admin1_credentials}
     When the user clicks the button/link   link = ${COVIDdeminimuscompetitionTitle}
@@ -111,7 +113,7 @@ External project finance can edit funding sought
 External project finance can generate spend profile and complete PS
     [Documentation]  IFS-7357
     Given the user clicks the button/link    css = .generate-spend-profile-main-button
-    When the user clicks the button/link    css = #generate-spend-profile-modal-button
+    When the user clicks the button/link     css = #generate-spend-profile-modal-button
     Then the internal user can complete PS
 
 Internal user is able to approve Spend profile and generates the GOL
@@ -195,7 +197,7 @@ the project finance approves all steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Back to project setup
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}
@@ -290,7 +292,7 @@ invite assessor the the assesment
     the user clicks the button/link                    link = Invite
     the user clicks the button/link                    link = Review and send invites
     the user enters text to a text field               id = message    This is custom text
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Send invitation")
     Log in as a different user                         &{assessor_credentials}
     the user clicks the button/link                    link = ${COVIDdeminimuscompetitionTitle}
     the user selects the radio button                  acceptInvitation  true
@@ -327,13 +329,13 @@ the assessor submits
 
 the assessor adds score for every question
     [Arguments]   ${no_of_questions}
-    The user clicks the button/link                       link = Scope
-    The user selects the index from the drop-down menu    1    css = .research-category
-    The user clicks the button/link                       jQuery = label:contains("Yes")
+    The user clicks the button/link                               link = Scope
+    The user selects the index from the drop-down menu            1    css = .research-category
+    The user clicks the button/link                               jQuery = label:contains("Yes")
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
-      \    the user clicks the button/link    css = .next
+      \    the user clicks the button/link                        jQuery = li:contains("Next")
       \    The user selects the option from the drop-down menu    23    css = .assessor-question-score
-    The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
+    The user clicks the button with resubmission                  jquery = button:contains("Save and return to assessment overview")
 
 the user completes assessment and moves to PS
     the user set assessor score notification to yes
@@ -360,8 +362,8 @@ the user can change funding sought
     the user clicks the button/link        link = Change funding sought
     the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  2100
     the user clicks the button/link        jQuery = button:contains("Save and return to project finances")
-    the user should see the element        jQuery = h3:contains("Finances summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
-    the user clicks the button/link        link = Finance checks
+    the user should see the element        jQuery = h3:contains("Finance summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
+    the user clicks the button/link        link = Back to finance checks
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDdeminimusapplicationTitle1}

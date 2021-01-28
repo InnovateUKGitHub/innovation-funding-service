@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.inflight.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.assessor.form.OverviewSelectionForm;
@@ -46,12 +47,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionManagementSendInviteControllerTest extends BaseControllerMockMVCTest<CompetitionManagementSendInviteController> {
 
     private CompetitionResource competition;
+    private CompetitionResource alwaysOpenCompetition;
 
     @Mock
     private CompressedCookieService cookieUtil;
 
     @Mock
     private CompetitionInviteRestService competitionInviteRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected CompetitionManagementSendInviteController supplyControllerUnderTest() {
@@ -68,7 +73,44 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .withName("Technology inspired")
                 .withInnovationSectorName("Infrastructure systems")
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
+                .withAlwaysOpen(false)
                 .build();
+
+        alwaysOpenCompetition = newCompetitionResource()
+                .withCompetitionStatus(IN_ASSESSMENT)
+                .withName("Technology inspired")
+                .withInnovationSectorName("Infrastructure systems")
+                .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
+                .withAlwaysOpen(true)
+                .build();
+    }
+
+    @Test
+    public void getInvitesToSendForAlwaysOpen() throws Exception{
+        long competitionId = 1L;
+
+        AssessorInvitesToSendResource invites = newAssessorInvitesToSendResource()
+                .withRecipients(singletonList("Jessica Doe"))
+                .withCompetitionId(competitionId)
+                .withCompetitionName("Photonics for health")
+                .withContent("Readonly content")
+                .build();
+
+        when(competitionInviteRestService.getAllInvitesToSend(competitionId)).thenReturn(restSuccess(invites));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(alwaysOpenCompetition));
+
+        SendInviteForm expectedForm = new SendInviteForm();
+        expectedForm.setSubject("Invitation to be an assessor for competition: 'Photonics for health'");
+
+        SendInvitesViewModel expectedViewModel = new SendInvitesViewModel(competitionId, "Photonics for health", singletonList( "Jessica Doe"), "Readonly content");
+
+        mockMvc.perform(get("/competition/{competitionId}/assessors/invite/send", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("assessors/send-invites"));
+
+        verify(competitionInviteRestService, only()).getAllInvitesToSend(competitionId);
     }
 
     @Test
@@ -83,6 +125,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .build();
 
         when(competitionInviteRestService.getAllInvitesToSend(competitionId)).thenReturn(restSuccess(invites));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Invitation to assess 'Photonics for health'");
@@ -114,6 +157,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
         when(competitionInviteRestService.getAllInvitesToResend(competition.getId(), inviteIds)).thenReturn(restSuccess(invite));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         ResendInviteForm expectedForm = new ResendInviteForm();
         expectedForm.setSubject("Invitation to assess 'Photonics for health'");

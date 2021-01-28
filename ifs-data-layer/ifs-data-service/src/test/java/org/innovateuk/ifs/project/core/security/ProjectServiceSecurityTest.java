@@ -24,7 +24,7 @@ import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
  */
 public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER));
     private static final EnumSet<Role> NON_SYSTEM_REGISTRATION_ROLES = complementOf(of(SYSTEM_REGISTRATION_USER));
 
     private ProjectPermissionRules projectPermissionRules;
@@ -67,13 +67,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
     @Test
     public void createProjectFromApplication_allowedIfCompAdminRole() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
         classUnderTest.createProjectFromApplication(123L);
     }
 
     @Test
     public void createProjectFromApplication_deniedForApplicant() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
         try {
             classUnderTest.createProjectFromApplication(123L);
             fail("Should not have been able to create project from application as applicant");
@@ -84,7 +84,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
     @Test
     public void createProjectFromFundingDecisions_allowedIfGlobalCompAdminRole() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
         classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
     }
 
@@ -103,7 +103,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void createProjectFromFundingDecisions_deniedIfNotCorrectGlobalRoles() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(role)).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
                 Assert.fail("Should not have been able to create project from application without the global Comp " +
@@ -149,7 +149,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void addPartner_deniedIfNotSystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+            setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
             try {
                 classUnderTest.addPartner(1L, 2L, 3L);
                 Assert.fail("Should not have been able to add a partner without the system registrar role");
@@ -184,7 +184,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+            setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
             try {
                 classUnderTest.addPartner(1L, 2L, 3L);
                 Assert.fail("Should not have been able to add a partner without the system registrar role");

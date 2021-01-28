@@ -26,7 +26,6 @@ public class ProjectDetailsViewModel {
     private String competitionName;
     private UserResource userResource;
     private OrganisationResource leadOrganisation;
-    private boolean locationPerPartnerRequired;
     private List<PartnerOrganisationResource> partnerOrganisations;
     private List<OrganisationResource> organisations;
     private String financeReviewerName;
@@ -39,7 +38,6 @@ public class ProjectDetailsViewModel {
                                    String competitionName,
                                    UserResource userResource,
                                    OrganisationResource leadOrganisation,
-                                   boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations,
                                    List<OrganisationResource> organisations,
                                    String financeReviewerName,
@@ -51,7 +49,6 @@ public class ProjectDetailsViewModel {
         this.competitionName = competitionName;
         this.userResource = userResource;
         this.leadOrganisation = leadOrganisation;
-        this.locationPerPartnerRequired = locationPerPartnerRequired;
         this.partnerOrganisations = partnerOrganisations;
         this.organisations = organisations;
         this.financeReviewerName = financeReviewerName;
@@ -66,7 +63,6 @@ public class ProjectDetailsViewModel {
                 project.getCompetitionName(),
                 null,
                 null,
-                false,
                 Collections.emptyList(),
                 Collections.emptyList(),
                 null,
@@ -107,10 +103,6 @@ public class ProjectDetailsViewModel {
         return financeReviewerEmail;
     }
 
-    public boolean isLocationPerPartnerRequired() {
-        return locationPerPartnerRequired;
-    }
-
     public String getPostcodeForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().equals(organisationId))
@@ -137,6 +129,10 @@ public class ProjectDetailsViewModel {
 
     public boolean isProjectFinance() {
         return userResource.hasRole(PROJECT_FINANCE);
+    }
+
+    public boolean isIfsAdministrator() {
+        return userResource.hasRole(IFS_ADMINISTRATOR);
     }
 
     public String getLocationForPartnerOrganisation(Long organisationId) {
@@ -184,7 +180,6 @@ public class ProjectDetailsViewModel {
 
         return new EqualsBuilder()
                 .append(userResource, that.userResource)
-                .append(locationPerPartnerRequired, that.locationPerPartnerRequired)
                 .append(project, that.project)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
@@ -204,7 +199,6 @@ public class ProjectDetailsViewModel {
                 .append(competitionName)
                 .append(userResource)
                 .append(leadOrganisation)
-                .append(locationPerPartnerRequired)
                 .append(partnerOrganisations)
                 .append(organisations)
                 .append(financeReviewerName)

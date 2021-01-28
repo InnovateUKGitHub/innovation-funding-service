@@ -6,9 +6,10 @@ import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,7 @@ public class HomeController {
     private NavigationUtils navigationUtils;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
@@ -95,15 +96,16 @@ public class HomeController {
     }
 
     private void addKtaRoles(UserResource user, Set<Role> dashboardRoles) {
-        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRoleByUserId(user.getId()).getSuccess();
+        List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRoleByUserId(user.getId()).getSuccess();
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
-        boolean isApplicant = processRoleResources.stream().map(ProcessRoleResource::getRole)
-                .anyMatch(Role::isKta);
+        boolean shouldShowApplicantPanel = processRoleResources.stream()
+                .map(ProcessRoleResource::getRole)
+                .anyMatch(ProcessRoleType::isKta);
 
         if (isMonitoringOfficer) {
             dashboardRoles.add(MONITORING_OFFICER);
         }
-        if (isApplicant) {
+        if (shouldShowApplicantPanel) {
             dashboardRoles.add(APPLICANT);
         }
 

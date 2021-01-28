@@ -17,35 +17,31 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${organisationDetails.organisationName},subTitle=|${organisationDetails.projectId}: ${organisationDetails.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle=${organisationDetails.organisationName},subTitle=|${organisationDetails.projectName}|,size='govuk-heading-xl'"/>
 
         <th:block
             th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (organisationDetails=${organisationDetails})"/>
 
-        <div th:if="${yourOrganisation != null}">
-            <h2 class="govuk-heading-m">Organisation size</h2>
+        <th:block th:unless="${organisationDetails.knowledgeBase && organisationDetails.ktpCompetition}">
+            <div th:if="${yourOrganisation != null}">
+                <h2 class="govuk-heading-m">Organisation size</h2>
 
-            <form th:object="${form}">
-                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                                __${formFragment}__(
-                                                       form=${form},
-                                                       organisationSizeOptions=${yourOrganisation.organisationSizeOptions},
-                                                       isH2020=${yourOrganisation.h2020},
-                                                       isProcurementCompetition=${yourOrganisation.procurementCompetition},
-                                                       isInternalUser=${true},
-                                                       readOnly=${yourOrganisation.readOnly},
-                                                       showOrganisationSizeAlert=${yourOrganisation.showOrganisationSizeAlert},
-                                                       showStateAidAgreement=${yourOrganisation.showStateAidAgreement},
-                                                       showHints=${yourOrganisation.showHints})"/>
-            </form>
+                <form th:object="${form}">
+                    <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                                    __${formFragment}__(
+                                                           form=${form},
+                                                           model=${yourOrganisation},
+                                                           readOnly=${yourOrganisation.readOnly})"/>
+                </form>
 
-            <th:block th:unless="${!yourOrganisation.isAllowedToEditOrganisationSize()}">
-                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/{urlPart} (projectId=${yourOrganisation.projectId}, organisationId=${yourOrganisation.organisationId}, urlPart=${formFragment})}"
-                   class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation
-                    size</a>
-            </th:block>
 
-        </div>
+                <th:block th:unless="${!yourOrganisation.isAllowedToEditOrganisationSize()}">
+                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/{urlPart} (projectId=${yourOrganisation.projectId}, organisationId=${yourOrganisation.organisationId}, urlPart=${formFragment})}"
+                       class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation
+                        size</a>
+                </th:block>
+            </div>
+        </th:block>
 
         <div class="govuk-form-group govuk-!-margin-top-6">
             <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"

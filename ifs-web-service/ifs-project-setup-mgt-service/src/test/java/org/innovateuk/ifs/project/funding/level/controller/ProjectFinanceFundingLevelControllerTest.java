@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingLevelViewModel;
 import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinancePartnerFundingLevelViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -72,6 +73,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     private static final ProjectResource project = newProjectResource()
             .withId(projectId)
             .withName("Project")
+            .withProjectState(ProjectState.SETUP)
             .withApplication(5L)
             .withCompetition(6L)
             .build();
@@ -122,7 +124,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals("Project", viewModel.getProjectName());
         assertEquals(5L, viewModel.getApplicationId());
         assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(totalGrant, viewModel.getTotalFundingSought());
+        assertEquals(totalGrant.setScale(0, RoundingMode.HALF_UP), viewModel.getTotalFundingSought());
         assertEquals(industrialFinances.getTotal().add(academicFinances.getTotal()), viewModel.getTotalCosts());
         assertEquals(2, viewModel.getPartners().size());
 
@@ -130,7 +132,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals(industrialOrganisation, industrialViewModel.getId());
         assertEquals(60, industrialViewModel.getMaximumFundingLevel());
         assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
-        assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
+        assertEquals(industrialFinances.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP), industrialViewModel.getFundingSought());
         assertEquals(new BigDecimal("87.78"), industrialViewModel.getPercentageOfTotalGrant().setScale(MAX_DECIMAL_PLACES, RoundingMode.HALF_UP));
         assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
         assertEquals(totalGrant, industrialViewModel.getTotalGrant());
@@ -154,7 +156,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "60")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "60"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview?showFundingLevelMessage=true", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
@@ -196,7 +198,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview?showFundingLevelMessage=true", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
@@ -227,7 +229,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals("Project", viewModel.getProjectName());
         assertEquals(5L, viewModel.getApplicationId());
         assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(totalGrant, viewModel.getTotalFundingSought());
+        assertEquals(totalGrant.setScale(0, RoundingMode.HALF_UP), viewModel.getTotalFundingSought());
         assertEquals(industrialFinances.getTotal().add(academicFinances.getTotal()), viewModel.getTotalCosts());
         assertEquals(2, viewModel.getPartners().size());
 
@@ -235,7 +237,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals(industrialOrganisation, industrialViewModel.getId());
         assertEquals(60, industrialViewModel.getMaximumFundingLevel());
         assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
-        assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
+        assertEquals(industrialFinances.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP), industrialViewModel.getFundingSought());
         assertEquals(new BigDecimal("87.78"), industrialViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
         assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
         assertEquals(totalGrant, industrialViewModel.getTotalGrant());

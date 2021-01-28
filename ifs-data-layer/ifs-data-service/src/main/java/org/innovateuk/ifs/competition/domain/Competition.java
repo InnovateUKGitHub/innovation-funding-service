@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -17,12 +17,12 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -63,12 +63,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionTypeId", referencedColumnName = "id")
     private CompetitionType competitionType;
 
-    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
-    private Integer assessorCount;
-
-    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
-    private BigDecimal assessorPay;
-
     @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST)
     private List<Milestone> milestones = new ArrayList<>();
 
@@ -79,9 +73,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
-
-    @OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
-    private CompetitionType templateForType;
 
     private String pafCode;
     private String budgetCode;
@@ -110,19 +101,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private boolean multiStream;
     private Boolean resubmission;
 
-    @ZeroDowntime(reference = "IFS-7369", description = "Assessment Panel")
-    private Boolean hasAssessmentPanel;
-
-    @ZeroDowntime(reference = "IFS-7369", description = "Interview Stage")
-    private Boolean hasInterviewStage;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionAssessmentConfigId", referencedColumnName = "id")
     private CompetitionAssessmentConfig competitionAssessmentConfig;
-
-    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
-    @Enumerated(EnumType.STRING)
-    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -138,8 +119,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean useResubmissionQuestion = true;
 
-    private boolean template = false;
-
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
@@ -151,11 +130,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinTable(name = "grant_claim_maximum_competition",
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
-    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
+        private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
-    private boolean locationPerPartner = true;
-
-    private Boolean stateAid;
+    @Enumerated(EnumType.STRING)
+    private FundingRules fundingRules;
 
     private Boolean includeYourOrganisationSection;
 
@@ -200,6 +178,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "golTemplateId", referencedColumnName = "id")
+    private GolTemplate golTemplate;
+
+    private Boolean alwaysOpen;
 
     public Competition() {
         setupComplete = false;
@@ -708,30 +692,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return "";
     }
 
-    public Integer getAssessorCount() {
-        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorCount).orElse(null);
-    }
-
-    public void setAssessorCount(Integer assessorCount) {
-        this.assessorCount = assessorCount;
-    }
-
-    public BigDecimal getAssessorPay() {
-        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorPay).orElse(null);
-    }
-
-    public void setAssessorPay(BigDecimal assessorPay) {
-        this.assessorPay = assessorPay;
-    }
-
-    public boolean isTemplate() {
-        return template;
-    }
-
-    public void setTemplate(boolean template) {
-        this.template = template;
-    }
-
     public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -811,30 +771,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.nonIfsUrl = nonIfsUrl;
     }
 
-    public Boolean isHasAssessmentPanel() {
-        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getHasAssessmentPanel).orElse(null);
-    }
-
-    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
-        this.hasAssessmentPanel = hasAssessmentPanel;
-    }
-
-    public Boolean isHasInterviewStage() {
-        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getHasInterviewStage).orElse(null);
-    }
-
-    public void setHasInterviewStage(Boolean hasInterviewStage) {
-        this.hasInterviewStage = hasInterviewStage;
-    }
-
-    public AssessorFinanceView getAssessorFinanceView() {
-        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorFinanceView).orElse(AssessorFinanceView.OVERVIEW);
-    }
-
-    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
-        this.assessorFinanceView = assessorFinanceView;
-    }
-
     public List<GrantClaimMaximum> getGrantClaimMaximums() {
         return grantClaimMaximums;
     }
@@ -854,14 +790,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.termsAndConditions = termsAndConditions;
     }
 
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
-    }
-
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
-    }
-
     public Integer getMaxProjectDuration() {
         return maxProjectDuration;
     }
@@ -878,12 +806,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.minProjectDuration = minProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -1000,9 +928,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionAssessmentConfig = competitionAssessmentConfig;
     }
 
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return ofNullable(getCompetitionType()).map(CompetitionType::getCompetitionTypeEnum).orElse(null);
+    }
+
     @Override
     public boolean isExpressionOfInterest() {
-        return competitionType.isExpressionOfInterest();
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
     }
 
     @Override
@@ -1011,7 +943,33 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isProcurementMilestones() {
+        return isProcurement() &&
+            sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
+    }
+
+    @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
+    }
+
+    public boolean isAssessmentClosed() {
+        return getCompetitionStatus() != null && getCompetitionStatus().isLaterThan(IN_ASSESSMENT);
+    }
+
+    public GolTemplate getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplate golTemplate) {
+        this.golTemplate = golTemplate;
+    }
+
+    public void setAlwaysOpen(Boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
+
+    public boolean isAlwaysOpen() {
+        return BooleanUtils.isTrue(alwaysOpen);
     }
 }

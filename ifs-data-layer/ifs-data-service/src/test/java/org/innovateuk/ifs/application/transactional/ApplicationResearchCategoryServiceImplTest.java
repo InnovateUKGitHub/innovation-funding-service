@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -120,7 +120,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
                 (researchCategory).build();
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(organisationService.findById(application.getLeadOrganisationId())).thenReturn(serviceSuccess(organisation));
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competition.getId())).thenReturn(serviceSuccess(true));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competition.getId())).thenReturn(serviceSuccess(true));
 
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
         when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(Optional.of(researchCategory));

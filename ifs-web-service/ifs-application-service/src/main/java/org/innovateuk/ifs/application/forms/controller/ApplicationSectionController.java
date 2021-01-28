@@ -10,7 +10,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.SECTION_U
 public class ApplicationSectionController {
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private ApplicationUrlHelper applicationUrlHelper;
@@ -43,7 +43,7 @@ public class ApplicationSectionController {
     private ApplicationRestService applicationRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @GetMapping("/{sectionType}/{organisationId}")
     public String redirectToSectionManagement(@PathVariable SectionType sectionType,
                                               @PathVariable long applicationId,
@@ -91,7 +91,7 @@ public class ApplicationSectionController {
     }
 
     private String redirect(long applicationId, SectionResource section, UserResource user) {
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         return redirect(applicationId, section, role.getOrganisationId());
     }
 

@@ -14,11 +14,13 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -27,8 +29,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -79,13 +81,13 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource allowedAndConnectedUser = newUserResource().build();
         UserResource connectedUserAndNotAllowedUser = newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), questionStatusResource.getApplication(), Role.LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), questionStatusResource.getApplication(), ProcessRoleType.LEADAPPLICANT))
                 .thenReturn(true);
 
-        ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
+        ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(ProcessRoleType.COLLABORATOR).build();
         when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(allowedAndConnectedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), ProcessRoleType.COLLABORATOR))
                 .thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
                 .thenReturn(true);
@@ -95,7 +97,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         when(questionRepository.findById(questionStatusResource.getQuestion()))
                 .thenReturn(Optional.of(QuestionBuilder.newQuestion().withMultipleStatuses(false).build()));
 
-        ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
+        ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(ProcessRoleType.COLLABORATOR).build();
         when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(connectedUserAndNotAllowedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(connectedProcessRole);
 
@@ -108,11 +110,11 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     public void internalUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = newQuestionStatusResource().build();
 
-        UserResource compAdminUser = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
-        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
-        UserResource projectFinanceUser = newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
-        UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
-        UserResource nonInternalUser = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
+        UserResource compAdminUser = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
+        UserResource supportUser = newUserResource().withRoleGlobal(Role.SUPPORT).build();
+        UserResource projectFinanceUser = newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build();
+        UserResource innovationLeadUser = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
+        UserResource nonInternalUser = newUserResource().withRoleGlobal(Role.ASSESSOR).build();
 
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, innovationLeadUser));
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, compAdminUser));
@@ -128,7 +130,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         QuestionStatusResource questionStatusResource = newQuestionStatusResource()
                 .withApplication(newApplicationResource().withId(application.getId()).build())
                 .build();
-        UserResource competitionFinanceUser = newUserResource().withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
 
         when(applicationRepository.findById(questionStatusResource.getApplication())).thenReturn(Optional.of(application));
         when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
@@ -141,10 +143,10 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
         UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(leadApplicant.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), application.getId()))
                 .thenReturn(true);
-        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantProcessRoles(), application.getId()))
-                .thenReturn(null);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), application.getId()))
+                .thenReturn(false);
 
         assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));
         assertFalse(rules.onlyMemberOfProjectTeamCanMarkSection(application, nonProjectTeamMember));

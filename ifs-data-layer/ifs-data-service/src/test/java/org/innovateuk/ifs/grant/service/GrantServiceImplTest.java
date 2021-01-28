@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.innovateuk.ifs.user.domain.User;
@@ -29,7 +30,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -133,7 +134,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         when(grantEndpoint.send(grant)).thenReturn(serviceSuccess());
         when(grantProcessService.findOneReadyToSend()).thenReturn(of(process));
 
-        ServiceResult<Void> result = service.sendReadyProjects();
+        ServiceResult<ScheduleResponse> result = service.sendReadyProjects();
 
         assertThat(result.isSuccess(), equalTo(true));
 

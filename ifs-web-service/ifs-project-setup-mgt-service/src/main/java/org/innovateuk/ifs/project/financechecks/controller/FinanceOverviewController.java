@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -18,6 +20,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +29,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -54,16 +58,24 @@ public class FinanceOverviewController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
+
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
     public String view(@PathVariable("projectId") Long projectId,
-                       Model model) {
-        model.addAttribute("model", buildFinanceCheckOverviewViewModel(projectId));
+                       @RequestParam(required = false, defaultValue = "false") boolean showFundingLevelMessage,
+                       @RequestParam(required = false, defaultValue = "false") boolean showFundingAmountMessage,
+                       Model model, UserResource loggedInUser) {
+        model.addAttribute("showFundingLevelMessage", showFundingLevelMessage);
+        model.addAttribute("showFundingAmountMessage", showFundingAmountMessage);
+        model.addAttribute("model", buildFinanceCheckOverviewViewModel(projectId, loggedInUser));
         return "project/financecheck/overview";
     }
 
-    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(long projectId) {
+    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(long projectId, UserResource loggedInUser) {
         final FinanceCheckSummaryResource financeCheckSummary = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         final List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).orElse(null);
@@ -76,6 +88,9 @@ public class FinanceOverviewController {
                 competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT) && !financeCheckSummary.isSpendProfilesGenerated();
         boolean canChangeFundingLevel =
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE) && financeCheckSummary.isAllEligibilityAndViabilityInReview();
+
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
+
         return new FinanceCheckOverviewViewModel(
                         getProjectFinanceOverviewViewModel(projectId),
                         getProjectFinanceSummaries(project, sortedOrganisations, competition),
@@ -83,8 +98,10 @@ public class FinanceOverviewController {
                         applicationId,
                         canChangeFundingSought,
                         competition.isLoan(),
+                        competition.isKtp(),
                         canChangeFundingLevel,
-                        competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE));
+                        competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
+                        applicationFundingBreakdownViewModel);
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {

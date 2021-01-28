@@ -5,9 +5,10 @@ import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
@@ -17,12 +18,16 @@ import org.mockito.Spy;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Objects;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -42,7 +47,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     protected HomeController supplyControllerUnderTest() {
@@ -147,13 +152,13 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void redirectToDashboardSelectionForKnowledgeTransferAdvisor() throws Exception {
+    public void redirectToDashboardSelectionForKnowledgeTransferAdvisorWithMO() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).build(1);
 
-        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
+        when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(true));
 
 
@@ -166,7 +171,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     public void assessorDashboardDefaultForKnowledgeTransferAdvisor() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
 
-        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(emptyList()));
+        when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(emptyList()));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get("/dashboard-selection"))
@@ -175,17 +180,89 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void multiDashboardForKnowledgeTransferAdvisor() throws Exception {
+    public void multiDashboardForKnowledgeTransferAdvisorWithApplications() throws Exception {
+        UserResource ktaUser = this.knowledgeTransferAdvisor;
+        kta.setRoles(newArrayList(Role.KNOWLEDGE_TRANSFER_ADVISER));
+        setLoggedInUser(ktaUser);
+
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
+                .build(1);
+
+        when(processRoleRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(processRoleResources));
+        when(monitoringOfficerRestService.isMonitoringOfficer(this.knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(true));
+
+        DashboardSelectionViewModel dashboard = (DashboardSelectionViewModel) Objects.requireNonNull(
+                mockMvc.perform(get("/dashboard-selection"))
+                        .andExpect(status().is2xxSuccessful())
+                        .andExpect(model().attributeExists("model"))
+                        .andExpect(view().name("login/multiple-dashboard-choice"))
+                        .andReturn().getModelAndView()).getModel().get("model");
+        List<DashboardPanel> availableDashboards = dashboard.getAvailableDashboards();
+        assertEquals(3, availableDashboards.size());
+        assertTrue(availableDashboards.stream()
+                .allMatch(panel -> panel.getRole().equals(Role.MONITORING_OFFICER) ||
+                        panel.getRole().isAssessor() ||
+                        panel.getRole().equals(Role.APPLICANT)));
+    }
+
+    @Test
+    public void multiDashboardForKnowledgeTransferAdvisorNotAttachedToAnyApplications() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
+                .withRole(ProcessRoleType.COLLABORATOR)
+                .build(1);
 
-        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
-        when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(true));
+        when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(processRoleResources));
+        when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(true));
 
-        mockMvc.perform(get("/dashboard-selection"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("login/multiple-dashboard-choice"));
+        DashboardSelectionViewModel dashboard = (DashboardSelectionViewModel) Objects.requireNonNull(
+                mockMvc.perform(get("/dashboard-selection"))
+                        .andExpect(status().is2xxSuccessful())
+                        .andExpect(model().attributeExists("model"))
+                        .andExpect(view().name("login/multiple-dashboard-choice"))
+                        .andReturn().getModelAndView()).getModel().get("model");
+        List<DashboardPanel> availableDashboards = dashboard.getAvailableDashboards();
+        assertEquals(2, availableDashboards.size());
+        assertTrue(availableDashboards.stream()
+                .allMatch(panel -> panel.getRole().equals(Role.MONITORING_OFFICER) || panel.getRole().isAssessor()));
+    }
+
+    @Test
+    public void projectSetupHiddenWhenNoProjectsForKTA() throws Exception {
+        setLoggedInUser(knowledgeTransferAdvisor);
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
+                .build(1);
+
+        when(processRoleRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(processRoleResources));
+        when(monitoringOfficerRestService.isMonitoringOfficer(this.knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(false));
+
+        DashboardSelectionViewModel dashboard = (DashboardSelectionViewModel) Objects.requireNonNull(
+                mockMvc.perform(get("/dashboard-selection"))
+                        .andExpect(status().is2xxSuccessful())
+                        .andExpect(model().attributeExists("model"))
+                        .andExpect(view().name("login/multiple-dashboard-choice"))
+                        .andReturn().getModelAndView()).getModel().get("model");
+        List<DashboardPanel> availableDashboards = dashboard.getAvailableDashboards();
+        assertEquals(2, availableDashboards.size());
+        assertTrue(availableDashboards.stream()
+                .noneMatch(panel -> panel.getRole().equals(Role.MONITORING_OFFICER)));
+    }
+
+    @Test
+    public void multiDashboardForSupporterAdvisor() throws Exception {
+        setLoggedInUser(applicantAndSupporter);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/dashboard-selection"));
     }
 }

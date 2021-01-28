@@ -40,7 +40,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -404,7 +403,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         UserCreationResource userResource = anUserCreationResource()
-                .withPassword("password123")
+                .withPassword("password135723")
                 .withFirstName("firstName")
                 .withLastName("lastName")
                 .withPhoneNumber("0123456789")
@@ -548,7 +547,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
 
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
@@ -559,7 +558,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
 
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)

@@ -6,6 +6,9 @@ Documentation  IFS-5158 - Competition Template
 ...            IFS-5700 - Create new project team page to manage roles in project setup
 ...
 ...            IFS-7195  Organisational eligibility category in Competition setup
+...
+...            IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -21,10 +24,10 @@ ${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
-    [Documentation]  IFS-5158
+    [Documentation]  IFS-5158  IFS-6775
     Given a user starts a new competition
     When the user clicks the button/link                               link = Initial details
-    Then the user selects the option from the drop-down menu           Horizon 2020   name = competitionTypeId
+    Then the user selects the option from the drop-down menu           ${compType_H2020}   name = competitionTypeId
     And the user is able to complete Initial details section
     And the user should see the read-only view of the initial details
     [Teardown]  the user clicks the button/link                        link = Return to setup overview
@@ -44,10 +47,11 @@ User can populate Terms and Conditions
 
 User can populate Funding information and Project eligibility
     [Documentation]  IFS-5158
-    Given the user clicks the button/link                                 link = Funding information
+    Given the user clicks the button/link                                       link = Funding information
     When the user completes funding information
-    Then the user clicks the button/link                                  link = Return to setup overview
-    And the user fills in the Competition Setup Project eligibility section       ${BUSINESS_TYPE_ID}  4
+    Then the user clicks the button/link                                        link = Return to setup overview
+    And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
+    And the user fills in the CS funding eligibility                            false   ${compType_H2020}
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -61,7 +65,7 @@ User can complete Organisational eligibility
     Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
     When the user selects the radio button                    internationalOrganisationsApplicable       false
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
-    And the user clicks the button/link                       link = Competition details
+    And the user clicks the button/link                       link = Back to competition details
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 User can finish setting up the grant transfer
@@ -221,6 +225,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link       jQuery = button:contains("Write and send email")
     the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link       link = Competition
     the user clicks the button/link       link = Manage funding notifications
 
@@ -236,28 +241,28 @@ A user starts a new competition
     the user clicks the button/link       jQuery = .govuk-button:contains("Create competition")
 
 The user is able to complete Initial details section
-    the user enters text to a text field                            css = #title  ${competitionTitle}
-    the user selects the radio button                               fundingType  GRANT
-    the user selects the option from the drop-down menu             None  id = innovationSectorCategoryId
-    the user selects the value from the drop-down menu              67  name = innovationAreaCategoryIds[0]
-    the user enters text to a text field                            id = openingDateDay    10
-    the user enters text to a text field                            id = openingDateMonth    1
-    the user enters text to a text field                            id = openingDateYear     ${nextyear}
-    the user selects the option from the drop-down menu             Ian Cooper    id = innovationLeadUserId
-    the user selects the option from the drop-down menu             John Doe   id = executiveUserId
-    the user clicks the button twice                                css = label[for = "stateAid2"]
-    the user clicks the button/link                                 jQuery = button:contains("Done")
+    the user enters text to a text field                              css = #title  ${competitionTitle}
+    the user selects the radio button                                 fundingType  GRANT
+    And the user selects the radio button                             fundingRule  SUBSIDY_CONTROL
+    the user selects the option from the drop-down menu               None  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu                67  name = innovationAreaCategoryIds[0]
+    the user enters text to a text field                              id = openingDateDay    10
+    the user enters text to a text field                              id = openingDateMonth    1
+    the user enters text to a text field                              id = openingDateYear     ${nextyear}
+    the user selects option from type ahead                           innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                           executiveUserId  j  John Doe
+    the user clicks the button/link                                   jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
 The user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("H2020 Grant Transfer")
     the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
+    the user should see the element    jQuery = dt:contains("Competition funding rules") ~ dd:contains("Subsidy control")
     the user should see the element    jQuery = dd:contains("None")
     the user should see the element    jQuery = dd:contains("None")
     the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
-    the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
     the user clicks the button/link         id = generate-code
@@ -369,14 +374,12 @@ The user fills in the Competition Setup Project eligibility section
     [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link                      link = Project eligibility
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
-    the user selects the radio button                    researchCategoriesApplicable    false
-    the user selects the option from the drop-down menu  100%  fundingLevelPercentage
     the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  None     researchParticipation
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition details
+    the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 The user is able to complete Horizon 2020 Grant transfer application
@@ -466,8 +469,8 @@ The user is able to complete your project costs section
 
 The user is able to validate conversion spredsheet links works
     the user clicks the button/link                 link = funding conversion spreadsheet
-    Select Window                                   title = 404 - UK Research and Innovation
-    the user should see the element                 jQuery = p:contains("Go back")
+    Select Window                                   title = Page not found – UKRI
+    the user should see the element                 link = Contact us
     the user closes the last opened tab
 
 The user is able to submit the application

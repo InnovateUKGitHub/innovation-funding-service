@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -16,19 +17,19 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -74,6 +75,9 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
     @Mock
     private SystemNotificationSource systemNotificationSource;
 
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepository;
+
     @Override
     protected ApplicationDeletionServiceImpl supplyServiceUnderTest() {
         return new ApplicationDeletionServiceImpl();
@@ -96,12 +100,12 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         ProcessRole leadRole = newProcessRole()
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .build();
         ProcessRole inactiveRole = newProcessRole()
                 .withApplication(application)
                 .withUser(newUser().withStatus(UserStatus.INACTIVE).build())
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .build();
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
@@ -109,7 +113,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         notificationArguments.put("leadEmail", user.getEmail());
         NotificationTarget to = new UserNotificationTarget(format("%s %s", firstName, lastName), email);
         Notification notification = new Notification(systemNotificationSource,
-                emptyList(),
+                Collections.emptyList(),
                 ApplicationDeletionServiceImpl.Notifications.APPLICATION_DELETED,
                 notificationArguments);
 
@@ -130,8 +134,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         verify(processHistoryRepository).deleteByProcessId(application.getApplicationProcess().getId());
         verify(applicationRepository).delete(application);
         verify(notificationService, only()).sendNotificationWithFlush(notification, EMAIL);
-
-
+        verify(applicationInviteRepository).deleteAll(application.getInvites());
 
         verify(deletedApplicationRepository).save(any());
     }

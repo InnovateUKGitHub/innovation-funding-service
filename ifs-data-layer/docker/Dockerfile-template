@@ -1,4 +1,4 @@
-FROM innovateuk/app-base-image
+FROM docker-ifs.devops.innovateuk.org/releases/ifs-base-image
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081
@@ -17,6 +17,7 @@ RUN mkdir /tmp/ifs && \
   mkdir /tmp/virus-scan-scanned && \ 
   chown -R gluster:gluster /tmp/ifs && \
   chown -R gluster:gluster /tmp/virus-scan* && \
+  chown -R gluster:gluster /var/log/tomcat && \
   find /tmp/ifs  \( -type d -o -type f \) -exec chmod 775 {} + && \
   find /tmp/virus-scan*  \( -type d -o -type f \) -exec chmod 775 {} +
 

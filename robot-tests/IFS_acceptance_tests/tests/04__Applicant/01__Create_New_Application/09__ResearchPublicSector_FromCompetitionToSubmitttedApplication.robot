@@ -11,6 +11,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-7718 EDI question - application form
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -30,7 +32,7 @@ ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
-    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700
+    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700  IFS-8779
     [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
@@ -65,17 +67,17 @@ The Applicant completing the application details
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
 
 Applicant Applies to Public content leading Competition
-    [Documentation]  IFS-1012  IFS-4046
+    [Documentation]  IFS-1012  IFS-4046  IFS-8044
     [Tags]  Applicant  CompAdmin  HappyPath
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
-    Given logged in user applies to competition public    ${openCompetitionPublicSector_name}  4
-    When the user clicks the button/link                  link = Application details
-    Then the user fills in the Application details        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
-    And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
-    When the user navigates to Your-finances page         ${publicLeadApp}
-    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
-    And the user accept the competition terms and conditions    Return to application overview
+    Given logged in user applies to competition public                   ${openCompetitionPublicSector_name}  4
+    When the user clicks the button/link                                 link = Application details
+    Then the user fills in the Application details with no submit        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user marks every section but one as complete                 ${publicLeadApp}  Experimental development
+    When the user navigates to Your-finances page                        ${publicLeadApp}
+    Then the user marks the finances as complete                         ${publicLeadApp}  Calculate  52,214  no
+    And the user accept the competition terms and conditions             Return to application overview
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com  no
 
 Project Finance is able to see the Overheads costs file
@@ -95,15 +97,16 @@ The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2  GRANT
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  SUBSIDY_CONTROL  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%
+    the user fills in the CS funding eligibility            true   ${compType_Generic}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user removes the Project details questions and marks the Application section as done  yes  Generic  ${competition}
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      GRANT
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
@@ -169,7 +172,7 @@ the internal user can see that the Generic competition has only one Application 
     the user clicks the button/link                   link = 1. Edit this question
     the user is able to configure the new question    ${customQuestion}
     the user should be able to see the read only view of question correctly  ${customQuestion}
-    the user clicks the button/link                   link = Competition details
+    the user clicks the button/link                   link = Back to competition details
 
 Custom suite teardown
     Close browser and delete emails

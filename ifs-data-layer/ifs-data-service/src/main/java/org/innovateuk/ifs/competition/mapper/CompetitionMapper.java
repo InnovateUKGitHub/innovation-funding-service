@@ -15,6 +15,7 @@ import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.mapper.GolTemplateMapper;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.*;
@@ -38,7 +39,8 @@ import java.util.stream.Collectors;
                 GrantClaimMaximumMapper.class,
                 CompetitionDocumentMapper.class,
                 FileTypeMapper.class,
-                FileEntryMapper.class
+                FileEntryMapper.class,
+                GolTemplateMapper.class
         })
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 
@@ -57,7 +59,6 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     @Mappings({
             @Mapping(target = "sections", ignore = true),
             @Mapping(target = "questions", ignore = true),
-            @Mapping(target = "template", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
             @Mapping(target = "panelDate", ignore = true),
             @Mapping(target = "projectStages", ignore = true)

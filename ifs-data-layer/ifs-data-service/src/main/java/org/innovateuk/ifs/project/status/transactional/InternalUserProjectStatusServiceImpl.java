@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -32,7 +33,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +83,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private GrantProcessService grantProcessService;
 
     @Override
-    @Transactional //Write transaction for first time creation of project finances.
     public ServiceResult<ProjectStatusPageResource> getCompetitionStatus(long competitionId,
                                                                          String applicationSearchString,
                                                                          int page,
@@ -121,9 +120,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
-        boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
-        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, partnerProjectLocationStatus);
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, partnerProjectLocationStatus);
         ProjectActivityStates projectTeamStatus = getProjectTeamStatus(project);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project);
@@ -144,16 +142,17 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 bankDetailsStatus,
                 financeChecksStatus,
                 spendProfileStatus,
-                getMonitoringOfficerStatus(project, projectDetailsStatus, locationPerPartnerRequired, partnerProjectLocationStatus),
+                getMonitoringOfficerStatus(project, projectDetailsStatus, partnerProjectLocationStatus),
                 documentsStatus,
                 getGrantOfferLetterState(project, bankDetailsStatus, spendProfileStatus, documentsStatus),
                 getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
                 golWorkflowHandler.isSent(project),
                 project.getProjectState(),
+                project.getApplication().getApplicationProcess().getProcessState(),
                 sentToIfsPa);
     }
-    private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectActivityStates partnerProjectLocationStatus) {
-        if (locationPerPartnerRequired && PENDING.equals(partnerProjectLocationStatus)) {
+    private ProjectActivityStates getProjectDetailsStatus(Project project, ProjectActivityStates partnerProjectLocationStatus) {
+        if (PENDING.equals(partnerProjectLocationStatus)) {
             return PENDING;
         }
         return projectDetailsWorkflowHandler.isSubmitted(project) ?
@@ -195,6 +194,9 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project) {
+        if (!projectContainsStage(project, ProjectSetupStage.BANK_DETAILS)) {
+            return COMPLETE;
+        }
         List<Organisation> organisationsRequiringBankDetails = project.getOrganisations()
                 .stream()
                 .filter(org -> areBankDetailsRequired(project, org))
@@ -264,30 +266,21 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project,
                                                              ProjectActivityStates projectDetailsStatus,
-                                                             final boolean locationPerPartnerRequired,
                                                              final ProjectActivityStates partnerProjectLocationStatus) {
 
         boolean monitoringOfficerExists = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).isSuccess();
 
         return createMonitoringOfficerCompetitionStatus(monitoringOfficerExists,
                                                         projectDetailsStatus,
-                                                        locationPerPartnerRequired,
                                                         partnerProjectLocationStatus,
                                                         project.getProjectState());
     }
 
     private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final boolean monitoringOfficerExists,
                                                                            final ProjectActivityStates leadProjectDetailsSubmitted,
-                                                                           final boolean locationPerPartnerRequired,
                                                                            final ProjectActivityStates partnerProjectLocationStatus,
                                                                            final ProjectState projectState) {
-
-        boolean allRequiredDetailsComplete;
-        if (locationPerPartnerRequired) {
-            allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE) && partnerProjectLocationStatus.equals(COMPLETE);
-        } else {
-            allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE);
-        }
+        boolean allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE) && partnerProjectLocationStatus.equals(COMPLETE);
 
         return getMonitoringOfficerStatus(monitoringOfficerExists, allRequiredDetailsComplete, projectState);
     }
@@ -360,7 +353,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         }
         if (COMPLETE.equals(documentsStatus)
                 && COMPLETE.equals(spendProfileStatus)
-                && COMPLETE.equals(bankDetailsStatus)) {
+                && COMPLETE.equals(bankDetailsStatus)
+                && project.getApplication().getApplicationProcess().getProcessState() == ApplicationState.APPROVED) {
             if (golWorkflowHandler.isApproved(project)) {
                 return COMPLETE;
             } else if (golWorkflowHandler.isRejected(project)) {
@@ -434,10 +428,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private boolean projectLocationsCompletedIfNecessary(final Project project) {
-        boolean locationsRequired = project.getApplication().getCompetition().isLocationPerPartner();
-        if(!locationsRequired) {
-            return true;
-        }
         return project.getPartnerOrganisations()
                 .stream()
                 .noneMatch(org -> org.getPostcode() == null);

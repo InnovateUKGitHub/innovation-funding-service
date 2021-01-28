@@ -5,10 +5,12 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.assessment.builder.ApplicationAssessmentsResourceBuilder;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -24,8 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -33,12 +34,15 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -143,7 +147,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
                 asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
-                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture));
+                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
@@ -167,6 +171,59 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
     }
 
     @Test
+    public void populateForSupporterReturnsCorrectDownloadUrlForFiles() {
+        user = newUserResource().withRoleGlobal(Role.SUPPORTER).build();
+
+        FormInputResource appendix = newFormInputResource()
+                .withType(FormInputType.FILEUPLOAD)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .build();
+
+        FileEntryResource appendixOneFileEntry = newFileEntryResource()
+                .withName("Appendix1.pdf")
+                .build();
+
+        FileEntryResource appendixTwoFileEntry = newFileEntryResource()
+                .withName("Appendix2.pdf")
+                .build();
+
+        FormInputResource templateDocument = newFormInputResource()
+                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .withDescription("Document Title")
+                .build();
+
+        FormInputResponseResource appendixResponse = newFormInputResponseResource()
+                .withFormInputs(appendix.getId())
+                .withFileEntries(Arrays.asList(appendixOneFileEntry, appendixTwoFileEntry))
+                .build();
+
+        FileEntryResource templateFileEntry = newFileEntryResource()
+                .withName("template.pdf")
+                .build();
+
+        FormInputResponseResource templateDocumentResponse = newFormInputResponseResource()
+                .withFormInputs(templateDocument.getId())
+                .withFileEntries(Collections.singletonList(templateFileEntry))
+                .build();
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList(), emptyList());
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
+
+        assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
+                question.getId(), appendix.getId(), appendixOneFileEntry.getId()), viewModel.getAppendices().get(0).getUrl());
+        assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
+                question.getId(), appendix.getId(), appendixTwoFileEntry.getId()), viewModel.getAppendices().get(1).getUrl());
+        assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
+                question.getId(), templateDocument.getId(), templateFileEntry.getId()), viewModel.getTemplateFile().getUrl());
+    }
+
+    @Test
     public void populateForMultipleChoiceOptions() {
         FormInputResource multipleChoice = newFormInputResource()
                 .withType(FormInputType.MULTIPLE_CHOICE)
@@ -179,12 +236,49 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withMultipleChoiceOptionText("Some text")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
-                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList(), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
 
         assertEquals("Some text", viewModel.getAnswer());
+    }
+
+    @Test
+    public void populateForKtpAssessment() {
+
+        Long questionId = 1L;
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource().withName("Research category").build())
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
+                .withId(questionId)
+                .withShortName("Impact")
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .build();
+        List<ApplicationAssessmentResource> assessments = ApplicationAssessmentsResourceBuilder.newApplicationAssessmentResource()
+                .withApplicationId(application.getId())
+                .withAssessmentId(2L, 3L)
+                .withScores(asMap(questionId, BigDecimal.ONE), asMap(questionId, BigDecimal.TEN))
+                .withFeedback(asMap(questionId, "Feedback-1"), asMap(questionId, "Feedback-10"))
+                .build(2);
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), assessments, emptyList());
+
+        ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(true);
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data, settings);
+
+        assertNotNull(viewModel);
+        assertTrue(viewModel.isKtpAssessmentQuestion());
+        assertEquals(questionId.longValue(), viewModel.getQuestionId());
+        assertEquals(asList("Feedback-1", "Feedback-10"), viewModel.getFeedback());
+        assertEquals(asList(BigDecimal.ONE, BigDecimal.TEN), viewModel.getScores());
+        assertEquals(BigDecimal.valueOf(5.5), viewModel.getAverageScore());
     }
 }

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
-
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
@@ -27,17 +26,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -113,12 +112,11 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                         ServiceResult<Long> result = service.create(query);
                         if (result.isSuccess()) {
                             Project project = projectFinance.getProject();
-                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT);
+                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT, PROJECT_MANAGER);
                             List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> Objects.equals(pu.getOrganisation().getId(), projectFinance.getOrganisation().getId()));
-
-                            Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
-                            if (financeContact.isPresent()) {
-                                ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), project);
+                            Set<User> usersToNotify = financeContacts.stream().map(ProjectUser::getUser).collect(Collectors.toSet());
+                            for (User user: usersToNotify) {
+                                ServiceResult<Void> notificationResult = sendNewQueryNotification(user, project);
 
                                 if (!notificationResult.isSuccess()) {
                                     return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
@@ -156,7 +154,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("applicationName", application.getName());
 
-        Notification notification = new Notification(from, singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
+        Notification notification = new Notification(from, pmTarget, Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
 
     }
@@ -173,7 +171,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
         notificationArguments.put("applicationId", project.getApplication().getId());
 
-        Notification notification = new Notification(from, singletonList(pmTarget), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
+        Notification notification = new Notification(from, pmTarget, FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

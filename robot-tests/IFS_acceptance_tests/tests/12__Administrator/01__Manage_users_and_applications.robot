@@ -35,12 +35,17 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7960 KTA Dashboard
 ...
+...               IFS-8095 Content improvement for KTA journey
+...
+...               IFS-8547 KTA application and project dashboards
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
@@ -57,15 +62,21 @@ ${validKTNDomainEmail}                   jake.Rayan@ktn-uk.test
 ${KTNDomainEmailAssessor}                alyssa.smith@ktn-uk.test
 ${nonKTNDomainEmailAssessor}             simon.bates@gmail.com
 ${inviteExternalUserText}                Invite a new external user
-${firstNameInvalidCharacterMessage}      Your first name should have at least 2 characters.
-${lastNameInvalidCharacterMessage}       Your last name should have at least 2 characters.
+${firstNameInvalidCharacterMessage}      Their first name should have at least 2 characters.
+${lastNameInvalidCharacterMessage}       Their last name should have at least 2 characters.
+${newFirstNameInvalidCharacterMessage}   Your first name should have at least 2 characters.
+${newLastNameInvalidCharacterMessage}    Your last name should have at least 2 characters.
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
-${invalidKTNDomainValidationMessage}     Users cannot be registered without a knowledge transfer network email address.
+${invalidKTNDomainValidationMessage}     You must enter a valid Knowledge Transfer Network email address.
+${blankKTNDomainValidationMessage}       You must enter a Knowledge Transfer Network email address.
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
+${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
+${applicantKTACredentials}               john.fenton@ktn-uk.test
+${newApplicantCredentials}               joe.adams@ktn-uk.test
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -183,7 +194,8 @@ Support can change email address
     [Documentation]  IFS-6380  IFS-6928
     Given Log in as a different user           &{support_user_credentials}
     And The user clicks the button/link        link = Manage users
-    And the user clicks the button/link        jQuery = .pagination-links a:contains("6")
+    And the user enters text to a text field   id = filter   ${supportChangeEmailOld}
+    And the user clicks the button/link        css = input[type="submit"]
     When the user clicks the button/link       jQuery = .user-profile:contains("${supportChangeEmailOld}") a:contains("Edit")
     And the user enters text to a text field   id = email  ${supportChangeEmailNew}
     And the user clicks the button/link        jQuery = button:contains("Save and return")
@@ -198,11 +210,11 @@ Support cannot see internal users
     And the user should not see the element       jQuery = p:contains("users matching the search")
 
 Server side validation for invite new internal user
-    [Documentation]  IFS-27
+    [Documentation]  IFS-27 IFS-8095
     [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/management/admin/users/active
     When the user clicks the button/link                    link = Invite a new internal user
-    And the user clicks the button/link                     jQuery = button:contains("Send invite")
+    And the user clicks the button/link                     jQuery = button:contains("Send invitation")
     Then the use should see the validation error summary    Please enter an email address.
 
 The user must use an Innovate UK email
@@ -240,14 +252,14 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
     Given the user reads his email and clicks the link            ${email}  ${emailInviteSubject}  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                           jQuery = .govuk-button:contains("Create account")
-    And the use should see the validation error summary           Password must be at least 8 characters
+    And the use should see the validation error summary           Password must be at least 12 characters
     When the user enters the basic details to create account      New  Administrator  ${email}
     Set Focus To Element                                          css = #lastName
     Then the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
-    Given the user enters text to a text field  id = password  PASSWORD123
+    Given the user enters text to a text field  id = password  PASSWORD1357123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field   css = #password  ${short_password}
@@ -324,7 +336,7 @@ Deactivate external user
 
 Deactivated external user cannot login
     [Documentation]  IFS-6380
-    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd
+    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd1357
     When Logging in and Error Checking                          &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details   ${adminChangeEmailNew}  inactive
     And the IFS admin reactivate the user                       ${adminChangeEmailNew}
@@ -364,16 +376,17 @@ Deactivated innovation lead cannot be selected on initial details
     Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
 Invite a new external user field validations
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                                            link = Manage users
     When the user clicks the button/link                                             link = Invite a new external user
-    And the user clicks the button/link                                              jQuery = button:contains("Save and return")
+    And the user selects a new external user role                                    KNOWLEDGE_TRANSFER_ADVISER
+    And the user clicks the button/link                                              jQuery = button:contains("Send invitation")
     Then the user should see invite a new external user field validation message
 
 KTN email domain validations
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user fills invite a new external user fields     Jake  Rayan  ${invalidEmail}
-    When the user clicks the button/link                       jQuery = button:contains("Save and return")
+    When the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see a field and summary error         ${invalidKTNDomainValidationMessage}
 
 Administrator can cancel the new external user details entered
@@ -383,16 +396,17 @@ Administrator can cancel the new external user details entered
     Then the user should see the element                            link = Invite a new external user
 
 Administrator can sucessfully save and return to the manage users page
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                     link = Invite a new external user
+    And the user selects a new external user role             KNOWLEDGE_TRANSFER_ADVISER
     When the user fills invite a new external user fields     Jake  Rayan  ${validKTNDomainEmail}
-    And the user clicks the button/link                       jQuery = button:contains("Save and return")
+    And the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see the element                      link = Invite a new external user
     [Teardown]  Logout as user
 
 The user accepts the invite for KTA role
     [Documentation]  IFS-7934
-    When the user reads his email and clicks the link      ${validKTNDomainEmail}  ${emailInviteSubject}  ${KTAEmailInviteText}
+    When the user reads his email and clicks the link      ${validKTNDomainEmail}  ${ktpEmailInviteSubject}  ${KTAEmailInviteText}
     Then the user should see the element                   jQuery = h1:contains("Create knowledge transfer adviser account")
 
 The KTA creates a new account
@@ -430,6 +444,20 @@ IFS Admin can add a role profile of KTA to an assessor in KT Network
     Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element                  link = Add a new external role profile
 
+IFS Admin can add a role profile of KTA to an applicant in KT Network
+    [Documentation]  IFS-7976
+    Given the user navigates to the page                     ${server}/management/admin/users/active
+    When the user selects a user to edit details             joe.adams  ${newApplicantCredentials}
+    And the user adds a new external role profile of KTA
+    Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
+    And the user should not see the element                  link = Add a new external role profile
+
+Applicant that has been assigned a KTA role can see applications and assessment dashboard
+    [Documentation]  IFS-8547
+     Given Log in as a different user     ${newApplicantCredentials}  ${short_password}
+     When Then the user should see the element    id = dashboard-link-APPLICANT
+     Then And The user should see the element     id = dashboard-link-ASSESSOR
+
 Comp Admin should be able to see the details of assessor with new role profile of KTA
     [Documentation]  IFS-7976
     [Setup]  log in as a different user         &{Comp_admin1_credentials}
@@ -458,8 +486,9 @@ the user selects a user to edit details
     the user clicks the button/link     jQuery = .user-profile:contains("${email}") a:contains("Edit")
 
 the user adds a new external role profile of KTA
-    the user clicks the button/link     link = Add a new external role profile
-    the user clicks the button/link     css = button[type="submit"]
+    the user clicks the button/link               link = Add a new external role profile
+    the user selects a new external user role     KNOWLEDGE_TRANSFER_ADVISER
+    the user clicks the button/link               css = button[type="submit"]
 
 the KTA user enters the details to create account
     [Arguments]  ${firstName}  ${lastName}  ${email}
@@ -471,8 +500,8 @@ the KTA user enters the details to create account
     the user selects the checkbox                           termsAndConditions
 
 the KTA user checks for all validations
-    the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${firstNameInvalidCharacterMessage}
-    the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${lastNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${newFirstNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${newLastNameInvalidCharacterMessage}
     the user enters the text and checks for validation message     phoneNumber  12  ${enter_a_valid_phone_number}  ${enter_a_phone_number_between_8_and_20_digits}
     the user clicks the button/link                                name = create-account
     the user should see the element                                jquery = span:contains("${search_a_valid_postcode}")
@@ -515,7 +544,7 @@ the external user removes the pending parter invitation
 the user removes the pending organisation invitation
     [Arguments]  ${pageToRemoveFrom}
     the user navigates to the page      ${pageToRemoveFrom}
-    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove organisation")
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove")
     the user clicks the button/link     jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
 
 the user removes the pending organisation invitation in projet setup
@@ -557,7 +586,7 @@ the user navigates to the View internal user details
     the user clicks the button/link        jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invitation")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -578,7 +607,7 @@ the IFS admin invites a new internal user
     the user enters text to a text field        id = firstName  Support
     the user enters text to a text field        id = lastName  User
     the user enters text to a text field        id = emailAddress  ${invalidEmail}
-    the user clicks the button/link             jQuery = button:contains("Send invite")
+    the user clicks the button/link             jQuery = button:contains("Send invitation")
 
 the user enters the text and checks for validation message
     [Arguments]  ${field_id}  ${text}  ${error_message1}  ${error_message2}
@@ -593,7 +622,7 @@ the IFS admin send invite to internal user
     the user enters text to a text field                 id = lastName  ${last_name}
     the user enters text to a text field                 id = emailAddress  ${email}
     the user selects the option from the drop-down menu  ${user_role}  id = role
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invitation")
 
 the IFS admin edit internal user details
     the user enters text to a text field                 id = firstName  Innovation
@@ -626,7 +655,7 @@ the new internal user logs in and checks user details
     the user should see the element        jQuery = option[value="IFS_ADMINISTRATOR"][selected="selected"]
     the user clicks the button/link        link = Manage users
     the user clicks the button/link        jQuery = a:contains("Pending")
-    the user should see the element        jQuery = span:contains("0") + span:contains("pending internal users")
+    the user should see the element        jQuery = span:contains("0") + span:contains("pending users")
     the user should not see the element    css = .table-overflow ~ td
     the user clicks the button/link        jQuery = a:contains("Active")
 
@@ -712,7 +741,7 @@ the user should see invite a new external user field validation message
     The user should see a field and summary error     ${firstNameValidationMessage}
     The user should see a field and summary error     ${lastNameValidationMessage}
     The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
-    The user should see a field and summary error     ${emailAddressValidationMessage}
+    The user should see a field and summary error     ${blankKTNDomainValidationMessage}
 
 the user fills invite a new external user fields
     [Arguments]  ${firstName}  ${lastName}  ${emailAddress}

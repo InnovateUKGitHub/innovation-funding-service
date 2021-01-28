@@ -4,7 +4,6 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -18,6 +17,7 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     private int minProjectDuration;
     private int maxProjectDuration;
+    private boolean minProjectDurationDictatedByCompetition;
 
     private Set<Long> competitionInnovationAreas;
     private String selectedInnovationAreaName;
@@ -28,18 +28,21 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
     private boolean complete;
 
     private boolean ktpCompetition;
+    private boolean canResubmit;
 
-    public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete) {
+    public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete, int maxMilestoneMonth) {
         this.application = application;
         this.competitionIsClosingSoon = competition.isClosingSoon();
         this.competitionInnovationAreas = competition.getInnovationAreas();
-        this.minProjectDuration = competition.getMinProjectDuration();
+        this.minProjectDuration = Math.max(maxMilestoneMonth, competition.getMinProjectDuration());
+        this.minProjectDurationDictatedByCompetition = minProjectDuration == competition.getMinProjectDuration();
         this.maxProjectDuration = competition.getMaxProjectDuration();
         this.selectedInnovationAreaName = application.getInnovationArea().getName();
         this.procurementCompetition = competition.isProcurement();
         this.open = open;
         this.complete = complete;
         this.ktpCompetition = competition.isKtp();
+        this.canResubmit = competition.getResubmission();
     }
 
     @Override
@@ -66,6 +69,10 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     public int getMaxProjectDuration() {
         return maxProjectDuration;
+    }
+
+    public boolean isMinProjectDurationDictatedByCompetition() {
+        return minProjectDurationDictatedByCompetition;
     }
 
     public Set<Long> getCompetitionInnovationAreas() {
@@ -111,5 +118,9 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isCanResubmit() {
+        return canResubmit;
     }
 }

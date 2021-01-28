@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
@@ -13,25 +11,28 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,16 +43,17 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.KNOWLEDGE_BASE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -94,6 +96,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
+
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private FinanceChecksGenerator financeChecksGenerator;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -190,15 +198,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(long applicationId) {
-
-        return getApplication(applicationId).andOnSuccess(application -> {
-
-            if (FundingDecisionStatus.FUNDED.equals(application.getFundingDecision())) {
-                return createSingletonProjectFromApplicationId(applicationId);
-            } else {
-                return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
-            }
-        });
+        return getApplication(applicationId).andOnSuccess(application ->
+                createSingletonProjectFromApplicationId(applicationId));
     }
 
     @Override
@@ -233,36 +234,68 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             project.setTargetStartDate(application.getStartDate());
             project.setUseDocusignForGrantOfferLetter(application.getCompetition().isUseDocusignForGrantOfferLetter());
 
+
             ProcessRole leadApplicantRole = simpleFindFirst(application.getProcessRoles(), ProcessRole::isLeadApplicant).get();
             List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isCollaborator);
             List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
 
-            List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
+            List<ProjectUser> projectUsers = simpleMap(allRoles,
                     role -> {
                         Organisation organisation = organisationRepository.findById(role.getOrganisationId()).orElse(null);
                         return createPartnerProjectUser(project, role.getUser(), organisation);
                     });
 
-            ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
+            List<Organisation> uniqueOrganisations =
+                    removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
-            ServiceResult<Project> saveProjectResult = projectUserCollection.andOnSuccessReturn(projectUsers -> {
+            List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
+                    createPartnerOrganisation(application, project, org, leadApplicantRole));
 
-                List<Organisation> uniqueOrganisations =
-                        removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
+            project.setProjectUsers(projectUsers);
+            project.setPartnerOrganisations(partnerOrganisations);
+            Project savedProject = projectRepository.save(project);
 
-                List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                        createPartnerOrganisation(application, project, org, leadApplicantRole));
-
-                project.setProjectUsers(projectUsers);
-                project.setPartnerOrganisations(partnerOrganisations);
-                return projectRepository.save(project);
-            });
-
-            return saveProjectResult.
-                    andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                            andOnSuccess(() -> setCompetitionProjectSetupStartedDate(newProject)).
-                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+            return createProcessEntriesForNewProject(savedProject).
+                    andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(savedProject)).
+                    andOnSuccess(() -> handleFundingTypeSpecificSetup(savedProject)).
+                    andOnSuccess(() -> setCompetitionProjectSetupStartedDate(savedProject)).
+                    andOnSuccessReturn(() -> projectMapper.mapToResource(savedProject));
         });
+    }
+
+    private ServiceResult<Void> handleFundingTypeSpecificSetup(Project project) {
+        if (project.getApplication().getCompetition().isKtp()) {
+            PartnerOrganisation lead = project.getPartnerOrganisations()
+                    .stream()
+                    .filter(PartnerOrganisation::isLeadOrganisation)
+                    .findAny()
+                    .get();
+            Address address = lead.getOrganisation().getAddresses()
+                    .stream()
+                    .filter(orgAddress -> orgAddress.getAddressType().getId().equals(KNOWLEDGE_BASE.getId()))
+                    .findFirst()
+                    .map(OrganisationAddress::getAddress)
+                    .orElse(null);
+
+            project.setAddress(address);
+            if (!projectDetailsWorkflowHandler.projectAddressAdded(project, project.getProjectUsers().get(0))) {
+                return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+            }
+
+            Map<Long, ProcessRole> organisationIdToRoleMap = project.getApplication().getProcessRoles().stream()
+                .filter(pr -> pr.getOrganisationId() != null)
+                .collect(Collectors.toMap(ProcessRole::getOrganisationId, Function.identity(), (pr1, pr2) -> pr2.isLeadApplicant() ? pr2 : pr1));
+            organisationIdToRoleMap.forEach((orgId, pr) -> {
+                Organisation organisation = organisationRepository.findById(pr.getOrganisationId()).orElse(null);
+                if (pr.isLeadApplicant()) {
+                    project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_MANAGER));
+                }
+                project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_FINANCE_CONTACT));
+            });
+            Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole().isKta()).findAny();
+            ktaRole.ifPresent(role -> project.setProjectMonitoringOfficer(new MonitoringOfficer(role.getUser(), project)));
+        }
+        return serviceSuccess();
     }
 
     private void setCompetitionProjectSetupStartedDate(Project newProject) {
@@ -292,12 +325,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return partnerOrganisation;
     }
 
-    private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
+    private ProjectUser createPartnerProjectUser(Project project, User user, Organisation organisation) {
         return createProjectUserForRole(project, user, organisation, PROJECT_PARTNER);
     }
 
-    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
-        return serviceSuccess(new ProjectUser(user, project, role, organisation));
+    private ProjectUser createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
+        return new ProjectUser(user, project, role, organisation);
     }
 
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
@@ -374,4 +407,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private List<ProjectUser> getProjectUsersByProjectId(Long projectId, List<ProjectParticipantRole> projectParticipantRoles) {
         return projectUserRepository.findByProjectIdAndRoleIsIn(projectId, projectParticipantRoles);
     }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = newProject.getOrganisations();
+
+        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
+                financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
+                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+                                financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
+
+        return processAnyFailuresOrSucceed(financeCheckResults);
+    }
+
 }

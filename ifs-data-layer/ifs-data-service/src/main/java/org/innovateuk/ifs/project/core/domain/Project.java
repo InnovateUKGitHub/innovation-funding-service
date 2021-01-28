@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -85,6 +86,10 @@ public class Project implements ProcessActivity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="signedAdditionalContractFileEntryId", referencedColumnName = "id")
+    private FileEntry signedAdditionalContractFile;
 
     @NotNull
     @Enumerated(STRING)
@@ -286,6 +291,14 @@ public class Project implements ProcessActivity {
         this.additionalContractFile = additionalContractFile;
     }
 
+    public FileEntry getSignedAdditionalContractFile() {
+        return signedAdditionalContractFile;
+    }
+
+    public void setSignedAdditionalContractFile(FileEntry signedAdditionalContractFile) {
+        this.signedAdditionalContractFile = signedAdditionalContractFile;
+    }
+
     public FileEntry getGrantOfferLetter() {
         return grantOfferLetter;
     }
@@ -337,6 +350,12 @@ public class Project implements ProcessActivity {
                 projectUser.isProjectManager()).isEmpty();
     }
 
+    public boolean isFinanceContact(User user) {
+        return !getProjectUsers(projectUser ->
+                projectUserForUser(user, projectUser) &&
+                        projectUser.isFinanceContact()).isEmpty();
+    }
+
     private boolean projectUserForUser(User user, ProjectUser projectUser) {
         return projectUser.getUser().getId().equals(user.getId());
     }
@@ -384,4 +403,6 @@ public class Project implements ProcessActivity {
     public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
         this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
+
+
 }

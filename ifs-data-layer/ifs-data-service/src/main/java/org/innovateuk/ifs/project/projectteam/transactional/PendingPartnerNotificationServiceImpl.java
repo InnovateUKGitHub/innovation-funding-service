@@ -19,9 +19,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerNotificationServiceImpl.Notifications.NEW_PARTNER_ORGANISATION_JOINED;
 
 @Service
@@ -83,7 +82,7 @@ public class PendingPartnerNotificationServiceImpl implements PendingPartnerNoti
         notificationArguments.put("organisationName", organisation.getName());
         notificationArguments.put("projectTeamLink", getProjectTeamLink(project.getId()));
 
-        Notification notification = new Notification(from, singletonList(to), NEW_PARTNER_ORGANISATION_JOINED, notificationArguments);
+        Notification notification = new Notification(from, to, NEW_PARTNER_ORGANISATION_JOINED, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 

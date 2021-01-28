@@ -58,6 +58,7 @@ ${internationalLeadInternationalCompetition}             International Lead Inte
 ${openCompetitionPerformance_name}                       Performance testing competition
 ${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
 ${projectEligibilityLink}                                Project eligibility
+${fundingEligibilityTitle}                               Funding eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
@@ -111,7 +112,16 @@ ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}   ${getPrettyLongMi
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_TIME_DATE_LONG}  ${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}  ${getPrettyLongMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
-${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_DATE}   ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH}   ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DAY_MONTH_YEAR}  ${getPrettyMilestoneDayMthYear(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${ktpAssessmentCompetitionName}                               KTP assessment
+${ktpAssessmentCompetitionId}                                 ${competition_ids['${ktpAssessmentCompetitionName}']}
+${ktpAssessmentCompetitionReleaseFeedbackDayMonthYear}        ${getPrettyMilestoneDate(${ktpAssessmentCompetitionId}, "RELEASE_FEEDBACK")}
+${ktpDetailsFinanceCompetitionName}                           KTP assessment Detailed Finances
+${ktpDetailsFinanceCompetitionId}                             ${competition_ids['${ktpDetailsFinanceCompetitionName}']}
+${ktpDetailsFinanceCompetitionReleaseFeedbackDayMonthYear}    ${getPrettyMilestoneDate(${ktpDetailsFinanceCompetitionId}, "RELEASE_FEEDBACK")}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_TITLE}      Intelligent Building
@@ -278,8 +288,8 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
-${existingAcademicPartnerOrgName}     WORTH IT LTD
-${newPartnerOrgName}                  INNOVATE LTD
+${existingAcademicPartnerOrgName}     Aviva Plc
+${newPartnerOrgName}                  ROYAL MAIL PLC
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
@@ -296,6 +306,8 @@ ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
+${compType_PT}         The Prince's Trust
+${compType_H2020}      Horizon 2020
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
@@ -315,18 +327,19 @@ ${compType_ATI}        Aerospace Technology Institute
 @{multiple_answer_choice}     answer2  answer3  answer4  answer5  answer6  answer7  answer8  answer9  answer10
 
 #Project Setup
-${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
-${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
-${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}       100000
-${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}      60
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}      53532322
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    100000
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}   60
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
-${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
-${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}
+${PROJECT_SETUP_COMPETITION_NAME}                                   New designs for a circular economy
+${PROJECT_SETUP_COMPETITION}                                        ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
+${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}     60674010
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}                100000
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}               60
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}               53532322
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}             100000
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}            60
+${EXISTING_PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}              ROYAL MAIL PLC
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}             ewan+1@hiveit.co.uk
+${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}                        ${collaborator1_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}               ${collaborator2_credentials["email"]}
 
 #OrganisationTypes and Info text
 ${businessOrganisationName}              Business

@@ -56,7 +56,7 @@ public class LabourCostCategoryTest {
         BigDecimal result = labourCost.getGrossEmployeeCost();
         labourCostCategory.calculateTotal();
 
-        assertEquals(result.setScale(5, RoundingMode.HALF_EVEN), labourCostCategory.getTotal());
+        assertEquals(result, labourCostCategory.getTotal());
     }
 
     @Test

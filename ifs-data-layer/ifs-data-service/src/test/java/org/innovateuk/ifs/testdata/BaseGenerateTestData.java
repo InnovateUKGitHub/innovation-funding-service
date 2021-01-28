@@ -2,9 +2,11 @@ package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
 import org.flywaydb.core.Flyway;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
@@ -15,10 +17,7 @@ import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
-import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -47,6 +46,7 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
@@ -170,6 +170,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private OrganisationDataBuilderService organisationDataBuilderService;
 
+    @Autowired
+    private SupporterDataService supporterDataService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -184,9 +187,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Project Setup Comp 18}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Rolling stock future developments}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
 
     @Before
@@ -270,6 +273,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createPublicContent(createCompetitionFutures), taskExecutor);
 
+        CompletableFuture<Void> supporterFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
+                createSupporters(createCompetitionFutures, createApplicationsFutures), taskExecutor);
+
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
                 createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
@@ -284,11 +290,16 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
+        CompletableFuture<Void> competitionAssessmentPeriodsFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                createAssessmentPeriodsForCompetitions(createCompetitionFutures), taskExecutor);
+
         CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture,
-                                competitionOrganisationConfigFutures
+                                competitionOrganisationConfigFutures,
+                                supporterFutures,
+                                competitionAssessmentPeriodsFutures
         ).join();
 
         long after = System.currentTimeMillis();
@@ -333,6 +344,21 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
+    private void createSupporters(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
+        simpleMap(createCompetitionFutures, CompletableFuture::join);
+        List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
+
+        List<ApplicationResource> applicationsForCofunding = applications.stream()
+                .filter(app -> app.getCompetition().getFundingType() == FundingType.KTP)
+                .map(ApplicationData::getApplication)
+                .collect(toList());
+
+        List<ExternalUserLine> filteredSupporters = simpleFilter(this.externalUserLines, l -> l.role == Role.SUPPORTER);
+
+        supporterDataService.buildSupporters(applicationsForCofunding, filteredSupporters);
+    }
+
+
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         createPublicContentGroups(competitions);
@@ -347,6 +373,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void createCompetitionOrganisationConfigForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         createCompetitionOrganisationConfig(competitions);
+    }
+
+    private void createAssessmentPeriodsForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        createCompetitionAssessmentPeriods(competitions);
     }
 
     private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
@@ -366,7 +397,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
+        applicationFinances.join(); //wait for finances to be created.
+
+        CompletableFuture<List<ProcurementMilestoneData>> procurementMilestones = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createProcurementMilestones(applicationData, applicationLine, externalUserLines),
+                taskExecutor);
+
+
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, procurementMilestones);
 
         return allQuestionsAnswered.thenApplyAsync(done -> {
 
@@ -432,6 +470,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitionOrganisationConfig(List<CompetitionData> competitions) {
         competitions.forEach(competitionDataBuilderService::createCompetitionOrganisationConfig);
+    }
+
+    private void createCompetitionAssessmentPeriods(List<CompetitionData> competitions) {
+        competitions.forEach(competitionDataBuilderService::createCompetitionAssessmentPeriods);
     }
 
     private void createPublicContentGroups(List<CompetitionData> competitions) {
