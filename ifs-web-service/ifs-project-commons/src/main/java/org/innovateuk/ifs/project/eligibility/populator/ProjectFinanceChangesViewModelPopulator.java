@@ -124,8 +124,9 @@ public class ProjectFinanceChangesViewModelPopulator {
             }
         }
 
-        boolean vatRegistered = appFinance.isVatRegistered();
-        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, vatRegistered, vat);
+        boolean appVatRegistered = appFinance.isVatRegistered();
+        boolean projectVatRegistered = projectFinance.isVatRegistered();
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, appVatRegistered, projectVatRegistered, vat);
         return projectFinanceChangesProjectFinancesViewModel;
     }
 

@@ -5,13 +5,15 @@ import java.util.List;
 
 public class ProjectFinanceChangesProjectFinancesViewModel {
     private List<CostChangeViewModel> entries;
-    private boolean vatRegistered;
+    private boolean applicationVatRegistered;
+    private boolean projectVatRegistered;
     private CostChangeViewModel vat;
 
     public ProjectFinanceChangesProjectFinancesViewModel(List<CostChangeViewModel> entries,
-                                                         boolean vatRegistered, CostChangeViewModel vat) {
+                                                         boolean applicationVatRegistered, boolean projectVatRegistered, CostChangeViewModel vat) {
         this.entries = entries;
-        this.vatRegistered = vatRegistered;
+        this.applicationVatRegistered = applicationVatRegistered;
+        this.projectVatRegistered = projectVatRegistered;
         this.vat = vat;
     }
 
@@ -19,8 +21,16 @@ public class ProjectFinanceChangesProjectFinancesViewModel {
         return entries;
     }
 
-    public boolean isVatRegistered() {
-        return vatRegistered;
+    public boolean isApplicationVatRegistered() {
+        return applicationVatRegistered;
+    }
+
+    public boolean isProjectVatRegistered() {
+        return projectVatRegistered;
+    }
+
+    public boolean isVatRegisteredChanged() {
+        return applicationVatRegistered != projectVatRegistered;
     }
 
     public CostChangeViewModel getVat() {

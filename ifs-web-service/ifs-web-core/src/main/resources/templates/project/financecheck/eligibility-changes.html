@@ -95,10 +95,15 @@
                 <tr class="govuk-table__row standard-border">
                     <th class="govuk-table__header" scope="row">Are you VAT registered?</th>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <th:block th:if="${model.projectFinances.vatRegistered}">Yes</th:block>
-                        <th:block th:unless="${model.projectFinances.vatRegistered}">No</th:block>
+                        <th:block th:if="${model.projectFinances.applicationVatRegistered}">Yes</th:block>
+                        <th:block th:unless="${model.projectFinances.applicationVatRegistered}">No</th:block>
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${model.projectFinances.vatRegisteredChanged}">
+                            <th:block th:if="${model.projectFinances.projectVatRegistered}">Yes</th:block>
+                            <th:block th:unless="${model.projectFinances.projectVatRegistered}">No</th:block>
+                        </th:block>
+                    </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"></td>
                 </tr>
                 <tr class="govuk-table__row standard-border" th:with="vat=${model.projectFinances.vat}">
