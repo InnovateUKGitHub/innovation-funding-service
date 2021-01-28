@@ -119,4 +119,6 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     AssessmentTotalScoreResource getTotalScore(@Param("id") Long id);
 
     List<Assessment> findByTargetIdAndActivityStateIn(Long applicationId, Set<AssessmentState> states);
+
+    boolean existsByTargetId(Long targetId);
 }
