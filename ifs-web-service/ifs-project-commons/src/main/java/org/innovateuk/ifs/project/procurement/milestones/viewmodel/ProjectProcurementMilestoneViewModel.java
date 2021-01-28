@@ -16,8 +16,9 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final PaymentMilestoneResource paymentMilestoneResource;
     private final boolean eligibilityAndViabilityApproved;
     private final boolean externalUser;
+    private final boolean showChangesLink;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser, boolean showChangesLink) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
         this.organisationId = organisationId;
@@ -28,6 +29,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         this.eligibilityAndViabilityApproved = eligibilityAndViabilityApproved;
         this.paymentMilestoneResource = paymentMilestoneResource;
         this.externalUser = externalUser;
+        this.showChangesLink = showChangesLink;
     }
 
     public long getApplicationId() {
@@ -68,7 +70,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         return readOnly;
     }
 
-    public boolean getCanApprove() {
+    public boolean isCanApprove() {
         return this.eligibilityAndViabilityApproved && !this.paymentMilestoneResource.isMilestonePaymentApproved()
                 && this.isReadOnly();
     }
@@ -77,7 +79,11 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         return this.paymentMilestoneResource.isMilestonePaymentApproved();
     }
 
-    public boolean getShowBanner() {
+    public boolean isShowBanner() {
         return this.isApproved();
+    }
+
+    public boolean isShowChangesLink() {
+        return showChangesLink;
     }
 }

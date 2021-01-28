@@ -36,7 +36,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  @PathVariable long organisationId,
                                  UserResource userResource,
                                  Model model) {
-        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, false));
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, false, false));
         ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
         return viewProjectSetupMilestones(model, userResource, form);
     }

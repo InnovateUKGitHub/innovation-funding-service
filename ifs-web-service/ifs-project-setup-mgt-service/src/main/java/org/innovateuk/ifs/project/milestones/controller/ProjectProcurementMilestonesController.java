@@ -71,7 +71,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     }
 
     private String viewProjectMilestones(long projectId, long organisationId, boolean editMilestones, UserResource userResource, Model model, ProcurementMilestonesForm form) {
-        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, editMilestones));
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, editMilestones, true));
         return viewProjectSetupMilestones(model, userResource, form);
     }
 
@@ -164,7 +164,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                              UserResource userResource,
                              @PathVariable long projectId,
                              @PathVariable long organisationId) {
-        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, true));
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, true, true));
         return addAjaxRow(model);
     }
 

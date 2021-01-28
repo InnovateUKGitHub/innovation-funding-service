@@ -45,6 +45,10 @@
             </div>
         </th:block>
 
+        <p class="govuk-body" th:if="${model.showChangesLink}"><a
+            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${model.projectId},organisationId=${model.organisationId})}"
+            class="govuk-link">View changes to finances</a></p>
+
         <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                               data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
         <form th:object="${form}"
