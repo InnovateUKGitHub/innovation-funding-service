@@ -17,7 +17,9 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
-    <th:block th:insert="fragments/layout :: header-sub"
+    <th:block th:if="${model.externalUser}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${model.projectId})}"/>
+    <th:block th:unless="${model.externalUser}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
