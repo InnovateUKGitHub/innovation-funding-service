@@ -216,7 +216,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         "We will review your financial information.",
-                        format("/project/%d/finance-checks", project.getId()),
+                        format("/project/%d/finance-check", project.getId()),
                         financeChecksStatus,
                         monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
                         pendingQueries ? "pending-query" : null

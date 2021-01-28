@@ -87,7 +87,7 @@ public class ProjectFinanceChecksController {
 
     private static final Log LOG = LogFactory.getLog(ProjectFinanceChecksController.class);
 
-    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks";
+    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-check";
 
     private static final String ATTACHMENT_COOKIE = "query_new_response_attachments";
     private static final String FORM_ATTR = "form";
@@ -427,7 +427,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String redirectToQueries(Long projectId) {
-        return "redirect:/project/" + projectId + "/finance-checks";
+        return "redirect:/project/" + projectId + "/finance-check";
     }
 
     private String getCookieName(Long projectId, Long organisationId, Long queryId) {

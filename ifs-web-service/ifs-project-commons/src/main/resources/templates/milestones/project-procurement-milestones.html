@@ -18,7 +18,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+              th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
