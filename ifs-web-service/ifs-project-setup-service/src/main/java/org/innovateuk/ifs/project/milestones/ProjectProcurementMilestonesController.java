@@ -50,7 +50,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
 
     // not required for applicants in project setup
     @Override
-    public AbstractProcurementMilestoneFormSaver getSaver() {
+    protected AbstractProcurementMilestoneFormSaver getSaver() {
         return null;
     }
 }
