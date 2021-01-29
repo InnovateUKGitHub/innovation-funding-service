@@ -48,7 +48,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
-    private AssessmentRepository assessmentRepository;
+    private AssessmentService assessmentService;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -216,7 +216,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
         return application.getLeadApplicant().getId().equals(userId) &&
                 application.getFundingDecision() == null &&
                 application.isSubmitted() &&
-                !assessmentRepository.existsByTargetId(application.getId());
+                !assessmentService.existsByTargetId(application.getId()).getSuccess();
     }
 
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {

@@ -103,11 +103,10 @@ public class ApplicationDashboardServiceImplTest {
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
                 .thenReturn(applications);
 
-        List<AssessmentResource> assessmentResources = Collections.singletonList(newAssessmentResource()
-                .withApplication(inProgressAlwaysOpenCompApplicationInAssessment.getId())
-                .build());
         when(assessmentService.existsByTargetId(inProgressAlwaysOpenCompApplicationInAssessment.getId()))
                 .thenReturn(serviceSuccess(true));
+        when(assessmentService.existsByTargetId(inProgressOpenCompApplication.getId()))
+                .thenReturn(serviceSuccess(false));
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
