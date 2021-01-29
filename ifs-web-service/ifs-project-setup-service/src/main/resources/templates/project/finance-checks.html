@@ -41,13 +41,13 @@
                     <p class="govuk-body">The checks have been completed and your project finances approved.</p>
                 </div>
                 <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">You can review your
-                    <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
+                    <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
                                class="govuk-link">project finance overview</a>.
                 </p>
                 <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">You can <a
-                    th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
+                    th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                     class="govuk-link">review your project finances</a>
-                    and <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
+                    and <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
                                class="govuk-link">your project finance overview</a>
                     <th:block th:if="${model.paymentMilestonesLink}">
                     and
@@ -60,7 +60,7 @@
                     <p class="govuk-body">We have finished checking your finances.</p>
                 </div>
             <p class="govuk-body"> Review your <a
-                th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
+                th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                 class="govuk-link">finances.</a>
             </p>
             </th:block>
@@ -80,7 +80,7 @@
                     </li>
                 </ul>
                 <p th:if="${model.showChangesLink}" class="govuk-body">You can <a class="govuk-link"
-                    th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${model.projectId})}">view any changes to finances</a></p>
+                    th:href="@{/project/{projectId}/finance-check/eligibility/changes(projectId=${model.projectId})}">view any changes to finances</a></p>
             </th:block>
             <th:block th:unless="${model.procurementCompetition}">
                 <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the

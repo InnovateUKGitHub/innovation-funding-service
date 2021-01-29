@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
@@ -19,9 +20,11 @@ import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHan
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
@@ -70,6 +73,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
@@ -329,7 +335,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-        if (financeChecksApproved(partnerOrg)) {
+        if (financeChecksApproved(partnerOrg, project.getApplication().getCompetition())) {
             return COMPLETE;
         } else if (isAwaitingResponse) {
             return ACTION_REQUIRED;
@@ -337,9 +343,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return PENDING;
     }
 
-    private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
+    private boolean financeChecksApproved(PartnerOrganisation partnerOrg, Competition competition) {
         return asList(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE).contains(eligibilityWorkflowHandler.getState(partnerOrg)) &&
-                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
+                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg)) &&
+                paymentMilestonesApproved(partnerOrg, competition);
+    }
+
+    private boolean paymentMilestonesApproved(PartnerOrganisation partnerOrg, Competition competition) {
+        if (competition.isProcurementMilestones()) {
+            return asList(PaymentMilestoneState.APPROVED).contains(paymentMilestoneWorkflowHandler.getState(partnerOrg));
+        }
+        return true;
     }
 
     private ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
