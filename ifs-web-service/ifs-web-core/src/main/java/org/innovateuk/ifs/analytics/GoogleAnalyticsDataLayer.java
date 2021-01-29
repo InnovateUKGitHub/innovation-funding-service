@@ -3,7 +3,6 @@ package org.innovateuk.ifs.analytics;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 public class GoogleAnalyticsDataLayer {
 
     private String competitionName;
-    private List<Role> userRoles = new ArrayList<>();
+    private List<String> userRoles = new ArrayList<>();
     private Long applicationId;
 
     public String getCompetitionName() {
@@ -34,19 +33,22 @@ public class GoogleAnalyticsDataLayer {
             return "anonymous";
         }
         return simpleJoiner(userRoles,
-                            role -> role.toString().toLowerCase(),
+                String::toLowerCase,
                             ",");
 
     }
 
-    public void setUserRoles(List<Role> userRoles) {
+    public void setUserRoles(List<String> userRoles) {
         this.userRoles = userRoles;
     }
 
-    public void addUserRoles(List<Role> newRoles) {
+    public void addUserRoles(List<String> newRoles) {
         userRoles.addAll(newRoles);
     }
 
+    public void addRole(String role) {
+        userRoles.add(role);
+    }
     public Long getApplicationId() { return applicationId; }
 
     public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }

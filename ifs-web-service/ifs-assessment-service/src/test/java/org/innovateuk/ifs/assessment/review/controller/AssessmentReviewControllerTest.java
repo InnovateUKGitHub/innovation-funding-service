@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
@@ -102,7 +103,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                         leadOrganisation.getId(),
                         collaboratorOrganisation2.getId(),
                         otherOrganisation.getId())
-                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ASSESSOR)
+                .withRole(ProcessRoleType.COLLABORATOR, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.ASSESSOR)
                 .build(4);
 
         partners = new TreeSet<>(comparingLong(OrganisationResource::getId));

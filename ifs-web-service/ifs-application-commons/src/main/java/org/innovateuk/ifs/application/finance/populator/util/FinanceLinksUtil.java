@@ -21,6 +21,8 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.ALL;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.assessorProcessRoles;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component

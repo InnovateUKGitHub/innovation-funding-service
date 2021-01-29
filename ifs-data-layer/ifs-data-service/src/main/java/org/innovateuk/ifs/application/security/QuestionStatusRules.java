@@ -11,14 +11,14 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @Component
@@ -93,6 +93,6 @@ public class QuestionStatusRules extends BasePermissionRules {
     }
 
     private boolean userIsLeadApplicant(Long applicationId, UserResource user){
-        return processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, Role.LEADAPPLICANT);
+        return processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, ProcessRoleType.LEADAPPLICANT);
     }
 }

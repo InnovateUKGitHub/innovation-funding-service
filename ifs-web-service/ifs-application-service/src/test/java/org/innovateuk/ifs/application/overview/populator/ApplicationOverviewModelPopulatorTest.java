@@ -13,7 +13,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -96,7 +96,7 @@ public class ApplicationOverviewModelPopulatorTest {
         UserResource user = newUserResource().build();
         List<ProcessRoleResource> processRoles = newProcessRoleResource()
                 .withUser(user, newUserResource().build())
-                .withRole(Role.LEADAPPLICANT, Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT)
                 .build(2);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())

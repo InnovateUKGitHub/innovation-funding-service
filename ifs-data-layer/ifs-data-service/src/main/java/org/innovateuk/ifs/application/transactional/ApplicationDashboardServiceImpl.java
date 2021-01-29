@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -251,6 +251,6 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean isLead(Optional<ProcessRole> processRole) {
-        return processRole.map(ProcessRole::getRole).map(Role::isLeadApplicant).orElse(false);
+        return processRole.map(ProcessRole::getRole).map(ProcessRoleType::isLeadApplicant).orElse(false);
     }
 }

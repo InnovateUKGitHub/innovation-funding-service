@@ -1,4 +1,5 @@
 apply from: rootProject.file("gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/bom.gradle")
 
 group 'innovateuk'
 version project.version
@@ -10,7 +11,8 @@ ext {
 }
 
 dependencies {
-    compile "org.springframework.security:spring-security-core:5.1.5.RELEASE"
+    compile "org.springframework:spring-web"
+    compile "org.springframework.security:spring-security-core"
     compile project(':ifs-commons')
     compile project(':ifs-error-util')
 }

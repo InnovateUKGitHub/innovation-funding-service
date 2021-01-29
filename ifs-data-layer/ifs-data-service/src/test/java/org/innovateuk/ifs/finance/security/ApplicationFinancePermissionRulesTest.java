@@ -9,8 +9,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +25,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -93,17 +91,15 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             kta = ktaUser();
             supporter = supporterUser();
 
-            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(leadApplicant.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), applicationId, organisationId)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(collaborator.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), applicationId, organisationId)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(assessor.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), applicationId, organisationId)).thenReturn(false);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(leadApplicant.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(collaborator.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(assessor.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), applicationId, organisationId)).thenReturn(false);
 
-            ProcessRole compAdminProcessRole = newProcessRole().withRole(Role.COMP_ADMIN).build();
 
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationId, Role.LEADAPPLICANT)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationId, Role.COLLABORATOR)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
-            when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), applicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationId, ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationId, ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, ProcessRoleType.ASSESSOR)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), applicationId, ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
             when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
             when(competitionRepository.findById(application.getCompetition().getId())).thenReturn(Optional.of(competition));
@@ -125,11 +121,11 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();
             otherKta = ktaUser();
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherKta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), ProcessRoleType.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherKta.getId(), otherApplicationId, ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(false);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), otherApplicationId, ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(false);
 
             setupSupporterAssignmentExpectations(otherApplication.getId(), supporter.getId(), false);
         }
