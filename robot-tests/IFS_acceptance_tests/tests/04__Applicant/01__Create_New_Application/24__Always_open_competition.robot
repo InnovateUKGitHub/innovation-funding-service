@@ -150,4 +150,4 @@ the user checks the status of the application in assessment
     the user should see the element         jQuery = p:contains("You will be asked to set up your project.")
     the user clicks the button/link         link = Back to applications
     the user should see the element         jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Decision pending") + .msg-progress:contains("Submitted")
-    the user should not see the element     jQuery = li:contains("${applicationName}") a:contains("Reopen")
+    the user should not see the element     jQuery = li:contains("${webTestAppName}") a:contains("Reopen")
