@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -17,6 +18,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Service for operations around the usage and processing of AssessmentPeriod
  */
+@Service
 public class AssessmentPeriodServiceImpl extends BaseTransactionalService implements AssessmentPeriodService {
 
     @Autowired

@@ -403,7 +403,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withDefaultAssessmentPeriod(Boolean alwaysOpen) {
 
-        if (BooleanUtils.isFalse(alwaysOpen)) {
+        if (BooleanUtils.isTrue(alwaysOpen)) {
             return this;
         }
 

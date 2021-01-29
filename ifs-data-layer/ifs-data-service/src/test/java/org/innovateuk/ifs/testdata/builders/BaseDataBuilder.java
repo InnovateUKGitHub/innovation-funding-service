@@ -358,6 +358,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionApplicationConfigService = serviceLocator.getBean(CompetitionApplicationConfigService.class);
         milestoneRepository = serviceLocator.getBean(MilestoneRepository.class);
         assessmentPeriodRepository = serviceLocator.getBean(AssessmentPeriodRepository.class);
+        assessmentPeriodService = serviceLocator.getBean(AssessmentPeriodService.class);
     }
 
     protected UserResource compAdmin() {
