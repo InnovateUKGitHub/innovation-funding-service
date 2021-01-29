@@ -25,8 +25,7 @@ public class CompaniesHouseDocs {
                 fieldWithPath("organisationExecutiveOfficers[].id").description("Generated Id of the organisation"),
                 fieldWithPath("organisationExecutiveOfficers[].organisation").description("Organisation"),
                 fieldWithPath("organisationExecutiveOfficers[].name").description("Current Director's name of the organisation"),
-                fieldWithPath("organisationStatus").description("Organisation status"),
-                fieldWithPath("inactiveCompanyToDisplay").description("Organisation status display either ACTIVE or INACTIVE"),
+                fieldWithPath("organisationStatus").description("The status of the Organisation")
         };
     }
 }
