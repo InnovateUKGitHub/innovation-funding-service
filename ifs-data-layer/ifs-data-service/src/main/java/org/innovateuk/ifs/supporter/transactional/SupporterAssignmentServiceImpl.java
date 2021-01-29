@@ -239,7 +239,7 @@ public class SupporterAssignmentServiceImpl extends BaseTransactionalService imp
     }
 
     private ServiceResult<List<SupporterAssignment>> findSupporterAssignmentsByApplicationId(long applicationId) {
-        return find(supporterAssignmentRepository.findByTargetId(applicationId), notFoundError(SupporterAssignment.class, applicationId));
+        return serviceSuccess(supporterAssignmentRepository.findByTargetId(applicationId));
     }
 
     private ServiceResult<SupporterAssignment> findSupporterAssignmentById(long assignmentId) {
