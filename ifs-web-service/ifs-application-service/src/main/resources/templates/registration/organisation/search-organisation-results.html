@@ -61,9 +61,10 @@
                            </th:block>
                        </h3>
                            <th:block th:unless="${organisationForm.research}">
-                              <p class="govuk-body meta crumbtrail" th:if="${organisation.OrganisationValidToDisplay}" th:text="${organisation.extraAttributes.description}"></p>
-                              <p class="govuk-hint meta crumbtrail govuk-!-margin-top-0 govuk-!-margin-bottom-0" th:unless="${organisation.OrganisationValidToDisplay}" th:text="${organisation.extraAttributes.description}"></p>
-                              <p class="govuk-body" th:text="${organisation.location}"></p>
+                               <p th:classappend = "${organisation.OrganisationValidToDisplay} ? 'govuk-body meta crumbtrail'
+                                                  : 'govuk-hint meta crumbtrail govuk-!-margin-top-0 govuk-!-margin-bottom-0'"
+                                   th:text="${organisation.extraAttributes.description}"></p>
+                               <p class="govuk-body" th:text="${organisation.location}"></p>
                           </th:block>
                       <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3"/>
                       </li>
