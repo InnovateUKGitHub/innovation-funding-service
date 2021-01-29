@@ -43,7 +43,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -280,7 +282,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, null, null, false);
+
+        if (StringUtils.isEmpty(retractionReason)) {
+            bindingResult.addError(new FieldError(FORM_ATTR_NAME, "retractionReason", "Enter a reason."));
+            return failureView.get();
+        }
 
         RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, retractionReason);
         return validationHandler

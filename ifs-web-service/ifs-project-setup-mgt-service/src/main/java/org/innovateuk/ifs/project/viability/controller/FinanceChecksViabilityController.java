@@ -24,7 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -95,9 +97,15 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, new FinanceChecksViabilityForm());
+
+        if (StringUtils.isEmpty(form.getRetractionReason())) {
+            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason."));
+            return failureView.get();
+        }
+
         RestResult<Void> resetViabilityResult = financeCheckRestService.resetViability(projectId, form.getRetractionReason());
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, new FinanceChecksViabilityForm());
 
         return validationHandler.
                 addAnyErrors(resetViabilityResult).

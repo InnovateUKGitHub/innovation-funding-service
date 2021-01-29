@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -101,6 +103,12 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                            Model model,
                                            UserResource user) {
         Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
+
+        if (StringUtils.isEmpty(form.getRetractionReason())) {
+            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason."));
+            return view.get();
+        }
+
         RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, form.getRetractionReason());
         return validationHandler
                 .addAnyErrors(resetPaymentMilestoneState)
