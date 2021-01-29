@@ -18,6 +18,8 @@ Resource          ../../../resources/keywords/05__Email_Keywords.robot
 # REPLACE WEB TEST DATA VARIABLES WITH ACTUAL E2E FLOW DATA AND CHANGE NAME OF VARIABLES
 ${webTestCompName}                 Always open competition
 ${applicationName}                 Always open application
+${webTestAppName}                  Always open application decision pending
+#Delete the above application when the user can assign an assessor to the application
 ${webTestAssessor}                 Paul Plum
 ${webTestAssessorEmailAddress}     paul.plum@gmail.com
 
@@ -31,23 +33,28 @@ Send the email invite to the assessor for the competition using new content
 Lead user creates an always open application and checks the status
     [Documentation]  IFS-8850
     Given the user logs out if they are logged in
-    And the lead user creates an always open application     Test   user1   test.user1@gmail.com   ${applicationName}
+    And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
     When the lead user completes project details, application questions and finances sections
     Then the user checks the status of the application before completion
 
 Lead user completes the t's & c's of the always open application and checks the status
     [Documentation]  IFS-8850
-    Given The user clicks the button/link                                   link = ${applicationName}
-    And the user clicks the button/link                                     link = Award terms and conditions
+    Given the user clicks the button/link                                   link = ${applicationName}
     When the user accept the competition terms and conditions               Back to application overview
     Then the user checks the status of the application after completion
 
 Lead user submits the always open application and checks the status
     [Documentation]  IFS-8850
-    Given The user clicks the button/link                                  link = ${applicationName}
-    When The user clicks the button/link                                   link = Review and submit
+    Given the user clicks the button/link                                  link = ${applicationName}
+    When the user clicks the button/link                                   link = Review and submit
     and the user clicks the button/link                                    jQuery = button:contains("Submit application")
     Then the user checks the status of the application after submission
+
+Checking the status of the application after an assessor is assigned to the application
+    [Documentation]  IFS-8850
+    Given Log in as a different user                                    &{lead_applicant_credentials}
+    When The user clicks the button/link                                link = ${webTestAppName}
+    Then the user checks the status of the application in assessment
 
 *** Keywords ***
 Custom suite setup
@@ -74,8 +81,6 @@ the lead user creates an always open application
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
     the user select the competition and starts application          ${webTestCompName}
     the user clicks the button/link                                 link = Continue and create an account
-#    user selects where is organisation based                        isNotInternational
-#    the user can see multiple options when selecting org type
     the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            ASOS  ASOS PLC
@@ -88,20 +93,13 @@ the lead user creates an always open application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
 
 the lead user completes project details, application questions and finances sections
-    the user completes the application details section     ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    the applicant completes Application Team
     the applicant marks EDI question as complete
-    the user completes the research category               Feasibility studies
-    the user marks the project details as complete
+    the user completes the research category
     the lead applicant fills all the questions and marks as complete(programme)
-    the user marks the finances as complete        ${applicationName}  labour costs  54,000  no
-
-
-
-#the user can see multiple options when selecting org type
-#    the user should see the element     css=[name^="organisationTypeId"][value="radio-${BUSINESS_TYPE_ID}"] ~ label, [id="radio-${BUSINESS_TYPE_ID}"] ~ label
-#    the user should see the element     css=[name^="organisationTypeId"][value="radio-${ACADEMIC_TYPE_ID}"] ~ label, [id="radio-${ACADEMIC_TYPE_ID}"] ~ label
-#    the user should see the element     css=[name^="organisationTypeId"][value="radio-${RTO_TYPE_ID}"] ~ label, [id="radio-${RTO_TYPE_ID}"] ~ label
-#    the user should see the element     css=[name^="organisationTypeId"][value="radio-${PUBLIC_SECTOR_TYPE_ID}"] ~ label, [id="radio-${PUBLIC_SECTOR_TYPE_ID}"] ~ label
+    the user clicks the button/link                                                 link = Your project finances
+    the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
 
 the user completes the application details section
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
@@ -118,12 +116,11 @@ the user completes the application details section
     the user clicks the button/link             link = Back to application overview
     the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
 
-The user completes the research category
-    [Arguments]  ${res_category}
+the user completes the research category
     the user clicks the button/link      link=Research category
-    the user selects the checkbox        researchCategory
-    the user clicks the button/link      jQuery=label:contains("${res_category}")
-    the user clicks the button/link      id=application-question-complete
+    the user selects the checkbox        id = researchCategory
+    the user clicks the button/link      id = application-question-complete
+    the user clicks the button/link      link = Back to application overview
     the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
 
 the user checks the status of the application before completion
@@ -141,28 +138,16 @@ the user checks the status of the application after completion
 the user checks the status of the application after submission
     the user should see the element     jQuery = h2:contains("Application submitted")
     the user should see the element     jQuery = a:contains("Reopen application")
+    the user should see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
+    the user should see the element     jQuery = p:contains("You will be asked to set up your project.")
+    the user clicks the button/link     link = Back to applications
+    the user should see the element     jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Awaiting assessment") + .msg-progress:contains("Submitted") a:contains("Reopen")
 
-
-the applicant adds a partner for each organisation type
-    the user selects the radio button       organisationTypeId    radio-${BUSINESS_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("1")
-    the user should see the element         jQuery = td:contains("Business") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    radio-${ACADEMIC_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("2")
-    the user should see the element         jQuery = td:contains("Research") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    radio-${RTO_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("3")
-    the user should see the element         jQuery = td:contains("Research and technology organisation (RTO)") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    radio-${PUBLIC_SECTOR_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("4")
-    the user should see the element         jQuery = td:contains("Public sector, charity or non Je-S registered research organisation") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         id = application-question-complete
-    the user clicks the button/link         link = Application overview
-    the user should see the element         jQuery = li:contains("Application team") > .task-status-complete
+the user checks the status of the application in assessment
+    the user should see the element         jQuery = h2:contains("Application submitted")
+    the user should not see the element     jQuery = a:contains("Reopen application")
+    the user should not see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
+    the user should see the element         jQuery = p:contains("You will be asked to set up your project.")
+    the user clicks the button/link         link = Back to applications
+    the user should see the element         jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Decision pending") + .msg-progress:contains("Submitted")
+    the user should not see the element     jQuery = li:contains("${applicationName}") a:contains("Reopen")
