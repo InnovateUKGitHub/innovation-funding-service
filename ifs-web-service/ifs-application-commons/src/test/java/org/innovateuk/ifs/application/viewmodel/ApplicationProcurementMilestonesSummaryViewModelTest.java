@@ -2,8 +2,6 @@ package org.innovateuk.ifs.application.viewmodel;
 
 
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
-import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.junit.Assert;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneBuilder.newApplicationProcurementMilestoneResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneResourceBuilder.newApplicationProcurementMilestoneResource;
 
 public class ApplicationProcurementMilestonesSummaryViewModelTest {
 
