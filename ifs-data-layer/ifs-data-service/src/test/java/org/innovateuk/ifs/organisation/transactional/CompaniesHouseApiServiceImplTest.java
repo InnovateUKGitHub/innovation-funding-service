@@ -138,7 +138,7 @@ public class CompaniesHouseApiServiceImplTest {
 		verify(adapter).restGetEntity(searchByIndexUrlPath, JsonNode.class, searchByIndexVariables);
 		assertEquals(1, result.getSuccess().size());
 		assertEquals("dissolved", result.getSuccess().get(0).getOrganisationStatus());
-		assertEquals("NOTACTIVE", result.getSuccess().get(0).getInactiveCompanyToDisplay());
+		assertEquals(Boolean.FALSE, result.getSuccess().get(0).isOrganisationValidToDisplay());
 	}
 
 	@Test
@@ -158,7 +158,7 @@ public class CompaniesHouseApiServiceImplTest {
 		assertTrue(result.isSuccess());
 		assertEquals(1, result.getSuccess().size());
 		assertEquals("closed", result.getSuccess().get(0).getOrganisationStatus());
-		assertEquals("NOTACTIVE", result.getSuccess().get(0).getInactiveCompanyToDisplay());
+		assertEquals(Boolean.FALSE, result.getSuccess().get(0).isOrganisationValidToDisplay());
 	}
 
     @Test
