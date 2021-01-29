@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.invite.repository;
 
-import com.google.common.collect.ImmutableList;
-import org.assertj.core.api.InstanceOfAssertFactories;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -14,12 +12,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
@@ -134,8 +129,12 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
         createNewApplicationInvite(application1, inviteOrganisation, "app1.user3@org1.com");
         createNewApplicationInvite(application1, inviteOrganisation, "app1.user4@org1.com");
 
-        Optional<InviteOrganisation> inviteOrg = repository.findFirstByOrganisationIdAndInvitesApplicationId(organisation1.getId(), application1.getId());
-        assertThat(ImmutableList.of(inviteOrganisation.getId(), inviteOrgApplication1Org1.getId(), inviteOrgApplication1Org2.getId()).contains(inviteOrg.get().getId()));
+        assertThat(repository.findFirstByOrganisationIdAndInvitesApplicationId(organisation1.getId(), application1.getId()))
+                .isPresent()
+                .get()
+                .extracting("id")
+                .containsAnyOf(inviteOrganisation.getId(), inviteOrgApplication1Org1.getId(), inviteOrgApplication1Org2.getId());
+
     }
 
     private ApplicationInvite createNewApplicationInvite(Application application, InviteOrganisation inviteOrganisation, String email) {

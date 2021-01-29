@@ -43,7 +43,6 @@ public class UserController {
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
-
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
     private static final String DEFAULT_PAGE_NUMBER = "0";

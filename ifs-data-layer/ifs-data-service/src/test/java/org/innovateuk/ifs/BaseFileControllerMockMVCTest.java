@@ -194,7 +194,7 @@ public abstract class BaseFileControllerMockMVCTest<ControllerType> extends Base
                 andExpect(status().isCreated());
 
         verify(fileValidator).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", mediaTypesContext, 1234L);
-        createFileServiceCall.apply(serviceToCall, expectedTemporaryFile);
+        createFileServiceCall.apply(verify(serviceToCall), expectedTemporaryFile);
 
         return resultActions;
     }
