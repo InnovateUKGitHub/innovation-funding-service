@@ -256,12 +256,15 @@ the user selects to change funding sought
     the user clicks the button/link  link = Change funding sought
 
 the internal user should see the funding changes
-    the user clicks the button/link    link = Review all changes to project finances
+    #Check the link title is correct!!!
+    the user clicks the button/link    link = View changes to finances
+    #the user clicks the button/link    link = Review all changes to project finances
     the user should see the element    jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
     the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
     the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
     the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
-    the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
+    #the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
+    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
     the user should see the element    jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
     the user should see the element    jQuery = th:contains("Labour") ~ td:contains("3,081")
     the user should see the element    jQuery = th:contains("Overheads") ~ td:contains("0")
@@ -269,7 +272,9 @@ the internal user should see the funding changes
     the user should see the element    jQuery = th:contains("Capital usage") ~ td:contains("552")
     the user should see the element    jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
     the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
-    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
+    #Double check these numbers??
+    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    #the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
 
 the external user should see the funding changes
     log in as a different user         &{lead_applicant_credentials}
@@ -280,7 +285,8 @@ the external user should see the funding changes
     the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
     the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
     the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
-    the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
+    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    #the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
     the user should see the element    jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
     the user should see the element    jQuery = th:contains("Labour") ~ td:contains("3,081")
     the user should see the element    jQuery = th:contains("Overheads") ~ td:contains("0")
@@ -288,7 +294,8 @@ the external user should see the funding changes
     the user should see the element    jQuery = th:contains("Capital usage") ~ td:contains("552")
     the user should see the element    jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
     the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
-    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
+    #the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
+    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
 the user marks loan as complete
     [Arguments]  ${status}  ${appl_name}
