@@ -78,7 +78,7 @@ public class ApplicationDashboardServiceImplTest {
             .build();
     private static final long USER_ID = 1L;
     private final User user = newUser().withId(USER_ID).build();
-    private final ProcessRole processRole = newProcessRole().withRole(Role.LEADAPPLICANT).withUser(user).build();
+    private final ProcessRole processRole = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
 
     @Test
     public void getApplicantDashboard() {
