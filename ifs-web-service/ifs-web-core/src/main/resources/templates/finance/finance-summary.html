@@ -245,7 +245,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col" colspan="2">Total payment requested</th>
                         <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="${#numbers.formatInteger(breakdown.getPercentage(breakdown.getTotal()), 0,'DEFAULT')} + '%'">100%</th>
-                        <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="'£' + ${breakdown.getTotal()}"></th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="'£' + ${#numbers.formatInteger(breakdown.getTotal(), 0,'DEFAULT')}"></th>
                     </tr>
                     </tfoot>
                 </table>
