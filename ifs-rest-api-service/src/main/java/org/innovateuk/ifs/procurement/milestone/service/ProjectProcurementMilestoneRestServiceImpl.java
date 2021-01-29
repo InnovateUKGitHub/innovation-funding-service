@@ -23,6 +23,12 @@ public class ProjectProcurementMilestoneRestServiceImpl
     }
 
     @Override
+    public RestResult<List<ProjectProcurementMilestoneResource>> getByProjectId(long projectId) {
+        return getWithRestResult(getMilestoneUrl() + String.format("/project/%d", projectId),
+                new ParameterizedTypeReference<List<ProjectProcurementMilestoneResource>>() {});
+    }
+
+    @Override
     protected Class<ProjectProcurementMilestoneResource> getResourceClass() {
         return ProjectProcurementMilestoneResource.class;
     }

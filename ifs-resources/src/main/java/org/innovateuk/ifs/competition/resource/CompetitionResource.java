@@ -107,7 +107,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
+    private boolean procurementMilestones;
     private CovidType covidType;
+    private boolean alwaysOpen;
 
     public CompetitionResource() {
     }
@@ -137,11 +139,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isH2020() {
         return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
-    }
-
-    @JsonIgnore
-    public boolean isHeukar() {
-        return competitionTypeEnum == CompetitionTypeEnum.HEUKAR;
     }
 
     @JsonIgnore
@@ -791,6 +788,23 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public void setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
+
+    @Override
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
+    }
+
+    public void setProcurementMilestones(boolean procurementMilestones) {
+        this.procurementMilestones = procurementMilestones;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -866,6 +880,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
+                .append(alwaysOpen, that.alwaysOpen)
                 .isEquals();
     }
 
@@ -929,6 +944,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn)
                 .append(modifiedBy)
                 .append(modifiedOn)
+                .append(alwaysOpen)
                 .toHashCode();
     }
 
@@ -956,5 +972,4 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public boolean isSbriPilot() {
         return SBRI_PILOT.equals(name);
     }
-
 }

@@ -27,8 +27,8 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.ProfileRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,6 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -159,7 +158,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
                 .withApplication(application)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(3L)
                 .withUser(userMapper.mapToDomain(getSteveSmith()))
                 .build();
@@ -217,7 +216,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -297,7 +296,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -382,7 +381,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -462,7 +461,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -553,7 +552,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -633,7 +632,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();

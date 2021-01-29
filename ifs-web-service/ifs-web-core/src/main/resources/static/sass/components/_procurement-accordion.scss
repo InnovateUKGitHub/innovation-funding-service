@@ -1,0 +1,138 @@
+.procurement-milestones {
+  .govuk-accordion {
+    .section-status {
+      float: left;
+      padding: 20px 5px 0 20px;
+
+      + .width-20-percent {
+        width: 17%;
+      }
+    }
+
+    .section-incomplete {
+      background-position: left 100%;
+    }
+  }
+
+  .textarea-wrapped {
+    .govuk-textarea--error {
+      @include box-shadow(none);
+      border: 4px solid $govuk-error-colour;
+    }
+  }
+
+  .width-10-percent {
+    width: 10%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  // Heading above accordion needs more space on mobile
+  h4 {
+    &.width-10-percent {
+      @include media-down(mobile) {
+        width: 15%;
+      }
+    }
+  }
+
+  .width-20-percent {
+    width: 20%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .width-48-percent {
+    @include media-down(mobile) {
+      width:20%;
+    }
+
+    width: 48%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .width-80-percent {
+    width: 79%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .govuk-form-group--error {
+    .left-col {
+      width: 19%;
+    }
+  }
+
+  .col-wrapper {
+    display: flex;
+
+    .central-col {
+      @include media-down(mobile) {
+        display: block;
+      }
+
+      width: 48%;
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 10px;
+    }
+
+    .left-col {
+      @include media-down(mobile) {
+        display: block;
+      }
+
+      width: 20%;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .right-col {
+      @include media-down(mobile) {
+        display: block;
+      }
+
+      width: 25%;
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+
+  .margin-right-60 {
+    margin-right: 60px;
+  }
+
+  .govuk-form-group--error {
+    padding-left: 0;
+    border-left: none;
+  }
+}
+
+.js-enabled {
+  .procurement-milestones {
+    .govuk-accordion {
+      border-bottom: 3px solid govuk-colour("black");
+
+      .govuk-accordion__icon {
+        top: 0;
+        margin-top: 20px;
+      }
+
+      .govuk-accordion__controls {
+        @include media-down(mobile) {
+          margin-top: 40px;
+        }
+
+        display: inline-block;
+        float: right;
+        margin-top: 54px;
+      }
+    }
+  }
+}
+

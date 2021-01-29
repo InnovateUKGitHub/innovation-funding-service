@@ -1,9 +1,8 @@
+.vertical-align-top {
+  vertical-align: top !important;
+}
 
 table {
-
-  .cell-align-top {
-    vertical-align: top;
-  }
 
   .cell-nowrap {
     white-space: nowrap;
@@ -363,10 +362,10 @@ hr,
 }
 
 .width-100-percent {
-    box-sizing: border-box;
-    padding-right: 1em;
-    width: 100%;
-  }
+  box-sizing: border-box;
+  padding-right: 1em;
+  width: 100%;
+}
 
 /* make selector more specific than autocomplete library. */
 .autocomplete__input {
@@ -386,8 +385,23 @@ hr,
   }
 }
 
-table.hidden-error-labels {
-  .govuk-error-message {
-    display:none;
+table {
+  .hidden-error-labels {
+    .govuk-error-message {
+      display: none;
+    }
+  }
+}
+
+.error-heading-icon {
+  &:before {
+    content: "";
+    background-image: url('../images/ifs-images/icons/icon-alert.png');
+    background-repeat: no-repeat;
+    background-position: left 100%;
+    background-size: 14px;
+    width: 20px;
+    height: 20px;
+    float: left;
   }
 }

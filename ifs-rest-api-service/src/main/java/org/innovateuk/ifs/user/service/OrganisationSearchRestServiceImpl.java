@@ -20,8 +20,8 @@ public class OrganisationSearchRestServiceImpl extends BaseRestService implement
     private String organisationRestURL = "/organisationsearch";
 
     @Override
-    public RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText) {
-        return getWithRestResultAnonymous(organisationRestURL + "/search-organisations/" + organisationTypeId + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
+    public RestResult<List<OrganisationSearchResult>> searchOrganisation(Long organisationTypeId, String organisationSearchText, int indexPos) {
+        return getWithRestResultAnonymous(organisationRestURL + "/search-organisations/" + organisationTypeId + "?organisationSearchText="+ organisationSearchText + "&page="+ indexPos, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
     }
 
     @Override
@@ -30,8 +30,8 @@ public class OrganisationSearchRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText) {
-        return getWithRestResultAnonymous(organisationRestURL + "/search-organisations/enum/" + organisationType.name() + "?organisationSearchText="+ organisationSearchText, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
+    public RestResult<List<OrganisationSearchResult>> searchOrganisation(Enum<?> organisationType, String organisationSearchText, int indexPos) {
+        return getWithRestResultAnonymous(organisationRestURL + "/search-organisations/enum/" + organisationType.name() + "?organisationSearchText="+ organisationSearchText + "&page="+ indexPos, new ParameterizedTypeReference<List<OrganisationSearchResult>>() {});
     }
 
     @Override

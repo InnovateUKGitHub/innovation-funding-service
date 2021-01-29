@@ -26,6 +26,7 @@ public class FinanceChecksQueriesViewModel {
     private Long queryId;
     private Long applicationId;
     private final boolean projectIsActive;
+    private final boolean procurementMilestonesCompetition;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -41,7 +42,8 @@ public class FinanceChecksQueriesViewModel {
                                          int maxQueryCharacters,
                                          Long queryId,
                                          Long applicationId,
-                                         boolean projectIsActive) {
+                                         boolean projectIsActive,
+                                         boolean procurementMilestonesCompetition) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContact= financeContact;
@@ -57,7 +59,7 @@ public class FinanceChecksQueriesViewModel {
         this.queryId = queryId;
         this.applicationId = applicationId;
         this.projectIsActive = projectIsActive;
-
+        this.procurementMilestonesCompetition = procurementMilestonesCompetition;
     }
 
     public String getOrganisationName() {
@@ -178,5 +180,9 @@ public class FinanceChecksQueriesViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isProcurementMilestonesCompetition() {
+        return procurementMilestonesCompetition;
     }
 }

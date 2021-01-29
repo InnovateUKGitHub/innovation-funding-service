@@ -7,8 +7,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
@@ -24,25 +26,24 @@ import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -52,8 +53,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
 
@@ -78,6 +78,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Mock
     private ApplicationRestService applicationRestService;
 
+    @Mock
+    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
+
     @Spy
     @SuppressWarnings("unused")
     private NavigationUtils navigationUtils;
@@ -88,7 +91,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
@@ -116,19 +119,19 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectUserResource projectManagerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PROJECT_MANAGER).
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
                 build();
 
         ProjectUserResource leadFinanceContactProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         ProjectUserResource partnerFinanceContactProjectUser = newProjectUserResource().
                 withUser(2L).
                 withOrganisation(partnerOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         projectUsers.add(projectManagerProjectUser);
@@ -169,7 +172,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetailsKtpCompetition() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
@@ -197,19 +200,19 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectUserResource projectManagerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PROJECT_MANAGER).
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
                 build();
 
         ProjectUserResource leadFinanceContactProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         ProjectUserResource partnerFinanceContactProjectUser = newProjectUserResource().
                 withUser(2L).
                 withOrganisation(partnerOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         projectUsers.add(projectManagerProjectUser);
@@ -270,7 +273,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(ProjectParticipantRole.PROJECT_PARTNER).
                 build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -462,6 +465,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restFailure(HttpStatus.NOT_FOUND));
 
         performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
 
@@ -491,6 +495,35 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void updateProjectDurationWhenDurationIsLessThanMaxMilestone() throws Exception {
+
+        long competitionId = 1L;
+        long projectId = 11L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT).build();
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId()).build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(Arrays.asList(
+                newProjectProcurementMilestoneResource().withMonth(1).build(),
+                newProjectProcurementMilestoneResource().withMonth(5).build())));
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("durationInMonths", "4"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/edit-duration"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "durationInMonths", "PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE"))
+                .andReturn();
+
+        verify(projectDetailsService, never()).updateProjectDuration(anyLong(), anyLong());
+    }
+
+    @Test
     public void updateProjectDurationFailure() throws Exception {
 
         long competitionId = 1L;
@@ -508,6 +541,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restFailure(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -529,6 +563,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String durationInMonths = "18";
 
         when(projectDetailsService.updateProjectDuration(projectId, 18L)).thenReturn(serviceSuccess());
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restFailure(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -545,13 +580,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectUserResource leadPartnerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(ProjectParticipantRole.PROJECT_PARTNER).
                 build();
 
         ProjectUserResource partnerProjectUser = newProjectUserResource().
                 withUser(2L).
                 withOrganisation(partnerOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(ProjectParticipantRole.PROJECT_PARTNER).
                 build();
 
         List<ProjectUserResource> projectUsers = new ArrayList<>();

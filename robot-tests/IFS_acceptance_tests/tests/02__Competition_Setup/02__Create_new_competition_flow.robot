@@ -335,9 +335,9 @@ Funding eligibility: Mark as Done
     And the user clicks the button/link           jQuery = button:contains("Done")
     And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
     And the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
-    And the user should see the element           jQuery = td:contains("Micro entity or small company")
-    And the user should see the element           jQuery = td:contains("Medium-sized company")
-    And the user should see the element           jQuery = td:contains("Large-sized company")
+    And the user should see the element           jQuery = td:contains("Micro or small")
+    And the user should see the element           jQuery = td:contains("Medium")
+    And the user should see the element           jQuery = td:contains("Large")
     And the user enters text to a text field      maximums[0][0].maximum  75
     And the user enters text to a text field      maximums[0][1].maximum  75
     And the user enters text to a text field      maximums[1][0].maximum  75
@@ -999,7 +999,7 @@ the comp admin creates competition with all sections details
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility            ${researchCategory}   ${compType}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}

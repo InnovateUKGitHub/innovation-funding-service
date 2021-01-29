@@ -31,7 +31,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
@@ -392,7 +392,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
         when(processRoleRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
-                newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
+                newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build(3)));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
@@ -464,7 +464,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
         when(processRoleRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
-                newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
+                newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build(3)));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));

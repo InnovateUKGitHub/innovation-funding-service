@@ -9,8 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.stream.Collectors.toList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
@@ -70,8 +67,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
                 .flatMap(x -> x.getCompetition().isKtp()
-                        ? x.getProcessRolesByRoles(asSet(Role.KNOWLEDGE_TRANSFER_ADVISER)).stream()
-                        : x.getProcessRolesByRoles(asSet(Role.LEADAPPLICANT, Role.COLLABORATOR)).stream())
+                        ? x.getProcessRolesByRoles(asSet(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).stream()
+                        : x.getProcessRolesByRoles(asSet(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)).stream())
                 .collect(Collectors.toList());
 
         for (ProcessRole applicant : applicants) {
@@ -172,8 +169,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         notification = horizon2020GrantTransferNotification(from, to, application);
                     } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
-                    } else if (competition.isHeukar()) {
-                        notification = heukarNotification(from, to, application, competition);
                     } else {
                         notification = applicationSubmitNotification(from, to, application, competition);
                     }
@@ -259,20 +254,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
-    private Notification heukarNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("applicationName", application.getName());
-        notificationArguments.put("applicationId", application.getId());
-        notificationArguments.put("competitionName", competition.getName());
-
-        return new Notification(
-                from,
-                to,
-                Notifications.HEUKAR_APPLICATION_SUBMITTED,
-                notificationArguments
-        );
-    }
-
     private Notification applicationSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
@@ -287,12 +268,12 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_2020_APPLICATION_SUBMITTED,
-        HEUKAR_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,
         REOPEN_APPLICATION_PARTNER,

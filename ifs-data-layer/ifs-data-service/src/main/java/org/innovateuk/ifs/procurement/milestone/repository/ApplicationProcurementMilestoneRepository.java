@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface ApplicationProcurementMilestoneRepository extends ProcurementMilestoneRepository<ApplicationProcurementMilestone> {
 
-    List<ApplicationProcurementMilestone> findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationId(long applicationId, long organisationId);
+    List<ApplicationProcurementMilestone> findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(long applicationId, long organisationId);
+
+    void deleteByApplicationFinanceId(long applicationFinanceId);
 }
