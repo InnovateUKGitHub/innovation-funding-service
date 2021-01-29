@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.AbstractProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.procurement.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones")
+@SecuredBySpring(value = "PROCUREMENT_MILESTONE", description = "Applicants can view procurement milestones.")
 public class ProjectProcurementMilestonesController extends AbstractProcurementMilestoneController {
 
     private static final String VIEW = "milestones/project-procurement-milestones";
