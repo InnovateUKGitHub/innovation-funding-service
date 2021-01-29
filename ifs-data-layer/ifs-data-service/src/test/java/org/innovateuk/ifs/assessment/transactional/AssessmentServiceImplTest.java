@@ -90,6 +90,17 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private ProcessRoleRepository processRoleRepositoryMock;
 
     @Test
+    public void testExistsByTargetId() {
+        long applicationId = 1L;
+        when(assessmentRepositoryMock.existsByTargetId(applicationId)).thenReturn(true);
+        Boolean hasAssessment = assessmentService.existsByTargetId(1L).getSuccess();
+        assertTrue(hasAssessment);
+        when(assessmentRepositoryMock.existsByTargetId(applicationId)).thenReturn(false);
+        Boolean noAssessment = assessmentService.existsByTargetId(1L).getSuccess();
+        assertFalse(noAssessment);
+    }
+
+    @Test
     public void findById() {
         Long assessmentId = 1L;
 

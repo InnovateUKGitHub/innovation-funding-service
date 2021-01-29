@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelP
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -204,8 +205,9 @@ public class ReviewAndSubmitController {
                                            UserResource userResource) {
 
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
-        if (!canReopenApplication(applicationResource, userResource)) {
+        if (!canReopenApplication(applicationResource, userResource, competitionResource.isAlwaysOpen())) {
             return "redirect:/application/" + applicationId + "/track";
         }
 
@@ -216,7 +218,12 @@ public class ReviewAndSubmitController {
         return "application-confirm-reopen";
     }
 
-    private boolean canReopenApplication(ApplicationResource application, UserResource user) {
+    private boolean canReopenApplication(ApplicationResource application, UserResource user, boolean alwaysOpen) {
+        if (alwaysOpen) {
+            return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
+                    && !applicationRestService.applicationHasAssessment(application.getId()).getSuccess()
+                    && userService.isLeadApplicant(user.getId(), application);
+        }
         return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
                 && application.canBeReopened()
                 && userService.isLeadApplicant(user.getId(), application);
@@ -259,7 +266,7 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user)
+                canReopenApplication(application, user, competition.isAlwaysOpen())
         ));
         return getTrackingPage(competition);
     }

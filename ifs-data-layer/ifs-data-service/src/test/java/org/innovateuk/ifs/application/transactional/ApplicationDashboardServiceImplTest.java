@@ -105,8 +105,8 @@ public class ApplicationDashboardServiceImplTest {
         List<AssessmentResource> assessmentResources = Collections.singletonList(newAssessmentResource()
                 .withApplication(inProgressAlwaysOpenCompApplicationInAssessment.getId())
                 .build());
-        when(assessmentService.findByApplicationId(inProgressAlwaysOpenCompApplicationInAssessment.getId()))
-                .thenReturn(serviceSuccess(assessmentResources));
+        when(assessmentService.existsByTargetId(inProgressAlwaysOpenCompApplicationInAssessment.getId()))
+                .thenReturn(serviceSuccess(true));
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
