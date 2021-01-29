@@ -126,7 +126,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subsidyControlTermsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions subsidyControlTermsAndConditions;
 
