@@ -208,7 +208,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
-                andExpect(view().name("project/finance-check")).
+                andExpect(view().name("project/finance-checks")).
                 andReturn();
 
         ProjectFinanceChecksViewModel model = (ProjectFinanceChecksViewModel) result.getModelAndView().getModel().get("model");
@@ -234,7 +234,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getOrganisationIdFromUser(projectId, financeContactUser)).thenReturn(organisationId);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
-                andExpect(view().name("project/finance-check")).
+                andExpect(view().name("project/finance-checks")).
                 andReturn();
 
         ProjectFinanceChecksViewModel model = (ProjectFinanceChecksViewModel) result.getModelAndView().getModel().get("model");
@@ -486,7 +486,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", tooManyWords))
-                .andExpect(view().name("project/finance-check"))
+                .andExpect(view().name("project/finance-checks"))
                 .andReturn();
 
         FinanceChecksQueryResponseForm form = (FinanceChecksQueryResponseForm) result.getModelAndView().getModel().get("form");
@@ -632,7 +632,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
-                .andExpect(view().name("project/finance-check"))
+                .andExpect(view().name("project/finance-checks"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
@@ -670,7 +670,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
-                .andExpect(view().name("project/finance-check"))
+                .andExpect(view().name("project/finance-checks"))
                 .andReturn();
 
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
