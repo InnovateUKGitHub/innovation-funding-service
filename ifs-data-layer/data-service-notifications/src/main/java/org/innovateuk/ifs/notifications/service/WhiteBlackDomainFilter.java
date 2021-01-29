@@ -13,10 +13,10 @@ public class WhiteBlackDomainFilter {
     private static final String WILDCARD = "*";
     private static final Log LOG = LogFactory.getLog(WhiteBlackDomainFilter.class);
 
-    @Value("#{'${ifs.email.whitelist}'.split(',')}")
+    @Value("#{'${ifs.email.whitelist:*}'.split(',')}")
     protected List<String> whitelist;
 
-    @Value("#{'${ifs.email.blacklist}'.split(',')}")
+    @Value("#{'${ifs.email.blacklist:example.com}'.split(',')}")
     protected List<String> blacklist;
 
     /**
