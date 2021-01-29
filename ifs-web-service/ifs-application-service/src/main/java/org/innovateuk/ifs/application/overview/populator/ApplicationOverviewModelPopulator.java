@@ -78,7 +78,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         Future<List<ProcessRoleResource>> processRoles = async(() -> processRoleRestService.findProcessRole(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> statuses = async(() -> questionStatusRestService.findByApplicationAndOrganisation(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<List<Long>> completedSectionIds = async(() -> sectionStatusRestService.getCompletedSectionIds(application.getId(), resolve(organisation).getId()).getSuccess());
-        Future<Map<Long, Set<Long>>> completedSectionsByOrganisation = async(() -> sectionStatusRestService.getCompletedSectionsByApplication(application.getId()).getSuccess());
+        Future<Map<Long, Set<Long>>> completedSectionsByOrganisation = async(() -> sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess());
 
         async(() -> {
             List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(resolve(statuses), user.getId());

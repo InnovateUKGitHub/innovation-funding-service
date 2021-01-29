@@ -132,7 +132,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
         when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
 
-        when(sectionStatusRestService.getCompletedSectionsByApplication(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
 

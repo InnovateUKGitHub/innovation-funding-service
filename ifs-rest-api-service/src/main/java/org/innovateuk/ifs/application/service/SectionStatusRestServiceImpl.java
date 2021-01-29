@@ -38,8 +38,8 @@ public class SectionStatusRestServiceImpl extends BaseRestService implements Sec
     }
 
     @Override
-    public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByApplication(long applicationId) {
-        return getWithRestResult(sectionRestURL + "/get-completed-sections-by-application/" + applicationId, mapOfLongToLongsSetType());
+    public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(long applicationId) {
+        return getWithRestResult(sectionRestURL + "/get-completed-sections-by-organisation/" + applicationId, mapOfLongToLongsSetType());
     }
 
     @Override

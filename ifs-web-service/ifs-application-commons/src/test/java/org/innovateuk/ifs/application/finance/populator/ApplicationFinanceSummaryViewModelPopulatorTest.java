@@ -131,7 +131,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
         when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(Collections.singletonList(applicationFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(Collections.singletonList(organisation)));
-        when(sectionStatusRestService.getCompletedSectionsByApplication(application.getId())).thenReturn(restSuccess(new HashMap<>()));
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(new HashMap<>()));
         when(sectionRestService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FINANCE)).thenReturn(restSuccess(Collections.singletonList(section)));
         when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfig));
 
@@ -197,7 +197,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBaseProcessRole, partnerProcessRole)));
         when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBaseFinance, partnerFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBase, partner)));
-        when(sectionStatusRestService.getCompletedSectionsByApplication(application.getId())).thenReturn(restSuccess(new HashMap<>()));
+        when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(new HashMap<>()));
         when(sectionRestService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FINANCE)).thenReturn(restSuccess(Collections.singletonList(section)));
         when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfig));
         when(financeLinksUtil.financesLink(knowledgeBase, newArrayList(knowledgeBaseProcessRole, partnerProcessRole), user, application, competition)).thenReturn(Optional.of(financeLinkUrl));

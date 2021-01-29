@@ -120,7 +120,7 @@ public class FinanceSummaryTableViewModelPopulator {
         final BigDecimal maximumFundingSought;
         if (open) {
             maximumFundingSought = competitionApplicationConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess().getMaximumFundingSought();
-            completedSections = sectionStatusRestService.getCompletedSectionsByApplication(application.getId()).getSuccess();
+            completedSections = sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess();
         } else {
             completedSections = new HashMap<>();
             maximumFundingSought = null;

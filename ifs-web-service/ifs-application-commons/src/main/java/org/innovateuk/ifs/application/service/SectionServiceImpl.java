@@ -66,7 +66,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return sectionStatusRestService.getCompletedSectionsByApplication(applicationId).getSuccess();
+        return sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
     }
 
     /**
