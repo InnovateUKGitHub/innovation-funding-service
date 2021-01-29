@@ -51,7 +51,7 @@ ${Successful_Monitoring_Officer_Page}     ${server}/project-setup-management/pro
 ${Assign_Project}                         Climate control solution
 ${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
 ${Assign_Project2}                        High Performance Gasoline Stratified
-${sbri_applicaton_name}                   Procurement application 1
+${sbri_applicaton_name}                   SBRI application
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
 ${PSCapplicationID}                       212
@@ -271,10 +271,10 @@ MO can now check the application feedback
 
 MO can now view payment milestones in SBRI application
     [Documentation]   IFS-8958
-    Given the SBRI MO assignee has been changed
+    Given Requesting IDs of this application
+    When the SBRI MO assignee has been changed
     And Log in as a different user                                          &{monitoring_officer_one_credentials}
-    And Requesting IDs of this application
-    When the user navigates to the page                                     ${server}/project-setup/project/${ProjectID}
+    And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
     And the user clicks the button/link                                     link = view application feedback
     Then the payment milestone table is visible in application overview
 
@@ -304,11 +304,15 @@ The user is able to see Spend profile section
     the user clicks the button/link   link = Spend profile
     the user clicks the button/link   jQuery = a:contains("Set up your project")
 
+Requesting IDs of this application
+    ${sbri_projectID} =  get project id by name    ${sbri_applicaton_name}
+    Set suite variable    ${sbri_projectID}
+
 The SBRI MO assignee has been changed
     log in as a different user                  &{Comp_admin1_credentials}
-    the user navigates to the page              ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
     the user clicks the button/link             link = Change monitoring officer
-    internal user assigns mo to application     252  Procurement application 1  Orvill  Orville Gibbs
+    internal user assigns mo to application     255  SBRI application  Orvill  Orville Gibbs
 
 Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
@@ -336,10 +340,6 @@ The user edits the MO details
     the user clicks the button/link    link = Back to assign monitoring officers
     search for MO  Nilesh  Nilesh Patti
     the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
-
-Requesting IDs of this application
-    ${ProjectID} =  get project id by name    ${sbri_applicaton_name}
-    Set suite variable    ${ProjectID}
 
 Custom suite setup
     Connect to database  @{database}
