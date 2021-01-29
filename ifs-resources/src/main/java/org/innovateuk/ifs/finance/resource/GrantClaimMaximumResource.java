@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.resource;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 
 public class GrantClaimMaximumResource {
 
@@ -11,6 +12,8 @@ public class GrantClaimMaximumResource {
     private OrganisationSize organisationSize;
 
     private Integer maximum;
+
+    private FundingRules fundingRules;
 
     public Long getId() {
         return id;
@@ -42,5 +45,13 @@ public class GrantClaimMaximumResource {
 
     public void setMaximum(Integer maximum) {
         this.maximum = maximum;
+    }
+
+    public FundingRules getFundingRules() {
+        return fundingRules;
+    }
+
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 }
