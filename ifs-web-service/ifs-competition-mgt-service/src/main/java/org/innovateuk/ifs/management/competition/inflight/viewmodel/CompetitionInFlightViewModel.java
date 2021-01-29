@@ -65,7 +65,7 @@ public class CompetitionInFlightViewModel {
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
-        this.alwaysOpen = competitionResource.getAlwaysOpen();
+        this.alwaysOpen = competitionResource.isAlwaysOpen();
     }
 
     public Long getCompetitionId() {

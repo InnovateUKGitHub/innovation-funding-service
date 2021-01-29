@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -17,6 +16,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<MilestoneRestServiceImpl> {
 
@@ -30,11 +30,19 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
+    public void addNewAssessmentPeriod() {
+        String url = milestonesRestURL + "/" + newCompetitionId + "/new-assessment-period";
+        setupPostWithRestResultExpectations(url, OK);
+        RestResult<Void> response = service.addNewAssessmentPeriod(newCompetitionId);
+        assertNotNull(response);
+    }
+
+    @Test
     public void getAllPublicMilestonesByCompetitionId() {
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
 
-        setupGetWithRestResultAnonymousExpectations(milestonesRestURL + "/" + competitionId + "/public", milestoneResourceListType(), returnedResponse, HttpStatus.OK);
+        setupGetWithRestResultAnonymousExpectations(milestonesRestURL + "/" + competitionId + "/public", milestoneResourceListType(), returnedResponse, OK);
         List<MilestoneResource> response = service.getAllPublicMilestonesByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
@@ -96,7 +104,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         milestone.setDate(milestone.getDate().plusDays(7));
         response.set(0, milestone);
 
-        setupPutWithRestResultExpectations(milestonesRestURL + "/many", Void.class, response, null, HttpStatus.OK);
+        setupPutWithRestResultExpectations(milestonesRestURL + "/many", Void.class, response, null, OK);
         service.updateMilestones(response);
         setupPutWithRestResultVerifications(milestonesRestURL + "/many", Void.class, response);
     }
@@ -116,7 +124,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         ZonedDateTime date = ZonedDateTime.now();
         response.setDate(date);
 
-        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, response, null, HttpStatus.OK);
+        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, response, null, OK);
         service.updateMilestone(response);
         setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, response);
     }
@@ -128,7 +136,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
                 null,
                 competitionId);
 
-        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, milestoneToReset, null, HttpStatus.OK);
+        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, milestoneToReset, null, OK);
         RestResult<Void> result = service.resetMilestone(milestoneToReset);
 
         assertTrue(result.isSuccess());
@@ -142,7 +150,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         String url = milestonesRestURL + "/competition/" + competitionId + "/completion-stage?completionStage=" +
                 CompetitionCompletionStage.PROJECT_SETUP.name();
 
-        setupPutWithRestResultExpectations(url, HttpStatus.OK);
+        setupPutWithRestResultExpectations(url, OK);
 
         RestResult<Void> result = service.updateCompletionStage(competitionId, CompetitionCompletionStage.PROJECT_SETUP);
 

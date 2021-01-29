@@ -43,7 +43,7 @@ public class ManageAssessmentsViewModel {
         this.assessmentsAccepted = keyStatistics.getAssignmentsAccepted();
         this.assessmentsStarted = keyStatistics.getAssessmentsStarted();
         this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
-        this.alwaysOpen = competition.getAlwaysOpen();
+        this.alwaysOpen = competition.isAlwaysOpen();
         this.assessmentPeriods = assessmentPeriods;
     }
 

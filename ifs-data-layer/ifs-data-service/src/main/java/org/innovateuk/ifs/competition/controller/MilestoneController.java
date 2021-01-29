@@ -50,7 +50,7 @@ public class MilestoneController {
     }
 
     @PutMapping("/assessment-periods")
-    public RestResult<Void> newAssessmentPeriod(@RequestBody final List<MilestoneResource> milestones) {
+    public RestResult<Void> updateAssessmentPeriodMilestones(@RequestBody final List<MilestoneResource> milestones) {
         return milestoneService.updateAssessmentPeriodMilestones(milestones).toPutResponse();
     }
 

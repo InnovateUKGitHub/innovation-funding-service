@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -40,6 +39,28 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     @Before
     public void setLoggedInUserOnThread() {
         loginCompAdmin();
+    }
+
+    @Test
+    public void testNewAssessmentPeriod() {
+        RestResult<List<MilestoneResource>> result = controller.newAssessmentPeriod(COMPETITION_ID_VALID);
+        assertTrue(result.isSuccess());
+        List<MilestoneResource> milestones = result.getSuccess();
+        assertNotNull(milestones);
+        assertEquals(3, milestones.size());
+    }
+
+    @Test
+    public void testUpdateAssessmentPeriodMilestones() {
+        Competition newCompetition = competitionRepository.save(newCompetition().withId((Long) null).build());
+
+        List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
+        assertNotNull(milestones);
+        assertTrue(milestones.isEmpty());
+
+        RestResult<Void> result = controller.updateAssessmentPeriodMilestones(milestones);
+        assertNotNull(result.getSuccess());
+
     }
 
     @Test
