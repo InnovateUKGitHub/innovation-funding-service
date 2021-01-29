@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -100,9 +99,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private List<MilestoneType> ifsAllPublicDatesComplete(Competition competition) {
         List<MilestoneType> milestonesRequired;
 
-        boolean isAlwaysOpen = BooleanUtils.isTrue(competition.getAlwaysOpen());
-
-        if (isAlwaysOpen) {
+        if (competition.isAlwaysOpen()) {
             milestonesRequired = ALWAYS_OPEN_PUBLIC_MILESTONES.stream()
                     .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
                     .collect(toList());

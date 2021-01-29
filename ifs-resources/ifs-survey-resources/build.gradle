@@ -1,4 +1,5 @@
 apply from: rootProject.file("gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/bom.gradle")
 
 group 'innovateuk'
 version project.version

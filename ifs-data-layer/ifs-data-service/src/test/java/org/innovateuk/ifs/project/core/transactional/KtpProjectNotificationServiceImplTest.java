@@ -10,7 +10,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -61,13 +60,13 @@ public class KtpProjectNotificationServiceImplTest {
     @Test
     public void sendProjectSetupNotification() {
         User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(ProcessRoleType.LEADAPPLICANT).build();
 
         User collaborator = newUser().withEmailAddress("collaborator@example.com").build();
-        ProcessRole collaboratorProcessRole = newProcessRole().withUser(collaborator).withRole(Role.COLLABORATOR).build();
+        ProcessRole collaboratorProcessRole = newProcessRole().withUser(collaborator).withRole(ProcessRoleType.LEADAPPLICANT).build();
 
         User ktaUser = newUser().withEmailAddress("kta@example.com").build();
-        ProcessRole ktaProcessRole = newProcessRole().withUser(ktaUser).withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build();
+        ProcessRole ktaProcessRole = newProcessRole().withUser(ktaUser).withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).build();
 
         Competition competition = newCompetition().withFundingType(FundingType.KTP).build();
         Application application = newApplication()
@@ -99,10 +98,10 @@ public class KtpProjectNotificationServiceImplTest {
     @Test
     public void sendProjectSetupNotification_For_NotFound_Application() {
         User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(ProcessRoleType.LEADAPPLICANT).build();
 
         User ktaUser = newUser().withEmailAddress("kta@example.com").build();
-        ProcessRole ktaProcessRole = newProcessRole().withUser(ktaUser).withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build();
+        ProcessRole ktaProcessRole = newProcessRole().withUser(ktaUser).withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).build();
 
         Competition competition = newCompetition().withFundingType(FundingType.LOAN).build();
         Application application = newApplication()
@@ -120,10 +119,10 @@ public class KtpProjectNotificationServiceImplTest {
     @Test
     public void sendProjectSetupNotification_For_Inactive_Application_User() {
         User leadUser = newUser().withStatus(UserStatus.INACTIVE).build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(ProcessRoleType.LEADAPPLICANT).build();
 
         User ktaUser = newUser().withEmailAddress("kta@example.com").build();
-        ProcessRole ktaProcessRole = newProcessRole().withUser(ktaUser).withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build();
+        ProcessRole ktaProcessRole = newProcessRole().withUser(ktaUser).withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).build();
 
         Competition competition = newCompetition().withFundingType(FundingType.LOAN).build();
         Application application = newApplication()

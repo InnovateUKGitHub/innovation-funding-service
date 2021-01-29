@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 
 import javax.validation.constraints.*;
@@ -22,7 +21,7 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     private String name;
 
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     @NotBlank(groups = Default.class, message = NOT_BLANK_MESSAGE)
     private String role;
 

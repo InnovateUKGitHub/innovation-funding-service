@@ -3,7 +3,8 @@ package org.innovateuk.ifs.analytics.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.analytics.controller.GoogleAnalyticsDataLayerController;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -25,8 +26,8 @@ public class GoogleAnalyticsDataLayerControllerDocumentation extends BaseControl
     private static final long COMPETITION_ID = 1L;
     private static final long PROJECT_ID = 1L;
     private static final long ASSESSMENT_ID = 1L;
-    private static final List<Role> APPLICATION_ROLES = asList(Role.LEADAPPLICANT, Role.COLLABORATOR);
-    private static final List<Role> PROJECT_ROLES = asList(Role.PARTNER, Role.FINANCE_CONTACT, Role.PROJECT_MANAGER);
+    private static final List<ProcessRoleType> APPLICATION_ROLES = asList(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT);
+    private static final List<ProjectParticipantRole> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_FINANCE_CONTACT, ProjectParticipantRole.PROJECT_MANAGER);
 
     @Mock
     private GoogleAnalyticsDataLayerService googleAnalyticsDataLayerService;

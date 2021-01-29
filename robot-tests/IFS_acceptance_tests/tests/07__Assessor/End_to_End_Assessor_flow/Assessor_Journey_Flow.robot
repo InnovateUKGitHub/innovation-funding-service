@@ -147,13 +147,13 @@ comp admin logs in and navigate to invite assessor page
 comp admin send invite to an assessor
     the user clicks the button/link          jQuery = a:contains("Review and send invites")
     the user enters text to a text field     id = message    This is custom text
-    the user clicks the button/link          jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
     the user should see the element          jQuery = h2:contains("View assessors who have not yet responded or have declined the invite.")
 
 comp admin resend invite to an assessor
     the user clicks the button/link      jQuery = tr:contains("EtoE") label
     the user clicks the button/link      jQuery = button:contains("Resend invites")
-    the user clicks the button/link      jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link      jQuery = .govuk-button:contains("Send invitation")
 
 Resent email can be read by the invited user
     the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:  1

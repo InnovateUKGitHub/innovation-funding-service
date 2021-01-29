@@ -1,6 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
@@ -41,7 +41,6 @@ afterEvaluate {
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 buildDocker.dependsOn prepareDockerInput
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
@@ -126,27 +125,27 @@ dependencies {
     compile "org.apache.commons:commons-pool2"
 
     compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
+    compile "org.mariadb.jdbc:mariadb-java-client"
     compile "org.springframework:spring-web"
-    compile "com.jayway.jsonpath:json-path-assert:2.0.0"
+    compile "com.jayway.jsonpath:json-path-assert"
     compile "com.jayway.jsonpath:json-path"
     compile "org.springframework.statemachine:spring-statemachine-core:2.1.3.RELEASE"
-    compile 'org.apache.commons:commons-lang3:3.9'
-    compile 'org.apache.commons:commons-text:1.3'
-    compile 'commons-codec:commons-codec:1.12'
-    compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
+    compile 'org.apache.commons:commons-lang3'
+    compile 'org.apache.commons:commons-text'
+    compile 'commons-codec:commons-codec'
+    compile "commons-beanutils:commons-beanutils"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile 'com.docusign:docusign-esign-java:3.2.0'
     compile "com.newrelic.agent.java:newrelic-api:6.1.0"
     compile "com.hubspot.slack:slack-base:1.12"
     compile "com.hubspot.slack:slack-java-client:1.12"
 
-    compile 'javax.mail:mail:1.4.7'
+    compile 'javax.mail:mail'
     compile "org.apache.httpcomponents:httpasyncclient"
-    compile "com.google.guava:guava:27.1-jre"
-    compile "commons-io:commons-io:2.5"
-    compile 'org.jsoup:jsoup:1.10.3'
-    compile "com.opencsv:opencsv:4.3.2"
+    compile "com.google.guava:guava"
+    compile "commons-io:commons-io"
+    compile 'org.jsoup:jsoup'
+    compile "com.opencsv:opencsv"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
@@ -159,7 +158,6 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
-    testCompile 'au.com.dius:pact-jvm-consumer-junit_2.12:3.5.13'
 }
 
 test {
@@ -176,11 +174,6 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
-
-    if (project.hasProperty('pactDir')) {
-        systemProperty 'pact.rootDir', project.getProperty('pactDir')
-    }
-
 
     if (targetBuild == 'docker') {
         dependsOn ":docker:ifs-mysql:ifs-database:initDB"
@@ -200,7 +193,7 @@ task syncUser() {
                 commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-user.sh', project.getProperty('email')
             }
         } else {
-            throw new GradleException('Please enter a valid email. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com')
+            throw new GradleException('Please enter comma separated valid emails. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com,troy.ward@gmail.com')
         }
     }
 }

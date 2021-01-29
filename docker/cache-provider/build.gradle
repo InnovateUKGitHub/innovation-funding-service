@@ -3,30 +3,30 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 buildscript {
     repositories { jcenter() }
 }
-def redisVersion = "5.0.5"
 
-buildDocker.inputDir = project.file("$project.projectDir/docker")
-buildDocker.tag = "innovateuk/cache-provider:" + redisVersion
+buildDocker.enabled = false
+tagDocker.enabled = false
+osStageRemote.enabled = false
 
 createContainer.containerName = "cache-provider"
 createContainer.containerId = "cache-provider"
-createContainer.imageId = "innovateuk/cache-provider:" + redisVersion
+createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/cache-provider:" + cacheProviderVersion
 
 tagDocker.onlyIf { !isNamedEnv() }
 tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/cache-provider"
-tagDocker.imageId = "innovateuk/cache-provider:" + redisVersion
-tagDocker.tag = redisVersion
+tagDocker.imageId = "innovateuk/cache-provider:" + cacheProviderVersion
+tagDocker.tag = cacheProviderVersion
 
-tagDockerLocal.imageId = "innovateuk/cache-provider:" + redisVersion
-tagDockerLocal.tag = redisVersion
+tagDockerLocal.imageId = "innovateuk/cache-provider:" + cacheProviderVersion
+tagDockerLocal.tag = cacheProviderVersion
 tagDockerLocal {
     doFirst {
         repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/cache-provider"
-        tag = redisVersion
+        tag = cacheProviderVersion
     }
 }
 
-osStageLocal.tag = redisVersion
+osStageLocal.tag = cacheProviderVersion
 osStageLocal {
     doFirst {
         registryCredentials = getLocalOCCredentials()
@@ -37,7 +37,7 @@ osStageLocal {
 
 osStageRemote.onlyIf { !isNamedEnv() }
 osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/cache-provider"
-osStageRemote.tag = redisVersion
+osStageRemote.tag = cacheProviderVersion
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->

@@ -29,6 +29,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -65,7 +66,11 @@ public class FinanceOverviewController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
     public String view(@PathVariable("projectId") Long projectId,
+                       @RequestParam(required = false, defaultValue = "false") boolean showFundingLevelMessage,
+                       @RequestParam(required = false, defaultValue = "false") boolean showFundingAmountMessage,
                        Model model, UserResource loggedInUser) {
+        model.addAttribute("showFundingLevelMessage", showFundingLevelMessage);
+        model.addAttribute("showFundingAmountMessage", showFundingAmountMessage);
         model.addAttribute("model", buildFinanceCheckOverviewViewModel(projectId, loggedInUser));
         return "project/financecheck/overview";
     }

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -55,7 +56,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
         ProcessRole processRole = newProcessRole()
                 .withOrganisationId(organisationId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .build();
 
         List<Question> questions = newQuestion()
@@ -106,7 +107,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
         ProcessRole processRole = newProcessRole()
                 .withOrganisationId(organisationId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .build();
 
         List<Question> questions = newQuestion()

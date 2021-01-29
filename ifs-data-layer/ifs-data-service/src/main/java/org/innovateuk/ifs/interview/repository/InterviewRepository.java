@@ -39,7 +39,7 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
                     //This line is needed, it doesn't seem to add check for descriminator value.
                     " AND type(interviews) = Interview " +
             " WHERE " +
-            "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
+            "   processRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT AND " +
             "   interviewAssignment.target.competition.id = :competitionId AND " +
             "   interviewAssignment.activityState IN (" +
             "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +
@@ -108,7 +108,7 @@ public interface InterviewRepository extends ProcessRepository<Interview>, Pagin
             " LEFT JOIN Interview interviews ON interviews.target.id = interviewAssignment.target.id" +
             " AND type(interviews) = Interview " +
             " WHERE " +
-            "   processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT AND " +
+            "   processRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT AND " +
             "   processRole.applicationId IN (:applicationIds) AND " +
             "   interviewAssignment.activityState IN (" +
             "     org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, " +

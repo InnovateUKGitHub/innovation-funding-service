@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -21,8 +21,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -76,7 +76,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);
-        Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
+        Set<ProcessRoleType> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(true);
@@ -94,7 +94,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);
 
-        Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
+        Set<ProcessRoleType> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
 

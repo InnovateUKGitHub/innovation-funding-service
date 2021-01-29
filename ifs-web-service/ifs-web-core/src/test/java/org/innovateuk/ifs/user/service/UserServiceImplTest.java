@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
@@ -121,7 +122,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         roleResource = COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
+                .withRoleGlobal(roleResource)
                 .build();
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
@@ -132,10 +133,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        roleResource = Role.FINANCE_CONTACT;
+        roleResource = APPLICANT;
         UserResource userResource = newUserResource()
                 .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
+                .withRoleGlobal(roleResource)
                 .build();
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));

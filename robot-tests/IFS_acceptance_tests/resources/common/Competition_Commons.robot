@@ -155,9 +155,9 @@ the user fills funding level percentages
     [Arguments]   ${compType}
     the user should see the element          jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
     the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
-    the user should see the element          jQuery = td:contains("Micro entity or small company")
-    the user should see the element          jQuery = td:contains("Medium-sized company")
-    the user should see the element          jQuery = td:contains("Large-sized company")
+    the user should see the element          jQuery = td:contains("Micro or small")
+    the user should see the element          jQuery = td:contains("Medium")
+    the user should see the element          jQuery = td:contains("Large")
     # if the organisation funding values are different, while completing the application user can see research category validation in your funding page
     # if funding level are same , user can see competition rules link in your funding
     Run Keyword If  "${compType}" == "${compType_ATI}"     run keywords     the user enters text to a text field     maximums[0][0].maximum  75
