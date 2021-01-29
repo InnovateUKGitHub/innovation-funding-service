@@ -973,7 +973,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
 
         verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
-
     }
 
     @Test
@@ -1356,6 +1355,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                         .withOrganisationType(BUSINESS)
                         .build())
                 .build();
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, PENDING);
 
         User user = newUser().withId(1l).build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -1366,6 +1366,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisationInDB, user, "reason")).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(grantOfferLetterProcessRepository.findOneByTargetId(projectId)).thenReturn(currentGOLProcess);
 
         ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId, "reason");
 

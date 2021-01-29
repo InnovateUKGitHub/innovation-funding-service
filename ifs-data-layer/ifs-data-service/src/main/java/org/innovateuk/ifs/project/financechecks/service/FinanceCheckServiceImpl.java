@@ -372,7 +372,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
                         .andOnSuccess(this::getPaymentMilestoneProcess)
-                        .andOnSuccess(process -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process, reason))
+                        .andOnSuccess(process -> {
+                            deleteSpendProfileAndResetGol(projectId);
+                            return triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process, reason);
+                        })
         );
     }
 
@@ -471,6 +474,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             long organisationId = projectFinance.getOrganisation().getId();
             viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), reason);
             projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
+            deleteSpendProfileAndResetGol(projectId);
         });
 
         return serviceSuccess();
@@ -483,6 +487,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             long organisationId = projectFinance.getOrganisation().getId();
             eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), reason);
             projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
+            deleteSpendProfileAndResetGol(projectId);
         });
         return serviceSuccess();
     }
@@ -492,14 +497,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     public ServiceResult<Void> resetFinanceChecks(Long projectId) {
         resetViability(projectId, "Finance reset");
         resetEligibility(projectId, "Finance reset");
-
-        if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
-            spendProfileService.deleteSpendProfile(projectId);
-        }
-
-        if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
-            grantOfferLetterService.resetGrantOfferLetter(projectId);
-        }
         return serviceSuccess();
     }
 
@@ -531,6 +528,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                     projectFinanceRepository.save(projectFinance);
 
                 });
+    }
+
+    private void deleteSpendProfileAndResetGol(Long projectId) {
+        if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
+            spendProfileService.deleteSpendProfile(projectId);
+        }
+
+        if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
+            grantOfferLetterService.resetGrantOfferLetter(projectId);
+        }
     }
 
     private ServiceResult<ProjectFinance> getProjectFinance(Long projectId, Long organisationId) {
