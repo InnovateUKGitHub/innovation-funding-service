@@ -7,9 +7,11 @@ import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(
-        config = GlobalMapperConfig.class
+        config = GlobalMapperConfig.class,
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class GrantTermsAndConditionsMapper
         extends BaseMapper<GrantTermsAndConditions, GrantTermsAndConditionsResource, Long> {
