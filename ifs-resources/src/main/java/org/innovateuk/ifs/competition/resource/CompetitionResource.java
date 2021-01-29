@@ -90,6 +90,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
+    private GrantTermsAndConditionsResource subsidyControlTermsAndConditions;
     private GolTemplateResource golTemplate;
     private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
@@ -660,6 +661,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
+    public GrantTermsAndConditionsResource getSubsidyControlTermsAndConditions() {
+        return subsidyControlTermsAndConditions;
+    }
+
+    public void setSubsidyControlTermsAndConditions(GrantTermsAndConditionsResource subsidyControlTermsAndConditions) {
+        this.subsidyControlTermsAndConditions = subsidyControlTermsAndConditions;
+    }
+
     public Integer getMinProjectDuration() {
         return minProjectDuration;
     }
@@ -869,6 +878,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
+                .append(subsidyControlTermsAndConditions, that.subsidyControlTermsAndConditions)
                 .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
@@ -933,6 +943,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
+                .append(subsidyControlTermsAndConditions)
                 .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
