@@ -14,8 +14,8 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(
         classes = {WhiteBlackDomainFilter.class},
         properties = {
-                "ifs.emailNotification.blacklist=example.com,another.com",
-                "ifs.emailNotification.whitelist=*"
+                "ifs.email.blacklist=example.com,another.com",
+                "ifs.email.whitelist=*"
         })
 public class WhiteBlackDomainFilterComponentTest {
 
