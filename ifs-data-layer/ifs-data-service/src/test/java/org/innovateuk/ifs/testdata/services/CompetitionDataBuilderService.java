@@ -187,6 +187,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 withApplicationFormFromTemplate().
                 withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
                 withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView).
+                withDefaultAssessmentPeriod(line.alwaysOpen).
                 withNewMilestones(line.competitionCompletionStage, line.alwaysOpen);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);

@@ -383,11 +383,33 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
-                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccess(),
+                                failure -> milestoneService.create(type, data.getCompetition().getId())
+                                        .andOnSuccessReturn(milestoneResource -> {
+                                            if (BooleanUtils.isFalse(alwaysOpen) && MilestoneType.assessmentPeriodValues().stream()
+                                                            .anyMatch(milestoneType -> (milestoneType == type))) {
+                                                assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(data.getCompetition().getId(), 1)
+                                                        .andOnSuccessReturn(assessmentPeriodResource -> {
+                                                            milestoneResource.setAssessmentPeriodId(assessmentPeriodResource.getId());
+                                                            return milestoneService.updateMilestone(milestoneResource).getSuccess();
+                                                        });
+                                            }
+                                            return milestoneResource;
+                                        }),
                                 success -> success
                         )
             )
         );
+    }
+
+    public CompetitionDataBuilder withDefaultAssessmentPeriod(Boolean alwaysOpen) {
+
+        if (BooleanUtils.isFalse(alwaysOpen)) {
+            return this;
+        }
+
+        return asCompAdmin(data -> {
+            assessmentPeriodService.create(data.getCompetition().getId(), 1);
+        });
     }
 
     public CompetitionDataBuilder withOpenDate(ZonedDateTime date) {
