@@ -248,7 +248,7 @@ Internal users can see SBRI application in previous tab with submitted status
 External user finance overview link is not shown
     [Documentation]    IFS-8127
     Given log in as a different user             &{becky_mason_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-check
     Then the user should not see the element     jQuery = project finance overview
 
 External user finances details are correct
@@ -343,9 +343,16 @@ Project lead is able to view pending query on project dashboard
 
 Project lead responds to pending queries
     [Documentation]  IFS-8943
-    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-check
     When the user clicks the button/link         id = post-new-response-1
     Then the user responds to the query
+
+Internal user can edit payment milestone in project setup
+     [Documentation]  IFS-8941
+     Given log in as a different user                       &{internal_finance_credentials}
+     And the user navigates to the page                     ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+     And the user edits the payment milestone
+     Then the internal user approves payment milestone
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048
@@ -383,7 +390,7 @@ Internal user can send the contract
 Check that the VAT value shows on finance table
     [Documentation]  IFS-8321
     Given log in as a different user             &{becky_mason_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks/overview
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-check/overview
     Then the user should see the element         jQuery = th:contains("Total VAT")
 
 External user of international org should not see bank details
@@ -397,13 +404,6 @@ External user can upload the contract
      Given applicant uploads the contract
      When the internal user approve the contract     ${sbriProjectId2}
      Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
-
-Internal user can edit payment milestone in project setup
-     [Documentation]  IFS-8941
-     Given log in as a different user                       &{internal_finance_credentials}
-     And the user navigates to the page                     ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     When the user edits the payment milestone
-     Then the internal user approves payment milestone
 
 *** Keywords ***
 Custom Suite Setup
@@ -543,7 +543,6 @@ the data is in the database correctly
 Generate spend profile
     confirm viability                                0
     confirm eligibility                              0
-    the internal user approves payment milestone
     the user clicks the button/link                  css = .generate-spend-profile-main-button
 
 internal user generates the contract
@@ -589,7 +588,7 @@ the user should see validation messages
     the user should see a field and summary error     You must state the payment requested in pounds (£).
 
 the user edits the payment milestone
-     the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Approved")
+     the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
      the user clicks the button/link                        id = edit
      the user clicks the button/link                        jQuery = button:contains("Open all")
      the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
