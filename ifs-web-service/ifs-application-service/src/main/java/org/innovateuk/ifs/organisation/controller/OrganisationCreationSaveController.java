@@ -125,7 +125,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                     UserResource loggedInUser) {
 
         organisationForm.getAddressForm().validateAction(bindingResult);
-
+        if (validationHandler.hasErrors()) {
+            return "registration/organisation/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
 
         AddressForm addressForm = organisationForm.getAddressForm();
         addressForm.handleAction(this::searchPostcode);
