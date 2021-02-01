@@ -87,4 +87,24 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
     }
+
+    @Test
+    public void subsidyControlTermsAndConditions() throws Exception {
+        GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
+                "special-terms-and-conditions", 3);
+
+        final CompetitionResource competitionResource = newCompetitionResource()
+                .withCompetitionTypeName("Competition name")
+                .withSubsidyControlTermsAndConditions(termsAndConditions)
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+
+        mockMvc.perform(get("/competition/{id}/info/subsidy-control-terms-and-conditions", competitionResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", new CompetitionTermsViewModel(competitionResource.getId())))
+                .andExpect(view().name("competition/info/special-terms-and-conditions"));
+
+        verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
+    }
 }

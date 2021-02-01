@@ -42,6 +42,19 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
+    public void updateSubsidyControlTermsAndConditionsForCompetition() throws Exception {
+        final long competitionId = 1L;
+        final long termsAndConditionsId = 2L;
+
+        when(competitionService.updateSubsidyControlTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/update-subsidy-control-terms-and-conditions/{tcId}", competitionId, termsAndConditionsId))
+                .andExpect(status().isOk());
+
+        verify(competitionService, only()).updateSubsidyControlTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
+    }
+
+    @Test
     public void downloadTerms() throws Exception {
         final long competitionId = 1L;
         String fileName = "filename";
