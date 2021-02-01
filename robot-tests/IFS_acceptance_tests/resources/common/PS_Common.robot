@@ -828,14 +828,11 @@ the user edits the payment milestone
      the user clicks the button/link                        jQuery = button:contains("Open all")
      the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
      the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
-     the user navigates to the page                         ${server}/project-setup-management/project/${sbriProjectId}/finance-check
 
 the internal user approves payment milestone
     the user selects the checkbox       approve-milestones
     the user clicks the button/link     id = confirm-button   #Page confirmation button
     the user clicks the button/link     jQuery = h2:contains("Approve payment milestones") ~ div button:contains("Approve payment milestones")   #Pop-up confirmation button
-    the user clicks the button/link     link = Return to finance checks
-    the user clicks the button/link     css = .generate-spend-profile-main-button
 
 the internal user approve the contract
     [Arguments]  ${projectID}

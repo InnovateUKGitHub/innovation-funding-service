@@ -353,15 +353,16 @@ Internal user can edit payment milestone in project setup
      When the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId}/finance-check
      And the user clicks the button/link           jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
      Then the user edits the payment milestone
+     And the user navigates to the page            ${server}/project-setup-management/project/${sbriProjectId}/finance-check
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048   IFS-8941
     Given Log in as a different user                      &{internal_finance_credentials}
     And the user navigates to the page                    ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-    When generate spend profile
+    When confirm viability and eligibility
     And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the internal user approves payment milestone
-    Then the user should see the element                  css = .success-alert
+    Then generate spend profile
 
 Internal user should not see spend profile section
     [Documentation]  IFS-8048
@@ -378,7 +379,7 @@ Internal user should see bank details complete for an international applicant
 Contract section is enabled without bank details
     [Documentation]  IFS-8202  IFS-8941
     Given the user navigates to the page                 ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
-    And generate spend profile
+    And confirm viability and eligibility
     When the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the internal user approves payment milestone
     And the user navigates to the page                   ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
@@ -544,9 +545,9 @@ the data is in the database correctly
      Should Be Equal As Integers   ${month2VAT}     0
      Should Be Equal As Integers   ${month3VAT}     33135
 
-Generate spend profile
-    confirm viability                                0
-    confirm eligibility                              0
+confirm viability and eligibility
+    confirm viability       0
+    confirm eligibility     0
 
 internal user generates the contract
     [Arguments]  ${projectID}
@@ -589,3 +590,8 @@ the user should see validation messages
     the user should see a field and summary error     Number of months completed must be selected.
     the user should see a field and summary error     You must state the milestone task or activity.
     the user should see a field and summary error     You must state the payment requested in pounds (£).
+
+generate spend profile
+    the user clicks the button/link     link = Return to finance checks
+    the user clicks the button/link     css = .generate-spend-profile-main-button
+    the user should see the element     css = .success-alert
