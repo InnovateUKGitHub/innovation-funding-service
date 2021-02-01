@@ -353,7 +353,7 @@ Internal user can edit payment milestone in project setup
      When the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId}/finance-check
      And the user clicks the button/link           jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
      Then the user edits the payment milestone
-     And the user navigates to the page            ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+     And the user cannot see a validation error in the page
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048   IFS-8941

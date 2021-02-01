@@ -826,7 +826,7 @@ confirm eligibility
 the user edits the payment milestone
      the user clicks the button/link                        id = edit
      the user clicks the button/link                        jQuery = button:contains("Open all")
-     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
+     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
      the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
 
 the internal user approves payment milestone
