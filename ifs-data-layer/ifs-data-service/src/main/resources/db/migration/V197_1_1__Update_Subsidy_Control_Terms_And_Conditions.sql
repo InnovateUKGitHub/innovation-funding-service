@@ -4,7 +4,7 @@ SET @system_maintenance_user_id = (
     WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
 
 INSERT INTO terms_and_conditions (name, template, version, type, created_by, created_on, modified_on, modified_by)
-VALUES ('Innovate UK - Subsidy control', 'ati-subsidy-control-terms-and-conditions-v2', 2, 'GRANT', @system_maintenance_user_id, NOW(), NOW(), @system_maintenance_user_id);
+VALUES ('Innovate UK - Subsidy control', 'default-subsidy-control-terms-and-conditions-v2', 2, 'GRANT', @system_maintenance_user_id, NOW(), NOW(), @system_maintenance_user_id);
 
 INSERT INTO terms_and_conditions (name, template, version, type, created_by, created_on, modified_on, modified_by)
 VALUES ('Aerospace Technology Institute (ATI) - Subsidy control', 'ati-subsidy-control-terms-and-conditions-v2', 2, 'GRANT', @system_maintenance_user_id, NOW(), NOW(), @system_maintenance_user_id);
