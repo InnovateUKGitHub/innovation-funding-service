@@ -349,21 +349,24 @@ Project lead responds to pending queries
 
 Internal user can edit payment milestone in project setup
      [Documentation]  IFS-8941
-     Given log in as a different user                       &{internal_finance_credentials}
-     And the user navigates to the page                     ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     And the user edits the payment milestone
+     Given log in as a different user              &{internal_finance_credentials}
+     When the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+     And the user clicks the button/link           jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+     Then the user edits the payment milestone
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048
-    Given Log in as a different user          &{internal_finance_credentials}
-    And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    Given Log in as a different user                      &{internal_finance_credentials}
+    And the user navigates to the page                    ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     When generate spend profile
-    Then the user should see the element      css = .success-alert
+    And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the internal user approves payment milestone
+    Then the user should see the element                  css = .success-alert
 
 Internal user should not see spend profile section
     [Documentation]  IFS-8048
-    When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should not see the element     jQuery = th:contains("Spend profile")
+    When the user navigates to the page           ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should not see the element      jQuery = th:contains("Spend profile")
     And the data is in the database correctly
 
 Internal user should see bank details complete for an international applicant
@@ -374,10 +377,12 @@ Internal user should see bank details complete for an international applicant
 
 Contract section is enabled without bank details
     [Documentation]  IFS-8202
-    Given the user navigates to the page     ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
-    When generate spend profile
-    And the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
+    Given the user navigates to the page                 ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    And generate spend profile
+    when the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the internal user approves payment milestone
+    And the user navigates to the page                   ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element                 jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
@@ -542,7 +547,6 @@ the data is in the database correctly
 Generate spend profile
     confirm viability                                0
     confirm eligibility                              0
-    the internal user approves payment milestone
 
 internal user generates the contract
     [Arguments]  ${projectID}
@@ -587,7 +591,6 @@ the user should see validation messages
     the user should see a field and summary error     You must state the payment requested in pounds (£).
 
 the user edits the payment milestone
-     the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
      the user clicks the button/link                        id = edit
      the user clicks the button/link                        jQuery = button:contains("Open all")
      the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
