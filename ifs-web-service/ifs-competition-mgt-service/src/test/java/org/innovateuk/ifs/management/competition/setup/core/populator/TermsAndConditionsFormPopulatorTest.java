@@ -24,12 +24,32 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions).build();
 
-        CompetitionSetupForm result = service.populateForm(competition);
+        TermsAndConditionsForm result = service.populateForm(competition);
 
-        assertTrue(result instanceof TermsAndConditionsForm);
-        TermsAndConditionsForm form = (TermsAndConditionsForm) result;
+        assertNotNull(result.getTermsAndConditionsId());
+        assertEquals(result.getTermsAndConditionsId(), termsAndConditions.getId());
+    }
 
-        assertNotNull(form.getTermsAndConditionsId());
-        assertEquals(form.getTermsAndConditionsId(), termsAndConditions.getId());
+    @Test
+    public void testGetSectionFormDataSubsidyControlTermsAndConditions() {
+        GrantTermsAndConditionsResource termsAndConditions = newGrantTermsAndConditionsResource().build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withSubsidyControlTermsAndConditions(termsAndConditions).build();
+
+        TermsAndConditionsForm result = service.populateFormForSubsidyControl(competition);
+
+        assertNotNull(result.getTermsAndConditionsId());
+        assertEquals(result.getTermsAndConditionsId(), termsAndConditions.getId());
+    }
+
+    @Test
+    public void testGetSectionFormDataNullSubsidyControlTermsAndConditions() {
+        CompetitionResource competition = newCompetitionResource()
+                .withSubsidyControlTermsAndConditions(null).build();
+
+        TermsAndConditionsForm result = service.populateFormForSubsidyControl(competition);
+
+        assertNull(result.getTermsAndConditionsId());
     }
 }
