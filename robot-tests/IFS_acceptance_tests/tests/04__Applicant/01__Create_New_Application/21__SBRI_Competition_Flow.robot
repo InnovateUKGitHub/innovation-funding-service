@@ -355,7 +355,7 @@ Internal user can edit payment milestone in project setup
      Then the user edits the payment milestone
 
 Internal user can generate spend profile
-    [Documentation]   IFS-8048
+    [Documentation]   IFS-8048   IFS-8941
     Given Log in as a different user                      &{internal_finance_credentials}
     And the user navigates to the page                    ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     When generate spend profile
@@ -376,7 +376,7 @@ Internal user should see bank details complete for an international applicant
     Then the user should see the element     jQuery = span:contains("No action required")
 
 Contract section is enabled without bank details
-    [Documentation]  IFS-8202
+    [Documentation]  IFS-8202  IFS-8941
     Given the user navigates to the page                 ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
     And generate spend profile
     When the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
