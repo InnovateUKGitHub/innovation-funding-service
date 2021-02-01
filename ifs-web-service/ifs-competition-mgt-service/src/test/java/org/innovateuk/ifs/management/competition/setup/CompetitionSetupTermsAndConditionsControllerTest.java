@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.management.competition.setup;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
@@ -27,13 +24,11 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
-import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -54,9 +49,6 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     private static final String URL_PREFIX = "/competition/setup";
 
     @Mock
-    private CategoryRestService categoryRestService;
-
-    @Mock
     private CompetitionSetupService competitionSetupService;
 
     @Mock
@@ -64,9 +56,6 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Mock
     private Validator validator;
-
-    @Mock
-    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Mock
     private UserService userService;
@@ -79,6 +68,9 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Mock
     private TermsAndConditionsRestService termsAndConditionsRestService;
+
+    @Mock
+    private TermsAndConditionsModelPopulator termsAndConditionsModelPopulator;
 
     @Override
     protected CompetitionSetupTermsAndConditionsController supplyControllerUnderTest() {
@@ -103,19 +95,6 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
                                 .withLastName("Technologist")
                                 .build(1))
                 );
-
-        List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
-                .withName("A Innovation Sector")
-                .withId(1L)
-                .build(1);
-        when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectorResources));
-
-        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
-                .withName("A Innovation Area")
-                .withId(2L)
-                .withSector(1L)
-                .build(1);
-        when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreaResources));
 
         List<CompetitionTypeResource> competitionTypeResources = newCompetitionTypeResource()
                 .withId(1L)
@@ -175,10 +154,10 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
-        when(competitionSetupService.saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competition),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionComplete(anyLong(), eq(TERMS_AND_CONDITIONS))).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
                 .param("termsAndConditionsId", String.valueOf(nonProcurementTerms.getId())))
@@ -189,10 +168,12 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
-        inOrder.verify(competitionSetupService).saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competition),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
+        inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
+                eq(COMPETITION_ID),
+                eq(nonProcurementTerms.getId()));
+        inOrder.verify(competitionSetupRestService).markSectionComplete(
+                eq(COMPETITION_ID),
+                eq(TERMS_AND_CONDITIONS));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -206,20 +187,19 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
         when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
-        when(competitionSetupService.saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competitionWithTermsDoc),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionComplete(anyLong(), eq(TERMS_AND_CONDITIONS))).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
                 .param("termsAndConditionsId", String.valueOf(procurementTerms.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
 
-        verify(competitionSetupService).saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competitionWithTermsDoc),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
+        verify(competitionRestService).updateTermsAndConditionsForCompetition(
+                eq(COMPETITION_ID),
+                eq(procurementTerms.getId()));
     }
 
     @Test
@@ -229,10 +209,10 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithoutTermsDoc));
         when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
-        when(competitionSetupService.saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competitionWithoutTermsDoc),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionComplete(anyLong(), eq(TERMS_AND_CONDITIONS))).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
                 .param("termsAndConditionsId", String.valueOf(procurementTerms.getId())))

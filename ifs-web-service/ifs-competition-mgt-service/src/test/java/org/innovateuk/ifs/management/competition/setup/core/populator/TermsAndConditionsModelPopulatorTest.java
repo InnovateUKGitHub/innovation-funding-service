@@ -57,7 +57,8 @@ public class TermsAndConditionsModelPopulatorTest {
 
         TermsAndConditionsViewModel viewModel = populator.populateModel(
                 competitionResource,
-                userResource);
+                userResource,
+                false);
 
         assertEquals(CompetitionSetupSection.TERMS_AND_CONDITIONS, viewModel.getGeneral().getCurrentSection());
         assertEquals(viewModel.getTermsAndConditionsList(), termsAndConditions);
