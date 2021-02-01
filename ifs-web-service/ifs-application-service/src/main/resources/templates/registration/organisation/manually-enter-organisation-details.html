@@ -23,8 +23,8 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Manually enter your organisation\'s details',subTitle='Create an account',size='govuk-heading-l'"/>
 
-        <div class="govuk-body">This page is only for organisations that cannot be registered on Companies House, <br> for example:</div>
-        <ul class="govuk-list govuk-list--bullet">
+        <div class="govuk-body govuk-!-margin-bottom-0">This page is only for organisations that cannot be registered on Companies House, <br> for example:</div>
+        <ul class="govuk-list govuk-list--bullet ">
             <li>charities</li>
             <li>local authorities</li>
             <li>NGOs</li>
@@ -89,6 +89,11 @@
                                th:field="${organisationForm.sicCodes[__${iteration.index}__].sicCode}"
                                maxlength="5"/>
                 </div>
+                <div th:if="${iteration.index > 0}">
+                    <button class="button-clear alignright" data-remove-row-man="sicCode" type="button" name="remove-sic-code"
+                                th:id="remove-sic-code-row"> Remove
+                    </button>
+                </div>
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+ Add SIC code</button>
@@ -104,11 +109,16 @@
                            maxlength="255"
                            type="text"/>
                 </div>
+                <div th:if="${iteration.index > 0}">
+                    <button class="button-clear alignright" data-remove-row-man="execOfficer" type="button" name="remove-exec-officer"
+                            th:id="remove-exec-officer-row"> Remove
+                    </button>
+                </div>
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>
             </div>
-            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
+            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s govuk-!-font-size-24" for="name">
                 Registered address
             </label>
             <div id="custom-postcode" class="govuk-body">
