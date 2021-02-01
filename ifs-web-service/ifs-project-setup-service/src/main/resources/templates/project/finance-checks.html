@@ -77,7 +77,7 @@
 
 
             <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
-                <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
+                <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                    class="govuk-link">your project finances</a>
                 <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
                 and you can also <a

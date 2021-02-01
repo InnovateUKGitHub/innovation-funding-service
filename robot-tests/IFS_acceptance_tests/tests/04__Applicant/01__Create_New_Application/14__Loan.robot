@@ -254,7 +254,7 @@ the internal user should see the funding changes
 
 the external user should see the funding changes
     log in as a different user        &{lead_applicant_credentials}
-    the user navigates to the page    ${loan_PS}/finance-checks/eligibility
+    the user navigates to the page    ${loan_PS}/finance-check/eligibility
     the user should see the element   jQuery = p:contains("All members of your organisation can access and edit your project")
     the user clicks the button/link   link = View changes to finances
     the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
