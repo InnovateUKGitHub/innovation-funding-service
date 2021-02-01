@@ -146,7 +146,7 @@
         </th:block>
         <th:block th:if="${model.externalUser}">
             <a class="govuk-button govuk-button--secondary"
-               th:href="@{/project/{projectId}/finance-checks(projectId=${model.projectId})}">
+               th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">
                 Return to finance checks</a>
         </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>
