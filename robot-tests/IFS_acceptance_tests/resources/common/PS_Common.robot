@@ -829,6 +829,7 @@ the internal user approves payment milestone
     the user clicks the button/link                         id = confirm-button   #Page confirmation button
     the user clicks the button/link                         jQuery = h2:contains("Approve payment milestones") ~ div button:contains("Approve payment milestones")   #Pop-up confirmation button
     the user clicks the button/link                         link = Return to finance checks
+    the user clicks the button/link                         css = .generate-spend-profile-main-button
 
 the internal user approve the contract
     [Arguments]  ${projectID}

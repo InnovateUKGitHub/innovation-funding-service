@@ -352,7 +352,6 @@ Internal user can edit payment milestone in project setup
      Given log in as a different user                       &{internal_finance_credentials}
      And the user navigates to the page                     ${server}/project-setup-management/project/${sbriProjectId}/finance-check
      And the user edits the payment milestone
-     Then the internal user approves payment milestone
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048
@@ -543,7 +542,7 @@ the data is in the database correctly
 Generate spend profile
     confirm viability                                0
     confirm eligibility                              0
-    the user clicks the button/link                  css = .generate-spend-profile-main-button
+    the internal user approves payment milestone
 
 internal user generates the contract
     [Arguments]  ${projectID}
