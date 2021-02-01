@@ -2,7 +2,9 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
 import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
@@ -181,17 +184,26 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @PostMapping("/" + SELECTED_ORGANISATION_MANUAL)
-    public String selectManualOrganisationForConfirmation(@ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                    Model model,
-                                                    HttpServletRequest request,
-                                                    HttpServletResponse response,
-                                                    UserResource user) {
+    public String selectManualOrganisationForConfirmation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                          BindingResult bindingResult,
+                                                          ValidationHandler validationHandler,
+                                                          Model model,
+                                                          HttpServletRequest request,
+                                                          HttpServletResponse response,
+                                                          UserResource user) {
 
         addManualOrganisation(organisationForm, model);
 
         organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         organisationForm.setManualEntry(true);
+
+        bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
+        validator.validate(organisationForm, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
