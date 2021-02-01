@@ -379,7 +379,7 @@ Contract section is enabled without bank details
     [Documentation]  IFS-8202
     Given the user navigates to the page                 ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
     And generate spend profile
-    when the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    When the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the internal user approves payment milestone
     And the user navigates to the page                   ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element                 jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
@@ -589,10 +589,3 @@ the user should see validation messages
     the user should see a field and summary error     Number of months completed must be selected.
     the user should see a field and summary error     You must state the milestone task or activity.
     the user should see a field and summary error     You must state the payment requested in pounds (£).
-
-the user edits the payment milestone
-     the user clicks the button/link                        id = edit
-     the user clicks the button/link                        jQuery = button:contains("Open all")
-     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
-     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
-     the user navigates to the page                         ${server}/project-setup-management/project/${sbriProjectId}/finance-check
