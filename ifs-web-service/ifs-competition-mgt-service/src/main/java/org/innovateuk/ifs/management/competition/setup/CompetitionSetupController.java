@@ -62,6 +62,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
@@ -371,6 +372,46 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, loggedInUser, model);
+    }
+
+    @GetMapping("/{competitionId}/section/terms-and-conditions")
+    public String editTermsAndConditions(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              Model model,
+                                              UserResource loggedInUser) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
+        if (competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
+
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, TERMS_AND_CONDITIONS));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, TERMS_AND_CONDITIONS));
+
+        return "competition/setup";
+    }
+
+    @GetMapping("/{competitionId}/section/subsidy-control-terms-and-conditions")
+    public String editSubsidyControlTermsAndConditions(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                                Model model,
+                                                                UserResource loggedInUser) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
+            return "redirect:/competition/setup/" + competition.getId();
+        }
+
+        if (competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
+
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, TERMS_AND_CONDITIONS));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, TERMS_AND_CONDITIONS));
+
+        return "competition/setup";
     }
 
     @PostMapping("/{competitionId}/section/terms-and-conditions")

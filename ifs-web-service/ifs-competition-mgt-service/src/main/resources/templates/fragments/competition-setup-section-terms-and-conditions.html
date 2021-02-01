@@ -6,7 +6,12 @@
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
+    <th:block th:unless="${model.general.subsidyControlCompetition}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
+
+    <th:block th:if="${model.general.subsidyControlCompetition}">
+        <span class="hint">Terms and conditions</span>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='State Aid',size='govuk-heading-xl'" />
+    </th:block>
 
     <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 

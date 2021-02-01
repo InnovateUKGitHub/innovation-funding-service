@@ -33,4 +33,6 @@ public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
     public boolean isTermsAndConditionsDocUploaded() {
         return termsAndConditionsDocUploaded;
     }
+
+
 }

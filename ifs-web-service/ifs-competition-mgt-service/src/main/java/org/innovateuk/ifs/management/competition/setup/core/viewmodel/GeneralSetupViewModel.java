@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.competition.setup.core.viewmodel;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 
 import java.util.List;
 
@@ -94,6 +96,10 @@ public class GeneralSetupViewModel {
 
     public boolean isIfsAdmin() {
         return ifsAdmin;
+    }
+
+    public boolean isSubsidyControlCompetition() {
+        return FundingRules.SUBSIDY_CONTROL == competition.getFundingRules();
     }
 
     public static List<CompetitionSetupSection> getPublishSections() {
