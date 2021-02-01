@@ -408,7 +408,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         }
 
         return asCompAdmin(data -> {
-            assessmentPeriodService.create(data.getCompetition().getId(), 1);
+            CompetitionCompletionStage competitionCompletionStage = data.getCompetition().getCompletionStage();
+            if (isCompetitionEligibleForAssessment(competitionCompletionStage)) {
+                assessmentPeriodService.create(data.getCompetition().getId(), 1);
+            }
         });
     }
 

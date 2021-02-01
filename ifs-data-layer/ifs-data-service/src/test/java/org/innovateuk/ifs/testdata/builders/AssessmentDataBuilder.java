@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
@@ -41,7 +42,8 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                                                     String rejectComment,
                                                     AssessmentState state,
                                                     String feedback,
-                                                    String recommendComment) {
+                                                    String recommendComment,
+                                                    CompetitionResource competition) {
         return with(data -> {
 
             UserResource assessor = retrieveUserByEmail(assessorEmail);
@@ -60,11 +62,11 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             }
 
             AssessmentResource assessmentResource = doAs(compAdmin(), () ->
-                    testService.doWithinTransaction(() -> {
+                    {
                         Application application = applicationRepository.findByName(applicationName).get(0);
-                        attachDefaultAssessmentPeriod(application);
+                        attachDefaultAssessmentPeriod(application, competition);
                         return assessmentService.createAssessment(new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess();
-                    })
+                    }
             );
 
             doAs(compAdmin(), () ->
@@ -115,12 +117,12 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
         });
     }
 
-    private void attachDefaultAssessmentPeriod(Application application) {
-        if (application.getAssessmentPeriod() == null && !application.getCompetition().isAlwaysOpen()) {
+    private void attachDefaultAssessmentPeriod(Application application, CompetitionResource competition) {
+        if (application.getAssessmentPeriod() == null && !competition.isAlwaysOpen() && isCompetitionEligibleForAssessment(competition.getCompletionStage())) {
             AssessmentPeriodResource assessmentPeriod = assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(application.getCompetition().getId(), 1)
                     .handleSuccessOrFailure(failure -> {
                                 throw new ObjectNotFoundException(String.format("Default assessment period not exists for competition %s, unable to create assessments for application %s",
-                                        application.getCompetition().getName(), application.getName()));
+                                        competition.getName(), application.getName()));
                             },
                             success -> success);
             applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod);

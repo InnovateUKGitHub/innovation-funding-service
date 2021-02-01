@@ -24,6 +24,7 @@ import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.transactional.*;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceService;
@@ -503,5 +504,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
                             .collect(toList())
             );
         }).getSuccess();
+    }
+
+    protected boolean isCompetitionEligibleForAssessment(CompetitionCompletionStage competitionCompletionStage) {
+        return competitionCompletionStage == CompetitionCompletionStage.PROJECT_SETUP
+                || competitionCompletionStage == CompetitionCompletionStage.RELEASE_FEEDBACK;
     }
 }
