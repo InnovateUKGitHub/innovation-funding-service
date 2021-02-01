@@ -22,8 +22,8 @@
 
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Manually enter your organisation\'s details',subTitle='Create an account',size='govuk-heading-l'"/>
-        <p class="govuk-body">This page is only for organisations that cannot be registered on Companies House, for
-            example:</p>
+
+        <div class="govuk-body">This page is only for organisations that cannot be registered on Companies House, <br> for example:</div>
         <ul class="govuk-list govuk-list--bullet">
             <li>charities</li>
             <li>local authorities</li>
@@ -32,8 +32,8 @@
             <li>sole traders</li>
             <li>trusts</li>
         </ul>
-        <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you make will
-            slow down the application process, which could delay your funding payments.</p>
+        <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you <br> make will
+            slow down the application process, which could delay your funding <br> payments.</p>
         <form th:object="${organisationForm}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post">
@@ -60,7 +60,7 @@
                     Organisation number
                 </label>
                 <div class="govuk-hint"><small>Enter your organisation’s unique identification number, such as your HMRC
-                    Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.</small></div>
+                    Unique Taxpayer <br>  Reference (UTR), UK charity number or other unique reference number.</small></div>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="number"
                        th:field="*{organisationNumber}"
@@ -111,12 +111,9 @@
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
                 Registered address
             </label>
-            <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.postcode')}">
-                <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationForm.addressForm.manualAddress.postcode')}" th:text="${err}"></span>
-            </th:block>
-                <div id="custom-postcode" class="govuk-body">
-                    <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
-                </div>
+            <div id="custom-postcode" class="govuk-body">
+                <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},legend=${'Find address'}"/>
+            </div>
                 <button name="save-organisation" formaction="/organisation/create/selected-organisation-manual" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end"/>
