@@ -41,7 +41,7 @@ IFS.manuallyEnter = (function () {
       var html = '<div class="govuk-grid-row govuk-!-margin-top-6 sic-code-row" id="sic-code-row-' + idCount + '">' +
                                      '<div class="govuk-grid-column">' +
                                          '<div class="govuk-grid-column-two-thirds">' +
-                                         '<input class="govuk-input govuk-input--width-20"' +
+                                         '<input class="govuk-input govuk-input--width-5"' +
                                          'id="sicCode"' +
                                           'type="text" ' +
                                           'maxlength="5" ' +
@@ -83,7 +83,7 @@ IFS.manuallyEnter = (function () {
       var html = '<div class="govuk-grid-row govuk-!-margin-top-6 exec-officer-row" id="exec-officer-row-' + idCount + '">' +
                                '<div class="govuk-grid-column">' +
                                    '<div class="govuk-grid-column-two-thirds">' +
-                                   '<input class="govuk-input govuk-input--width-20"' +
+                                   '<input class="govuk-input govuk-input--width-23"' +
                                    'id="execOfficer"' +
                                     'type="text" ' +
                                     'maxlength="255" ' +
