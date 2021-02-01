@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.thymeleaf.util.StringUtils;
 
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
@@ -148,7 +149,7 @@ public class GenericMilestoneRowForm {
         }
         else {
             try {
-                dayOfWeek = dayName.substring(0, 1) + dayName.substring(1, 3).toLowerCase();
+                dayOfWeek = StringUtils.capitalize(dayName.toLowerCase());
             } catch (Exception e) {
                 LOG.trace(e);
             }
