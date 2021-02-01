@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.data.domain.Pageable;
@@ -98,4 +99,8 @@ public interface ApplicationService {
 
     @NotSecured(value = "Only called by other secured services")
     ServiceResult<Void> linkAddressesToOrganisation(long organisationId, long applicationId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @SecuredBySpring(value = "SET_ASSESSMENT_PERIOD", securedType = ApplicationResource.class, description = "Comp Admins should be able to map the assessment period for application")
+    ServiceResult<ApplicationResource> updateAssessmentPeriod(long applicationId, AssessmentPeriodResource assessmentPeriod);
 }

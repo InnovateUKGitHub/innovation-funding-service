@@ -469,6 +469,14 @@ public class Application implements ProcessActivity {
         this.projectToBeCreated = projectToBeCreated;
     }
 
+    public AssessmentPeriod getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public void setAssessmentPeriod(AssessmentPeriod assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
+    }
+
     public Optional<Integer> getMaxMilestoneMonth(){
         Optional<Integer> max = Optional.of(getApplicationFinances())
                 .map(Collection::stream)

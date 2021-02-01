@@ -77,8 +77,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                     Objects.equals(l.applicationName, application.getApplication().getName()));
 
             assessmentLinesForApplication.forEach(assessmentLine -> {
-
-                createAssessment(assessmentLine);
+                createAssessment(application, assessmentLine);
 
                 createAssessorResponses(assessmentLine.applicationName, assessmentLine.assessorEmail, assessmentLine.state,
                         assessorResponseLines, application.getCompetition());
@@ -214,7 +213,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    private void createAssessment(AssessmentLine line) {
+    private void createAssessment(ApplicationData application, AssessmentLine line) {
         assessmentBuilder.withAssessmentData(
                 line.assessorEmail,
                 line.applicationName,
