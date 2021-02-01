@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_FAILED_WHITELIST_BLACKLIST_CHECK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -65,7 +65,7 @@ class EmailNotificationSender implements NotificationSender {
                 LOG.error("Discarded email notification due to whitelist/blacklist rules for one or more email recipients: "
                         + notificationMessage.getTo().getEmailAddress());
                 // I'm treating this as an error, not as code but a build/release process error that we need to propagate and signal
-                return serviceFailure(EMAILS_NOT_SENT_MULTIPLE);
+                return serviceFailure(EMAILS_FAILED_WHITELIST_BLACKLIST_CHECK);
             }
         }
 
