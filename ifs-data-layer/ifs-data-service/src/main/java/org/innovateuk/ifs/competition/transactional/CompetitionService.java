@@ -71,6 +71,11 @@ public interface CompetitionService {
             description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
     ServiceResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @SecuredBySpring(value = "UPDATE_TERMS_AND_CONDITIONS", securedType = CompetitionResource.class,
+            description = "Only Comp Admins are able to update grant terms and conditions for the given competitions")
+    ServiceResult<Void> updateSubsidyControlTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
+
     @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
     ServiceResult<FileAndContents> downloadTerms(long competitionId);
 

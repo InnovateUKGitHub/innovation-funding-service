@@ -70,9 +70,18 @@ public class CompetitionController {
         return "competition/info/" + termsAndConditions.getTemplate();
     }
 
+    @GetMapping("info/subsidy-control-terms-and-conditions")
+    public String subsidyControlTermsAndConditions(@PathVariable("competitionId") final long competitionId, Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        GrantTermsAndConditionsResource termsAndConditions = competition.getSubsidyControlTermsAndConditions();
+        model.addAttribute("model", new CompetitionTermsViewModel(competitionId));
+        return "competition/info/" + termsAndConditions.getTemplate();
+    }
+
     @GetMapping("info/terms-and-conditions/full")
     public @ResponseBody ResponseEntity<ByteArrayResource> additionalTerms(@PathVariable("competitionId") final long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         return getFileResponseEntity(competitionRestService.downloadTerms(competitionId).getSuccess(), competition.getCompetitionTerms());
     }
+
 }

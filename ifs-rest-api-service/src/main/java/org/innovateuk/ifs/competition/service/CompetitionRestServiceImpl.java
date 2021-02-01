@@ -60,6 +60,11 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     }
 
     @Override
+    public RestResult<Void> updateSubsidyControlTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
+        return putWithRestResult(format("%s/%d/%s/%d", COMPETITION_REST_SERVICE, competitionId, "update-subsidy-control-terms-and-conditions", termsAndConditionsId), Void.class);
+    }
+
+    @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
         return getWithRestResult(format("%s/%s", COMPETITION_TYPE_REST_SERVICE, "find-all"), competitionTypeResourceListType());
     }

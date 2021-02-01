@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.competition.setup.core.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
@@ -17,12 +16,6 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private TermsAndConditionsFormPopulator service;
-
-    @Test
-    public void testSectionToFill() {
-        CompetitionSetupSection result = service.sectionToFill();
-        assertEquals(CompetitionSetupSection.TERMS_AND_CONDITIONS, result);
-    }
 
     @Test
     public void testGetSectionFormDataTermsAndConditions() {

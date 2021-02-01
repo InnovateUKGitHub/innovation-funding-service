@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapKeyAndValue;
  */
 @Service
 public class CompetitionSetupPopulator {
+
     @Autowired
     private CompetitionSetupService competitionSetupService;
 

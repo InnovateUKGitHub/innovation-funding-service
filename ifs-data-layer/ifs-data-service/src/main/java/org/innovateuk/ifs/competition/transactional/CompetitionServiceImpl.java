@@ -202,6 +202,21 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    @Transactional
+    public ServiceResult<Void> updateSubsidyControlTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
+        Optional<GrantTermsAndConditions> termsAndConditions = grantTermsAndConditionsRepository.findById(termsAndConditionsId);
+        if (termsAndConditions.isPresent()) {
+            return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
+                    .andOnSuccess(competition -> {
+                        competition.setSubsidyControlTermsAndConditions(termsAndConditions.get());
+                        competitionRepository.save(competition);
+                        return serviceSuccess();
+                    });
+        }
+        return serviceFailure(notFoundError(GrantTermsAndConditions.class, termsAndConditionsId));
+    }
+
+    @Override
     public ServiceResult<FileAndContents> downloadTerms(long competitionId) {
         return findCompetitionById(competitionId)
                 .andOnSuccess(c -> find(c.getCompetitionTerms(), notFoundError(FileEntry.class))
