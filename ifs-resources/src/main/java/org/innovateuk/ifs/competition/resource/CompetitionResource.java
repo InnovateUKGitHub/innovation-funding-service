@@ -90,7 +90,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
-    private GrantTermsAndConditionsResource subsidyControlTermsAndConditions;
+    private GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions;
     private GolTemplateResource golTemplate;
     private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
@@ -661,12 +661,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
-    public GrantTermsAndConditionsResource getSubsidyControlTermsAndConditions() {
-        return subsidyControlTermsAndConditions;
+    public GrantTermsAndConditionsResource getOtherFundingRulesTermsAndConditions() {
+        return otherFundingRulesTermsAndConditions;
     }
 
-    public void setSubsidyControlTermsAndConditions(GrantTermsAndConditionsResource subsidyControlTermsAndConditions) {
-        this.subsidyControlTermsAndConditions = subsidyControlTermsAndConditions;
+    public void setOtherFundingRulesTermsAndConditions(GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions) {
+        this.otherFundingRulesTermsAndConditions = otherFundingRulesTermsAndConditions;
     }
 
     public Integer getMinProjectDuration() {
@@ -878,7 +878,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(subsidyControlTermsAndConditions, that.subsidyControlTermsAndConditions)
+                .append(otherFundingRulesTermsAndConditions, that.otherFundingRulesTermsAndConditions)
                 .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
@@ -943,7 +943,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
-                .append(subsidyControlTermsAndConditions)
+                .append(otherFundingRulesTermsAndConditions)
                 .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)

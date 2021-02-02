@@ -6,33 +6,33 @@
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:unless="${model.includeSubsidyControl}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
+    <th:block th:unless="${model.includeStateAid}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
 
-    <th:block th:if="${model.includeSubsidyControl AND model.general.editable}">
-        <th:block th:unless="${model.subsidyControlPage}">
-            <p class="govuk-body"><span class="hint">Terms and conditions</span></p>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='State Aid',size='govuk-heading-xl'" />
-        </th:block>
-        <th:block th:if="${model.subsidyControlPage}">
+    <th:block th:if="${model.includeStateAid AND model.general.editable}">
+        <th:block th:unless="${model.stateAidPage}">
             <p class="govuk-body"><span class="hint">Terms and conditions</span></p>
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Subsidy Control',size='govuk-heading-xl'" />
         </th:block>
+        <th:block th:if="${model.stateAidPage}">
+            <p class="govuk-body"><span class="hint">Terms and conditions</span></p>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='State Aid',size='govuk-heading-xl'" />
+        </th:block>
     </th:block>
 
-    <th:block th:if="${model.includeSubsidyControl AND !model.general.editable}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='govuk-heading-xl'" />
+    <th:block th:if="${model.includeStateAid AND !model.general.editable}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='govuk-heading-xl'" />
 
     <th:block th:if="${model.general.editable}">
-        <th:block th:if="${model.subsidyControlPage AND model.currentSubsidyControlTermsAndConditions != null}">
+        <th:block th:if="${model.stateAidPage AND model.currentStateAidTermsAndConditions != null}">
             <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 
-            <p class="govuk-body"><a th:text="|${model.currentSubsidyControlTermsAndConditions.name} (opens in a new window)|"
-                                     th:href="@{~/competition/{competitionId}/info/subsidy-control-terms-and-conditions(competitionId=${model.general.competition.id})}"
+            <p class="govuk-body"><a th:text="|${model.currentStateAidTermsAndConditions.name} (opens in a new window)|"
+                                     th:href="@{~/competition/{competitionId}/info/state-aid-terms-and-conditions(competitionId=${model.general.competition.id})}"
                                      target="_blank"
                                      class="govuk-link">
                 Terms and conditions</a>
             </p>
         </th:block>
-        <th:block th:if="${!model.subsidyControlPage AND model.currentTermsAndConditions != null}">
+        <th:block th:if="${!model.stateAidPage AND model.currentTermsAndConditions != null}">
             <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 
             <p class="govuk-body"><a th:text="|${model.currentTermsAndConditions.name} (opens in a new window)|"
@@ -45,13 +45,13 @@
     </th:block>
 
     <th:block th:unless="${model.general.editable}">
-        <dl class="standard-definition-list" th:if="${model.includeSubsidyControl}">
+        <dl class="standard-definition-list" th:if="${model.includeStateAid}">
             <dt>Subsidy control terms and conditions</dt>
-            <dd><th:block th:if="${model.currentSubsidyControlTermsAndConditions != null}" th:text="${model.currentSubsidyControlTermsAndConditions.name}"></th:block></dd>
-            <dt>State aid terms and conditions</dt>
             <dd><th:block th:if="${model.currentTermsAndConditions != null}" th:text="${model.currentTermsAndConditions.name}"></th:block></dd>
+            <dt>State aid terms and conditions</dt>
+            <dd><th:block th:if="${model.currentStateAidTermsAndConditions != null}" th:text="${model.currentStateAidTermsAndConditions.name}"></th:block></dd>
         </dl>
-        <th:block th:if="${!model.includeSubsidyControl AND model.currentTermsAndConditions != null}">
+        <th:block th:if="${!model.includeStateAid AND model.currentTermsAndConditions != null}">
             <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 
             <p class="govuk-body"><a th:text="|${model.currentTermsAndConditions.name} (opens in a new window)|"

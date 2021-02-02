@@ -89,18 +89,18 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
-    public void subsidyControlTermsAndConditions() throws Exception {
+    public void otherFundingRulesTermsAndConditions() throws Exception {
         GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
                 "special-terms-and-conditions", 3);
 
         final CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionTypeName("Competition name")
-                .withSubsidyControlTermsAndConditions(termsAndConditions)
+                .withOtherFundingRulesTermsAndConditions(termsAndConditions)
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
-        mockMvc.perform(get("/competition/{id}/info/subsidy-control-terms-and-conditions", competitionResource.getId()))
+        mockMvc.perform(get("/competition/{id}/info/other-funding-rules-terms-and-conditions", competitionResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", new CompetitionTermsViewModel(competitionResource.getId())))
                 .andExpect(view().name("competition/info/special-terms-and-conditions"));

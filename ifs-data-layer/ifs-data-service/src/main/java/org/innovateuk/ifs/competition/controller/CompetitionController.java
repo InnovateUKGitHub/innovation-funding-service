@@ -54,10 +54,10 @@ public class CompetitionController {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
 
-    @PutMapping("{id}/update-subsidy-control-terms-and-conditions/{tcId}")
-    public RestResult<Void> updateSubsidyControlTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
+    @PutMapping("{id}/update-other-funding-rules-terms-and-conditions/{tcId}")
+    public RestResult<Void> updateOtherFundingRulesTermsAndConditionsForCompetition(@PathVariable("id") final long competitionId,
                                                                    @PathVariable("tcId") final long termsAndConditionsId) {
-        return competitionService.updateSubsidyControlTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
+        return competitionService.updateOtherFundingRulesTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
 
     @GetMapping(path = "/{id}/terms-and-conditions", produces = "application/json")

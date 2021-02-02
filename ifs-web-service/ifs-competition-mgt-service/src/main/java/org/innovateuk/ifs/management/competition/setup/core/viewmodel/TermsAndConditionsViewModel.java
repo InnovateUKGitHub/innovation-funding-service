@@ -10,25 +10,25 @@ public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
     private final List<GrantTermsAndConditionsResource> termsAndConditionsList;
 
     private final GrantTermsAndConditionsResource currentTermsAndConditions;
-    private final GrantTermsAndConditionsResource currentSubsidyControlTermsAndConditions;
+    private final GrantTermsAndConditionsResource currentStateAidTermsAndConditions;
 
     private final boolean termsAndConditionsDocUploaded;
-    private final boolean includeSubsidyControl;
-    private final boolean subsidyControlPage;
+    private final boolean includeStateAid;
+    private final boolean stateAidPage;
 
     public TermsAndConditionsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                        List<GrantTermsAndConditionsResource> termsAndConditionsList,
                                        GrantTermsAndConditionsResource currentTermsAndConditions,
-                                       GrantTermsAndConditionsResource currentSubsidyControlTermsAndConditions,
+                                       GrantTermsAndConditionsResource currentStateAidTermsAndConditions,
                                        boolean termsAndConditionsDocUploaded,
-                                       boolean includeSubsidyControl, boolean subsidyControlPage) {
+                                       boolean includeStateAid, boolean stateAidPage) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.termsAndConditionsList = termsAndConditionsList;
         this.currentTermsAndConditions = currentTermsAndConditions;
-        this.currentSubsidyControlTermsAndConditions = currentSubsidyControlTermsAndConditions;
+        this.currentStateAidTermsAndConditions = currentStateAidTermsAndConditions;
         this.termsAndConditionsDocUploaded = termsAndConditionsDocUploaded;
-        this.includeSubsidyControl = includeSubsidyControl;
-        this.subsidyControlPage = subsidyControlPage;
+        this.includeStateAid = includeStateAid;
+        this.stateAidPage = stateAidPage;
     }
 
     public List<GrantTermsAndConditionsResource> getTermsAndConditionsList() {
@@ -39,19 +39,19 @@ public class TermsAndConditionsViewModel extends CompetitionSetupViewModel {
         return currentTermsAndConditions;
     }
 
-    public GrantTermsAndConditionsResource getCurrentSubsidyControlTermsAndConditions() {
-        return currentSubsidyControlTermsAndConditions;
+    public GrantTermsAndConditionsResource getCurrentStateAidTermsAndConditions() {
+        return currentStateAidTermsAndConditions;
     }
 
     public boolean isTermsAndConditionsDocUploaded() {
         return termsAndConditionsDocUploaded;
     }
 
-    public boolean isIncludeSubsidyControl() {
-        return includeSubsidyControl;
+    public boolean isIncludeStateAid() {
+        return includeStateAid;
     }
 
-    public boolean isSubsidyControlPage() {
-        return subsidyControlPage;
+    public boolean isStateAidPage() {
+        return stateAidPage;
     }
 }

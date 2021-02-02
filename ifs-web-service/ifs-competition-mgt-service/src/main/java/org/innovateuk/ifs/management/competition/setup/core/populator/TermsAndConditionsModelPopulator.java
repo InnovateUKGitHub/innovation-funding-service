@@ -25,16 +25,11 @@ public class TermsAndConditionsModelPopulator {
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
 
-    public TermsAndConditionsViewModel populateModel(CompetitionResource competitionResource, UserResource userResource, boolean subsidyControlPage) {
+    public TermsAndConditionsViewModel populateModel(CompetitionResource competitionResource, UserResource userResource, boolean stateAidPage) {
 
         GrantTermsAndConditionsResource termsAndConditions = null;
         if (competitionResource.getTermsAndConditions() != null) {
             termsAndConditions = termsAndConditionsRestService.getById(competitionResource.getTermsAndConditions().getId()).getSuccess();
-        }
-
-        GrantTermsAndConditionsResource subsidyControlTermsAndConditions = null;
-        if (competitionResource.getSubsidyControlTermsAndConditions() != null) {
-            subsidyControlTermsAndConditions = termsAndConditionsRestService.getById(competitionResource.getSubsidyControlTermsAndConditions().getId()).getSuccess();
         }
 
         GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, userResource, CompetitionSetupSection.TERMS_AND_CONDITIONS);
@@ -44,10 +39,21 @@ public class TermsAndConditionsModelPopulator {
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
-        boolean includeSubsidyControl = FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules() && !competitionResource.isExpressionOfInterest();
+        boolean includeStateAid = FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules() && !competitionResource.isExpressionOfInterest();
+
+        if (includeStateAid) {
+            GrantTermsAndConditionsResource otherTermsAndConditions = null;
+            if (competitionResource.getOtherFundingRulesTermsAndConditions() != null) {
+                otherTermsAndConditions = termsAndConditionsRestService.getById(competitionResource.getOtherFundingRulesTermsAndConditions().getId()).getSuccess();
+            }
+
+            return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
+                    otherTermsAndConditions, termsAndConditions, termsAndConditionsDocUploaded, true, stateAidPage);
+        }
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
-                termsAndConditions, subsidyControlTermsAndConditions, termsAndConditionsDocUploaded, includeSubsidyControl, subsidyControlPage);
+                termsAndConditions, null, termsAndConditionsDocUploaded, false, false);
+
     }
 
 }

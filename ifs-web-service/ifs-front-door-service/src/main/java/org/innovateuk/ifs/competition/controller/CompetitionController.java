@@ -70,10 +70,10 @@ public class CompetitionController {
         return "competition/info/" + termsAndConditions.getTemplate();
     }
 
-    @GetMapping("info/subsidy-control-terms-and-conditions")
-    public String subsidyControlTermsAndConditions(@PathVariable("competitionId") final long competitionId, Model model) {
+    @GetMapping("info/other-funding-rules-terms-and-conditions")
+    public String otherFundingRulesTermsAndConditions(@PathVariable("competitionId") final long competitionId, Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        GrantTermsAndConditionsResource termsAndConditions = competition.getSubsidyControlTermsAndConditions();
+        GrantTermsAndConditionsResource termsAndConditions = competition.getOtherFundingRulesTermsAndConditions();
         model.addAttribute("model", new CompetitionTermsViewModel(competitionId));
         return "competition/info/" + termsAndConditions.getTemplate();
     }

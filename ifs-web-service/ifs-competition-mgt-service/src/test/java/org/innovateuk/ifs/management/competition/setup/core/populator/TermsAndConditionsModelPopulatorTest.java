@@ -67,7 +67,7 @@ public class TermsAndConditionsModelPopulatorTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-        return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS,
-                CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
+        return new GeneralSetupViewModel(false, false, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS,
+                CompetitionSetupSection.values(), true, false);
     }
 }

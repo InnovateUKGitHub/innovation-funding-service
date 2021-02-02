@@ -18,10 +18,10 @@ public class TermsAndConditionsFormPopulator {
         return termsAndConditionsForm;
     }
 
-    public TermsAndConditionsForm populateFormForSubsidyControl(CompetitionResource competitionResource) {
+    public TermsAndConditionsForm populateFormForStateAid(CompetitionResource competitionResource) {
         TermsAndConditionsForm termsAndConditionsForm = new TermsAndConditionsForm();
-        if (competitionResource.getSubsidyControlTermsAndConditions() != null) {
-            termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getSubsidyControlTermsAndConditions().getId());
+        if (competitionResource.getOtherFundingRulesTermsAndConditions() != null) {
+            termsAndConditionsForm.setTermsAndConditionsId(competitionResource.getOtherFundingRulesTermsAndConditions().getId());
         }
         return termsAndConditionsForm;
     }

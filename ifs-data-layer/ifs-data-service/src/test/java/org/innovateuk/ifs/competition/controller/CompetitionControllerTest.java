@@ -42,16 +42,16 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
-    public void updateSubsidyControlTermsAndConditionsForCompetition() throws Exception {
+    public void updateOtherFundingRulesTermsAndConditionsForCompetition() throws Exception {
         final long competitionId = 1L;
         final long termsAndConditionsId = 2L;
 
-        when(competitionService.updateSubsidyControlTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
+        when(competitionService.updateOtherFundingRulesTermsAndConditionsForCompetition(competitionId, termsAndConditionsId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/{id}/update-subsidy-control-terms-and-conditions/{tcId}", competitionId, termsAndConditionsId))
+        mockMvc.perform(put("/competition/{id}/update-other-funding-rules-terms-and-conditions/{tcId}", competitionId, termsAndConditionsId))
                 .andExpect(status().isOk());
 
-        verify(competitionService, only()).updateSubsidyControlTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
+        verify(competitionService, only()).updateOtherFundingRulesTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
     }
 
     @Test

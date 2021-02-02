@@ -3,7 +3,6 @@ package org.innovateuk.ifs.management.competition.setup.core.populator;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,24 +30,24 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetSectionFormDataSubsidyControlTermsAndConditions() {
+    public void testGetSectionFormDataStateAidTermsAndConditions() {
         GrantTermsAndConditionsResource termsAndConditions = newGrantTermsAndConditionsResource().build();
 
         CompetitionResource competition = newCompetitionResource()
-                .withSubsidyControlTermsAndConditions(termsAndConditions).build();
+                .withOtherFundingRulesTermsAndConditions(termsAndConditions).build();
 
-        TermsAndConditionsForm result = service.populateFormForSubsidyControl(competition);
+        TermsAndConditionsForm result = service.populateFormForStateAid(competition);
 
         assertNotNull(result.getTermsAndConditionsId());
         assertEquals(result.getTermsAndConditionsId(), termsAndConditions.getId());
     }
 
     @Test
-    public void testGetSectionFormDataNullSubsidyControlTermsAndConditions() {
+    public void testGetSectionFormDataNullStateAidTermsAndConditions() {
         CompetitionResource competition = newCompetitionResource()
-                .withSubsidyControlTermsAndConditions(null).build();
+                .withOtherFundingRulesTermsAndConditions(null).build();
 
-        TermsAndConditionsForm result = service.populateFormForSubsidyControl(competition);
+        TermsAndConditionsForm result = service.populateFormForStateAid(competition);
 
         assertNull(result.getTermsAndConditionsId());
     }

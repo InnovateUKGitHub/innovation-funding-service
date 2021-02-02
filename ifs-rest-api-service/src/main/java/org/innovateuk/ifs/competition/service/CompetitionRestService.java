@@ -29,7 +29,7 @@ public interface CompetitionRestService {
 
     RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 
-    RestResult<Void> updateSubsidyControlTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
+    RestResult<Void> updateOtherFundingRulesTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
 
     RestResult<ByteArrayResource> downloadTerms(long competitionId);
 }

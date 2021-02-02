@@ -203,12 +203,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateSubsidyControlTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
+    public ServiceResult<Void> updateOtherFundingRulesTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId) {
         Optional<GrantTermsAndConditions> termsAndConditions = grantTermsAndConditionsRepository.findById(termsAndConditionsId);
         if (termsAndConditions.isPresent()) {
             return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                     .andOnSuccess(competition -> {
-                        competition.setSubsidyControlTermsAndConditions(termsAndConditions.get());
+                        competition.setOtherFundingRulesTermsAndConditions(termsAndConditions.get());
                         competitionRepository.save(competition);
                         return serviceSuccess();
                     });
