@@ -50,14 +50,12 @@ public class Milestone {
         this.competition = competition;
     }
 
-    public Milestone(MilestoneType type, ZonedDateTime date, Competition competition, AssessmentPeriod assessmentPeriod) {
+    public Milestone(MilestoneType type, Competition competition, AssessmentPeriod assessmentPeriod) {
         if (type == null) { throw new IllegalArgumentException("type cannot be null"); }
         if (competition == null) { throw new IllegalArgumentException("competition cannot be null"); }
         if (assessmentPeriod == null) { throw new IllegalArgumentException("assessment period cannot be null"); }
-        if (date == null) { throw new IllegalArgumentException("date cannot be null"); }
 
         this.type = type;
-        this.date = date;
         this.competition = competition;
         this.assessmentPeriod = assessmentPeriod;
     }

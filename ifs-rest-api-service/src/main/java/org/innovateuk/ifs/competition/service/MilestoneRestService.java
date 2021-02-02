@@ -24,6 +24,8 @@ public interface MilestoneRestService {
 
     RestResult<MilestoneResource> create(MilestoneType type, Long competitionId);
 
+    RestResult<MilestoneResource> create(MilestoneType type, Long competitionId, Long assessmentPeriodId);
+
     RestResult<Void> resetMilestone(MilestoneResource milestone);
 
     RestResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);

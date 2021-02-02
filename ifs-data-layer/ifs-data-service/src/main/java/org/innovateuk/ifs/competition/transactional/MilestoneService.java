@@ -44,6 +44,11 @@ public interface MilestoneService {
             description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions")
     ServiceResult<MilestoneResource> create(MilestoneType type, Long id);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value="CREATE", securedType=MilestoneResource.class,
+            description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions with assessment period")
+    ServiceResult<MilestoneResource> create(MilestoneType type, Long competitionId, Long assessmentPeriodId);
+
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'UPDATE_COMPLETION_STAGE')")
     ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
 }

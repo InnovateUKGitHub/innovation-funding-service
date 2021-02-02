@@ -44,6 +44,13 @@ public class MilestoneController {
         return milestoneService.create(type, competitionId).toPostCreateResponse();
     }
 
+    @PostMapping("/{competitionId}/with-assessment-period")
+    public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
+                                                @RequestParam("assessmentPeriodId") final Integer assessmentPeriodId,
+                                                @PathVariable("competitionId") final Long competitionId) {
+        return milestoneService.create(type, competitionId).toPostCreateResponse();
+    }
+
     @PutMapping("/many")
     public RestResult<Void> saveMilestones(@RequestBody final List<MilestoneResource> milestones) {
         return milestoneService.updateMilestones(milestones).toPutResponse();

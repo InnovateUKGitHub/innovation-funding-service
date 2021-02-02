@@ -5,8 +5,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime;
@@ -28,16 +32,43 @@ import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupMilestoneServiceImpl.class);
 
+    private static final Integer DEFAULT_INDEX = 1;
+
     @Autowired
     private MilestoneRestService milestoneRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private AssessmentPeriodRestService assessmentPeriodRestService;
 
     @Override
     public ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs()).forEach(type ->
-            newMilestones.add(milestoneRestService.create(type, competitionId).getSuccess())
-        );
+
+        AssessmentPeriodResource assessmentPeriodResource = assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess();
+
+        Stream.of(MilestoneType.presetValues())
+                .filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                .forEach(type ->  newMilestones.add(createMilestone(type, competitionId, assessmentPeriodResource.getId())));
+
         return serviceSuccess(newMilestones);
+    }
+
+    private MilestoneResource createMilestone(MilestoneType type, Long competitionId, Long assessmentPeriodId) {
+        MilestoneResource milestoneResource;
+
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        if (!competitionResource.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
+                .anyMatch(milestoneType -> (milestoneType == type))) {
+            milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodId).getSuccess();
+        } else {
+            milestoneResource = milestoneRestService.create(type, competitionId).getSuccess();
+        }
+
+        return milestoneResource;
     }
 
     @Override
