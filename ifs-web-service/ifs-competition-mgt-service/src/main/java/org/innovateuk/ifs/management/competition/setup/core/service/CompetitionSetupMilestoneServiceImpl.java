@@ -5,10 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -47,23 +44,25 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     public ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
 
-        AssessmentPeriodResource assessmentPeriodResource = assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess();
+
 
         Stream.of(MilestoneType.presetValues())
                 .filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                .forEach(type ->  newMilestones.add(createMilestone(type, competitionId, assessmentPeriodResource.getId())));
+                .forEach(type ->  newMilestones.add(createMilestone(type, competitionId)));
 
         return serviceSuccess(newMilestones);
     }
 
-    private MilestoneResource createMilestone(MilestoneType type, Long competitionId, Long assessmentPeriodId) {
+    private MilestoneResource createMilestone(MilestoneType type, Long competitionId) {
         MilestoneResource milestoneResource;
 
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if (!competitionResource.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
+        if (!competition.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
                 .anyMatch(milestoneType -> (milestoneType == type))) {
-            milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodId).getSuccess();
+            AssessmentPeriodResource assessmentPeriodResource = assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(DEFAULT_INDEX, competition.getId())
+                    .getOrElse(assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess());
+            milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodResource.getId()).getSuccess();
         } else {
             milestoneResource = milestoneRestService.create(type, competitionId).getSuccess();
         }

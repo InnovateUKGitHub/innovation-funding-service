@@ -48,6 +48,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     private static final List<MilestoneType> ALWAYS_OPEN_PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE);
 
+    private static final Integer DEFAULT_INDEX = 1;
+
     @Autowired
     private MilestoneRepository milestoneRepository;
 
@@ -210,8 +212,17 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 } else {
                     Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
                             .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
-                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
-                            newMilestones.add(new Milestone(type, competition))
+                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
+                            .forEach(type -> {
+                                if (!competition.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
+                                        .anyMatch(milestoneType -> (milestoneType == type))) {
+                                    AssessmentPeriod assessmentPeriod = assessmentPeriodRepository.findByCompetitionIdAndIndex(competition.getId(), DEFAULT_INDEX)
+                                            .orElseGet(() -> assessmentPeriodRepository.save(new AssessmentPeriod(competition, DEFAULT_INDEX)));
+                                    newMilestones.add(new Milestone(type, competition, assessmentPeriod));
+                                } else {
+                                    newMilestones.add(new Milestone(type, competition));
+                                }
+                            }
                     );
                     milestoneRepository.saveAll(newMilestones);
                 }
