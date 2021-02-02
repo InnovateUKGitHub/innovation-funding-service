@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,15 +40,12 @@ import static java.lang.String.format;
 @Component
 public class OrganisationJourneyEnd {
 
-    public static final String DATE_OF_CREATION = "date_of_creation";
+
     @Autowired
     private ApplicationRestService applicationRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private CompaniesHouseRestService companiesHouseRestService;
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
@@ -64,7 +62,12 @@ public class OrganisationJourneyEnd {
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
-    private final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+
+    @Autowired
+    private  CompaniesHouseRestService companiesHouseRestService;
+
 
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
 
@@ -78,32 +81,12 @@ public class OrganisationJourneyEnd {
     }
 
     private void updateExistingCompaniesHouseData(final long organisationId) {
-        RestResult<OrganisationResource> org = organisationRestService.getOrganisationById(organisationId);
-        org.getOptionalSuccessObject().ifPresent(theOrg -> getOrganisationfromCompaniesHouse(theOrg));
+
+        CompaniesHouseSyncTask companiesHouseSyncTask = new CompaniesHouseSyncTask(organisationId, organisationRestService,companiesHouseRestService);
+       taskExecutor.execute(companiesHouseSyncTask);
 
     }
 
-    private void getOrganisationfromCompaniesHouse(final OrganisationResource theOrg) {
-        RestResult<OrganisationSearchResult> organisationWithNewCompaniesHouseData = companiesHouseRestService.getOrganisationById(theOrg.getCompaniesHouseNumber());
-        organisationWithNewCompaniesHouseData.getOptionalSuccessObject().ifPresent(theOrgWithCHData -> updateOrganisationWithCompaniesHouseData(theOrgWithCHData,theOrg));
-    }
-
-    private void updateOrganisationWithCompaniesHouseData(OrganisationSearchResult org, OrganisationResource orgResource){
-        orgResource.setSicCodes(org.getOrganisationSicCodes());
-        orgResource.setExecutiveOfficers(org.getOrganisationExecutiveOfficers());
-        List<OrganisationAddressResource> addressList = new ArrayList<>();
-        OrganisationAddressResource organisationAddress = new OrganisationAddressResource();
-        organisationAddress.setOrganisation(orgResource.getId());
-        organisationAddress.setAddress(org.getOrganisationAddress());
-        organisationAddress.setAddressType(new AddressTypeResource(1L, OrganisationAddressType.REGISTERED.name()));
-        addressList.add(organisationAddress);
-        orgResource.setAddresses(addressList);
-        String localDateString = (String) org.getExtraAttributes().get(DATE_OF_CREATION);
-        if (localDateString != null) {
-            orgResource.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
-        }
-       organisationRestService.createOrMatch(orgResource);
-    }
 
     private String handleExistingUser(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
         if (!user.hasRole(Role.APPLICANT)) {
