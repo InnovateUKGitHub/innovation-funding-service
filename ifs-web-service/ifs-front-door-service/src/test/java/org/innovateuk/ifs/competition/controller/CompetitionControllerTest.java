@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
@@ -89,7 +90,28 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     }
 
     @Test
-    public void otherFundingRulesTermsAndConditions() throws Exception {
+    public void stateAidTermsAndConditions() throws Exception {
+        GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
+                "special-terms-and-conditions", 3);
+
+        final CompetitionResource competitionResource = newCompetitionResource()
+                .withCompetitionTypeName("Competition name")
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withOtherFundingRulesTermsAndConditions(termsAndConditions)
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+
+        mockMvc.perform(get("/competition/{id}/info/state-aid-terms-and-conditions", competitionResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", new CompetitionTermsViewModel(competitionResource.getId())))
+                .andExpect(view().name("competition/info/special-terms-and-conditions"));
+
+        verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
+    }
+
+    @Test
+    public void stateAidTermsAndConditionsForNonDualTermsAndConditionsCompetition() throws Exception {
         GrantTermsAndConditionsResource termsAndConditions = new GrantTermsAndConditionsResource("T&C",
                 "special-terms-and-conditions", 3);
 
@@ -100,10 +122,9 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
-        mockMvc.perform(get("/competition/{id}/info/other-funding-rules-terms-and-conditions", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", new CompetitionTermsViewModel(competitionResource.getId())))
-                .andExpect(view().name("competition/info/special-terms-and-conditions"));
+        mockMvc.perform(get("/competition/{id}/info/state-aid-terms-and-conditions", competitionResource.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/setup/" + competitionResource.getId()));
 
         verify(competitionRestService, only()).getCompetitionById(competitionResource.getId());
     }

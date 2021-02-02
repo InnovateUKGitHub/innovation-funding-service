@@ -17,6 +17,7 @@ import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndCo
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,6 +62,9 @@ public class CompetitionSetupTermsAndConditionsController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
+
+    @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
+    private Boolean subsidyControlNorthernIrelandEnabled;
 
     @GetMapping("/{competitionId}/section/terms-and-conditions")
     public String editTermsAndConditions(@PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -247,7 +251,9 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     private boolean shouldHaveSeparateTerms(CompetitionResource competition) {
-        return FundingRules.SUBSIDY_CONTROL == competition.getFundingRules() && !competition.isExpressionOfInterest();
+        return Boolean.TRUE.equals(subsidyControlNorthernIrelandEnabled)
+                && FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
+                && !competition.isExpressionOfInterest();
     }
 
     private String ifsCompetitionSetup(long competitionId) {
