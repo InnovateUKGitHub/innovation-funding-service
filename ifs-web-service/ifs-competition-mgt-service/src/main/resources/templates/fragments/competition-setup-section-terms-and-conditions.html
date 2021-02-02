@@ -44,14 +44,24 @@
         </th:block>
     </th:block>
 
-    <dl class="standard-definition-list" th:unless="${model.general.editable}">
-        <th:block th:if="${model.includeSubsidyControl}">
+    <th:block th:unless="${model.general.editable}">
+        <dl class="standard-definition-list" th:if="${model.includeSubsidyControl}">
             <dt>Subsidy control terms and conditions</dt>
             <dd><th:block th:if="${model.currentSubsidyControlTermsAndConditions != null}" th:text="${model.currentSubsidyControlTermsAndConditions.name}"></th:block></dd>
+            <dt>State aid terms and conditions</dt>
+            <dd><th:block th:if="${model.currentTermsAndConditions != null}" th:text="${model.currentTermsAndConditions.name}"></th:block></dd>
+        </dl>
+        <th:block th:if="${!model.includeSubsidyControl AND model.currentTermsAndConditions != null}">
+            <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
+
+            <p class="govuk-body"><a th:text="|${model.currentTermsAndConditions.name} (opens in a new window)|"
+                                     th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}"
+                                     target="_blank"
+                                     class="govuk-link">
+                Terms and conditions</a>
+            </p>
         </th:block>
-        <dt>State aid terms and conditions</dt>
-        <dd><th:block th:if="${model.currentTermsAndConditions != null}" th:text="${model.currentTermsAndConditions.name}"></th:block></dd>
-    </dl>
+    </th:block>
 
     <form th:action="@{(${model.general.editable} ? '' : 'terms-and-conditions/edit')}"
           th:object="${competitionSetupForm}"

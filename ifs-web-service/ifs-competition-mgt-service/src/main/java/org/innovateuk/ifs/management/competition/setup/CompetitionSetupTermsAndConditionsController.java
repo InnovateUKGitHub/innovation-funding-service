@@ -96,7 +96,7 @@ public class CompetitionSetupTermsAndConditionsController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules()) {
+        if (!shouldHaveSeparateTerms(competition)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -178,6 +178,10 @@ public class CompetitionSetupTermsAndConditionsController {
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
+    private boolean shouldHaveSeparateTerms(CompetitionResource competition) {
+        return FundingRules.SUBSIDY_CONTROL == competition.getFundingRules() && !competition.isExpressionOfInterest();
+    }
+
     private String termsAndConditionsSection(TermsAndConditionsForm competitionSetupForm,
                                              ValidationHandler validationHandler,
                                              CompetitionResource competition,
@@ -191,7 +195,7 @@ public class CompetitionSetupTermsAndConditionsController {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
 
-        if (subsidyControl && (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules())) {
+        if (subsidyControl && !shouldHaveSeparateTerms(competition)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -199,7 +203,7 @@ public class CompetitionSetupTermsAndConditionsController {
         if (subsidyControl) {
             successView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
         } else {
-            if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+            if (shouldHaveSeparateTerms(competition)) {
                 successView = () -> format("redirect:/competition/setup/%d/section/subsidy-control-terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
             } else {
                 successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
@@ -228,7 +232,7 @@ public class CompetitionSetupTermsAndConditionsController {
                         competition.getId(),
                         competitionSetupForm.getTermsAndConditionsId()
                 ).toServiceResult().andOnSuccess(() -> {
-                    if (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules() && competitionSetupForm.isMarkAsCompleteAction()) {
+                    if (!shouldHaveSeparateTerms(competition) && competitionSetupForm.isMarkAsCompleteAction()) {
                         return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
                     }
                     return serviceSuccess();

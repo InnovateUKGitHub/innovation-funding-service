@@ -44,7 +44,7 @@ public class TermsAndConditionsModelPopulator {
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
-        boolean includeSubsidyControl = FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules();
+        boolean includeSubsidyControl = FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules() && !competitionResource.isExpressionOfInterest();
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
                 termsAndConditions, subsidyControlTermsAndConditions, termsAndConditionsDocUploaded, includeSubsidyControl, subsidyControlPage);
