@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 public enum OrganisationStatusEnum {
     DISSOLVED("dissolved"),
     CLOSED("closed"),
+    CLOSED_ON("closed-on"),
     LIQUIDATION("liquidation"),
     RECEIVER_ACTION("receivership"),
     CONVERTED_CLOSED("converted-closed"),

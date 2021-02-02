@@ -55,7 +55,9 @@
                            <th:block th:unless="${organisation.OrganisationValidToDisplay}">
                              <div class="govuk-grid-row govuk-!-margin-bottom-0">
                                  <div class="govuk-grid-column-one-third govuk-!-margin-bottom-0">
-                                     <p class="govuk-body meta crumbtrail govuk-!-margin-bottom-0" th:text="${organisation.name}"></p>
+                                     <span style="white-space: nowrap">
+                                        <p class="govuk-body meta crumbtrail govuk-!-margin-bottom-0" th:text="${organisation.name}"></p>
+                                     </span>
                                  </div>
                              </div>
                            </th:block>
