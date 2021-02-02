@@ -111,14 +111,14 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     @PostMapping("/{competitionId}/section/terms-and-conditions")
-    public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm competitionSetupForm,
+    public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                                          @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                          ValidationHandler validationHandler,
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                          UserResource loggedInUser,
                                                          Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        if (isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
+        if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
             if (competition.getCompetitionTerms() == null) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
             }
@@ -126,17 +126,13 @@ public class CompetitionSetupTermsAndConditionsController {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
         }
 
-        Supplier<String> successView;
-        if (shouldHaveSeparateTerms(competition)) {
-            successView = () -> format("redirect:/competition/setup/%d/section/state-aid-terms-and-conditions", competition.getId());
-        } else {
-            successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
-        }
-        return termsAndConditionsSection(competitionSetupForm, validationHandler, competition, loggedInUser, model, false, successView);
+        Supplier<ServiceResult<Void>> saveAction = () -> nonStateAidSaveAction(competition, termsAndConditionsForm);
+        Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
+        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect);
     }
 
     @PostMapping("/{competitionId}/section/state-aid-terms-and-conditions")
-    public String submitStateAidTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm competitionSetupForm,
+    public String submitStateAidTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                                          @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                          ValidationHandler validationHandler,
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -144,9 +140,13 @@ public class CompetitionSetupTermsAndConditionsController {
                                                          Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId());
+        if (!shouldHaveSeparateTerms(competition)) {
+            return ifsCompetitionSetup(competition.getId());
+        }
 
-        return termsAndConditionsSection(competitionSetupForm, validationHandler, competition, loggedInUser, model, true, successView);
+        Supplier<ServiceResult<Void>> saveAction = () -> stateAidSaveAction(competition, termsAndConditionsForm);
+        Supplier<String> postSaveRedirect = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId());
+        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect);
     }
 
     @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
@@ -158,13 +158,10 @@ public class CompetitionSetupTermsAndConditionsController {
                                            Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> saveSuccessView;
-        if (shouldHaveSeparateTerms(competition)) {
-            saveSuccessView = () -> format("redirect:/competition/setup/%d/section/state-aid-terms-and-conditions", competition.getId());
-        } else {
-            saveSuccessView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
-        }
-        Supplier<String> failure = () -> termsAndConditionsSection(termsAndConditionsForm, validationHandler, competition, loggedInUser, model, false, saveSuccessView);
+
+        Supplier<ServiceResult<Void>> saveAction = () -> nonStateAidSaveAction(competition, termsAndConditionsForm);
+        Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
+        Supplier<String> failure = () -> termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
@@ -193,11 +190,12 @@ public class CompetitionSetupTermsAndConditionsController {
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
-    private String termsAndConditionsSection(TermsAndConditionsForm competitionSetupForm,
-                                             ValidationHandler validationHandler,
+    private String termsAndConditionsSection(ValidationHandler validationHandler,
                                              CompetitionResource competition,
                                              UserResource loggedInUser,
-                                             Model model, boolean stateAid, Supplier<String> successView) {
+                                             Model model,
+                                             Supplier<ServiceResult<Void>> saveAction,
+                                             Supplier<String> postSaveRedirect) {
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
             return ifsCompetitionSetup(competition.getId());
         }
@@ -206,50 +204,56 @@ public class CompetitionSetupTermsAndConditionsController {
             return nonIfsCompetitionSetup(competition.getId());
         }
 
-        if (stateAid && !shouldHaveSeparateTerms(competition)) {
-            return ifsCompetitionSetup(competition.getId());
-        }
-
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
             return "competition/setup";
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult;
-            if (shouldHaveSeparateTerms(competition)) {
-                if (stateAid) {
-                    saveResult = competitionRestService.updateOtherFundingRulesTermsAndConditionsForCompetition(
-                            competition.getId(),
-                            competitionSetupForm.getTermsAndConditionsId()
-                    ).toServiceResult().andOnSuccess(() -> {
-                        if (competitionSetupForm.isMarkAsCompleteAction()) {
-                            return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
-                        }
-                        return serviceSuccess();
-                    });
-                } else {
-                    saveResult = competitionRestService.updateTermsAndConditionsForCompetition(
-                            competition.getId(),
-                            competitionSetupForm.getTermsAndConditionsId()
-                    ).toServiceResult();
-                }
-            } else {
-                saveResult = competitionRestService.updateTermsAndConditionsForCompetition(
-                        competition.getId(),
-                        competitionSetupForm.getTermsAndConditionsId()
-                ).toServiceResult().andOnSuccess(() -> {
-                    if (competitionSetupForm.isMarkAsCompleteAction()) {
-                        return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
-                    }
-                    return serviceSuccess();
-                });
-            }
-
-
+            ServiceResult<Void> saveResult = saveAction.get();
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, successView);
+                    .failNowOrSucceedWith(failureView, postSaveRedirect);
         });
+    }
+
+    private ServiceResult<Void> stateAidSaveAction(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
+        if (shouldHaveSeparateTerms(competition)) {
+            return saveOtherFundingRulesTermsAndConditions(competition, termsAndConditionsForm)
+                    .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
+        } else {
+            return saveTermsAndConditions(competition, termsAndConditionsForm)
+                    .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
+        }
+    }
+
+    private ServiceResult<Void> nonStateAidSaveAction(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
+        if (shouldHaveSeparateTerms(competition)) {
+            return saveTermsAndConditions(competition, termsAndConditionsForm);
+        } else {
+            return saveTermsAndConditions(competition, termsAndConditionsForm)
+                    .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
+        }
+    }
+
+    private ServiceResult<Void> saveTermsAndConditions(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
+        return competitionRestService.updateTermsAndConditionsForCompetition(
+                competition.getId(),
+                termsAndConditionsForm.getTermsAndConditionsId()
+        ).toServiceResult();
+    }
+
+    private ServiceResult<Void> saveOtherFundingRulesTermsAndConditions(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
+        return competitionRestService.updateOtherFundingRulesTermsAndConditionsForCompetition(
+                competition.getId(),
+                termsAndConditionsForm.getTermsAndConditionsId()
+        ).toServiceResult();
+    }
+
+    private ServiceResult<Void> optionallyMarkTermsSectionComplete(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
+        if (termsAndConditionsForm.isMarkAsCompleteAction()) {
+            return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
+        }
+        return serviceSuccess();
     }
 
     private boolean isProcurement(long termsAndConditionsId) {
@@ -268,6 +272,13 @@ public class CompetitionSetupTermsAndConditionsController {
 
     private String nonIfsCompetitionSetup(long competitionId) {
         return "redirect:/non-ifs-competition/setup/" + competitionId;
+    }
+
+    private String postSaveRedirectForSingleTermsAndConditions(CompetitionResource competition) {
+        if (shouldHaveSeparateTerms(competition)) {
+            return format("redirect:/competition/setup/%d/section/state-aid-terms-and-conditions", competition.getId());
+        }
+        return format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
     }
 
 }
