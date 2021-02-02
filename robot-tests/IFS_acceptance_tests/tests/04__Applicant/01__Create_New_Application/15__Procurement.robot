@@ -252,7 +252,7 @@ the user should see all procurement finance subsections complete
 the payment milestone table is visible in application summary
     the user expands the section                Funding breakdown
     the user should see the element             jQuery = h1:contains("Application summary")
-    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£72839") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£72,839") th:contains("100%")
     the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£72,839")
 
 the applicant submits the procurement application
