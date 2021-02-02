@@ -22,9 +22,9 @@
 
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Manually enter your organisation\'s details',subTitle='Create an account',size='govuk-heading-l'"/>
-        <p class="govuk-body">This page is only for organisations that cannot be registered on Companies House, for
-            example:</p>
-        <ul class="govuk-list govuk-list--bullet">
+
+        <div class="govuk-body govuk-!-margin-bottom-0">This page is only for organisations that cannot be registered on Companies House, <br> for example:</div>
+        <ul class="govuk-list govuk-list--bullet ">
             <li>charities</li>
             <li>local authorities</li>
             <li>NGOs</li>
@@ -32,8 +32,8 @@
             <li>sole traders</li>
             <li>trusts</li>
         </ul>
-        <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you make will
-            slow down the application process, which could delay your funding payments.</p>
+        <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you <br> make will
+            slow down the application process, which could delay your funding <br> payments.</p>
         <form th:object="${organisationForm}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post">
@@ -50,7 +50,7 @@
                 <input class="govuk-input govuk-!-width-one-half"
                        id="name"
                        th:field="*{organisationName}"
-                       th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"
+                       th:attr="data-required-errormessage=#{validation.manualentry.organisationname.required}"
                        maxlength="255"
                        type="text" required="required"/>
             </div>
@@ -60,7 +60,7 @@
                     Organisation number
                 </label>
                 <div class="govuk-hint"><small>Enter your organisation’s unique identification number, such as your HMRC
-                    Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.</small></div>
+                    Unique Taxpayer <br>  Reference (UTR), UK charity number or other unique reference number.</small></div>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="number"
                        th:field="*{organisationNumber}"
@@ -84,11 +84,17 @@
             <div class="govuk-hint">Enter your 5 digit Standard Industrial Classification code.</div>
             <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row govuk-!-margin-top-6" th:id="'sic-code-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
-                        <input id="sicCode" class="govuk-input govuk-!-width-one-half"
+                        <input id="sicCode" class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-3"
                                type="text"
                                th:field="${organisationForm.sicCodes[__${iteration.index}__].sicCode}"
                                maxlength="5"/>
                 </div>
+                <div th:if="${iteration.index > 0}">
+                    <button class="button-clear alignright" data-remove-row-man="sicCode" type="button" name="remove-sic-code"
+                                th:id="remove-sic-code-row"> Remove
+                    </button>
+                </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+ Add SIC code</button>
@@ -98,25 +104,28 @@
             </label>
             <div class="govuk-hint">Enter the first and last names of all company directors, if your organisation has any.</div>
             <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row govuk-!-margin-top-6" th:id="'exec-officer-row-'+${iteration.index}">
-                <div class="govuk-grid-column-one-half">
-                    <input id="execOfficer" class="govuk-input govuk-!-width-one-half"
+                <div class="govuk-grid-column-two-thirds">
+                    <input id="execOfficer" class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-2"
                            th:field="${organisationForm.executiveOfficers[__${iteration.index}__].name}"
                            maxlength="255"
                            type="text"/>
                 </div>
+                <div th:if="${iteration.index > 0}">
+                    <button class="button-clear alignright" data-remove-row-man="execOfficer" type="button" name="remove-exec-officer"
+                            th:id="remove-exec-officer-row"> Remove
+                    </button>
+                </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>
             </div>
-            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
+            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s govuk-!-font-size-24" for="name">
                 Registered address
             </label>
-            <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.postcode')}">
-                <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationForm.addressForm.manualAddress.postcode')}" th:text="${err}"></span>
-            </th:block>
-                <div id="custom-postcode" class="govuk-body">
-                    <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
-                </div>
+            <div id="custom-postcode" class="govuk-body">
+                <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},legend=${'Find address'}"/>
+            </div>
                 <button name="save-organisation" formaction="/organisation/create/selected-organisation-manual" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end"/>

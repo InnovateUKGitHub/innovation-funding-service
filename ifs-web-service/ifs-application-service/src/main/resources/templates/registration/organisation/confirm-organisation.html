@@ -26,6 +26,9 @@
             <dt>Organisation type</dt>
             <dd th:text="${organisationType.name}">Business</dd>
 
+            <dt>Business type</dt>
+            <dd th:text="${organisationForm.businessType}">Business Type</dd>
+
             <th:block th:if="${includeInternationalQuestion}">
                 <dt>Is your organisation based in the UK?</dt>
                 <dd>Yes</dd>
@@ -47,18 +50,22 @@
             </th:block>
 
             <th:block th:if="${organisationForm.sicCodes != null}">
-                <dt>Sic Code</dt>
-                <dd th:each="sicCode : ${organisationForm.sicCodes}" th:text="${sicCode.sicCode}"></dd>
+                <dt>SIC code</dt>
+                <dd>
+                    <div th:each="sicCode : ${organisationForm.sicCodes}" th:text="${sicCode.sicCode}"></div>
+                </dd>
             </th:block>
 
             <th:block th:if="${organisationForm.executiveOfficers != null}">
-                <dt>Executive Officers</dt>
-                <dd th:each="execOfficer : ${organisationForm.executiveOfficers}" th:text="${execOfficer.name}"></dd>
+                <dt>Executive officers</dt>
+                <dd>
+                    <div th:each="execOfficer : ${organisationForm.executiveOfficers}" th:text="${execOfficer.name}"></div>
+                </dd>
             </th:block>
 
             <th:block th:if="${selectedOrganisation?.organisationAddress != null}">
                 <th:block th:if="${improvedSearchEnabled}" >
-                    <dt>Registered Address</dt>
+                    <dt>Registered address</dt>
                 </th:block>
                 <th:block th:unless="${improvedSearchEnabled}" >
                     <dt>Address</dt>
