@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
@@ -12,6 +13,8 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.transactional.AssessmentPeriodService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -43,12 +46,16 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
 
+    private static final Integer DEFAULT_INDEX = 1;
+
     private AssessmentRepository assessmentRepository;
     private AssessmentMapper assessmentMapper;
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
     private CompetitionParticipantService competitionParticipantService;
+    private AssessmentPeriodService assessmentPeriodService;
+    private ApplicationService applicationService;
 
     public AssessmentServiceImpl() {
     }
@@ -59,13 +66,17 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                  AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
                                  AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
                                  AssessmentWorkflowHandler assessmentWorkflowHandler,
-                                 CompetitionParticipantService competitionParticipantService) {
+                                 CompetitionParticipantService competitionParticipantService,
+                                 AssessmentPeriodService assessmentPeriodService,
+                                 ApplicationService applicationService) {
         this.assessmentRepository = assessmentRepository;
         this.assessmentMapper = assessmentMapper;
         this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
         this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
         this.assessmentWorkflowHandler = assessmentWorkflowHandler;
         this.competitionParticipantService = competitionParticipantService;
+        this.assessmentPeriodService = assessmentPeriodService;
+        this.applicationService = applicationService;
     }
 
     @Override
@@ -247,12 +258,25 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role) {
 
+        Competition competition = application.getCompetition();
         ProcessRole processRole = getExistingOrCreateNewProcessRole(assessor, application, role);
-
         Assessment assessment = new Assessment(application, processRole);
+
+        attachDefaultAssessmentPeriod(assessor, application, competition);
 
         return serviceSuccess(assessmentRepository.save(assessment))
                 .andOnSuccessReturn(assessmentMapper::mapToResource);
+    }
+
+    private ServiceResult<Void> attachDefaultAssessmentPeriod(User assessor, Application application, Competition competition) {
+        if (!competition.isAlwaysOpen() && CompetitionCompletionStage.assessmentValues().stream()
+                .anyMatch(completionStage -> (completionStage == competition.getCompletionStage()))) {
+            return assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competition.getId(), DEFAULT_INDEX)
+                    .andOnSuccessReturn(assessmentPeriod -> applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod).andOnSuccessReturnVoid())
+                    .andOnFailure(() -> serviceFailure(new Error(ASSESSMENT_CREATE_FAILED_NO_DEFAULT_ASSESSMENT_PERIOD_EXISTS, assessor.getId(), application.getId(), competition.getId())));
+        }
+
+        return serviceSuccess();
     }
 
     private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, ProcessRoleType role) {

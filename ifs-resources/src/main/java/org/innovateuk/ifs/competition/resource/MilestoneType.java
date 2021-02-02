@@ -70,9 +70,9 @@ public enum MilestoneType {
 
     public static List<MilestoneType> assessmentPeriodValues() {
         return Stream.of(values())
-                .filter(MilestoneType -> (MilestoneType == MilestoneType.ASSESSOR_BRIEFING
-                        || MilestoneType == MilestoneType.ASSESSOR_ACCEPTS
-                        || MilestoneType == MilestoneType.ASSESSOR_DEADLINE))
+                .filter(type -> (type == MilestoneType.ASSESSOR_BRIEFING
+                        || type == MilestoneType.ASSESSOR_ACCEPTS
+                        || type == MilestoneType.ASSESSOR_DEADLINE))
                 .collect(Collectors.toList());
     }
 }
