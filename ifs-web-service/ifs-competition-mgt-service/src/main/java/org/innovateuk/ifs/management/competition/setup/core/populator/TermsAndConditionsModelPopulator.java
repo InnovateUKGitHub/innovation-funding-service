@@ -41,19 +41,14 @@ public class TermsAndConditionsModelPopulator {
 
         boolean includeStateAid = FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules() && !competitionResource.isExpressionOfInterest();
 
-        if (includeStateAid) {
-            GrantTermsAndConditionsResource otherTermsAndConditions = null;
-            if (competitionResource.getOtherFundingRulesTermsAndConditions() != null) {
-                otherTermsAndConditions = termsAndConditionsRestService.getById(competitionResource.getOtherFundingRulesTermsAndConditions().getId()).getSuccess();
-            }
+        GrantTermsAndConditionsResource otherTermsAndConditions = null;
 
-            return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
-                    otherTermsAndConditions, termsAndConditions, termsAndConditionsDocUploaded, true, stateAidPage);
+        if (includeStateAid && competitionResource.getOtherFundingRulesTermsAndConditions() != null) {
+            otherTermsAndConditions = termsAndConditionsRestService.getById(competitionResource.getOtherFundingRulesTermsAndConditions().getId()).getSuccess();
         }
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
-                termsAndConditions, null, termsAndConditionsDocUploaded, false, false);
-
+                termsAndConditions, otherTermsAndConditions, termsAndConditionsDocUploaded, includeStateAid, stateAidPage);
     }
 
 }
