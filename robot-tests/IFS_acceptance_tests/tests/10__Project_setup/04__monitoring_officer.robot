@@ -369,7 +369,7 @@ The user enters the details
 The payment milestone table is visible in application overview
     the user expands the section                Funding breakdown
     the user should see the element             jQuery = h1:contains("Application overview")
-    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£265084") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£265,084") th:contains("100%")
     the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£265,084")
 
 MO enter details and create account
