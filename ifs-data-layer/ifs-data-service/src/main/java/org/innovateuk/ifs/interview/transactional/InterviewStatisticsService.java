@@ -14,18 +14,18 @@ import org.springframework.stereotype.Service;
 @Service
 public interface InterviewStatisticsService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
     ServiceResult<InterviewAssignmentKeyStatisticsResource> getInterviewAssignmentPanelKeyStatistics(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "READ_INTERVIEW_INVITE_STATISTICS",
             description = "Comp admins and project finance users can see invite statistics for the assessment interview panel invite page")
     ServiceResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "READ_INTERVIEW_STATISTICS",
             description = "Comp admins and project finance users can see statistics for the assessment interview panel invite page")

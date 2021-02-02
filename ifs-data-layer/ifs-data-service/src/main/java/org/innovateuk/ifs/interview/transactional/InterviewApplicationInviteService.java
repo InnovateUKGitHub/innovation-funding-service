@@ -12,22 +12,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface InterviewApplicationInviteService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATION_EMAIL_TEMPLATE",
             description = "The Competition Admin user and Project Finance users can view template for inviting applicants")
     ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate();
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATION_SEND_INVITE",
             description = "The Competition Admin user and Project Finance users can send invites to applicants")
     ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATION_SENT_INVITE",
             description = "The Competition Admin user and Project Finance users can view sent invites to applicants")
     ServiceResult<InterviewApplicationSentInviteResource> getSentInvite(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATION_RESEND_INVITE",
             description = "The Competition Admin user and Project Finance users can resend invites to applicants")
     ServiceResult<Void> resendInvite(long applicationId, AssessorInviteSendResource assessorInviteSendResource);

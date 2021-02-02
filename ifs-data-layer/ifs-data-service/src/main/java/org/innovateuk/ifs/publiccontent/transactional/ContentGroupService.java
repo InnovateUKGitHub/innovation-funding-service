@@ -18,17 +18,17 @@ import java.util.function.Supplier;
  */
 public interface ContentGroupService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "UPLOAD_CONTENT_GROUP_FILE",
             description = "The Competition Admin, or project finance user can upload a content group file.")
     ServiceResult<Void> uploadFile(long contentGroupId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "REMOVE_CONTENT_GROUP_FILE",
             description = "The Competition Admin, or project finance user can remove a content group file.")
     ServiceResult<Void> removeFile(Long contentGroupId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "SAVE_CONTENT_GROUPS",
             description = "The Competition Admin, or project finance user can remove a content group file.")
     ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType section);

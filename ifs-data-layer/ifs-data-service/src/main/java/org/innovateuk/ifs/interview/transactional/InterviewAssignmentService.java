@@ -17,42 +17,42 @@ import java.util.List;
  */
 public interface InterviewAssignmentService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
     ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_STAGED_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
     ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_ASSIGNED_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
     ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
     ServiceResult<List<Long>> getAvailableApplicationIds(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "UNSTAGE_INTERVIEW_PANEL_APPLICATION",
             description = "The Competition Admin user and Project Finance users can unstage applications")
     ServiceResult<Void> unstageApplication(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "UNSTAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can unstage applications")
     ServiceResult<Void> unstageApplications(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'external_finance', 'innovation_lead', 'stakeholder', 'support', 'monitoring_officer', 'knowledge_transfer_adviser', 'supporter')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'external_finance', 'innovation_lead', 'stakeholder', 'support', 'monitoring_officer', 'knowledge_transfer_adviser', 'supporter')")
     @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
             description = "The applicants, assessors, comp admin, project finance, innovation lead, stakeholder, support users and kta can see if the application is assigned to interview")
     ServiceResult<Boolean> isApplicationAssigned(long applicationId);

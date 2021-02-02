@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 @Controller
 @RequestMapping("/project/{projectId}/team-status")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = TeamStatusController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin')")
 public class TeamStatusController {
 
     @Autowired

@@ -22,7 +22,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementAssessorProfileController.class)
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementAssessorProfileController {
 
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;

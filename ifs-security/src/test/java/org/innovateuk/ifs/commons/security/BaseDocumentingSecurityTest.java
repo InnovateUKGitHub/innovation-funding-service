@@ -335,7 +335,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
             // expected behaviour
         }
         rolesThatShouldSucceed.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRoleGlobal(role).build());
             try {
                 functionToCall.run();
                 // Should not throw

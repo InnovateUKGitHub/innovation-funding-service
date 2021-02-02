@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup/public-content/how-to-apply")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = HowToApplyController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class HowToApplyController extends AbstractContentGroupController<HowToApplyViewModel, HowToApplyForm> {
 
     @Autowired

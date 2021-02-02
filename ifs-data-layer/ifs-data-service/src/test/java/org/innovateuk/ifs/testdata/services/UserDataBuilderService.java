@@ -65,7 +65,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
             setDefaultSystemRegistrar();
 
-            Role role = Role.getByName(line.role);
+            Role role = Role.valueOf(line.role.toUpperCase());
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.withRole(role);
 

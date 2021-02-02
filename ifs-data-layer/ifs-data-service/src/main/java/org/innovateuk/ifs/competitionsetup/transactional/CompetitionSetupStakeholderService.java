@@ -14,11 +14,11 @@ import java.util.List;
 public interface CompetitionSetupStakeholderService {
 
     @SecuredBySpring(value = "SAVE_STAKEHOLDER_INVITE", description = "Only comp admin, project finance or IFS admin can save a stakeholder invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<Void> inviteStakeholder(UserResource invitedUser, long competitionId);
 
     @SecuredBySpring(value = "FIND_STAKEHOLDERS_FOR_COMPETITION", description = "Only comp admin, project finance or IFS admin can search stakeholders for a given competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<List<UserResource>> findStakeholders(long competitionId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
@@ -28,14 +28,14 @@ public interface CompetitionSetupStakeholderService {
     ServiceResult<StakeholderInviteResource> getInviteByHash(String hash);
 
     @SecuredBySpring(value = "ADD_STAKEHOLDER_TO_COMPETITION", description = "Only comp admin, project finance or IFS admin can add stakeholders to a given competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<Void> addStakeholder(long competitionId, long stakeholderUserId);
 
     @SecuredBySpring(value = "REMOVE_STAKEHOLDER_FROM_COMPETITION", description = "Only comp admin, project finance or IFS admin can remove stakeholders from a given competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<Void> removeStakeholder(long competitionId, long stakeholderUserId);
 
     @SecuredBySpring(value = "FIND_PENDING_STAKEHOLDER_INVITES_FOR_COMPETITION", description = "Only comp admin, project finance or IFS admin can find pending stakeholder invites for a given competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<List<UserResource>> findPendingStakeholderInvites(long competitionId);
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.thread.viewmodel;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -90,7 +90,7 @@ public class ThreadViewModelPopulator {
 
         return user -> {
 
-            if (user.hasRole(PROJECT_FINANCE)) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 return user.getName() + " - Innovate UK (Finance team)";
             } else {
                 return user.getName() + " - Innovate UK";

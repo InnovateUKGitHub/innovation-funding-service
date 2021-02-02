@@ -64,7 +64,7 @@ public class FinanceOverviewController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'external_finance')")
     public String view(@PathVariable("projectId") Long projectId,
                        @RequestParam(required = false, defaultValue = "false") boolean showFundingLevelMessage,
                        @RequestParam(required = false, defaultValue = "false") boolean showFundingAmountMessage,

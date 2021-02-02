@@ -3,6 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -15,8 +16,8 @@ public final class SecurityRuleUtil {
 
     private SecurityRuleUtil() {}
 
-    public static boolean isProjectFinanceUser(User user) {
-        return user.hasRole(PROJECT_FINANCE);
+    public static boolean hasProjectFinanceAuthority(User user) {
+        return user.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
     public static boolean isSupport(User user) { return user.hasRole(SUPPORT); }

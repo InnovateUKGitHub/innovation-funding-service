@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @Controller
 @RequestMapping("/competition/application/{applicationId}/ineligible")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementSendIneligibleController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementSendIneligibleController {
 
     @Autowired

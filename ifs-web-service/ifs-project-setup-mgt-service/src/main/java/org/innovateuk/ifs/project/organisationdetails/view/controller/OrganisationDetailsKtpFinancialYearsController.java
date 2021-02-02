@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/ktp-financial-years")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
         securedType = OrganisationDetailsKtpFinancialYearsController.class)
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class OrganisationDetailsKtpFinancialYearsController extends AbstractOrganisationDetailsController<YourOrganisationKtpFinancialYearsForm> {
 
     @Autowired

@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
@@ -274,7 +275,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRolesAndStatusIn(Role.PROJECT_FINANCE, EnumSet.allOf(UserStatus.class));
+        List<User> projectFinanceUsers = userRepository.findDistinctByRolesInAndStatusIn(newArrayList(Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR), EnumSet.allOf(UserStatus.class));
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 

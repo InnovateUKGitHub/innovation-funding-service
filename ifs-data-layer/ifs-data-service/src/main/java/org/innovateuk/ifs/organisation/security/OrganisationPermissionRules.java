@@ -136,7 +136,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "A project finance user can update any Organisation")
     public boolean projectFinanceUserCanUpdateAnyOrganisation(OrganisationResource organisation, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "READ", description = "Project Partners can see the Partner Organisations within their Projects")

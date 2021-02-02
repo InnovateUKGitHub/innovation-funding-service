@@ -28,6 +28,7 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplic
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,7 @@ import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySetting
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 
 @Component
@@ -132,7 +132,7 @@ public class ManagementApplicationPopulator {
                 applicationReadOnlyViewModel,
                 getAppendices(applicationId),
                 canMarkAsIneligible(application, user),
-                user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN),
+                user.hasAuthority(Authority.COMP_ADMIN),
                 support,
                 projectId,
                 user.hasRole(Role.EXTERNAL_FINANCE),
@@ -142,12 +142,12 @@ public class ManagementApplicationPopulator {
     }
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, Long applicationId) {
-        return (user.hasRole(PROJECT_FINANCE) && competition.isProcurement())
+        return (user.hasAuthority(Authority.PROJECT_FINANCE) && competition.isProcurement())
                 || interviewAssigned(applicationId, user);
     }
 
     private boolean interviewAssigned(Long applicationId, UserResource loggedInUser) {
-        return loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE) && interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+        return loggedInUser.hasAuthority(Authority.COMP_ADMIN) && interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {
@@ -178,6 +178,6 @@ public class ManagementApplicationPopulator {
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {
         return application.getApplicationState() == SUBMITTED
-                && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, Role.INNOVATION_LEAD);
+                && user.hasAnyRoles(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, Role.INNOVATION_LEAD);
     }
 }

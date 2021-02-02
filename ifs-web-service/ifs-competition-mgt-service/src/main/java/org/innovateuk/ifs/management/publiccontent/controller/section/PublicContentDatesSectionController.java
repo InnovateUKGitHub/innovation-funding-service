@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup/public-content/dates")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = PublicContentDatesSectionController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class PublicContentDatesSectionController extends AbstractPublicContentSectionController<DatesViewModel, DatesForm> {
 
     @Autowired

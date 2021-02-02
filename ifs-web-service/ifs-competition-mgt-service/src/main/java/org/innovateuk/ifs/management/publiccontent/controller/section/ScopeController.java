@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup/public-content/scope")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ScopeController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class ScopeController extends AbstractContentGroupController<ScopeViewModel, ScopeForm> {
 
     @Autowired

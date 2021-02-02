@@ -67,7 +67,7 @@ public class ApplicationProcurementMilestonesController {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROCUREMENT_MILESTONE", description = "Everyone view the milestone page, if they have permissions defined in data layer.")
     public String viewMilestones(@PathVariable long applicationId,
                                  @PathVariable long organisationId,

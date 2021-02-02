@@ -41,7 +41,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.cancelNewForm(1L, 2L, "", null, null, null);
                 Assert.fail("Should not have been able to cancel form without the project finance role");
@@ -62,7 +62,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.downloadAttachment(1L, 2L, 3L, null, null);
                 Assert.fail("Should not have been able to download attachment without the project finance role");
@@ -83,7 +83,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save query without the project finance role");
@@ -104,7 +104,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.uploadAttachment(null, 1L, 2L, "", null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save a query attachment without the project finance role");
@@ -125,7 +125,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.viewNew(1L, 2L, "", null, null, null, null);
                 Assert.fail("Should not have been able to show the create query form without the project finance role");
@@ -146,7 +146,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.removeAttachment(1L, 2L, "", 3L, null, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to remove attachments from the create query form without the project finance role");

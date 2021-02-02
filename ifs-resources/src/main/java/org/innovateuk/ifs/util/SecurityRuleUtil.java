@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.util;
 
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -17,12 +18,11 @@ public final class SecurityRuleUtil {
     }
 
     public static boolean isInternalAdmin(UserResource user) {
-        return user.hasRole(COMP_ADMIN) ||
-                user.hasRole(PROJECT_FINANCE);
+        return user.hasAuthority(Authority.COMP_ADMIN);
     }
 
-    public static boolean isProjectFinanceUser(UserResource user) {
-        return user.hasRole(PROJECT_FINANCE);
+    public static boolean hasProjectFinanceAuthority(UserResource user) {
+        return user.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
     public static boolean isSystemMaintenanceUser(UserResource user) {
@@ -34,7 +34,7 @@ public final class SecurityRuleUtil {
     }
 
     public static boolean hasAssessorAuthority(UserResource user) {
-        return user.hasAuthority(ASSESSOR.getName());
+        return user.hasAuthority(Authority.ASSESSOR);
     }
 
     public static boolean isSupport(UserResource user) {

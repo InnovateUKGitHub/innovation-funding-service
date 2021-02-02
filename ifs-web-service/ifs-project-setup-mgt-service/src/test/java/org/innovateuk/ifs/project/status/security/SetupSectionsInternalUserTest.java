@@ -135,7 +135,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         stream(Role.values()).forEach(role -> {
             if (role != PROJECT_FINANCE) {
 
-                List<Role> roles = singletonList(Role.getByName(role.getName()));
+                List<Role> roles = singletonList(role);
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(nonFinanceTeam));
 
@@ -161,9 +161,9 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void checkAccessToFinanceChecksSectionAsNonFinanceTeamMembers() {
         stream(Role.values()).forEach(role -> {
-            if (role != PROJECT_FINANCE && role != EXTERNAL_FINANCE) {
+            if (role != PROJECT_FINANCE && role != EXTERNAL_FINANCE && role != IFS_ADMINISTRATOR && role != SYSTEM_MAINTAINER) {
                 System.out.println(role.getDisplayName());
-                List<Role> roles = singletonList(Role.getByName(role.getName()));
+                List<Role> roles = singletonList(role);
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessFinanceChecksSection(nonFinanceTeam));
             }

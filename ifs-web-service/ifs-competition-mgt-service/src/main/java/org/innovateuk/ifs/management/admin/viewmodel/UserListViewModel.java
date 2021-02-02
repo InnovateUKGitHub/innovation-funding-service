@@ -116,9 +116,6 @@ public class UserListViewModel {
     }
 
     public String getRoleDisplayNames(ManageUserResource manageUserResource) {
-        if (manageUserResource.getRoles().contains(IFS_ADMINISTRATOR)) {
-            return IFS_ADMINISTRATOR.getDisplayName();
-        }
         return manageUserResource.getRoles().stream().map(role -> getRoleDisplay(role, manageUserResource.getRoleProfileStatusResourceSet())).collect(joining(", "));
     }
 

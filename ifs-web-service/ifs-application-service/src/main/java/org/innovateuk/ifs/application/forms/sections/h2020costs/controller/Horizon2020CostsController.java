@@ -49,7 +49,7 @@ public class Horizon2020CostsController extends AsyncAdaptor {
     private ProcessRoleRestService processRoleRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder')")
     @SecuredBySpring(value = "VIEW_H2020_COSTS", description = "Applicants and internal users can view the Your project costs page")
     public String viewHorizon2020Costs(Model model,
                                        UserResource user,

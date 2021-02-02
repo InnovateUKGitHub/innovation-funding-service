@@ -18,17 +18,17 @@ public interface EuGrantTransferService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<Void> deleteGrantAgreement(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant')")
     @SecuredBySpring(value = "DOWNLOAD_GRANT_AGREEMENT",
             description = "Competition Admins, Project Finance users and applicants can download grant agreement")
     ServiceResult<FileAndContents> downloadGrantAgreement(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant')")
     @SecuredBySpring(value = "FIND_GRANT_AGREEMENT",
             description = "Competition Admins, Project Finance users and applicants can download grant agreement")
     ServiceResult<FileEntryResource> findGrantAgreement(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant')")
     @SecuredBySpring(value = "GET_GRANT_TRANSFER_DETAILS",
             description = "Competition Admins, Project Finance users and applicants can view grant transfer details")
     ServiceResult<EuGrantTransferResource> getGrantTransferByApplicationId(long applicationId);

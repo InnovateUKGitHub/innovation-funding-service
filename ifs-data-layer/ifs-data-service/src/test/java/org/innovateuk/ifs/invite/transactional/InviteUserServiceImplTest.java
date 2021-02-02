@@ -350,7 +350,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInviteResource roleInviteResource = new RoleInviteResource();
         roleInviteResource.setName("Arden Pimenta");
         roleInviteResource.setEmail("Arden.Pimenta@innovateuk.test");
-        roleInviteResource.setRoleName("ifs_administrator");
 
         when(roleInviteRepositoryMock.findByEmailContainsAndStatus("", SENT, pageable)).thenReturn(page);
         when(roleInviteMapperMock.mapToResource(Mockito.any(RoleInvite.class))).thenReturn(roleInviteResource);

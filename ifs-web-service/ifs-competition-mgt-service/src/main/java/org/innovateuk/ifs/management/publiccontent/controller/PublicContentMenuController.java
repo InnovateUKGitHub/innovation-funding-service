@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupCo
 @Controller
 @RequestMapping("/competition/setup/public-content")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = PublicContentMenuController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class PublicContentMenuController {
 
     private static final String TEMPLATE_FOLDER = "competition/";

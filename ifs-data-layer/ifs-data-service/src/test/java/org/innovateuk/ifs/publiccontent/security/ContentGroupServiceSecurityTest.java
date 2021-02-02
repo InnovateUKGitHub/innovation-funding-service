@@ -88,8 +88,7 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRoleGlobal(Role.getByName(roleType.getName())
-                        )
+                        .withRoleGlobal(roleType)
                         .build());
         serviceCall.run();
     }

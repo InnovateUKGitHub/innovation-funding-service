@@ -144,7 +144,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         assertEquals(result, String.format("redirect:/application/%s", application.getId()));
         verify(applicationRestService).createApplication(competitionId, user.getId(), organisationId, "");
         verify(userRestService).grantRole(user.getId(), Role.APPLICANT);
-        verify(cookieUtil).saveToCookie(response, "role", Role.APPLICANT.getName());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.commons.security.authentication.user;
 
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,6 +44,7 @@ public class UserAuthentication implements Authentication {
 
         return user.getRoles().stream()
                 .flatMap(role -> role.getAuthorities().stream())
+                .map(Authority::toSpringSecurityAuthorityString)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toCollection(ArrayList::new));
     }

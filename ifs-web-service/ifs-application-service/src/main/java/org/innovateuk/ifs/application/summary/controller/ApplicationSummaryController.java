@@ -70,7 +70,7 @@ public class ApplicationSummaryController {
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the horizon 2020 grant agreement")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'stakeholder', 'comp_admin')")
     @GetMapping("/{applicationId}/grant-agreement")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGrantAgreement(@PathVariable long applicationId) {
@@ -114,7 +114,7 @@ public class ApplicationSummaryController {
 
     @GetMapping("/{applicationId}/summary/download-response")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
@@ -124,7 +124,7 @@ public class ApplicationSummaryController {
 
     @GetMapping("/{applicationId}/summary/download-feedback")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'innovation_lead', 'stakeholder', 'monitoring_officer')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                                        @PathVariable("applicationId") long applicationId) {

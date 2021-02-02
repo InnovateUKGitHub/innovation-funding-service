@@ -17,13 +17,13 @@ public interface AssessorService {
     @PreAuthorize("hasPermission(#assessorId, 'org.innovateuk.ifs.assessment.resource.AssessorProfileResource', 'READ_PROFILE')")
     ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "NOTIFY_ASSESSORS",
             description = "Comp admins and execs can notify all assessors of their assignments for a competition")
     ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "HAS_ASSESSMENTS",
             description = "Comp admins and execs can see if an assessor has any assessments assigned to them")

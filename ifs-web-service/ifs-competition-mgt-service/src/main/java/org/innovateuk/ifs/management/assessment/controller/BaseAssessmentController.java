@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 // TODO not sure we really need the base class -- could combine into one controller
 
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = BaseAssessmentController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public abstract class BaseAssessmentController {
 
     protected static final int PAGE_SIZE = 20;

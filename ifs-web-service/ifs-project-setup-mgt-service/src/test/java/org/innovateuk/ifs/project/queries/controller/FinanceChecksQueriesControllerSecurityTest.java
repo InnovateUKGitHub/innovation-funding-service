@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.queries.controller;
 
-import java.util.List;
-import java.util.function.Consumer;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
@@ -13,8 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
@@ -58,7 +58,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.downloadAttachment(projectCompositeId.id(), 2L, 3L);
                 Assert.fail("Should not have been able to download attachment without the project finance role");
@@ -79,7 +79,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.showPage(projectCompositeId.id(), 2L, "", null);
                 Assert.fail("Should not have been able to view the page without the project finance role");
@@ -100,7 +100,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.cancelNewForm(projectCompositeId.id(), 2L, 3L, "", null, null);
                 Assert.fail("Should not have been able to cancel the response form without the project finance role");
@@ -121,7 +121,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.downloadResponseAttachment(projectCompositeId.id(), 2L, 3L, 4L, null);
                 Assert.fail("Should not have been able to download attachment without the project finance role");
@@ -142,7 +142,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.saveResponse(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save response without the project finance role");
@@ -163,7 +163,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null);
                 Assert.fail("Should not have been able to save a response attachment without the project finance role");
@@ -184,7 +184,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.viewNewResponse(projectCompositeId.id(), 2L, 3L, "", null, null, null);
                 Assert.fail("Should not have been able to show the add response form without the project finance role");
@@ -204,7 +204,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, "", 4L, null, null, null);
                 Assert.fail("Should not have been able to remove attachments from the create response form without the project finance role");

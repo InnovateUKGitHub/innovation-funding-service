@@ -14,8 +14,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -47,7 +49,7 @@ public class FinanceReviewerServiceImpl extends BaseTransactionalService impleme
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findFinanceUsers() {
-        return serviceSuccess(userRepository.findByRolesAndStatusIn(PROJECT_FINANCE, EnumSet.of(ACTIVE))
+        return serviceSuccess(userRepository.findDistinctByRolesInAndStatusIn(newArrayList(PROJECT_FINANCE, IFS_ADMINISTRATOR), EnumSet.of(ACTIVE))
                 .stream()
                 .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
                 .collect(Collectors.toList()));
@@ -65,6 +67,6 @@ public class FinanceReviewerServiceImpl extends BaseTransactionalService impleme
     }
 
     private ServiceResult<User> getProjectFinanceUser(long userId) {
-        return find(userRepository.findByIdAndRoles(userId, PROJECT_FINANCE), notFoundError(User.class, userId));
+        return find(userRepository.findById(userId), notFoundError(User.class, userId));
     }
 }

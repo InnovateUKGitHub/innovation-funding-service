@@ -56,7 +56,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
     public boolean projectFinanceCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Comp admin users can view finance reviewer.")

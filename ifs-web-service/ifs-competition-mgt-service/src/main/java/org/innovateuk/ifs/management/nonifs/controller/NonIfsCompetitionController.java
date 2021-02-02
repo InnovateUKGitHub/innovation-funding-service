@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  */
 @Controller
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = NonIfsCompetitionController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class NonIfsCompetitionController {
     private static final String FORM_ATTR = "form";
 

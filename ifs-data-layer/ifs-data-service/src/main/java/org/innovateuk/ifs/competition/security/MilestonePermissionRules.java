@@ -6,13 +6,12 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -50,7 +49,7 @@ public class MilestonePermissionRules extends BasePermissionRules {
     public boolean compAdminsAndProjectFinanceUserCanUpdateCompletionStageDuringCompetitionSetup(
             CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
 
-        if (!(loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE))) {
+        if (!(loggedInUser.hasAuthority(Authority.COMP_ADMIN))) {
             return false;
         }
 

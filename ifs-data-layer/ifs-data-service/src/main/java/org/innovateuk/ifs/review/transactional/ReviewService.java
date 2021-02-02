@@ -14,25 +14,25 @@ import java.util.List;
  */
 public interface ReviewService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "ASSIGN_APPLICATIONS_TO_PANEL",
             description = "Comp admins and execs can assign applications to an assessment panel")
     ServiceResult<Void> assignApplicationToPanel(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "UNASSIGN_APPLICATIONS_FROM_PANEL",
             description = "Comp admins and execs can unassign applications from an assessment panel")
     ServiceResult<Void> unassignApplicationFromPanel(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "CREATE_AND_NOTIFY_ASSESSMENT_REVIEWS",
             description = "Comp admins and execs can create and notify assessment reviews on an assessment panel")
     ServiceResult<Void> createAndNotifyReviews(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "PENDING_ASSESSMENT_REVIEWS",
             description = "Comp admins and execs can determine if there are pending assessment reviews")

@@ -17,33 +17,33 @@ public interface MonitoringOfficerService {
 
     @SecuredBySpring(value = "GET_MONITORING_OFFICERS",
             description = "Only comp admin, project finance and ifs administrators can get a project list of monitoring officers")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<List<SimpleUserResource>> findAll();
 
     @SecuredBySpring(value = "GET_MONITORING_OFFICERS",
             description = "Only comp admin, project finance and ifs administrators can get a project list of monitoring officers")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<List<SimpleUserResource>> findAllKtp();
 
     @SecuredBySpring(value = "GET_MONITORING_OFFICERS",
             description = "Only comp admin, project finance and ifs administrators can get a project list of monitoring officers")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<List<SimpleUserResource>> findAllNonKtp();
 
     @SecuredBySpring(value = "GET_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can get a project monitoring officer")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<MonitoringOfficerAssignmentResource> getProjectMonitoringOfficer(long userId);
 
     @SecuredBySpring(value = "ASSIGN_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can assign projects to a monitoring officer")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     @Activity(type = MONITORING_OFFICER_ASSIGNED, projectId = "projectId")
     ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId);
 
     @SecuredBySpring(value = "UNASSIGN_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can unassign projects from a monitoring officer")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<Void> unassignProjectFromMonitoringOfficer(long userId, long projectId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'GET_MONITORING_OFFICER_PROJECTS')")

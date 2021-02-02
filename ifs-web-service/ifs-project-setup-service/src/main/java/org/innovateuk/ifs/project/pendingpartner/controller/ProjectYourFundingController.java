@@ -53,7 +53,7 @@ public class ProjectYourFundingController {
 
     @GetMapping
     @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder')")
     public String viewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
                                   Model model,
                                   @PathVariable long projectId,

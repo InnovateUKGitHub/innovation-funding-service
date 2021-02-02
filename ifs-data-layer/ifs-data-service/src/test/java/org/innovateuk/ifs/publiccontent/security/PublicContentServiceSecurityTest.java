@@ -53,9 +53,7 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRoleGlobal(
-                                Role.getByName(roleType.getName())
-                        )
+                        .withRoleGlobal(roleType)
                         .build());
         serviceCall.run();
     }

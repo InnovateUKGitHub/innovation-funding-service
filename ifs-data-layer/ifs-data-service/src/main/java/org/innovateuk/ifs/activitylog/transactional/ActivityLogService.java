@@ -30,7 +30,7 @@ public interface ActivityLogService {
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     void recordQueryActivityByProjectFinanceId(long projectFinanceId, ActivityType type, long threadId);
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "VIEW_ACTIVITY_LOG", description = "Only internal users can view activity log")
     ServiceResult<List<ActivityLogResource>> findByApplicationId(long applicationId);
 

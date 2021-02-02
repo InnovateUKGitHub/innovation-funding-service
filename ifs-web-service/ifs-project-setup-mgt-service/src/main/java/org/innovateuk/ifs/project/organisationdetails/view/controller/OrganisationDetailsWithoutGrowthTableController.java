@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/without-growth-table")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
         securedType = OrganisationDetailsWithoutGrowthTableController.class)
 public class OrganisationDetailsWithoutGrowthTableController extends AbstractOrganisationDetailsController<YourOrganisationWithoutGrowthTableForm> {

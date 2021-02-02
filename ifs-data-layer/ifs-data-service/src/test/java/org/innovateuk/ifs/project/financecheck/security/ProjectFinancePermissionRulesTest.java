@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -376,7 +376,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isProjectFinanceUser(user)) {
+            if (hasProjectFinanceAuthority(user)) {
                 assertTrue(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
             } else {
                 assertFalse(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
@@ -391,7 +391,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isProjectFinanceUser(user)) {
+            if (hasProjectFinanceAuthority(user)) {
                 assertTrue(rules.projectFinanceUserCanResetFinanceChecks(projectId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanResetFinanceChecks(projectId, user));

@@ -66,11 +66,11 @@ public interface CompetitionSetupService {
     ServiceResult<CompetitionResource> createNonIfs();
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to competition setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(Long competitionId);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to competition setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId);
 
     @SecuredBySpring(value = "DELETE", description = "Only those with either comp admin or project finance roles, " +

@@ -15,34 +15,30 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public enum Role implements Identifiable {
 
-    ASSESSOR                    ( 3, "assessor",        "Assessor"),
-    APPLICANT                   ( 4, "applicant",       "Applicant"),
-    COMP_ADMIN                  ( 5, "comp_admin",              "Competition Administrator"),
-    SYSTEM_REGISTRATION_USER    ( 6, "system_registrar",        "System Registration User"),
-    SYSTEM_MAINTAINER           ( 7, "system_maintainer",       "System Maintainer"),
-    PROJECT_FINANCE             ( 8, "project_finance",         "Project Finance"),
-    INNOVATION_LEAD             (13, "innovation_lead",     "Innovation Lead"),
-    IFS_ADMINISTRATOR           (14, "ifs_administrator",   "IFS Administrator"),
-    SUPPORT                     (15, "support",             "IFS Support User"),
-    MONITORING_OFFICER          (19, "monitoring_officer",         "Monitoring Officer"),
-    STAKEHOLDER                 (20, "stakeholder",                "Stakeholder"),
-    LIVE_PROJECTS_USER          (21, "live_projects_user",         "Live projects user"),
-    EXTERNAL_FINANCE            (22, "external_finance",           "External finance reviewer"),
-    KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser"),
-    SUPPORTER                   (24, "supporter",                    "Supporter");
+    ASSESSOR                    ( 3, "Assessor", Authority.ASSESSOR),
+    APPLICANT                   ( 4, "Applicant", Authority.APPLICANT),
+    COMP_ADMIN                  ( 5,  "Competition Administrator", Authority.COMP_ADMIN),
+    SYSTEM_REGISTRATION_USER    ( 6, "System Registration User", Authority.SYSTEM_REGISTRATION_USER),
+    SYSTEM_MAINTAINER           ( 7, "System Maintainer", Authority.SYSTEM_MAINTAINER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    PROJECT_FINANCE             ( 8, "Project Finance", Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    INNOVATION_LEAD             (13, "Innovation Lead", Authority.INNOVATION_LEAD),
+    IFS_ADMINISTRATOR           (14, "IFS Administrator", Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    SUPPORT                     (15, "IFS Support User", Authority.SUPPORT),
+    MONITORING_OFFICER          (19, "Monitoring Officer", Authority.MONITORING_OFFICER),
+    STAKEHOLDER                 (20, "Stakeholder", Authority.STAKEHOLDER),
+    LIVE_PROJECTS_USER          (21, "Live projects user", Authority.LIVE_PROJECTS_USER),
+    EXTERNAL_FINANCE            (22, "External finance reviewer", Authority.EXTERNAL_FINANCE),
+    KNOWLEDGE_TRANSFER_ADVISER  (23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
+    SUPPORTER                   (24, "Supporter", Authority.SUPPORTER);
 
     final long id;
-    final String name;
     final String displayName;
+    final List<Authority> authorities;
 
-    Role(final long id, final String name, final String displayName) {
+    Role(final long id, final String displayName, final Authority... authorities) {
         this.id = id;
-        this.name = name;
         this.displayName = displayName;
-    }
-
-    public static Role getByName(String name) {
-        return Stream.of(values()).filter(role -> role.name.equals(name)).findFirst().get();
+        this.authorities = newArrayList(authorities);
     }
 
     public static Role getById (long id) {
@@ -53,14 +49,9 @@ public enum Role implements Identifiable {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
-
 
     public boolean isStakeHolder() {return this == STAKEHOLDER; }
 
@@ -87,16 +78,11 @@ public enum Role implements Identifiable {
     }
 
     public static boolean containsMultiDashboardRole(Collection<Role> roles){
-        return multiDashboardRoles().stream().anyMatch(role -> roles.contains(role));
+        return multiDashboardRoles().stream().anyMatch(roles::contains);
     }
 
-    public List<String> getAuthorities() {
-        if (this == KNOWLEDGE_TRANSFER_ADVISER) {
-            return newArrayList(this.name, ASSESSOR.name, MONITORING_OFFICER.name);
-        } if (this == SYSTEM_MAINTAINER) {
-            return newArrayList(this.name, IFS_ADMINISTRATOR.name, PROJECT_FINANCE.name);
-        }
-        return newArrayList(this.name);
+    public List<Authority> getAuthorities() {
+        return authorities;
     }
 
     public static Set<Role> externalRolesToInvite() {

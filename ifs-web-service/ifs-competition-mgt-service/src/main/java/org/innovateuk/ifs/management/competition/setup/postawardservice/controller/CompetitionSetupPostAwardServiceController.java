@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "Controller for choosing post award service", securedType = CompetitionSetupPostAwardServiceController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
 public class CompetitionSetupPostAwardServiceController {
 
     private static final String COMPETITION_ID_KEY = "competitionId";

@@ -21,7 +21,7 @@ public interface ApplicationNotificationService {
 
     @SecuredBySpring(value = "INFORM_APPLICATION_IS_INELIGIBLE",
             description = "Comp admins and project finance users can inform applicants that their application is ineligible")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<Void> informIneligible(long applicationId,
                                          ApplicationIneligibleSendResource applicationIneligibleSendResource);
 

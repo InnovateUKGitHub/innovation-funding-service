@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.Collections;
@@ -14,7 +15,6 @@ import java.util.Optional;
 import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_OFFLINE;
 import static org.innovateuk.ifs.project.resource.ProjectState.HANDLED_OFFLINE;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
  * View model backing the Project Details page for Project Setup
@@ -124,11 +124,11 @@ public class ProjectDetailsViewModel {
     }
 
     public boolean isAbleToManageProjectState() {
-        return userResource.hasRole(PROJECT_FINANCE);
+        return userResource.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
     public boolean isProjectFinance() {
-        return userResource.hasRole(PROJECT_FINANCE);
+        return userResource.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
     public boolean isIfsAdministrator() {
@@ -159,7 +159,7 @@ public class ProjectDetailsViewModel {
     * */
 
     public boolean modifyTheFinanceReviewer() {
-        return userResource.hasRole(PROJECT_FINANCE) && project.getProjectState().isActive();
+        return userResource.hasAuthority(Authority.PROJECT_FINANCE) && project.getProjectState().isActive();
     }
 
     public boolean modifyStartDate() {

@@ -12,12 +12,12 @@ import java.util.List;
  */
 public interface EuActionTypeService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant')")
     @SecuredBySpring(value = "ACTION_TYPES",
             description = "Competition Admins, Project Finance users and applicants can view action types")
     ServiceResult<List<EuActionTypeResource>> findAll();
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant')")
     @SecuredBySpring(value = "ACTION_TYPE",
             description = "Competition Admins, Project Finance users and applicants can view action types")
     ServiceResult<EuActionTypeResource> getById(long id);

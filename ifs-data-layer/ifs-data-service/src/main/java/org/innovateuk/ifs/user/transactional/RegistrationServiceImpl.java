@@ -26,11 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -40,7 +41,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -192,7 +194,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             user.setEmail(invite.getEmail());
 
             if (invite instanceof RoleInvite) {
-                user.setRoles(new HashSet<>(getInternalRoleResources(((RoleInvite) invite).getTarget()).getSuccess()));
+                user.setRoles(singleton(((RoleInvite) invite).getTarget()));
                 if (((RoleInvite) invite).getSimpleOrganisation() != null) {
                     profile.setSimpleOrganisation(((RoleInvite) invite).getSimpleOrganisation());
                 }
@@ -322,23 +324,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<UserResource> editInternalUser(UserResource userToEdit, Role userRoleType) {
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
-                .andOnSuccess(user -> getInternalRoleResources(userRoleType)
-                    .andOnSuccessReturn(roleResources -> {
-                        Set<Role> roleList = new HashSet<>(roleResources);
+                .andOnSuccessReturn(user -> {
+                        Set<Role> roleList = singleton(userRoleType);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);
                         return userRepository.save(user);
-                    })
-                ).andOnSuccessReturn(userMapper::mapToResource);
-    }
-
-    private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
-        if (role == IFS_ADMINISTRATOR){
-            return serviceSuccess(newArrayList(IFS_ADMINISTRATOR, PROJECT_FINANCE));
-        } else {
-            return serviceSuccess(singletonList(role));
-        }
+                })
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
     private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {

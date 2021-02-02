@@ -13,26 +13,26 @@ import java.util.List;
 public interface SetupStatusService {
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<List<SetupStatusResource>> findByTargetClassNameAndTargetId(String targetClassName, Long targetId);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<List<SetupStatusResource>> findByTargetClassNameAndTargetIdAndParentId(String targetClassName, Long targetId, Long parentId);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<List<SetupStatusResource>> findByClassNameAndParentId(String className, Long parentId);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<SetupStatusResource> findSetupStatus(String className, Long classPk);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the status related to setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<SetupStatusResource> findSetupStatusAndTarget(String className, Long classPk, String targetClassName, Long targetId);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update the status related to setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<SetupStatusResource> saveSetupStatus(SetupStatusResource setupStatusResource);
 }

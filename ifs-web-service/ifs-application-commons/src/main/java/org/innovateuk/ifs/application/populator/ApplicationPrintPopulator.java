@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -53,7 +54,7 @@ public class ApplicationPrintPopulator {
     }
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
-        return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement())
+        return (user.hasAuthority(Authority.PROJECT_FINANCE) && competition.isProcurement())
                 || ktpUserCanViewFeedback(user, competition, application)
                 || nonKtpUserCanViewFeedback(user, competition, application);
     }

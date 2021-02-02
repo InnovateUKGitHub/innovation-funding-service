@@ -17,14 +17,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;
@@ -149,7 +148,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void addPartner_deniedIfNotSystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
-            setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+            setLoggedInUser(newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.addPartner(1L, 2L, 3L);
                 Assert.fail("Should not have been able to add a partner without the system registrar role");
@@ -184,7 +183,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
-            setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+            setLoggedInUser(newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.addPartner(1L, 2L, 3L);
                 Assert.fail("Should not have been able to add a partner without the system registrar role");

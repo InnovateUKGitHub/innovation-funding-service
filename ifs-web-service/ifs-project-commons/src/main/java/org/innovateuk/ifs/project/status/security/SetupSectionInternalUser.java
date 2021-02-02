@@ -4,12 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -51,7 +51,7 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
 
-        if (!userResource.hasRole(PROJECT_FINANCE) || !projectSetupProgressChecker.isBankDetailsAccessible()) {
+        if (!userResource.hasAuthority(Authority.PROJECT_FINANCE) || !projectSetupProgressChecker.isBankDetailsAccessible()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -59,7 +59,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
+        return (userResource.hasAuthority(Authority.PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
@@ -132,7 +132,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessProjectSetupComplete(UserResource user) {
-        if (user.hasRole(PROJECT_FINANCE)
+        if (user.hasAuthority(Authority.PROJECT_FINANCE)
                 && documentsApproved()
                 && projectSetupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;
@@ -145,12 +145,12 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE))  ?
+        return (userResource.hasAuthority(Authority.PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE))  ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
+        return (userResource.hasAuthority(Authority.PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 

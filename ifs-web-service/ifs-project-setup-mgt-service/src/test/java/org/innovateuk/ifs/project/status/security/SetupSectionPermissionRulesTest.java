@@ -145,13 +145,13 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void onlyInternalAdminUserCanApproveDocuments() {
 
-        assertTrue(stream(Role.values()).filter(role -> asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE).contains(role))
+        assertTrue(stream(Role.values()).filter(role -> asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR, Role.SYSTEM_MAINTAINER).contains(role))
                 .map(this::doTestApproveDocumentsAccess)
                 .filter(Boolean.FALSE::equals)
                 .collect(Collectors.toList())
                 .isEmpty());
 
-        assertTrue(stream(Role.values()).filter(role -> !(asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE).contains(role)))
+        assertTrue(stream(Role.values()).filter(role -> !(asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR, Role.SYSTEM_MAINTAINER).contains(role)))
                 .map(this::doTestApproveDocumentsAccess)
                 .filter(Boolean.TRUE::equals)
                 .collect(Collectors.toList())

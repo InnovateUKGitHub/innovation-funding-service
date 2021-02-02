@@ -7,7 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 
 @Component
 @PermissionRules
@@ -25,7 +25,7 @@ public class BankDetailsPermissionRules extends BasePermissionRules {
             value = "UPDATE",
             description = "Project finance users can update any organisations bank details")
     public boolean projectFinanceUsersCanUpdateAnyOrganisationsBankDetails(BankDetailsResource bankDetailsResource, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(bankDetailsResource.getProject());
+        return hasProjectFinanceAuthority(user) && isProjectActive(bankDetailsResource.getProject());
     }
 
     @PermissionRule(
@@ -39,6 +39,6 @@ public class BankDetailsPermissionRules extends BasePermissionRules {
             value = "READ",
             description = "Project finance user can see all bank details on all projects")
     public boolean projectFinanceUsersCanSeeAllBankDetailsOnAllProjects(BankDetailsResource bankDetailsResource, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 }

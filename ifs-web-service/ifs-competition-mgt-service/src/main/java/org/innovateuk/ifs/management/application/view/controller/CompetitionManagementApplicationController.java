@@ -62,7 +62,7 @@ public class CompetitionManagementApplicationController {
     private ManagementApplicationPopulator managementApplicationPopulator;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}")
     @AsyncMethod
     public String newApplicationSummary(@PathVariable("applicationId") final Long applicationId,
@@ -76,7 +76,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead')")
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
                                    @PathVariable("competitionId") final long competitionId,
@@ -102,7 +102,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
     public String reinstateIneligibleApplication(Model model,
                                                  @PathVariable("competitionId") final long competitionId,
@@ -122,7 +122,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @GetMapping(value = "/{applicationId}/reinstateIneligibleApplication/confirm")
     public String reinstateIneligibleApplicationConfirm(final Model model,
                                                         @ModelAttribute("form") final ReinstateIneligibleApplicationForm form,
@@ -131,7 +131,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
@@ -150,7 +150,7 @@ public class CompetitionManagementApplicationController {
      * Printable version of the application
      */
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
@@ -167,7 +167,7 @@ public class CompetitionManagementApplicationController {
 
     @GetMapping("/{applicationId}/download-response")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
@@ -178,7 +178,7 @@ public class CompetitionManagementApplicationController {
 
     @GetMapping("/{applicationId}/download-feedback")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
                                                        @PathVariable("applicationId") long applicationId) {

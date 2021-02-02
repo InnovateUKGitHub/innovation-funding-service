@@ -57,7 +57,7 @@ import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupCo
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupApplicationController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
