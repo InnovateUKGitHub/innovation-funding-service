@@ -9,6 +9,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Model attributes for the application terms partner view.
  */
+//TODO delete
 public class ApplicationTermsPartnerViewModel implements BaseAnalyticsViewModel {
     private final long applicationId;
     private final String competitionName;

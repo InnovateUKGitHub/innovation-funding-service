@@ -1,35 +1,32 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
+import java.util.List;
+
 public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
-    private final ApplicationTermsViewModel applicationTermsViewModel;
-    private final ApplicationTermsPartnerViewModel applicationTermsPartnerViewModel;
+    private final List<TermsAndConditionsRowReadOnlyViewModel> partners;
+    private final boolean includeFundingRules;
     private final boolean displayCompleteStatus;
-    private final boolean assessment;
     private final String termsAndConditionsTerminology;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
-                                               ApplicationTermsViewModel applicationTermsViewModel,
-                                               ApplicationTermsPartnerViewModel applicationTermsPartnerViewModel,
-                                               boolean assessment,
+                                               boolean includeFundingRules,
+                                               List<TermsAndConditionsRowReadOnlyViewModel> partners,
                                                String termsAndConditionsTerminology) {
         super(data, question);
-        this.applicationTermsViewModel = applicationTermsViewModel;
-        this.applicationTermsPartnerViewModel = applicationTermsPartnerViewModel;
-        this.displayCompleteStatus = !data.getCompetition().isExpressionOfInterest(); // do not show status for EoI competitions
-        this.assessment = assessment;
+        this.partners = partners;
+        this.includeFundingRules = includeFundingRules;
+        this.displayCompleteStatus = !data.getApplication().isSubmitted() && !data.getCompetition().isExpressionOfInterest();
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
     }
 
     @Override
     public String getFragment() {
-        return assessment ? "terms-and-conditions-assessment" : "terms-and-conditions";
+        return "terms-and-conditions";
     }
 
     @Override
@@ -44,19 +41,7 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     @Override
     public boolean isComplete() {
-        return applicationTermsViewModel.isTermsAcceptedByAllOrganisations();
-    }
-
-    public ApplicationTermsViewModel getApplicationTermsViewModel() {
-        return applicationTermsViewModel;
-    }
-
-    public ApplicationTermsPartnerViewModel getApplicationTermsPartnerViewModel() {
-        return applicationTermsPartnerViewModel;
-    }
-
-    public boolean isAssessment() {
-        return assessment;
+        return partners.stream().allMatch(TermsAndConditionsRowReadOnlyViewModel::isAccepted);
     }
 
     @Override
@@ -64,7 +49,15 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
         return displayCompleteStatus;
     }
 
+    public boolean isIncludeFundingRules() {
+        return includeFundingRules;
+    }
+
     public String getTermsAndConditionsTerminology() {
         return termsAndConditionsTerminology;
+    }
+
+    public List<TermsAndConditionsRowReadOnlyViewModel> getPartners() {
+        return partners;
     }
 }

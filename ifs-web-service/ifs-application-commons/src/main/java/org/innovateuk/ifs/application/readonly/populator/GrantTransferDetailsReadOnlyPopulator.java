@@ -25,7 +25,7 @@ public class GrantTransferDetailsReadOnlyPopulator implements QuestionReadOnlyVi
     }
 
     @Override
-    public GrantTransferDetailsReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public GrantTransferDetailsReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Optional<EuGrantTransferResource> grantTransferResource = grantTransferRestService.findDetailsByApplicationId(data.getApplication().getId()).getOptionalSuccessObject();
         if (grantTransferResource.isPresent()) {
             return new GrantTransferDetailsReadOnlyViewModel(

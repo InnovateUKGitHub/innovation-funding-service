@@ -127,7 +127,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .stream()
                 .filter(section -> section.getParentSection() == null)
                 .filter(section -> settings.isIncludeAllAssessorFeedback() || section.getType() != SectionType.KTP_ASSESSMENT)
-                .map(section -> async(() -> sectionView(competition, section, settings, data)))
+                .map(section -> async(() -> sectionView(section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
@@ -153,14 +153,14 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return competition.isKtp() && isKta;
     }
 
-    private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
+    private ApplicationSectionReadOnlyViewModel sectionView(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         if (!section.getChildSections().isEmpty()) {
             return sectionWithChildren(section, settings, data);
         }
         Set<ApplicationQuestionReadOnlyViewModel> questionViews = section.getQuestions()
                 .stream()
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
-                .map(question ->  populateQuestionViewModel(competition, question, data, settings))
+                .map(question ->  populateQuestionViewModel(question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
         return new ApplicationSectionReadOnlyViewModel(section.getName(), false, questionViews);
     }
@@ -171,9 +171,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationSectionReadOnlyViewModel(section.getName(), true, asSet(finance));
     }
 
-    private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
-            return populatorMap.get(question.getQuestionSetupType()).populate(competition, question, data, settings);
+            return populatorMap.get(question.getQuestionSetupType()).populate(question, data, settings);
         } else {
             throw new IFSRuntimeException("Populator not found for question type: " + question.getQuestionSetupType().name());
         }

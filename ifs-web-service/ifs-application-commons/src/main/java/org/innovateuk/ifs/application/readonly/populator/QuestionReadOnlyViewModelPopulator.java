@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface QuestionReadOnlyViewModelPopulator<M extends ApplicationQuestionReadOnlyViewModel> {
 
-    M populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings);
+    M populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings);
 
     Set<QuestionSetupType> questionTypes();
 }

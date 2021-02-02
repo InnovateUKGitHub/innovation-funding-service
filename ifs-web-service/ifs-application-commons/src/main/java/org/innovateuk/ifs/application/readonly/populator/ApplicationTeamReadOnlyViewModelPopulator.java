@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamReadOnly
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamUserReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -35,7 +34,8 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Component
 public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<ApplicationTeamReadOnlyViewModel> {
@@ -56,7 +56,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
 
     @Override
-    public ApplicationTeamReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
         List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(data.getApplication().getId()).getSuccess();
         List<ProcessRoleResource> processRoles = applicationProcessRoles.stream()
@@ -70,7 +70,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<ProcessRoleResource> ktaProcessRole = Optional.empty();
         String ktaPhoneNumber = null;
 
-        if (competition.isKtp()) {
+        if (data.getCompetition().isKtp()) {
             ktaProcessRole = applicationProcessRoles.stream()
                     .filter(role -> role.getRole().isKta())
                     .findAny();
