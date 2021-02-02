@@ -38,10 +38,10 @@ IFS.manuallyEnter = (function () {
           return
         }
       }
-      var html = '<div class="govuk-grid-row govuk-!-margin-top-6 sic-code-row" id="sic-code-row-' + idCount + '">' +
+      var html = '<div class="govuk-grid-row govuk-!-margin-top-6" id="sic-code-row-' + idCount + '">' +
                                      '<div class="govuk-grid-column">' +
                                          '<div class="govuk-grid-column-two-thirds">' +
-                                         '<input class="govuk-input govuk-input--width-5"' +
+                                         '<input class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-3"' +
                                          'id="sicCode"' +
                                           'type="text" ' +
                                           'maxlength="5" ' +
@@ -54,6 +54,7 @@ IFS.manuallyEnter = (function () {
                                                          'th:id="remove-sic-code-row"' + idCount + ' ">Remove' +
                                               '</button>' +
                                             '</div>' +
+                                           '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">' +
                                       '</div>'
       jQuery('.sic-code-row').last().after(html)
       jQuery('.sic-code-' + idCount).val('')
@@ -80,10 +81,10 @@ IFS.manuallyEnter = (function () {
       if (jQuery('.exec-officer-row').length) {
         idCount = parseInt(jQuery('.exec-officer-row[id^=exec-officer-row-]').last().attr('id').split('exec-officer-row-')[1], 10) + 1
       }
-      var html = '<div class="govuk-grid-row govuk-!-margin-top-6 exec-officer-row" id="exec-officer-row-' + idCount + '">' +
+      var html = '<div class="govuk-grid-row govuk-!-margin-top-6" id="exec-officer-row-' + idCount + '">' +
                                '<div class="govuk-grid-column">' +
                                    '<div class="govuk-grid-column-two-thirds">' +
-                                   '<input class="govuk-input govuk-input--width-23"' +
+                                   '<input class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-3"' +
                                    'id="execOfficer"' +
                                     'type="text" ' +
                                     'maxlength="255" ' +
@@ -96,6 +97,7 @@ IFS.manuallyEnter = (function () {
                                                    'th:id="remove-exec-officer-row"' + idCount + ' ">Remove' +
                                         '</button>' +
                                       '</div>' +
+                                      '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">' +
                                 '</div>'
       jQuery('.exec-officer-row').last().after(html)
       jQuery('.exec-officer-' + idCount).val('')

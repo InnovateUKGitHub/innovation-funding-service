@@ -84,7 +84,7 @@
             <div class="govuk-hint">Enter your 5 digit Standard Industrial Classification code.</div>
             <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row govuk-!-margin-top-6" th:id="'sic-code-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
-                        <input id="sicCode" class="govuk-input govuk-input--width-5"
+                        <input id="sicCode" class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-3"
                                type="text"
                                th:field="${organisationForm.sicCodes[__${iteration.index}__].sicCode}"
                                maxlength="5"/>
@@ -94,6 +94,7 @@
                                 th:id="remove-sic-code-row"> Remove
                     </button>
                 </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+ Add SIC code</button>
@@ -104,7 +105,7 @@
             <div class="govuk-hint">Enter the first and last names of all company directors, if your organisation has any.</div>
             <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row govuk-!-margin-top-6" th:id="'exec-officer-row-'+${iteration.index}">
                 <div class="govuk-grid-column-two-thirds">
-                    <input id="execOfficer" class="govuk-input govuk-input--width-23"
+                    <input id="execOfficer" class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-2"
                            th:field="${organisationForm.executiveOfficers[__${iteration.index}__].name}"
                            maxlength="255"
                            type="text"/>
@@ -114,6 +115,7 @@
                             th:id="remove-exec-officer-row"> Remove
                     </button>
                 </div>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>
