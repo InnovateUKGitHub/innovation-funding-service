@@ -250,7 +250,7 @@ Internal users can see SBRI application in previous tab with submitted status
 External user finance overview link is not shown
     [Documentation]    IFS-8127
     Given log in as a different user             &{becky_mason_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-check
     Then the user should not see the element     jQuery = project finance overview
 
 External user finances details are correct
@@ -345,21 +345,31 @@ Project lead is able to view pending query on project dashboard
 
 Project lead responds to pending queries
     [Documentation]  IFS-8943
-    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-check
     When the user clicks the button/link         id = post-new-response-1
     Then the user responds to the query
 
+Internal user can edit payment milestone in project setup
+     [Documentation]  IFS-8941
+     Given log in as a different user              &{internal_finance_credentials}
+     When the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+     And the user clicks the button/link           jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+     Then the user edits the payment milestone
+     And the user cannot see a validation error in the page
+
 Internal user can generate spend profile
-    [Documentation]   IFS-8048
-    Given Log in as a different user          &{internal_finance_credentials}
-    And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-    When generate spend profile
-    Then the user should see the element      css = .success-alert
+    [Documentation]   IFS-8048   IFS-8941
+    Given Log in as a different user                      &{internal_finance_credentials}
+    And the user navigates to the page                    ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    When confirm viability and eligibility
+    And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the internal user approves payment milestone
+    Then generate spend profile
 
 Internal user should not see spend profile section
     [Documentation]  IFS-8048
-    When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should not see the element     jQuery = th:contains("Spend profile")
+    When the user navigates to the page           ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should not see the element      jQuery = th:contains("Spend profile")
     And the data is in the database correctly
 
 Internal user should see bank details complete for an international applicant
@@ -369,11 +379,13 @@ Internal user should see bank details complete for an international applicant
     Then the user should see the element     jQuery = span:contains("No action required")
 
 Contract section is enabled without bank details
-    [Documentation]  IFS-8202
-    Given the user navigates to the page     ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
-    When generate spend profile
-    And the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
+    [Documentation]  IFS-8202  IFS-8941
+    Given the user navigates to the page                 ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    And confirm viability and eligibility
+    When the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the internal user approves payment milestone
+    And the user navigates to the page                   ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element                 jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
@@ -385,7 +397,7 @@ Internal user can send the contract
 Check that the VAT value shows on finance table
     [Documentation]  IFS-8321
     Given log in as a different user             &{becky_mason_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks/overview
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-check/overview
     Then the user should see the element         jQuery = th:contains("Total VAT")
 
 External user of international org should not see bank details
@@ -399,13 +411,6 @@ External user can upload the contract
      Given applicant uploads the contract
      When the internal user approve the contract     ${sbriProjectId2}
      Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
-
-Internal user can edit payment milestone in project setup
-     [Documentation]  IFS-8941
-     Given log in as a different user                       &{internal_finance_credentials}
-     And the user navigates to the page                     ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     When the user edits the payment milestone
-     Then the internal user approves payment milestone
 
 *** Keywords ***
 Custom Suite Setup
@@ -590,10 +595,7 @@ the user should see validation messages
     the user should see a field and summary error     You must state the milestone task or activity.
     the user should see a field and summary error     You must state the payment requested in pounds (£).
 
-the user edits the payment milestone
-     the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Approved")
-     the user clicks the button/link                        id = edit
-     the user clicks the button/link                        jQuery = button:contains("Open all")
-     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
-     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
-     the user navigates to the page                         ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+generate spend profile
+    the user clicks the button/link     link = Return to finance checks
+    the user clicks the button/link     css = .generate-spend-profile-main-button
+    the user should see the element     css = .success-alert
