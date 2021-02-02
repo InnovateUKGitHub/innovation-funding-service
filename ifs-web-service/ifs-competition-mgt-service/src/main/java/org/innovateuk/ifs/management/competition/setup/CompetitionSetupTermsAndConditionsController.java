@@ -64,7 +64,7 @@ public class CompetitionSetupTermsAndConditionsController {
     private CompetitionSetupService competitionSetupService;
 
     @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
-    private Boolean subsidyControlNorthernIrelandEnabled;
+    private boolean subsidyControlNorthernIrelandEnabled;
 
     @GetMapping("/{competitionId}/section/terms-and-conditions")
     public String editTermsAndConditions(@PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -197,10 +197,10 @@ public class CompetitionSetupTermsAndConditionsController {
 
         Supplier<String> successView;
         if (stateAid) {
-            successView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+            successView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId());
         } else {
             if (shouldHaveSeparateTerms(competition)) {
-                successView = () -> format("redirect:/competition/setup/%d/section/state-aid-terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+                successView = () -> format("redirect:/competition/setup/%d/section/state-aid-terms-and-conditions", competition.getId());
             } else {
                 successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
             }
@@ -251,7 +251,7 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     private boolean shouldHaveSeparateTerms(CompetitionResource competition) {
-        return Boolean.TRUE.equals(subsidyControlNorthernIrelandEnabled)
+        return subsidyControlNorthernIrelandEnabled
                 && FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
                 && !competition.isExpressionOfInterest();
     }
@@ -264,7 +264,4 @@ public class CompetitionSetupTermsAndConditionsController {
         return "redirect:/non-ifs-competition/setup/" + competitionId;
     }
 
-    protected void setSubsidyControlNorthernIrelandEnabled(Boolean subsidyControlNorthernIrelandEnabled) {
-        this.subsidyControlNorthernIrelandEnabled = subsidyControlNorthernIrelandEnabled;
-    }
 }

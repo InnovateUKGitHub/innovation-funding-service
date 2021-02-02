@@ -55,12 +55,9 @@ public class TermsAndConditionsModelPopulator {
     }
 
     private boolean includeStateAid(CompetitionResource competitionResource) {
-        return Boolean.TRUE.equals(subsidyControlNorthernIrelandEnabled)
+        return subsidyControlNorthernIrelandEnabled
                 && FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules()
                 && !competitionResource.isExpressionOfInterest();
     }
 
-    protected void setSubsidyControlNorthernIrelandEnabled(Boolean subsidyControlNorthernIrelandEnabled) {
-        this.subsidyControlNorthernIrelandEnabled = subsidyControlNorthernIrelandEnabled;
-    }
 }

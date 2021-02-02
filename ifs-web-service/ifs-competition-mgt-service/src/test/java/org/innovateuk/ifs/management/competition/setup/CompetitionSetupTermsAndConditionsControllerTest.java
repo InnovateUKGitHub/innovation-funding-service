@@ -17,6 +17,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
 
-        controller.setSubsidyControlNorthernIrelandEnabled(Boolean.TRUE);
+        ReflectionTestUtils.setField(controller, "subsidyControlNorthernIrelandEnabled", true);
     }
 
     @Test
