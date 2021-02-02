@@ -41,27 +41,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         loginCompAdmin();
     }
 
-    @Test
-    public void testNewAssessmentPeriod() {
-        RestResult<List<MilestoneResource>> result = controller.newAssessmentPeriod(COMPETITION_ID_VALID);
-        assertTrue(result.isSuccess());
-        List<MilestoneResource> milestones = result.getSuccess();
-        assertNotNull(milestones);
-        assertEquals(3, milestones.size());
-    }
-
-    @Test
-    public void testUpdateAssessmentPeriodMilestones() {
-        Competition newCompetition = competitionRepository.save(newCompetition().withId((Long) null).build());
-
-        List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
-        assertNotNull(milestones);
-        assertTrue(milestones.isEmpty());
-
-        RestResult<Void> result = controller.updateAssessmentPeriodMilestones(milestones);
-        assertNotNull(result.getSuccess());
-
-    }
 
     @Test
     public void testGetAllMilestonesByCompetitionId() throws Exception {

@@ -6,9 +6,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
-import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,15 +94,8 @@ public class AssessmentPeriodServiceImpl implements AssessmentPeriodService {
     private List<MilestoneResource> getExistingAssessmentPeriodMilestoneResources(long competitionId) {
         return milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
                 .stream()
-                .filter(this::isOfAssessmentPeriodMilestoneType)
+                .filter(e -> MilestoneType.assessmentPeriodValues().contains(e.getType()))
                 .collect(Collectors.toList());
     }
-
-    private boolean isOfAssessmentPeriodMilestoneType(MilestoneResource existingMilestone) {
-        return existingMilestone.getType().equals(MilestoneType.ASSESSOR_BRIEFING) ||
-                existingMilestone.getType().equals(MilestoneType.ASSESSOR_ACCEPTS) ||
-                existingMilestone.getType().equals(MilestoneType.ASSESSOR_DEADLINE);
-    }
-
 
 }

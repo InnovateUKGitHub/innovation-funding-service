@@ -3,16 +3,12 @@ package org.innovateuk.ifs.management.assessmentperiod.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.MilestoneRestService;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.assessmentperiod.populator.ManageAssessmentPeriodsPopulator;
 import org.innovateuk.ifs.management.assessmentperiod.service.AssessmentPeriodService;
-import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -44,7 +38,7 @@ public class AssessmentPeriodController {
     private ManageAssessmentPeriodsPopulator assessmentPeriodsPopulator;
 
     @Autowired
-    private MilestoneRestService milestoneRestService;
+    private AssessmentPeriodRestService assessmentPeriodRestService;
 
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
@@ -77,7 +71,7 @@ public class AssessmentPeriodController {
         Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
         Supplier<String> failureView = () -> manageAssessmentPeriods(form, competitionId, model);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> saveResult = milestoneRestService.updateAssessmentPeriodMilestones(updatedMilestones);
+            RestResult<Void> saveResult = assessmentPeriodRestService.updateAssessmentPeriodMilestones(updatedMilestones);
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, successView);
         });
@@ -90,7 +84,7 @@ public class AssessmentPeriodController {
                                       Model model,
                                       @PathVariable long competitionId
     ) {
-        milestoneRestService.addNewAssessmentPeriod(competitionId);
+        assessmentPeriodRestService.addNewAssessmentPeriod(competitionId);
         return redirectToManageAssessmentPeriods(competitionId);
     }
 

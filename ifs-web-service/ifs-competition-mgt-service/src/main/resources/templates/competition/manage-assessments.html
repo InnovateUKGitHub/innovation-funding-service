@@ -60,8 +60,8 @@
         <h2 class="govuk-heading-m">Actions</h2>
 
         <ul class="govuk-list link-list">
-            <li>
-                <a th:if="${model.alwaysOpen}"
+            <li th:if="${model.alwaysOpen}">
+                <a
                    th:href="@{/assessment/competition/{competitionId}/assessment-period(competitionId=${model.competitionId})}"
                    class="govuk-link">
                     Manage assessment period

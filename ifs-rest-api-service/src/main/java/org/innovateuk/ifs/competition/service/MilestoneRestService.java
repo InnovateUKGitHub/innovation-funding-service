@@ -20,8 +20,6 @@ public interface MilestoneRestService {
 
     RestResult<Void> updateMilestones(List<MilestoneResource> milestones);
 
-    RestResult<Void> updateAssessmentPeriodMilestones(List<MilestoneResource> milestones);
-
     RestResult<Void> updateMilestone(MilestoneResource milestone);
 
     RestResult<MilestoneResource> create(MilestoneType type, Long competitionId);
@@ -30,5 +28,4 @@ public interface MilestoneRestService {
 
     RestResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
 
-    RestResult<Void> addNewAssessmentPeriod(long competitionId);
 }

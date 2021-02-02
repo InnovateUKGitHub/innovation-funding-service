@@ -41,18 +41,9 @@ public interface MilestoneService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = MilestoneResource.class,
-            description = "Only Comp Admins and project finance users are able to save single milestone for the given competitions")
-    ServiceResult<Void> updateAssessmentPeriodMilestones(List<MilestoneResource> milestones);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = MilestoneResource.class,
             description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions")
     ServiceResult<MilestoneResource> create(MilestoneType type, Long id);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = MilestoneResource.class,
-            description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions")
-    ServiceResult<List<MilestoneResource>> createAssessmentPeriodMilestones(Long id);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'UPDATE_COMPLETION_STAGE')")
     ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);

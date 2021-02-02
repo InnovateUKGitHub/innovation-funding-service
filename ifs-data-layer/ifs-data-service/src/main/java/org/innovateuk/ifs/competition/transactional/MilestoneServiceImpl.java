@@ -59,9 +59,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Autowired
     private CompetitionRepository competitionRepository;
 
-    @Autowired
-    private AssessmentPeriodRepository assessmentPeriodRepository;
-
     @Override
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccessReturn(competition ->
@@ -163,36 +160,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         return serviceSuccess();
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> updateAssessmentPeriodMilestones(List<MilestoneResource> milestones) {
-        ValidationMessages messages = new ValidationMessages();
-        messages.addAll(validateCompetitionIdConsistency(milestones));
 
-        messages.addAll(validateDates(milestones));
-        messages.addAll(validateAssessmentPeriodDateOrder(milestones));
-
-        if (messages.hasErrors()) {
-            return serviceFailure(messages.getErrors());
-        }
-
-        milestoneRepository.saveAll(milestoneMapper.mapToDomain(milestones));
-        return serviceSuccess();
-    }
-
-    private ValidationMessages validateAssessmentPeriodDateOrder(List<MilestoneResource> milestoneResources) {
-        ValidationMessages vm = new ValidationMessages();
-
-        milestoneResources.stream()
-                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId))
-                .values()
-                .forEach(assessmentPeriodMilestones -> {
-                    assessmentPeriodMilestones.sort(comparing(MilestoneResource::getType));
-                    validatePresetMilestonesSequentialOrder(vm, assessmentPeriodMilestones);
-                });
-
-        return vm;
-    }
 
     private void validatePresetMilestonesSequentialOrder(ValidationMessages vm, List<MilestoneResource> milestones) {
         for (int i = 1; i < milestones.size(); i++) {
@@ -215,33 +183,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<List<MilestoneResource>> createAssessmentPeriodMilestones(Long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId).orElse(null);
-        int max = assessmentPeriodRepository.findAllByCompetitionId(competitionId).stream()
-                .map(AssessmentPeriod::getIndex)
-                .mapToInt(v -> v).max()
-                .orElse(1);
-
-        AssessmentPeriod assessmentPeriod = new AssessmentPeriod();
-        assessmentPeriod.setCompetition(competition);
-        assessmentPeriod.setIndex(max + 1);
-        assessmentPeriodRepository.save(assessmentPeriod);
-
-        List<Milestone> assessmentPeriodMilestones = new ArrayList<>();
-        Milestone assessorBriefing = new Milestone(MilestoneType.ASSESSOR_BRIEFING, competition);
-        assessorBriefing.setAssessmentPeriod(assessmentPeriod);
-        Milestone assessorAccepts = new Milestone(MilestoneType.ASSESSOR_ACCEPTS, competition);
-        assessorAccepts.setAssessmentPeriod(assessmentPeriod);
-        Milestone assessorDeadline = new Milestone(MilestoneType.ASSESSOR_DEADLINE, competition);
-        assessorDeadline.setAssessmentPeriod(assessmentPeriod);
-        assessmentPeriodMilestones.add(assessorBriefing);
-        assessmentPeriodMilestones.add(assessorAccepts);
-        assessmentPeriodMilestones.add(assessorDeadline);
-
-        return serviceSuccess(newArrayList(milestoneMapper.mapToResource(milestoneRepository.saveAll(assessmentPeriodMilestones))));
-    }
 
     @Override
     @Transactional

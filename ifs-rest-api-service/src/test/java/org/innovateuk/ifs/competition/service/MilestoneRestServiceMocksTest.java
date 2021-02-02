@@ -30,14 +30,6 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void addNewAssessmentPeriod() {
-        String url = milestonesRestURL + "/" + newCompetitionId + "/new-assessment-period";
-        setupPostWithRestResultExpectations(url, OK);
-        RestResult<Void> response = service.addNewAssessmentPeriod(newCompetitionId);
-        assertNotNull(response);
-    }
-
-    @Test
     public void getAllPublicMilestonesByCompetitionId() {
         List<MilestoneResource> returnedResponse = new ArrayList<>();
         returnedResponse.add(getOpenDateMilestone());
