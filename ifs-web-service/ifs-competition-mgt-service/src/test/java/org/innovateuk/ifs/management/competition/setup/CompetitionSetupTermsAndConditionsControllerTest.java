@@ -96,6 +96,8 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypeResources));
 
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
+
+        controller.setSubsidyControlNorthernIrelandEnabled(Boolean.TRUE);
     }
 
     @Test
@@ -161,6 +163,72 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
         inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
         inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
+                eq(COMPETITION_ID),
+                eq(nonProcurementTerms.getId()));
+        inOrder.verify(competitionSetupRestService).markSectionComplete(
+                eq(COMPETITION_ID),
+                eq(TERMS_AND_CONDITIONS));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitTermsAndConditionsWhenDualTermsAndConditionsApply() throws Exception {
+        GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
+                .withName("Non procurement terms")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
+                .param("termsAndConditionsId", String.valueOf(nonProcurementTerms.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/state-aid-terms-and-conditions"));
+
+        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
+        inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
+        inOrder.verify(competitionRestService).updateTermsAndConditionsForCompetition(
+                eq(COMPETITION_ID),
+                eq(nonProcurementTerms.getId()));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitStateAidTermsAndConditionsWhenDualTermsAndConditionsApply() throws Exception {
+        GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
+                .withName("Non procurement terms")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
+        when(competitionRestService.updateOtherFundingRulesTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionComplete(anyLong(), eq(TERMS_AND_CONDITIONS))).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/state-aid-terms-and-conditions")
+                .param("termsAndConditionsId", String.valueOf(nonProcurementTerms.getId())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
+
+        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(competitionRestService).updateOtherFundingRulesTermsAndConditionsForCompetition(
                 eq(COMPETITION_ID),
                 eq(nonProcurementTerms.getId()));
         inOrder.verify(competitionSetupRestService).markSectionComplete(

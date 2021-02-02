@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,11 @@ public class TermsAndConditionsModelPopulatorTest {
 
     @Mock
     private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Before
+    public void setUp() {
+        populator.setSubsidyControlNorthernIrelandEnabled(Boolean.TRUE);
+    }
 
     @Test
     public void populateModel() {

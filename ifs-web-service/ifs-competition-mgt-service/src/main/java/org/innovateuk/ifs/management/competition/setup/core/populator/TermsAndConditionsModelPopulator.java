@@ -60,4 +60,7 @@ public class TermsAndConditionsModelPopulator {
                 && !competitionResource.isExpressionOfInterest();
     }
 
+    protected void setSubsidyControlNorthernIrelandEnabled(Boolean subsidyControlNorthernIrelandEnabled) {
+        this.subsidyControlNorthernIrelandEnabled = subsidyControlNorthernIrelandEnabled;
+    }
 }

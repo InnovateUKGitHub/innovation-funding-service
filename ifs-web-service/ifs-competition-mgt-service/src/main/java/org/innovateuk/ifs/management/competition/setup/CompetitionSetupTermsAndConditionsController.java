@@ -264,4 +264,7 @@ public class CompetitionSetupTermsAndConditionsController {
         return "redirect:/non-ifs-competition/setup/" + competitionId;
     }
 
+    protected void setSubsidyControlNorthernIrelandEnabled(Boolean subsidyControlNorthernIrelandEnabled) {
+        this.subsidyControlNorthernIrelandEnabled = subsidyControlNorthernIrelandEnabled;
+    }
 }
