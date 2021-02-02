@@ -1,4 +1,5 @@
 apply from: rootProject.file("gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/bom.gradle")
 
 group 'innovateuk'
 version project.version
@@ -14,6 +15,8 @@ dependencies {
     compile project(':ifs-resources')
     compile project(':ifs-resources:ifs-survey-resources')
     compile project(':ifs-security')
+
+    compile "org.springframework:spring-web"
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
