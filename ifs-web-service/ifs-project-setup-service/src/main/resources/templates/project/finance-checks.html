@@ -71,7 +71,7 @@
                 <p class="govuk-body">Innovate UK is reviewing:</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
+                        <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                            class="govuk-link">your project finances</a>
                     </li>
                     <li th:if="${model.paymentMilestonesLink}">
@@ -84,14 +84,14 @@
             </th:block>
             <th:block th:unless="${model.procurementCompetition}">
                 <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
-                    <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
+                    <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
                        class="govuk-link">project finance overview</a>.</p>
                 <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
-                    <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
+                    <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                        class="govuk-link">your project finances</a>
                     <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
                     and you can also <a
-                        th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
+                        th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
                         class="govuk-link">view the project finance overview</a>.
                     </th:block>
                     <th:block th:if="${model.paymentMilestonesLink}">

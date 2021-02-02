@@ -277,11 +277,11 @@ the internal user should see the funding changes
     #the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
 
 the external user should see the funding changes
-    log in as a different user         &{lead_applicant_credentials}
-    the user navigates to the page     ${loan_PS}/finance-checks/eligibility
-    the user should see the element    jQuery = p:contains("All members of your organisation can access and edit your project")
-    the user clicks the button/link    link = View changes to finances
-    the user should see the element    jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
+    log in as a different user        &{lead_applicant_credentials}
+    the user navigates to the page    ${loan_PS}/finance-check/eligibility
+    the user should see the element   jQuery = p:contains("All members of your organisation can access and edit your project")
+    the user clicks the button/link   link = View changes to finances
+    the user should see the element   jQuery = p:contains("Funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
     the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
     the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
     the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
@@ -346,11 +346,3 @@ the user enters a value over the max funding
     the user clicks the button/link                jQuery = button:contains("Edit your funding")
     the user enters text to a text field           id = amount  65000
     the user clicks the button/link                id = mark-all-as-complete
-
-the user amends other project costs in finances
-    the user navigates to the page           ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility
-    the user expands the section             Other costs
-    the user clicks the button/link          jQuery = #accordion-finances-content-7 a:contains("Edit")
-    the user enters text to a text field     css = #other-costs-table tr:nth-child(1) td:nth-child(2) textarea    some other costs
-    the user enters text to a text field     css = #other-costs-table tr:nth-child(1) td:nth-child(3) input    5000
-    the user clicks the button/link          jQuery = .govuk-button[name = save-eligibility]

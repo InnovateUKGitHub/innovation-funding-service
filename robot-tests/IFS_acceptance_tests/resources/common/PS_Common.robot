@@ -823,12 +823,16 @@ confirm eligibility
     the user clicks the button/link                         name = confirm-eligibility   #Pop-up confirmation button
     the user clicks the button/link                         link = Return to finance checks
 
+the user edits the payment milestone
+     the user clicks the button/link                        id = edit
+     the user clicks the button/link                        jQuery = button:contains("Open all")
+     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    This is an edited text${SPACE}    3
+     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
+
 the internal user approves payment milestone
-    the user clicks the button/link                         jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
-    the user selects the checkbox                           approve-milestones
-    the user clicks the button/link                         id = confirm-button   #Page confirmation button
-    the user clicks the button/link                         jQuery = h2:contains("Approve payment milestones") ~ div button:contains("Approve payment milestones")   #Pop-up confirmation button
-    the user clicks the button/link                         link = Return to finance checks
+    the user selects the checkbox       approve-milestones
+    the user clicks the button/link     id = confirm-button   #Page confirmation button
+    the user clicks the button/link     jQuery = h2:contains("Approve payment milestones") ~ div button:contains("Approve payment milestones")   #Pop-up confirmation button
 
 the internal user approve the contract
     [Arguments]  ${projectID}
