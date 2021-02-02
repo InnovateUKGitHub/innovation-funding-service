@@ -105,8 +105,6 @@ public class ApplicationDashboardServiceImplTest {
 
         when(assessmentService.existsByTargetId(inProgressAlwaysOpenCompApplicationInAssessment.getId()))
                 .thenReturn(serviceSuccess(true));
-        when(assessmentService.existsByTargetId(inProgressOpenCompApplication.getId()))
-                .thenReturn(serviceSuccess(false));
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
