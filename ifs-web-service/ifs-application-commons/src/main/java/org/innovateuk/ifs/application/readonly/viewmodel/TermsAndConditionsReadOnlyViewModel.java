@@ -12,19 +12,22 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final boolean displayCompleteStatus;
     private final boolean assessment;
     private final String termsAndConditionsTerminology;
+    private final long leadOrganisationId;
 
     public TermsAndConditionsReadOnlyViewModel(ApplicationReadOnlyData data,
                                                QuestionResource question,
                                                ApplicationTermsViewModel applicationTermsViewModel,
                                                ApplicationTermsPartnerViewModel applicationTermsPartnerViewModel,
                                                boolean assessment,
-                                               String termsAndConditionsTerminology) {
+                                               String termsAndConditionsTerminology,
+                                               long leadOrganisationId) {
         super(data, question);
         this.applicationTermsViewModel = applicationTermsViewModel;
         this.applicationTermsPartnerViewModel = applicationTermsPartnerViewModel;
         this.displayCompleteStatus = !data.getCompetition().isExpressionOfInterest(); // do not show status for EoI competitions
         this.assessment = assessment;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
+        this.leadOrganisationId = leadOrganisationId;
     }
 
     @Override
@@ -66,5 +69,9 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public String getTermsAndConditionsTerminology() {
         return termsAndConditionsTerminology;
+    }
+
+    public long getLeadOrganisationId() {
+        return leadOrganisationId;
     }
 }

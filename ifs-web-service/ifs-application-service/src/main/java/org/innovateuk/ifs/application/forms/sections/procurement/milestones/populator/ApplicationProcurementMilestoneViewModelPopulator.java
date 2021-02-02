@@ -67,7 +67,7 @@ public class ApplicationProcurementMilestoneViewModelPopulator {
                 String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId),
                 complete,
                 open,
-                ApplicationUrlHelper.getQuestionUrl(QuestionSetupType.APPLICATION_DETAILS, applicationDetails.getId(), applicationId).orElseThrow(ObjectNotFoundException::new),
+                ApplicationUrlHelper.getQuestionUrl(QuestionSetupType.APPLICATION_DETAILS, applicationDetails.getId(), applicationId, organisationId).orElseThrow(ObjectNotFoundException::new),
                 completedSectionIds.contains(projectCostsSection.getId()));
     }
 }

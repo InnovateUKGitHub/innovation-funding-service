@@ -26,6 +26,7 @@ public abstract class BaseFinanceResource {
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
     private FinancialYearAccountsResource financialYearAccounts;
+    protected boolean northernIrelandDeclaration;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -114,6 +115,14 @@ public abstract class BaseFinanceResource {
 
     public void setFinancialYearAccounts(FinancialYearAccountsResource financialYearAccounts) {
         this.financialYearAccounts = financialYearAccounts;
+    }
+
+    public boolean isNorthernIrelandDeclaration() {
+        return northernIrelandDeclaration;
+    }
+
+    public void setNorthernIrelandDeclaration(boolean northernIrelandDeclaration) {
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
     }
 
     public FinanceRowCostCategory getFinanceOrganisationDetails(FinanceRowType costType) {

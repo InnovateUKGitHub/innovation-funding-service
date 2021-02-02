@@ -76,4 +76,8 @@ public class ProcessRoleResource {
         this.userEmail = userEmail;
         return this;
     }
+
+    public boolean isLeadApplicant() {
+        return this.role == ProcessRoleType.LEADAPPLICANT;
+    }
 }
