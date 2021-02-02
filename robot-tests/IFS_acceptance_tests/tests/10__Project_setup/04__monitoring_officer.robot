@@ -39,6 +39,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8753 515 - 73652 - Monitoring Officer unable to view application feedback
 ...
+...               IFS-8958  SBRI Milestones - Application overview / summary
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -49,6 +51,7 @@ ${Successful_Monitoring_Officer_Page}     ${server}/project-setup-management/pro
 ${Assign_Project}                         Climate control solution
 ${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
 ${Assign_Project2}                        High Performance Gasoline Stratified
+${sbri_applicaton_name}                   SBRI application
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
 ${PSCapplicationID}                       212
@@ -73,25 +76,25 @@ Before Monitoring Officer is assigned
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
-    And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
+    [Setup]    log in as a different user       &{Comp_admin1_credentials}
+    When the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
+    And the user should see the element         css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
 
 Search for an MO
     [Documentation]  IFS-5428  IFS-5418  IFS-5686
-    [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-    Then search for MO    Orvill  Orville Gibbs
-    And the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
-    And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
+    [Setup]  log in as a different user             &{internal_finance_credentials}
+    Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link            css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
+    Then search for MO                              Orvill  Orville Gibbs
+    And the user should see the element             jQuery = span:contains("Assign projects to Monitoring Officer")
+    And the internal user assign project to MO      ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
@@ -145,8 +148,8 @@ Monitoring officer see the project setup veiw for assigned project
 
 MO sees the application feedback
     [Documentation]  IFS-5298  IFS-8066
-    Given the user clicks the button/link  link = view application feedback
-    Then the user should see the element   jQuery = h1:contains("Application overview")
+    Given the user clicks the button/link       link = view application feedback
+    Then the user should see the element        jQuery = h1:contains("Application overview")
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
@@ -260,11 +263,20 @@ Internal user assigns a MO to a new project and removes a partner organisation
 
 MO can now check the application feedback
     [Documentation]    IFS-8753
-    Given Log in as a different user                           Orville.Gibbs@gmail.com    Passw0rd1357
+    Given Log in as a different user                           &{monitoring_officer_one_credentials}
     And the user clicks the project setup tile if displayed
     When The user clicks the button/link                       link = ${PSCapplicationTitle}
     and the user clicks the button/link                        link = view application feedback
     Then The user should see the element                       jQuery = h1:contains("Application overview")
+
+MO can now view payment milestones in SBRI application
+    [Documentation]   IFS-8958
+    Given Requesting IDs of this application
+    When the SBRI MO assignee has been changed
+    And Log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
+    And the user clicks the button/link                                     link = view application feedback
+    Then the payment milestone table is visible in application overview
 
 *** Keywords ***
 The MO user is able to access all of the links
@@ -291,6 +303,16 @@ The user is able to see Monitoring officer section
 The user is able to see Spend profile section
     the user clicks the button/link   link = Spend profile
     the user clicks the button/link   jQuery = a:contains("Set up your project")
+
+Requesting IDs of this application
+    ${sbri_projectID} =  get project id by name    ${sbri_applicaton_name}
+    Set suite variable    ${sbri_projectID}
+
+The SBRI MO assignee has been changed
+    log in as a different user                  &{Comp_admin1_credentials}
+    the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
+    the user clicks the button/link             link = Change monitoring officer
+    internal user assigns mo to application     255  SBRI application  Orvill  Orville Gibbs
 
 Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
@@ -343,6 +365,12 @@ The user enters the details
     the user enters text to a text field    id = firstName  Tom
     the user enters text to a text field    id = lastName   Poly
     the user enters text to a text field    id = phoneNumber  123456789
+
+The payment milestone table is visible in application overview
+    the user expands the section                Funding breakdown
+    the user should see the element             jQuery = h1:contains("Application overview")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£265,084") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£265,084")
 
 MO enter details and create account
     the user enters the details
