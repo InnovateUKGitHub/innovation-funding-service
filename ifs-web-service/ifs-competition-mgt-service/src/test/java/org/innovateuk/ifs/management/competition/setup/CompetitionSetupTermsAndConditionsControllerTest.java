@@ -10,7 +10,6 @@ import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditi
 import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.validation.Validator;
 
 import java.util.List;
 
@@ -53,12 +51,6 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;
-
-    @Mock
-    private Validator validator;
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private UserRestService userRestService;

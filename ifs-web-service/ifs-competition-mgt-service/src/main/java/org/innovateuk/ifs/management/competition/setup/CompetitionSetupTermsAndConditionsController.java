@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -42,7 +40,6 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupTermsAndConditionsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupTermsAndConditionsController {
-    private static final Log LOG = LogFactory.getLog(CompetitionSetupTermsAndConditionsController.class);
     public static final String COMPETITION_ID_KEY = "competitionId";
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String MODEL = "model";
@@ -125,7 +122,7 @@ public class CompetitionSetupTermsAndConditionsController {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
         }
 
-        return termsAndConditionsSection(competitionSetupForm, validationHandler, competition, loggedInUser, model);
+        return termsAndConditionsSection(competitionSetupForm, validationHandler, competition, loggedInUser, model, false);
     }
 
     @PostMapping("/{competitionId}/section/subsidy-control-terms-and-conditions")
@@ -136,40 +133,8 @@ public class CompetitionSetupTermsAndConditionsController {
                                                          UserResource loggedInUser,
                                                          Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competition.getId();
-        }
 
-        if (competition.isNonIfs()) {
-            return "redirect:/non-ifs-competition/setup/" + competitionId;
-        }
-
-        if (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules()) {
-            return "redirect:/competition/setup/" + competition.getId();
-        }
-
-        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
-
-        Supplier<String> failureView = () -> {
-            model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
-            return "competition/setup";
-        };
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult = competitionRestService.updateSubsidyControlTermsAndConditionsForCompetition(
-                    competition.getId(),
-                    competitionSetupForm.getTermsAndConditionsId()
-            ).toServiceResult().andOnSuccess(() -> {
-                if (competitionSetupForm.isMarkAsCompleteAction()) {
-                    return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
-                }
-                return serviceSuccess();
-            });
-
-        return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, successView);
-        });
-
+        return termsAndConditionsSection(competitionSetupForm, validationHandler, competition, loggedInUser, model, true);
     }
 
     private boolean isProcurement(long termsAndConditionsId) {
@@ -186,7 +151,7 @@ public class CompetitionSetupTermsAndConditionsController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
-        Supplier<String> failure = () -> termsAndConditionsSection(termsAndConditionsForm, validationHandler, competition, loggedInUser, model);
+        Supplier<String> failure = () -> termsAndConditionsSection(termsAndConditionsForm, validationHandler, competition, loggedInUser, model, false);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
@@ -217,20 +182,28 @@ public class CompetitionSetupTermsAndConditionsController {
                                              ValidationHandler validationHandler,
                                              CompetitionResource competition,
                                              UserResource loggedInUser,
-                                             Model model) {
-        if (competition.isNonIfs()) {
-            return format("redirect:/non-ifs-competition/setup/%d", competition.getId());
+                                             Model model, boolean subsidyControl) {
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
+            return "redirect:/competition/setup/" + competition.getId();
         }
 
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
-            return format("redirect:/competition/setup/%d", competition.getId());
+        if (competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competition.getId();
+        }
+
+        if (subsidyControl && (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules())) {
+            return "redirect:/competition/setup/" + competition.getId();
         }
 
         Supplier<String> successView;
-        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
-            successView = () -> format("redirect:/competition/setup/%d/section/subsidy-control-terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+        if (subsidyControl) {
+            successView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
         } else {
-            successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+            if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+                successView = () -> format("redirect:/competition/setup/%d/section/subsidy-control-terms-and-conditions", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+            } else {
+                successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), TERMS_AND_CONDITIONS.getPostMarkCompletePath());
+            }
         }
 
         Supplier<String> failureView = () -> {
@@ -239,17 +212,31 @@ public class CompetitionSetupTermsAndConditionsController {
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult = competitionRestService.updateTermsAndConditionsForCompetition(
-                    competition.getId(),
-                    competitionSetupForm.getTermsAndConditionsId()
-            ).toServiceResult().andOnSuccess(() -> {
-                if (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules() && competitionSetupForm.isMarkAsCompleteAction()) {
-                    return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
-                }
-                return serviceSuccess();
-            });
+            ServiceResult<Void> saveResult;
+            if (subsidyControl) {
+                saveResult = competitionRestService.updateSubsidyControlTermsAndConditionsForCompetition(
+                        competition.getId(),
+                        competitionSetupForm.getTermsAndConditionsId()
+                ).toServiceResult().andOnSuccess(() -> {
+                    if (competitionSetupForm.isMarkAsCompleteAction()) {
+                        return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
+                    }
+                    return serviceSuccess();
+                });
+            } else {
+                saveResult = competitionRestService.updateTermsAndConditionsForCompetition(
+                        competition.getId(),
+                        competitionSetupForm.getTermsAndConditionsId()
+                ).toServiceResult().andOnSuccess(() -> {
+                    if (FundingRules.SUBSIDY_CONTROL != competition.getFundingRules() && competitionSetupForm.isMarkAsCompleteAction()) {
+                        return competitionSetupRestService.markSectionComplete(competition.getId(), TERMS_AND_CONDITIONS).toServiceResult();
+                    }
+                    return serviceSuccess();
+                });
+            }
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, successView);
         });
     }
+
 }
