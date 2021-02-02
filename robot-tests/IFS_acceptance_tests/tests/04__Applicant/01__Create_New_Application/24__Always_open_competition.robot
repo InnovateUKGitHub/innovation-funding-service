@@ -53,6 +53,7 @@ Lead user submits the always open application and checks the status
 Checking the status of the application after an assessor is assigned to the application
     [Documentation]  IFS-8850
     Given Log in as a different user                                    &{lead_applicant_credentials}
+    and the user clicks the application tile if displayed
     When The user clicks the button/link                                link = ${webTestAppName}
     Then the user checks the status of the application in assessment
 
