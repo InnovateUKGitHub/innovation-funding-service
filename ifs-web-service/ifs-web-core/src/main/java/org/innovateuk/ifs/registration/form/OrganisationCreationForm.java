@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchDisabled", predicate = true, message = "{validation.standard.organisationsearchname.required}")
 @FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchEnabled", predicate = true, message = "{validation.improved.organisationsearchname.required}")
-@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
+@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.manualentry.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
 
