@@ -382,6 +382,7 @@ Contract section is enabled without bank details
     And confirm viability and eligibility
     When the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the internal user approves payment milestone
+    And the user navigates to the page                   ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     And the user navigates to the page                   ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element                 jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
