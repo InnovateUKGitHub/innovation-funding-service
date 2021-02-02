@@ -7,11 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -65,30 +61,46 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private CompetitionMapper competitionMapper;
+
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
+
     @Autowired
     private StakeholderRepository stakeholderRepository;
+
     @Autowired
     private CompetitionFunderService competitionFunderService;
+
     @Autowired
     private PublicContentService publicContentService;
+
     @Autowired
     private CompetitionSetupTemplateService competitionSetupTemplateService;
+
     @Autowired
     private SetupStatusService setupStatusService;
+
     @Autowired
     private SetupStatusRepository setupStatusRepository;
+
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
     @Autowired
     private PublicContentRepository publicContentRepository;
+
     @Autowired
     private MilestoneRepository milestoneRepository;
+
     @Autowired
     private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
+
     @Autowired
     private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
+
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
+
 
     @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
     private Long maxFileSize;
@@ -357,6 +369,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     deleteSetupStatus(competition);
                     deleteCompetitionFinanceRowsTypesForCompetition(competition);
                     deleteGrantProcessConfiguration(competition);
+                    deleteAssessmentPeriodsForCompetition(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
@@ -397,6 +410,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private void deleteMilestonesForCompetition(Competition competition) {
         competition.getMilestones().clear();
         milestoneRepository.deleteByCompetitionId(competition.getId());
+    }
+
+    private void deleteAssessmentPeriodsForCompetition(Competition competition) {
+        assessmentPeriodRepository.deleteByCompetitionId(competition.getId());
     }
 
     private void deleteInnovationLead(Competition competition) {
