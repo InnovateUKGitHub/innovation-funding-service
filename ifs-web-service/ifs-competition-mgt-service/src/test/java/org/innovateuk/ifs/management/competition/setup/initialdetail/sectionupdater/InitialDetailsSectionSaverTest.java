@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.sectionupdater;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -129,7 +129,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
         // We don't care about the order of the innovation area ids, so compare as a set
-        Set<Long> expectedInnovationAreaIds = asSet(innovationAreaId);
+        Set<Long> expectedInnovationAreaIds = ImmutableSet.of(innovationAreaId);
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
@@ -337,7 +337,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getExecutive(), executiveUserId);
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
-        Set<Long> expectedInnovationAreaIds = asSet(innovationAreaId);
+        Set<Long> expectedInnovationAreaIds = ImmutableSet.of(innovationAreaId);
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);

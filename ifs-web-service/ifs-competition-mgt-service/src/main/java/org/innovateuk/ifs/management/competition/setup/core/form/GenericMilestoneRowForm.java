@@ -1,16 +1,18 @@
 package org.innovateuk.ifs.management.competition.setup.core.form;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+
 
 /**
  * Default Milestone Form Entry without any validations for the Milestones form.
@@ -19,10 +21,11 @@ public class GenericMilestoneRowForm {
 
     private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
 
-    protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
-    protected static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
+    protected static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
+    protected static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
-    @Range(min=2000, max = 9999, message = "{validation.standard.date.format}")
+    @Min(value = 2000, message = "{validation.standard.date.format}")
+    @Max(value = 9999, message = "{validation.standard.date.format}")
     protected Integer year;
     protected Integer month;
     protected Integer day;

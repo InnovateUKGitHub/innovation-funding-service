@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.granttransferdetails.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.forms.questions.granttransferdetails.viewmodel.GrantTransferDetailsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -24,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static java.util.Arrays.asList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -77,7 +77,7 @@ public class GrantTransferDetailsViewModelPopulatorTest {
         when(euActionTypeRestService.findAll()).thenReturn(restSuccess(actionTypeResources));
         when(organisationRestService.getByUserAndApplicationId(userId, applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.getMarkedAsComplete(applicationId, organisation.getId())).thenReturn(future);
-        when(future.get()).thenReturn(asSet(questionId));
+        when(future.get()).thenReturn(ImmutableSet.of(questionId));
 
         GrantTransferDetailsViewModel viewModel = populator.populate(applicationId, questionId, userId);
 

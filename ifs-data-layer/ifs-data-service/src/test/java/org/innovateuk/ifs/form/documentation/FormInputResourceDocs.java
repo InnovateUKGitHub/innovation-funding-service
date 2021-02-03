@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.form.documentation;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -35,5 +35,5 @@ public class FormInputResourceDocs {
             .withId(1L)
             .withType(TEXTAREA)
             .withWordCount(140)
-            .withAllowedFileTypes(asSet(SPREADSHEET, PDF));
+            .withAllowedFileTypes(ImmutableSet.of(SPREADSHEET, PDF));
 }
