@@ -7,6 +7,8 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               IFS-7722 Improvement to company search journey
 ...
+...               IFS-9103 Companies House API: Return more relevant results
+...
 Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -68,12 +70,23 @@ Companies House: Empty company name field validation message
     And the user clicks the button/link                    id = org-search
     Then the user should see a field and summary error     You must enter an organisation name or company registration number.
 
-Companies House: Searching for dissolved company and the result should be disabled
+Companies House: Search for a dissolved company and the result should be disabled
     [Documentation]    IFS-9103
     When the user enters text to a text field     id = organisationSearchName    10699577
     And the user clicks the button/link           id = org-search
     Then the user should not see the element      link = THE BRAND ESCALATOR LTD
 
+Companies House: Search for a liquidated company and the result should be disabled
+    [Documentation]    IFS-9103
+    When the user enters text to a text field     id = organisationSearchName    THE BRAND FORUM LTD
+    And the user clicks the button/link           id = org-search
+    Then the user should not see the element      link = THE BRAND FORUM LTD
+
+Companies House: Search for a company under administration and the result should be disabled
+    [Documentation]    IFS-9103
+    When the user enters text to a text field     id = organisationSearchName    BONMARCHE LIMITED
+    And the user clicks the button/link           id = org-search
+    Then the user should not see the element      link = BONMARCHE LIMITED
 
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
