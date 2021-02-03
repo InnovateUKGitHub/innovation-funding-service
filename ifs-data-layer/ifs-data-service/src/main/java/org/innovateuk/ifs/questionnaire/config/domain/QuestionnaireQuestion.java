@@ -6,7 +6,7 @@ import java.util.List;
 @Entity
 public class QuestionnaireQuestion extends QuestionnaireDecision {
 
-    private int order;
+    private int priority;
 
     private String title;
     private String question;
@@ -19,12 +19,12 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
     private List<QuestionnaireOption> options;
 
-    public int getOrder() {
-        return order;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public String getTitle() {

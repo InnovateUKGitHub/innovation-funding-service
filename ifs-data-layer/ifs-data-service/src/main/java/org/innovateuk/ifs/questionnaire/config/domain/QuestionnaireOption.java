@@ -12,11 +12,11 @@ public class QuestionnaireOption {
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="decisionId", referencedColumnName="id")
+    @JoinColumn(name="questionnaireDecisionId", referencedColumnName="id")
     private QuestionnaireDecision decision;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="questionId", referencedColumnName="id")
+    @JoinColumn(name="questionnaireQuestionId", referencedColumnName="id")
     private QuestionnaireQuestion question;
 
     public Long getId() {

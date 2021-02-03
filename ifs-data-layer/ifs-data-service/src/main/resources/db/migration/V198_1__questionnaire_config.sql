@@ -17,7 +17,7 @@ CREATE TABLE questionnaire_question (
   priority int(11) NOT NULL,
   title VARCHAR(255) NOT NULL,
   question VARCHAR(255) NOT NULL,
-  guidance VARCHAR(255) NOT NULL,
+  guidance VARCHAR(255) NULL,
 
   KEY questionnaire_question_to_questionnaire (questionnaire_id),
   CONSTRAINT questionnaire_question_to_questionnaire_fk FOREIGN KEY (questionnaire_id) REFERENCES questionnaire(id),

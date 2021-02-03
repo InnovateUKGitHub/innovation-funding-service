@@ -46,7 +46,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireQuestion questionOne = new QuestionnaireQuestion();
         questionOne.setTitle("Question 1");
         questionOne.setQuestion("Is your business based in NI?");
-        questionOne.setOrder(0);
+        questionOne.setPriority(0);
         questionOne.setQuestionnaire(questionnaire);
 
         QuestionnaireOption questionOneYes = new QuestionnaireOption();
@@ -63,7 +63,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireQuestion questionTwo = new QuestionnaireQuestion();
         questionTwo.setTitle("Question 2");
         questionTwo.setQuestion("Do you trade in NI?");
-        questionTwo.setOrder(1);
+        questionTwo.setPriority(1);
         questionTwo.setQuestionnaire(questionnaire);
 
         questionOneNo.setDecision(questionTwo);
