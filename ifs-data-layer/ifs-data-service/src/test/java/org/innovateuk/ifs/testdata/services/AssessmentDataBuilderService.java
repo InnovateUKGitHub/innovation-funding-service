@@ -2,7 +2,6 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -66,10 +65,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
     }
 
-    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionLine> competitionLines) {
+    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionResource> competitionLines) {
 
-        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
-        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.name);
+        List<CompetitionResource> competitionsPastAssessment = simpleFilter(competitionLines, CompetitionResource::isLaterThanAssessment);
+        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.getName());
 
         applications.forEach(application -> {
 

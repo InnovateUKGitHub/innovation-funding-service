@@ -371,6 +371,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isLaterThanAssessment() {
+        return this.competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT);
+    }
+
+    @JsonIgnore
     public boolean isClosingSoon() {
         long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(ZonedDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;

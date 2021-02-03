@@ -339,16 +339,16 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     public void createFundingDecisions(
             CompetitionData competition,
-            CompetitionLine competitionLine,
+            CompetitionResource competitionLine,
             List<ApplicationLine> applicationLines) {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-        if (!competition.getCompetition().isKtp() && asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.competitionStatus)) {
+        if (!competition.getCompetition().isKtp() && asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.getCompetitionStatus())) {
 
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
-                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name, applicationLines)).
+                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.getName(), applicationLines)).
                     build();
         }
     }

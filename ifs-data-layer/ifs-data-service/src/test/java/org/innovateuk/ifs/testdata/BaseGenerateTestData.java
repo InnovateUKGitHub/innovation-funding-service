@@ -176,7 +176,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private SupporterDataService supporterDataService;
 
     private List<OrganisationLine> organisationLines;
-    private List<CompetitionResource> competitions;
+    private List<CompetitionResource> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
     private List<PublicContentGroupLine> publicContentGroupLines;
     private List<PublicContentDateLine> publicContentDateLines;
@@ -216,7 +216,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
-        competitions = buildCompetitionResources();
+        competitionLines = buildCompetitionResources();
     }
 
     @PostConstruct
@@ -258,7 +258,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
 
-        List<CompetitionResource> competitionsToProcess = simpleFilter(competitions, competitionFilter);
+        List<CompetitionResource> competitionsToProcess = simpleFilter(competitionLines, competitionFilter);
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);
@@ -321,8 +321,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void createFundingDecisions(List<CompetitionData> competitions) {
         competitions.forEach(competition -> {
 
-            CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
+            CompetitionResource competitionLine = simpleFindFirstMandatory(competitionLines, l ->
+                    Objects.equals(l.getName(), competition.getCompetition().getName()));
 
             applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
         });
@@ -383,8 +383,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private List<CompletableFuture<CompetitionData>> createCompetitions(List<CompetitionResource> competitions) {
-        return simpleMap(competitions, line -> CompletableFuture.supplyAsync(() ->
-                competitionDataBuilderService.createCompetition(competitions), taskExecutor));
+        return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() ->
+                competitionDataBuilderService.createCompetition(line), taskExecutor));
     }
 
     private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
