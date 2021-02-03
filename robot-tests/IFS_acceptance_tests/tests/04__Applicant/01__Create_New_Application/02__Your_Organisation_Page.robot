@@ -53,7 +53,8 @@ Companies House: Valid registration number
     [Tags]  HappyPath
     When the user enters text to a text field    id = organisationSearchName    00445790
     And the user clicks the button/link          id = org-search
-    Then the user should see the element         Link = TESCO PLC
+    Then the user clicks the button/link         jQuery = a:contains("Next")
+    And the user should see the element          Link = TESCO PLC
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887  IFS-7723
@@ -72,24 +73,18 @@ Companies House: Empty company name field validation message
 
 Companies House: Search for a dissolved company and the result should be disabled
     [Documentation]    IFS-9103
-    When the user enters text to a text field     id = organisationSearchName    10699577
+    When the user enters text to a text field     id = organisationSearchName    UNIACE
     And the user clicks the button/link           id = org-search
-    Then the user should not see the element      link = THE BRAND ESCALATOR LTD
-    And The user should see the element           jQuery = span p:contains("THE BRAND ESCALATOR LTD")
+    And The user clicks the button/link           jQuery = a:contains("Next")
+    Then the user should not see the element      link = UNIACE LIMITED
+    And The user should see the element           jQuery = span p:contains("UNIACE LIMITED")
 
 Companies House: Search for a liquidated company and the result should be disabled
     [Documentation]    IFS-9103
-    When the user enters text to a text field     id = organisationSearchName    THE BRAND FORUM LTD
+    When the user enters text to a text field     id = organisationSearchName    TESCO AQUA
     And the user clicks the button/link           id = org-search
-    Then the user should not see the element      link = THE BRAND FORUM LTD
-    And The user should see the element           jQuery = span p:contains("THE BRAND FORUM LTD")
-
-Companies House: Search for a company under administration and the result should be disabled
-    [Documentation]    IFS-9103
-    When the user enters text to a text field     id = organisationSearchName    BONMARCHE LIMITED
-    And the user clicks the button/link           id = org-search
-    Then the user should not see the element      link = BONMARCHE LIMITED
-    And The user should see the element           jQuery = span p:contains("BONMARCHE LIMITED")
+    Then the user should not see the element      link = TESCO AQUA (FINCO1) LIMITED
+    And The user should see the element           jQuery = span p:contains("TESCO AQUA (FINCO1) LIMITED")
 
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
