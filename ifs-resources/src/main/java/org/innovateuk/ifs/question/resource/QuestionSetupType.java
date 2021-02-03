@@ -11,6 +11,7 @@ public enum QuestionSetupType {
     APPLICATION_TEAM("Application team"),
     TERMS_AND_CONDITIONS("T&C"),
     EQUALITY_DIVERSITY_INCLUSION("Equality, diversity & inclusion", true),
+    QUESTIONNAIRE(""),
     /* h2020 */
     GRANT_TRANSFER_DETAILS("Application details"),
     GRANT_AGREEMENT("Horizon 2020 grant agreement"),

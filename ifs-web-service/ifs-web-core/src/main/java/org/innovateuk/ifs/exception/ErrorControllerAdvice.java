@@ -329,14 +329,14 @@ public class ErrorControllerAdvice {
         return mav;
     }
 
-    private Map<String, Object> populateExceptionMap(Exception e, HttpServletRequest req, List<Object> arguments) {
-        Map<String, Object> result = asMap("exception", e);
-        if (env.acceptsProfiles("debug")) {
-            result.put("stacktrace", ExceptionUtils.getStackTrace(e));
-            result.put("message", MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale()));
+        private Map<String, Object> populateExceptionMap(Exception e, HttpServletRequest req, List<Object> arguments) {
+            Map<String, Object> result = asMap("exception", e);
+            if (env.acceptsProfiles("debug")) {
+                result.put("stacktrace", ExceptionUtils.getStackTrace(e));
+                result.put("message", MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale()));
+            }
+            return result;
         }
-        return result;
-    }
 
     private String getErrorMessageClass(HttpStatus status) {
         return status.name().toLowerCase();
