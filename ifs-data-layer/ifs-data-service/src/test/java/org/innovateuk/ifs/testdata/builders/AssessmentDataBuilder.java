@@ -59,7 +59,8 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             Application application = applicationRepository.findByName(applicationName).get(0);
 
             AssessmentResource assessmentResource = doAs(compAdmin(), () -> assessmentService.createAssessment(
-                    new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess());
+                    new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess()
+            );
 
             doAs(compAdmin(), () ->
                 testService.doWithinTransaction(() -> {
