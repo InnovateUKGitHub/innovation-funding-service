@@ -81,7 +81,7 @@
             <label class="govuk-label govuk-label--s" for="name">
                 SIC code
             </label>
-            <div class="govuk-hint">Enter your 5 digit Standard Industrial Classification code.</div>
+            <div class="govuk-hint"><small>Enter your 5 digit Standard Industrial Classification code.</small></div>
             <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row govuk-!-margin-top-6" th:id="'sic-code-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                         <input id="sicCode" class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-3"
