@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
+import org.innovateuk.ifs.competition.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -36,12 +38,18 @@ import static org.mockito.Mockito.*;
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl> {
     @InjectMocks
     private MilestoneServiceImpl service;
+
     @Mock
     private CompetitionRepository competitionRepository;
+
     @Mock
     private MilestoneRepository milestoneRepository;
+
     @Mock
     private MilestoneMapper milestoneMapper;
+
+    @Mock
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Before
     public void setUp() {
@@ -366,6 +374,11 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .build();
 
         when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findByCompetitionIdAndIndex(competition.getId(), 1))
+                .thenReturn(Optional.of(newAssessmentPeriod()
+                        .withCompetition(competition)
+                        .withIndex(1)
+                        .build()));
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
 
