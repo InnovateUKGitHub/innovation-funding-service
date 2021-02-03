@@ -60,6 +60,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     public void getTerms() throws Exception {
         long applicationId = 3L;
         long compeitionId = 5L;
+        long organisationId = 6L;
         long questionId = 7L;
         String competitionTermsTemplate = "terms-template";
         boolean collaborativeApplication = false;
@@ -74,7 +75,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "compName", compeitionId, questionId,
                 competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms);
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, false)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, organisationId, false)).thenReturn(viewModel);
 
         setLoggedInUser(loggedInUser);
 
@@ -83,13 +84,14 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
-        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, false);
+        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, organisationId, false);
     }
 
     @Test
     public void getTerms_readOnly() throws Exception {
         long applicationId = 3L;
         long compeitionId = 5L;
+        long organisationId = 6L;
         long questionId = 7L;
         String competitionTermsTemplate = "terms-template";
         boolean collaborativeApplication = false;
@@ -104,7 +106,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "compeName", compeitionId, questionId,
                 competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms);
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, true)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, organisationId, true)).thenReturn(viewModel);
 
         setLoggedInUser(loggedInUser);
 
@@ -113,7 +115,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
-        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, true);
+        verify(applicationTermsModelPopulatorMock, only()).populate(loggedInUser, applicationId, questionId, organisationId,  true);
     }
 
     @Test
@@ -160,6 +162,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         boolean additionalTerms = true;
 
         long questionId = 7L;
+        long organisationId = 6L;
         CompetitionResource competition = newCompetitionResource()
                 .withId(5L)
                 .build();
@@ -168,8 +171,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withId(3L)
                 .withCompetition(competition.getId())
                 .build();
-
-        SectionResource termsAndConditionsSection = newSectionResource().build();
 
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withUser(getLoggedInUser())
@@ -183,7 +184,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(application.getId(), "compName",competition.getId(), questionId,
                 competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms);
 
-        when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, false)).thenReturn(viewModel);
+        when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, organisationId, false)).thenReturn(viewModel);
 
         ApplicationTermsForm form = new ApplicationTermsForm();
 
@@ -198,7 +199,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         InOrder inOrder = inOrder(processRoleRestServiceMock, questionStatusRestServiceMock, applicationTermsModelPopulatorMock);
         inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
-        inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, false);
+        inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, organisationId, false);
         inOrder.verifyNoMoreInteractions();
     }
 

@@ -86,7 +86,7 @@ public class ApplicationTermsModelPopulator {
     }
 
     private String getTermsAndConditionsTemplate(CompetitionResource competition, long applicationId, Long organisationId) {
-        if (organisationId != null) {
+        if (!competition.isExpressionOfInterest() && organisationId != null) {
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
             if (applicationFinanceResource.isNorthernIrelandDeclaration()) {
                 return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
