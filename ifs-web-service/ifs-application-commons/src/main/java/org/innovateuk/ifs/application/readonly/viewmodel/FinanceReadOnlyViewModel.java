@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
@@ -10,27 +11,32 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final long applicationId;
     private final boolean fullyFunded;
     private final long financeSectionId;
+    private final ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final boolean collaborativeProject;
     private final boolean open;
     private final boolean ktpCompetition;
+    private final boolean procurementMilestones;
 
     public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
+                                    ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
                                     ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                     ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                                     ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
-                                    boolean collaborativeProject, boolean ktpCompetition) {
+                                    boolean collaborativeProject, boolean ktpCompetition, boolean procurementMilestones) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
+        this.applicationProcurementMilestonesSummaryViewModel = applicationProcurementMilestonesSummaryViewModel;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.collaborativeProject = collaborativeProject;
         this.open = !applicationFinanceSummaryViewModel.isReadOnly();
         this.ktpCompetition = ktpCompetition;
+        this.procurementMilestones = procurementMilestones;
     }
 
     @Override
@@ -49,6 +55,10 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     public long getFinanceSectionId() {
         return financeSectionId;
+    }
+    
+    public ApplicationProcurementMilestonesSummaryViewModel getApplicationProcurementMilestonesSummaryViewModel() {
+        return applicationProcurementMilestonesSummaryViewModel;
     }
 
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
@@ -73,6 +83,10 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
     }
 
     @Override
@@ -104,5 +118,4 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     public boolean isLead() {
         return false; // not required
     }
-
 }
