@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
-<div class="govuk-width-container">
+<div class="govuk-width-container" style="width:666px;">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to organisations not registered on Companies House',linkClass='link-back',linkUrl=@{/organisation/create/organisation-type/not-registered-on-companies-house}"/>
@@ -90,11 +90,11 @@
                                maxlength="5"/>
                 </div>
                 <div th:if="${iteration.index > 0}">
-                    <button class="button-clear alignright" data-remove-row-man="sicCode" type="button" name="remove-sic-code"
+                    <button class="button-clear " data-remove-row-man="sicCode" type="button" name="remove-sic-code"
                                 th:id="remove-sic-code-row"> Remove
                     </button>
                 </div>
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3  govuk-!-margin-left-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+ Add SIC code</button>
@@ -115,7 +115,7 @@
                             th:id="remove-exec-officer-row"> Remove
                     </button>
                 </div>
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3 govuk-!-margin-left-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>

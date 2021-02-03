@@ -49,7 +49,7 @@ public class OrganisationCreationForm implements Serializable {
     private String organisationNumber;
     private String businessType;
 
-    @Valid
+    @Valid()
     private AddressForm addressForm;
 
 
