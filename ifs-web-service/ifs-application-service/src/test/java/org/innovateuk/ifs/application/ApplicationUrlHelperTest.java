@@ -81,7 +81,7 @@ public class ApplicationUrlHelperTest {
         Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
-        assertEquals(Optional.of("/application/2/form/question/1/terms-and-conditions"), result);
+        assertEquals(Optional.of("/application/2/form/terms-and-conditions/organisation/3/question/1"), result);
     }
 
     @Test
