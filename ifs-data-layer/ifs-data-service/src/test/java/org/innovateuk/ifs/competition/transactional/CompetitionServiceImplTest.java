@@ -437,7 +437,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void updateSubsidyControlTermsAndConditionsForCompetition() {
+    public void updateOtherFundingRulesTermsAndConditionsForCompetition() {
         GrantTermsAndConditions termsAndConditions = newGrantTermsAndConditions().build();
 
         Competition competition = newCompetition().build();
@@ -446,10 +446,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .thenReturn(Optional.of(termsAndConditions));
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
 
-        ServiceResult<Void> result = service.updateSubsidyControlTermsAndConditionsForCompetition(competition.getId(), termsAndConditions.getId());
+        ServiceResult<Void> result = service.updateOtherFundingRulesTermsAndConditionsForCompetition(competition.getId(), termsAndConditions.getId());
 
         assertTrue(result.isSuccess());
-        assertEquals(competition.getSubsidyControlTermsAndConditions().getId(), termsAndConditions.getId());
+        assertEquals(competition.getOtherFundingRulesTermsAndConditions().getId(), termsAndConditions.getId());
 
         //Verify that the entity is saved
         verify(competitionRepositoryMock).findById(competition.getId());
@@ -458,14 +458,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void updateInvalidSubsidyControlTermsAndConditionsForCompetition() {
+    public void updateInvalidOtherFundingRulesTermsAndConditionsForCompetition() {
         Competition competition = newCompetition().build();
         long termsAndConditionsId = 999L;
 
         when(grantTermsAndConditionsRepositoryMock.findById(termsAndConditionsId)).thenReturn(Optional.empty());
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
 
-        ServiceResult<Void> result = service.updateSubsidyControlTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
+        ServiceResult<Void> result = service.updateOtherFundingRulesTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
                 termsAndConditionsId)));

@@ -288,7 +288,7 @@
                 <td class="govuk-table__cell" th:text="${partner.fundingRules.displayName}"
                     th:if="${model.includeFundingRules}"></td>
                 <td class="govuk-table__cell">
-                    <a href="@{~/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                    <a href=""@{~/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId},organisationId=${partner.organisationId})}"
                        class="govuk-link"
                        th:text="${partner.getTermsName()}"></a>
                 </td>

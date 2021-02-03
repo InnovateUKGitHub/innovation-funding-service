@@ -191,7 +191,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     }
 
     private static String getRowUrlFromQuestion(QuestionResource question, ApplicationOverviewData data) {
-        return getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId())
+        return getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId(), data.getOrganisation().getId())
                 .orElse(format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()));
     }
 

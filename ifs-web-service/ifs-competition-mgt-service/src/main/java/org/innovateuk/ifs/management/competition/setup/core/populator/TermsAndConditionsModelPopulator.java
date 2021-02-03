@@ -9,6 +9,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,16 +26,14 @@ public class TermsAndConditionsModelPopulator {
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
 
-    public TermsAndConditionsViewModel populateModel(CompetitionResource competitionResource, UserResource userResource, boolean subsidyControlPage) {
+    @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
+    private Boolean subsidyControlNorthernIrelandEnabled;
+
+    public TermsAndConditionsViewModel populateModel(CompetitionResource competitionResource, UserResource userResource, boolean stateAidPage) {
 
         GrantTermsAndConditionsResource termsAndConditions = null;
         if (competitionResource.getTermsAndConditions() != null) {
             termsAndConditions = termsAndConditionsRestService.getById(competitionResource.getTermsAndConditions().getId()).getSuccess();
-        }
-
-        GrantTermsAndConditionsResource subsidyControlTermsAndConditions = null;
-        if (competitionResource.getSubsidyControlTermsAndConditions() != null) {
-            subsidyControlTermsAndConditions = termsAndConditionsRestService.getById(competitionResource.getSubsidyControlTermsAndConditions().getId()).getSuccess();
         }
 
         GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, userResource, CompetitionSetupSection.TERMS_AND_CONDITIONS);
@@ -44,10 +43,24 @@ public class TermsAndConditionsModelPopulator {
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
-        boolean includeSubsidyControl = FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules();
+        boolean includeStateAid = includeStateAid(competitionResource);
+
+        GrantTermsAndConditionsResource otherTermsAndConditions = null;
+        if (includeStateAid && competitionResource.getOtherFundingRulesTermsAndConditions() != null) {
+            otherTermsAndConditions = termsAndConditionsRestService.getById(competitionResource.getOtherFundingRulesTermsAndConditions().getId()).getSuccess();
+        }
 
         return new TermsAndConditionsViewModel(generalViewModel, termsAndConditionsList,
-                termsAndConditions, subsidyControlTermsAndConditions, termsAndConditionsDocUploaded, includeSubsidyControl, subsidyControlPage);
+                termsAndConditions, otherTermsAndConditions, termsAndConditionsDocUploaded, includeStateAid, stateAidPage);
     }
 
+    private boolean includeStateAid(CompetitionResource competitionResource) {
+        return Boolean.TRUE.equals(subsidyControlNorthernIrelandEnabled)
+                && FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules()
+                && !competitionResource.isExpressionOfInterest();
+    }
+
+    protected void setSubsidyControlNorthernIrelandEnabled(Boolean subsidyControlNorthernIrelandEnabled) {
+        this.subsidyControlNorthernIrelandEnabled = subsidyControlNorthernIrelandEnabled;
+    }
 }

@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance', 'supporter')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
@@ -43,7 +43,6 @@ public class ApplicationTermsController {
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
 
     public ApplicationTermsController() {
-
     }
 
     @Autowired
@@ -62,12 +61,13 @@ public class ApplicationTermsController {
     @GetMapping
     public String getTerms(@PathVariable long applicationId,
                            @PathVariable long questionId,
+                           @PathVariable long organisationId,
                            UserResource user,
                            Model model,
                            @ModelAttribute(name = "form", binding = false) ApplicationTermsForm form,
                            @RequestParam(value = "readonly", defaultValue = "false") Boolean readOnly) {
 
-        ApplicationTermsViewModel viewModel = applicationTermsModelPopulator.populate(user, applicationId, questionId, readOnly);
+        ApplicationTermsViewModel viewModel = applicationTermsModelPopulator.populate(user, applicationId, questionId, organisationId, readOnly);
         model.addAttribute("model", viewModel);
 
         return "application/sections/terms-and-conditions/terms-and-conditions";
@@ -76,12 +76,13 @@ public class ApplicationTermsController {
     @PostMapping
     public String acceptTerms(@PathVariable long applicationId,
                               @PathVariable long questionId,
+                              @PathVariable long organisationId,
                               UserResource user,
                               Model model,
                               @ModelAttribute(name = "form", binding = false) ApplicationTermsForm form,
                               @SuppressWarnings("unused") BindingResult bindingResult,
                               ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> getTerms(applicationId, questionId, user, model, form, false);
+        Supplier<String> failureView = () -> getTerms(applicationId, questionId, organisationId, user, model, form, false);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -94,5 +95,4 @@ public class ApplicationTermsController {
                             () -> format("redirect:%s%d/form/question/%d/terms-and-conditions#terms-accepted", APPLICATION_BASE_URL, applicationId, questionId));
         });
     }
-
 }

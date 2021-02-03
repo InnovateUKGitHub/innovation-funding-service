@@ -77,10 +77,10 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 .map(organisation -> {
                     GrantTermsAndConditionsResource termsForPartner = getTermsForPartner(data, organisation, supplier);
                     return aTermsAndConditionsRowReadOnlyViewModel()
+                            .withPartnerId(organisation.getId())
                             .withPartnerName(organisation.getName())
                             .withLead(data.getApplication().getLeadOrganisationId().equals(organisation.getId()))
                             .withAccepted(finalAcceptedOrgs.contains(organisation.getId()))
-                            .withTermsId(termsForPartner.getId())
                             .withTermsName(termsForPartner.getName())
                             .build();
                 })
@@ -95,15 +95,15 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 && competitionHasConfiguredDualTermsAndConditions(data.getCompetition())) {
             ApplicationFinanceResource finance = financeSupplier.get().get(organisation.getId());
             if (finance != null && Boolean.TRUE.equals(finance.getNorthernIrelandDeclaration())) {
-                return data.getCompetition().getSubsidyControlTermsAndConditions();
+                return data.getCompetition().getOtherFundingRulesTermsAndConditions();
             }
         }
         return data.getCompetition().getTermsAndConditions();
     }
 
     private boolean competitionHasConfiguredDualTermsAndConditions(CompetitionResource competition) {
-        return competition.getSubsidyControlTermsAndConditions() != null
-                && competition.getSubsidyControlTermsAndConditions().getId() != null;
+        return competition.getOtherFundingRulesTermsAndConditions() != null
+                && competition.getOtherFundingRulesTermsAndConditions().getId() != null;
     }
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {

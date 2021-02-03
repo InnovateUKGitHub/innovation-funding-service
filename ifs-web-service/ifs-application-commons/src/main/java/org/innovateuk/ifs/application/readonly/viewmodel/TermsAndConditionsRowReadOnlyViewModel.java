@@ -4,20 +4,24 @@ import org.innovateuk.ifs.competition.resource.FundingRules;
 
 public class TermsAndConditionsRowReadOnlyViewModel {
 
+    private final long partnerId;
     private final String partnerName;
     private final boolean lead;
     private final FundingRules fundingRules;
-    private final long termsId;
     private final String termsName;
     private final boolean accepted;
 
-    private TermsAndConditionsRowReadOnlyViewModel(String partnerName, boolean lead, FundingRules fundingRules, long termsId, String termsName, boolean accepted) {
+    public TermsAndConditionsRowReadOnlyViewModel(long partnerId, String partnerName, boolean lead, FundingRules fundingRules, String termsName, boolean accepted) {
+        this.partnerId = partnerId;
         this.partnerName = partnerName;
         this.lead = lead;
         this.fundingRules = fundingRules;
-        this.termsId = termsId;
         this.termsName = termsName;
         this.accepted = accepted;
+    }
+
+    public long getPartnerId() {
+        return partnerId;
     }
 
     public String getPartnerName() {
@@ -32,10 +36,6 @@ public class TermsAndConditionsRowReadOnlyViewModel {
         return fundingRules;
     }
 
-    public long getTermsId() {
-        return termsId;
-    }
-
     public String getTermsName() {
         return termsName;
     }
@@ -46,10 +46,10 @@ public class TermsAndConditionsRowReadOnlyViewModel {
 
 
     public static final class TermsAndConditionsRowReadOnlyViewModelBuilder {
+        private long partnerId;
         private String partnerName;
         private boolean lead;
         private FundingRules fundingRules;
-        private long termsId;
         private String termsName;
         private boolean accepted;
 
@@ -58,6 +58,11 @@ public class TermsAndConditionsRowReadOnlyViewModel {
 
         public static TermsAndConditionsRowReadOnlyViewModelBuilder aTermsAndConditionsRowReadOnlyViewModel() {
             return new TermsAndConditionsRowReadOnlyViewModelBuilder();
+        }
+
+        public TermsAndConditionsRowReadOnlyViewModelBuilder withPartnerId(long partnerId) {
+            this.partnerId = partnerId;
+            return this;
         }
 
         public TermsAndConditionsRowReadOnlyViewModelBuilder withPartnerName(String partnerName) {
@@ -75,11 +80,6 @@ public class TermsAndConditionsRowReadOnlyViewModel {
             return this;
         }
 
-        public TermsAndConditionsRowReadOnlyViewModelBuilder withTermsId(long termsId) {
-            this.termsId = termsId;
-            return this;
-        }
-
         public TermsAndConditionsRowReadOnlyViewModelBuilder withTermsName(String termsName) {
             this.termsName = termsName;
             return this;
@@ -91,7 +91,7 @@ public class TermsAndConditionsRowReadOnlyViewModel {
         }
 
         public TermsAndConditionsRowReadOnlyViewModel build() {
-            return new TermsAndConditionsRowReadOnlyViewModel(partnerName, lead, fundingRules, termsId, termsName, accepted);
+            return new TermsAndConditionsRowReadOnlyViewModel(partnerId, partnerName, lead, fundingRules, termsName, accepted);
         }
     }
 }

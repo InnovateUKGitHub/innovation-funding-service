@@ -8,15 +8,13 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
@@ -24,43 +22,32 @@ import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 @Component
 public class ApplicationTermsModelPopulator {
 
+    @Autowired
     private ApplicationRestService applicationRestService;
+    @Autowired
     private CompetitionRestService competitionRestService;
+    @Autowired
     private SectionService sectionService;
-    private ProcessRoleRestService processRoleRestService;
-    private OrganisationService organisationService;
+    @Autowired
     private QuestionStatusRestService questionStatusRestService;
-
-    public ApplicationTermsModelPopulator(ApplicationRestService applicationRestService,
-                                          CompetitionRestService competitionRestService,
-                                          SectionService sectionService,
-                                          ProcessRoleRestService processRoleRestService,
-                                          OrganisationService organisationService,
-                                          QuestionStatusRestService questionStatusRestService) {
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.sectionService = sectionService;
-        this.processRoleRestService = processRoleRestService;
-        this.organisationService = organisationService;
-        this.questionStatusRestService = questionStatusRestService;
-    }
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     public ApplicationTermsViewModel populate(UserResource currentUser,
                                               long applicationId,
                                               long termsQuestionId,
+                                              Long organisationId,
                                               boolean readOnly) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         boolean additionalTerms = competition.getCompetitionTerms() != null;
 
-        if (!readOnly && !competition.isExpressionOfInterest())  {
+        if (organisationId != null && !readOnly && !competition.isExpressionOfInterest())  {
             // is the current user a member of this application?
-            Optional<OrganisationResource> organisation = organisationService.getOrganisationForUser(currentUser.getId(), userApplicationRoles);
-            if (organisation.isPresent() && competition.isOpen() && application.isOpen()) {
+            if (competition.isOpen() && application.isOpen()) {
                 Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
                         questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
-                                termsQuestionId, applicationId, organisation.get().getId()).getSuccess();
+                                termsQuestionId, applicationId, organisationId).getSuccess();
 
                 boolean termsAccepted = optionalMarkedAsCompleteQuestionStatus
                         .map(QuestionStatusResource::getMarkedAsComplete)
@@ -78,7 +65,7 @@ public class ApplicationTermsModelPopulator {
                         competition.getName(),
                         competition.getId(),
                         termsQuestionId,
-                        competition.getTermsAndConditions().getTemplate(),
+                        getTermsAndConditionsTemplate(competition, applicationId, organisationId),
                         application.isCollaborativeProject(),
                         termsAccepted,
                         termsAcceptedByName,
@@ -93,9 +80,19 @@ public class ApplicationTermsModelPopulator {
                 competition.getName(),
                 competition.getId(),
                 termsQuestionId,
-                competition.getTermsAndConditions().getTemplate(),
+                getTermsAndConditionsTemplate(competition, applicationId, organisationId),
                 application.isCollaborativeProject(),
                 isAllOrganisationsTermsAccepted(applicationId, competition.getId()), additionalTerms);
+    }
+
+    private String getTermsAndConditionsTemplate(CompetitionResource competition, long applicationId, Long organisationId) {
+        if (organisationId != null) {
+            ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+            if (applicationFinanceResource.isNorthernIrelandDeclaration()) {
+                return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
+            }
+        }
+        return competition.getTermsAndConditions().getTemplate();
     }
 
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
