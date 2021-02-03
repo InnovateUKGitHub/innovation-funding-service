@@ -51,6 +51,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireOption questionOneYes = new QuestionnaireOption();
         questionOneYes.setText("Yes");
+        questionOneYes.setQuestion(questionOne);
 
         QuestionnaireTextOutcome questionOneYesOutcome = new QuestionnaireTextOutcome();
         questionOneYesOutcome.setText("You are from NI, please apply with state aid");
@@ -59,6 +60,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireOption questionOneNo = new QuestionnaireOption();
         questionOneNo.setText("No");
+        questionOneNo.setQuestion(questionOne);
 
         QuestionnaireQuestion questionTwo = new QuestionnaireQuestion();
         questionTwo.setTitle("Question 2");
@@ -70,6 +72,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireOption questionTwoYes = new QuestionnaireOption();
         questionTwoYes.setText("Yes");
+        questionTwoYes.setQuestion(questionTwo);
 
         QuestionnaireTextOutcome questionTwoYesOutcome = new QuestionnaireTextOutcome();
         questionTwoYesOutcome.setText("You trade with NI, please apply with state aid");
@@ -78,6 +81,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireOption questionTwoNo = new QuestionnaireOption();
         questionTwoNo.setText("No");
+        questionTwoNo.setQuestion(questionTwo);
 
         QuestionnaireTextOutcome questionTwoNoOutcome = new QuestionnaireTextOutcome();
         questionTwoNoOutcome.setText("You do not operate with NI, please apply with subsidy control");

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,8 +17,8 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
     @JoinColumn(name="questionnaireId", referencedColumnName="id")
     private Questionnaire questionnaire;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
-    private List<QuestionnaireOption> options;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)
+    private List<QuestionnaireOption> options = new ArrayList<>();
 
     public int getPriority() {
         return priority;
@@ -58,5 +59,13 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
     public void setQuestionnaire(Questionnaire questionnaire) {
         this.questionnaire = questionnaire;
         questionnaire.getQuestions().add(this);
+    }
+
+    public List<QuestionnaireOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<QuestionnaireOption> options) {
+        this.options = options;
     }
 }

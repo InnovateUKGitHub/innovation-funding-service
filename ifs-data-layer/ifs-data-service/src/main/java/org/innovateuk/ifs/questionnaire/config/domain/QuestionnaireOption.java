@@ -11,7 +11,7 @@ public class QuestionnaireOption {
 
     private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name="questionnaireDecisionId", referencedColumnName="id")
     private QuestionnaireDecision decision;
 
@@ -41,5 +41,13 @@ public class QuestionnaireOption {
 
     public void setDecision(QuestionnaireDecision decision) {
         this.decision = decision;
+    }
+
+    public QuestionnaireQuestion getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(QuestionnaireQuestion question) {
+        this.question = question;
     }
 }
