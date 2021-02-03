@@ -54,7 +54,7 @@ IFS.manuallyEnter = (function () {
                                                          'th:id="remove-sic-code-row"' + idCount + ' ">Remove' +
                                               '</button>' +
                                             '</div>' +
-                                           '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">' +
+                                           '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3  govuk-!-margin-left-3">' +
                                       '</div>'
       jQuery('.sic-code-row').last().after(html)
       jQuery('.sic-code-' + idCount).val('')
@@ -97,7 +97,7 @@ IFS.manuallyEnter = (function () {
                                                    'th:id="remove-exec-officer-row"' + idCount + ' ">Remove' +
                                         '</button>' +
                                       '</div>' +
-                                      '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3">' +
+                                      '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3  govuk-!-margin-left-3">' +
                                 '</div>'
       jQuery('.exec-officer-row').last().after(html)
       jQuery('.exec-officer-' + idCount).val('')
