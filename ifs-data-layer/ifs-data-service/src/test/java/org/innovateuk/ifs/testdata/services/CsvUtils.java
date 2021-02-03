@@ -70,10 +70,6 @@ public class CsvUtils {
         return simpleMap(readCsvLines("assessor-users"), AssessorUserLine::new);
     }
 
-    public static List<CompetitionLine> readCompetitions() {
-        return simpleMapWithIndex(readCsvLines("competitions"), CompetitionLine::new);
-    }
-
     public static List<CompetitionOrganisationConfigLine> readCompetitionOrganisationConfig() {
         return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
     }

@@ -5,17 +5,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
-import org.innovateuk.ifs.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,20 +20,16 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -48,25 +40,35 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     private static final Logger LOG = LoggerFactory.getLogger(CompetitionDataBuilder.class);
 
-    public CompetitionDataBuilder createCompetition() {
+    public CompetitionDataBuilder createCompetition(CompetitionResource competitionResource) {
 
         return asCompAdmin(data -> {
 
-            CompetitionResource newCompetition = competitionSetupService.
+            // create new competition in db
+            CompetitionResource competitionWithId = competitionSetupService.
                     create().
                     getSuccess();
+
+            // copy competition details to newly created compeititon
+            CompetitionResource newCompetition = competitionSetupService.
+                    save(competitionWithId.getId(), competitionResource).getSuccess();
 
             updateCompetitionInCompetitionData(data, newCompetition.getId());
         });
     }
 
-    public CompetitionDataBuilder createNonIfsCompetition() {
+    public CompetitionDataBuilder createNonIfsCompetition(CompetitionResource competitionResource) {
 
         return asCompAdmin(data -> {
 
-            CompetitionResource newCompetition = competitionSetupService.
+            // create new competition in db
+            CompetitionResource competitionWithId = competitionSetupService.
                     createNonIfs().
                     getSuccess();
+
+            // copy competition details to newly created compeititon
+            CompetitionResource newCompetition = competitionSetupService.
+            save(competitionWithId.getId(), competitionResource).getSuccess();
 
             updateCompetitionInCompetitionData(data, newCompetition.getId());
         });
@@ -88,88 +90,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return with(data -> {
             data.setCompetition(competitionData.getCompetition());
             competitionData.getOriginalMilestones().forEach(data::addOriginalMilestone);
-        });
-    }
-
-    public CompetitionDataBuilder withBasicData(String name,
-                                                String competitionTypeName,
-                                                List<String> innovationAreaNames,
-                                                String innovationSectorName,
-                                                FundingRules fundingRules,
-                                                List<String> researchCategoryNames,
-                                                String leadTechnologist,
-                                                String compExecutive,
-                                                String budgetCode,
-                                                String pafCode,
-                                                String code,
-                                                String activityCode,
-                                                Boolean multiStream,
-                                                String collaborationLevelCode,
-                                                List<OrganisationTypeEnum> leadApplicantTypes,
-                                                Integer researchRatio,
-                                                Boolean resubmission,
-                                                String nonIfsUrl,
-                                                FundingType fundingType,
-                                                CompetitionCompletionStage completionStage,
-                                                Boolean includeJesForm,
-                                                ApplicationFinanceType applicationFinanceType,
-                                                Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation,
-                                                Boolean alwaysOpen) {
-
-        return asCompAdmin(data -> {
-
-            doCompetitionDetailsUpdate(data, competition -> {
-
-                if (competitionTypeName != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName);
-                    competition.setCompetitionType(competitionType.getId());
-                }
-
-                List<Long> innovationAreas = simpleFilter(
-                        simpleMap(innovationAreaNames, this::getInnovationAreaIdOrNull),
-                        Objects::nonNull
-                );
-
-                List<Long> researchCategories = simpleFilter(
-                        simpleMap(researchCategoryNames, this::getResearchCategoryIdOrNull),
-                        Objects::nonNull
-                );
-
-                Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
-
-                CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
-
-                List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
-
-                competition.setName(name);
-                competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
-                competition.setInnovationSector(innovationSector);
-                competition.setResearchCategories(researchCategories.isEmpty() ? emptySet() : newHashSet(researchCategories));
-                competition.setFundingRules(fundingRules);
-                competition.setMaxResearchRatio(30);
-                competition.setAcademicGrantPercentage(100);
-                competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
-                competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
-                competition.setPafCode(pafCode);
-                competition.setCode(code);
-                competition.setBudgetCode(budgetCode);
-                competition.setActivityCode(activityCode);
-                competition.setCollaborationLevel(collaborationLevel);
-                competition.setLeadApplicantTypes(leadApplicantTypeIds);
-                competition.setMaxResearchRatio(researchRatio);
-                competition.setResubmission(resubmission);
-                competition.setMultiStream(multiStream);
-                competition.setNonIfsUrl(nonIfsUrl);
-                competition.setIncludeJesForm(includeJesForm);
-                competition.setApplicationFinanceType(applicationFinanceType);
-                competition.setApplicationFinanceType(STANDARD);
-                competition.setIncludeProjectGrowthTable(includeProjectGrowth);
-                competition.setIncludeYourOrganisationSection(includeYourOrganisation);
-                competition.setFundingType(fundingType);
-                competition.setCompletionStage(completionStage);
-                competition.setAlwaysOpen(alwaysOpen);
-            });
         });
     }
 
@@ -481,23 +401,23 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, String projectSize, List<String> keywords, boolean inviteOnly) {
+    public CompetitionDataBuilder withDefaultPublicContent(String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, String projectSize, List<String> keywords, boolean inviteOnly) {
         return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
 
-            if (published) {
-                publicContent.setShortDescription(shortDescription);
-                publicContent.setProjectFundingRange(fundingRange);
-                publicContent.setEligibilitySummary(eligibilitySummary);
-                publicContent.setSummary(competitionDescription);
-                publicContent.setProjectSize(projectSize);
+                publicContent.setShortDescription("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow");
+                publicContent.setProjectFundingRange("Up to £35,000");
+                publicContent.setEligibilitySummary("UK based business of any size. Must involve at least one SME");
+                publicContent.setSummary("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.\n" +
+                        "The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).\n" +
+                        "We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.\n" +
+                        "There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.");
+                publicContent.setProjectSize("£15 million");
                 publicContent.setKeywords(keywords);
                 publicContent.setInviteOnly(inviteOnly);
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
 
                 publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccess();
-            }
-
         }));
     }
 

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -48,6 +49,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionResources;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -91,24 +93,24 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static String competitionNameForFilter;
 
-    private enum CompetitionFilter implements Predicate<CompetitionLine> {
+    private enum CompetitionFilter implements Predicate<CompetitionResource> {
 
         ALL_COMPETITIONS(competitionLine -> true),
         NO_COMPETITIONS(competitionLine -> false),
         BY_NAME(competitionLine -> {
             assert competitionNameForFilter != null;
-            return competitionNameForFilter.equals(competitionLine.name);
+            return competitionNameForFilter.equals(competitionLine.getName());
         });
 
-        private Predicate<CompetitionLine> test;
+        private Predicate<CompetitionResource> test;
 
-        CompetitionFilter(Predicate<CompetitionLine> test) {
+        CompetitionFilter(Predicate<CompetitionResource> test) {
             this.test = test;
         }
 
         @Override
-        public boolean test(CompetitionLine competitionLine) {
-            return test.test(competitionLine);
+        public boolean test(CompetitionResource competitionResource) {
+            return test.test(competitionResource);
         }
     }
 
@@ -174,7 +176,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private SupporterDataService supporterDataService;
 
     private List<OrganisationLine> organisationLines;
-    private List<CompetitionLine> competitionLines;
+    private List<CompetitionResource> competitions;
     private List<CsvUtils.ApplicationLine> applicationLines;
     private List<PublicContentGroupLine> publicContentGroupLines;
     private List<PublicContentDateLine> publicContentDateLines;
@@ -202,7 +204,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Before
     public void readCsvs() {
         organisationLines = readOrganisations();
-        competitionLines = readCompetitions();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
         externalUserLines = readExternalUsers();
@@ -215,6 +216,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
+        competitions = buildCompetitionResources();
     }
 
     @PostConstruct
@@ -256,7 +258,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
 
-        List<CompetitionLine> competitionsToProcess = simpleFilter(competitionLines, competitionFilter);
+        List<CompetitionResource> competitionsToProcess = simpleFilter(competitions, competitionFilter);
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);
@@ -380,9 +382,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createCompetitionAssessmentPeriods(competitions);
     }
 
-    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
-        return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() ->
-                competitionDataBuilderService.createCompetition(line), taskExecutor));
+    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CompetitionResource> competitions) {
+        return simpleMap(competitions, line -> CompletableFuture.supplyAsync(() ->
+                competitionDataBuilderService.createCompetition(competitions), taskExecutor));
     }
 
     private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
