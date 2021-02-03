@@ -75,16 +75,16 @@ Companies House: Search for a dissolved company and the result should be disable
     [Documentation]    IFS-9103
     When the user enters text to a text field     id = organisationSearchName    UNIACE
     And the user clicks the button/link           id = org-search
-    And The user clicks the button/link           jQuery = a:contains("Next")
+    And the user clicks the button/link           jQuery = a:contains("Next")
     Then the user should not see the element      link = UNIACE LIMITED
-    And The user should see the element           jQuery = span p:contains("UNIACE LIMITED")
+    And the user should see the element           jQuery = span p:contains("UNIACE LIMITED")
 
 Companies House: Search for a liquidated company and the result should be disabled
     [Documentation]    IFS-9103
     When the user enters text to a text field     id = organisationSearchName    TESCO AQUA
     And the user clicks the button/link           id = org-search
     Then the user should not see the element      link = TESCO AQUA (FINCO1) LIMITED
-    And The user should see the element           jQuery = span p:contains("TESCO AQUA (FINCO1) LIMITED")
+    And the user should see the element           jQuery = span p:contains("TESCO AQUA (FINCO1) LIMITED")
 
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
