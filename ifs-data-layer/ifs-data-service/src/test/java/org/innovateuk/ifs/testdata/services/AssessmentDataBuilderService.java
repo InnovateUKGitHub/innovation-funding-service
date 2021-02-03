@@ -77,6 +77,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                     Objects.equals(l.applicationName, application.getApplication().getName()));
 
             assessmentLinesForApplication.forEach(assessmentLine -> {
+
                 createAssessment(assessmentLine);
 
                 createAssessorResponses(assessmentLine.applicationName, assessmentLine.assessorEmail, assessmentLine.state,
