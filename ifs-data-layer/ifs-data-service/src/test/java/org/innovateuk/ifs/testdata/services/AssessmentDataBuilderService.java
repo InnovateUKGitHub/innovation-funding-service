@@ -77,7 +77,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                     Objects.equals(l.applicationName, application.getApplication().getName()));
 
             assessmentLinesForApplication.forEach(assessmentLine -> {
-                createAssessment(assessmentLine, application.getCompetition());
+                createAssessment(assessmentLine);
 
                 createAssessorResponses(assessmentLine.applicationName, assessmentLine.assessorEmail, assessmentLine.state,
                         assessorResponseLines, application.getCompetition());
@@ -99,8 +99,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                             null,
                             SUBMITTED,
                             "Perfect application",
-                            "You should fund this.",
-                            application.getCompetition())
+                            "You should fund this.")
                             .build();
 
                     createAssessorResponses(application.getApplication().getName(), assessorEmail, SUBMITTED, Collections.emptyList(), application.getCompetition());
@@ -214,7 +213,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    private void createAssessment(AssessmentLine line, CompetitionResource competition) {
+    private void createAssessment(AssessmentLine line) {
         assessmentBuilder.withAssessmentData(
                 line.assessorEmail,
                 line.applicationName,
@@ -222,8 +221,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 line.rejectComment,
                 line.state,
                 line.feedback,
-                line.recommendComment,
-                competition)
+                line.recommendComment)
                 .build();
     }
 

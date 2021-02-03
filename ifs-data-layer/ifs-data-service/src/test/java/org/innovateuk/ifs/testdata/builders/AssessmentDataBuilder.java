@@ -3,9 +3,6 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
@@ -42,8 +39,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                                                     String rejectComment,
                                                     AssessmentState state,
                                                     String feedback,
-                                                    String recommendComment,
-                                                    CompetitionResource competition) {
+                                                    String recommendComment) {
         return with(data -> {
 
             UserResource assessor = retrieveUserByEmail(assessorEmail);
@@ -60,14 +56,10 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                     });
                 });
             }
+            Application application = applicationRepository.findByName(applicationName).get(0);
 
-            AssessmentResource assessmentResource = doAs(compAdmin(), () ->
-                    {
-                        Application application = applicationRepository.findByName(applicationName).get(0);
-                        attachDefaultAssessmentPeriod(application, competition);
-                        return assessmentService.createAssessment(new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess();
-                    }
-            );
+            AssessmentResource assessmentResource = doAs(compAdmin(), () -> assessmentService.createAssessment(
+                    new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess());
 
             doAs(compAdmin(), () ->
                 testService.doWithinTransaction(() -> {
@@ -115,18 +107,6 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                 assessmentService.recommend(assessmentResource.getId(), fundingDecision).getSuccess();
             });
         });
-    }
-
-    private void attachDefaultAssessmentPeriod(Application application, CompetitionResource competition) {
-        if (application.getAssessmentPeriod() == null && !competition.isAlwaysOpen() && isCompetitionEligibleForAssessment(competition.getCompletionStage())) {
-            AssessmentPeriodResource assessmentPeriod = assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(application.getCompetition().getId(), 1)
-                    .handleSuccessOrFailure(failure -> {
-                                throw new ObjectNotFoundException(String.format("Default assessment period not exists for competition %s, unable to create assessments for application %s",
-                                        competition.getName(), application.getName()));
-                            },
-                            success -> success);
-            applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod);
-        }
     }
 
     public AssessmentDataBuilder withSubmission(String applicationName,
