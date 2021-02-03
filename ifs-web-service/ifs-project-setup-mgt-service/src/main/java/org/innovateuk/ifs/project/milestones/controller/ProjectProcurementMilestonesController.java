@@ -113,20 +113,6 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         });
     }
 
-    @PostMapping("auto-save")
-    public @ResponseBody
-    JsonNode ajaxAutoSave(UserResource user,
-                          @PathVariable long projectId,
-                          @PathVariable long organisationId,
-                          @RequestParam String field,
-                          @RequestParam String value) {
-        Optional<Long> fieldId = saver.autoSave(field, value, projectId, organisationId);
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        fieldId.ifPresent(id -> node.put("fieldId", id));
-        return node;
-    }
-
     @PostMapping(params = "remove_row")
     public String removeRowPost(Model model,
                                 UserResource user,
