@@ -7,6 +7,8 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               IFS-7722 Improvement to company search journey
 ...
+...               IFS-7724 Input organisation details manually
+...
 Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -14,84 +16,85 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Test Cases ***
-# TODO  should be implemented with IFS-7724
-#Not in Companies House: Enter details manually link
-#    [Documentation]    INFUND-888
-#    [Tags]
-#    When the user clicks the button/link    jQuery = summary:contains("Enter details manually")
-#    Then the user should see the element    jQuery = .govuk-label:contains("Organisation name")
-
 Companies House: Valid company name
     [Documentation]    INFUND-887  IFS-7723
     [Tags]  HappyPath
-    When the user enters text to a text field    id = organisationSearchName    ROYAL
-    And the user clicks the button/link          id = org-search
-    Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    When the applicant searches for organisation     ROYAL
+    Then the user should see the element             link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887  IFS-7723
     [Tags]  HappyPath
-    When the user clicks the button/link     Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    When the user clicks the button/link     link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     Then the user should see the element     jQuery = dt:contains("Organisation type")
     And the user should see the element      jQuery = dt:contains("Organisation name")
-    And the user should see the element      jQuery = dt:contains("Address")
+    And the user should see the element      jQuery = dt:contains("Registered address")
     And the user should see the element      jQuery = dt:contains("Registration number")
-    And the user should see the element      jQuery = dt:contains("Registered Address")
+    And the user should see the element      jQuery = dt:contains("Registered address")
 
 Companies House: Invalid company name
     [Documentation]    INFUND-887  IFS-7723
     [Tags]
-    Given the user clicks the button/link         link = Back to companies house search results
-    When the user enters text to a text field     id = organisationSearchName    innoavte
-    And the user clicks the button/link           id = org-search
-    Then the user should see the element          jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies") + span:contains("innoavte")
+    Given the user clicks the button/link            link = Back to companies house search results
+    When the applicant searches for organisation     innoavte
+    When the user enters text to a text field        id = organisationSearchName    innoavte
+    And the user clicks the button/link              id = org-search
+    Then the user should see the element             jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies") + span:contains("innoavte")
 
 Companies House: Valid registration number
     [Documentation]    INFUND-8870  IFS-7723
     [Tags]  HappyPath
-    When the user enters text to a text field    id = organisationSearchName    00445790
-    And the user clicks the button/link          id = org-search
-    Then the user should see the element         Link = TESCO PLC
+    When the applicant searches for organisation     00445790
+    Then the user should see the element             link = TESCO PLC
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887  IFS-7723
     [Tags]
-    When the user enters text to a text field     id = organisationSearchName    ${EMPTY}
-    And the user clicks the button/link           id = org-search
-    Then the user should see the element          jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
+    When the applicant searches for organisation     ${EMPTY}
+    Then the user should see the element             jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
 
 Companies House: Empty company name field validation message
     [Documentation]    IFS-7723  IFS-7722
     [Tags]
     Given the user clicks the button/link                  link = Back to enter your organisation's details
-    When the user enters text to a text field              id = organisationSearchName    ${EMPTY}
-    And the user clicks the button/link                    id = org-search
+    When the applicant searches for organisation           ${EMPTY}
     Then the user should see a field and summary error     You must enter an organisation name or company registration number.
 
-# TODO should be implemented on ifs-7724
-#Manually add the details and pass to the confirmation page
-#    [Documentation]    INFUND-888
-#    [Tags]  HappyPath
-#    [Setup]  the user expands enter details manually
-#    Given the user enters text to a text field    name = organisationName    Top of the Popps
-#    When the user clicks the button/link          jQuery = button:contains("Continue")
-#    Then the user should see the element          jQuery = dt:contains("Organisation type")~ dd:contains("Business")
-#    And the user should see the element           jQuery = dt:contains("Organisation name")~ dd:contains("Top of the Popps")
+Not in Companies House: Enter details manually link
+    [Documentation]    INFUND-888  IFS-7724
+    [Tags]
+    Given the applicant searches for organisation     Not exist
+    When the user clicks the button/link              link = Find out what to do
+    Then the user clicks the button/link              link = enter its details manually
+    And the user should see the element               jQuery = h1:contains("Manually enter your organisation's details")
+
+Manually add the details validation message
+    [Documentation]    INFUND-888  IFS-7724
+    [Tags]
+    When the user clicks the button/link                   jQuery = button:contains("Save and continue")
+    And the user should see a field and summary error      You must enter your organisation's name.
+    Then the user should see a field and summary error     You must enter your organisation's postcode.
+
+Manually add the details and pass to the confirmation page
+    [Documentation]    INFUND-888  IFS-7724
+    [Tags]
+    Given the user enters text to a text field     name = organisationName       Best Test Company
+    When the user enters text to a text field      name = organisationNumber     1234567890
+    And the user enters text to a text field       name = businessType           Partnership
+    And the user enters text to a text field       id = sicCode                  54321
+    And the user enters text to a text field       id = execOfficer              Phil Mitchell
 
 *** Keywords ***
 Applicant goes to the organisation search page
-    Given the guest user opens the browser
-    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
-    When the user clicks the button/link    link = Start new application
-    And the user clicks the button/link     link = Continue and create an account
-    And the user clicks the button/link     jQuery = span:contains("Business")
-    And the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the guest user opens the browser
+    the user navigates to the page                            ${frontDoor}
+    the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
+    the user clicks the button/link                           link = Start new application
+    the user clicks the button/link                           link = Continue and create an account
+    the user clicks the button/link                           jQuery = span:contains("Business")
+    the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
-the backslash doesnt give errors
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = addressForm.selectedPostcodeIndex
-    Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
-
-the user expands enter details manually
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]
+the applicant searches for organisation
+    [Arguments]  ${searchTerm}
+    the user enters text to a text field     id = organisationSearchName     ${searchTerm}
+    the user clicks the button/link          id = org-search
