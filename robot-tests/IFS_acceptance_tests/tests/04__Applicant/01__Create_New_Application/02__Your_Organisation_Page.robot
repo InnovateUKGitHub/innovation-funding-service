@@ -24,7 +24,7 @@ Resource          ../../../resources/common/PS_Common.robot
 Companies House: Valid company name
     [Documentation]    INFUND-887  IFS-7723
     [Tags]  HappyPath
-    When the user enters text to a text field    id = organisationSearchName    ROYAL
+    When the user enters text to a text field    id = organisationSearchName    ROYAL MAIL
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
 
@@ -67,6 +67,13 @@ Companies House: Empty company name field validation message
     When the user enters text to a text field              id = organisationSearchName    ${EMPTY}
     And the user clicks the button/link                    id = org-search
     Then the user should see a field and summary error     You must enter an organisation name or company registration number.
+
+Companies House: Searching for dissolved company and the result should be disabled
+    [Documentation]    IFS-9103
+    When the user enters text to a text field     id = organisationSearchName    10699577
+    And the user clicks the button/link           id = org-search
+    Then the user should not see the element      link = THE BRAND ESCALATOR LTD
+
 
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
