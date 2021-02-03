@@ -60,8 +60,10 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
         if (!competition.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
                 .anyMatch(milestoneType -> (milestoneType == type))) {
-            AssessmentPeriodResource assessmentPeriodResource = assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(DEFAULT_INDEX, competition.getId())
-                    .getOrElse(assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess());
+            AssessmentPeriodResource assessmentPeriodResource =  assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(DEFAULT_INDEX, competition.getId())
+                    .handleSuccessOrFailure(
+                            failure -> assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess(),
+                            success -> success);
             milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodResource.getId()).getSuccess();
         } else {
             milestoneResource = milestoneRestService.create(type, competitionId).getSuccess();

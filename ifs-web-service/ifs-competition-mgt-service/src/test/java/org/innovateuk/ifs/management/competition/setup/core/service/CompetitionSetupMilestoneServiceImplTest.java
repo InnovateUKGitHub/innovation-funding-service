@@ -3,8 +3,11 @@ package org.innovateuk.ifs.management.competition.setup.core.service;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
@@ -23,6 +26,8 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -36,21 +41,53 @@ public class CompetitionSetupMilestoneServiceImplTest {
 	@Mock
 	private MilestoneRestService milestoneRestService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
 	@Test
 	public void testCreateMilestonesForCompetition() {
-        when(milestoneRestService.create(any(MilestoneType.class), anyLong())).thenReturn(restSuccess(newMilestoneResource().with(
-				(integer, milestoneResource) -> milestoneResource.setType(MilestoneType.OPEN_DATE)).build()));
+	    Long competitionId = 1L;
+	    Long assessmentPeriodId = 2L;
+	    Integer index = 1;
 
-		List<MilestoneResource> result = service.createMilestonesForIFSCompetition(123L).getSuccess();
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withId(assessmentPeriodId).withIndex(index).withCompetitionId(competitionId).build();
+
+        when(competitionRestService.getCompetitionById(competitionId))
+                .thenReturn(restSuccess(newCompetitionResource()
+                        .withId(competitionId).withAlwaysOpen(false).build()));
+
+        when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId))
+                .thenReturn(restSuccess(assessmentPeriodResource));
+
+        when(milestoneRestService.create(any(MilestoneType.class), eq(competitionId)))
+                .thenReturn(restSuccess(newMilestoneResource()
+                        .with((integer, milestoneResource) -> milestoneResource.setType(MilestoneType.OPEN_DATE))
+                        .build()));
+
+        when(milestoneRestService.create(any(MilestoneType.class), eq(competitionId), eq(assessmentPeriodId)))
+                .thenReturn(restSuccess(newMilestoneResource()
+                        .with((integer, milestoneResource) -> milestoneResource.setType(MilestoneType.OPEN_DATE))
+                        .build()));
+
+		List<MilestoneResource> result = service.createMilestonesForIFSCompetition(competitionId).getSuccess();
 
         result.forEach(milestoneResource -> assertEquals(MilestoneType.OPEN_DATE, milestoneResource.getType()));
 
         int numberOfMilestonesExpected = Arrays.stream(MilestoneType.presetValues())
                 .filter(milestoneType -> !milestoneType.isOnlyNonIfs()).collect(toList()).size();
 
+        int numberOfAssessmentPeriodMilestonesExpected = MilestoneType.assessmentPeriodValues().size();
+
 		assertEquals(numberOfMilestonesExpected, result.size());
-		verify(milestoneRestService, times(numberOfMilestonesExpected)).create(any(MilestoneType.class), anyLong());
-	}
+		verify(milestoneRestService, times(numberOfMilestonesExpected-numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId));
+        verify(competitionRestService, times(numberOfMilestonesExpected)).getCompetitionById(competitionId);
+        verify(assessmentPeriodRestService, times(numberOfAssessmentPeriodMilestonesExpected)).getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId);
+        verify(milestoneRestService, times(numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId), eq(assessmentPeriodId));
+    }
 
 	@Test
 	public void testUpdateMilestonesForCompetition() {
