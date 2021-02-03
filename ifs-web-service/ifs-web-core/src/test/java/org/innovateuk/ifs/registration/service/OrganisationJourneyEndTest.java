@@ -16,6 +16,8 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,6 +68,9 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Mock
     private CompaniesHouseRestService companiesHouseRestService;
+
+    @Mock
+    private ThreadPoolTaskExecutor taskExecutor;
 
     @Test
     public void completeProcess_newUser() {
