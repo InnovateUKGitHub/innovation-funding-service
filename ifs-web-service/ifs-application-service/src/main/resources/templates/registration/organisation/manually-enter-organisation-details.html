@@ -102,7 +102,7 @@
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
                 Executive officers
             </label>
-            <div class="govuk-hint">Enter the first and last names of all company directors, if your organisation has any.</div>
+            <div class="govuk-hint"><small>Enter the first and last names of all company directors, if your organisation has any.</small></div>
             <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row govuk-!-margin-top-6" th:id="'exec-officer-row-'+${iteration.index}">
                 <div class="govuk-grid-column-two-thirds">
                     <input id="execOfficer" class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-2"
