@@ -23,9 +23,12 @@
                 <ul class="govuk-list govuk-error-summary__list">
                     <th:block th:each="err : ${nonFormErrors}">
                         <th:block th:each="errMsg, iterStat : ${err.codes}">
-                            <li th:if="${err.arguments == null or err.arguments.length == 0}" th:text="#{${errMsg}}"></li>
-                            <li th:if="${err.arguments != null and err.arguments.length == 1}" th:text="#{${errMsg}(${err.arguments[0]})}"></li>
-                            <li th:if="${err.arguments != null and err.arguments.length == 2}" th:text="#{${errMsg}(${err.arguments[0]},${err.arguments[1]})}"></li>
+                            <li th:if="${err.arguments == null or err.arguments.length == 0}"
+                                th:text="#{${errMsg}}"></li>
+                            <li th:if="${err.arguments != null and err.arguments.length == 1}"
+                                th:text="#{${errMsg}(${err.arguments[0]})}"></li>
+                            <li th:if="${err.arguments != null and err.arguments.length == 2}"
+                                th:text="#{${errMsg}(${err.arguments[0]},${err.arguments[1]})}"></li>
                         </th:block>
                     </th:block>
                 </ul>
@@ -42,54 +45,53 @@
                 </div>
                 <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">You can review your
                     <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
-                               class="govuk-link">project finance overview</a>.
+                       class="govuk-link">project finance overview</a>.
                 </p>
                 <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">You can <a
                     th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                     class="govuk-link">review your project finances</a>
                     and <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
-                               class="govuk-link">your project finance overview</a>
+                           class="govuk-link">your project finance overview</a>
                     <th:block th:if="${model.paymentMilestonesLink}">
-                    and
-                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-                       class="govuk-link">your payment milestones</a>.</th:block>
+                        and
+                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                           class="govuk-link">your payment milestones</a>.
+                    </th:block>
                 </p>
             </th:block>
             <th:block th:if="${model.loanCompetition}">
                 <div class="message-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">We have finished checking your finances.</p>
                 </div>
-            <p class="govuk-body"> Review your <a
-                th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
-                class="govuk-link">finances.</a>
-            </p>
+                <p class="govuk-body"> Review your <a
+                    th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
+                    class="govuk-link">finances.</a>
+                </p>
             </th:block>
 
         </th:block>
-        <th:block th:unless="${model.isApproved()}">
-            <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
+        <th:block class="govuk-body" th:unless="${model.isApproved()}">
+            <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the
+                project finances. You can view the
                 <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
-                class="govuk-link">project finance overview</a>.</p>
+                   class="govuk-link">project finance overview</a>.</p>
 
+            <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing</p>
+            <ul class="govuk-list--bullet">
+                <li><a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
+                       class="govuk-link">your project finances</a></li>
 
+                <li th:if="${model.paymentMilestonesLink}">
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                       class="govuk-link">payment milestones</a>
+                </li>
+            </ul>
 
-            Innovate UK is reviewing:
-
-
-            <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
-                <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
-                   class="govuk-link">your project finances</a>
-                <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
+            <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
                 and you can also <a
-                    th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
-                    class="govuk-link">view the project finance overview</a>.
-                </th:block>
-                <th:block th:if="${model.paymentMilestonesLink}">
-
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-                   class="govuk-link">payment milestones</a>
-                </th:block>
-            </p>
+                th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
+                class="govuk-link">view the project finance overview</a>.
+            </th:block>
         </th:block>
 
         <th:block th:unless="${model.noQueries()}">
@@ -207,10 +209,12 @@
                                         <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
                                         <details class="govuk-details">
                                             <summary class="govuk-details__summary">
-                                                <span class="govuk-details__summary-text">What file types can I upload?</span>
+                                                <span
+                                                    class="govuk-details__summary-text">What file types can I upload?</span>
                                             </summary>
                                             <div class="govuk-details__text wysiwyg-styles">
-                                                <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                                                <p class="govuk-body"><strong>You can only upload these file
+                                                    types</strong></p>
                                                 <ul class="govuk-list govuk-list--bullet">
                                                     <li>spreadsheet (.ods, .xls, .xlsx)</li>
                                                     <li>text document (.odt, .doc, .docx)</li>
@@ -219,7 +223,8 @@
                                                 <p>Each document must be less than 10MB</p>
                                             </div>
                                         </details>
-                                        <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
+                                        <p th:if="${model.newAttachmentLinks.isEmpty()}"
+                                           class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
                                         <ul class="govuk-list file-list">
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
                                                 class="success">
@@ -236,15 +241,19 @@
                                                 </div>
                                             </li>
                                         </ul>
-                                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
+                                        <div
+                                            th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                             <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('attachment')}"
                                                   th:text="${err}"/>
                                             </th:block>
                                             <input type="file" id="attachment" class="inputfile" name="attachment">
-                                            <label for="attachment" class="govuk-button govuk-button--secondary govuk-!-margin-top-6">
+                                            <label for="attachment"
+                                                   class="govuk-button govuk-button--secondary govuk-!-margin-top-6">
                                                 Upload</label>
-                                            <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
+                                            <button name="uploadAttachment" class="govuk-button govuk-button--secondary"
+                                                    type="submit"
                                                     data-for-file-upload="attachment">Save
                                             </button>
                                         </div>
@@ -358,10 +367,12 @@
                                         <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
                                         <details class="govuk-details">
                                             <summary class="govuk-details__summary">
-                                                <span class="govuk-details__summary-text">What file types can I upload?</span>
+                                                <span
+                                                    class="govuk-details__summary-text">What file types can I upload?</span>
                                             </summary>
                                             <div class="govuk-details__text wysiwyg-styles">
-                                                <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                                                <p class="govuk-body"><strong>You can only upload these file
+                                                    types</strong></p>
                                                 <ul class="govuk-list govuk-list--bullet">
                                                     <li>spreadsheet (.ods, .xls, .xlsx)</li>
                                                     <li>text document (.odt, .doc, .docx)</li>
@@ -370,7 +381,8 @@
                                                 <p>Each document must be less than 10MB</p>
                                             </div>
                                         </details>
-                                        <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No
+                                        <p th:if="${model.newAttachmentLinks.isEmpty()}"
+                                           class="govuk-body no-file-uploaded">No
                                             file currently
                                             uploaded.</p>
                                         <ul class="govuk-list file-list">
@@ -389,15 +401,19 @@
                                                 </div>
                                             </li>
                                         </ul>
-                                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
+                                        <div
+                                            th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                             <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('attachment')}"
                                                   th:text="${err}"/>
                                             </th:block>
                                             <input type="file" id="attachment" class="inputfile" name="attachment">
-                                            <label for="attachment" class="govuk-button govuk-button--secondary govuk-!-margin-top-6">
+                                            <label for="attachment"
+                                                   class="govuk-button govuk-button--secondary govuk-!-margin-top-6">
                                                 Upload</label>
-                                            <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
+                                            <button name="uploadAttachment" class="govuk-button govuk-button--secondary"
+                                                    type="submit"
                                                     data-for-file-upload="attachment">Save
                                             </button>
                                         </div>
@@ -510,10 +526,12 @@
                                         <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
                                         <details class="govuk-details">
                                             <summary class="govuk-details__summary">
-                                                <span class="govuk-details__summary-text">What file types can I upload?</span>
+                                                <span
+                                                    class="govuk-details__summary-text">What file types can I upload?</span>
                                             </summary>
                                             <div class="govuk-details__text wysiwyg-styles">
-                                                <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                                                <p class="govuk-body"><strong>You can only upload these file
+                                                    types</strong></p>
                                                 <ul class="govuk-list govuk-list--bullet">
                                                     <li>spreadsheet (.ods, .xls, .xlsx)</li>
                                                     <li>text document (.odt, .doc, .docx)</li>
@@ -522,7 +540,8 @@
                                                 <p>Each document must be less than 10MB</p>
                                             </div>
                                         </details>
-                                        <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No
+                                        <p th:if="${model.newAttachmentLinks.isEmpty()}"
+                                           class="govuk-body no-file-uploaded">No
                                             file currently
                                             uploaded.</p>
                                         <ul class="govuk-list file-list">
@@ -541,15 +560,19 @@
                                                 </div>
                                             </li>
                                         </ul>
-                                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
+                                        <div
+                                            th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                             <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('attachment')}"
                                                   th:text="${err}"/>
                                             </th:block>
                                             <input type="file" id="attachment" class="inputfile" name="attachment">
-                                            <label for="attachment" class="govuk-button govuk-button--secondary govuk-!-margin-top-6">
+                                            <label for="attachment"
+                                                   class="govuk-button govuk-button--secondary govuk-!-margin-top-6">
                                                 Upload</label>
-                                            <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
+                                            <button name="uploadAttachment" class="govuk-button govuk-button--secondary"
+                                                    type="submit"
                                                     data-for-file-upload="attachment">Save
                                             </button>
                                         </div>
