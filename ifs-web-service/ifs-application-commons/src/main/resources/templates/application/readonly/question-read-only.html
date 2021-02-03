@@ -268,38 +268,47 @@
     </th:block>
 </th:block>
 
+<th:block th:fragment="terms-and-conditions-partner-table (applicationId, questionId, partners, includeFundingRules, displayCompleteStatus)">
+    <!--/*@thymesVar id="applicationId" type="java.lang.Long"*/-->
+    <!--/*@thymesVar id="questionId" type="java.lang.Long"*/-->
+    <!--/*@thymesVar id="partners" type="java.util.List"*/-->
+    <!--/*@thymesVar id="includeFundingRules" type="java.lang.Boolean"*/-->
+    <!--/*@thymesVar id="displayCompleteStatus" type="java.lang.Boolean"*/-->
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Partner</th>
+            <th scope="col" class="govuk-table__header"
+                th:if="${includeFundingRules}">Funding rules</th>
+            <th scope="col" class="govuk-table__header">Terms and conditions</th>
+            <th scope="col" class="govuk-table__header"
+                th:if="${displayCompleteStatus}">Status</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <tr th:each="partner : ${partners}" class="govuk-table__row">
+            <!--/*@thymesVar id="partner" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel"*/-->
+            <td class="govuk-table__cell" th:text="${partner.partnerName}"> <span class="hint" th:if="${partner.lead}">(Lead)</span></td>
+            <td class="govuk-table__cell" th:text="${partner.fundingRules.displayName}"
+                th:if="${includeFundingRules}"></td>
+            <td class="govuk-table__cell">
+                <a th:href="@{~/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}(applicationId=${applicationId},questionId=${questionId},organisationId=${partner.partnerId})}"
+                   class="govuk-link"
+                   th:text="${partner.getTermsName()}"></a>
+            </td>
+            <td class="govuk-table__cell"
+                th:if="${displayCompleteStatus}">
+                <th:block th:if="${partner.accepted}">Accepted</th:block>
+                <th:block th:unless="${partner.accepted}">Not yet accepted</th:block>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+
 <th:block th:fragment="terms-and-conditions (model)">
     <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
-    <div id="terms-and-conditions">
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Partner</th>
-                <th scope="col" class="govuk-table__header"
-                    th:if="${model.includeFundingRules}">Funding rules</th>
-                <th scope="col" class="govuk-table__header">Terms and conditions</th>
-                <th scope="col" class="govuk-table__header"
-                    th:if="${model.displayCompleteStatus}">Status</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr th:each="partner : ${model.partners}" class="govuk-table__row">
-                <td class="govuk-table__cell" th:text="${partner.partnerName}"> <span class="hint" th:if="${partner.lead}">(Lead)</span></td>
-                <td class="govuk-table__cell" th:text="${partner.fundingRules.displayName}"
-                    th:if="${model.includeFundingRules}"></td>
-                <td class="govuk-table__cell">
-                    <a href=""@{~/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId},organisationId=${partner.organisationId})}"
-                       class="govuk-link"
-                       th:text="${partner.getTermsName()}"></a>
-                </td>
-                <td class="govuk-table__cell"
-                    th:if="${model.displayCompleteStatus}">
-                    <th:block th:if="${partner.accepted}">Accepted</th:block>
-                    <th:block th:unless="${partner.accepted}">Not yet accepted</th:block>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
 </th:block>
 </html>

@@ -60,4 +60,8 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
     public List<TermsAndConditionsRowReadOnlyViewModel> getPartners() {
         return partners;
     }
+
+    public String getAccordionSectionId() {
+        return "terms-and-conditions";
+    }
 }

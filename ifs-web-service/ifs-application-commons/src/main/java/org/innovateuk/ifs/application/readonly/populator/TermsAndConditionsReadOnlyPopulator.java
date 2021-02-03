@@ -4,11 +4,11 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -55,15 +55,15 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                 data,
                 question,
                 data.getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle,
-                getPartners(data, question),
+                getPartners(data.getApplication(), data.getCompetition(), question),
                 termsAndConditionsTerminology(data.getCompetition())
         );
     }
 
-    private List<TermsAndConditionsRowReadOnlyViewModel> getPartners(ApplicationReadOnlyData data, QuestionResource question) {
+    public List<TermsAndConditionsRowReadOnlyViewModel> getPartners(ApplicationResource application, CompetitionResource competition, QuestionResource question) {
         List<Long> acceptedOrgs = new ArrayList<>();
-        if (data.getApplication().isOpen()) {
-            acceptedOrgs = sectionService.getCompletedSectionsByOrganisation(data.getApplication().getId())
+        if (application.isOpen()) {
+            acceptedOrgs = sectionService.getCompletedSectionsByOrganisation(application.getId())
                     .entrySet()
                     .stream()
                     .filter(t -> t.getValue().contains(question.getSection()))
@@ -72,33 +72,34 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
         }
 
         List<Long> finalAcceptedOrgs = acceptedOrgs;
-        Supplier<Map<Long, ApplicationFinanceResource>> supplier = financeSupplier(data.getApplication().getId());
-        return organisationRestService.getOrganisationsByApplicationId(data.getApplication().getId()).getSuccess().stream()
+        Supplier<Map<Long, ApplicationFinanceResource>> supplier = financeSupplier(application.getId());
+        return organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess().stream()
                 .map(organisation -> {
-                    GrantTermsAndConditionsResource termsForPartner = getTermsForPartner(data, organisation, supplier);
+                    boolean partnerUseCompetitionTermsAndConditions = shouldPartnerUseCompetitionTermsAndConditions(competition, organisation, supplier);
                     return aTermsAndConditionsRowReadOnlyViewModel()
                             .withPartnerId(organisation.getId())
                             .withPartnerName(organisation.getName())
-                            .withLead(data.getApplication().getLeadOrganisationId().equals(organisation.getId()))
+                            .withLead(application.getLeadOrganisationId().equals(organisation.getId()))
                             .withAccepted(finalAcceptedOrgs.contains(organisation.getId()))
-                            .withTermsName(termsForPartner.getName())
+                            .withTermsName(partnerUseCompetitionTermsAndConditions ? competition.getTermsAndConditions().getName() : competition.getOtherFundingRulesTermsAndConditions().getName())
+                            .withFundingRules(partnerUseCompetitionTermsAndConditions ? competition.getFundingRules() : FundingRules.STATE_AID)
                             .build();
                 })
                 .sorted((o1, o2) -> o1.isLead() ? -1 : 1)
                 .collect(toList());
     }
 
-    private GrantTermsAndConditionsResource getTermsForPartner(ApplicationReadOnlyData data, OrganisationResource organisation, Supplier<Map<Long, ApplicationFinanceResource>> financeSupplier) {
-        if (data.getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL
-                && data.getCompetition().isFinanceType()
+    private boolean shouldPartnerUseCompetitionTermsAndConditions(CompetitionResource competition, OrganisationResource organisation, Supplier<Map<Long, ApplicationFinanceResource>> financeSupplier) {
+        if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL
+                && competition.isFinanceType()
                 && northernIrelandSubsidyControlToggle
-                && competitionHasConfiguredDualTermsAndConditions(data.getCompetition())) {
+                && competitionHasConfiguredDualTermsAndConditions(competition)) {
             ApplicationFinanceResource finance = financeSupplier.get().get(organisation.getId());
             if (finance != null && Boolean.TRUE.equals(finance.getNorthernIrelandDeclaration())) {
-                return data.getCompetition().getOtherFundingRulesTermsAndConditions();
+                return false;
             }
         }
-        return data.getCompetition().getTermsAndConditions();
+        return true;
     }
 
     private boolean competitionHasConfiguredDualTermsAndConditions(CompetitionResource competition) {
@@ -128,6 +129,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
             return financeResourceMap[0];
         };
     }
+
     @Override
     public Set<QuestionSetupType> questionTypes() {
         return singleton(TERMS_AND_CONDITIONS);

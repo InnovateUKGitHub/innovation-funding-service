@@ -15,5 +15,5 @@ public interface ApplicationQuestionReadOnlyViewModel {
         return true;
     }
     default boolean hasScore() { return false; }
-
+    default String getAccordionSectionId() { return null; }
 }

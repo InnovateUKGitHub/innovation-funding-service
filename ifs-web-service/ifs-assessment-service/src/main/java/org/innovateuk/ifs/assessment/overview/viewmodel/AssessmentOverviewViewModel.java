@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel;
 
 import java.util.List;
 
@@ -19,7 +20,10 @@ public class AssessmentOverviewViewModel {
     private final long daysLeft;
     private final List<AssessmentOverviewSectionViewModel> sections;
     private final List<AssessmentOverviewAppendixViewModel> appendices;
+
     private final String termsAndConditionsTerminology;
+    private final List<TermsAndConditionsRowReadOnlyViewModel> termsAndConditionsRows;
+    private final boolean dualTermsAndConditions;
 
     public AssessmentOverviewViewModel(long assessmentId,
                                        long applicationId,
@@ -30,7 +34,9 @@ public class AssessmentOverviewViewModel {
                                        long daysLeft,
                                        List<AssessmentOverviewSectionViewModel> sections,
                                        List<AssessmentOverviewAppendixViewModel> appendices,
-                                       String termsAndConditionsTerminology) {
+                                       String termsAndConditionsTerminology,
+                                       List<TermsAndConditionsRowReadOnlyViewModel> termsAndConditionsRows,
+                                       boolean dualTermsAndConditions) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -41,6 +47,8 @@ public class AssessmentOverviewViewModel {
         this.sections = sections;
         this.appendices = appendices;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
+        this.termsAndConditionsRows = termsAndConditionsRows;
+        this.dualTermsAndConditions = dualTermsAndConditions;
     }
 
     public long getAssessmentId() {
@@ -81,6 +89,14 @@ public class AssessmentOverviewViewModel {
 
     public String getTermsAndConditionsTerminology() {
         return termsAndConditionsTerminology;
+    }
+
+    public List<TermsAndConditionsRowReadOnlyViewModel> getTermsAndConditionsRows() {
+        return termsAndConditionsRows;
+    }
+
+    public boolean isDualTermsAndConditions() {
+        return dualTermsAndConditions;
     }
 
     @Override

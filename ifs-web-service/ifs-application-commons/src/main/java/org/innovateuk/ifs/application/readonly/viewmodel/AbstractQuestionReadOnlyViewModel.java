@@ -95,4 +95,5 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     public boolean isKtpCompetition() {
         return ktpCompetition;
     }
+
 }

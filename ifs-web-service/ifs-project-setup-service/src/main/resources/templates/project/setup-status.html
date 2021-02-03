@@ -39,7 +39,7 @@
                     th:text="${model.applicationFeedbackAvailable ? 'view application feedback' : 'view application overview'}">
                         view application feedback</a></li>
                     <li>
-                        <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
+                        <a th:href="${'/application/' + model.applicationId + '/summary#terms-and-conditions'}"
                            class="govuk-link">
                             <th:block th:if="${model.investorPartnershipCompetition}">
                                 view the Investor Partnerships terms and conditions

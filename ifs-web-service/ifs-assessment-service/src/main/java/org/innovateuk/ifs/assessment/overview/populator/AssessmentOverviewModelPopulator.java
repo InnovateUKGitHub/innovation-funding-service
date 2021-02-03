@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
+import org.innovateuk.ifs.application.readonly.populator.TermsAndConditionsReadOnlyPopulator;
+import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -13,6 +17,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -21,7 +26,9 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -76,9 +83,19 @@ public class AssessmentOverviewModelPopulator {
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
+    @Autowired
+    private TermsAndConditionsReadOnlyPopulator termsAndConditionsReadOnlyPopulator;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
+
     public AssessmentOverviewViewModel populateModel(long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
+        ApplicationResource application = applicationRestService.getApplicationById(assessment.getApplication()).getSuccess();
 
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
@@ -94,7 +111,9 @@ public class AssessmentOverviewModelPopulator {
                 competition.getAssessmentDaysLeft(),
                 getSections(assessment, assessorViewQuestions),
                 getAppendices(assessment.getApplication(), assessorViewQuestions),
-                termsAndConditionsTerminology
+                termsAndConditionsTerminology,
+                getTermsAndConditionsRows(questions, application, competition),
+                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && competition.getOtherFundingRulesTermsAndConditions() != null && northernIrelandSubsidyControlToggle
         );
     }
 
@@ -220,5 +239,13 @@ public class AssessmentOverviewModelPopulator {
             return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
         return TERMS_AND_CONDITIONS_OTHER;
+    }
+
+    private List<TermsAndConditionsRowReadOnlyViewModel> getTermsAndConditionsRows(List<QuestionResource> questions, ApplicationResource application, CompetitionResource competition) {
+        return questions.stream()
+                .filter(q -> q.getQuestionSetupType() == QuestionSetupType.TERMS_AND_CONDITIONS)
+                .findFirst()
+                .map(q -> termsAndConditionsReadOnlyPopulator.getPartners(application, competition, q))
+                .orElse(emptyList());
     }
 }
