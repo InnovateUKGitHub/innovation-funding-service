@@ -217,22 +217,16 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     private ServiceResult<Void> stateAidSaveAction(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
-        if (shouldHaveSeparateTerms(competition)) {
-            return saveOtherFundingRulesTermsAndConditions(competition, termsAndConditionsForm)
-                    .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
-        } else {
-            return saveTermsAndConditions(competition, termsAndConditionsForm)
-                    .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
-        }
+        return saveOtherFundingRulesTermsAndConditions(competition, termsAndConditionsForm)
+                .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
     }
 
     private ServiceResult<Void> nonStateAidSaveAction(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
         if (shouldHaveSeparateTerms(competition)) {
             return saveTermsAndConditions(competition, termsAndConditionsForm);
-        } else {
-            return saveTermsAndConditions(competition, termsAndConditionsForm)
-                    .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
         }
+        return saveTermsAndConditions(competition, termsAndConditionsForm)
+                .andOnSuccess(() -> optionallyMarkTermsSectionComplete(competition, termsAndConditionsForm));
     }
 
     private ServiceResult<Void> saveTermsAndConditions(CompetitionResource competition, TermsAndConditionsForm termsAndConditionsForm) {
