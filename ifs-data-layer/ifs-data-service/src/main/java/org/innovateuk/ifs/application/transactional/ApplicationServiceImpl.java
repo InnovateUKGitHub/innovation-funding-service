@@ -11,7 +11,6 @@ import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -24,7 +23,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -378,13 +376,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateAssessmentPeriod(long applicationId, AssessmentPeriodResource assessmentPeriod) {
         return find(application(applicationId))
                 .andOnSuccess((application) -> {
-                    if (application.isSubmitted()) {
-                        application.setAssessmentPeriod(assessmentPeriodMapper.mapToDomain(assessmentPeriod));
-                        applicationRepository.save(application);
-                        return serviceSuccess(applicationMapper.mapToResource(application));
-                    } else {
-                        return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
-                    }
+                    application.setAssessmentPeriod(assessmentPeriodMapper.mapToDomain(assessmentPeriod));
+                    applicationRepository.save(application);
+                    return serviceSuccess(applicationMapper.mapToResource(application));
                 });
     }
 
