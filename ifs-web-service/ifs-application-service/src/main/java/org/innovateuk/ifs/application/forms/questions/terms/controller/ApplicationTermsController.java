@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.application.forms.questions.terms.controller;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -36,27 +34,15 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
         securedType = ApplicationTermsController.class)
 public class ApplicationTermsController {
 
+    @Autowired
     private ProcessRoleRestService processRoleRestService;
-    private ApplicationTermsModelPopulator applicationTermsModelPopulator;
-    private QuestionStatusRestService questionStatusRestService;
-    private ApplicationRestService applicationRestService;
-    private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
-
-    public ApplicationTermsController() {
-    }
 
     @Autowired
-    public ApplicationTermsController(ProcessRoleRestService processRoleRestService,
-                                      QuestionStatusRestService questionStatusRestService,
-                                      ApplicationRestService applicationRestService,
-                                      ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator,
-                                      ApplicationTermsModelPopulator applicationTermsModelPopulator) {
-        this.processRoleRestService = processRoleRestService;
-        this.questionStatusRestService = questionStatusRestService;
-        this.applicationRestService = applicationRestService;
-        this.applicationTermsModelPopulator = applicationTermsModelPopulator;
-        this.applicationTermsPartnerModelPopulator = applicationTermsPartnerModelPopulator;
-    }
+    private ApplicationTermsModelPopulator applicationTermsModelPopulator;
+
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
+
 
     @GetMapping
     public String getTerms(@PathVariable long applicationId,
