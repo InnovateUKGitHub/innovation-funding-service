@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
@@ -272,13 +271,8 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         if (!competition.isAlwaysOpen() && CompetitionCompletionStage.assessmentValues().stream()
                 .anyMatch(completionStage -> (completionStage == competition.getCompletionStage()))) {
             return assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competition.getId(), DEFAULT_INDEX)
-                    .andOnSuccess(assessmentPeriod -> {
-                        if (assessmentPeriod == null) {
-                            return serviceFailure(new Error(ASSESSMENT_CREATE_FAILED_NO_DEFAULT_ASSESSMENT_PERIOD_EXISTS, assessor.getId(), application.getId(), competition.getId()));
-                        } else {
-                            return applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod).andOnSuccessReturnVoid();
-                        }
-                    });
+                    .andOnSuccessReturn(assessmentPeriod -> applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod).andOnSuccessReturnVoid())
+                    .andOnFailure(() -> serviceFailure(new Error(ASSESSMENT_CREATE_FAILED_NO_DEFAULT_ASSESSMENT_PERIOD_EXISTS, assessor.getId(), application.getId(), competition.getId())));
         }
 
         return serviceSuccess();

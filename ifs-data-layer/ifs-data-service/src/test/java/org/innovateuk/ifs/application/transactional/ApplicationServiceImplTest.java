@@ -717,6 +717,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertNotNull(result.getErrors());
         assertEquals(1, result.getErrors().size());
         assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
         assertNotNull(result.getErrors().get(0).getArguments());
         assertEquals("Application not found", result.getErrors().get(0).getArguments().get(0));
 

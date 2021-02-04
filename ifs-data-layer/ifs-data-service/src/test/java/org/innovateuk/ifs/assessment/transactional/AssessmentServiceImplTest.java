@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
@@ -653,6 +655,68 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
+    }
+
+    @Test
+    public void createAssessment_withNoDefaultAssessmentPeriod() {
+        Long assessorId = 1L;
+        Long applicationId = 2L;
+        Long competitionId = 3L;
+        Integer index = 1;
+
+        User user = newUser().withId(assessorId).build();
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withAlwaysOpen(false)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .build();
+        Application application = newApplication().withCompetition(competition).withId(applicationId).build();
+
+        ProcessRole expectedProcessRole = newProcessRole()
+                .with(id(null))
+                .withApplication(application)
+                .withUser(user)
+                .withRole(ProcessRoleType.ASSESSOR)
+                .build();
+        ProcessRole savedProcessRole = newProcessRole()
+                .withId(10L)
+                .withApplication(application)
+                .withUser(user)
+                .withRole(ProcessRoleType.ASSESSOR)
+                .build();
+
+        when(userRepositoryMock.findById(assessorId)).thenReturn(Optional.of(user));
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.empty());
+        when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId)).thenReturn(null);
+        when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
+        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index)).thenReturn(serviceFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)));
+
+        AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(applicationId)
+                .withAssessorId(assessorId)
+                .build();
+
+        ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
+
+        InOrder inOrder = inOrder(
+                userRepositoryMock, applicationRepositoryMock, processRoleRepositoryMock, assessmentPeriodServiceMock, assessmentRepositoryMock
+        );
+
+        inOrder.verify(userRepositoryMock).findById(assessorId);
+        inOrder.verify(applicationRepositoryMock).findById(applicationId);
+        inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
+        inOrder.verify(processRoleRepositoryMock).findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId);
+        inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
+        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isFailure());
+
+        assertNotNull(serviceResult.getErrors());
+        assertEquals(1, serviceResult.getErrors().size());
+        assertEquals(HttpStatus.BAD_REQUEST, serviceResult.getErrors().get(0).getStatusCode());
+        assertEquals(ASSESSMENT_CREATE_FAILED_NO_DEFAULT_ASSESSMENT_PERIOD_EXISTS.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
     }
 
     @Test
