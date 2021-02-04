@@ -36,9 +36,10 @@ public class AssessmentPeriodServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<AssessmentPeriodResource> create(Long competitionId, Integer index) {
-        Competition competition = competitionRepository.findById(competitionId).orElse(null);
-
-        AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition, index);
-        return serviceSuccess(assessmentPeriodMapper.mapToResource(assessmentPeriodRepository.save(assessmentPeriod)));
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccess(competition -> {
+                    AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition, index);
+                    return serviceSuccess(assessmentPeriodMapper.mapToResource(assessmentPeriodRepository.save(assessmentPeriod)));
+                });
     }
 }

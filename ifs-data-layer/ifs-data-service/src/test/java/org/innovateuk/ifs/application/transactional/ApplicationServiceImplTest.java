@@ -712,7 +712,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         ServiceResult<ApplicationResource> result = service.updateAssessmentPeriod(application.getId(), assessmentPeriodResource);
 
-        assertFalse(result.isSuccess());
+        assertTrue(result.isFailure());
 
         assertNotNull(result.getErrors());
         assertEquals(1, result.getErrors().size());
