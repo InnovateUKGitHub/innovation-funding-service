@@ -30,20 +30,20 @@ Send the email invite to the assessor for the competition using new content
     When comp admin sends invite to assesor
     Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${webTestCompName}'  We invite you to assess applications for the competition:
 
-Lead user creates an always open application and checks the status
+Lead applicant creates an always open application and checks the status
     [Documentation]  IFS-8850
     Given the user logs out if they are logged in
     And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
     When the lead user completes project details, application questions and finances sections
     Then the user checks the status of the application before completion
 
-Lead user completes the t's & c's of the always open application and checks the status
+Lead applicant completes the t's & c's of the always open application and checks the status
     [Documentation]  IFS-8850
     Given the user clicks the button/link                                   link = ${applicationName}
     When the user accept the competition terms and conditions               Back to application overview
     Then the user checks the status of the application after completion
 
-Lead user submits the always open application and checks the status
+Lead applicant submits the always open application and checks the status
     [Documentation]  IFS-8850
     Given the user clicks the button/link                                  link = ${applicationName}
     When the user clicks the button/link                                   link = Review and submit
@@ -54,7 +54,7 @@ Checking the status of the application after an assessor is assigned to the appl
     [Documentation]  IFS-8850
     Given Log in as a different user                                    &{lead_applicant_credentials}
     and the user clicks the application tile if displayed
-    When The user clicks the button/link                                link = ${webTestAppName}
+    When the user clicks the button/link                                link = ${webTestAppName}
     Then the user checks the status of the application in assessment
 
 *** Keywords ***
