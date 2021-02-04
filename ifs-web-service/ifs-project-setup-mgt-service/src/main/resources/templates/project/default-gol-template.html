@@ -762,8 +762,14 @@
     </div>
     <!-- terms start -->
     <div class="terms-and-conditions letter-size letter-size--terms">
-        <h2 style="font-size: 24px">Terms and conditions</h2>
-        <th:block th:insert="competition/info/__${model.termsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+        <th:block th:if="${model.singleTermsAndConditionsTemplatePresent}">
+            <h2 style="font-size: 24px">Terms and conditions</h2>
+            <th:block th:insert="competition/info/__${model.singleTermsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+        </th:block>
+        <th:block th:unless="${model.singleTermsAndConditionsTemplatePresent}" th:each="termsTemplate : ${model.termsAndConditionsTemplates.entrySet()}">
+            <h2 style="font-size: 24px">Terms and conditions (<th:block th:text="${termsTemplate.key}" />)</h2>
+            <th:block th:insert="competition/info/__${termsTemplate.value}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+        </th:block>
     </div>
     <!-- terms end  -->
 </main>

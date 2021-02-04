@@ -32,6 +32,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -695,7 +696,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   "projectName",
                                                                   "leadOrgName",
                                                                   newNoteResource().build(1),
-                                                                  "templateName",
+                                                                  Collections.singletonMap("state aid", "templateName"),
                                                                   industrialTable,
                                                                   academicTable,
                                                                   summaryTable,
