@@ -67,8 +67,7 @@
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST"
-              th:attr="data-autosave=@{__${#ifsUtil.formPostUri(#httpServletRequest)}__/auto-save},
-                       data-row-operation-url=@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+              th:attr="data-row-operation-url=@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <button class="hidden-save" name="save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
