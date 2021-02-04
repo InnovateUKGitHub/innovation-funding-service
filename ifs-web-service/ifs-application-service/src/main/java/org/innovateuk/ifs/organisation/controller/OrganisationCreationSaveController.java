@@ -1,34 +1,27 @@
 package org.innovateuk.ifs.organisation.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.form.AddressForm;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -117,21 +110,5 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return organisationResource;
     }
 
-    @PostMapping(value= "organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS)
-    public String addressFormAction(Model model,
-                                    @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                    BindingResult bindingResult,
-                                    ValidationHandler validationHandler,
-                                    UserResource loggedInUser) {
 
-        organisationForm.getAddressForm().validateAction(bindingResult);
-        if (validationHandler.hasErrors()) {
-            return "registration/organisation/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-        }
-
-        AddressForm addressForm = organisationForm.getAddressForm();
-        addressForm.handleAction(this::searchPostcode);
-
-        return "registration/organisation/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-    }
 }

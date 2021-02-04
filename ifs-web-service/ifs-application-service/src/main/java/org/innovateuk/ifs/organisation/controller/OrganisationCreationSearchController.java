@@ -2,7 +2,7 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.ErrorHolder;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -26,7 +26,7 @@ import javax.validation.Valid;
 import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
 import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
@@ -192,16 +192,12 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                           HttpServletResponse response,
                                                           UserResource user) {
 
-        addManualOrganisation(organisationForm, model);
-
         organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         organisationForm.setManualEntry(true);
+        addManualOrganisation(organisationForm, model);
 
-        bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
-        validator.validate(organisationForm, bindingResult);
-
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasFieldErrors()) {
             return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
         }
 
@@ -217,7 +213,25 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
 
-    @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
+    @PostMapping(value={"organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, "/" + SELECTED_ORGANISATION_MANUAL},  params = FORM_ACTION_PARAMETER)
+    public String addressFormAction(Model model,
+                                    @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                    BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    UserResource loggedInUser) {
+
+        organisationForm.getAddressForm().validateAction(bindingResult);
+        if (validationHandler.hasErrors()) {
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
+
+        AddressForm addressForm = organisationForm.getAddressForm();
+        addressForm.handleAction(this::searchPostcode);
+
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
     public String manualOrganisationSave(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                          BindingResult bindingResult,
                                          Model model,

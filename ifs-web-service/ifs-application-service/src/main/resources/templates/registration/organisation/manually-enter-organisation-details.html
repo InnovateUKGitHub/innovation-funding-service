@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account' ,hasFormErrors=${#fields.hasErrors('*{organisationForm.organisationName}')}"/>
 </head>
 
 <body class="govuk-template__body create-application-eligibility">
@@ -36,6 +36,7 @@
             slow down the application process, which could delay your funding <br> payments.</p>
         <form th:object="${organisationForm}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              novalidate="novalidate"
               method="post">
             <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
             <div class="govuk-form-group"
@@ -44,15 +45,18 @@
                        for="name">
                     Organisation name
                 </label>
-                <span class="govuk-error-message"
-                      th:if="${#fields.hasErrors('*{organisationName}')}"
-                      th:errors="*{name}"></span>
+                <th:block th:if="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationName}')}" th:text="${err}" />
+                </th:block>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="name"
                        th:field="*{organisationName}"
+                       th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-input--error'"
+                       type="text"
                        th:attr="data-required-errormessage=#{validation.manualentry.organisationname.required}"
                        maxlength="255"
-                       type="text" required="required"/>
+                       required="required"
+                       value="" />
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationNumber}')} ? 'govuk-form-group--error'">

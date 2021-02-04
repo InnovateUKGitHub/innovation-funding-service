@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResultPageResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
@@ -113,6 +112,19 @@ public abstract class AbstractOrganisationCreationController {
        else {
           return getFormDataFromCookie(organisationForm, model, request);
        }
+    }
+
+    protected OrganisationCreationForm getFormDataForManualEntryFromCookie(OrganisationCreationForm organisationForm,HttpServletRequest request) {
+        return processedManualEntryOrganisationCreationFormFromCookie(request).
+                orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
+    }
+
+    private Optional<OrganisationCreationForm> processedManualEntryOrganisationCreationFormFromCookie(HttpServletRequest request) {
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+        organisationCreationFormFromCookie.ifPresent(organisationCreationForm -> {
+            addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
+        });
+        return organisationCreationFormFromCookie;
     }
 
     private OrganisationCreationForm processedOrganisationCreationFormFromRequest(OrganisationCreationForm organisationForm, HttpServletRequest request){
@@ -252,13 +264,15 @@ public abstract class AbstractOrganisationCreationController {
      * @return OrganisationSearchResult populated with manually inputted data.
      */
     protected OrganisationSearchResult addManualOrganisation(final OrganisationCreationForm organisationForm, final Model model) {
-
             OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult();
-
             if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
                 organisationSearchResult.setOrganisationAddress(getAddressResourceFromForm(organisationForm.getAddressForm()));
                 organisationSearchResult.setOrganisationExecutiveOfficers(organisationForm.getExecutiveOfficers());
                 organisationSearchResult.setOrganisationSicCodes(organisationForm.getSicCodes());
+
+                BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
+                organisationFormValidate(organisationForm, bindingResult);
+                model.addAttribute(BINDING_RESULT_ORGANISATION_FORM, bindingResult);
             }
             model.addAttribute("selectedOrganisation", organisationSearchResult);
             return organisationSearchResult;
