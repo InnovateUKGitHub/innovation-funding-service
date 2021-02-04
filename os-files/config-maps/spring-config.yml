@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: spring-config
 data:
-  SPRING_ACTIVE_PROFILES: "${SPRING_ACTIVE_PROFILES}"
+  SPRING_PROFILES_ACTIVE: "${SPRING_PROFILES_ACTIVE}"

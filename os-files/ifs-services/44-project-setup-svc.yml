@@ -77,11 +77,11 @@ items:
                     configMapKeyRef:
                       name: web-config
                       key: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
-                - name: SPRING_ACTIVE_PROFILES
+                - name: SPRING_PROFILES_ACTIVE
                   valueFrom:
                     configMapKeyRef:
                       name: spring-config
-                      key: SPRING_ACTIVE_PROFILES
+                      key: SPRING_PROFILES_ACTIVE
                 - name: JAVA_OPTS
                   value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
