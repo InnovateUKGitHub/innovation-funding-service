@@ -3,7 +3,6 @@ package org.innovateuk.ifs.organisation.controller;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -52,9 +51,6 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
 
     @Autowired
     private KnowledgeBaseRestService knowledgeBaseRestService;
-
-    @Autowired
-    private AddressRestService addressRestService;
 
     @GetMapping
     public String selectKnowledgeBase(@ModelAttribute(name = "form", binding = false) KnowledgeBaseForm organisationForm,

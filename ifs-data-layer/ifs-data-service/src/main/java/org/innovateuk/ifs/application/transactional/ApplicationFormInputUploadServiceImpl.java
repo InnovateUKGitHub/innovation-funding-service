@@ -21,7 +21,6 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +51,6 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
 
     @Autowired
     private FormInputRepository formInputRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private FileService fileService;
