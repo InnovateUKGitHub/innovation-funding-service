@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.registration.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.rest.RestFailure;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -15,6 +18,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 
 public class CompaniesHouseSyncTask implements Runnable {
@@ -30,6 +35,8 @@ public class CompaniesHouseSyncTask implements Runnable {
 
 
     private CompaniesHouseRestService companiesHouseRestService;
+
+    private static final Log LOG = LogFactory.getLog(CompaniesHouseSyncTask.class);
 
 
 
@@ -49,7 +56,7 @@ public class CompaniesHouseSyncTask implements Runnable {
         RestResult<OrganisationSearchResult> organisationWithNewCompaniesHouseData = companiesHouseRestService.getOrganisationById(theOrg.getCompaniesHouseNumber());
         organisationWithNewCompaniesHouseData.getOptionalSuccessObject().ifPresent(theOrgWithCHData -> updateOrganisationWithCompaniesHouseData(theOrgWithCHData,theOrg));
     }
-    private void updateOrganisationWithCompaniesHouseData(OrganisationSearchResult org, OrganisationResource orgResource){
+    private void updateOrganisationWithCompaniesHouseData(OrganisationSearchResult org, OrganisationResource orgResource) {
         orgResource.setSicCodes(org.getOrganisationSicCodes());
         orgResource.setExecutiveOfficers(org.getOrganisationExecutiveOfficers());
         List<OrganisationAddressResource> addressList = new ArrayList<>();
@@ -61,8 +68,11 @@ public class CompaniesHouseSyncTask implements Runnable {
         orgResource.setAddresses(addressList);
         String localDateString = (String) org.getExtraAttributes().get(DATE_OF_CREATION);
         if (localDateString != null) {
-            orgResource.setDateOfIncorporation(LocalDate.parse(localDateString,DATE_PATTERN));
+            orgResource.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
         }
-        organisationRestService.createOrMatch(orgResource);
+        RestResult<OrganisationResource> result = organisationRestService.createOrMatch(orgResource);
+        if (result.isFailure()) {
+            LOG.error("Failed to update organiation with companies house data : " + result.getFailure());
+        }
     }
 }
