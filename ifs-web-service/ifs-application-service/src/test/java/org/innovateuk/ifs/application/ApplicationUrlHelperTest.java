@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationUrlHelperTest {
     private static final long QUESTION_ID = 1L;
     private static final long APPLICATION_ID = 2L;
+    private static final long ORGANISATION_ID = 3L;
 
     @Test
     public void questionUrlForNoQuestionType() {
@@ -17,7 +18,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = null;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.empty(), result);
@@ -29,7 +30,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.APPLICATION_DETAILS;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.of("/application/2/form/question/1/application-details"), result);
@@ -41,7 +42,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.GRANT_AGREEMENT;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.of("/application/2/form/question/1/grant-agreement"), result);
@@ -53,7 +54,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.GRANT_TRANSFER_DETAILS;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.of("/application/2/form/question/1/grant-transfer-details"), result);
@@ -65,7 +66,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.APPLICATION_TEAM;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.of("/application/2/form/question/1/team"), result);
@@ -77,10 +78,10 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.TERMS_AND_CONDITIONS;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
-        assertEquals(Optional.of("/application/2/form/question/1/terms-and-conditions"), result);
+        assertEquals(Optional.of("/application/2/form/terms-and-conditions/organisation/3/question/1"), result);
     }
 
     @Test
@@ -89,7 +90,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.RESEARCH_CATEGORY;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.of("/application/2/form/question/1/research-category"), result);
@@ -101,7 +102,7 @@ public class ApplicationUrlHelperTest {
         QuestionSetupType questionSetupType = QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION;
 
         // when
-        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID);
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
 
         // then
         assertEquals(Optional.of("/application/2/form/question/1/generic"), result);
