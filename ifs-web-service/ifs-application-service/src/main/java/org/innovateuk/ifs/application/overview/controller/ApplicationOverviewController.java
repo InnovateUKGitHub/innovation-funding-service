@@ -61,7 +61,8 @@ public class ApplicationOverviewController {
     public String applicationOverview(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
-        ApplicationResource application = null;
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId)
+                .getSuccess();
 
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN
                 || userIsKta(user.getId(), application.getId())) {
