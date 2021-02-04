@@ -2,13 +2,10 @@ package org.innovateuk.ifs.application.forms.questions.terms.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -23,8 +20,6 @@ import java.time.ZonedDateTime;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -44,16 +39,11 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     @Mock
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
-    private ApplicationRestService applicationRestServiceMock;
-    @Mock
     private ApplicationTermsModelPopulator applicationTermsModelPopulatorMock;
-    @Mock
-    private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulatorMock;
 
     @Override
     protected ApplicationTermsController supplyControllerUnderTest() {
-        return new ApplicationTermsController(processRoleRestServiceMock, questionStatusRestServiceMock, applicationRestServiceMock,
-                applicationTermsPartnerModelPopulatorMock, applicationTermsModelPopulatorMock);
+        return new ApplicationTermsController();
     }
 
     @Test
@@ -201,86 +191,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
         inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, organisationId, false);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void getPartnerStatus() throws Exception {
-        long questionId = 7L;
-        long orgId = 1l;
-        CompetitionResource competition = newCompetitionResource()
-                .build();
-
-        ApplicationResource application = newApplicationResource()
-                .withId(3L)
-                .withCompetition(competition.getId())
-                .withCollaborativeProject(true)
-                .withApplicationState(OPENED)
-                .build();
-
-
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
-        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(applicationTermsPartnerModelPopulatorMock.populate(application, questionId)).thenReturn(viewModel);
-
-        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/partner-status", application.getId(), orgId, questionId))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions-partner-status"));
-
-        InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
-        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
-        inOrder.verify(applicationTermsPartnerModelPopulatorMock).populate(application, questionId);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void getPartnerStatus_nonCollaborative() throws Exception {
-        long questionId = 7L;
-        long orgId = 1l;
-        CompetitionResource competition = newCompetitionResource()
-                .build();
-
-        ApplicationResource application = newApplicationResource()
-                .withId(3L)
-                .withCompetition(competition.getId())
-                .withCollaborativeProject(false)
-                .withApplicationState(OPENED)
-                .build();
-
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
-        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-
-        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/partner-status", application.getId(), questionId, orgId))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
-        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void getPartnerStatus_nonOpen() throws Exception {
-        long questionId = 7L;
-        long orgId = 1l;
-        CompetitionResource competition = newCompetitionResource()
-                .build();
-
-        ApplicationResource application = newApplicationResource()
-                .withId(3L)
-                .withCompetition(competition.getId())
-                .withCollaborativeProject(true)
-                .withApplicationState(SUBMITTED)
-                .build();
-
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
-        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-
-        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/partner-status", application.getId(), questionId, orgId))
-                .andExpect(status().isForbidden());
-
-        InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
-        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verifyNoMoreInteractions();
     }
 }
