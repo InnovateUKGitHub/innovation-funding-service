@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel;
 
 import java.util.List;
@@ -101,13 +102,9 @@ public class AssessmentOverviewViewModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessmentOverviewViewModel that = (AssessmentOverviewViewModel) o;
 
@@ -115,12 +112,15 @@ public class AssessmentOverviewViewModel {
                 .append(assessmentId, that.assessmentId)
                 .append(applicationId, that.applicationId)
                 .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
                 .append(daysLeft, that.daysLeft)
+                .append(dualTermsAndConditions, that.dualTermsAndConditions)
                 .append(applicationName, that.applicationName)
+                .append(competitionName, that.competitionName)
                 .append(sections, that.sections)
                 .append(appendices, that.appendices)
+                .append(termsAndConditionsTerminology, that.termsAndConditionsTerminology)
+                .append(termsAndConditionsRows, that.termsAndConditionsRows)
                 .isEquals();
     }
 
@@ -136,6 +136,27 @@ public class AssessmentOverviewViewModel {
                 .append(daysLeft)
                 .append(sections)
                 .append(appendices)
+                .append(termsAndConditionsTerminology)
+                .append(termsAndConditionsRows)
+                .append(dualTermsAndConditions)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("assessmentId", assessmentId)
+                .append("applicationId", applicationId)
+                .append("applicationName", applicationName)
+                .append("competitionId", competitionId)
+                .append("competitionName", competitionName)
+                .append("daysLeftPercentage", daysLeftPercentage)
+                .append("daysLeft", daysLeft)
+                .append("sections", sections)
+                .append("appendices", appendices)
+                .append("termsAndConditionsTerminology", termsAndConditionsTerminology)
+                .append("termsAndConditionsRows", termsAndConditionsRows)
+                .append("dualTermsAndConditions", dualTermsAndConditions)
+                .toString();
     }
 }

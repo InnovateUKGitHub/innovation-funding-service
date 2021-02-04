@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -117,5 +118,17 @@ public class AssessmentOverviewSectionViewModel {
                 .append(finance)
                 .append(termsAndConditions)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("guidance", guidance)
+                .append("questions", questions)
+                .append("finance", finance)
+                .append("termsAndConditions", termsAndConditions)
+                .toString();
     }
 }
