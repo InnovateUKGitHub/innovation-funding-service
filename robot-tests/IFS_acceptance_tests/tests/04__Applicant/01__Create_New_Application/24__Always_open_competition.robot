@@ -118,7 +118,7 @@ the user completes the application details section
     the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
 
 the user completes the research category
-    the user clicks the button/link      link=Research category
+    the user clicks the button/link      link = Research category
     the user selects the checkbox        id = researchCategory
     the user clicks the button/link      id = application-question-complete
     the user clicks the button/link      link = Back to application overview
