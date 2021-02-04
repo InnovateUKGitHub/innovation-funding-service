@@ -86,15 +86,17 @@ public class ApplicationTermsModelPopulator {
     }
 
     private String getTermsAndConditionsTemplate(CompetitionResource competition, long applicationId, Long organisationId) {
-        if (!competition.isExpressionOfInterest() && organisationId != null) {
+        if (competition.isFinanceType() && organisationId != null) {
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
-            if (applicationFinanceResource.isNorthernIrelandDeclaration()) {
-                return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
+            if (applicationFinanceResource != null && applicationFinanceResource.isNorthernIrelandDeclaration()) {
+                if (competition.getOtherFundingRulesTermsAndConditions() != null) {
+                    return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
+                }
             }
         }
         return competition.getTermsAndConditions().getTemplate();
     }
-
+    
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
         long termsAndConditionsSectionId =
                 sectionService.getSectionsForCompetitionByType(competitionId, TERMS_AND_CONDITIONS).get(0).getId();
