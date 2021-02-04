@@ -122,6 +122,11 @@ items:
                     configMapKeyRef:
                       name: new-relic-config
                       key: NEW_RELIC_LOG
+                - name: SPRING_ACTIVE_PROFILES
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spring-config
+                      key: SPRING_ACTIVE_PROFILES
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-application-service (${openshiftEnv})"
                 - name: JAVA_OPTS

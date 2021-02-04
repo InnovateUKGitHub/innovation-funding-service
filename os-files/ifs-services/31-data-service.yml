@@ -257,6 +257,11 @@ items:
                     configMapKeyRef:
                       name: feature-toggle-config
                       key: IFS_PROCUREMENT_MILESTONES_ENABLED
+                - name: SPRING_ACTIVE_PROFILES
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spring-config
+                      key: SPRING_ACTIVE_PROFILES
                 - name: JAVA_OPTS
                   value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
