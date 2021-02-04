@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
@@ -379,6 +380,51 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                         .withCompetition(competition)
                         .withIndex(1)
                         .build()));
+
+        ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void createMilestoneWithAssessmentPeriod() {
+        Long competitionId = 1L;
+        Long assessmentPeriodId = 2L;
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .build();
+
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod().build();
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(assessmentPeriodId)).thenReturn(Optional.of(assessmentPeriod));
+        when(milestoneRepository.save(any(Milestone.class))).thenReturn(newMilestone().build());
+        when(milestoneMapper.mapToResource(any(Milestone.class))).thenReturn(newMilestoneResource().build());
+
+        ServiceResult<MilestoneResource> result = service.create(ASSESSOR_ACCEPTS, competitionId, assessmentPeriodId);
+
+        assertTrue(result.isSuccess());
+
+        verify(competitionRepository).findById(competitionId);
+        verify(assessmentPeriodRepository).findById(assessmentPeriodId);
+        verify(milestoneRepository).save(any(Milestone.class));
+        verify(milestoneMapper).mapToResource(any(Milestone.class));
+    }
+
+    @Test
+    @Rollback
+    public void updateCompletionStageCreatesNewMileStone() {
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .build();
+
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findByCompetitionIdAndIndex(competition.getId(), 1))
+                .thenReturn(Optional.empty());
+        when(assessmentPeriodRepository.save(any(AssessmentPeriod.class)))
+                .thenReturn(newAssessmentPeriod().build());
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
 
