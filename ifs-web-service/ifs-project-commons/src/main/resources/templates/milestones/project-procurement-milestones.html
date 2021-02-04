@@ -46,6 +46,13 @@
         <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                               data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
 
+        <h3 class="govuk-heading-m width-80-percent govuk-!-margin-bottom-5">Payment milestone overview</h3>
+
+        <dl class="govuk-list">
+            <dt>Total project costs</dt>
+            <dd th:text="'£' + ${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></dd>
+        </dl>
+
         <p th:if="${model.externalUser}" class="govuk-body">These are your project finances. Only your organisation can
             see this level of detail. Your designated project manager will be the main contact for queries. You will be
             consulted before any changes are approved. Changes that result from discussions with Innovate UK will be
