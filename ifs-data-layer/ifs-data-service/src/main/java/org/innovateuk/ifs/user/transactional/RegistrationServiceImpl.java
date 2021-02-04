@@ -194,7 +194,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             user.setEmail(invite.getEmail());
 
             if (invite instanceof RoleInvite) {
-                user.setRoles(singleton(((RoleInvite) invite).getTarget()));
+                user.setRoles(newHashSet(((RoleInvite) invite).getTarget()));
                 if (((RoleInvite) invite).getSimpleOrganisation() != null) {
                     profile.setSimpleOrganisation(((RoleInvite) invite).getSimpleOrganisation());
                 }

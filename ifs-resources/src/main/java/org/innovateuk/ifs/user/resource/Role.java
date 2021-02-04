@@ -18,7 +18,7 @@ public enum Role implements Identifiable {
     ASSESSOR                    ( 3, "Assessor", Authority.ASSESSOR),
     APPLICANT                   ( 4, "Applicant", Authority.APPLICANT),
     COMP_ADMIN                  ( 5,  "Competition Administrator", Authority.COMP_ADMIN),
-    SYSTEM_REGISTRATION_USER    ( 6, "System Registration User", Authority.SYSTEM_REGISTRATION_USER),
+    SYSTEM_REGISTRATION_USER    ( 6, "System Registration User", Authority.SYSTEM_REGISTRAR),
     SYSTEM_MAINTAINER           ( 7, "System Maintainer", Authority.SYSTEM_MAINTAINER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
     PROJECT_FINANCE             ( 8, "Project Finance", Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
     INNOVATION_LEAD             (13, "Innovation Lead", Authority.INNOVATION_LEAD),
