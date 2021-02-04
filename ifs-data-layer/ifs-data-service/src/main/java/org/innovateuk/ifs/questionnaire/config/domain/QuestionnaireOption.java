@@ -49,5 +49,6 @@ public class QuestionnaireOption {
 
     public void setQuestion(QuestionnaireQuestion question) {
         this.question = question;
+        question.getOptions().add(this);
     }
 }

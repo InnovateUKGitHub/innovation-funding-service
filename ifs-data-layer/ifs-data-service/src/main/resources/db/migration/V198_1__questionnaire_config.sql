@@ -28,6 +28,7 @@ CREATE TABLE questionnaire_question (
 CREATE TABLE questionnaire_text_outcome (
   id BIGINT(20) PRIMARY KEY,
   text VARCHAR(255) NOT NULL,
+  implementation VARCHAR(255) NULL,
 
   KEY questionnaire_text_outcome_to_questionnaire_decision (id),
   CONSTRAINT questionnaire_text_outcome_to_questionnaire_decision_fk FOREIGN KEY (id) REFERENCES questionnaire_decision(id)
