@@ -349,11 +349,21 @@ Project lead responds to pending queries
 
 Internal user can edit payment milestone in project setup
      [Documentation]  IFS-8941
-     Given log in as a different user              &{internal_finance_credentials}
-     When the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId}/finance-check
-     And the user clicks the button/link           jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+     Given log in as a different user                           &{internal_finance_credentials}
+     When the user navigates to the page                        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+     And the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
      Then the user edits the payment milestone
      And the user cannot see a validation error in the page
+
+Internal user can view validation message when payment requested is less than total project cost
+    [Documentation]  IFS-8941
+    Given the user navigates to the page            ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    And the user clicks the button/link             jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the user clicks the button/link             id = edit
+    When The user enters text to a text field       id = milestones[1].payment   10000000
+    And The user clicks the button/link             jQuery = button:contains("Save and return to payment milestone check")
+    Then the user should see a summary error        Your payment milestones exceeds 100% of your project costs. You must lower your payment requests or adjust your project costs.
+    [Teardown]  The user clicks the button/link     id = cancel
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048   IFS-8941
@@ -382,14 +392,15 @@ Contract section is enabled without bank details
     And confirm viability and eligibility
     When the user clicks the button/link                 jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
     And the internal user approves payment milestone
-    And the user navigates to the page                   ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     And the user navigates to the page                   ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element                 jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
 Internal user can send the contract
     [Documentation]  IFS-8202  IFS-8199  IFS-8198
-    Given internal user generates the contract     ${sbriProjectId2}
-    When the user navigates to the page            ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Given the user navigates to the page           ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    And The user clicks the button/link            jQuery = button:contains("Approve finance checks")
+    When internal user generates the contract      ${sbriProjectId2}
+    And the user navigates to the page             ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
     And the user reads his email                   ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
 
