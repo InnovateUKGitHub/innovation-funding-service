@@ -76,6 +76,10 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setFinancialYearAccounts(v), financialYearAccounts);
     }
 
+    public S withNorthernIrelandDeclarations(Boolean... northernIrelandDeclarations) {
+        return withArray((northernIrelandDeclaration, finance) -> setField("northernIrelandDeclaration", northernIrelandDeclaration, finance), northernIrelandDeclarations);
+    }
+
     @SafeVarargs
     public final S withFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory>... financeOrganisationDetails) {
         return withArray((financeOrganisationDetail, finance) -> setField("financeOrganisationDetails", financeOrganisationDetail, finance), financeOrganisationDetails);
