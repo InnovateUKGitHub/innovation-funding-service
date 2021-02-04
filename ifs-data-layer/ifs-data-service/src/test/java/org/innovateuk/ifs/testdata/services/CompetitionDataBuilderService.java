@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
 import org.apache.commons.lang3.BooleanUtils;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -23,15 +22,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSOR_ACCEPTS;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
 import static org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder.newCompetitionConfigData;
+import static org.innovateuk.ifs.testdata.builders.AssessmentPeriodDataBuilder.newCompetitionAssessmentPeriods;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.testdata.builders.AssessmentPeriodDataBuilder.newCompetitionAssessmentPeriods;
 import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionResources;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -162,15 +160,13 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
         CompetitionDataBuilder competitionWithoutMilestones = this.competitionDataBuilder
                 .createNonIfsCompetition(competition)
-                .withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
-                .withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView);
+                .withApplicationFinances()
+                .withAssessmentConfig();
 
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionWithoutMilestones);
+        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(competition, competitionWithoutMilestones);
 
         return competitionWithMilestones
-                .withDefaultPublicContent(
-                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.projectSize, line.keywords, line.inviteOnly);
+                .withDefaultPublicContent();
     }
 
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CompetitionResource competitionResource) {
@@ -178,16 +174,13 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition(competitionResource).
                 withApplicationFormFromTemplate().
-                withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
-                withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView).
-                withNewMilestones(line.competitionCompletionStage, line.alwaysOpen);
+                withApplicationFinances().
+                withAssessmentConfig().
+                withNewMilestones();
 
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
+        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(competitionResource, competitionBeforeMilestones);
         return competitionWithMilestones.
-                withDefaultPublicContent(
-                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.projectSize, line.keywords,
-                        line.inviteOnly);
+                withDefaultPublicContent();
     }
 
     private CompetitionDataBuilder getCompetitionWithMilestones(CompetitionResource line, CompetitionDataBuilder competitionBeforeMilestones) {

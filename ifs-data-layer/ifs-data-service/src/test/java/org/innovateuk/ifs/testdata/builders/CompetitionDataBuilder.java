@@ -295,11 +295,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
+    public CompetitionDataBuilder withNewMilestones() {
         return asCompAdmin(data ->
-            Stream.of(BooleanUtils.isTrue(alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
+            Stream.of(BooleanUtils.isTrue(data.getCompetition().isAlwaysOpen()) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
-                    .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
+                    .filter(milestoneType -> milestoneType.getPriority() <= data.getCompetition().getCompletionStage().getLastMilestone().getPriority())
                     .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
@@ -401,7 +401,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withDefaultPublicContent(String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, String projectSize, List<String> keywords, boolean inviteOnly) {
+    public CompetitionDataBuilder withDefaultPublicContent() {
         return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
 
                 publicContent.setShortDescription("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow");
@@ -412,8 +412,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         "We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.\n" +
                         "There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.");
                 publicContent.setProjectSize("£15 million");
-                publicContent.setKeywords(keywords);
-                publicContent.setInviteOnly(inviteOnly);
+                publicContent.setKeywords(asList(data.getCompetition().getName().split("\\s+"))); // keywords will now be competition name split
+                publicContent.setInviteOnly(false); // need to pass this in somehow
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
 
@@ -421,35 +421,29 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         }));
     }
 
-    public CompetitionDataBuilder withApplicationFinances(Boolean includeJesForm,
-                                                          ApplicationFinanceType applicationFinanceType,
-                                                          Boolean includeProjectGrowth,
-                                                          Boolean includeYourOrganisation) {
+    public CompetitionDataBuilder withApplicationFinances() {
 
         return asCompAdmin(data -> {
             CompetitionSetupFinanceResource competitionSetupFinanceResource
                     = new CompetitionSetupFinanceResource();
             competitionSetupFinanceResource.setCompetitionId(data.getCompetition().getId());
-            competitionSetupFinanceResource.setApplicationFinanceType(applicationFinanceType);
-            competitionSetupFinanceResource.setIncludeGrowthTable(includeProjectGrowth);
-            competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
-            competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
+            competitionSetupFinanceResource.setApplicationFinanceType(data.getCompetition().getApplicationFinanceType());
+            competitionSetupFinanceResource.setIncludeGrowthTable(data.getCompetition().getIncludeProjectGrowthTable());
+            competitionSetupFinanceResource.setIncludeYourOrganisationSection(data.getCompetition().getIncludeYourOrganisationSection());
+            competitionSetupFinanceResource.setIncludeJesForm(data.getCompetition().getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
         });
     }
 
-    public CompetitionDataBuilder withAssessmentConfig(Integer assessorCount,
-                                                       BigDecimal assessorPay,
-                                                       Boolean hasAssessmentPanel,
-                                                       Boolean hasInterviewStage,
-                                                       AssessorFinanceView assessorFinanceView) {
+    public CompetitionDataBuilder withAssessmentConfig() {
+//        TODO FIND A WAY TO PASS VALUES
         return asCompAdmin(data -> {
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
-        competitionAssessmentConfigResource.setAssessorCount(assessorCount);
-        competitionAssessmentConfigResource.setAssessorPay(assessorPay);
-        competitionAssessmentConfigResource.setHasAssessmentPanel(hasAssessmentPanel);
-        competitionAssessmentConfigResource.setHasInterviewStage(hasInterviewStage);
-        competitionAssessmentConfigResource.setAssessorFinanceView(assessorFinanceView);
+        competitionAssessmentConfigResource.setAssessorCount(5);
+        competitionAssessmentConfigResource.setAssessorPay(BigDecimal.valueOf(100));
+        competitionAssessmentConfigResource.setHasAssessmentPanel(false);
+        competitionAssessmentConfigResource.setHasInterviewStage(false);
+        competitionAssessmentConfigResource.setAssessorFinanceView(data.getCompetition().getAssessorFinanceView());
         competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }
