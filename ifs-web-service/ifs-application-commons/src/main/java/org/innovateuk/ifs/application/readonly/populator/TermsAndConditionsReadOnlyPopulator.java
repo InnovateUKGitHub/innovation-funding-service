@@ -46,7 +46,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
     private boolean northernIrelandSubsidyControlToggle;
 
     @Override
