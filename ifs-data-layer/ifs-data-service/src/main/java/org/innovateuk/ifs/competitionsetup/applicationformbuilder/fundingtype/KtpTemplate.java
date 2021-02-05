@@ -58,7 +58,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                     if (fecFinanceModel) {
                         financeSection.getChildSections().stream().filter(childSection ->
                                 childSection.getName().equals("Your project finances")).findAny().ifPresent(yourProjectFinancesSection ->
-                                yourProjectFinancesSection.getChildSections().add(fecCostsSection()));
+                                yourProjectFinancesSection.getChildSections().add(0, fecCostsSection()));
                     }
                 });
 
