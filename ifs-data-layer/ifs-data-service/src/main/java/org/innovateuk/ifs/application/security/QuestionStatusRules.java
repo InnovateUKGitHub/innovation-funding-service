@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
@@ -30,9 +29,6 @@ public class QuestionStatusRules extends BasePermissionRules {
 
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @PermissionRule(value = "READ", description = "Users can only read statuses of applications they are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
