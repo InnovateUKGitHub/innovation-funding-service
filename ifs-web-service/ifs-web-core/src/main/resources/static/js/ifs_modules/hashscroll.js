@@ -1,4 +1,4 @@
-IFS.core.hashScroll =(function () {
+IFS.core.hashScroll = (function () {
   'use strict'
   return {
     init: function () {
