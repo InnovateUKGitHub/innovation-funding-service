@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 
@@ -16,15 +16,15 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 public class SubcontractingRowForm extends AbstractCostRowForm<SubContractingCost> {
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String country;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
