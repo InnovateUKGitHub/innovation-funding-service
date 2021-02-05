@@ -94,14 +94,15 @@
                                maxlength="5"/>
                 </div>
                 <div th:if="${iteration.index > 0}">
-                    <button class="button-clear " data-remove-row-man="sicCode" type="button" name="remove-sic-code"
+                    <button class="button-clear " data-remove-row-man="sicCode" name="remove-sic-code"
+                            th:value="${iteration.index}"
                                 th:id="remove-sic-code-row"> Remove
                     </button>
                 </div>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3  govuk-!-margin-left-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
-                <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+ Add SIC code</button>
+                <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode">+ Add SIC code</button>
             </div>
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
                 Executive officers
@@ -115,14 +116,16 @@
                            type="text"/>
                 </div>
                 <div th:if="${iteration.index > 0}">
-                    <button class="button-clear alignright" data-remove-row-man="execOfficer" type="button" name="remove-exec-officer"
+                    <button class="button-clear alignright" data-remove-row-man="execOfficer"
+                            th:value="${iteration.index}"
+                            name="remove-exec-officer"
                             th:id="remove-exec-officer-row"> Remove
                     </button>
                 </div>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3 govuk-!-margin-left-3">
             </div>
             <div class="alignleft govuk-!-margin-top-6">
-                <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>
+                <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer">+ Add executive officer</button>
             </div>
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s govuk-!-font-size-24" for="name">
                 Registered address
