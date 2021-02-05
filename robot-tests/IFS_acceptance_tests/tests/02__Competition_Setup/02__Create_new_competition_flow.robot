@@ -106,6 +106,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
 ...
+...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -201,13 +203,17 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
-    [Documentation]  IFS-3086  IFS-6205
+    [Documentation]  IFS-3086  IFS-6205  IFS-9214
     [Tags]  HappyPath
-    Given the user clicks the button/link    link = Terms and conditions
-    When the user should see the element     link = Loans (opens in a new window)
-    And the user clicks the button/link      jQuery = button:contains("Done")
-    And the user clicks the button/link      link = Back to competition details
-    And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
+    Given the user clicks the button/link     link = Terms and conditions
+    When the user should see the element      link = Loans (opens in a new window)
+    And the user clicks the button/link       jQuery = button:contains("Done")
+    And the user selects the radio button     termsAndConditionsId  23
+    And the user clicks the button/link       jQuery = button:contains("Done")
+    And the user should see the element       jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Loans")
+    And the user should see the element       jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Loans")
+    And the user clicks the button/link       link = Return to setup overview
+    And the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
