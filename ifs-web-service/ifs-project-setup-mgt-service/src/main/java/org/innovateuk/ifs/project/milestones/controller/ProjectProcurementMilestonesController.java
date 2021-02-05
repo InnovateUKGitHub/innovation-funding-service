@@ -64,6 +64,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     public String viewMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
                                  @RequestParam(name = "editMilestones", defaultValue = "false") boolean editMilestones,
+                                 @ModelAttribute("procurementMilestonesForm") ProcurementMilestonesForm procurementMilestonesForm,
                                  UserResource userResource,
                                  Model model) {
         model.addAttribute("projectProcurementMilestoneApprovalForm", new ProjectProcurementMilestoneApprovalForm());
@@ -86,7 +87,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                            Model model,
                                            UserResource user) {
         validator.validate(procurementMilestonesForm, projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess(), validationHandler);
-        Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
+        Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, procurementMilestonesForm, user, model);
         return validationHandler.failNowOrSucceedWith(view, () -> {
             RestResult<Void> approvePaymentMilestoneState = financeCheckRestService.approvePaymentMilestoneState(projectId, organisationId);
             return validationHandler
