@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.forms.questions.granttransferdetails.form
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
 import javax.validation.constraints.*;
@@ -24,20 +23,24 @@ public class GrantTransferDetailsForm {
     @NotBlank(message = "{validation.fundingForm.project.name}")
     private String projectName;
 
-    @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
+    @Min(value = 1, message = "{validation.fundingForm.date.month}")
+    @Max(value = 12,  message = "{validation.fundingForm.date.month}")
     private Integer startDateMonth;
 
-    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
+    @Min(value = 1000, message = "{validation.fundingForm.date.year}")
+    @Max(value = 9999,  message = "{validation.fundingForm.date.year}")
     private Integer startDateYear;
 
-    @Range(min = 1, max = 12, message = "{validation.fundingForm.date.month}")
+    @Min(value = 1, message = "{validation.fundingForm.date.month}")
+    @Max(value = 12,  message = "{validation.fundingForm.date.month}")
     private Integer endDateMonth;
 
-    @Range(min = 1000, max = 9999, message = "{validation.fundingForm.date.year}")
+    @Min(value = 1000, message = "{validation.fundingForm.date.year}")
+    @Max(value = 9999,  message = "{validation.fundingForm.date.year}")
     private Integer endDateYear;
 
     @Digits(integer = 10, fraction = 0, message = "{validation.fundingForm.funding.format.invalid}")
-    @Range(min = 0, message = "{validation.fundingForm.funding.positive}")
+    @Min(value = 0, message = "{validation.fundingForm.funding.positive}")
     @NotNull(message = "{validation.fundingForm.funding.contribution}")
     private BigDecimal fundingContribution;
 

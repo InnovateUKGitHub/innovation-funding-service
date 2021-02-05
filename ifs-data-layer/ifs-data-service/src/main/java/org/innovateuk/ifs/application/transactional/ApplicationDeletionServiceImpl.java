@@ -13,7 +13,6 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,9 +43,6 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
