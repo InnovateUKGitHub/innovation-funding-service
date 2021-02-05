@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.repository;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
@@ -168,7 +168,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         FormInputType formInputType = FILEUPLOAD;
         Question question = newQuestion().withId(1L).build();
         Competition competition = newCompetition().withId(1L).build();
-        Set<FormValidator> inputValidators = asSet(
+        Set<FormValidator> inputValidators = ImmutableSet.of(
                 newFormValidator().build(),
                 newFormValidator().build()
         );
@@ -180,7 +180,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().withPriority(0).build(2);
 
         Boolean isActive = true;
-        Set<FileTypeCategory> allowedFileTypes = asSet(PDF, SPREADSHEET);
+        Set<FileTypeCategory> allowedFileTypes = ImmutableSet.of(PDF, SPREADSHEET);
 
         FormInput formInput = newFormInput()
                 .withWordCount(wordCount)
