@@ -516,7 +516,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setEmail(emailToUpdate);
         User user = userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccessReturnVoid(() -> logEmailChange(oldEmail, emailToUpdate))
                 .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
                 .andOnSuccessReturn(() -> user);
     }
