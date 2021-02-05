@@ -33,7 +33,7 @@ public class IdentitiesEndpoint_Creating_Test extends MockedIdentitiesEndpoint {
             .content(convertToJson(new NewIdentity(email, password))))
 
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.uuid", is(equalTo(uuid))))
             .andExpect(jsonPath("$.email", is(equalTo(email))))
             .andExpect(header().string(HttpHeaders.LOCATION, is(equalTo("/identities/" + uuid))));

@@ -1,7 +1,7 @@
 
 ext {
-    bomSpringBootVersion = '2.3.8.RELEASE'
-    bomSpringCloudVersion = 'Hoxton.SR9'
+    bomSpringBootVersion = '2.0.9.RELEASE'
+    bomSpringCloudVersion = 'Finchley.RELEASE'
 }
 
 dependencies {
@@ -29,6 +29,7 @@ dependencies {
         }
     }
 
+    // This is technical debt
     implementation('org.flywaydb:flyway-core') {
         version {
             strictly '5.2.4'
@@ -54,6 +55,7 @@ dependencies {
         }
     }
 
+    // This is technical debt
     implementation('org.mariadb.jdbc:mariadb-java-client') {
         version {
             // This is different to current mariadb in spring dependencies
