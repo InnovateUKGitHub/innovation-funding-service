@@ -80,15 +80,19 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     public String approvePaymentMilestones(@PathVariable long projectId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") ProjectProcurementMilestoneApprovalForm form,
+                                           @Valid @ModelAttribute("procurementMilestonesForm") ProcurementMilestonesForm procurementMilestonesForm,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
                                            UserResource user) {
+        validator.validate(procurementMilestonesForm, projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess(), validationHandler);
         Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
-        RestResult<Void> approvePaymentMilestoneState = financeCheckRestService.approvePaymentMilestoneState(projectId, organisationId);
-        return validationHandler
-                .addAnyErrors(approvePaymentMilestoneState)
-                .failNowOrSucceedWith(view, view);
+        return validationHandler.failNowOrSucceedWith(view, () -> {
+            RestResult<Void> approvePaymentMilestoneState = financeCheckRestService.approvePaymentMilestoneState(projectId, organisationId);
+            return validationHandler
+                    .addAnyErrors(approvePaymentMilestoneState)
+                    .failNowOrSucceedWith(view, view);
+        });
     }
 
     @PostMapping(params = "save")
