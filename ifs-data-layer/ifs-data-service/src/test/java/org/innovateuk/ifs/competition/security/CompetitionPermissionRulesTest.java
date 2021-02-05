@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalAdminCanManageInnovationLeadsForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
@@ -231,7 +232,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
                 .build(CompetitionStatus.values().length);
 
         allGlobalRoleUsers.forEach(user -> competitions.forEach(competitionResource -> {
-            if ((user.hasRole(COMP_ADMIN) || user.hasRole(PROJECT_FINANCE) || user.hasRole(IFS_ADMINISTRATOR)) &&
+            if (user.hasAuthority(Authority.COMP_ADMIN) &&
                     (competitionResource.getCompetitionStatus() == COMPETITION_SETUP ||
                             competitionResource.getCompetitionStatus() == READY_TO_OPEN)) {
                 assertTrue(rules.internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(competitionResource, user));
@@ -244,7 +245,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalAdminCanSetPostAwardServiceForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
@@ -255,7 +256,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void internalAdminCanReadPostAwardServiceForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));

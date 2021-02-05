@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -177,7 +178,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     @Test
     public void projectFinanceUserCanUpdateAllOrganisations() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanUpdateAnyOrganisation(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.projectFinanceUserCanUpdateAnyOrganisation(newOrganisationResource().build(), user));

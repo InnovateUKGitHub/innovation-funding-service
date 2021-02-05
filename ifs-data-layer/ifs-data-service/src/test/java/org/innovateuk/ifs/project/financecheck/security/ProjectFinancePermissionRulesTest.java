@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissio
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -64,7 +65,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewViability(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewViability(projectOrganisationCompositeId, user));
@@ -117,7 +118,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
@@ -133,7 +134,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
@@ -186,7 +187,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, user));
@@ -202,7 +203,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
@@ -249,7 +250,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewCreditReport(projectId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewCreditReport(projectId, user));

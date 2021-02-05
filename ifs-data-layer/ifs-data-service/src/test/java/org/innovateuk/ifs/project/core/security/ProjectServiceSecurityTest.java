@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
  */
 public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER));
     private static final EnumSet<Role> NON_SYSTEM_REGISTRATION_ROLES = complementOf(of(SYSTEM_REGISTRATION_USER));
 
     private ProjectPermissionRules projectPermissionRules;

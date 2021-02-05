@@ -9,7 +9,6 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.EnumSet;
 import java.util.HashMap;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -18,7 +17,7 @@ import static org.junit.Assert.fail;
 
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER));
 
     @Test
     public void testNotifyLeadApplicantAllowedIfGlobalCompAdminRole() {

@@ -22,7 +22,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CompetitionTypeServiceSecurityTest extends BaseServiceSecurityTest<CompetitionTypeService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER, IFS_ADMINISTRATOR));
 
     private CompetitionLookupStrategy competitionLookupStrategy;
 

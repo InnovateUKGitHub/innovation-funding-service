@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.financereviewer.repository.FinanceReviewerRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +16,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.financereviewer.builder.FinanceReviewerBuilder.newFinanceReviewer;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -43,7 +45,7 @@ public class FinanceReviewerServiceImplTest {
     @Test
     public void findAll() {
         User user = newUser().build();
-        when(userRepository.findByRolesAndStatusIn(Role.PROJECT_FINANCE, EnumSet.of(ACTIVE))).thenReturn(singletonList(user));
+        when(userRepository.findDistinctByRolesInAndStatusIn(newArrayList(PROJECT_FINANCE, IFS_ADMINISTRATOR), EnumSet.of(ACTIVE))).thenReturn(singletonList(user));
 
         List<SimpleUserResource> result = service.findFinanceUsers().getSuccess();
 
@@ -82,7 +84,7 @@ public class FinanceReviewerServiceImplTest {
                 .build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(userRepository.findByIdAndRoles(financeReviewerUser.getId(), Role.PROJECT_FINANCE)).thenReturn(Optional.of(financeReviewerUser));
+        when(userRepository.findById(financeReviewerUser.getId())).thenReturn(Optional.of(financeReviewerUser));
 
         service.assignFinanceReviewer(financeReviewerUser.getId(), projectId).getSuccess();
 

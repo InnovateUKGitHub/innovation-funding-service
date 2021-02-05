@@ -14,8 +14,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -32,12 +31,12 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testGetFinanceCheckByProjectAndOrganisation() {
-        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
+        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
     }
 
     @Test
     public void testGetFinanceCheckSummary(){
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, EXTERNAL_FINANCE);
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, EXTERNAL_FINANCE);
     }
 
     @Test
