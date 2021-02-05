@@ -112,6 +112,7 @@ def osFileMap = [
         [name:'shibboleth-config', type: 'config-maps'],
         [name:'survey-db-config', type: 'config-maps'],
         [name:'web-config', type: 'config-maps'],
+        [name:'spring-config', type: 'config-maps'],
 
         [name:'67-db-anonymised-data', type: 'db-anonymised-data'],
 
