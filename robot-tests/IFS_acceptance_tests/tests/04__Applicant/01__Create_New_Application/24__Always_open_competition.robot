@@ -30,30 +30,30 @@ Send the email invite to the assessor for the competition using new content
     When comp admin sends invite to assesor
     Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${webTestCompName}'  We invite you to assess applications for the competition:
 
-Lead applicant creates an always open application and checks the status
+Lead applicant creates an application and checks the dashboard content when the application is incomplete
     [Documentation]  IFS-8850
     Given the user logs out if they are logged in
     And the lead user creates an always open application                                         Test   User   test.user1@gmail.com   ${applicationName}
     When the lead user completes project details, application questions and finances sections
     Then the user checks the status of the application before completion
 
-Lead applicant completes the t's & c's of the always open application and checks the status
+Lead applicant completes the application and checks the dashboard content before the application is submitted
     [Documentation]  IFS-8850
     Given the user clicks the button/link                                   link = ${applicationName}
     When the user accept the competition terms and conditions               Back to application overview
     Then the user checks the status of the application after completion
 
-Lead applicant submits the always open application and checks the status
+Lead applicant submits the application and checks the dashboard content and the guidance after submission
     [Documentation]  IFS-8850
     Given the user clicks the button/link                                  link = ${applicationName}
     When the user clicks the button/link                                   link = Review and submit
-    and the user clicks the button/link                                    jQuery = button:contains("Submit application")
+    And the user clicks the button/link                                    jQuery = button:contains("Submit application")
     Then the user checks the status of the application after submission
 
-Checking the status of the application after an assessor is assigned to the application
+Lead applicant checks the dashboard content and the guidance after an assessor is assigned to the application
     [Documentation]  IFS-8850
     Given Log in as a different user                                    &{lead_applicant_credentials}
-    and the user clicks the application tile if displayed
+    And the user clicks the application tile if displayed
     When the user clicks the button/link                                link = ${webTestAppName}
     Then the user checks the status of the application in assessment
 
