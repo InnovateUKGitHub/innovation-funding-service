@@ -1,7 +1,7 @@
 
 ext {
-    bomSpringBootVersion = '2.0.9.RELEASE'
-    bomSpringCloudVersion = 'Finchley.RELEASE'
+    bomSpringBootVersion = '2.4.2'
+    bomSpringCloudVersion = '2020.0.1'
 }
 
 dependencies {
