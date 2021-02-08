@@ -50,7 +50,7 @@ public final class NumberUtils {
     }
 
     public static NumberFormat getNumberFormat() {
-        return DecimalFormat.getInstance(Locale.UK);
+        return NumberFormat.getInstance(Locale.UK);
     }
 
     public static String cleanNumberValue(String value) {

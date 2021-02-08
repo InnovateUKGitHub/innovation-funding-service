@@ -4,7 +4,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
@@ -97,7 +97,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         } else {
             otherPublicFunding = "";
         }
-        String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;
+        String fundingSource = BaseOtherFundingCostCategory.OTHER_FUNDING;
         String securedDate = null;
         BigDecimal fundingAmount = new BigDecimal(0);
         return newArrayList(new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
