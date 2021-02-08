@@ -334,22 +334,25 @@ internal user approve bank details
     the user clicks the button/link          id = submit-approve-bank-details
 
 internal user generate SP
-    the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/finance-check
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
-    the user selects the checkbox            project-viable
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link          css = #confirm-button
-    the user clicks the button/link          css = [name="confirm-viability"]
-    the user clicks the button/link         link = Back to finance checks
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
-    the user selects the checkbox            project-eligible
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link          css = #confirm-button
-    the user clicks the button/link          css = [name="confirm-eligibility"]
-    the user clicks the button/link          link = Return to finance checks
-    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
-    the user clicks the button/link          css = .generate-spend-profile-main-button
-    the user clicks the button/link          css = #generate-spend-profile-modal-button
+    the user navigates to the page                        ${server}/project-setup-management/project/${ProjectID}/finance-check
+    the user clicks the button/link                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user selects the checkbox                         project-viable
+    the user selects the option from the drop-down menu   Green  id = rag-rating
+    the user clicks the button/link                       css = #confirm-button
+    the user clicks the button/link                       css = [name="confirm-viability"]
+    the user clicks the button/link                       link = Back to finance checks
+    the user clicks the button/link                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
+    the user selects the checkbox                         project-eligible
+    the user selects the option from the drop-down menu   Green  id = rag-rating
+    the user clicks the button/link                       css = #confirm-button
+    the user clicks the button/link                       css = [name="confirm-eligibility"]
+    the user clicks the button/link                       link = Return to finance checks
+    the user should see the element                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
+    And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the internal user approves payment milestone
+    the user clicks the button/link                       link = Return to finance checks
+    the user clicks the button/link                       css = .generate-spend-profile-main-button
+    the user clicks the button/link                       css = #generate-spend-profile-modal-button
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}

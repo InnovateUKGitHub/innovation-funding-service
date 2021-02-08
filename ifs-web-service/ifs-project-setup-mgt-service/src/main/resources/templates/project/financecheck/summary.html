@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub"
+    <th:block th:insert="fragments/layout :: header-sub"\
               th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}, dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -68,8 +68,7 @@
                     <dd th:unless="${model.financeCheckSummaryResource.procurement}" th:text="${#numbers.formatDecimal(model.financeCheckSummaryResource.totalPercentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}"></dd>
                 </dl>
                 <a th:unless="${model.financeCheckSummaryResource.procurement}"
-                   th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View
-                    finances</a>
+                   th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View finances</a>
             </div>
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Project details</h2>
