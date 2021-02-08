@@ -2,10 +2,13 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Integration test for testing the rest services of the milestone controller
@@ -30,6 +34,9 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Override
     @Autowired
@@ -115,6 +122,50 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
+    public void testCreateSingleMilestoneWithAssessmentPeriod() {
+        User compAdminUser = newUser().withId(getLoggedInUser().getId()).build();
+        Competition newCompetition = competitionRepository.save(
+                newCompetition().withId((Long) null).withCreatedBy(compAdminUser).build());
+        AssessmentPeriod newAssessmentPeriod = assessmentPeriodRepository.save(
+                newAssessmentPeriod().withCompetition(newCompetition).withIndex(1).build());
+
+        List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
+        assertNotNull(milestones);
+        assertTrue(milestones.isEmpty());
+
+        MilestoneResource newMilestone = createNewMilestoneWithAssessmentPeriod(MilestoneType.ASSESSOR_BRIEFING, newCompetition.getId(), newAssessmentPeriod.getId());
+
+        assertNotNull(newMilestone.getId());
+        assertEquals(MilestoneType.ASSESSOR_BRIEFING, newMilestone.getType());
+        assertNull(newMilestone.getDate());
+        assertEquals(newAssessmentPeriod.getId(), newMilestone.getAssessmentPeriodId());
+    }
+
+    @Test
+    public void testCreateMilestonesWithAssessmentPeriod() {
+        User compAdminUser = newUser().withId(getLoggedInUser().getId()).build();
+        Competition newCompetition = competitionRepository.save(
+                newCompetition().withId((Long) null).withCreatedBy(compAdminUser).build());
+        AssessmentPeriod newAssessmentPeriod = assessmentPeriodRepository.save(
+                newAssessmentPeriod().withId((Long) null).withCompetition(newCompetition).withIndex(1).build());
+
+        List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
+
+        assertNotNull(milestones);
+        assertTrue(milestones.isEmpty());
+
+        List<MilestoneResource> newMilestones = createNewMilestonesWithAssessmentPeriod(newCompetition.getId(), newAssessmentPeriod.getId());
+
+        assertEquals(MilestoneType.alwaysOpenValues().length, newMilestones.size());
+
+        newMilestones.forEach(m -> {
+            assertNotNull(m.getId());
+            assertNull(m.getDate());
+            assertEquals(newAssessmentPeriod.getId(), m.getAssessmentPeriodId());
+        });
+    }
+
+    @Test
     public void testUpdateMilestones() throws Exception {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_VALID);
 
@@ -193,6 +244,22 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneType.values()).forEach(name -> {
             MilestoneResource newMilestone = createNewMilestone(name, competitionId);
+            newMilestone.setType(name);
+            newMilestones.add(newMilestone);
+        });
+        return newMilestones;
+    }
+
+    private MilestoneResource createNewMilestoneWithAssessmentPeriod(MilestoneType name, Long competitionId, Long assessmentPeriodId) {
+        RestResult<MilestoneResource> milestoneResult = controller.create(name, assessmentPeriodId, competitionId);
+        assertTrue(milestoneResult.isSuccess());
+        return milestoneResult.getSuccess();
+    }
+
+    private List<MilestoneResource> createNewMilestonesWithAssessmentPeriod(Long competitionId, Long assessmentPeriodId) {
+        List<MilestoneResource> newMilestones = new ArrayList<>();
+        Stream.of(MilestoneType.alwaysOpenValues()).forEach(name -> {
+            MilestoneResource newMilestone = createNewMilestoneWithAssessmentPeriod(name, competitionId, assessmentPeriodId);
             newMilestone.setType(name);
             newMilestones.add(newMilestone);
         });
