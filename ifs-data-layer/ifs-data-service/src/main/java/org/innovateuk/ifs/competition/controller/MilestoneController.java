@@ -45,10 +45,10 @@ public class MilestoneController {
     }
 
     @PostMapping("/{competitionId}/with-assessment-period")
-    public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
-                                                @RequestParam("assessmentPeriodId") final Integer assessmentPeriodId,
-                                                @PathVariable("competitionId") final Long competitionId) {
-        return milestoneService.create(type, competitionId).toPostCreateResponse();
+    public RestResult<MilestoneResource> create(@RequestParam final MilestoneType type,
+                                                @RequestParam final long assessmentPeriodId,
+                                                @PathVariable("competitionId") final long competitionId) {
+        return milestoneService.create(type, competitionId, assessmentPeriodId).toPostCreateResponse();
     }
 
     @PutMapping("/many")

@@ -33,8 +33,8 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void getAssessmentPeriodByCompetitionIdAndIndex_returnsSuccess() throws Exception {
 
-        Long competitionId = 1L;
-        Integer index = 1;
+        long competitionId = 1L;
+        int index = 1;
 
         AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource().build();
 
@@ -42,7 +42,7 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
                 .thenReturn(ServiceResult.serviceSuccess(assessmentPeriodResource));
 
         mockMvc.perform(get("/assessment-period/{competitionId}/get-by-index", competitionId)
-                .param("index", index.toString()))
+                .param("index", String.valueOf(index)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(assessmentPeriodResource)));
     }
@@ -50,22 +50,22 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void getAssessmentPeriodByCompetitionIdAndIndex_returnsFailure() throws Exception {
 
-        Long competitionId = 1L;
-        Integer index = 1;
+        long competitionId = 1L;
+        int index = 1;
 
         when(assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index))
                 .thenReturn(ServiceResult.serviceFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)));
 
         mockMvc.perform(get("/assessment-period/{competitionId}/get-by-index", competitionId)
-                .param("index", index.toString()))
+                .param("index", String.valueOf(index)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void create_returnsSuccess() throws Exception {
 
-        Long competitionId = 1L;
-        Integer index = 1;
+        long competitionId = 1L;
+        int index = 1;
 
         AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
                 .withCompetitionId(competitionId)
@@ -76,7 +76,7 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
                 .thenReturn(ServiceResult.serviceSuccess(assessmentPeriodResource));
 
         mockMvc.perform(post("/assessment-period/{competitionId}", competitionId)
-                .param("index", index.toString()))
+                .param("index", String.valueOf(index)))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(toJson(assessmentPeriodResource)));
     }
@@ -84,15 +84,15 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
     @Test
     public void create_returnsFailure() throws Exception {
 
-        Long competitionId = 1L;
-        Integer index = 1;
+        long competitionId = 1L;
+        int index = 1;
 
         when(assessmentPeriodService.create(competitionId, index))
                 .thenReturn(ServiceResult.serviceFailure(
                         new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)));
 
         mockMvc.perform(post("/assessment-period/{competitionId}", competitionId)
-                .param("index", index.toString()))
+                .param("index", String.valueOf(index)))
                 .andExpect(status().isInternalServerError());
     }
 }

@@ -18,14 +18,14 @@ public class AssessmentPeriodController {
 
     @GetMapping("/{competitionId}/get-by-index")
     public RestResult<AssessmentPeriodResource> getAssessmentPeriodByCompetitionIdAndIndex(
-            @RequestParam("index") final Integer index,
-            @PathVariable("competitionId") final Long competitionId) {
+            @RequestParam final int index,
+            @PathVariable("competitionId") final long competitionId) {
         return assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index).toGetResponse();
     }
 
     @PostMapping("/{competitionId}")
-    public RestResult<AssessmentPeriodResource> create(@RequestParam("index") final Integer index,
-                                                @PathVariable("competitionId") final Long competitionId) {
+    public RestResult<AssessmentPeriodResource> create(@RequestParam final int index,
+                                                @PathVariable("competitionId") final long competitionId) {
         return assessmentPeriodService.create(competitionId, index).toPostCreateResponse();
     }
 
