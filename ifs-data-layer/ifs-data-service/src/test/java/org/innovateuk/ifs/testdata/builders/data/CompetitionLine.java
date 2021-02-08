@@ -12,18 +12,18 @@ public class CompetitionLine {
 
     public Long id;
     public String name;
-    public String type;
-    public List<String> innovationAreas;
+    public Long type;
+    public Set<Long> innovationAreas;
     public String innovationSector;
     public Set<Long> researchCategory;
-    public String collaborationLevel;
+    public CollaborationLevel collaborationLevel;
     public List<OrganisationTypeEnum> leadApplicantTypes;
     public Integer researchRatio;
     public Boolean resubmission;
     public Boolean multiStream;
     public CompetitionStatus competitionStatus;
-    public String leadTechnologist;
-    public String compExecutive;
+    public Long leadTechnologist;
+    public Long compExecutive;
     public boolean setupComplete;
     public String budgetCode;
     public String code;
@@ -51,18 +51,18 @@ public class CompetitionLine {
 
     public CompetitionLine(Long id,
                            String name,
-                           String type,
-                           List<String> innovationAreas,
+                           Long type,
+                           Set<Long> innovationAreas,
                            String innovationSector,
                            Set<Long> researchCategory,
-                           String collaborationLevel,
+                           CollaborationLevel collaborationLevel,
                            List<OrganisationTypeEnum> leadApplicantTypes,
                            Integer researchRatio,
                            Boolean resubmission,
                            Boolean multiStream,
                            CompetitionStatus competitionStatus,
-                           String leadTechnologist,
-                           String compExecutive,
+                           Long leadTechnologist,
+                           Long compExecutive,
                            boolean setupComplete,
                            String budgetCode,
                            String code,
@@ -138,19 +138,19 @@ public class CompetitionLine {
         this.name = name;
     }
 
-    public String getType() {
+    public Long getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Long type) {
         this.type = type;
     }
 
-    public List<String> getInnovationAreas() {
+    public Set<Long> getInnovationAreas() {
         return innovationAreas;
     }
 
-    public void setInnovationAreas(List<String> innovationAreas) {
+    public void setInnovationAreas(Set<Long> innovationAreas) {
         this.innovationAreas = innovationAreas;
     }
 
@@ -170,11 +170,11 @@ public class CompetitionLine {
         this.researchCategory = researchCategory;
     }
 
-    public String getCollaborationLevel() {
+    public CollaborationLevel getCollaborationLevel() {
         return collaborationLevel;
     }
 
-    public void setCollaborationLevel(String collaborationLevel) {
+    public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
         this.collaborationLevel = collaborationLevel;
     }
 
@@ -218,19 +218,19 @@ public class CompetitionLine {
         this.competitionStatus = competitionStatus;
     }
 
-    public String getLeadTechnologist() {
+    public Long getLeadTechnologist() {
         return leadTechnologist;
     }
 
-    public void setLeadTechnologist(String leadTechnologist) {
+    public void setLeadTechnologist(Long leadTechnologist) {
         this.leadTechnologist = leadTechnologist;
     }
 
-    public String getCompExecutive() {
+    public Long getCompExecutive() {
         return compExecutive;
     }
 
-    public void setCompExecutive(String compExecutive) {
+    public void setCompExecutive(Long compExecutive) {
         this.compExecutive = compExecutive;
     }
 

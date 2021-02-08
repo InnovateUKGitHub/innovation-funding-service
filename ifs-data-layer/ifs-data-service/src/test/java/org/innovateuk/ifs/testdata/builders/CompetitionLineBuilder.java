@@ -101,7 +101,7 @@ public class CompetitionLineBuilder extends BaseBuilder<CompetitionLine, Competi
 //    }
 
     public CompetitionLineBuilder withMaxResearchRatio(Integer... maxResearchRatios) {
-        return withArraySetFieldByReflection("maxResearchRatio", maxResearchRatios);
+        return withArraySetFieldByReflection("researchRatio", maxResearchRatios);
     }
 
     public CompetitionLineBuilder withAcademicGrantClaimPercentage(Integer... grantClaimPercentages) {
@@ -121,7 +121,7 @@ public class CompetitionLineBuilder extends BaseBuilder<CompetitionLine, Competi
     }
 
     public CompetitionLineBuilder withExecutive(Long... userIds) {
-        return withArraySetFieldByReflection("executive", userIds);
+        return withArraySetFieldByReflection("compExecutive", userIds);
     }
 
     public CompetitionLineBuilder withExecutiveName(String... names) {
@@ -129,7 +129,7 @@ public class CompetitionLineBuilder extends BaseBuilder<CompetitionLine, Competi
     }
 
     public CompetitionLineBuilder withCompetitionType(Long... typeId) {
-        return withArraySetFieldByReflection("competitionType", typeId);
+        return withArraySetFieldByReflection("type", typeId);
     }
 
     public CompetitionLineBuilder withCompetitionTypeName(String... names) {
@@ -141,7 +141,7 @@ public class CompetitionLineBuilder extends BaseBuilder<CompetitionLine, Competi
     }
 
     public CompetitionLineBuilder withInnovationSectorName(String... names) {
-        return withArraySetFieldByReflection("innovationSectorName", names);
+        return withArraySetFieldByReflection("innovationSector", names);
     }
 
     public CompetitionLineBuilder withInnovationAreas(Set<Long>... ids) {
@@ -225,7 +225,7 @@ public class CompetitionLineBuilder extends BaseBuilder<CompetitionLine, Competi
     }
 
     public CompetitionLineBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
-        return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
+        return withArraySetFieldByReflection("includeYourOrganisation", includeYourOrganisationSection);
     }
 
     public CompetitionLineBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {
@@ -241,27 +241,27 @@ public class CompetitionLineBuilder extends BaseBuilder<CompetitionLine, Competi
     }
 
     public CompetitionLineBuilder withIncludeProjectGrowthTable(Boolean... includeProjectGrowthTable) {
-        return withArraySetFieldByReflection("includeProjectGrowthTable", includeProjectGrowthTable);
+        return withArraySetFieldByReflection("includeProjectGrowth", includeProjectGrowthTable);
     }
 
-    public CompetitionLineBuilder withCreatedBy(String... users) {
-        return withArraySetFieldByReflection("createdBy", users);
-    }
-
-    public CompetitionLineBuilder withCreatedOn(ZonedDateTime... createdOns) {
-        return withArraySetFieldByReflection("createdOn", createdOns);
-    }
-
-    public CompetitionLineBuilder withModifiedBy(String... users) {
-        return withArraySetFieldByReflection("modifiedBy", users);
-    }
-
-    public CompetitionLineBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
-        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
-    }
+//    public CompetitionLineBuilder withCreatedBy(String... users) {
+//        return withArraySetFieldByReflection("createdBy", users);
+//    }
+//
+//    public CompetitionLineBuilder withCreatedOn(ZonedDateTime... createdOns) {
+//        return withArraySetFieldByReflection("createdOn", createdOns);
+//    }
+//
+//    public CompetitionLineBuilder withModifiedBy(String... users) {
+//        return withArraySetFieldByReflection("modifiedBy", users);
+//    }
+//
+//    public CompetitionLineBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
+//        return withArraySetFieldByReflection("modifiedOn", modifiedOns);
+//    }
 
     public CompetitionLineBuilder withCompletionStage(CompetitionCompletionStage... completionStage) {
-        return withArraySetFieldByReflection("completionStage", completionStage);
+        return withArraySetFieldByReflection("competitionCompletionStage", completionStage);
     }
 
     public CompetitionLineBuilder withFundingType(FundingType... fundingTypes) {
