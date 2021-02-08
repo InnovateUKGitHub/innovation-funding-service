@@ -100,8 +100,8 @@ Not in Companies House: Manually add the details and pass to the confirmation pa
     [Documentation]    INFUND-888  IFS-7724
     [Tags]
     Given the applicant manually adds company details
-    When the user clicks the button/link                   jQuery = button:contains("Save and continue")
-    Then the applicant confirms company details
+    When the user clicks the button/link                      jQuery = button:contains("Save and continue")
+    Then the applicant confirms and saves company details
 
 *** Keywords ***
 Applicant goes to the organisation search page
@@ -163,7 +163,7 @@ the applicant enters address manually
     the user enters text to a text field     id = addressForm.manualAddress.county                  ${address_county}
     the user enters text to a text field     id = addressForm.manualAddress.postcode                ${address_postcode}
 
-the applicant confirms company details
+the applicant confirms and saves company details
     the user should see the element     jQuery = h1:contains("Confirm your organisation")
     the user should see the element     jQuery = dt:contains("Organisation type")
     the user should see the element     jQuery = dd:contains("Business")
@@ -184,3 +184,5 @@ the applicant confirms company details
     the user should see the element     jQuery = dd div:contains("${address_town}")
     the user should see the element     jQuery = dd div:contains("${address_county}")
     the user should see the element     jQuery = dd div:contains("${address_postcode}")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user should see the element     jQuery = h1:contains("Application overview")
