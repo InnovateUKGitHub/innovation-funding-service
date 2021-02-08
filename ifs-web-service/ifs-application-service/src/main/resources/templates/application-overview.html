@@ -51,9 +51,13 @@
                         <dd>Innovate UK</dd>
                         <dt>Application deadline:</dt>
                         <dd>
-                            <th:block
-                                th:text="${#strings.toLowerCase(#temporals.format(model.competition.endDate, 'hh:mma '))}"/>
-                            <th:block th:text="${#temporals.format(model.competition.endDate, 'EEEE d MMMM yyyy')}"/>
+                            <th:block th:if="${model.competition.alwaysOpen}">Decision pending</th:block>
+                            <th:block th:unless="${model.competition.alwaysOpen}">
+                                <th:block
+                                    th:text="${#strings.toLowerCase(#temporals.format(model.competition.endDate, 'hh:mma '))}"/>
+                                <th:block
+                                    th:text="${#temporals.format(model.competition.endDate, 'EEEE d MMMM yyyy')}"/>
+                            </th:block>
                         </dd>
                     </th:block>
                     <th:block th:if="${model.competition.isH2020()}">
