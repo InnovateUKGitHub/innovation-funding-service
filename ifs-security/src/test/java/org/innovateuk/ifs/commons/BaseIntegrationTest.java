@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * platform with a full stack available for autowiring.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest extends BaseTest {
 
