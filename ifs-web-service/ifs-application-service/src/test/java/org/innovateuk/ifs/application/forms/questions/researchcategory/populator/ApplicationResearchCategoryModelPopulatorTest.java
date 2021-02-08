@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.researchcategory.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
@@ -24,7 +25,6 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
@@ -204,7 +204,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         ResearchCategoryResource researchCategoryTwo = newResearchCategoryResource().withName(researchCategoryNameTwo).build();
 
         CompetitionResource competitionResource = newCompetitionResource()
-                .withResearchCategories(asSet(researchCategoryOne.getId(), researchCategoryTwo.getId())).build();
+                .withResearchCategories(ImmutableSet.of(researchCategoryOne.getId(), researchCategoryTwo.getId())).build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
         UserResource leadApplicant = newUserResource()

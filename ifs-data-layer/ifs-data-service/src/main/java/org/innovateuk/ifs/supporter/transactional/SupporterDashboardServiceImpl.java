@@ -5,7 +5,6 @@ import org.innovateuk.ifs.supporter.domain.CompetitionForCofunding;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.supporter.resource.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,6 @@ public class SupporterDashboardServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private ApplicationAssessmentService applicationAssessmentService;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Autowired
     private SupporterAssignmentRepository supporterAssignmentRepository;

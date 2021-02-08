@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.projectdocument.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import javax.validation.constraints.NotBlank;
@@ -17,7 +17,7 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.standard.title.required}")
     private String title;
 
-    @Length(max = 5000, message = "{validation.field.too.many.characters}")
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @NotBlank(message = "{validation.documentform.guidance.required}")
     private String guidance;
 

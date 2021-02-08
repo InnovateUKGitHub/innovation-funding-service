@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.grantagreement.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.forms.questions.grantagreement.model.GrantAgreementViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -23,7 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -76,7 +77,7 @@ public class GrantAgreementViewModelPopulatorTest {
         when(euGrantTransferRestService.findGrantAgreement(applicationId)).thenReturn(restFailure(Collections.emptyList(), HttpStatus.NOT_FOUND));
         when(organisationRestService.getByUserAndApplicationId(userId, applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.getMarkedAsComplete(applicationId, organisation.getId())).thenReturn(future);
-        when(future.get()).thenReturn(asSet(questionId));
+        when(future.get()).thenReturn(ImmutableSet.of(questionId));
 
         GrantAgreementViewModel viewModel = populator.populate(1L, 2L, 3L);
 
