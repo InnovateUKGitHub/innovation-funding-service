@@ -157,6 +157,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;
                 }
+                return null;
             default:
                 return null;
         }

@@ -25,10 +25,8 @@
                 <dt>Competition type</dt>
                 <dd th:each="(competitionType : ${model.competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
 
-                <th:block th:if="${model.fundingRuleEnabled}">
-                    <dt>Competition funding rules</dt>
-                    <dd th:text="${competitionSetupForm.fundingRule.displayName}"></dd>
-                </th:block>
+                <dt>Competition funding rules</dt>
+                <dd th:text="${competitionSetupForm.fundingRule.displayName}"></dd>
 
                 <dt>Opening date</dt>
                 <dd>
@@ -36,9 +34,7 @@
                     <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
                 </dd>
 
-                <th:block th:if="${model.fundingRuleEnabled}">
-                    <input type="hidden" th:field="${competitionSetupForm.fundingRule}" />
-                </th:block>
+                <input type="hidden" th:field="${competitionSetupForm.fundingRule}" />
 
                 <input type="hidden" th:field="${competitionSetupForm.fundingType}" />
                 <input type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
@@ -70,7 +66,7 @@
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingType">
                             <h2 class="govuk-fieldset__heading">Funding type</h2>
                         </legend>
-                        <p th:if="${model.fundingRuleEnabled}" class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
+                        <p class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                         <th:block th:if="${#fields.hasErrors('fundingType')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
                         </th:block>
@@ -98,7 +94,7 @@
                     <label class="govuk-label govuk-label--s" for="competitionTypeId">
                         Competition type
                     </label>
-                    <p th:if="${model.fundingRuleEnabled}" class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
+                    <p class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                     <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}"></span>
                     </th:block>
@@ -118,7 +114,7 @@
                     </select>
                 </div>
 
-                <div th:if="${model.fundingRuleEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingRule')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingRule')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingRule">
                             <h2 class="govuk-fieldset__heading">Competition funding rules</h2>
@@ -329,34 +325,6 @@
                 </div>
             </div>
 
-            <div th:unless="${model.fundingRuleEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingRule')} ? 'govuk-form-group--error'">
-
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingRule">
-                        <h2 class="govuk-fieldset__heading">State aid</h2>
-                    </legend>
-                    <th:block th:if="${#fields.hasErrors('fundingRule')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingRule')}" th:text="${err}" />
-                    </th:block>
-                    <div class="govuk-radios govuk-radios--inline">
-                        <div th:each="fundingRule : ${ {T(org.innovateuk.ifs.competition.resource.FundingRules).STATE_AID,  T(org.innovateuk.ifs.competition.resource.FundingRules).NOT_AID} }"
-                             class="govuk-radios__item">
-                            <input type="radio"
-                                   class="govuk-radios__input"
-                                   name="fundingRule"
-                                   th:id="${'fundingRule-'+fundingRule}"
-                                   th:value="${fundingRule}"
-                                   required="required"
-                                   th:checked="${competitionSetupForm.fundingRule == fundingRule}"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.stateaid.required}" />
-                            <label th:for="${'fundingRule-'+fundingRule}"
-                                   th:text="${fundingRule == T(org.innovateuk.ifs.competition.resource.FundingRules).STATE_AID} ? 'Yes' : 'No'"
-                                   class="govuk-label govuk-radios__label"></label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
             <input type="hidden" name="unrestricted" value="1" th:if="!${model.restricted}" />
 
             <button class="govuk-button">
@@ -375,10 +343,8 @@
                 <dt>Competition type</dt>
                 <dd th:each="(competitionType : ${model.competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
 
-                <th:block th:if="${model.fundingRuleEnabled}">
-                    <dt>Competition funding rules</dt>
-                    <dd th:text="${competitionSetupForm.fundingRule.displayName}"></dd>
-                </th:block>
+                <dt>Competition funding rules</dt>
+                <dd th:text="${competitionSetupForm.fundingRule.displayName}"></dd>
 
                 <dt>Innovation sector</dt>
                 <dd th:each="(innovationSector : ${model.innovationSectors})" th:if="${innovationSector.id == competitionSetupForm.innovationSectorCategoryId}" th:text="${innovationSector.name}">Innovation Sector</dd>
@@ -395,10 +361,6 @@
                 <dt>Portfolio Manager</dt>
                 <dd th:each="(competitionExecutiveUser : ${model.competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:if="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</dd>
 
-                <th:block th:unless="${model.fundingRuleEnabled}">
-                    <dt>State aid</dt>
-                    <dd th:text="${competitionSetupForm.fundingRule == T(org.innovateuk.ifs.competition.resource.FundingRules).STATE_AID} ? 'Yes' : 'No'"></dd>
-                </th:block>
             </dl>
 
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
