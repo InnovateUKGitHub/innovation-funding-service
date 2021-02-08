@@ -395,7 +395,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         "We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.\n" +
                         "There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.");
                 publicContent.setProjectSize("£15 million");
-                publicContent.setKeywords(asList(data.getCompetition().getName().split("\\s+"))); // keywords will now be competition name split
+                publicContent.setKeywords(asList(line.getName().split("\\s+"))); // keywords will now be competition name split
                 publicContent.setInviteOnly(line.inviteOnly);
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
