@@ -94,30 +94,32 @@ the user selects procurement Terms and Conditions
     the user should see the element                                     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user performs procurement Terms and Conditions validations
-    the user clicks the button/link                 jQuery = button:contains("Done")
-    the user should see a field and summary error   Upload a terms and conditions document.
-    the user uploads the file                       css = .inputfile  ${ods_file}
-    the user should see the element                 jQuery = :contains("${wrong_filetype_validation_error}")
+    the user clicks the button/link                   jQuery = button:contains("Done")
+    the user should see a field and summary error     Upload a terms and conditions document.
+    the user uploads the file                         css = .inputfile  ${ods_file}
+    the user should see the element                   jQuery = :contains("${wrong_filetype_validation_error}")
 
-the user selects the Terms and Conditions
-    the user clicks the button/link      link = Terms and conditions
-    the user clicks the button/link      jQuery = button:contains("Done")
-    the user clicks the button/link      link = Back to competition details
-    the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
-
-the user fills in the CS Funding Information
-    the user clicks the button/link       link = Funding information
-    the user clicks the button/link       jQuery = button:contains("Generate code")
-    the user enters text to an autocomplete field  id = funders[0].funder    Aerospace Technology Institute (ATI)
-    the user enters text to a text field  id = funders[0].funderBudget  142424242
-    the user enters text to a text field  id = pafNumber  2424
-    the user enters text to a text field  id = budgetCode  Ch0col@73
-    the user enters text to a text field  id = activityCode  133t
-    ${nextYearInTwoDigits}=               get next year in two digits
-    textfield should contain              css = input[name="competitionCode"]   ${nextYearInTwoDigits}
+the user selects the Terms and Conditions   #Will this impact EOI?
+    the user clicks the button/link       link = Terms and conditions
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user selects the radio button     termsAndConditionsId  34
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Back to competition details
-    the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
+    the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
+
+the user fills in the CS Funding Information
+    the user clicks the button/link                   link = Funding information
+    the user clicks the button/link                   jQuery = button:contains("Generate code")
+    the user enters text to an autocomplete field     id = funders[0].funder    Aerospace Technology Institute (ATI)
+    the user enters text to a text field              id = funders[0].funderBudget  142424242
+    the user enters text to a text field              id = pafNumber  2424
+    the user enters text to a text field              id = budgetCode  Ch0col@73
+    the user enters text to a text field              id = activityCode  133t
+    ${nextYearInTwoDigits}=                           get next year in two digits
+    textfield should contain                          css = input[name="competitionCode"]   ${nextYearInTwoDigits}
+    the user clicks the button/link                   jQuery = button:contains("Done")
+    the user clicks the button/link                   link = Back to competition details
+    the user should see the element                   jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
