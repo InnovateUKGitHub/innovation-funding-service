@@ -22,13 +22,14 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+        <div th:if="${#fields.hasErrors('${form.*}') or #fields.hasErrors('${projectProcurementMilestoneApprovalForm.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
              data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+            <th:block  th:if="${#fields.hasErrors('${form.*}')}" th:insert="fragments/elements :: error-summary-list(form)"/>
+            <th:block  th:if="${#fields.hasErrors('${projectProcurementMilestoneApprovalForm.*}')}" th:insert="fragments/elements :: error-summary-list(projectProcurementMilestoneApprovalForm)"/>
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
@@ -54,6 +55,13 @@
 
         <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                               data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
+
+        <h3 class="govuk-heading-m width-80-percent govuk-!-margin-bottom-5">Payment milestone overview</h3>
+
+        <dl class="govuk-list">
+            <dt>Total project costs</dt>
+            <dd th:text="'£' + ${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></dd>
+        </dl>
 
         <p th:if="${model.externalUser}" class="govuk-body">These are your project finances. Only your organisation can
             see this level of detail. Your designated project manager will be the main contact for queries. You will be
