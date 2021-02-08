@@ -23,7 +23,6 @@ dependencies {
     compile("org.springframework.security:spring-security-ldap")
     compile("org.springframework.data:spring-data-ldap")
     compile("org.springframework.boot:spring-boot-starter-security")
-
     testCompile("org.springframework.ldap:spring-ldap-test")
 }
 
