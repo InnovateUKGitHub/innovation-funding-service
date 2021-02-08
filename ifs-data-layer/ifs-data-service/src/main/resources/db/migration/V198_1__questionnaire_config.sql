@@ -2,10 +2,6 @@ CREATE TABLE questionnaire (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT
 );
 
-ALTER TABLE question ADD questionnaire_id BIGINT(20) NULL;
-
-ALTER TABLE question ADD CONSTRAINT question_questionnaire_fk FOREIGN KEY (questionnaire_id) REFERENCES questionnaire(id);
-
 CREATE TABLE questionnaire_decision (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT
 );
