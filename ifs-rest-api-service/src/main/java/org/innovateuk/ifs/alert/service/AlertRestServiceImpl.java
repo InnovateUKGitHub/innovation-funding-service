@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.alert.service;
 
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.alert.resource.AlertResource;
@@ -35,32 +34,29 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "findAllVisibleFallback")
     public RestResult<List<AlertResource>> findAllVisible() {
-        return getWithRestResultAnonymous(alertRestURL + "/find-all-visible", ParameterizedTypeReferences.alertResourceListType());
-    }
-
-    public RestResult<List<AlertResource>> findAllVisibleFallback(Throwable e) {
-        LOG.info("Calling Alerts Fallback:",e);
-        return RestResult.restSuccess(Collections.emptyList());
+        try {
+            return getWithRestResultAnonymous(alertRestURL + "/find-all-visible", ParameterizedTypeReferences.alertResourceListType());
+        } catch (Throwable t) {
+            LOG.info("Calling Alerts Fallback:", t);
+            return RestResult.restSuccess(Collections.emptyList());
+        }
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "findAllVisibleByTypeFallback")
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
-        return getWithRestResultAnonymous(alertRestURL + "/find-all-visible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
-    }
-
-    public RestResult<List<AlertResource>> findAllVisibleByTypeFallback(AlertType type, Throwable e) {
-        LOG.info("Calling Alerts Fallback:",e);
-        return RestResult.restSuccess(Collections.emptyList());
+        try {
+            return getWithRestResultAnonymous(alertRestURL + "/find-all-visible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
+        } catch (Throwable t) {
+            LOG.info("Calling Alerts Fallback:", t);
+            return RestResult.restSuccess(Collections.emptyList());
+        }
     }
 
     @Override
     public RestResult<AlertResource> getAlertById(final Long id) {
         return getWithRestResult(alertRestURL + "/" + id, AlertResource.class);
     }
-
 
     @Override
     public RestResult<AlertResource> create(final AlertResource alertResource) {

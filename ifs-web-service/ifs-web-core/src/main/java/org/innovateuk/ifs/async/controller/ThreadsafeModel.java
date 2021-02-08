@@ -55,11 +55,10 @@ public class ThreadsafeModel implements Model {
         return withReadLock(() -> model.containsAttribute(attributeName));
     }
 
-    // This gets added in a later spring so uncomment then
-    //    @Override
-    //    public Object getAttribute(String attributeName) {
-    //        return withReadLock(() -> model.getAttribute(attributeName));
-    //    }
+    @Override
+    public Object getAttribute(String attributeName) {
+        return withReadLock(() -> model.getAttribute(attributeName));
+    }
 
     @Override
     public Map<String, Object> asMap() {

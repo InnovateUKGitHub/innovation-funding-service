@@ -1,5 +1,47 @@
 import org.ajoberstar.grgit.*
 
+buildscript {
+    ext {
+        // Important versions tracked here
+        // Spring boot around line 27
+        springBootVersion = "2.4.2"
+        springCloudVersion = "2020.0.1"
+        dependencyPluginVersion = "1.0.11.RELEASE"
+    }
+    repositories {
+        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyPluginVersion}"
+        classpath "com.bluepapa32:gradle-watch-plugin:0.1.5"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.3"
+        classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0"
+        classpath "org.ajoberstar.grgit:grgit-core:4.0.2"
+    }
+}
+
+plugins {
+    id "com.github.hierynomus.license" version "0.15.0"
+    //id 'org.springframework.boot' version "2.4.2" apply false
+}
+
+// This enables spring boot dependency mgt without enabling the plugin
+// https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#managing-dependencies-dependency-management-plugin-using-in-isolation
+apply plugin: 'io.spring.dependency-management'
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+
+    dependencies {
+        dependency group:'org.flywaydb', name:'flyway-core', version:'5.2.4'
+        dependency group:'com.google.guava', name:'guava', version:'29.0-jre'
+        dependency group:'org.apache.commons', name:'commons-lang3', version:'3.11'
+    }
+}
+
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/certificates.gradle"
@@ -42,33 +84,6 @@ if (!project.hasProperty('osTestArgs')) {
 
 apply from: "gradle-support/openshift-support.gradle"
 
-buildscript {
-
-    ext {
-        springBootVersion = '2.0.9.RELEASE'
-    }
-
-    repositories {
-        maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/" }
-
-    }
-
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
-        classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
-
-        classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
-    }
-
-}
-
-
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
         rules.all { ComponentSelection selection ->
@@ -82,9 +97,6 @@ dependencyUpdates.resolutionStrategy = {
         }
     }
 }
-
-
-apply plugin: "com.github.hierynomus.license"
 
 
 wrapper {
