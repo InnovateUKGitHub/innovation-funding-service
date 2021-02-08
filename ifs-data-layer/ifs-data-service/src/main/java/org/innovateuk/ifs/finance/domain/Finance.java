@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.domain;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -44,13 +45,21 @@ public abstract class Finance {
 
     private Boolean northernIrelandDeclaration;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration) {
+    private Boolean fecModelEnabled;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fecFileEntryId", referencedColumnName = "id")
+    private FileEntry fecFileEntry;
+
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
         this.employeesAndTurnover = employeesAndTurnover;
         this.ktpFinancialYears = ktpFinancialYears;
         this.northernIrelandDeclaration = northernIrelandDeclaration;
+        this.fecModelEnabled = fecModelEnabled;
+        this.fecFileEntry = fecFileEntry;
     }
 
     public Finance(Organisation organisation) {
@@ -202,5 +211,21 @@ public abstract class Finance {
 
     private boolean isBusinessOrganisationType() {
         return getOrganisation().getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId());
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
+    }
+
+    public FileEntry getFecFileEntry() {
+        return fecFileEntry;
+    }
+
+    public void setFecFileEntry(FileEntry fecFileEntry) {
+        this.fecFileEntry = fecFileEntry;
     }
 }
