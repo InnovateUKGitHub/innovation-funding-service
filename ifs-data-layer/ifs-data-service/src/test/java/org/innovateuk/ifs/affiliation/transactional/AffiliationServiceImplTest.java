@@ -141,7 +141,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
     private User createUserExpectations(Long userId, Profile profile) {
         return createLambdaMatcher(user -> {
             assertEquals(userId, user.getId());
-            assertEquals(profile, user.getProfileId());
+            assertEquals(profile.getId(), user.getProfileId());
         });
     }
 

@@ -43,8 +43,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -175,7 +174,7 @@ public class OrganisationDetailsKtpFinancialYearsControllerTest extends BaseCont
 
         sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
 
-        assertNotEquals("yourOrganisation", result.getModelAndView().getModel());
+        assertFalse(result.getModelAndView().getModel().containsKey("yourOrganisation"));
     }
 
     private OrganisationFinancesKtpYearsResource getFinances() {
