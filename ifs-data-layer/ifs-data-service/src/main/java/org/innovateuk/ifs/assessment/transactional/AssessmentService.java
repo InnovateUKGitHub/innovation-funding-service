@@ -18,6 +18,9 @@ public interface AssessmentService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<AssessmentResource> findById(long id);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Boolean> existsByTargetId(long applicationId);
+
     @PostAuthorize("hasPermission(returnObject, 'READ_TO_ASSIGN')")
     ServiceResult<AssessmentResource> findAssignableById(long id);
 
