@@ -186,3 +186,5 @@ the applicant confirms and saves company details
     the user should see the element     jQuery = dd div:contains("${address_postcode}")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user should see the element     jQuery = h1:contains("Your details")
+    the user clicks the button/link     jQuery = button:contains("Back to confirm your organisation")
+    the user should see the element     jQuery = h1:contains("Confirm your organisation")
