@@ -17,15 +17,14 @@ import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<ContentGroupService> {
 
-    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
+    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
     private ContentGroupPermissionRules rules;
     private ContentGroupLookupStrategy contentGroupLookupStrategies;
 

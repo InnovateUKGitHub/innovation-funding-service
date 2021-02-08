@@ -84,9 +84,10 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 serviceSuccess(
                         newRoleInviteResource()
                                 .withName("Arden Pimenta")
-                                .withRoleId(1L)
-                                .withEmail("example@test.com").withHash("SomeHashString")
-                                .withRoleName("Project Finance").build()));
+                                .withEmail("example@test.com")
+                                .withHash("SomeHashString")
+                                .withRole(Role.IFS_ADMINISTRATOR)
+                                .build()));
 
         mockMvc.perform(get("/invite-user/get-invite/{inviteHash}", "SomeHashString")
                 .header("IFS_AUTH_TOKEN", "123abc"))

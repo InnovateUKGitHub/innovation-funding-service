@@ -41,14 +41,6 @@ public class RoleInviteResourceBuilder extends BaseBuilder<RoleInviteResource, R
         return withArraySetFieldByReflection("email", emails);
     }
 
-    public RoleInviteResourceBuilder withRoleId(Long... roleIds) {
-        return withArraySetFieldByReflection("roleId", roleIds);
-    }
-
-    public RoleInviteResourceBuilder withRoleName(String... roleNames) {
-        return withArraySetFieldByReflection("roleName", roleNames);
-    }
-
     public RoleInviteResourceBuilder withHash(String... hashes) {
         return withArraySetFieldByReflection("hash", hashes);
     }

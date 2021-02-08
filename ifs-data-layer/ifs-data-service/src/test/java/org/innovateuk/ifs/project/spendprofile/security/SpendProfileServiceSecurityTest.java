@@ -46,7 +46,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             UserResource userWithRole = newUserResource().withRoleGlobal(role).build();
             setLoggedInUser(userWithRole);
 
-            if (role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE || role == SYSTEM_MAINTAINER) {
+            if (role == IFS_ADMINISTRATOR || role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE || role == SYSTEM_MAINTAINER) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
@@ -219,7 +219,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     private List<Role> getNonProjectFinanceUserRoles() {
-        return Arrays.stream(Role.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SYSTEM_MAINTAINER)
+        return Arrays.stream(Role.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SYSTEM_MAINTAINER && type != IFS_ADMINISTRATOR)
                 .collect(toList());
     }
 }
