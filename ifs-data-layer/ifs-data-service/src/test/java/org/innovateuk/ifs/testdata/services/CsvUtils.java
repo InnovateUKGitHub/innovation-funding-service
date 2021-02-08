@@ -9,14 +9,12 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Role;
@@ -451,99 +449,6 @@ public class CsvUtils {
             this.formInputType = formInputType;
             this.isResearchCategory = isResearchCategory;
             this.value = value;
-        }
-    }
-
-    public static class CompetitionLine {
-
-        public int lineNumber;
-        public String name;
-        public String type;
-        public List<String> innovationAreas;
-        public String innovationSector;
-        public List<String> researchCategory;
-        public String collaborationLevel;
-        public List<OrganisationTypeEnum> leadApplicantTypes;
-        public Integer researchRatio;
-        public Boolean resubmission;
-        public Boolean multiStream;
-        public CompetitionStatus competitionStatus;
-        public String leadTechnologist;
-        public String compExecutive;
-        public boolean setupComplete;
-        public String budgetCode;
-        public String code;
-        public String pafCode;
-        public String activityCode;
-        public Integer assessorCount;
-        public BigDecimal assessorPay;
-        public Boolean hasAssessmentPanel;
-        public Boolean hasInterviewStage;
-        public AssessorFinanceView assessorFinanceView;
-        public boolean published;
-        public String shortDescription;
-        public String fundingRange;
-        public String eligibilitySummary;
-        public String competitionDescription;
-        public FundingType fundingType;
-        public String projectSize;
-        public List<String> keywords;
-        public boolean inviteOnly;
-        public boolean nonIfs;
-        public String nonIfsUrl;
-        public CompetitionCompletionStage competitionCompletionStage;
-        public Boolean includeJesForm;
-        public ApplicationFinanceType applicationFinanceType;
-        public Boolean includeProjectGrowth;
-        public Boolean includeYourOrganisation;
-        public FundingRules fundingRules;
-        public Boolean alwaysOpen;
-
-        private CompetitionLine(List<String> line, int lineNumber) {
-
-            this.lineNumber = lineNumber;
-            int i = 0;
-            name = nullable(line.get(i++));
-            type = nullable(line.get(i++));
-            innovationAreas = nullableSplitOnNewLines(line.get(i++));
-            innovationSector = nullable(line.get(i++));
-            researchCategory = nullableSplitOnNewLines(line.get(i++));
-            collaborationLevel = nullable(line.get(i++));
-            leadApplicantTypes = simpleMap(nullableSplitOnNewLines(line.get(i++)), OrganisationTypeEnum::valueOf);
-            researchRatio = nullableInteger(line.get(i++));
-            resubmission = nullableBoolean(line.get(i++));
-            multiStream = nullableBoolean(line.get(i++));
-            competitionStatus = CompetitionStatus.valueOf(line.get(i++));
-            leadTechnologist = nullable((line.get(i++)));
-            compExecutive = nullable((line.get(i++)));
-            setupComplete = nullableBoolean(line.get(i++));
-            pafCode = nullable(line.get(i++));
-            budgetCode = nullable(line.get(i++));
-            activityCode = nullable(line.get(i++));
-            code = nullable(line.get(i++));
-            assessorCount = nullableInteger(line.get(i++));
-            assessorPay = nullableBigDecimal(line.get(i++));
-            hasAssessmentPanel = nullableBoolean(line.get(i++));
-            hasInterviewStage = nullableBoolean(line.get(i++));
-            assessorFinanceView = nullableEnum(line.get(i++), AssessorFinanceView::valueOf);
-            published = nullableBoolean(line.get(i++));
-            shortDescription = nullable(line.get(i++));
-            fundingRange = nullable(line.get(i++));
-            eligibilitySummary = nullable(line.get(i++));
-            competitionDescription = nullable(line.get(i++));
-            fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
-            projectSize = nullable(line.get(i++));
-            keywords = nullableSplittableString(line.get(i++));
-            inviteOnly = nullableBoolean(line.get(i++));
-            nonIfs = nullableBoolean(line.get(i++));
-            nonIfsUrl = nullable(line.get(i++));
-            competitionCompletionStage = CompetitionCompletionStage.valueOf(line.get(i++));
-            includeJesForm = nullableBoolean(line.get(i++));
-            applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
-            includeProjectGrowth = nullableBoolean(line.get(i++));
-            includeYourOrganisation = nullableBoolean(line.get(i++));
-            fundingRules = FundingRules.valueOf(line.get(i++));
-            alwaysOpen = nullableBoolean(line.get(i++));
         }
     }
 

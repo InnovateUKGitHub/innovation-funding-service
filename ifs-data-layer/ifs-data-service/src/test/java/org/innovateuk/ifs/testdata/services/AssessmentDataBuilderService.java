@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
@@ -65,10 +67,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
     }
 
-    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionResource> competitionLines) {
+    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionLine> competitionLines) {
 
-        List<CompetitionResource> competitionsPastAssessment = simpleFilter(competitionLines, CompetitionResource::isLaterThanAssessment);
-        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.getName());
+        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
+        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.name);
 
         applications.forEach(application -> {
 

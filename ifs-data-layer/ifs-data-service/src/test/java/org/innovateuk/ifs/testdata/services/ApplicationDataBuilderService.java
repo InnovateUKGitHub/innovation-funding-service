@@ -339,7 +339,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     public void createFundingDecisions(
             CompetitionData competition,
-            CompetitionResource competitionLine,
+            CompetitionLine competitionLine,
             List<ApplicationLine> applicationLines) {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);

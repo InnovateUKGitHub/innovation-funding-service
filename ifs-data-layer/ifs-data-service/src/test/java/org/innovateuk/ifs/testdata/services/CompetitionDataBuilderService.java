@@ -2,11 +2,11 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionResources;
+import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -54,7 +54,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
     private AssessmentPeriodDataBuilder assessmentPeriodDataBuilder;
 
-    private List<CompetitionResource> competitionLines;
+    private List<CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
     private static List<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLines;
     private static List<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriodLines;
@@ -69,7 +69,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
         assessmentPeriodDataBuilder = newCompetitionAssessmentPeriods(serviceLocator);
 
-        competitionLines = buildCompetitionResources();
+        competitionLines = buildCompetitionLines();
         competitionFunderLines = readCompetitionFunders();
         competitionOrganisationConfigLines = readCompetitionOrganisationConfig();
         competitionAssessmentPeriodLines = readCompetitionAssessmentPeriods();
@@ -79,7 +79,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
         competitions.forEach(competition -> {
 
-            CompetitionResource line = simpleFindFirstMandatory(competitionLines, l ->
+            CompetitionLine line = simpleFindFirstMandatory(competitionLines, l ->
                     Objects.equals(l.getName(), competition.getCompetition().getName()));
 
             CompetitionDataBuilder builder = this.competitionDataBuilder.
@@ -139,8 +139,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         );
     }
 
-    public CompetitionData createCompetition(CompetitionResource competitions) {
-        return competitionBuilderWithBasicInformation(competitions).build();
+    public CompetitionData createCompetition(CompetitionLine line) {
+        if (line.isNonIfs()) {
+            return nonIfsCompetitionDataBuilder(line).build();
+        } else {
+            return ifsCompetitionDataBuilder(line).build();
+        }
     }
 
     public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
@@ -148,66 +152,58 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
     }
 
-    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CompetitionResource competition) {
-        if (competition.isNonIfs()) {
-            return nonIfsCompetitionDataBuilder(competition);
-        } else {
-            return ifsCompetitionDataBuilder(competition);
-        }
-    }
-
-    private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CompetitionResource competition) {
+    private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CompetitionLine line) {
 
         CompetitionDataBuilder competitionWithoutMilestones = this.competitionDataBuilder
-                .createNonIfsCompetition(competition)
+                .createNonIfsCompetition()
                 .withApplicationFinances()
                 .withAssessmentConfig();
 
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(competition, competitionWithoutMilestones);
+        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionWithoutMilestones);
 
         return competitionWithMilestones
-                .withDefaultPublicContent();
+                .withDefaultPublicContent(line);
     }
 
-    private CompetitionDataBuilder ifsCompetitionDataBuilder(CompetitionResource competitionResource) {
+    private CompetitionDataBuilder ifsCompetitionDataBuilder(CompetitionLine line) {
 
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
-                createCompetition(competitionResource).
+                createCompetition().
                 withApplicationFormFromTemplate().
                 withApplicationFinances().
                 withAssessmentConfig().
                 withNewMilestones();
 
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(competitionResource, competitionBeforeMilestones);
+        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
         return competitionWithMilestones.
-                withDefaultPublicContent();
+                withDefaultPublicContent(line);
     }
 
-    private CompetitionDataBuilder getCompetitionWithMilestones(CompetitionResource line, CompetitionDataBuilder competitionBeforeMilestones) {
+    private CompetitionDataBuilder getCompetitionWithMilestones(CompetitionLine line, CompetitionDataBuilder competitionBeforeMilestones) {
 
         switch (line.getCompetitionStatus()) {
 
             case OPEN:
                 return line.isNonIfs() ?
                         withOpenStatusNonIfs(competitionBeforeMilestones) :
-                        withOpenStatus(competitionBeforeMilestones, line.getCompletionStage(), line.isAlwaysOpen());
+                        withOpenStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage(), line.getAlwaysOpen());
 
             case ASSESSOR_FEEDBACK:
-                return withAssessorFeedbackStatus(competitionBeforeMilestones, line.getCompletionStage());
+                return withAssessorFeedbackStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage());
             case CLOSED:
-                return withClosedStatus(competitionBeforeMilestones, line.getCompletionStage());
+                return withClosedStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage());
             case COMPETITION_SETUP:
                 return withCompetitionSetupStatus(competitionBeforeMilestones);
             case FUNDERS_PANEL:
-                return withFundersPanelStatus(competitionBeforeMilestones, line.getCompletionStage());
+                return withFundersPanelStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage());
             case IN_ASSESSMENT:
-                return withInAssessmentStatus(competitionBeforeMilestones, line.getCompletionStage());
+                return withInAssessmentStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage());
             case PROJECT_SETUP:
-                return withProjectSetupStatus(competitionBeforeMilestones, line.getCompletionStage());
+                return withProjectSetupStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage());
             case READY_TO_OPEN:
                 return line.isNonIfs() ?
                         withReadyToOpenStatusNonIfs(competitionBeforeMilestones) :
-                        withReadyToOpenStatus(competitionBeforeMilestones, line.getCompletionStage());
+                        withReadyToOpenStatus(competitionBeforeMilestones, line.getCompetitionCompletionStage());
 
             default:
                 throw new IllegalArgumentException("Unknown CompetitionStatus value of " + line.getCompetitionStatus().name());
