@@ -154,21 +154,20 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
 
     private OrganisationSearchResult improvedOrganisationSearchMapper(JsonNode jsonNode, String totalResults) {
-        AddressResource officeAddress = getImprovedSearchDisplayAddress(jsonNode);
+        String addressSnippet = getImprovedSearchDisplayAddress(jsonNode);
         OrganisationSearchResult org = getOrganisationBasicDetailsFromSearchResults(jsonNode);
 
         Map<String, Object> extras = getExtraAttributesOfCHSearch(jsonNode);
         extras.put("total_results", totalResults);
         org.setExtraAttributes(extras);
-        org.setOrganisationAddress(officeAddress);
+        org.setOrganisationAddressSnippet(addressSnippet);
         return org;
     }
 
-    private AddressResource getImprovedSearchDisplayAddress(JsonNode jsonNode) {
+    private String getImprovedSearchDisplayAddress(JsonNode jsonNode) {
         String addressSnippet = jsonNode.path("address_snippet").asText();
         addressSnippet = addressSnippet.equals("null") ? EMPTY_NAME_STRING : addressSnippet;
-        AddressResource officeAddress = new AddressResource(addressSnippet);
-        return officeAddress;
+        return addressSnippet;
     }
 
     private OrganisationSearchResult getOrganisationBasicDetailsFromSearchResults(JsonNode organisationNode) {

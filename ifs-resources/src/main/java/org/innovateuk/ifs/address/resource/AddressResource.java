@@ -28,13 +28,8 @@ public class AddressResource {
     @Size(max = 9, message = "{validation.standard.postcode.length}")
     private String postcode;
 
-    private String addressSnippet;
-
     public AddressResource() {
         // no-arg constructor
-    }
-    public AddressResource(String addressSnippet) {
-        this.addressSnippet = addressSnippet;
     }
 
     public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
@@ -114,14 +109,6 @@ public class AddressResource {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public String getAddressSnippet() {
-        return addressSnippet;
-    }
-
-    public void setAddressSnippet(String addressSnippet) {
-        this.addressSnippet = addressSnippet;
     }
 
     @JsonIgnore

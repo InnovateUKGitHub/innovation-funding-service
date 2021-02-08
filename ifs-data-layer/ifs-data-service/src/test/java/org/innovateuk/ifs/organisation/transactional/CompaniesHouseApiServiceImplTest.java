@@ -115,12 +115,7 @@ public class CompaniesHouseApiServiceImplTest {
 		assertEquals(1, result.getSuccess().size());
 		assertEquals("company name2", result.getSuccess().get(0).getName());
 		assertEquals("8910", result.getSuccess().get(0).getOrganisationSearchId());
-		assertEquals("line1", result.getSuccess().get(0).getOrganisationAddress().getAddressLine1());
-		assertEquals("line2", result.getSuccess().get(0).getOrganisationAddress().getAddressLine2());
-		assertEquals("line3", result.getSuccess().get(0).getOrganisationAddress().getAddressLine3());
-		assertEquals("loc", result.getSuccess().get(0).getOrganisationAddress().getTown());
-		assertEquals("reg", result.getSuccess().get(0).getOrganisationAddress().getCounty());
-		assertEquals("ba1", result.getSuccess().get(0).getOrganisationAddress().getPostcode());
+		assertEquals("addressSnippet", result.getSuccess().get(0).getOrganisationAddressSnippet());
 	}
 
 	@Test
@@ -360,20 +355,20 @@ public class CompaniesHouseApiServiceImplTest {
 				"title", "company name",
 				"company_status", "dissolved",
 				"company_number", "1234",
-				"address", addressMap()));
+				"address_snippet", "addressSnippet"));
 		indexedSearchResultMap.put(2, asMap("company_number", "4567",
 				"title", "company name1",
 				"company_number", "4567",
 				"company_status", "closed",
-				"address", addressMap()));
+				"address_snippet", "addressSnippet"));
 		indexedSearchResultMap.put(3, asMap("company_number", "8910",
 				"title", "company name2",
 				"company_number", "8910",
-				"address", addressMap()));
+				"address_snippet", "addressSnippet"));
 		indexedSearchResultMap.put(4, asMap("company_number", "1112",
 				"title", "company name3",
 				"company_number", "1112",
-				"address", addressMap()));
+				"address_snippet", "addressSnippet"));
 
 		return indexedSearchResultMap.get(indexPosition);
 
@@ -395,7 +390,6 @@ public class CompaniesHouseApiServiceImplTest {
 				"postal_code","ba1"
 					);
 	}
-
 	private Map<String, Object> companyMapWithSicCodes() {
 		return asMap("company_number", "1234",
 				"company_name", "company name",

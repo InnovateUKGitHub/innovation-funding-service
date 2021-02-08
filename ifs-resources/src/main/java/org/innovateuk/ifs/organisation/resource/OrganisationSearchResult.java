@@ -23,6 +23,7 @@ public class OrganisationSearchResult implements Serializable{
     private List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficers;
     private Map<String, Object> extraAttributes;
     private String organisationStatus;
+    private String organisationAddressSnippet;
 
     public OrganisationSearchResult(String id, String name) {
         this.name = name;
@@ -34,13 +35,6 @@ public class OrganisationSearchResult implements Serializable{
         extraAttributes = new HashMap<>();
     }
 
-    @JsonIgnore
-    public String getOrganisationAddressSnippet() {
-      	if(!StringUtils.isEmpty(organisationAddress.getAddressSnippet())){
-    		return organisationAddress.getAddressSnippet();
-    	}
-      	return "";
-     }
     @JsonIgnore
     public String getLocation() {
         List<String> parts = new ArrayList<>();
@@ -109,6 +103,17 @@ public class OrganisationSearchResult implements Serializable{
 
     public void setOrganisationStatus(String organisationStatus) {
         this.organisationStatus = organisationStatus;
+    }
+
+    public void setOrganisationAddressSnippet(String organisationAddressSnippet) {
+        this.organisationAddressSnippet = organisationAddressSnippet;
+    }
+
+    public String getOrganisationAddressSnippet() {
+        if(!StringUtils.isEmpty(organisationAddressSnippet)){
+            return organisationAddressSnippet;
+        }
+        return "";
     }
 
     @JsonIgnore

@@ -490,21 +490,19 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                                                                         String description,
                                                                         List<String> sicCodes,
                                                                         List<String> directors) {
-        AddressResource address = null;
-        if (isSearch) {
-             address = new AddressResource(addressSnippet);
-        }
-       else {
-          address = new AddressResource(addressLine1,
+          AddressResource  address = new AddressResource(addressLine1,
                     addressLine2,
                     addressLine3,
                     town,
                     county,
                     postcode);
-        }
         OrganisationSearchResult org = new OrganisationSearchResult(id, name);
         org.setOrganisationSicCodes(getSicCodes(sicCodes));
-        org.setOrganisationAddress(address);
+        if (isSearch) {
+            org.setOrganisationAddressSnippet(addressSnippet);
+        } else {
+            org.setOrganisationAddress(address);
+        }
         org.setOrganisationStatus(companyStatus);
         org.setOrganisationExecutiveOfficers(getDirectors(directors));
 
