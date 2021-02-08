@@ -7,7 +7,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqu
 /**
  * The absolute base class of all tests
  */
-public class BaseTest {
+public abstract class BaseTest {
 
     @Before
     public void resetBuilderIds() {
