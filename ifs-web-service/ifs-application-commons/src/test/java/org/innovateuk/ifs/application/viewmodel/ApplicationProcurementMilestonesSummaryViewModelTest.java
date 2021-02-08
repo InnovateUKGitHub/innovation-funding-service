@@ -23,7 +23,7 @@ public class ApplicationProcurementMilestonesSummaryViewModelTest {
                 Arrays.asList(
                         newApplicationProcurementMilestoneResource().withPayment(BigInteger.valueOf(10)).build(),
                         newApplicationProcurementMilestoneResource().withPayment(BigInteger.valueOf(20)).build(),
-                        newApplicationProcurementMilestoneResource().withPayment(null).build(), // This should not happen - but check it still works
+                        newApplicationProcurementMilestoneResource().withPayment((BigInteger) null).build(), // This should not happen - but check it still works
                         newApplicationProcurementMilestoneResource().withPayment(BigInteger.valueOf(0)).build() // This should not happen - but check it still works
                         );
         List<BaseFinanceResource> financeResources = Arrays.asList(new TestTotalFundingSoughtBaseFinanceResource(new BigDecimal(60)));
