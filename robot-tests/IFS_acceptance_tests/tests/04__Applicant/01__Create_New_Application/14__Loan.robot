@@ -335,7 +335,7 @@ the applicant checks for project status
     the user should see the element   jQuery = h2:contains("We have not approved your loan")
 
 the user should see the finished finance checks
-    the user navigates to the page    ${loan_PS}/finance-checks
+    the user navigates to the page    ${loan_PS}/finance-check
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
     the user clicks the button/link   link = finances.
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")

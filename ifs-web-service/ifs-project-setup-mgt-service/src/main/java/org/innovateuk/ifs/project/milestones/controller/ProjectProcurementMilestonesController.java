@@ -28,6 +28,9 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+
 @Controller
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones")
 @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -66,12 +69,12 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  @RequestParam(name = "editMilestones", defaultValue = "false") boolean editMilestones,
                                  UserResource userResource,
                                  Model model) {
-        model.addAttribute("projectProcurementMilestoneApprovalForm", new ProjectProcurementMilestoneApprovalForm());
         ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
-        return viewProjectMilestones(projectId, organisationId, editMilestones, userResource, model, form);
+        return viewProjectMilestones(projectId, organisationId, editMilestones, userResource, model, form, null);
     }
 
-    private String viewProjectMilestones(long projectId, long organisationId, boolean editMilestones, UserResource userResource, Model model, ProcurementMilestonesForm form) {
+    private String viewProjectMilestones(long projectId, long organisationId, boolean editMilestones, UserResource userResource, Model model, ProcurementMilestonesForm form, ProjectProcurementMilestoneApprovalForm approvalForm) {
+        model.addAttribute("projectProcurementMilestoneApprovalForm", approvalForm != null ? approvalForm : new ProjectProcurementMilestoneApprovalForm());
         model.addAttribute("model", populator.populate(projectId, organisationId, userResource, editMilestones, true));
         return viewProjectSetupMilestones(model, userResource, form);
     }
@@ -79,16 +82,20 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @PostMapping(params = "approve")
     public String approvePaymentMilestones(@PathVariable long projectId,
                                            @PathVariable long organisationId,
-                                           @ModelAttribute("form") ProjectProcurementMilestoneApprovalForm form,
+                                           @ModelAttribute("projectProcurementMilestoneApprovalForm") ProjectProcurementMilestoneApprovalForm projectProcurementMilestoneApprovalForm,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
                                            UserResource user) {
-        Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
-        RestResult<Void> approvePaymentMilestoneState = financeCheckRestService.approvePaymentMilestoneState(projectId, organisationId);
-        return validationHandler
-                .addAnyErrors(approvePaymentMilestoneState)
-                .failNowOrSucceedWith(view, view);
+        ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
+        validator.validate(form, projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess(), validationHandler);
+        Supplier<String> view = () -> viewProjectMilestones(projectId,organisationId,false, user, model, form, projectProcurementMilestoneApprovalForm);
+        return validationHandler.failNowOrSucceedWith(view, () -> {
+            RestResult<Void> approvePaymentMilestoneState = financeCheckRestService.approvePaymentMilestoneState(projectId, organisationId);
+            return validationHandler
+                    .addAnyErrors(approvePaymentMilestoneState)
+                    .failNowOrSucceedWith(view, view);
+        });
     }
 
     @PostMapping(params = "save")
@@ -100,7 +107,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  Model model,
                                  UserResource user) {
         validator.validate(form, projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess(), validationHandler);
-        Supplier<String> failureView = () -> viewProjectMilestones(projectId, organisationId, true, user, model,form);
+        Supplier<String> failureView = () -> viewProjectMilestones(projectId, organisationId, true, user, model,form, null);
         Supplier<String> successView = redirectToFinanceChecks(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -123,7 +130,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                 ValidationHandler validationHandler,
                                 @RequestParam("remove_row") String removeId) {
         validationHandler.addAnyErrors(saver.removeRowFromForm(form, removeId));
-        return viewProjectMilestones(projectId, organisationId, true, user, model, form);
+        return viewProjectMilestones(projectId, organisationId, true, user, model, form, null);
     }
 
     @PostMapping(params = "add_row")
@@ -133,7 +140,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                              @PathVariable long organisationId,
                              @ModelAttribute("form") ProcurementMilestonesForm form) {
         saver.addRowForm(form);
-        return viewProjectMilestones(projectId, organisationId, true, user, model, form);
+        return viewProjectMilestones(projectId, organisationId, true, user, model, form, null);
     }
 
     @PostMapping("/remove-row/{rowId}")
