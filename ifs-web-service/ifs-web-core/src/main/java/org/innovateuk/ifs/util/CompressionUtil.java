@@ -24,11 +24,8 @@ public final class CompressionUtil {
     public static String getCompressedString(String rawString) {
         String compressedString = "";
 
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            GZIPOutputStream zos = new GZIPOutputStream(baos);
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); GZIPOutputStream zos = new GZIPOutputStream(baos)){
             zos.write(rawString.getBytes());
-            closeQuietly(zos);
             compressedString = encodeBase64String(baos.toByteArray());
         } catch (IOException e) {
             LOG.error(e);
