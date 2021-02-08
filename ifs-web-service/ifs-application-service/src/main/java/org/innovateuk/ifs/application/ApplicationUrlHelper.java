@@ -49,6 +49,8 @@ public class ApplicationUrlHelper {
         switch (sectionType) {
             case FUNDING_FINANCES:
                 return Optional.of(String.format("/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId));
+            case FEC_COSTS_FINANCES:
+                return Optional.of(String.format("/application/%d/form/fec-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
             case PROJECT_COST_FINANCES:
                 CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
                 OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();

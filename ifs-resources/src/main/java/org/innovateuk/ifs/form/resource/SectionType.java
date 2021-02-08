@@ -18,7 +18,8 @@ public enum SectionType {
     OVERVIEW_FINANCES,
 	GENERAL,
     TERMS_AND_CONDITIONS,
-    KTP_ASSESSMENT;
+    KTP_ASSESSMENT,
+    FEC_COSTS_FINANCES(FINANCE);
 
     private final SectionType parent;
 
