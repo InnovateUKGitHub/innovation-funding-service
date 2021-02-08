@@ -7,11 +7,8 @@ import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
-<<<<<<< HEAD
 import org.innovateuk.ifs.competition.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-=======
->>>>>>> development
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
