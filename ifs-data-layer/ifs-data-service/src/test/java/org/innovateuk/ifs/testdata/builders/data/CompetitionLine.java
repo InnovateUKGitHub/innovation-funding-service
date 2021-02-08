@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class CompetitionLine {
 
+    public Long id;
     public String name;
     public String type;
     public List<String> innovationAreas;
@@ -48,7 +49,8 @@ public class CompetitionLine {
     public CompetitionLine() {
     }
 
-    public CompetitionLine(String name,
+    public CompetitionLine(Long id,
+                           String name,
                            String type,
                            List<String> innovationAreas,
                            String innovationSector,
@@ -83,6 +85,7 @@ public class CompetitionLine {
                            Boolean includeYourOrganisation,
                            FundingRules fundingRules,
                            Boolean alwaysOpen) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.innovationAreas = innovationAreas;
@@ -117,6 +120,14 @@ public class CompetitionLine {
         this.includeYourOrganisation = includeYourOrganisation;
         this.fundingRules = fundingRules;
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
