@@ -157,7 +157,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionWithoutMilestones = this.competitionDataBuilder
                 .createNonIfsCompetition()
                 .withApplicationFinances()
-                .withAssessmentConfig();
+                .withAssessmentConfig(line);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionWithoutMilestones);
 
@@ -171,7 +171,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 createCompetition().
                 withApplicationFormFromTemplate().
                 withApplicationFinances().
-                withAssessmentConfig().
+                withAssessmentConfig(line).
                 withNewMilestones();
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
