@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +26,8 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -61,6 +64,11 @@ public class CompetitionSetupMilestoneServiceImplTest {
                         .withId(competitionId).withAlwaysOpen(false).build()));
 
         when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId))
+                .thenReturn(restFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)))
+                .thenReturn(restSuccess(assessmentPeriodResource))
+                .thenReturn(restSuccess(assessmentPeriodResource));
+
+        when(assessmentPeriodRestService.create(index, competitionId))
                 .thenReturn(restSuccess(assessmentPeriodResource));
 
         when(milestoneRestService.create(any(MilestoneType.class), eq(competitionId)))
@@ -86,10 +94,12 @@ public class CompetitionSetupMilestoneServiceImplTest {
 		verify(milestoneRestService, times(numberOfMilestonesExpected-numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId));
         verify(competitionRestService, times(numberOfMilestonesExpected)).getCompetitionById(competitionId);
         verify(assessmentPeriodRestService, times(numberOfAssessmentPeriodMilestonesExpected)).getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId);
+        verify(assessmentPeriodRestService, times(1)).create(index, competitionId);
+        verify(milestoneRestService, times(numberOfMilestonesExpected-numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId));
         verify(milestoneRestService, times(numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId), eq(assessmentPeriodId));
     }
 
-	@Test
+    @Test
 	public void testUpdateMilestonesForCompetition() {
         List<MilestoneResource> oldMilestones = singletonList(
                 newMilestoneResource()

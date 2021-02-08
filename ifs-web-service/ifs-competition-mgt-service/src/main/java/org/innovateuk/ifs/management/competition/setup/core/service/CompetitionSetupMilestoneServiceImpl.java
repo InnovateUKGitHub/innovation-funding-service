@@ -44,8 +44,6 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     public ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
 
-
-
         Stream.of(MilestoneType.presetValues())
                 .filter(milestoneType -> !milestoneType.isOnlyNonIfs())
                 .forEach(type ->  newMilestones.add(createMilestone(type, competitionId)));
@@ -61,14 +59,10 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         if (!competition.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
                 .anyMatch(milestoneType -> (milestoneType == type))) {
             AssessmentPeriodResource assessmentPeriodResource =  assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(DEFAULT_INDEX, competition.getId())
-                    .andOnSuccessReturn(assessmentPeriod -> {
-                       if (assessmentPeriod == null) {
-                           return assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess();
-                       } else {
-                           return assessmentPeriod;
-                       }
-                    }).getSuccess();
-
+                    .handleSuccessOrFailure(
+                            failure -> assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess(),
+                            success -> success
+                    );
             milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodResource.getId()).getSuccess();
         } else {
             milestoneResource = milestoneRestService.create(type, competitionId).getSuccess();
