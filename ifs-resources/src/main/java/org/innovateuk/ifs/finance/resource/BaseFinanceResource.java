@@ -117,7 +117,7 @@ public abstract class BaseFinanceResource {
         this.financialYearAccounts = financialYearAccounts;
     }
 
-    public Boolean isNorthernIrelandDeclaration() {
+    public Boolean getNorthernIrelandDeclaration() {
         return northernIrelandDeclaration;
     }
 
