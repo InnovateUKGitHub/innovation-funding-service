@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.file.service;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
@@ -35,7 +36,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     @Test
     public void pdf() {
         assertExpectedMediaTypesForFileTypeCategory(
-                asSet(PDF),
+                ImmutableSet.of(PDF),
                 "application/pdf"
         );
     }
@@ -43,7 +44,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     @Test
     public void spreadsheet() {
         assertExpectedMediaTypesForFileTypeCategory(
-                asSet(SPREADSHEET),
+                ImmutableSet.of(SPREADSHEET),
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "application/vnd.oasis.opendocument.spreadsheet"
@@ -53,7 +54,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     @Test
     public void pdfAndSpreadsheet() {
         assertExpectedMediaTypesForFileTypeCategory(
-                asSet(PDF, SPREADSHEET),
+                ImmutableSet.of(PDF, SPREADSHEET),
                 "application/pdf",
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

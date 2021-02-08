@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.validation;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -110,13 +110,13 @@ public class ApplicationValidationUtil {
         }
         List<FinanceRowType> competitionFinanceTypes = section.getCompetition().getFinanceRowTypes();
         if (SectionType.PROJECT_COST_FINANCES == section.getType()) {
-             asSet(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
+            ImmutableSet.of(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
                     .stream()
                     .filter(competitionFinanceTypes::contains)
                     .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
             validationMessages.addAll(applicationValidatorService.validateAcademicUpload(application, markedAsCompleteById));
         } else if (SectionType.FUNDING_FINANCES == section.getType()) {
-            asSet(FINANCE, OTHER_FUNDING)
+            ImmutableSet.of(FINANCE, OTHER_FUNDING)
                     .stream()
                     .filter(competitionFinanceTypes::contains)
                     .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));

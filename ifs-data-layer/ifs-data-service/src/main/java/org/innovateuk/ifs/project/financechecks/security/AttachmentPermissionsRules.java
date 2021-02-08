@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
@@ -44,9 +43,6 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
 
     @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
 
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project Finance can upload attachments.")
     public boolean projectFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
