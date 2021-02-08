@@ -30,6 +30,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final LocalDate startDate;
     private final boolean showReopenLink;
     private final boolean hasAssessmentStage;
+    private final boolean alwaysOpen;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -43,7 +44,8 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
                                            boolean assignedToInterview,
                                            LocalDate startDate,
                                            boolean showReopenLink,
-                                           boolean hasAssessmentStage) {
+                                           boolean hasAssessmentStage,
+                                           boolean alwaysOpen) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -55,6 +57,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.startDate = startDate;
         this.showReopenLink = showReopenLink;
         this.hasAssessmentStage = hasAssessmentStage;
+        this.alwaysOpen = alwaysOpen;
     }
 
     public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
@@ -69,6 +72,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.startDate = resource.getStartDate();
         this.showReopenLink = resource.isShowReopenLink();
         this.hasAssessmentStage = resource.isHasAssessmentStage();
+        this.alwaysOpen = resource.isAlwaysOpen();
     }
 
     public boolean isAssignedToMe() {
@@ -105,6 +109,10 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
 
     public boolean isShowReopenLink() {
         return showReopenLink;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
     }
 
     /* view logic */
