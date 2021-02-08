@@ -3,12 +3,14 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -143,10 +145,12 @@ class GrantMapper {
                     + "have a spend profile to send grant");
         }
 
+        SpendProfile profile = spendProfile.get();
+
         /*
          * Calculate overhead percentage
          */
-        SpendProfileCalculations grantCalculator = new SpendProfileCalculations(spendProfile.get());
+        SpendProfileCalculations grantCalculator = new SpendProfileCalculations(profile);
 
 
         ProjectFinanceResource projectFinanceResource = projectFinanceHandler.getProjectOrganisationFinances(new ProjectFinanceResourceId(project.getId(), organisation.getId()))
@@ -155,15 +159,7 @@ class GrantMapper {
         String organisationSizeOrAcademic = projectFinanceResource.getOrganisationSize() != null ?
                 projectFinanceResource.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
 
-        List<Forecast> forecasts = contactUser.isFinanceContact() ? spendProfile.get()
-                .getSpendProfileFigures()
-                .getCosts().stream()
-                .sorted(Comparator.comparing(this::getFullCostCategoryName))
-                .collect(groupingBy(this::getFullCostCategoryName))
-                .values().stream()
-                .map(this::toForecast)
-                .collect(Collectors.toList()) :
-                null;
+        List<Forecast> forecasts = contactUser.isFinanceContact() ? forecastsForFinanceContact(profile) : null;
 
         return Participant.createProjectTeamParticipant(
                 organisation.getId(),
@@ -180,7 +176,45 @@ class GrantMapper {
                 forecasts);
     }
 
-    private Participant toSimpleContactParticipant(
+    private static List<Forecast> forecastsForFinanceContact(SpendProfile spendProfile) {
+        Competition competition = spendProfile.getProject().getApplication().getCompetition();
+
+        List<Forecast> forecasts = spendProfile.getSpendProfileFigures()
+                .getCosts().stream()
+                .sorted(Comparator.comparing(GrantMapper::getFullCostCategoryName))
+                .collect(groupingBy(GrantMapper::getFullCostCategoryName))
+                .values().stream()
+                .map(GrantMapper::toForecast)
+                .collect(Collectors.toList());
+
+        if (competition.isKtp()) {
+            long months = spendProfile.getProject().getDurationInMonths();
+            Forecast subcontractingForecast = subcontractingForecast(months);
+
+            forecasts.add(subcontractingForecast);
+        }
+
+        return forecasts;
+    }
+
+    private static Forecast subcontractingForecast(long months) {
+        Forecast subcontracting = new Forecast();
+        subcontracting.setCost(0);
+        subcontracting.setCostCategory(FinanceRowType.SUBCONTRACTING_COSTS.getDisplayName());
+
+        List<Period> periods = new ArrayList<>();
+        for(int i = 0; i < months; i++) {
+            Period p = new Period();
+            p.setMonth(i);
+            p.setValue(0L);
+            periods.add(p);
+        }
+        subcontracting.setPeriods(periods);
+
+        return subcontracting;
+    }
+
+    private static Participant toSimpleContactParticipant(
             long userId,
             Role role,
             String userEmail) {
@@ -191,18 +225,18 @@ class GrantMapper {
                 userEmail);
     }
 
-    private String lookupLiveProjectsRoleName(String role) {
+    private static String lookupLiveProjectsRoleName(String role) {
         return IFS_ROLES_TO_LIVE_ROLE_NAMES.getOrDefault(role, role);
     }
 
-    private String getFullCostCategoryName(Cost cost) {
+    private static String getFullCostCategoryName(Cost cost) {
         CostCategory category = cost.getCostCategory();
         return !isBlank(category.getLabel()) ?
                 category.getLabel() + " - " + category.getName() :
                 category.getName();
     }
 
-    private Forecast toForecast(List<Cost> costs) {
+    private static Forecast toForecast(List<Cost> costs) {
         Forecast forecast = new Forecast();
         forecast.setCostCategory(getFullCostCategoryName(costs.stream()
                 .findFirst()
@@ -215,12 +249,12 @@ class GrantMapper {
         forecast.setPeriods(costs
                 .stream()
                 .sorted(Comparator.comparing(cost -> cost.getCostTimePeriod().getOffsetAmount()))
-                .map(this::toPeriod)
+                .map(GrantMapper::toPeriod)
                 .collect(Collectors.toList()));
         return forecast;
     }
 
-    private Period toPeriod(Cost cost) {
+    private static Period toPeriod(Cost cost) {
         Period period = new Period();
         period.setMonth(cost.getCostTimePeriod().getOffsetAmount());
         period.setValue(cost.getValue()

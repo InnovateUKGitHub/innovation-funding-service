@@ -2,9 +2,11 @@ package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
@@ -51,6 +53,9 @@ public class FinanceReadOnlyViewModelPopulatorTest {
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
 
     @Mock
+    private ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
+
+    @Mock
     private SectionRestService sectionRestService;
 
     @Mock
@@ -73,11 +78,15 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
         ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel = mock(ApplicationResearchParticipationViewModel.class);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
+        ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel = mock(ApplicationProcurementMilestonesSummaryViewModel.class);
+
 
         when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(financeSection)));
         when(applicationFinanceSummaryViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFinanceSummaryViewModel);
         when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
         when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
+        when(applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestonesSummaryViewModel);
+
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
@@ -91,5 +100,6 @@ public class FinanceReadOnlyViewModelPopulatorTest {
 
         assertEquals("Finances summary", viewModel.getName());
         assertEquals(application.getId(), (Long) viewModel.getApplicationId());
+        assertEquals(false, viewModel.isProcurementMilestones());
     }
 }
