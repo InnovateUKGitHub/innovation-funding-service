@@ -93,7 +93,8 @@ public enum Role implements Identifiable {
     public List<String> getAuthorities() {
         if (this == KNOWLEDGE_TRANSFER_ADVISER) {
             return newArrayList(this.name, ASSESSOR.name, MONITORING_OFFICER.name);
-        } if (this == SYSTEM_MAINTAINER) {
+        }
+        if (this == SYSTEM_MAINTAINER) {
             return newArrayList(this.name, IFS_ADMINISTRATOR.name, PROJECT_FINANCE.name);
         }
         return newArrayList(this.name);
