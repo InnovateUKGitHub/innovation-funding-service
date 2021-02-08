@@ -66,8 +66,8 @@
                                <p th:classappend = "${organisation.OrganisationValidToDisplay} ? 'govuk-body meta crumbtrail govuk-!-margin-top-1 govuk-!-margin-bottom-1'
                                                   : 'govuk-hint meta crumbtrail govuk-!-margin-top-1 govuk-!-margin-bottom-1'"
                                    th:text="${organisation.extraAttributes.description}"></p>
-                               <p class="govuk-body" th:text="${organisation.location}"></p>
-                          </th:block>
+                               <p class="govuk-body" th:text="${organisation.OrganisationAddressSnippet}"></p>
+                           </th:block>
                       <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-1"/>
                       </li>
                 </ul>

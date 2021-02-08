@@ -35,18 +35,25 @@ public class OrganisationSearchResult implements Serializable{
     }
 
     @JsonIgnore
+    public String getOrganisationAddressSnippet() {
+      	if(!StringUtils.isEmpty(organisationAddress.getAddressSnippet())){
+    		return organisationAddress.getAddressSnippet();
+    	}
+      	return "";
+     }
+    @JsonIgnore
     public String getLocation() {
-    	List<String> parts = new ArrayList<>();
-    	if(!StringUtils.isEmpty(organisationAddress.getAddressLine1())){
-    		parts.add(organisationAddress.getAddressLine1());
-    	}
-    	if(!StringUtils.isEmpty(organisationAddress.getTown())){
-    		parts.add(organisationAddress.getTown());
-    	}
-    	if(!StringUtils.isEmpty(organisationAddress.getPostcode())){
-    		parts.add(organisationAddress.getPostcode());
-    	}
-    	return String.join(", ", parts);
+        List<String> parts = new ArrayList<>();
+        if(!StringUtils.isEmpty(organisationAddress.getAddressLine1())){
+            parts.add(organisationAddress.getAddressLine1());
+        }
+        if(!StringUtils.isEmpty(organisationAddress.getTown())){
+            parts.add(organisationAddress.getTown());
+        }
+        if(!StringUtils.isEmpty(organisationAddress.getPostcode())){
+            parts.add(organisationAddress.getPostcode());
+        }
+        return String.join(", ", parts);
     }
 
     public String getName() {

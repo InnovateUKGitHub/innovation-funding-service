@@ -226,7 +226,7 @@ public abstract class AbstractOrganisationCreationController {
             organisationForm.setOrganisationName(organisationSearchResult.getName());
             if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
                 String localDateString = (String) organisationSearchResult.getExtraAttributes().get("date_of_creation");
-                if (localDateString != null) {
+                if (localDateString != null && !localDateString.isEmpty()) {
                     organisationForm.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
                 }
                 organisationForm.setOrganisationAddress(organisationSearchResult.getOrganisationAddress());

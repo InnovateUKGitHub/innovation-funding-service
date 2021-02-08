@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.util.UriUtils;
 
 import java.util.*;
@@ -152,7 +154,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
 
     private OrganisationSearchResult improvedOrganisationSearchMapper(JsonNode jsonNode, String totalResults) {
-        AddressResource officeAddress = getAddress(jsonNode, "address");
+        AddressResource officeAddress = getImprovedSearchDisplayAddress(jsonNode);
         OrganisationSearchResult org = getOrganisationBasicDetailsFromSearchResults(jsonNode);
 
         Map<String, Object> extras = getExtraAttributesOfCHSearch(jsonNode);
@@ -160,6 +162,13 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         org.setExtraAttributes(extras);
         org.setOrganisationAddress(officeAddress);
         return org;
+    }
+
+    private AddressResource getImprovedSearchDisplayAddress(JsonNode jsonNode) {
+        String addressSnippet = jsonNode.path("address_snippet").asText();
+        addressSnippet = addressSnippet.equals("null") ? EMPTY_NAME_STRING : addressSnippet;
+        AddressResource officeAddress = new AddressResource(addressSnippet);
+        return officeAddress;
     }
 
     private OrganisationSearchResult getOrganisationBasicDetailsFromSearchResults(JsonNode organisationNode) {
@@ -225,7 +234,12 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
      * @return
      */
     protected <T> T restGet(String path, Class<T> c, Map<String, Object> variables) {
-        return adaptor.restGetEntity(companiesHouseUrl + path, c, variables).getBody();
+        try {
+            return adaptor.restGetEntity(companiesHouseUrl + path, c, variables).getBody();
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            LOG.error(e);
+            return null;
+        }
     }
 
     /**
