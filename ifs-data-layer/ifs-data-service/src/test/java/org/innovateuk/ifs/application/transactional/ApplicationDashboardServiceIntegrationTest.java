@@ -6,7 +6,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResou
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 
 /**
  * Testing {@link ApplicationDashboardService}
@@ -45,9 +48,8 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
             .withStartDate(LocalDate.of(2015, 11, 1))
             .withTitle("Using natural gas to heat homes")
             .withApplicationId(4)
-            .withCompetitionTitle("Connected digital additive manufacturing")
+            .withCompetitionTitle("Competition 1")
             .withCollaborationLevelSingle(true)
-            .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
             .build();
 
     @Test
@@ -58,7 +60,19 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         Application application = applicationRepository.findById(4L).get();
         application.setManageFundingEmailDate(ZonedDateTime.now());
         application.setFundingDecision(FundingDecisionStatus.UNFUNDED);
+        application.setCompetition(newCompetition().withAlwaysOpen(false).build());
         applicationRepository.save(application);
+
+        List<Application> collect = applicationRepository.findApplicationsForDashboard(userId).stream()
+                .filter(Application::isOpen)
+                .map(app -> {
+                    Competition competition = app.getCompetition();
+                    competition.setAlwaysOpen(false);
+                    app.setCompetition(competition);
+                    return application;
+                }).collect(Collectors.toList());
+        applicationRepository.saveAll(collect);
+
 
         ServiceResult<ApplicantDashboardResource> result = applicationDashboardService.getApplicantDashboard(userId);
         ApplicantDashboardResource dashboard = result.getSuccess();

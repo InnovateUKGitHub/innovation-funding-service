@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -44,6 +47,8 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private QuestionStatusService questionStatusService;
     @Autowired
     private ApplicationRepository applicationRepository;
+    @Autowired
+    private AssessmentService assessmentService;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -181,6 +186,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())
                 .withShowReopenLink(showReopenLinkVisible(application, userId))
+                .withAlwaysOpen(application.getCompetition().isAlwaysOpen())
                 .build();
     }
 
@@ -197,10 +203,20 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
+        if (application.getCompetition().isAlwaysOpen()) {
+            return isAlwaysOpenApplicationInAssessment(application, userId);
+        }
         return application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                 application.getFundingDecision() == null &&
                 application.isSubmitted();
+    }
+
+    private boolean isAlwaysOpenApplicationInAssessment(Application application, long userId) {
+        return application.getLeadApplicant().getId().equals(userId) &&
+                application.getFundingDecision() == null &&
+                application.isSubmitted() &&
+                !assessmentService.existsByTargetId(application.getId()).getSuccess();
     }
 
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {

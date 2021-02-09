@@ -1,6 +1,13 @@
 /*--- Progress list ---*/
 @import "govuk-frontend/govuk/settings/all";
 
+.always-open-status{
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  padding: 20px;
+}
+
 .progress-list{
   background-color:govuk-colour("light-grey");
   margin: 20px 0 50px;
