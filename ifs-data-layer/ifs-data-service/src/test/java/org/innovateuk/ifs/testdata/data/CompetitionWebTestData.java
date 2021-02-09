@@ -112,6 +112,7 @@ public class CompetitionWebTestData {
                         .withInnovationAreas(null),
                 defaultGrantCompetition()
                         .withName("SBRI competition")
+                        .withMaxResearchRatio(100)
                         .withInnovationAreas(null),
                 defaultKtpCompetition()
                         .withName("KTP Africa project setup"),
