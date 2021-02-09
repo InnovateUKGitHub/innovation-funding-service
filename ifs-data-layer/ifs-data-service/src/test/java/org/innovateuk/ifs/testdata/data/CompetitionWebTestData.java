@@ -114,6 +114,7 @@ public class CompetitionWebTestData {
                         .withName("KTP Africa project setup"),
                 defaultGrantCompetition()
                         .withName("Live project competition")
+                        .withLeadApplicantType(asList(1L, 2L, 3L, 4L))
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.PROJECT_SETUP))
@@ -148,10 +149,9 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("Internet of Things"),
                 defaultKtpCompetition()
-                        .withName("KTP in panel")
-//                ,
-//                defaultKtpCompetition()
-//                        .withName("KTP notifications")
+                        .withName("KTP in panel"),
+                defaultKtpCompetition()
+                        .withName("KTP notifications")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL))

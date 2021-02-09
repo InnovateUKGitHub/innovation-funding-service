@@ -6,9 +6,12 @@ import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -21,7 +24,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -195,7 +197,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationState(long applicationId,
                                                                      ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(applicationId)) {
-            return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
+            Application application = applicationRepository.findById(applicationId).get();
+            return serviceFailure(new Error(APPLICATION_NOT_READY_TO_BE_SUBMITTED, Application.class, application.getName()));
         }
 
         return find(application(applicationId)).andOnSuccess((application) -> {
