@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -29,11 +30,19 @@ public class ApcTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
+
+        GrantTermsAndConditions apcTerms = grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC)");
+
         if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
-            competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC) - Subsidy control"));
-            competition.setOtherFundingRulesTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC)"));
+            GrantTermsAndConditions subsidyControlTermsAndConditions = grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC) - Subsidy control");
+            if (subsidyControlTermsAndConditions != null) {
+                competition.setTermsAndConditions(subsidyControlTermsAndConditions);
+            } else {
+                competition.setTermsAndConditions(apcTerms);
+            }
+            competition.setOtherFundingRulesTermsAndConditions(apcTerms);
         } else {
-            competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC)"));
+            competition.setTermsAndConditions(apcTerms);
         }
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
