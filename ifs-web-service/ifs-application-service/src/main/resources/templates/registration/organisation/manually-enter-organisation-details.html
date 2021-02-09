@@ -111,7 +111,7 @@
                 <div class="govuk-grid-column-two-thirds">
                     <input id="execOfficer" class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-2"
                            th:field="${organisationForm.executiveOfficers[__${iteration.index}__].name}"
-                           maxlength="255"
+                           maxlength="50"
                            type="text"/>
                 </div>
                 <div th:if="${iteration.index > 0}" class="alignright">
