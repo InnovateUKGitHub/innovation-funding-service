@@ -120,7 +120,7 @@
 
         <p class="govuk-body" th:if="${model.open}">
             <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-               class="govuk-link">Return to your project finances</a> to make changes to your organisation's financial information.
+               class="govuk-link">Return to your project finances</a> to complete or make changes to your organisation's financial information.
         </p>
 
         <th:block th:unless="${model.fullyFunded}">
@@ -133,7 +133,15 @@
     <section class="portrait"
         th:remove="${print} ? tag : none">
         <h2 class="govuk-heading-s print-break-before" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
+
+        <h3 th:if="${model.procurementMilestones}" class="govuk-heading-s govuk-!-margin-top-6">Project cost breakdown</h3>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+
+        <th:block th:if="${model.procurementMilestones}">
+            <h3 class="govuk-heading-s govuk-!-margin-top-6">Payment milestones</h3>
+            <th:block  th:insert="finance/finance-summary :: payment-milestones-table (${model.applicationProcurementMilestonesSummaryViewModel})"/>
+        </th:block>
+
     </section>
 </th:block>
 

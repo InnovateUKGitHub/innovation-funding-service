@@ -9,6 +9,7 @@ NEXUS_USER=$4
 NEXUS_PASS=$5
 NEXUS_EMAIL=$6
 NEXUS_VERSION=$7
+NEXUS_REPOSITORY=$8
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
@@ -38,6 +39,6 @@ fi
 
 addAbilityToPullFromNexus
 # use hardcoded version as our version is one above the release so does not exist
-useNexusRegistry ${NEXUS_VERSION}
+useNexusRegistry ${NEXUS_VERSION} ${NEXUS_REPOSITORY}
 deploy
 blockUntilServiceIsUp

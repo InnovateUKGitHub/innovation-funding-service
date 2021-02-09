@@ -62,6 +62,17 @@ public class CrmServiceImpl implements CrmService {
         });
     }
 
+    @Override
+    public ServiceResult<Void> syncCrmContact(long userId, long projectId) {
+        return userService.getUserById(userId).andOnSuccess(user -> {
+
+            syncExternalUser(user, projectId);
+            syncMonitoringOfficer(user);
+
+            return serviceSuccess();
+        });
+    }
+
     private void syncExternalUser(UserResource user) {
         if (!user.isInternalUser()) {
             organisationService.getAllByUserId(user.getId()).andOnSuccessReturn(organisations -> {
@@ -72,6 +83,16 @@ public class CrmServiceImpl implements CrmService {
                         getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                     });
                 }
+                return serviceSuccess();
+            });
+        }
+    }
+
+    private void syncExternalUser(UserResource user, long projectId) {
+        if (!user.isInternalUser()) {
+            organisationService.getByUserAndProjectId(user.getId(), projectId).andOnSuccessReturn(organisation -> {
+                SilContact silContact = externalUserToSilContact(user, organisation);
+                getSilContactEmailAndOrganisationNameAndUpdateContact(silContact);
                 return serviceSuccess();
             });
         }
