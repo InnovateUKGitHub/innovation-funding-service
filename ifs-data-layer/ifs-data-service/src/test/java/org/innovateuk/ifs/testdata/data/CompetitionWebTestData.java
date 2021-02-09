@@ -39,7 +39,10 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("New designs for a circular economy"),
                 defaultGrantCompetition()
-                        .withName("Rolling stock future developments"),
+                        .withName("Rolling stock future developments")
+                        .withResubmission(false)
+
+                        .withMaxResearchRatio(100),
                 defaultGrantCompetition()
                         .withName("Biosciences round three: plastic recovery in the industrial sector"),
                 defaultGrantCompetition()
