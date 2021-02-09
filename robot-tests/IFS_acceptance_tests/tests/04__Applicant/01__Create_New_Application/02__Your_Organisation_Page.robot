@@ -107,11 +107,16 @@ Not in Companies House: Manually add the details and pass to the confirmation pa
 Applicant goes to the organisation search page
     the guest user opens the browser
     the user navigates to the page                            ${frontDoor}
-    the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
+    the user clicks the button/link in the paginated list     link = ${createApplicationOpenInternationalCompetition}
     the user clicks the button/link                           link = Start new application
     the user clicks the button/link                           link = Continue and create an account
+    user selects where is organisation based
     the user clicks the button/link                           jQuery = span:contains("Business")
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
+
+user selects where is organisation based
+    the user selects the radio button     international  isNotInternational
+    the user clicks the button/link       id = international-organisation-cta
 
 the applicant searches for organisation
     [Arguments]  ${searchTerm}
@@ -169,6 +174,8 @@ the applicant confirms and saves company details
     the user should see the element     jQuery = dd:contains("Business")
     the user should see the element     jQuery = dt:contains("Business type")
     the user should see the element     jQuery = dd:contains("${business_type}")
+    the user should see the element     jQuery = dt:contains("Is your organisation based in the UK?")
+    the user should see the element     jQuery = dd:contains("Yes")
     the user should see the element     jQuery = dt:contains("Organisation name")
     the user should see the element     jQuery = dd:contains("${organisation_name}")
     the user should see the element     jQuery = dt:contains("Organisation number")
@@ -186,5 +193,5 @@ the applicant confirms and saves company details
     the user should see the element     jQuery = dd div:contains("${address_postcode}")
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user should see the element     jQuery = h1:contains("Your details")
-    the user clicks the button/link     jQuery = button:contains("Back to confirm your organisation")
+    the user clicks the button/link     link = Back to confirm your organisation
     the user should see the element     jQuery = h1:contains("Confirm your organisation")
