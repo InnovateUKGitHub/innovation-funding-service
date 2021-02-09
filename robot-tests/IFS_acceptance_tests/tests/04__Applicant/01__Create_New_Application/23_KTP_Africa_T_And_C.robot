@@ -33,18 +33,21 @@ Creating a new KTP africa comp to confirm T&c's
     And the user selects the radio button       termsAndConditionsId  33
     And the user clicks the button/link         jQuery = button:contains("Done")
     
-    And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Aerospace Technology Institute (ATI) - Subsidy control")
-    And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Aerospace Technology Institute (ATI)")
-    And the user clicks the button/link         link = Return to setup overview
+    And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) Africa")
+    And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) Africa")
+    #And the user clicks the button/link         link = Return to setup overview
     #Then the user should see the element        link = Knowledge Transfer Partnership (KTP) Africa (opens in a new window)
 
 KTP africa t&c's are correct
     [Documentation]  IFS-8164
+    Given the user clicks the button/link        jQuery = button:contains("Edit")
     When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) Africa (opens in a new window)
     And select window                        title = Terms and conditions of an African Agriculture Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
     And close window
     And select window                        title = Competition terms and conditions - Innovation Funding Service
+    And the user clicks the button/link         jQuery = button:contains("Done")
+    And the user clicks the button/link         jQuery = button:contains("Done")
 
 T&c's section should be completed
     [Documentation]  IFS-8164
