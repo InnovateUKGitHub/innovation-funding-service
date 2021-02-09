@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
@@ -7,12 +7,6 @@ bootJar.enabled=false
 jar.enabled=true
 
 buildscript {
-
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
 
     repositories {
         jcenter()
@@ -35,17 +29,16 @@ artifacts {
 
 dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
-    compile "org.thymeleaf:thymeleaf-spring5:${thymeleafVersion}"
+    compile "org.thymeleaf:thymeleaf-spring5"
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.plugin:spring-plugin-core"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
-    compile "com.google.guava:guava:27.1-jre"
 
-    compile "org.apache.httpcomponents:httpclient:4.5.1"
-    compile "org.apache.httpcomponents:httpasyncclient:4.1.1"
-    compile 'org.jsoup:jsoup:1.10.3'
+    compile "org.apache.httpcomponents:httpclient"
+    compile "org.apache.httpcomponents:httpasyncclient"
+    compile 'org.jsoup:jsoup'
 
     compile project(":ifs-resources")
     compile project(':ifs-rest-api-service')
@@ -58,8 +51,8 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
 
-    testCompile "com.opencsv:opencsv:4.3.2"
-    testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: '1.7.0'
+    testCompile "com.opencsv:opencsv"
+    testCompile 'com.jayway.awaitility:awaitility'
 }
 
 // enabling Spring dev tools has security consequences so only do so for local development

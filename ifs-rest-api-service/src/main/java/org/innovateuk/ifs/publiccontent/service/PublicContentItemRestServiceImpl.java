@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -28,11 +27,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
 
-        try {
-            UriUtils.encode(searchString.orElse(null), "UTF8");
-        } catch (UnsupportedEncodingException e) {
-            LOG.error("searchString can not be encoded", e);
-        }
+        UriUtils.encode(searchString.orElse(null), "UTF8");
 
         String url = PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter";
         URIBuilder builder = new URIBuilder();

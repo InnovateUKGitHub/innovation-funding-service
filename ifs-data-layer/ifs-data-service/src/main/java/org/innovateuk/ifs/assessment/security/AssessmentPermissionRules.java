@@ -7,11 +7,9 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -26,8 +24,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 @Component
 @PermissionRules
 public class AssessmentPermissionRules extends BasePermissionRules {
-    @Autowired
-    private ReviewRepository reviewRepository;
 
     @PermissionRule(value = "READ_DASHBOARD", description = "Assessors can view all Assessments on the competition " +
             "dashboard, except those rejected or withdrawn")

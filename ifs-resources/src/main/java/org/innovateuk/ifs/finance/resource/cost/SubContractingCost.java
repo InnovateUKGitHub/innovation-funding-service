@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
@@ -21,15 +17,15 @@ public class SubContractingCost extends AbstractFinanceRowItem {
     private BigDecimal cost;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String country;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
     private SubContractingCost() {

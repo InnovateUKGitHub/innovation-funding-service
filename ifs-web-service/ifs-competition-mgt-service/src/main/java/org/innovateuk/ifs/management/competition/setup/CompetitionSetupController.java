@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -53,7 +52,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -204,10 +202,6 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
-        if (competitionSetupForm.getFundingRule() == null) {
-            String errorKey = fundingRuleEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
-            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));
-        }
 
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);
     }

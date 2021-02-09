@@ -9,13 +9,6 @@ version project.version
 processResources.dependsOn applyProfiles
 
 buildscript {
-
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-
     repositories {
         jcenter()
     }

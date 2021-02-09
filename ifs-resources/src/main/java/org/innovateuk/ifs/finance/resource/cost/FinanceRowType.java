@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.google.common.collect.Sets;
+
 import java.util.Optional;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.COST;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.INCLUDE_IN_SPEND_PROFILE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.APPEARS_IN_PROJECT_COSTS_ACCORDION;
@@ -60,7 +61,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     FinanceRowType(String type, String displayName, FinanceRowOptions... options) {
         this.type = type;
         this.displayName = displayName;
-        this.financeRowOptionsList = asSet(options);
+        this.financeRowOptionsList = Sets.newHashSet(options);
     }
 
     public String getType() {

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -13,7 +11,7 @@ public class Materials extends AbstractFinanceRowItem {
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
     @NotNull(message = NOT_BLANK_MESSAGE)

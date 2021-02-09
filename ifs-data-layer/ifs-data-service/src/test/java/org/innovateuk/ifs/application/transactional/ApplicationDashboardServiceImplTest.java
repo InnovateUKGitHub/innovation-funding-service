@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardRowResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
@@ -22,11 +25,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -52,18 +57,28 @@ public class ApplicationDashboardServiceImplTest {
     private InterviewAssignmentService interviewAssignmentService;
     @Mock
     private ApplicationRepository applicationRepository;
+    @Mock
+    private AssessmentService assessmentService;
 
-    private Competition closedCompetition = newCompetition().withSetupComplete(true)
+    private final Competition closedCompetition = newCompetition().withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().minusDays(1))
+            .withAlwaysOpen(false)
             .build();
-    private Competition openCompetition = newCompetition().withSetupComplete(true)
+    private final Competition openCompetition = newCompetition().withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().plusDays(1))
+            .withAlwaysOpen(false)
+            .build();
+
+    private final Competition alwaysOpenCompetition = newCompetition().withSetupComplete(true)
+            .withStartDate(ZonedDateTime.now().minusDays(2))
+            .withEndDate(ZonedDateTime.now().plusDays(1))
+            .withAlwaysOpen(true)
             .build();
     private static final long USER_ID = 1L;
-    private User user = newUser().withId(USER_ID).build();
-    private ProcessRole processRole = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
+    private final User user = newUser().withId(USER_ID).build();
+    private final ProcessRole processRole = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
 
     @Test
     public void getApplicantDashboard() {
@@ -72,6 +87,7 @@ public class ApplicationDashboardServiceImplTest {
         Application pendingPartnerInSetupApplication = pendingPartnerInSetupApplication();
         Application completedProjectApplication = completedProjectApplication();
         Application inProgressOpenCompApplication = inProgressOpenCompApplication();
+        Application inProgressAlwaysOpenCompApplicationInAssessment = inProgressAlwaysOpenCompApplication();
         Application inProgressClosedCompApplication = inProgressClosedCompApplication();
         Application onHoldNotifiedApplication = onHoldNotifiedApplication();
         Application unsuccessfulNotifiedApplication = unsuccessfulNotifiedApplication();
@@ -80,15 +96,20 @@ public class ApplicationDashboardServiceImplTest {
 
         when(interviewAssignmentService.isApplicationAssigned(anyLong())).thenReturn(serviceSuccess(true));
 
+        List<Application> applications = asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
+                inProgressOpenCompApplication, inProgressClosedCompApplication, inProgressAlwaysOpenCompApplicationInAssessment, onHoldNotifiedApplication,
+                unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication);
+
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
-                .thenReturn(asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
-                        inProgressOpenCompApplication, inProgressClosedCompApplication, onHoldNotifiedApplication,
-                        unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication));
+                .thenReturn(applications);
+
+        when(assessmentService.existsByTargetId(inProgressAlwaysOpenCompApplicationInAssessment.getId()))
+                .thenReturn(serviceSuccess(true));
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
         assertEquals(1, dashboardResource.getEuGrantTransfer().size());
-        assertEquals(3, dashboardResource.getInProgress().size());
+        assertEquals(4, dashboardResource.getInProgress().size());
         assertEquals(2, dashboardResource.getInSetup().size());
         assertEquals(4, dashboardResource.getPrevious().size());
 
@@ -99,13 +120,28 @@ public class ApplicationDashboardServiceImplTest {
         assertListContainsApplication(inProgressOpenCompApplication, dashboardResource.getInProgress());
         assertListContainsApplication(inProgressClosedCompApplication, dashboardResource.getPrevious());
         assertListContainsApplication(onHoldNotifiedApplication, dashboardResource.getInProgress());
+        assertListContainsApplication(inProgressAlwaysOpenCompApplicationInAssessment, dashboardResource.getInProgress());
         assertListContainsApplication(unsuccessfulNotifiedApplication, dashboardResource.getPrevious());
         assertListContainsApplication(ineligibleApplication, dashboardResource.getPrevious());
         assertListContainsApplication(submittedAwaitingDecisionApplication, dashboardResource.getInProgress());
 
+        assertFalse(dashboardResource.getInProgress().stream()
+                .filter(DashboardInProgressRowResource::isAlwaysOpen)
+                .findFirst().get()
+                .isShowReopenLink());
+
         assertTrue(pendingResource.isPendingPartner());
         assertFalse(notPendingResource.isPendingPartner());
 
+    }
+
+    private Application inProgressAlwaysOpenCompApplication() {
+        return newApplication()
+                .withProcessRole(processRole)
+                .withCompetition(alwaysOpenCompetition)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withFundingDecision(null)
+                .build();
     }
 
     private <R extends DashboardRowResource> R assertListContainsApplication(Application application, List<R> applications) {
@@ -212,7 +248,7 @@ public class ApplicationDashboardServiceImplTest {
     private Application h2020Application() {
         return newApplication()
                 .withApplicationState(ApplicationState.SUBMITTED)
-                .withCompetition(newCompetition().withCompetitionType(newCompetitionType().withName(H2020_TYPE_NAME).build()).build())
+                .withCompetition(newCompetition().withCompetitionType(newCompetitionType().withName(H2020_TYPE_NAME).build()).withAlwaysOpen(false).build())
                 .build();
     }
 }

@@ -1,4 +1,5 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
+
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
@@ -82,16 +83,16 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.apache.httpcomponents:httpasyncclient"
-    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
+    compile "org.mariadb.jdbc:mariadb-java-client"
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
-    testCompile "com.h2database:h2:1.4.200"
+    testCompile "com.h2database:h2"
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile "com.opencsv:opencsv:4.3.2"
+    testCompile "com.opencsv:opencsv"
 
 }
 
