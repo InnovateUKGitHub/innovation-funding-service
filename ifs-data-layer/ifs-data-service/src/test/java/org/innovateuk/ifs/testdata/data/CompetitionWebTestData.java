@@ -108,6 +108,7 @@ public class CompetitionWebTestData {
                         .withName("Innovation continuity loan competition"),
                 defaultGrantCompetition()
                         .withName("The Sustainable Innovation Fund: SBRI phase 1")
+                        .withMaxResearchRatio(100)
                         .withInnovationAreas(null),
                 defaultGrantCompetition()
                         .withName("SBRI competition")
