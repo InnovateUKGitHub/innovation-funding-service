@@ -9,6 +9,10 @@ import javax.persistence.*;
 @Entity
 public class ApplicationOrganisationQuestionnaireResponse {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="questionnaireResponseId", referencedColumnName="id")
     private QuestionnaireResponse questionnaireResponse;
@@ -20,6 +24,14 @@ public class ApplicationOrganisationQuestionnaireResponse {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="organisationId", referencedColumnName="id")
     private Organisation organisation;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public QuestionnaireResponse getQuestionnaireResponse() {
         return questionnaireResponse;

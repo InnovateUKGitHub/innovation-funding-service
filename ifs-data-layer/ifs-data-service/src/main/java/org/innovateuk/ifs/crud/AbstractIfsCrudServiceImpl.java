@@ -2,14 +2,19 @@ package org.innovateuk.ifs.crud;
 
 import org.innovateuk.ifs.commons.mapper.BaseResourceMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> implements IfsCrudService<Resource, Id> {
+public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends RootTransactionalService implements IfsCrudService<Resource, Id> {
 
     @Autowired
     private CrudRepository<Domain, Id> crudRepository;
@@ -22,6 +27,16 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> implement
         return findById(id)
                 .andOnSuccessReturn(mapper::mapToResource);
     }
+
+    @Override
+    public ServiceResult<List<Resource>> get(List<Id> ids) {
+        return serviceSuccess(
+                stream(crudRepository.findAllById(ids).spliterator(), false)
+                .map(mapper::mapToResource)
+                .collect(toList())
+        );
+    }
+
 
     @Override
     public ServiceResult<Resource> update(Id id, Resource resource) {

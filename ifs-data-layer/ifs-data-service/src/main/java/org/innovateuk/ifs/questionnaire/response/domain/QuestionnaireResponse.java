@@ -3,6 +3,7 @@ package org.innovateuk.ifs.questionnaire.response.domain;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class QuestionnaireResponse {
@@ -16,7 +17,7 @@ public class QuestionnaireResponse {
     private Questionnaire questionnaire;
 
     @OneToMany(mappedBy = "questionnaireResponse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private QuestionnaireQuestionResponse questionnaireQuestionResponse;
+    private List<QuestionnaireQuestionResponse> questionnaireQuestionResponse;
 
     public Questionnaire getQuestionnaire() {
         return questionnaire;
@@ -26,11 +27,11 @@ public class QuestionnaireResponse {
         this.questionnaire = questionnaire;
     }
 
-    public QuestionnaireQuestionResponse getQuestionnaireQuestionResponse() {
+    public List<QuestionnaireQuestionResponse> getQuestionnaireQuestionResponse() {
         return questionnaireQuestionResponse;
     }
 
-    public void setQuestionnaireQuestionResponse(QuestionnaireQuestionResponse questionnaireQuestionResponse) {
+    public void setQuestionnaireQuestionResponse(List<QuestionnaireQuestionResponse> questionnaireQuestionResponse) {
         this.questionnaireQuestionResponse = questionnaireQuestionResponse;
     }
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${question.title}" />
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" />
+    <!--/*<th:block th:unless="${previousAnswers == null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/covid-19/questionnaire/{questionType}(questionType=${previousAnswers.isEmpty() ? '' : previousAnswers.get(previousAnswers.size() - 1).left})}"/>*/-->
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${question.title},size='govuk-heading-xl'" />
+
+        <h1 th:each="option : ${options}" th:text="${option.text}"></h1>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

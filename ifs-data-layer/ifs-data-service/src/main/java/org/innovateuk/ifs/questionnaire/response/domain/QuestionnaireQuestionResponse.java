@@ -4,6 +4,7 @@ import org.innovateuk.ifs.questionnaire.config.domain.QuestionnaireOption;
 
 import javax.persistence.*;
 
+@Entity
 public class QuestionnaireQuestionResponse {
 
     @Id

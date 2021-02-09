@@ -4,6 +4,8 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 public abstract class AbstractCrudController<R, Id> {
 
     @Autowired
@@ -12,6 +14,11 @@ public abstract class AbstractCrudController<R, Id> {
     @PostMapping
     public RestResult<R> create(@RequestBody R resource) {
         return crudService.create(resource).toPostCreateResponse();
+    }
+
+    @GetMapping
+    public RestResult<List<R>> get(@RequestParam List<Id> ids) {
+        return crudService.get(ids).toGetResponse();
     }
 
     @GetMapping("/{id}")
