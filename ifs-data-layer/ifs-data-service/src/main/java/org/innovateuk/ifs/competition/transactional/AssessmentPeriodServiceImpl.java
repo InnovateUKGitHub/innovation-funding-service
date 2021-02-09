@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -28,8 +30,8 @@ public class AssessmentPeriodServiceImpl extends BaseTransactionalService implem
     private AssessmentPeriodMapper assessmentPeriodMapper;
 
     @Override
-    public ServiceResult<AssessmentPeriodResource> getAssessmentPeriodByCompetitionIdAndIndex(Long competitionId, Integer index) {
-        return find(assessmentPeriodRepository.findByCompetitionIdAndIndex(competitionId, index), notFoundError(AssessmentPeriodResource.class, competitionId, index))
+    public ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId) {
+        return find(assessmentPeriodRepository.findByCompetitionId(competitionId), notFoundError(AssessmentPeriodResource.class, competitionId))
                 .andOnSuccess(assessmentPeriod -> serviceSuccess(assessmentPeriodMapper.mapToResource(assessmentPeriod)));
     }
 

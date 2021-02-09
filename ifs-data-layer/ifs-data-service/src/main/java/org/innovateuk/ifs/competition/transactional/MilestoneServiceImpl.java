@@ -216,7 +216,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                             .forEach(type -> {
                                 if (!competition.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
                                         .anyMatch(milestoneType -> (milestoneType == type))) {
-                                    AssessmentPeriod assessmentPeriod = assessmentPeriodRepository.findByCompetitionIdAndIndex(competition.getId(), DEFAULT_INDEX)
+                                    AssessmentPeriod assessmentPeriod = assessmentPeriodRepository.findByCompetitionId(competition.getId()).stream()
+                                            .findFirst()
                                             .orElseGet(() -> assessmentPeriodRepository.save(new AssessmentPeriod(competition, DEFAULT_INDEX)));
                                     newMilestones.add(new Milestone(type, competition, assessmentPeriod));
                                 } else {

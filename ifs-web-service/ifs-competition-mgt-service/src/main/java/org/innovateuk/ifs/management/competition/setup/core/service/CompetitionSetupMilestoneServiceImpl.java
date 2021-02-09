@@ -58,10 +58,12 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
 
         if (!competition.isAlwaysOpen() && MilestoneType.assessmentPeriodValues().stream()
                 .anyMatch(milestoneType -> (milestoneType == type))) {
-            AssessmentPeriodResource assessmentPeriodResource =  assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(DEFAULT_INDEX, competition.getId())
+            AssessmentPeriodResource assessmentPeriodResource =  assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competition.getId())
                     .handleSuccessOrFailure(
-                            failure -> assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess(),
-                            success -> success
+                            failure -> createDefaultAssessmentPeriod(competitionId),
+                            success -> success.stream()
+                                    .findFirst()
+                                    .orElse(createDefaultAssessmentPeriod(competitionId))
                     );
             milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodResource.getId()).getSuccess();
         } else {
@@ -69,6 +71,10 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
         }
 
         return milestoneResource;
+    }
+
+    private AssessmentPeriodResource createDefaultAssessmentPeriod(Long competitionId) {
+        return assessmentPeriodRestService.create(DEFAULT_INDEX, competitionId).getSuccess();
     }
 
     @Override

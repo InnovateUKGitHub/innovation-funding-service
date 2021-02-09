@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competition.transactional.AssessmentPeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * AssessmentPeriodController exposes AssessmentPeriod data and operations through a REST API
  */
@@ -16,17 +18,15 @@ public class AssessmentPeriodController {
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
 
-    @GetMapping("/{competitionId}/get-by-index")
-    public RestResult<AssessmentPeriodResource> getAssessmentPeriodByCompetitionIdAndIndex(
-            @RequestParam final int index,
+    @GetMapping("/{competitionId}")
+    public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionIdAndIndex(
             @PathVariable("competitionId") final long competitionId) {
-        return assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index).toGetResponse();
+        return assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId).toGetResponse();
     }
 
     @PostMapping("/{competitionId}")
     public RestResult<AssessmentPeriodResource> create(@RequestParam final int index,
-                                                @PathVariable("competitionId") final long competitionId) {
+                                                       @PathVariable("competitionId") final long competitionId) {
         return assessmentPeriodService.create(competitionId, index).toPostCreateResponse();
     }
-
 }

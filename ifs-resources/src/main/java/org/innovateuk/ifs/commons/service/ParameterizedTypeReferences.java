@@ -399,4 +399,8 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<SupporterAssignmentResource>> supporterAssignmentResourceListType() {
         return new ParameterizedTypeReference<List<SupporterAssignmentResource>>() {};
     }
+
+    public static ParameterizedTypeReference<List<AssessmentPeriodResource>> assessmentPeriodResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentPeriodResource>>() {};
+    }
 }

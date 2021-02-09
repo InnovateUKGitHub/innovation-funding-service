@@ -2,8 +2,11 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * AssessmentPeriodRestServiceImpl is a utility for CRUD operations on {@link AssessmentPeriodResource}.
@@ -16,8 +19,8 @@ public class AssessmentPeriodRestServiceImpl extends BaseRestService implements 
     private String assessmentPeriodRestURL = "/assessment-period";
 
     @Override
-    public RestResult<AssessmentPeriodResource> getAssessmentPeriodByCompetitionIdAndIndex(Integer index, Long competitionId) {
-        return getWithRestResult(assessmentPeriodRestURL + "/" + competitionId + "/get-by-index?index=" + index, AssessmentPeriodResource.class);
+    public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId) {
+        return getWithRestResult(assessmentPeriodRestURL + "/" + competitionId, ParameterizedTypeReferences.assessmentPeriodResourceListType());
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -387,11 +388,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                         .andOnSuccessReturn(milestoneResource -> {
                                             if (BooleanUtils.isFalse(alwaysOpen) && MilestoneType.assessmentPeriodValues().stream()
                                                             .anyMatch(milestoneType -> (milestoneType == type))) {
-                                                assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(data.getCompetition().getId(), 1)
-                                                        .andOnSuccessReturn(assessmentPeriodResource -> {
-                                                            milestoneResource.setAssessmentPeriodId(assessmentPeriodResource.getId());
-                                                            return milestoneService.updateMilestone(milestoneResource).getSuccess();
-                                                        });
+                                                assessmentPeriodService.getAssessmentPeriodByCompetitionId(data.getCompetition().getId())
+                                                        .andOnSuccessReturn(assessmentPeriodResources ->
+                                                            assessmentPeriodResources.stream()
+                                                                    .findFirst()
+                                                                    .map(assessmentPeriodResource -> updateMilestone(milestoneResource, assessmentPeriodResource))
+                                                                    .orElse(null)).getSuccess();
                                             }
                                             return milestoneResource;
                                         }),
@@ -399,6 +401,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         )
             )
         );
+    }
+
+    private ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource, AssessmentPeriodResource assessmentPeriodResource) {
+        milestoneResource.setAssessmentPeriodId(assessmentPeriodResource.getId());
+        return milestoneService.updateMilestone(milestoneResource);
     }
 
     public CompetitionDataBuilder withDefaultAssessmentPeriod(Boolean alwaysOpen) {
