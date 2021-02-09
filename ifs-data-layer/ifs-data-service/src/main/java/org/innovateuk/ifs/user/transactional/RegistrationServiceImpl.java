@@ -31,7 +31,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -325,7 +324,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccessReturn(user -> {
-                        Set<Role> roleList = singleton(userRoleType);
+                        Set<Role> roleList = newHashSet(userRoleType);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);
