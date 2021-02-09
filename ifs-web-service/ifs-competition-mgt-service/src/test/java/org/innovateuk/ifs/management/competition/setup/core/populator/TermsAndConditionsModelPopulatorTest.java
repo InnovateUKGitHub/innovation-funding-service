@@ -74,7 +74,9 @@ public class TermsAndConditionsModelPopulatorTest {
 
     @Test
     public void populateModelWhenDualTermsAndConditions() {
-        List<GrantTermsAndConditionsResource> termsAndConditions = newGrantTermsAndConditionsResource().build(2);
+        List<GrantTermsAndConditionsResource> termsAndConditions = newGrantTermsAndConditionsResource()
+                .withName("tandc1", "tandc2")
+                .build(2);
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions.get(0))

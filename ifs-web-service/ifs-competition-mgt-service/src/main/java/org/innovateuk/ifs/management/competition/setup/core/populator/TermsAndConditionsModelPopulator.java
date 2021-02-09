@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Populates the model for the terms and condition competition setup section.
@@ -37,13 +38,18 @@ public class TermsAndConditionsModelPopulator {
         }
 
         GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, userResource, CompetitionSetupSection.TERMS_AND_CONDITIONS);
-        List<GrantTermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService
-                .getLatestVersionsForAllTermsAndConditions()
-                .getSuccess();
 
         boolean termsAndConditionsDocUploaded = competitionResource.isCompetitionTermsUploaded();
 
         boolean includeStateAid = includeStateAid(competitionResource);
+
+        List<GrantTermsAndConditionsResource> termsAndConditionsList = termsAndConditionsRestService
+                .getLatestVersionsForAllTermsAndConditions()
+                .getSuccess();
+
+        if (includeStateAid) {
+            termsAndConditionsList = termsAndConditionsList.stream().filter(tandc -> !tandc.isProcurement()).collect(Collectors.toList());
+        }
 
         GrantTermsAndConditionsResource otherTermsAndConditions = null;
         if (includeStateAid && competitionResource.getOtherFundingRulesTermsAndConditions() != null) {

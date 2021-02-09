@@ -121,19 +121,23 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(competitionSetupRestService.uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(),
                 file.getOriginalFilename(), getMultipartFileBytes(file))).thenReturn(restSuccess(fileEntryResource));
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
 
         mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
                 .file(file)
-                .param("uploadTermsAndConditionsDoc", "true"))
+                .param("uploadTermsAndConditionsDoc", "true")
+                .param("termsAndConditionsId", "12"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID)));
 
-        InOrder inOrder = inOrder(competitionRestService, competitionSetupRestService, competitionSetupService);
+        InOrder inOrder = inOrder(competitionRestService, competitionSetupRestService);
         inOrder.verify(competitionRestService).getCompetitionById(COMPETITION_ID);
         inOrder.verify(competitionSetupRestService)
                 .uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-        inOrder.verify(competitionSetupService)
-                .saveCompetitionSetupSection(form, competitionResource, CompetitionSetupSection.TERMS_AND_CONDITIONS);
+        inOrder.verify(competitionRestService)
+                .updateTermsAndConditionsForCompetition(COMPETITION_ID, 12L);
         inOrder.verifyNoMoreInteractions();
     }
 
