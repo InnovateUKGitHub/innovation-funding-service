@@ -53,6 +53,12 @@ The Investor partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213
     Given the user clicks the button/link    jQuery = button:contains("Done")
+
+    And the user selects the radio button       termsAndConditionsId  31
+    And the user clicks the button/link         jQuery = button:contains("Done")
+    And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Investor Partnerships")
+    And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Investor Partnerships")
+    
     When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
