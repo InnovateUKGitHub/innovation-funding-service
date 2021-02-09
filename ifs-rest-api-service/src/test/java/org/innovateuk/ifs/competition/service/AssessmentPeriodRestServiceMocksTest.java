@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -31,7 +34,7 @@ public class AssessmentPeriodRestServiceMocksTest extends BaseRestServiceUnitTes
 
         String url = assessmentPeriodRestURL + "/" + competitionId;
 
-        setupGetWithRestResultExpectations(url, AssessmentPeriodResource.class, assessmentPeriod, OK);
+        setupGetWithRestResultExpectations(url, ParameterizedTypeReferences.assessmentPeriodResourceListType(), Collections.singletonList(assessmentPeriod), OK);
 
         List<AssessmentPeriodResource> response = service.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);
