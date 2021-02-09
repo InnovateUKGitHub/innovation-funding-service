@@ -207,10 +207,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("nonIfs", nonIfs);
     }
 
-    public CompetitionResourceBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
-        return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
-    }
-
     public CompetitionResourceBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
     }
