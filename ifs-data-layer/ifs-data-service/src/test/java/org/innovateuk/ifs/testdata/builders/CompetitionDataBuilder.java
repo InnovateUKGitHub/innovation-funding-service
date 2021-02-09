@@ -24,7 +24,6 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -34,9 +33,7 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.assertj.core.util.Sets.newHashSet;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -90,9 +87,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     competition.setCompetitionType(competitionType.getId());
                 }
 
-
-                Set<Long> researchCategories = line.researchCategory;
-
                 Long innovationSector = getInnovationSectorIdOrNull(line.innovationSector);
 
                 CollaborationLevel collaborationLevel = line.collaborationLevel;
@@ -100,9 +94,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 List<Long> leadApplicantTypeIds = simpleMap(line.leadApplicantTypes, OrganisationTypeEnum::getId);
 
                 competition.setName(line.name);
-                competition.setInnovationAreas(line.innovationAreas.isEmpty() ? emptySet() : newHashSet(line.innovationAreas));
+                competition.setInnovationAreas(line.innovationAreas);
                 competition.setInnovationSector(innovationSector);
-                competition.setResearchCategories(researchCategories.isEmpty() ? emptySet() : newHashSet(researchCategories));
+                competition.setResearchCategories(line.researchCategory);
                 competition.setFundingRules(line.fundingRules);
                 competition.setMaxResearchRatio(line.researchRatio);
                 competition.setAcademicGrantPercentage(100);
@@ -309,7 +303,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
         });
     }
-    
+
     public CompetitionDataBuilder withNewMilestones(CompetitionLine line) {
         return asCompAdmin(data ->
                 Stream.of(BooleanUtils.isTrue(line.alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
