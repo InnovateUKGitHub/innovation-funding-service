@@ -63,7 +63,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                             failure -> createDefaultAssessmentPeriod(competitionId),
                             success -> success.stream()
                                     .findFirst()
-                                    .orElse(createDefaultAssessmentPeriod(competitionId))
+                                    .orElseGet(() -> createDefaultAssessmentPeriod(competitionId))
                     );
             milestoneResource = milestoneRestService.create(type, competitionId, assessmentPeriodResource.getId()).getSuccess();
         } else {
