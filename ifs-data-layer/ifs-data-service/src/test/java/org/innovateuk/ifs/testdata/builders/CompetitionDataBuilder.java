@@ -92,7 +92,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 List<Long> leadApplicantTypeIds = line.leadApplicantTypes;
 
                 competition.setName(line.name);
-                competition.setInnovationAreas(line.innovationAreas);
+                if (line.innovationAreas != null) {
+                    competition.setInnovationAreas(line.innovationAreas);
+                }
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(line.researchCategory);
                 competition.setFundingRules(line.fundingRules);

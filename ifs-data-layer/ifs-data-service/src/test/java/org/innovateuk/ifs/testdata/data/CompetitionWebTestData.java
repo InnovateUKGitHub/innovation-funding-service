@@ -105,9 +105,11 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("Innovation continuity loan competition"),
                 defaultGrantCompetition()
-                        .withName("The Sustainable Innovation Fund: SBRI phase 1"),
+                        .withName("The Sustainable Innovation Fund: SBRI phase 1")
+                        .withInnovationAreas(null),
                 defaultGrantCompetition()
-                        .withName("SBRI competition"),
+                        .withName("SBRI competition")
+                        .withInnovationAreas(null),
                 defaultKtpCompetition()
                         .withName("KTP Africa project setup"),
                 defaultGrantCompetition()
@@ -125,7 +127,8 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("Assessments of load capabilities"),
                 defaultGrantCompetition()
-                        .withName("Expression of Interest: Assistive technologies for caregivers"),
+                        .withName("Expression of Interest: Assistive technologies for caregivers")
+                        .withCompetitionType(7L),
                 defaultGrantCompetition()
                         .withName("Living models for the future"),
                 defaultGrantCompetition()
@@ -160,6 +163,8 @@ public class CompetitionWebTestData {
                         .withName("Photonics for health"),
                 defaultGrantCompetition()
                         .withName("Reducing carbon footprints")
+                        .withCompetitionType(null)
+                        .withInnovationAreas(asSet(21L))
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.READY_TO_OPEN))
@@ -179,11 +184,14 @@ public class CompetitionWebTestData {
     private static List<CompetitionLineBuilder> getClosedCompetitionLineBuilders() {
         return asList(
                 defaultGrantCompetition()
-                        .withName("Machine learning for transport infrastructure"),
+                        .withName("Machine learning for transport infrastructure")
+                        .withInnovationAreas(asSet(29L)),
                 defaultGrantCompetition()
-                        .withName("Personalised Smart HUDs for space helmets"),
+                        .withName("Personalised Smart HUDs for space helmets")
+                        .withCompetitionType(9L),
                 defaultGrantCompetition()
                         .withName("Smart monitoring in high-pressure engineering systems")
+                        .withCompetitionType(8L)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.CLOSED))
@@ -195,12 +203,17 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("Home and industrial efficiency programme"),
                 defaultGrantCompetition()
-                        .withName("Transforming big data"),
+                        .withName("Transforming big data")
+                        .withCompetitionType(null)
+                        .withInnovationAreas(asSet(5L)),
                 defaultGrantCompetition()
                         .withName("Predicting market trends programme"),
                 defaultGrantCompetition()
-                        .withName("Aerospace technology investment sector"),
+                        .withCompetitionType(5L)
+                        .withName("Aerospace technology investment sector")
+                        .withInnovationAreas(asSet(22L, 23L)),
                 defaultGrantCompetition()
+                        .withCompetitionType(6L)
                         .withName("Generic innovation"),
                 defaultGrantCompetition()
                         .withName("Photonics for Research"),
@@ -211,13 +224,17 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("Photonics for All"),
                 defaultGrantCompetition()
-                        .withName("Expression of Interest: Quantum Computing algorithms for combating antibiotic resistance through simulation"),
+                        .withName("Expression of Interest: Quantum Computing algorithms for combating antibiotic resistance through simulation")
+                        .withCompetitionType(7L),
                 defaultGrantCompetition()
-                        .withName("Low-cost propulsion mechanisms for subsonic travel"),
+                        .withName("Low-cost propulsion mechanisms for subsonic travel")
+                        .withCompetitionType(8L),
                 defaultGrantCompetition()
-                        .withName("Reusability of waste material rocketry components"),
+                        .withName("Reusability of waste material rocketry components")
+                        .withCompetitionType(9L),
                 defaultInvestorPartnershipCompetition()
-                        .withName("Investor"),
+                        .withName("Investor")
+                        .withCompetitionType(9L),
                 defaultGrantCompetition()
                         .withName("Performance testing competition"),
                 defaultGrantCompetition()
@@ -227,7 +244,9 @@ public class CompetitionWebTestData {
                 defaultLoanCompetition()
                         .withName("Loan Competition"),
                 defaultGrantCompetition()
-                        .withName("H2020 Performance testing competition"),
+                        .withName("H2020 Performance testing competition")
+                        .withCompetitionType(11L)
+                        .withInnovationAreas(null),
                 defaultGrantCompetition()
                         .withName("International Competition"),
                 defaultGrantCompetition()
@@ -247,7 +266,8 @@ public class CompetitionWebTestData {
                 defaultGrantCompetition()
                         .withName("Innovation continuity loan"),
                 defaultKtpCompetition()
-                        .withName("KTP Africa Comp"),
+                        .withName("KTP Africa Comp")
+                        .withCompetitionType(9L),
                 defaultKtpCompetition()
                         .withName("KTP cofunding"),
                 defaultKtpCompetition()
@@ -316,7 +336,7 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder defaultGrantCompetition() {
         return newCompetitionLine()
                 .withCompetitionType(1L) // Programme
-                .withInnovationAreas(asSet(5L)) // Digital industries
+                .withInnovationAreas(asSet(22L)) // Digital manufacturing
                 .withInnovationSectorName("Materials and manufacturing")
                 .withResearchCategories(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
@@ -347,7 +367,7 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder defaultInvestorPartnershipCompetition() {
         return newCompetitionLine()
                 .withCompetitionType(1L) // Programme
-                .withInnovationAreas(asSet(5L)) // Digital industries
+                .withInnovationAreas(asSet(22L)) // Digital manufacturing
                 .withInnovationSectorName("Materials and manufacturing")
                 .withResearchCategories(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
@@ -378,7 +398,7 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder defaultLoanCompetition() {
         return newCompetitionLine()
                 .withCompetitionType(1L) // Programme
-                .withInnovationAreas(asSet(5L)) // Digital industries
+                .withInnovationAreas(asSet(22L)) // Digital manufacturing
                 .withInnovationSectorName("Materials and manufacturing")
                 .withResearchCategories(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
@@ -409,7 +429,7 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder defaultKtpCompetition() {
         return newCompetitionLine()
                 .withCompetitionType(1L) // Programme
-                .withInnovationAreas(asSet(5L)) // Digital industries
+                .withInnovationAreas(asSet(22L)) // Digital manufacturing
                 .withInnovationSectorName("Materials and manufacturing")
                 .withResearchCategories(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
