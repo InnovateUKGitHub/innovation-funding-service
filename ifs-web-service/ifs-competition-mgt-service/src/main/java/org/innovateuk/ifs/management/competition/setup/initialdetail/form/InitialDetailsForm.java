@@ -57,7 +57,8 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long innovationLeadUserId;
-    
+
+    @NotNull(message = "{validation.initialdetailsform.funding.rule.required}", groups = Unrestricted.class)
     private FundingRules fundingRule;
 
     private String innovationAreaNamesFormatted;

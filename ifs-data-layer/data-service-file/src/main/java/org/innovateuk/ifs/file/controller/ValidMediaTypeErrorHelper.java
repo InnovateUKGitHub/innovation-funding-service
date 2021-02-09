@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.file.controller;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.collections.SetUtils;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.http.MediaType;
@@ -8,7 +9,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 public class ValidMediaTypeErrorHelper {
 
     /* Groups of FileTypeCategory that are supported as upload validation types. .*/
-    private static final Set<EnumSet<FileTypeCategory>> UPLOAD_TYPES = asSet(
+    private static final Set<EnumSet<FileTypeCategory>> UPLOAD_TYPES = ImmutableSet.of(
             EnumSet.of(PDF),
             EnumSet.of(SPREADSHEET),
             EnumSet.of(DOCUMENT),
