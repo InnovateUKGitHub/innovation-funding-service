@@ -180,6 +180,14 @@ The knowledge transfer partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213
     Given the user clicks the button/link    jQuery = button:contains("Done")
+
+    Then the user sees that the radio button is selected     termsAndConditionsId  34
+    And the user should see the element                      link = Innovate UK (opens in a new window)
+    Given the user clicks the button/link    jQuery = button:contains("Done")
+
+    And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
+    And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
+
     When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
