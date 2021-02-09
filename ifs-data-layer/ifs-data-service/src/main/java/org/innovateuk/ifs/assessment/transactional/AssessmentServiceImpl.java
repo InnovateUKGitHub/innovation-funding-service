@@ -74,6 +74,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<Boolean> existsByTargetId(long applicationId) {
+        return serviceSuccess(assessmentRepository.existsByTargetId(applicationId));
+    }
+
+    @Override
     public ServiceResult<AssessmentResource> findAssignableById(long id) {
         return find(assessmentRepository.findById(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
             if (WITHDRAWN == found.getProcessState()) {
