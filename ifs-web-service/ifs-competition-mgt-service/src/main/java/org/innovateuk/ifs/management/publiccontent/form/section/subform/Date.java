@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.management.publiccontent.form.section.subform;
 
-import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.management.publiccontent.form.section.DatesForm;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -13,13 +14,16 @@ import javax.validation.constraints.NotBlank;
 public class Date {
     private Long id;
 
-    @Range(min = 1, max = 31, message = "{validation.publiccontent.datesform.date.day}")
+    @Min(value = 1, message = "{validation.publiccontent.datesform.date.day}")
+    @Max(value = 31, message = "{validation.publiccontent.datesform.date.day}")
     private Integer day;
 
-    @Range(min = 1, max = 12, message = "{validation.publiccontent.datesform.date.month}")
+    @Min(value = 1, message = "{validation.publiccontent.datesform.date.month}")
+    @Max(value = 12, message = "{validation.publiccontent.datesform.date.month}")
     private Integer month;
 
-    @Range(min = 2000, max = 9999, message = "{validation.publiccontent.datesform.date.year}")
+    @Min(value = 2000, message = "{validation.publiccontent.datesform.date.year}")
+    @Max(value = 9999, message = "{validation.publiccontent.datesform.date.year}")
     private Integer year;
 
     @NotBlank(message = "{validation.publiccontent.datesform.content.required}")

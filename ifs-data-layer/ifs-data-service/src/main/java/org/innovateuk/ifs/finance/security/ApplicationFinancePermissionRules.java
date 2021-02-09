@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.finance.security;
 
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.security.ApplicationSecurityHelper;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +19,6 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @Autowired
     private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
