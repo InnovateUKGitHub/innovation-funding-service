@@ -209,6 +209,34 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
     }
 
     @Test
+    public void submitTermsAndConditionsWhenDualTermsAndConditionsApplyWithoutSelectingTerms() throws Exception {
+        GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
+                .withName("Non procurement terms")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
+        when(competitionRestService.updateTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "termsAndConditionsId"));
+
+        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService, termsAndConditionsModelPopulator);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(termsAndConditionsModelPopulator).populateModel(competition, loggedInUser, false);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void submitStateAidTermsAndConditionsWhenDualTermsAndConditionsApply() throws Exception {
         GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
                 .withName("Non procurement terms")
@@ -239,6 +267,36 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
         inOrder.verify(competitionSetupRestService).markSectionComplete(
                 eq(COMPETITION_ID),
                 eq(TERMS_AND_CONDITIONS));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitStateAidTermsAndConditionsWhenDualTermsAndConditionsApplyWithoutSelectingATerms() throws Exception {
+        GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
+                .withName("Non procurement terms")
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withCompetitionTerms(newFileEntryResource().build())
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
+        when(competitionRestService.updateOtherFundingRulesTermsAndConditionsForCompetition(
+                anyLong(),
+                anyLong())).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionComplete(anyLong(), eq(TERMS_AND_CONDITIONS))).thenReturn(restSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/state-aid-terms-and-conditions"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "termsAndConditionsId"));
+
+        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService, termsAndConditionsModelPopulator);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(competitionSetupService).hasInitialDetailsBeenPreviouslySubmitted(competition.getId());
+        inOrder.verify(termsAndConditionsModelPopulator).populateModel(competition, loggedInUser, true);
         inOrder.verifyNoMoreInteractions();
     }
 

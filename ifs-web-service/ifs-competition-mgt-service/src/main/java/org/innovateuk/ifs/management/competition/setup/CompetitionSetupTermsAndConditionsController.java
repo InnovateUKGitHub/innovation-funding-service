@@ -25,6 +25,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -110,13 +111,20 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     @PostMapping("/{competitionId}/section/terms-and-conditions")
-    public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
+    public String submitTermsAndConditionsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                                          @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                          ValidationHandler validationHandler,
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                          UserResource loggedInUser,
                                                          Model model) {
+
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        if (validationHandler.hasErrors()) {
+            model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
+            return "competition/setup";
+        }
+
         if (isProcurement(termsAndConditionsForm.getTermsAndConditionsId())) {
             if (competition.getCompetitionTerms() == null) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
@@ -127,11 +135,11 @@ public class CompetitionSetupTermsAndConditionsController {
 
         Supplier<ServiceResult<Void>> saveAction = () -> nonStateAidSaveAction(competition, termsAndConditionsForm);
         Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
-        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect);
+        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, false);
     }
 
     @PostMapping("/{competitionId}/section/state-aid-terms-and-conditions")
-    public String submitStateAidTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
+    public String submitStateAidTermsAndConditionsSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                                          @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                          ValidationHandler validationHandler,
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -145,11 +153,11 @@ public class CompetitionSetupTermsAndConditionsController {
 
         Supplier<ServiceResult<Void>> saveAction = () -> stateAidSaveAction(competition, termsAndConditionsForm);
         Supplier<String> postSaveRedirect = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", competition.getId());
-        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect);
+        return termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, true);
     }
 
     @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
-    public String uploadTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
+    public String uploadTermsAndConditions(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -160,7 +168,7 @@ public class CompetitionSetupTermsAndConditionsController {
 
         Supplier<ServiceResult<Void>> saveAction = () -> nonStateAidSaveAction(competition, termsAndConditionsForm);
         Supplier<String> postSaveRedirect = () -> postSaveRedirectForSingleTermsAndConditions(competition);
-        Supplier<String> failure = () -> termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect);
+        Supplier<String> failure = () -> termsAndConditionsSection(validationHandler, competition, loggedInUser, model, saveAction, postSaveRedirect, false);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
@@ -176,7 +184,7 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
-    public String deleteTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
+    public String deleteTermsAndConditions(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -194,7 +202,8 @@ public class CompetitionSetupTermsAndConditionsController {
                                              UserResource loggedInUser,
                                              Model model,
                                              Supplier<ServiceResult<Void>> saveAction,
-                                             Supplier<String> postSaveRedirect) {
+                                             Supplier<String> postSaveRedirect,
+                                             boolean stateAidPage) {
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
             return ifsCompetitionSetup(competition.getId());
         }
@@ -204,7 +213,7 @@ public class CompetitionSetupTermsAndConditionsController {
         }
 
         Supplier<String> failureView = () -> {
-            model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, false));
+            model.addAttribute(MODEL, termsAndConditionsModelPopulator.populateModel(competition, loggedInUser, stateAidPage));
             return "competition/setup";
         };
 
