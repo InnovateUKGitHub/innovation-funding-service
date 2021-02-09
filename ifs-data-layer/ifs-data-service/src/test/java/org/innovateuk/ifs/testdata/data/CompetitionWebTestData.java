@@ -40,11 +40,10 @@ public class CompetitionWebTestData {
                         .withName("New designs for a circular economy"),
                 defaultGrantCompetition()
                         .withName("Rolling stock future developments")
-                        .withResubmission(false)
-
                         .withMaxResearchRatio(100),
                 defaultGrantCompetition()
-                        .withName("Biosciences round three: plastic recovery in the industrial sector"),
+                        .withName("Biosciences round three: plastic recovery in the industrial sector")
+                        .withMaxResearchRatio(50),
                 defaultGrantCompetition()
                         .withName("Integrated delivery programme - solar vehicles"),
                 defaultGrantCompetition()
@@ -344,7 +343,7 @@ public class CompetitionWebTestData {
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantType(asList(1L)) // Buisness
                 .withMaxResearchRatio(30)
-                .withResubmission(true)
+                .withResubmission(false)
                 .withMultiStream(false)
                 .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
                 .withExecutive(20L) // john.doe@innovateuk.test
