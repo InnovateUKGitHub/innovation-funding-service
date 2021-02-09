@@ -204,7 +204,6 @@ public class CompetitionWebTestData {
                         .withName("Home and industrial efficiency programme"),
                 defaultGrantCompetition()
                         .withName("Transforming big data")
-                        .withCompetitionType(null)
                         .withInnovationAreas(asSet(5L)),
                 defaultGrantCompetition()
                         .withName("Predicting market trends programme"),
