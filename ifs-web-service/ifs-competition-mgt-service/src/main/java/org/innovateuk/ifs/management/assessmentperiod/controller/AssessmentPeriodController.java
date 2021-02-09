@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -54,7 +55,7 @@ public class AssessmentPeriodController {
     }
 
     @PostMapping
-    public String submitAssessmentPeriods(@ModelAttribute(value = "form", binding = true) ManageAssessmentPeriodsForm form,
+    public String submitAssessmentPeriods(@Valid @ModelAttribute(value = "form", binding = true) ManageAssessmentPeriodsForm form,
                                           BindingResult bindingResult,
                                           ValidationHandler validationHandler,
                                           Model model,
@@ -69,11 +70,15 @@ public class AssessmentPeriodController {
         List<MilestoneResource> updatedMilestones = assessmentPeriodService.extractMilestoneResourcesFromForm(form, competitionId);
 
         Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
-        Supplier<String> failureView = () -> manageAssessmentPeriods(form, competitionId, model);
+        Supplier<String> failureView = () -> {
+            model.addAttribute("model", assessmentPeriodsPopulator.populateModel(competitionId));
+            return "competition/manage-assessment-periods";
+        };
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             RestResult<Void> saveResult = assessmentPeriodRestService.updateAssessmentPeriodMilestones(updatedMilestones);
-            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+            String s = validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, successView);
+            return s;
         });
     }
 

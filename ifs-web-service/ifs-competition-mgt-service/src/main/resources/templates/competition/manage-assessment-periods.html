@@ -27,6 +27,7 @@
               th:object="${form}"
               th:attr="data-competition=${model.competitionId}"
               data-section="milestones"
+              novalidate="novalidate"
               method="post">
             <th:block th:each="assessmentPeriod, pStat: ${form.formList}">
                 <input type="hidden"
