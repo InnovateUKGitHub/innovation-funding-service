@@ -127,6 +127,22 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         });
     }
 
+    public ApplicationFinanceDataBuilder withFecModel(UnaryOperator<FecModelDataBuilder> costBuilderFn) {
+
+        return doAsUser(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.financeDetails(data.getApplication().getId(), data.getOrganisation().getId()).
+                            getSuccess();
+
+            FecModelDataBuilder baseFinanceBuilder = FecModelDataBuilder.newFecModel(serviceLocator).
+                    withApplicationFinance(applicationFinance).
+                    withCompetition(data.getCompetition());
+
+            costBuilderFn.apply(baseFinanceBuilder).build();
+        });
+    }
+
     private ApplicationFinanceDataBuilder doAsUser(Consumer<ApplicationFinanceData> action) {
         return with(data -> doAs(data.getUser(), () -> action.accept(data)));
     }

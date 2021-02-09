@@ -9,6 +9,8 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
     private String workPostcode;
     private String internationalLocation;
     private String justification;
+    private Boolean fecModelEnabled;
+    private Long fecFileEntry;
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
 
@@ -27,6 +29,11 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
     public ApplicationFinanceResource(Long financeFileEntry) {
         this.financeFileEntry = financeFileEntry;
+    }
+
+    public ApplicationFinanceResource(Boolean fecModelEnabled, Long fecFileEntry) {
+        this.fecModelEnabled = fecModelEnabled;
+        this.fecFileEntry = fecFileEntry;
     }
 
     public ApplicationFinanceResource(long id,
@@ -80,5 +87,21 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
     public void setJustification(String justification) {
         this.justification = justification;
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
+    }
+
+    public Long getFecFileEntry() {
+        return fecFileEntry;
+    }
+
+    public void setFecFileEntry(Long fecFileEntry) {
+        this.fecFileEntry = fecFileEntry;
     }
 }

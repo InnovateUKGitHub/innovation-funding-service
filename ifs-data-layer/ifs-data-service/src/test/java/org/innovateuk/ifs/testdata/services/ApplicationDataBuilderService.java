@@ -517,6 +517,17 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         }
     }
 
+    private FecModelDataBuilder addFecModel(
+            FecModelDataBuilder builder,
+            CsvUtils.ApplicationFinanceRow financeRow) {
+
+        if (financeRow.category.equals("Fec model enabled")) {
+            builder.withEnabled(Boolean.valueOf(financeRow.metadata.get(0))).withUploadedFecFile();
+        }
+
+        return builder;
+    }
+
     private ApplicationFinanceDataBuilder generateIndustrialCostsFromSuppliedData(
             ApplicationResource application,
             CompetitionResource competition,
@@ -543,9 +554,20 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             return costsWithData;
         };
 
+        UnaryOperator<FecModelDataBuilder> fecModelBuilder = fecModel -> {
 
-        return finance.
-                withIndustrialCosts(costBuilder);
+            FecModelDataBuilder fecModelWithData = fecModel;
+
+            for (CsvUtils.ApplicationFinanceRow financeRow : financeRows) {
+                fecModelWithData = addFecModel(fecModelWithData, financeRow);
+            }
+
+            return fecModelWithData;
+        };
+
+        return finance
+                .withIndustrialCosts(costBuilder)
+                .withFecModel(fecModelBuilder);
     }
 
     private ApplicationFinanceDataBuilder generateIndustrialCosts(
@@ -636,7 +658,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             };
 
-
             if (competition.isKtp()) {
                 if (OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType) {
                     competition.getFinanceRowTypes().forEach(costPopulator);
@@ -665,7 +686,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
-                withIndustrialCosts(costBuilder);
+                withIndustrialCosts(costBuilder)
+                .withFecModel(fecModel -> fecModel
+                        .withEnabled(false));
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(

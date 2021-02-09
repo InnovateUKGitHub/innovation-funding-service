@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
+
 /**
  * Generates FEC model for an Organisation on an Application
  */
@@ -49,6 +51,10 @@ public class FecModelDataBuilder extends BaseDataBuilder<FecModelData, FecModelD
 
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
+    }
+
+    public static FecModelDataBuilder newFecModel(ServiceLocator serviceLocator) {
+        return new FecModelDataBuilder(emptyList(), serviceLocator);
     }
 
     private FecModelDataBuilder(List<BiConsumer<Integer, FecModelData>> multiActions, ServiceLocator serviceLocator) {
