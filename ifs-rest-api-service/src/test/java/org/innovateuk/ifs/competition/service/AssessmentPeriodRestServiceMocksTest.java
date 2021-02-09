@@ -5,6 +5,8 @@ import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,13 +29,14 @@ public class AssessmentPeriodRestServiceMocksTest extends BaseRestServiceUnitTes
         assessmentPeriod.setCompetitionId(competitionId);
         assessmentPeriod.setIndex(index);
 
-        String url = assessmentPeriodRestURL + "/" + competitionId + "/get-by-index?index=" + index;
+        String url = assessmentPeriodRestURL + "/" + competitionId;
 
         setupGetWithRestResultExpectations(url, AssessmentPeriodResource.class, assessmentPeriod, OK);
 
-        AssessmentPeriodResource response = service.getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId).getSuccess();
+        List<AssessmentPeriodResource> response = service.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);
-        Assert.assertEquals(assessmentPeriod, response);
+        Assert.assertEquals(1, response.size());
+        Assert.assertEquals(assessmentPeriod, response.get(0));
     }
 
     @Test

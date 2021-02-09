@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -34,15 +36,13 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
     public void getAssessmentPeriodByCompetitionIdAndIndex_returnsSuccess() throws Exception {
 
         long competitionId = 1L;
-        int index = 1;
 
         AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource().build();
 
-        when(assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index))
-                .thenReturn(ServiceResult.serviceSuccess(assessmentPeriodResource));
+        when(assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId))
+                .thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(assessmentPeriodResource)));
 
-        mockMvc.perform(get("/assessment-period/{competitionId}/get-by-index", competitionId)
-                .param("index", String.valueOf(index)))
+        mockMvc.perform(get("/assessment-period/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(assessmentPeriodResource)));
     }
@@ -53,11 +53,10 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
         long competitionId = 1L;
         int index = 1;
 
-        when(assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index))
+        when(assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId))
                 .thenReturn(ServiceResult.serviceFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)));
 
-        mockMvc.perform(get("/assessment-period/{competitionId}/get-by-index", competitionId)
-                .param("index", String.valueOf(index)))
+        mockMvc.perform(get("/assessment-period/{competitionId}", competitionId))
                 .andExpect(status().isNotFound());
     }
 

@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -63,10 +64,10 @@ public class CompetitionSetupMilestoneServiceImplTest {
                 .thenReturn(restSuccess(newCompetitionResource()
                         .withId(competitionId).withAlwaysOpen(false).build()));
 
-        when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId))
+        when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId))
                 .thenReturn(restFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)))
-                .thenReturn(restSuccess(assessmentPeriodResource))
-                .thenReturn(restSuccess(assessmentPeriodResource));
+                .thenReturn(restSuccess(Collections.singletonList(assessmentPeriodResource)))
+                .thenReturn(restSuccess(Collections.singletonList(assessmentPeriodResource)));
 
         when(assessmentPeriodRestService.create(index, competitionId))
                 .thenReturn(restSuccess(assessmentPeriodResource));
@@ -93,7 +94,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
 		assertEquals(numberOfMilestonesExpected, result.size());
 		verify(milestoneRestService, times(numberOfMilestonesExpected-numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId));
         verify(competitionRestService, times(numberOfMilestonesExpected)).getCompetitionById(competitionId);
-        verify(assessmentPeriodRestService, times(numberOfAssessmentPeriodMilestonesExpected)).getAssessmentPeriodByCompetitionIdAndIndex(index, competitionId);
+        verify(assessmentPeriodRestService, times(numberOfAssessmentPeriodMilestonesExpected)).getAssessmentPeriodByCompetitionId(competitionId);
         verify(assessmentPeriodRestService, times(1)).create(index, competitionId);
         verify(milestoneRestService, times(numberOfMilestonesExpected-numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId));
         verify(milestoneRestService, times(numberOfAssessmentPeriodMilestonesExpected)).create(any(MilestoneType.class), eq(competitionId), eq(assessmentPeriodId));

@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -42,31 +44,29 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
     @Test
     public void getAssessmentPeriodByCompetitionIdAndIndex_returnSuccess() {
         Long competitionId = 1L;
-        Integer index = 1;
 
-        when(assessmentPeriodRepository.findByCompetitionIdAndIndex(competitionId, index))
-                .thenReturn(Optional.of(newAssessmentPeriod().build()));
+        when(assessmentPeriodRepository.findByCompetitionId(competitionId))
+                .thenReturn(Collections.singletonList(newAssessmentPeriod().build()));
 
         when(assessmentPeriodMapper.mapToResource(any(AssessmentPeriod.class)))
                 .thenReturn(newAssessmentPeriodResource().build());
 
-        ServiceResult<AssessmentPeriodResource> result = service.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        ServiceResult<List<AssessmentPeriodResource>> result = service.getAssessmentPeriodByCompetitionId(competitionId);
 
         assertTrue(result.isSuccess());
 
-        verify(assessmentPeriodRepository).findByCompetitionIdAndIndex(competitionId, index);
+        verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
         verify(assessmentPeriodMapper).mapToResource(any(AssessmentPeriod.class));
     }
 
     @Test
     public void getAssessmentPeriodByCompetitionIdAndIndex_returnFailure() {
         Long competitionId = 1L;
-        Integer index = 1;
 
-        when(assessmentPeriodRepository.findByCompetitionIdAndIndex(competitionId, index))
-                .thenReturn(Optional.empty());
+        when(assessmentPeriodRepository.findByCompetitionId(competitionId))
+                .thenReturn(Collections.emptyList());
 
-        ServiceResult<AssessmentPeriodResource> result = service.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        ServiceResult<List<AssessmentPeriodResource>> result = service.getAssessmentPeriodByCompetitionId(competitionId);
 
         assertTrue(result.isFailure());
 
@@ -77,7 +77,7 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
         assertNotNull(result.getErrors().get(0).getArguments());
         assertEquals("AssessmentPeriodResource not found", result.getErrors().get(0).getArguments().get(0));
 
-        verify(assessmentPeriodRepository).findByCompetitionIdAndIndex(competitionId, index);
+        verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
     }
 
     @Test

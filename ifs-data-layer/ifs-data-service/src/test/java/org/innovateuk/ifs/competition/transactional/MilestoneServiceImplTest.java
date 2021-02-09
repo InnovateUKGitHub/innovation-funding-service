@@ -22,6 +22,7 @@ import org.springframework.test.annotation.Rollback;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -375,8 +376,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .build();
 
         when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
-        when(assessmentPeriodRepository.findByCompetitionIdAndIndex(competition.getId(), 1))
-                .thenReturn(Optional.of(newAssessmentPeriod()
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId()))
+                .thenReturn(Collections.singletonList(newAssessmentPeriod()
                         .withCompetition(competition)
                         .withIndex(1)
                         .build()));
@@ -421,8 +422,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .build();
 
         when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
-        when(assessmentPeriodRepository.findByCompetitionIdAndIndex(competition.getId(), 1))
-                .thenReturn(Optional.empty());
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId()))
+                .thenReturn(Collections.emptyList());
         when(assessmentPeriodRepository.save(any(AssessmentPeriod.class)))
                 .thenReturn(newAssessmentPeriod().build());
 
