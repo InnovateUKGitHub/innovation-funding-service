@@ -33,7 +33,7 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
     }
 
     @Test
-    public void getAssessmentPeriodByCompetitionIdAndIndex_returnsSuccess() throws Exception {
+    public void getAssessmentPeriodByCompetitionId_returnsSuccess() throws Exception {
 
         long competitionId = 1L;
 
@@ -44,11 +44,11 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
 
         mockMvc.perform(get("/assessment-period/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(assessmentPeriodResource)));
+                .andExpect(content().json(toJson(Collections.singletonList(assessmentPeriodResource))));
     }
 
     @Test
-    public void getAssessmentPeriodByCompetitionIdAndIndex_returnsFailure() throws Exception {
+    public void getAssessmentPeriodByCompetitionId_returnsFailure() throws Exception {
 
         long competitionId = 1L;
         int index = 1;

@@ -26,7 +26,7 @@ public class AssessmentPeriodRestServiceMocksTest extends BaseRestServiceUnitTes
     }
 
     @Test
-    public void getAssessmentPeriodByCompetitionIdAndIndex() {
+    public void getAssessmentPeriodByCompetitionId() {
         AssessmentPeriodResource assessmentPeriod = new AssessmentPeriodResource();
         assessmentPeriod.setId(1L);
         assessmentPeriod.setCompetitionId(competitionId);

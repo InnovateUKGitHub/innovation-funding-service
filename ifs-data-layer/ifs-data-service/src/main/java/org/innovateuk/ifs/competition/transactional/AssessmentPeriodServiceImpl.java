@@ -32,7 +32,7 @@ public class AssessmentPeriodServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId) {
         return find(assessmentPeriodRepository.findByCompetitionId(competitionId), notFoundError(AssessmentPeriodResource.class, competitionId))
-                .andOnSuccess(assessmentPeriod -> serviceSuccess(assessmentPeriodMapper.mapToResource(assessmentPeriod)));
+                .andOnSuccessReturn(assessmentPeriodMapper::mapToResource);
     }
 
     @Override

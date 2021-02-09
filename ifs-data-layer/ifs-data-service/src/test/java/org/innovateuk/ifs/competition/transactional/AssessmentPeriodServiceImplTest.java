@@ -42,25 +42,26 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAssessmentPeriodByCompetitionIdAndIndex_returnSuccess() {
+    public void getAssessmentPeriodByCompetitionId_returnSuccess() {
         Long competitionId = 1L;
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod().build();
 
         when(assessmentPeriodRepository.findByCompetitionId(competitionId))
-                .thenReturn(Collections.singletonList(newAssessmentPeriod().build()));
+                .thenReturn(Collections.singletonList(assessmentPeriod));
 
-        when(assessmentPeriodMapper.mapToResource(any(AssessmentPeriod.class)))
-                .thenReturn(newAssessmentPeriodResource().build());
+        when(assessmentPeriodMapper.mapToResource(Collections.singletonList(assessmentPeriod)))
+                .thenReturn(Collections.singletonList(newAssessmentPeriodResource().build()));
 
         ServiceResult<List<AssessmentPeriodResource>> result = service.getAssessmentPeriodByCompetitionId(competitionId);
 
         assertTrue(result.isSuccess());
 
         verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
-        verify(assessmentPeriodMapper).mapToResource(any(AssessmentPeriod.class));
+        verify(assessmentPeriodMapper).mapToResource(Collections.singletonList(assessmentPeriod));
     }
 
     @Test
-    public void getAssessmentPeriodByCompetitionIdAndIndex_returnFailure() {
+    public void getAssessmentPeriodByCompetitionId_returnFailure() {
         Long competitionId = 1L;
 
         when(assessmentPeriodRepository.findByCompetitionId(competitionId))
