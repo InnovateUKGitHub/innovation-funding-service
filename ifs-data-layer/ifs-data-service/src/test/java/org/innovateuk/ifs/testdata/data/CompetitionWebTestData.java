@@ -163,7 +163,6 @@ public class CompetitionWebTestData {
                         .withName("Photonics for health"),
                 defaultGrantCompetition()
                         .withName("Reducing carbon footprints")
-                        .withCompetitionType(null)
                         .withInnovationAreas(asSet(21L))
         )
                 .stream()
