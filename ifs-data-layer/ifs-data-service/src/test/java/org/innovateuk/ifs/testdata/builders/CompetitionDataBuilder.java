@@ -15,7 +15,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
-import org.innovateuk.ifs.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,8 +99,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setFundingRules(line.fundingRules);
                 competition.setMaxResearchRatio(line.researchRatio);
                 competition.setAcademicGrantPercentage(100);
-                competition.setLeadTechnologist(userRepository.findById(line.leadTechnologist).map(User::getId).orElse(null));
-                competition.setExecutive(userRepository.findById(line.compExecutive).map(User::getId).orElse(null));
+                competition.setLeadTechnologist(line.leadTechnologist);
+                competition.setExecutive(line.compExecutive);
                 competition.setPafCode(line.pafCode);
                 competition.setCode(line.code);
                 competition.setBudgetCode(line.budgetCode);
