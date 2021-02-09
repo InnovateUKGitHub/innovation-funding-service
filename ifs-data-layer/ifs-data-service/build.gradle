@@ -112,8 +112,8 @@ prepareDockerBaseInput {
 
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
-    compile project(":ifs-data-layer:data-service-notifications")
-    compile project(":ifs-data-layer:data-service-file")
+    compile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'default')
+    compile project(path: ":ifs-data-layer:data-service-file", configuration: 'default')
     compile project(":ifs-sil-resources")
     compile project(":ifs-error-util")
 
