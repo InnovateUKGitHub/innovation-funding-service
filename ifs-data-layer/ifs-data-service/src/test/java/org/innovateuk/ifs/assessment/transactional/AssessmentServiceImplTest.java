@@ -33,6 +33,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -591,7 +592,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long applicationId = 2L;
         Long competitionId = 3L;
         Long assessmentPeriodId = 4L;
-        Integer index = 1;
 
         User user = newUser().withId(assessorId).build();
         Competition competition = newCompetition()
@@ -638,7 +638,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
         when(assessmentMapperMock.mapToResource(savedAssessment)).thenReturn(expectedAssessmentResource);
-        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index)).thenReturn(serviceSuccess(assessmentPeriodResource));
+        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionId(competitionId)).thenReturn(serviceSuccess(Collections.singletonList(assessmentPeriodResource)));
         when(applicationServiceMock.updateAssessmentPeriod(applicationId, assessmentPeriodResource)).thenReturn(serviceSuccess(applicationResource));
 
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
@@ -658,7 +658,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
         inOrder.verify(processRoleRepositoryMock).findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
-        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionId(competitionId);
         inOrder.verify(applicationServiceMock).updateAssessmentPeriod(applicationId, assessmentPeriodResource);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
         inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
@@ -701,7 +701,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.empty());
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId)).thenReturn(null);
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
-        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index)).thenReturn(serviceFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)));
+        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionId(competitionId)).thenReturn(serviceFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)));
 
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
                 .withApplicationId(applicationId)
@@ -719,7 +719,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
         inOrder.verify(processRoleRepositoryMock).findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
-        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionId(competitionId);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());
@@ -736,7 +736,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long applicationId = 2L;
         Long competitionId = 3L;
         Long assessmentPeriodId = 4L;
-        Integer index = 1;
 
         User user = newUser().withId(assessorId).build();
         Competition competition = newCompetition()
@@ -776,7 +775,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId)).thenReturn(expectedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
         when(assessmentMapperMock.mapToResource(savedAssessment)).thenReturn(expectedAssessmentResource);
-        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index)).thenReturn(serviceSuccess(assessmentPeriodResource));
+        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionId(competitionId)).thenReturn(serviceSuccess(Collections.singletonList(assessmentPeriodResource)));
         when(applicationServiceMock.updateAssessmentPeriod(applicationId, assessmentPeriodResource)).thenReturn(serviceSuccess(applicationResource));
 
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
@@ -795,7 +794,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(applicationRepositoryMock).findById(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
         inOrder.verify(processRoleRepositoryMock).findOneByUserIdAndRoleInAndApplicationId(assessorId, singleton(ProcessRoleType.ASSESSOR), applicationId);
-        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionId(competitionId);
         inOrder.verify(applicationServiceMock).updateAssessmentPeriod(applicationId, assessmentPeriodResource);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
         inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
@@ -812,7 +811,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         Long applicationId = 2L;
         Long competitionId = 3L;
         Long assessmentPeriodId = 4L;
-        Integer index = 1;
 
         User user = newUser().withId(assessorId).build();
         Competition competition = newCompetition()
@@ -861,7 +859,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
         when(assessmentMapperMock.mapToResource(savedAssessment)).thenReturn(expectedAssessmentResource);
-        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index)).thenReturn(serviceSuccess(assessmentPeriodResource));
+        when(assessmentPeriodServiceMock.getAssessmentPeriodByCompetitionId(competitionId)).thenReturn(serviceSuccess(Collections.singletonList(assessmentPeriodResource)));
         when(applicationServiceMock.updateAssessmentPeriod(applicationId, assessmentPeriodResource)).thenReturn(serviceSuccess(applicationResource));
 
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
@@ -879,7 +877,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(userRepositoryMock).findById(assessorId);
         inOrder.verify(applicationRepositoryMock).findById(applicationId);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
-        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionIdAndIndex(competitionId, index);
+        inOrder.verify(assessmentPeriodServiceMock).getAssessmentPeriodByCompetitionId(competitionId);
         inOrder.verify(applicationServiceMock).updateAssessmentPeriod(applicationId, assessmentPeriodResource);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
         inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);

@@ -46,8 +46,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
 
-    private static final Integer DEFAULT_INDEX = 1;
-
     private AssessmentRepository assessmentRepository;
     private AssessmentMapper assessmentMapper;
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
@@ -275,8 +273,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private ServiceResult<Void> attachDefaultAssessmentPeriod(User assessor, Application application, Competition competition) {
         if (!competition.isAlwaysOpen() && CompetitionCompletionStage.assessmentValues().stream()
                 .anyMatch(completionStage -> (completionStage == competition.getCompletionStage()))) {
-            return assessmentPeriodService.getAssessmentPeriodByCompetitionIdAndIndex(competition.getId(), DEFAULT_INDEX)
-                    .andOnSuccessReturn(assessmentPeriod -> applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod).andOnSuccessReturnVoid())
+            return assessmentPeriodService.getAssessmentPeriodByCompetitionId(competition.getId())
+                    .andOnSuccessReturn(assessmentPeriods -> assessmentPeriods.stream()
+                            .findFirst()
+                            .map(assessmentPeriod -> applicationService.updateAssessmentPeriod(application.getId(), assessmentPeriod))
+                            .orElse(null)
+                            .andOnSuccessReturnVoid())
                     .andOnFailure(() -> serviceFailure(new Error(ASSESSMENT_CREATE_FAILED_NO_DEFAULT_ASSESSMENT_PERIOD_EXISTS, assessor.getId(), application.getId(), competition.getId())));
         }
 
