@@ -115,6 +115,19 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     protected OrganisationCreationForm getFormDataForManualEntryFromCookie(OrganisationCreationForm organisationForm,HttpServletRequest request) {
+        return processedManualEntryOrganisationCreationFormFromCookie(request).
+                orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
+    }
+
+    private Optional<OrganisationCreationForm> processedManualEntryOrganisationCreationFormFromCookie(HttpServletRequest request) {
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+        organisationCreationFormFromCookie.ifPresent(organisationCreationForm -> {
+            addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
+        });
+        return organisationCreationFormFromCookie;
+    }
+
+    protected OrganisationCreationForm getFormDataForManualEntry(OrganisationCreationForm organisationForm,HttpServletRequest request) {
         OrganisationCreationForm organisationCreationForm = new OrganisationCreationForm();
         addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
         return organisationCreationForm;
