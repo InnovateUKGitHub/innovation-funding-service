@@ -26,7 +26,7 @@
             <dt>Organisation type</dt>
             <dd th:text="${organisationType.name}">Business</dd>
 
-            <th:block th:if="${organisationForm.businessType != null and organisationForm.manualEntry }">
+            <th:block th:if="${organisationForm.manualEntry and organisationForm.businessType != null}">
               <dt>Business type</dt>
               <dd th:text="${organisationForm.businessType}">Business Type</dd>
             </th:block>
@@ -45,19 +45,19 @@
                 </th:block>
             </th:block>
 
-            <th:block th:if="${organisationForm.organisationNumber != null and organisationForm.manualEntry}">
+            <th:block th:if="${organisationForm.manualEntry and organisationForm.organisationNumber != null}">
                 <dt>Organisation number</dt>
                 <dd th:text="${organisationForm.organisationNumber}"></dd>
             </th:block>
 
-            <th:block th:if="${organisationForm.sicCodes != null and organisationForm.manualEntry}">
+            <th:block th:if="${organisationForm.manualEntry and organisationForm.sicCodes != null}">
                 <dt>SIC code</dt>
                 <dd>
                     <div th:each="sicCode : ${organisationForm.sicCodes}" th:text="${sicCode.sicCode}"></div>
                 </dd>
             </th:block>
 
-            <th:block th:if="${organisationForm.executiveOfficers != null and organisationForm.manualEntry}">
+            <th:block th:if="${organisationForm.manualEntry and organisationForm.executiveOfficers != null}">
                 <dt>Executive officers</dt>
                 <dd>
                     <div th:each="execOfficer : ${organisationForm.executiveOfficers}" th:text="${execOfficer.name}"></div>
