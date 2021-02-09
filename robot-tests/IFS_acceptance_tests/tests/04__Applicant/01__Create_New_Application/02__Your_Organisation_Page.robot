@@ -91,7 +91,7 @@ Not in Companies House: Return to the original search page
 Not in Companies House: Manually add the details validation message
     [Documentation]    INFUND-888  IFS-7724
     [Tags]
-    Given The user navigates to the page                   ${server}/organisation/create/organisation-type/manually-enter-organisation-details
+    Given the user navigates to the page                   ${server}/organisation/create/organisation-type/manually-enter-organisation-details
     When the user clicks the button/link                   jQuery = button:contains("Save and continue")
     And the user should see a field and summary error      You must enter your organisation's name.
     Then the user should see a field and summary error     Search using a valid postcode or enter the address manually.
