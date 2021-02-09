@@ -116,9 +116,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setIncludeYourOrganisationSection(line.includeYourOrganisation);
                 competition.setFundingType(line.fundingType);
                 competition.setCompletionStage(line.competitionCompletionStage);
-                competition.setAlwaysOpen(line.alwaysOpen);
+                competition.setAlwaysOpen(isAlwaysOpen(line));
             });
         });
+    }
+
+    private boolean isAlwaysOpen(CompetitionLine line) {
+        return line.alwaysOpen != null ? line.alwaysOpen : false;
     }
 
     private Long getInnovationSectorIdOrNull(String name) {
