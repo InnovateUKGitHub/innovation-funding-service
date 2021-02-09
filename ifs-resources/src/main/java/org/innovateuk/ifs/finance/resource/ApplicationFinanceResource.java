@@ -21,6 +21,8 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
             this.workPostcode = applicationFinance.getWorkPostcode();
             this.internationalLocation = applicationFinance.getInternationalLocation();
             this.justification = applicationFinance.getJustification();
+            this.fecFileEntry = applicationFinance.getFecFileEntry();
+            this.fecModelEnabled = applicationFinance.getFecModelEnabled();
         }
     }
 

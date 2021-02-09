@@ -19,6 +19,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -58,6 +60,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 @Lazy
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilderService.class);
 
     @Autowired
     private GenericApplicationContext applicationContext;
@@ -206,9 +210,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         finances.applicationName.equals(applicationLine.title) &&
                         finances.organisationName.equals(organisationName));
 
+            ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
+
             if (applicationData.getCompetition().applicantShouldUseJesFinances(organisationType)) {
 
-                return organisationFinances.map(suppliedFinances ->
+                applicationFinanceDataBuilder = organisationFinances.map(suppliedFinances ->
                         generateAcademicFinancesFromSuppliedData(
                                 applicationData.getApplication(),
                                 applicationData.getCompetition(),
@@ -222,7 +228,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                                 organisationName)
                 );
             } else {
-                return organisationFinances.map(suppliedFinances ->
+                applicationFinanceDataBuilder = organisationFinances.map(suppliedFinances ->
                         generateIndustrialCostsFromSuppliedData(
                                 applicationData.getApplication(),
                                 applicationData.getCompetition(),
@@ -237,8 +243,24 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                                 organisationName,
                                 organisationType)
                 );
+
+                /*applicationFinanceDataBuilder = organisationFinances.map(suppliedFinances ->
+                        generateFecModelFromSuppliedData(
+                                applicationData.getApplication(),
+                                applicationData.getCompetition(),
+                                user,
+                                organisationName,
+                                suppliedFinances)
+                ).orElseGet(() ->
+                        generateFecModel(
+                                applicationData.getApplication(),
+                                applicationData.getCompetition(),
+                                user,
+                                organisationName)
+                );*/
             }
 
+            return applicationFinanceDataBuilder;
         });
 
         return simpleMap(builders, BaseBuilder::build);
@@ -570,6 +592,34 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 .withFecModel(fecModelBuilder);
     }
 
+    private ApplicationFinanceDataBuilder generateFecModelFromSuppliedData(
+            ApplicationResource application,
+            CompetitionResource competition,
+            String user,
+            String organisationName,
+            CsvUtils.ApplicationOrganisationFinanceBlock organisationFinances) {
+
+        List<CsvUtils.ApplicationFinanceRow> financeRows = organisationFinances.rows;
+
+        UnaryOperator<FecModelDataBuilder> fecModelBuilder = fecModel -> {
+
+            FecModelDataBuilder fecModelWithData = fecModel;
+
+            for (CsvUtils.ApplicationFinanceRow financeRow : financeRows) {
+                fecModelWithData = addFecModel(fecModelWithData, financeRow);
+            }
+
+            return fecModelWithData;
+        };
+
+        return applicationFinanceDataBuilder
+                .withApplication(application)
+                .withCompetition(competition)
+                .withOrganisation(organisationName)
+                .withUser(user)
+                .withFecModel(fecModelBuilder);
+    }
+
     private ApplicationFinanceDataBuilder generateIndustrialCosts(
             ApplicationResource application,
             CompetitionResource competition,
@@ -681,14 +731,32 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             return builder[0].withOrganisationSize(SMALL).
                     withLocation();
         };
+
+        UnaryOperator<FecModelDataBuilder> fecModelBuilder = fecModel -> fecModel.withEnabled(false);
+
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
                 withIndustrialCosts(costBuilder)
-                .withFecModel(fecModel -> fecModel
-                        .withEnabled(false));
+                .withFecModel(fecModelBuilder);
+    }
+
+    private ApplicationFinanceDataBuilder generateFecModel(
+            ApplicationResource application,
+            CompetitionResource competition,
+            String user,
+            String organisationName) {
+
+        UnaryOperator<FecModelDataBuilder> fecModelBuilder = fecModel -> fecModel.withEnabled(false);
+
+        return applicationFinanceDataBuilder
+                .withApplication(application)
+                .withCompetition(competition)
+                .withOrganisation(organisationName)
+                .withUser(user)
+                .withFecModel(fecModelBuilder);
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(

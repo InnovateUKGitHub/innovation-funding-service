@@ -34,9 +34,8 @@ public class FecModelDataBuilder extends BaseDataBuilder<FecModelData, FecModelD
         return with(data -> {
             FileEntry fileEntry = fileEntryRepository.save(
                     new FileEntry(null, "fec-file" + data.getApplicationFinance().getId() + ".pdf", "application/pdf", 7945));
-
             ApplicationFinance finance = applicationFinanceRepository.findById(data.getApplicationFinance().getId()).get();
-            //finance.setFecFileEntry(fileEntry);
+            finance.setFecFileEntry(fileEntry);
             applicationFinanceRepository.save(finance);
         });
     }
@@ -46,9 +45,7 @@ public class FecModelDataBuilder extends BaseDataBuilder<FecModelData, FecModelD
             ApplicationFinanceResource applicationFinance =
                     financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
                             getSuccess();
-
-            //applicationFinance.setFecModelEnabled(enabled);
-
+            applicationFinance.setFecModelEnabled(enabled);
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
