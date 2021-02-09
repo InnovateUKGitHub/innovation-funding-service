@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
@@ -15,7 +16,6 @@ import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.va
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +23,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -54,6 +53,9 @@ public class CompetitionSetupFundingLevelPercentageController {
     @Autowired
     private FundingLevelPercentageSectionUpdater updater;
 
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     @Value("${ifs.subsidy.control.northern.ireland.enabled}")
     private boolean northernIrelandSubsidyControlToggle;
 
@@ -81,6 +83,21 @@ public class CompetitionSetupFundingLevelPercentageController {
         return view(model, competition, loggedInUser, fundingRules);
     }
 
+    @PostMapping(params = "reset-maximum-funding-levels")
+    public String resetMaximumFundingLevels(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
+                                            @PathVariable long competitionId) {
+        grantClaimMaximumRestService.revertToDefaultForCompetitionType(competitionId).getSuccess();
+        return format("redirect:/competition/setup/%d/section/%s", competitionId, FUNDING_LEVEL_PERCENTAGE.getPath());
+    }
+
+    @PostMapping(value = "/funding-rule/{fundingRules}", params = "reset-maximum-funding-levels")
+    public String resetMaximumFundingLevelsFundingLevel(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
+                                                        @PathVariable long competitionId,
+                                                        @PathVariable FundingRules fundingRules) {
+        grantClaimMaximumRestService.revertToDefaultForCompetitionType(competitionId).getSuccess();
+        return format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competitionId, FUNDING_LEVEL_PERCENTAGE.getPath(), fundingRules.toUrl());
+    }
+
     @PostMapping
     public String submitFundingLevelPercentageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
                                                              BindingResult bindingResult,
@@ -93,20 +110,20 @@ public class CompetitionSetupFundingLevelPercentageController {
 
         Supplier<String> failureView = () -> view(model, competition, loggedInUser, null);
         Supplier<String> successView = () ->
-                        validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE))
-                                .failNowOrSucceedWith(failureView, () ->
-                                        format("redirect:/competition/setup/%d/section/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath()));
+                validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE))
+                        .failNowOrSucceedWith(failureView, () ->
+                                format("redirect:/competition/setup/%d/section/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath()));
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
     @PostMapping("/funding-rule/{fundingRules}")
     public String submitFundingRulesPercentages(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
-                                                 BindingResult bindingResult,
-                                                 ValidationHandler validationHandler,
-                                                 @PathVariable long competitionId,
-                                                 @PathVariable FundingRules fundingRules,
-                                                 UserResource loggedInUser,
-                                                 Model model) {
+                                                BindingResult bindingResult,
+                                                ValidationHandler validationHandler,
+                                                @PathVariable long competitionId,
+                                                @PathVariable FundingRules fundingRules,
+                                                UserResource loggedInUser,
+                                                Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         fundingLevelPercentageValidator.validate(competitionSetupForm, validationHandler);
 
@@ -123,6 +140,7 @@ public class CompetitionSetupFundingLevelPercentageController {
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
+
     private String view(Model model,
                         CompetitionResource competition,
                         UserResource loggedInUser,

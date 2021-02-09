@@ -22,6 +22,10 @@ public enum FundingRules {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, this.name());
     }
 
+    public boolean isStateAid() {
+        return this == STATE_AID;
+    }
+
     public static FundingRules fromUrl(String url) {
         return FundingRules.valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE, url));
     }

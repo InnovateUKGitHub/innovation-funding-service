@@ -35,7 +35,7 @@
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${fundingRules == null ? 'Funding level percentage' : fundingRules.displayName},size='govuk-heading-xl'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${fundingRules == null ? 'Funding level percentage' : fundingRules.displayName},subTitle=${fundingRules != null ? 'Funding level percentage' : null},size='govuk-heading-xl'" />
     <form th:action="@{(${model.general.editable} ? '' : '/competition/setup/' + ${model.general.competition.id} + '/section/funding-level-percentage/edit')}"
           method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
@@ -141,7 +141,7 @@
                         </thblock>
                     </tbody>
                 </table>
-                <button class="govuk-button button-clear" name="reset-maximum-funding-levels"  th:if="${model.showResetButton}">reset funding levels to State aid default</button>
+                <button class="govuk-button button-clear" name="reset-maximum-funding-levels"  th:if="${model.showResetButton or (fundingRules != null and fundingRules.isStateAid())}">reset funding levels to State aid default</button>
             </div>
         </th:block>
         </th:block>
