@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.slf4j.Logger;
@@ -90,7 +89,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 CollaborationLevel collaborationLevel = line.collaborationLevel;
 
-                List<Long> leadApplicantTypeIds = simpleMap(line.leadApplicantTypes, OrganisationTypeEnum::getId);
+                List<Long> leadApplicantTypeIds = line.leadApplicantTypes;
 
                 competition.setName(line.name);
                 competition.setInnovationAreas(line.innovationAreas);

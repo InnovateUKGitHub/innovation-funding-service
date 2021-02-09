@@ -2,9 +2,7 @@ package org.innovateuk.ifs.testdata.builders.data;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +15,7 @@ public class CompetitionLine {
     public String innovationSector;
     public Set<Long> researchCategory;
     public CollaborationLevel collaborationLevel;
-    public List<OrganisationTypeEnum> leadApplicantTypes;
+    public List<Long> leadApplicantTypes;
     public Integer researchRatio;
     public Boolean resubmission;
     public Boolean multiStream;
@@ -56,7 +54,7 @@ public class CompetitionLine {
                            String innovationSector,
                            Set<Long> researchCategory,
                            CollaborationLevel collaborationLevel,
-                           List<OrganisationTypeEnum> leadApplicantTypes,
+                           List<Long> leadApplicantTypes,
                            Integer researchRatio,
                            Boolean resubmission,
                            Boolean multiStream,
@@ -69,7 +67,6 @@ public class CompetitionLine {
                            String pafCode,
                            String activityCode,
                            Integer assessorCount,
-                           BigDecimal assessorPay,
                            Boolean hasAssessmentPanel,
                            Boolean hasInterviewStage,
                            AssessorFinanceView assessorFinanceView,
@@ -178,11 +175,11 @@ public class CompetitionLine {
         this.collaborationLevel = collaborationLevel;
     }
 
-    public List<OrganisationTypeEnum> getLeadApplicantTypes() {
+    public List<Long> getLeadApplicantTypes() {
         return leadApplicantTypes;
     }
 
-    public void setLeadApplicantTypes(List<OrganisationTypeEnum> leadApplicantTypes) {
+    public void setLeadApplicantTypes(List<Long> leadApplicantTypes) {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 
