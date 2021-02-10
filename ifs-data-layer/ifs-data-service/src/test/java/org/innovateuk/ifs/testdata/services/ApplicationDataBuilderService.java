@@ -546,6 +546,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             return costsWithData;
         };
+
         return finance.
                 withIndustrialCosts(costBuilder);
     }
