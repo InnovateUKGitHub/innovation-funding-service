@@ -69,8 +69,8 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
     public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionLine> competitionLines) {
 
-        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
-        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.name);
+        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT));
+        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.getName());
 
         applications.forEach(application -> {
 
