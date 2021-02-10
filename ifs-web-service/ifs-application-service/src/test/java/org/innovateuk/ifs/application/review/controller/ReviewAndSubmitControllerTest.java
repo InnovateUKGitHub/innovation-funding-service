@@ -28,12 +28,13 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<ReviewAndSubmitController> {
@@ -97,6 +98,55 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
         verify(applicationRestService, never()).updateApplicationState(any(Long.class), any(ApplicationState.class));
+    }
+
+    @Test
+    public void testAlwaysOpenApplicationTrackNoReopen() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withAlwaysOpen(true).build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+
+        when(applicationRestService.applicationHasAssessment(application.getId()))
+                .thenReturn(restSuccess(true));
+
+        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("always-open-track"))
+                .andReturn();
+        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
+        assertFalse(model.isReopenLinkVisible());
+    }
+
+    @Test
+    public void testAlwaysOpenApplicationTrackReopen() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withAlwaysOpen(true).build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withCompetition(competition.getId())
+                .build();
+
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
+
+        when(applicationRestService.applicationHasAssessment(application.getId()))
+                .thenReturn(restSuccess(false));
+
+        MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("always-open-track"))
+                .andReturn();
+        TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
+        assertTrue(model.isReopenLinkVisible());
     }
 
     @Test
