@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface AssessmentPeriodService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
-    @SecuredBySpring(value="UPDATE", securedType= AssessmentPeriodResource.class,
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
             description = "Only Comp Admins are able to get the assessment periods for the given competitions")
     ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId);
 
