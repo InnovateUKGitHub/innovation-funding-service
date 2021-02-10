@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.documentation;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.controller.SectionController;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -8,7 +9,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.SectionDocs.sectionResourceBuilder;
 import static org.innovateuk.ifs.documentation.SectionDocs.sectionResourceFields;
@@ -105,7 +105,7 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     public void getQuestionsForSectionAndSubsections() throws Exception {
         final Long sectionId = 1L;
 
-        when(sectionServiceMock.getQuestionsForSectionAndSubsections(sectionId)).thenReturn(serviceSuccess(asSet(1L, 2L, 3L)));
+        when(sectionServiceMock.getQuestionsForSectionAndSubsections(sectionId)).thenReturn(serviceSuccess(ImmutableSet.of(1L, 2L, 3L)));
 
         mockMvc.perform(get(baseURI + "/get-questions-for-section-and-subsections/{sectionId}", sectionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
