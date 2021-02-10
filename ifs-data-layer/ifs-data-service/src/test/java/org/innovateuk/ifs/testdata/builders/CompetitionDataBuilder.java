@@ -33,6 +33,7 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -91,10 +92,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 CollaborationLevel collaborationLevel = line.getCollaborationLevel();
 
-                List<Long> leadApplicantTypeIds = line.getLeadApplicantTypes()
-                        .stream()
-                        .map(OrganisationTypeEnum::getId)
-                        .collect(Collectors.toList());
+                if (!isEmpty(line.getLeadApplicantTypes())) {
+                    List<Long> leadApplicantTypeIds = line.getLeadApplicantTypes()
+                            .stream()
+                            .map(OrganisationTypeEnum::getId)
+                            .collect(Collectors.toList());
+
+                    competition.setLeadApplicantTypes(leadApplicantTypeIds);
+                }
 
                 competition.setName(line.getName());
                 if (line.getInnovationAreas() != null) {
@@ -112,7 +117,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setBudgetCode(line.getBudgetCode());
                 competition.setActivityCode(line.getActivityCode());
                 competition.setCollaborationLevel(collaborationLevel);
-                competition.setLeadApplicantTypes(leadApplicantTypeIds);
                 competition.setResubmission(line.getResubmission());
                 competition.setMultiStream(line.getMultiStream());
                 competition.setNonIfsUrl(line.getNonIfsUrl());
