@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.documentation;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.SectionStatusController;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
@@ -9,7 +10,7 @@ import org.mockito.Mock;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -40,7 +41,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
     public void getCompletedSectionsByOrganisation() throws Exception {
         final Long id = 1L;
 
-        final Map<Long, Set<Long>> result = asMap(1L, asSet(2L, 3L));
+        final Map<Long, Set<Long>> result = asMap(1L, ImmutableSet.of(2L, 3L));
 
         when(sectionStatusServiceMock.getCompletedSections(id)).thenReturn(serviceSuccess(result));
 
@@ -63,7 +64,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         final long applicationId = 2L;
 
-        final Set<Long> result = asSet(2L, 3L);
+        final Set<Long> result = ImmutableSet.of(2L, 3L);
 
         when(sectionStatusServiceMock.getCompletedSections(applicationId, organisationId)).thenReturn(serviceSuccess(result));
 

@@ -22,12 +22,11 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
     private final List<FundingType> fundingTypes;
     private final List<FundingRules> fundingRules;
     private final boolean restricted;
-    private final boolean fundingRuleEnabled;
 
     public InitialDetailsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                    List<UserResource> competitionExecutiveUsers, List<InnovationSectorResource> innovationSectors,
                                    List<InnovationAreaResource> innovationAreas, List<CompetitionTypeResource> competitionTypes,
-                                   List<UserResource> innovationLeadTechUsers, boolean restricted, boolean fundingRuleEnabled) {
+                                   List<UserResource> innovationLeadTechUsers, boolean restricted) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.competitionExecutiveUsers = competitionExecutiveUsers;
         this.innovationSectors = innovationSectors;
@@ -37,7 +36,6 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         this.fundingTypes = asList(FundingType.values());
         this.fundingRules = asList(FundingRules.values());
         this.restricted = restricted;
-        this.fundingRuleEnabled = fundingRuleEnabled;
     }
 
     public List<UserResource> getCompetitionExecutiveUsers() {
@@ -72,7 +70,4 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         return restricted || generalSetupViewModel.getCompetition().isSetupAndLive();
     }
 
-    public boolean isFundingRuleEnabled() {
-        return fundingRuleEnabled;
-    }
 }

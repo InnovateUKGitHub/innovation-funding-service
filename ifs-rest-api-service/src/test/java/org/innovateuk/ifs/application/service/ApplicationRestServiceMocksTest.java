@@ -38,6 +38,16 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         return applicationRestService;
     }
 
+    @Test
+    public void testApplicationHasAssessment(){
+        String expectedUrl = applicationRestURL + "/" + 1 + "/has-assessment";
+        Boolean response = true;
+
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, response);
+        Boolean success = service.applicationHasAssessment(1L).getSuccess();
+        assertNotNull(success);
+        Assert.assertEquals(response, success);
+    }
 
     @Test
     public void getApplicationById() {

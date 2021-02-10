@@ -216,6 +216,42 @@
         </th:block>
     </th:block>
 
+    <!-- ===========================Form: payment milestones table =========================== -->
+    <th:block th:fragment="payment-milestones-table(breakdown)">
+        <div class="payment-milestones-breakdown">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Month</th>
+                        <th class="govuk-table__header" scope="col">Milestone</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">% of project costs</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Payment request</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="row : ${breakdown.getApplicationProcurementMilestoneSummaryViewModels()}">
+                        <td class="govuk-table__cell" th:text="${row.month}">
+                        </td>
+                        <td class="govuk-table__cell" th:text="${row.description}">
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(breakdown.getPercentage(row.payment), 0,'DEFAULT') + '%'}"  0%>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(row.payment, 0,'DEFAULT')}">
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" colspan="2">Total payment requested</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="${#numbers.formatInteger(breakdown.getPercentage(breakdown.getTotal()), 0,'DEFAULT')} + '%'">100%</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="'£' + ${#numbers.formatInteger(breakdown.getTotal(), 0,'DEFAULT')}"></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </th:block>
     <!-- ===========================Form: Research Participations alert messages =========================== -->
     <th:block th:fragment="research-participation-alert(alertmodel)">
         <th:block th:unless="${alertmodel.currentCompetition.isKtp()}">
