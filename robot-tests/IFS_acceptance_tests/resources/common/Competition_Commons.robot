@@ -100,10 +100,14 @@ the user performs procurement Terms and Conditions validations
     the user should see the element                   jQuery = :contains("${wrong_filetype_validation_error}")
 
 the user selects the Terms and Conditions   #Will this impact EOI?
+    [Arguments]  ${fundingRule}
     the user clicks the button/link       link = Terms and conditions
     the user clicks the button/link       jQuery = button:contains("Done")
-    the user selects the radio button     termsAndConditionsId  34
-    the user clicks the button/link       jQuery = button:contains("Done")
+    
+    Run Keyword If  '${fundingRule}' == 'SUBSIDY_CONTROL'  
+    ...       the user selects the radio button     termsAndConditionsId  34
+    ...  And  the user clicks the button/link       jQuery = button:contains("Done")
+    
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
