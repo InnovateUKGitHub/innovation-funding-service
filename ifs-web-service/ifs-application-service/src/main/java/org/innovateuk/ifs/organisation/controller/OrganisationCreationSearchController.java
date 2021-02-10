@@ -168,10 +168,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                           HttpServletRequest request,
                                                           HttpServletResponse response,
                                                           UserResource user) {
-
-        organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
-        organisationForm.setManualEntry(true);
-        addManualOrganisation(organisationForm, model);
+        OrganisationCreationForm organisationFormFromCookie = getFormDataForManualEntryFromCookie(organisationForm, request);
+        addManualOrganisation(organisationForm, model, request, organisationFormFromCookie);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         if (bindingResult.hasFieldErrors()) {
@@ -188,11 +186,9 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                               Model model,
                                                               HttpServletRequest request,
                                                               UserResource user) {
-        organisationForm = getFormDataForManualEntryFromCookie(organisationForm, request);
-        organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
-        organisationForm.setManualEntry(true);
-        addManualOrganisation(organisationForm, model);
-        populateViewModelForSelectedOrgConfirmation(organisationForm, model, request);
+        OrganisationCreationForm organisationFormFromCookie = getFormDataOfSavedManualEntryFromCookie(organisationForm, request);
+        populateManualEntryFormData(organisationFormFromCookie, model, request);
+        populateViewModelForSelectedOrgConfirmation(organisationFormFromCookie, model, request);
         addPageSubtitleToModel(request, user, model);
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save

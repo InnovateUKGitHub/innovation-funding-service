@@ -163,7 +163,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
     @GetMapping(NOT_REGISTERED_ON_COMPANIES_HOUSE)
     public String showNotRegisteredOnCompaniesHouse(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
-        organisationForm = getFormDataForManualEntry(organisationForm, request);
+        organisationForm = getFormDataForManualEntryFromCookie(organisationForm, request);
         model.addAttribute(ORGANISATION_FORM,organisationForm);
         return TEMPLATE_PATH + "/" + NOT_REGISTERED_ON_COMPANIES_HOUSE;
     }
@@ -171,7 +171,12 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     @GetMapping(MANUALLY_ENTER_ORGANISATION_DETAILS)
     public String showManuallyEnterRegistrationDetails(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                        Model model, HttpServletRequest request) {
-       organisationForm = getFormDataForManualEntry(organisationForm, request);
+       boolean isManuallyEnterRequestURI = request.getHeader("referer").contains(NOT_REGISTERED_ON_COMPANIES_HOUSE);
+      if (isManuallyEnterRequestURI) {
+          organisationForm = getFormDataForManualEntryFromCookie(organisationForm, request);
+       } else {
+          organisationForm = getFormDataOfSavedManualEntryFromCookie(organisationForm, request);
+    }
        model.addAttribute(ORGANISATION_FORM, organisationForm);
        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }

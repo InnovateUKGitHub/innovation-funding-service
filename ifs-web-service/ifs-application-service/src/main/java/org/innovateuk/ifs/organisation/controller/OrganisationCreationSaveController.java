@@ -61,9 +61,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
-        organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
+        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
 
