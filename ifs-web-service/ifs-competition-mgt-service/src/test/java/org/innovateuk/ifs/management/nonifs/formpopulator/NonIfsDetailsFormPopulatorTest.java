@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.nonifs.formpopulator;
 
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.nonifs.form.NonIfsDetailsForm;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.ZonedDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.junit.Assert.assertThat;
@@ -33,7 +33,7 @@ public class NonIfsDetailsFormPopulatorTest {
     @Test
     public void testPopulate() {
         CompetitionResource competition = newCompetitionResource()
-                .withName(COMPETITION_NAME).withInnovationSector(INNOVATION_SECTOR).withInnovationAreas(asSet(INNOVATION_AREA))
+                .withName(COMPETITION_NAME).withInnovationSector(INNOVATION_SECTOR).withInnovationAreas(ImmutableSet.of(INNOVATION_AREA))
                 .withNonIfsUrl(COMPETITION_URL).withFundersPanelEndDate(NOTIFIED).withStartDate(OPEN).withEndDate(CLOSE)
                 .withFundingType(GRANT)
                 .build();

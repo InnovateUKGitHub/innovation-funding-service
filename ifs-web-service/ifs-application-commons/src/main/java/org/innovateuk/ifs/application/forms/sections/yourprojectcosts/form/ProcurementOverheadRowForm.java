@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.ProcurementOverhead;
 
@@ -16,7 +16,7 @@ public class ProcurementOverheadRowForm extends AbstractCostRowForm<ProcurementO
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @NotBlank(message = NOT_BLANK_MESSAGE)
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
