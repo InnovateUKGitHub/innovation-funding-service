@@ -13,6 +13,7 @@ import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder;
 import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
@@ -38,12 +39,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
-import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.newCompetitionLine;
+import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.aCompetitionLine;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 
@@ -207,32 +207,32 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         flushAndClearSession();
 
-        CompetitionLine competitionLine = newCompetitionLine()
+        CompetitionLine competitionLine = aCompetitionLine()
                 .withName("APC Competition")
-                .withCompetitionType(8L) // Advanced Propulsion Centre
+                .withCompetitionType(CompetitionTypeEnum.ADVANCED_PROPULSION_CENTRE)
                 .withInnovationAreas(asSet(22L)) // Digital manufacturing
-                .withInnovationSectorName("Materials and manufacturing")
-                .withResearchCategories(asSet(33L)) // Feasibility studies
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantType(asList(1L)) // Buisness
-                .withMaxResearchRatio(30)
+                .withLeadApplicantTypes(asSet(OrganisationTypeEnum.BUSINESS))
+                .withResearchRatio(30)
                 .withResubmission(false)
                 .withMultiStream(false)
                 .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
-                .withExecutive(20L) // john.doe@innovateuk.test
+                .withCompExecutive(20L) // john.doe@innovateuk.test
                 .withSetupComplete(true)
                 .withPafCode("875")
                 .withBudgetCode("DET1536/1537")
                 .withActivityCode("16014")
-                .withCompetitionCode("2/1/1506")
+                .withCode("2/1/1506")
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .withFundingType(FundingType.GRANT)
                 .withNonIfs(false)
-                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withIncludeJesForm(true)
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowthTable(true)
-                .withIncludeYourOrganisationSection(true)
+                .withIncludeProjectGrowth(true)
+                .withIncludeYourOrganisation(true)
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false)
