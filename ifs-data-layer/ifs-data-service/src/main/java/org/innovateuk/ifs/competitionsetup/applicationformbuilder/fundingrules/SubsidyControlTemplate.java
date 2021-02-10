@@ -41,12 +41,13 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     }
 
     private Questionnaire questionnaire() {
+        //TODO replace with service calls.
         Questionnaire questionnaire = new Questionnaire();
 
         QuestionnaireQuestion questionOne = new QuestionnaireQuestion();
         questionOne.setTitle("Question 1");
         questionOne.setQuestion("Is your business based in NI?");
-        questionOne.setPriority(0);
+        questionOne.setDepth(0);
         questionOne.setQuestionnaire(questionnaire);
 
         QuestionnaireOption questionOneYes = new QuestionnaireOption();
@@ -65,7 +66,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireQuestion questionTwo = new QuestionnaireQuestion();
         questionTwo.setTitle("Question 2");
         questionTwo.setQuestion("Do you trade in NI?");
-        questionTwo.setPriority(1);
+        questionTwo.setDepth(1);
         questionTwo.setQuestionnaire(questionnaire);
 
         questionOneNo.setDecision(questionTwo);

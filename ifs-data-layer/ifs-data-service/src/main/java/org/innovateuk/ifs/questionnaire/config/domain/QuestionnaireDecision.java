@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
+import org.innovateuk.ifs.questionnaire.resource.DecisionType;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,4 +19,7 @@ public abstract class QuestionnaireDecision {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public abstract DecisionType getDecisionType();
+
 }

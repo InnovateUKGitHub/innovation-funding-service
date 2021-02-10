@@ -7,7 +7,7 @@ CREATE TABLE questionnaire_response (
 );
 
 CREATE TABLE questionnaire_question_response (
-  id BIGINT(20) PRIMARY KEY,
+  id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
   questionnaire_response_id BIGINT(20) NOT NULL,
   questionnaire_option_id BIGINT(20) NOT NULL,
 

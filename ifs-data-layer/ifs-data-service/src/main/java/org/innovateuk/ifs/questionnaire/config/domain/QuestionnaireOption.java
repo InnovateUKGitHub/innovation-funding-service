@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
+import org.innovateuk.ifs.questionnaire.resource.DecisionType;
+
 import javax.persistence.*;
 
 @Entity
@@ -50,5 +52,9 @@ public class QuestionnaireOption {
     public void setQuestion(QuestionnaireQuestion question) {
         this.question = question;
         question.getOptions().add(this);
+    }
+
+    public DecisionType getDecisionType() {
+        return decision.getDecisionType();
     }
 }

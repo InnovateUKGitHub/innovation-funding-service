@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
+import org.innovateuk.ifs.questionnaire.resource.DecisionType;
+
 import javax.persistence.*;
 
 @Entity
@@ -24,5 +26,10 @@ public class QuestionnaireTextOutcome extends QuestionnaireDecision {
 
     public void setImplementation(QuestionnaireDecisionImplementation implementation) {
         this.implementation = implementation;
+    }
+
+    @Override
+    public DecisionType getDecisionType() {
+        return DecisionType.TEXT_OUTCOME;
     }
 }

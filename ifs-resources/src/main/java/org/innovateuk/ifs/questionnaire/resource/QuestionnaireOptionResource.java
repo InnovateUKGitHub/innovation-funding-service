@@ -10,6 +10,8 @@ public class QuestionnaireOptionResource {
 
     private Long question;
 
+    private DecisionType decisionType;
+
     public Long getId() {
         return id;
     }
@@ -40,5 +42,13 @@ public class QuestionnaireOptionResource {
 
     public void setQuestion(Long question) {
         this.question = question;
+    }
+
+    public DecisionType getDecisionType() {
+        return decisionType;
+    }
+
+    public void setDecisionType(DecisionType decisionType) {
+        this.decisionType = decisionType;
     }
 }

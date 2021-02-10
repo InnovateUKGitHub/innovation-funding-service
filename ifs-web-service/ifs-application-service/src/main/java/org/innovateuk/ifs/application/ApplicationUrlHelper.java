@@ -22,7 +22,7 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId) {
+    public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long organisationId, long applicationId) {
         if (questionType != null) {
             switch (questionType) {
                 case APPLICATION_DETAILS:
@@ -37,6 +37,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId));
                 case RESEARCH_CATEGORY:
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
+                case QUESTIONNAIRE:
+                    return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));

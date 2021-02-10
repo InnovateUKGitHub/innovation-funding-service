@@ -5,7 +5,7 @@ import java.util.List;
 
 public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource {
 
-    private int priority;
+    private int depth;
 
     private String title;
     private String question;
@@ -15,12 +15,12 @@ public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource
 
     private List<Long> options = new ArrayList<>();
 
-    public int getPriority() {
-        return priority;
+    public int getDepth() {
+        return depth;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     public String getTitle() {

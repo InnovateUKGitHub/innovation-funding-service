@@ -43,6 +43,6 @@ public abstract class AbstractIfsCrudRestServiceImpl<Resource, Id> extends BaseR
     protected abstract ParameterizedTypeReference<List<Resource>> getListTypeReference();
 
     private String joinIds(List<Id> ids) {
-        return ids.stream().map(Objects::toString).collect(joining());
+        return ids.stream().map(Objects::toString).collect(joining(","));
     }
 }

@@ -6,7 +6,9 @@ public class QuestionnaireQuestionResponseResource {
 
     private Long option;
 
-    private Long questionnaire;
+    private Long questionnaireResponse;
+
+    private Long question;
 
     public Long getId() {
         return id;
@@ -24,11 +26,19 @@ public class QuestionnaireQuestionResponseResource {
         this.option = option;
     }
 
-    public Long getQuestionnaire() {
-        return questionnaire;
+    public Long getQuestionnaireResponse() {
+        return questionnaireResponse;
     }
 
-    public void setQuestionnaire(Long questionnaire) {
-        this.questionnaire = questionnaire;
+    public void setQuestionnaireResponse(Long questionnaireResponse) {
+        this.questionnaireResponse = questionnaireResponse;
+    }
+
+    public Long getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
     }
 }

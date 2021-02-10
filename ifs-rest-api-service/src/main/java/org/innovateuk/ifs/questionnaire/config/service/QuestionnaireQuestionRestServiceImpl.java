@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.service;
+package org.innovateuk.ifs.questionnaire.config.service;
 
 import org.innovateuk.ifs.crud.AbstractIfsCrudRestServiceImpl;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResource;

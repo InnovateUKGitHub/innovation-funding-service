@@ -26,9 +26,9 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     private QuestionType type;
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
+    private Long questionnaireId;
     //Used by @Cacheable
     @JsonIgnore
-
     private boolean competitionOpen;
 
     public QuestionResource() {
@@ -163,6 +163,14 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    public Long getQuestionnaireId() {
+        return questionnaireId;
+    }
+
+    public void setQuestionnaireId(Long questionnaireId) {
+        this.questionnaireId = questionnaireId;
     }
 
     @Override

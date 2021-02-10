@@ -16,11 +16,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends RootTransactionalService implements IfsCrudService<Resource, Id> {
 
-    @Autowired
-    private CrudRepository<Domain, Id> crudRepository;
+    protected abstract CrudRepository<Domain, Id> crudRepository();
 
     @Autowired
-    private BaseResourceMapper<Domain, Resource> mapper;
+    protected BaseResourceMapper<Domain, Resource> mapper;
 
     @Override
     public ServiceResult<Resource> get(Id id) {
@@ -31,7 +30,7 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends R
     @Override
     public ServiceResult<List<Resource>> get(List<Id> ids) {
         return serviceSuccess(
-                stream(crudRepository.findAllById(ids).spliterator(), false)
+                stream(crudRepository().findAllById(ids).spliterator(), false)
                 .map(mapper::mapToResource)
                 .collect(toList())
         );
@@ -43,14 +42,14 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends R
         return findById(id)
                 .andOnSuccess(domain -> {
                     mapToDomain(domain, resource);
-                    return serviceSuccess(crudRepository.save(domain))
+                    return serviceSuccess(crudRepository().save(domain))
                             .andOnSuccessReturn(mapper::mapToResource);
                 });
     }
 
     @Override
     public ServiceResult<Void> delete(Id id) {
-        crudRepository.deleteById(id);
+        crudRepository().deleteById(id);
         return serviceSuccess();
     }
 
@@ -60,16 +59,16 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends R
         try {
             domain = getDomainClazz().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            //todod log.
+            //todo log.
         }
         mapToDomain(domain, resource);
-        return serviceSuccess(crudRepository.save(domain))
+        return serviceSuccess(crudRepository().save(domain))
                 .andOnSuccessReturn(mapper::mapToResource);
     }
 
 
     private ServiceResult<Domain> findById(Id id) {
-        return find(crudRepository.findById(id), notFoundError(getDomainClazz(), id));
+        return find(crudRepository().findById(id), notFoundError(getDomainClazz(), id));
     }
 
     protected abstract Class<Domain> getDomainClazz();

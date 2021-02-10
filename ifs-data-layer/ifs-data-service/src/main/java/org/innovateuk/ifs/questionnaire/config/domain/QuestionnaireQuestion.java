@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
+import org.innovateuk.ifs.questionnaire.resource.DecisionType;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
 @Entity
 public class QuestionnaireQuestion extends QuestionnaireDecision {
 
-    private int priority;
+    private int depth;
 
     private String title;
     private String question;
@@ -20,12 +22,12 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question", cascade = CascadeType.ALL)
     private List<QuestionnaireOption> options = new ArrayList<>();
 
-    public int getPriority() {
-        return priority;
+    public int getDepth() {
+        return depth;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     public String getTitle() {
@@ -67,5 +69,10 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
 
     public void setOptions(List<QuestionnaireOption> options) {
         this.options = options;
+    }
+
+    @Override
+    public DecisionType getDecisionType() {
+        return DecisionType.QUESTION;
     }
 }

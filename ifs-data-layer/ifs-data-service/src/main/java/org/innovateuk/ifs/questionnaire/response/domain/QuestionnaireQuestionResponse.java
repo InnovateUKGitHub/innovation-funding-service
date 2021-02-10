@@ -19,6 +19,14 @@ public class QuestionnaireQuestionResponse {
     @JoinColumn(name="questionnaireOptionId", referencedColumnName="id")
     private QuestionnaireOption option;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public QuestionnaireResponse getQuestionnaireResponse() {
         return questionnaireResponse;
     }

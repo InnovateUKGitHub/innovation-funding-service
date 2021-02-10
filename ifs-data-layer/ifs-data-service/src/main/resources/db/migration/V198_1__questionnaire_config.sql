@@ -10,7 +10,7 @@ CREATE TABLE questionnaire_question (
   id BIGINT(20) PRIMARY KEY,
   questionnaire_id BIGINT(20) NOT NULL,
 
-  priority int(11) NOT NULL,
+  depth int(11) NOT NULL,
   title VARCHAR(255) NOT NULL,
   question VARCHAR(255) NOT NULL,
   guidance VARCHAR(255) NULL,

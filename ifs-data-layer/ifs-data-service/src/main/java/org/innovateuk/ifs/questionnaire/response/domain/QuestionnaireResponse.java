@@ -19,6 +19,14 @@ public class QuestionnaireResponse {
     @OneToMany(mappedBy = "questionnaireResponse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<QuestionnaireQuestionResponse> questionnaireQuestionResponse;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Questionnaire getQuestionnaire() {
         return questionnaire;
     }

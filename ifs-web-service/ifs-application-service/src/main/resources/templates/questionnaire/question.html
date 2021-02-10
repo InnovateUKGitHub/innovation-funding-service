@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${question.title}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.title}" />
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -17,9 +17,60 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${question.title},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},size='govuk-heading-xl'" />
 
-        <h1 th:each="option : ${options}" th:text="${option.text}"></h1>
+        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="POST">
+            <input type="hidden" th:field="*{questionResponseId}" />
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('option')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h4 class="govuk-fieldset__heading" th:text="${model.question}"></h4>
+                    </legend>
+                    <span th:if="${model.guidance != null}" class="govuk-hint" th:text="${model.guidance}"></span>
+                    <span class="govuk-error-message"
+                          th:if="${#fields.hasErrors('option')}"
+                          th:each="err : ${#fields.errors('option')}"
+                          th:text="${err}"></span>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item" th:each="option : ${model.options}">
+                            <input th:value="${option.left}"
+                                   th:id="${option.left}"
+                                   type="radio"
+                                   th:field="*{option}"
+                                   class="govuk-radios__input"
+                                   required="required" />
+                            <label th:for="${option.left}"
+                                   class="govuk-label govuk-radios__label"
+                                   th:text="${option.right}">Yes</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button" type="submit">Submit</button>
+        </form>
+
+        <table class="govuk-table govuk-!-margin-top-3" th:unless="${model.previousQuestions == null or model.previousQuestions.isEmpty()}">
+            <caption class="govuk-table__caption">
+                <h2 class="govuk-heading-m">Previous answers</h2>
+                <p class="govuk-body"><a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}(questionnaireResponseId=${model.questionnaireResponseId})}">Start again</a></p>
+            </caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Question</th>
+                <th scope="col" class="govuk-table__header">Answer</th>
+                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Change answer</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr th:each="answer : ${model.previousQuestions}"
+                class="govuk-table__row">
+                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.question}">Where is your business based?</td>
+                <td class="govuk-table__cell" th:text="${answer.answer}"></td>
+                <td class="govuk-table__cell alignright">
+                    <a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}/question/{questionId}(questionnaireResponseId=${model.questionnaireResponseId},questionId=${answer.questionId})}">Change answer</a></td>
+            </tr>
+            </tbody>
+        </table>
     </main>
 </div>
 
