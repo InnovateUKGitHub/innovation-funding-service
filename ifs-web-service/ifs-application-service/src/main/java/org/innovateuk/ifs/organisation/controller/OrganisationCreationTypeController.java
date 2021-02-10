@@ -171,8 +171,9 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     @GetMapping(MANUALLY_ENTER_ORGANISATION_DETAILS)
     public String showManuallyEnterRegistrationDetails(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                        Model model, HttpServletRequest request) {
-       boolean isManuallyEnterRequestURI = request.getHeader("referer").contains(NOT_REGISTERED_ON_COMPANIES_HOUSE);
-      if (isManuallyEnterRequestURI) {
+        boolean isManuallyEnterRequestURI = true;
+        isManuallyEnterRequestURI = request.getHeader("referer") != null && request.getHeader("referer").contains((NOT_REGISTERED_ON_COMPANIES_HOUSE));
+        if (isManuallyEnterRequestURI) {
           organisationForm = getFormDataForManualEntryFromCookie(organisationForm, request);
        } else {
           organisationForm = getFormDataOfSavedManualEntryFromCookie(organisationForm, request);
