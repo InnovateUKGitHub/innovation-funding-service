@@ -86,11 +86,6 @@ dependencyUpdates.resolutionStrategy = {
 
 apply plugin: "com.github.hierynomus.license"
 
-
-wrapper {
-    gradleVersion = '5.6.4'
-}
-
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
 
 def nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository').toString() : ""
