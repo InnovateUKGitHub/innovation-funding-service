@@ -189,7 +189,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${ifs.generate.test.data.competition.filter.name:Rolling stock future developments}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
 
     @Before

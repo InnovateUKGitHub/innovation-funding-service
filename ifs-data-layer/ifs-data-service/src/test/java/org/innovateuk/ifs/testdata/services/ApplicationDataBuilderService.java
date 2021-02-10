@@ -19,8 +19,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -60,8 +58,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 @Lazy
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilderService.class);
 
     @Autowired
     private GenericApplicationContext applicationContext;
@@ -242,6 +238,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                                 organisationType)
                 );
             }
+
         });
 
         return simpleMap(builders, BaseBuilder::build);
@@ -549,9 +546,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             return costsWithData;
         };
-
-        return finance
-                .withIndustrialCosts(costBuilder);
+        return finance.
+                withIndustrialCosts(costBuilder);
     }
 
     private ApplicationFinanceDataBuilder generateIndustrialCosts(
@@ -642,6 +638,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             };
 
+
             if (competition.isKtp()) {
                 if (OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType) {
                     competition.getFinanceRowTypes().forEach(costPopulator);
@@ -662,8 +659,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
-            return builder[0]
-                    .withOrganisationSize(SMALL)
+            return builder[0].withOrganisationSize(SMALL)
                     .withLocation()
                     .withFecEnabled(getDefaultFecModel(organisationType));
         };
