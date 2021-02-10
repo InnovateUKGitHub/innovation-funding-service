@@ -84,7 +84,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 if (line.getCompetitionType() != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findByName(line.getCompetitionType().name());
+                    CompetitionType competitionType = competitionTypeRepository.findByName(line.getCompetitionType().getText());
                     competition.setCompetitionType(competitionType.getId());
                 }
 
