@@ -7,7 +7,7 @@ import org.springframework.test.annotation.IfProfileValue;
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  * Comment out @IfProfileValue annotation when debugging as a  unitest, as it caueses the test to be ignored.
  */
-//@IfProfileValue(name = "testGroups", values = {"generatetestdata"})
+@IfProfileValue(name = "testGroups", values = {"generatetestdata"})
 public class GenerateTestData extends BaseGenerateTestData {
 
     @Override
