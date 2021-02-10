@@ -16,7 +16,7 @@ public class WhiteBlackDomainFilter {
     @Value("#{'${ifs.email.whitelist:*}'.split(',')}")
     protected List<String> whitelist;
 
-    @Value("#{'${ifs.email.blacklist:example.com}'.split(',')}")
+    @Value("#{'${ifs.email.blacklist:blacklisted.com}'.split(',')}")
     protected List<String> blacklist;
 
     /**
