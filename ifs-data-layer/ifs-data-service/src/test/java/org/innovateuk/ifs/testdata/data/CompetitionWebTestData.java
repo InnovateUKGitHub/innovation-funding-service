@@ -10,10 +10,15 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
-import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.newCompetitionLine;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.*;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
+import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.aCompetitionLine;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 public class CompetitionWebTestData {
+
+    private static Long LEAD_TECHNOLOGIST_ID = 24L;
+    private static Long EXECUTIVE_ID = 20L;
 
     public static List<CompetitionLine> buildCompetitionLines() {
         return getCompetitionLineBuilders().stream().map(CompetitionLineBuilder::build).collect(Collectors.toList());
@@ -34,91 +39,91 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getProjectSetupCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Connected digital additive manufacturing"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("New designs for a circular economy"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Rolling stock future developments")
-                        .withMaxResearchRatio(100),
-                defaultGrantCompetition()
+                        .withResearchRatio(100),
+                grantCompetition()
                         .withName("Biosciences round three: plastic recovery in the industrial sector")
-                        .withMaxResearchRatio(50),
-                defaultGrantCompetition()
+                        .withResearchRatio(50),
+                grantCompetition()
                         .withName("Integrated delivery programme - solar vehicles"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Enhanced energy saving competition")
-                        .withLeadApplicantType(asList(1L, 2L, 3L, 4L)),
-                defaultGrantCompetition()
+                        .withLeadApplicantTypes(asSet(BUSINESS, RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY)),
+                grantCompetition()
                         .withName("Growth table comp"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("No Growth table comp")
-                        .withIncludeProjectGrowthTable(false),
-                defaultGrantCompetition()
+                        .withIncludeProjectGrowth(false),
+                grantCompetition()
                         .withName("Project Setup Comp 1"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 2"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 3"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 4"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 5"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 6"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 7"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 8"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 9"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 10"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 11"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 12"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 13"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 14"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 15"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 16"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 17"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 18"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 19"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Project Setup Comp 20"),
-                defaultLoanCompetition()
+                loanCompetition()
                         .withName("Project setup loan comp"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("583 Covid deminis round 1 project setup"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Post award service competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Investor partnership project setup"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Connect competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Innovation continuity loan competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("The Sustainable Innovation Fund: SBRI phase 1")
-                        .withMaxResearchRatio(100)
+                        .withResearchRatio(100)
                         .withInnovationAreas(null),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("SBRI competition")
-                        .withMaxResearchRatio(100)
+                        .withResearchRatio(100)
                         .withInnovationAreas(null),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP Africa project setup"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Live project competition")
-                        .withLeadApplicantType(asList(1L, 2L, 3L, 4L))
+                        .withLeadApplicantTypes(asSet(BUSINESS, RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY))
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.PROJECT_SETUP))
@@ -127,20 +132,20 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getInAssessmentCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Sustainable living models for the future"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Assessments of load capabilities"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Expression of Interest: Assistive technologies for caregivers")
-                        .withCompetitionType(7L),
-                defaultGrantCompetition()
+                        .withCompetitionType(EXPRESSION_OF_INTEREST),
+                grantCompetition()
                         .withName("Living models for the future"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("583 Covid deminis round 1"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Multiple choice assessed"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP assessment")
         )
                 .stream()
@@ -150,11 +155,11 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getFundersPanelCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Internet of Things"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP in panel"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP notifications")
         )
                 .stream()
@@ -164,9 +169,9 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getReadyToOpenCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Photonics for health"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Reducing carbon footprints")
                         .withInnovationAreas(asSet(21L))
         )
@@ -177,7 +182,7 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getAssessorFeedbackCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Integrated delivery programme - low carbon vehicles")
         )
                 .stream()
@@ -187,15 +192,15 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getClosedCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Machine learning for transport infrastructure")
                         .withInnovationAreas(asSet(29L)),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Personalised Smart HUDs for space helmets")
-                        .withCompetitionType(9L),
-                defaultGrantCompetition()
+                        .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
+                grantCompetition()
                         .withName("Smart monitoring in high-pressure engineering systems")
-                        .withCompetitionType(8L)
+                        .withCompetitionType(ADVANCED_PROPULSION_CENTRE)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.CLOSED))
@@ -204,88 +209,88 @@ public class CompetitionWebTestData {
 
     private static List<CompetitionLineBuilder> getOpenCompetitionLineBuilders() {
         return asList(
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Home and industrial efficiency programme"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Transforming big data")
                         .withInnovationAreas(asSet(5L)),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Predicting market trends programme"),
-                defaultGrantCompetition()
-                        .withCompetitionType(5L)
+                grantCompetition()
+                        .withCompetitionType(SECTOR)
                         .withName("Aerospace technology investment sector")
                         .withInnovationAreas(asSet(22L, 23L)),
-                defaultGrantCompetition()
-                        .withCompetitionType(6L)
+                grantCompetition()
+                        .withCompetitionType(GENERIC)
                         .withName("Generic innovation"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Photonics for Research"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Photonics for Public"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Photonics for RTO and Business"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Photonics for All"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Expression of Interest: Quantum Computing algorithms for combating antibiotic resistance through simulation")
-                        .withCompetitionType(7L),
-                defaultGrantCompetition()
+                        .withCompetitionType(EXPRESSION_OF_INTEREST),
+                grantCompetition()
                         .withName("Low-cost propulsion mechanisms for subsonic travel")
-                        .withCompetitionType(8L),
-                defaultGrantCompetition()
+                        .withCompetitionType(ADVANCED_PROPULSION_CENTRE),
+                grantCompetition()
                         .withName("Reusability of waste material rocketry components")
-                        .withCompetitionType(9L),
-                defaultInvestorPartnershipCompetition()
+                        .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
+                investorPartnershipCompetition()
                         .withName("Investor")
-                        .withCompetitionType(9L),
-                defaultGrantCompetition()
+                        .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
+                grantCompetition()
                         .withName("Performance testing competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Procurement Competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Procurement Competition"),
-                defaultLoanCompetition()
+                loanCompetition()
                         .withName("Loan Competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("H2020 Performance testing competition")
-                        .withCompetitionType(11L)
+                        .withCompetitionType(HORIZON_2020)
                         .withInnovationAreas(null),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("International Competition"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("596 Covid grants framework group"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("599 Covid de minimis round 2"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Multiple choice open"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("SBRI type one competition"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP new competition"),
-                defaultLoanCompetition()
+                loanCompetition()
                         .withName("Competition not submitted before the deadline"),
-                defaultLoanCompetition()
+                loanCompetition()
                         .withName("Competition for application submitted before competition closing time"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Innovation continuity loan"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP Africa Comp")
-                        .withCompetitionType(9L),
-                defaultKtpCompetition()
+                        .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
+                ktpCompetition()
                         .withName("KTP cofunding"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP assessment Detailed Finances"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP assessment Overview Finances"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("Non KTP competition all finance overview"),
-                defaultKtpCompetition()
+                ktpCompetition()
                         .withName("KTP cofunding single application"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("No aid comp"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("WTO comp"),
-                defaultGrantCompetition()
+                grantCompetition()
                         .withName("Always open competition")
         )
                 .stream()
@@ -294,182 +299,183 @@ public class CompetitionWebTestData {
     }
 
     private static List<CompetitionLineBuilder> getNonIfsLineBuilders() {
-        return asList(defaultNonIfsCompetition()
+        return asList(nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 1"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 2"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 3"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 4"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 5"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Non IFS Comp 6"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 7"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 8"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 9"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 10"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 11"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 12"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 13"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 14"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 15"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 16"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 17"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 18"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 19"),
-                defaultNonIfsCompetition()
+                nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 20"));
     }
 
-    private static CompetitionLineBuilder defaultGrantCompetition() {
-        return newCompetitionLine()
-                .withCompetitionType(1L) // Programme
+    private static CompetitionLineBuilder grantCompetition() {
+        return aCompetitionLine()
+                .withCompetitionType(PROGRAMME)
                 .withInnovationAreas(asSet(22L)) // Digital manufacturing
-                .withInnovationSectorName("Materials and manufacturing")
-                .withResearchCategories(asSet(33L)) // Feasibility studies
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantType(asList(1L)) // Buisness
-                .withMaxResearchRatio(30)
+                .withLeadApplicantTypes(asSet(BUSINESS))
+                .withResearchRatio(30)
                 .withResubmission(false)
                 .withMultiStream(false)
-                .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
-                .withExecutive(20L) // john.doe@innovateuk.test
+                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
+                .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
                 .withPafCode("875")
                 .withBudgetCode("DET1536/1537")
                 .withActivityCode("16014")
-                .withCompetitionCode("2/1/1506")
+                .withCode("2/1/1506")
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .withFundingType(FundingType.GRANT)
                 .withNonIfs(false)
-                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withIncludeJesForm(true)
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowthTable(true)
-                .withIncludeYourOrganisationSection(true)
+                .withIncludeProjectGrowth(true)
+                .withIncludeYourOrganisation(true)
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
     }
 
-    private static CompetitionLineBuilder defaultInvestorPartnershipCompetition() {
-        return newCompetitionLine()
-                .withCompetitionType(1L) // Programme
+    private static CompetitionLineBuilder investorPartnershipCompetition() {
+        return aCompetitionLine()
+                .withCompetitionType(PROGRAMME)
                 .withInnovationAreas(asSet(22L)) // Digital manufacturing
-                .withInnovationSectorName("Materials and manufacturing")
-                .withResearchCategories(asSet(33L)) // Feasibility studies
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantType(asList(1L)) // Buisness
-                .withMaxResearchRatio(30)
+                .withLeadApplicantTypes(asSet(BUSINESS))
+                .withResearchRatio(30)
                 .withResubmission(true)
                 .withMultiStream(false)
-                .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
-                .withExecutive(20L) // john.doe@innovateuk.test
+                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
+                .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
                 .withPafCode("875")
                 .withBudgetCode("DET1536/1537")
                 .withActivityCode("16014")
-                .withCompetitionCode("2/1/1506")
+                .withCode("2/1/1506")
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .withFundingType(FundingType.INVESTOR_PARTNERSHIPS)
                 .withNonIfs(false)
-                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withIncludeJesForm(true)
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowthTable(true)
-                .withIncludeYourOrganisationSection(true)
+                .withIncludeProjectGrowth(true)
+                .withIncludeYourOrganisation(true)
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
     }
 
-    private static CompetitionLineBuilder defaultLoanCompetition() {
-        return newCompetitionLine()
-                .withCompetitionType(1L) // Programme
+    private static CompetitionLineBuilder loanCompetition() {
+        return aCompetitionLine()
+                .withCompetitionType(PROGRAMME)
                 .withInnovationAreas(asSet(22L)) // Digital manufacturing
-                .withInnovationSectorName("Materials and manufacturing")
-                .withResearchCategories(asSet(33L)) // Feasibility studies
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantType(asList(1L)) // Buisness
-                .withMaxResearchRatio(30)
+                .withLeadApplicantTypes(asSet(BUSINESS))
+                .withResearchRatio(30)
                 .withResubmission(true)
                 .withMultiStream(false)
-                .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
-                .withExecutive(20L) // john.doe@innovateuk.test
+                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
+                .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
                 .withPafCode("875")
                 .withBudgetCode("DET1536/1537")
                 .withActivityCode("16014")
-                .withCompetitionCode("2/1/1506")
+                .withCode("2/1/1506")
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .withFundingType(FundingType.LOAN)
                 .withNonIfs(false)
-                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withIncludeJesForm(true)
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowthTable(true)
-                .withIncludeYourOrganisationSection(true)
+                .withIncludeProjectGrowth(true)
+                .withIncludeYourOrganisation(true)
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
     }
 
-    private static CompetitionLineBuilder defaultKtpCompetition() {
-        return newCompetitionLine()
-                .withCompetitionType(1L) // Programme
+    private static CompetitionLineBuilder ktpCompetition() {
+        return aCompetitionLine()
+                .withCompetitionType(PROGRAMME)
                 .withInnovationAreas(asSet(22L)) // Digital manufacturing
-                .withInnovationSectorName("Materials and manufacturing")
-                .withResearchCategories(asSet(33L)) // Feasibility studies
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(33L)) // Feasibility studies
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantType(asList(1L)) // Buisness
-                .withMaxResearchRatio(30)
+                .withLeadApplicantTypes(asSet(BUSINESS))
+                .withResearchRatio(30)
                 .withResubmission(true)
                 .withMultiStream(false)
-                .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
-                .withExecutive(20L) // john.doe@innovateuk.test
+                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
+                .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
                 .withPafCode("875")
                 .withBudgetCode("DET1536/1537")
                 .withActivityCode("16014")
-                .withCompetitionCode("2/1/1506")
+                .withCode("2/1/1506")
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .withFundingType(FundingType.KTP)
                 .withNonIfs(false)
-                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withIncludeJesForm(true)
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowthTable(true)
-                .withIncludeYourOrganisationSection(true)
+                .withIncludeProjectGrowth(true)
+                .withIncludeYourOrganisation(true)
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
     }
 
-    private static CompetitionLineBuilder defaultNonIfsCompetition() {
-        return newCompetitionLine()
+    private static CompetitionLineBuilder nonIfsCompetition() {
+        return aCompetitionLine()
                 .withInnovationAreas(asSet(5L)) // Digital industries
-                .withInnovationSectorName("Emerging and enabling")
+                .withInnovationSector("Emerging and enabling")
                 .withCompetitionStatus(CompetitionStatus.OPEN)
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW) // might not be needed
+                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .withPublished(true)
                 .withNonIfs(true)
                 .withNonIfsUrl("https://www.gov.uk/government/organisations/innovate-uk")
-                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
-                .withApplicationFinanceType(ApplicationFinanceType.STANDARD); // might not be needed
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD);
     }
+
 }

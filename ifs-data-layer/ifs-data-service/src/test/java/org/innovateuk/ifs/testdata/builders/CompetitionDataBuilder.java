@@ -12,6 +12,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -80,50 +82,53 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             doCompetitionDetailsUpdate(data, competition -> {
 
-                if (line.type != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findById(line.type).get();
+                if (line.getCompetitionType() != null) {
+                    CompetitionType competitionType = competitionTypeRepository.findByName(line.getCompetitionType().name());
                     competition.setCompetitionType(competitionType.getId());
                 }
 
-                Long innovationSector = getInnovationSectorIdOrNull(line.innovationSector);
+                Long innovationSector = getInnovationSectorIdOrNull(line.getInnovationSector());
 
-                CollaborationLevel collaborationLevel = line.collaborationLevel;
+                CollaborationLevel collaborationLevel = line.getCollaborationLevel();
 
-                List<Long> leadApplicantTypeIds = line.leadApplicantTypes;
+                List<Long> leadApplicantTypeIds = line.getLeadApplicantTypes()
+                        .stream()
+                        .map(OrganisationTypeEnum::getId)
+                        .collect(Collectors.toList());
 
-                competition.setName(line.name);
-                if (line.innovationAreas != null) {
-                    competition.setInnovationAreas(line.innovationAreas);
+                competition.setName(line.getName());
+                if (line.getInnovationAreas() != null) {
+                    competition.setInnovationAreas(line.getInnovationAreas());
                 }
                 competition.setInnovationSector(innovationSector);
-                competition.setResearchCategories(line.researchCategory);
-                competition.setFundingRules(line.fundingRules);
-                competition.setMaxResearchRatio(line.researchRatio);
+                competition.setResearchCategories(line.getResearchCategory());
+                competition.setFundingRules(line.getFundingRules());
+                competition.setMaxResearchRatio(line.getResearchRatio());
                 competition.setAcademicGrantPercentage(100);
-                competition.setLeadTechnologist(line.leadTechnologist);
-                competition.setExecutive(line.compExecutive);
-                competition.setPafCode(line.pafCode);
-                competition.setCode(line.code);
-                competition.setBudgetCode(line.budgetCode);
-                competition.setActivityCode(line.activityCode);
+                competition.setLeadTechnologist(line.getLeadTechnologist());
+                competition.setExecutive(line.getCompExecutive());
+                competition.setPafCode(line.getPafCode());
+                competition.setCode(line.getCode());
+                competition.setBudgetCode(line.getBudgetCode());
+                competition.setActivityCode(line.getActivityCode());
                 competition.setCollaborationLevel(collaborationLevel);
                 competition.setLeadApplicantTypes(leadApplicantTypeIds);
-                competition.setResubmission(line.resubmission);
-                competition.setMultiStream(line.resubmission);
-                competition.setNonIfsUrl(line.nonIfsUrl);
-                competition.setIncludeJesForm(line.includeJesForm);
-                competition.setApplicationFinanceType(line.applicationFinanceType);
-                competition.setIncludeProjectGrowthTable(line.includeProjectGrowth);
-                competition.setIncludeYourOrganisationSection(line.includeYourOrganisation);
-                competition.setFundingType(line.fundingType);
-                competition.setCompletionStage(line.competitionCompletionStage);
+                competition.setResubmission(line.getResubmission());
+                competition.setMultiStream(line.getMultiStream());
+                competition.setNonIfsUrl(line.getNonIfsUrl());
+                competition.setIncludeJesForm(line.getIncludeJesForm());
+                competition.setApplicationFinanceType(line.getApplicationFinanceType());
+                competition.setIncludeProjectGrowthTable(line.getIncludeProjectGrowth());
+                competition.setIncludeYourOrganisationSection(line.getIncludeYourOrganisation());
+                competition.setFundingType(line.getFundingType());
+                competition.setCompletionStage(line.getCompetitionCompletionStage());
                 competition.setAlwaysOpen(isAlwaysOpen(line));
             });
         });
     }
 
     private boolean isAlwaysOpen(CompetitionLine line) {
-        return line.alwaysOpen != null ? line.alwaysOpen : false;
+        return line.getAlwaysOpen() != null ? line.getAlwaysOpen() : false;
     }
 
     private Long getInnovationSectorIdOrNull(String name) {
@@ -310,9 +315,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withNewMilestones(CompetitionLine line) {
         return asCompAdmin(data ->
-                Stream.of(BooleanUtils.isTrue(line.alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
+                Stream.of(BooleanUtils.isTrue(line.getAlwaysOpen()) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
                         .filter(m -> !m.isOnlyNonIfs())
-                        .filter(milestoneType -> milestoneType.getPriority() <= line.competitionCompletionStage.getLastMilestone().getPriority())
+                        .filter(milestoneType -> milestoneType.getPriority() <= line.getCompetitionCompletionStage().getLastMilestone().getPriority())
                         .forEach(type ->
                                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                                         .handleSuccessOrFailure(
@@ -419,7 +424,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withDefaultPublicContent(CompetitionLine line) {
         return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
 
-            if (line.published) {
+            if (line.isPublished()) {
                 publicContent.setShortDescription("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow");
                 publicContent.setProjectFundingRange("Up to £35,000");
                 publicContent.setEligibilitySummary("UK based business of any size. Must involve at least one SME");
@@ -429,7 +434,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         "There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.");
                 publicContent.setProjectSize("£15 million");
                 publicContent.setKeywords(asList(line.getName().split("\\s+"))); // keywords will now be competition name split
-                publicContent.setInviteOnly(line.inviteOnly);
+                publicContent.setInviteOnly(line.isInviteOnly());
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
 
@@ -444,10 +449,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             CompetitionSetupFinanceResource competitionSetupFinanceResource
                     = new CompetitionSetupFinanceResource();
             competitionSetupFinanceResource.setCompetitionId(data.getCompetition().getId());
-            competitionSetupFinanceResource.setApplicationFinanceType(line.applicationFinanceType);
-            competitionSetupFinanceResource.setIncludeGrowthTable(line.includeProjectGrowth);
-            competitionSetupFinanceResource.setIncludeYourOrganisationSection(line.includeYourOrganisation);
-            competitionSetupFinanceResource.setIncludeJesForm(line.includeJesForm);
+            competitionSetupFinanceResource.setApplicationFinanceType(line.getApplicationFinanceType());
+            competitionSetupFinanceResource.setIncludeGrowthTable(line.getIncludeProjectGrowth());
+            competitionSetupFinanceResource.setIncludeYourOrganisationSection(line.getIncludeYourOrganisation());
+            competitionSetupFinanceResource.setIncludeJesForm(line.getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
         });
     }
@@ -457,8 +462,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
             competitionAssessmentConfigResource.setAssessorCount(line.getAssessorCount());
             competitionAssessmentConfigResource.setAssessorPay(BigDecimal.valueOf(100));
-            competitionAssessmentConfigResource.setHasAssessmentPanel(line.hasAssessmentPanel);
-            competitionAssessmentConfigResource.setHasInterviewStage(line.hasInterviewStage);
+            competitionAssessmentConfigResource.setHasAssessmentPanel(line.getHasAssessmentPanel());
+            competitionAssessmentConfigResource.setHasInterviewStage(line.getHasInterviewStage());
             competitionAssessmentConfigResource.setAssessorFinanceView(line.getAssessorFinanceView());
             competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });

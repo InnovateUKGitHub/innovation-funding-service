@@ -2,59 +2,59 @@ package org.innovateuk.ifs.testdata.builders.data;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import java.util.List;
 import java.util.Set;
 
 public class CompetitionLine {
 
-    public Long id;
-    public String name;
-    public Long type;
-    public Set<Long> innovationAreas;
-    public String innovationSector;
-    public Set<Long> researchCategory;
-    public CollaborationLevel collaborationLevel;
-    public List<Long> leadApplicantTypes;
-    public Integer researchRatio;
-    public Boolean resubmission;
-    public Boolean multiStream;
-    public CompetitionStatus competitionStatus;
-    public Long leadTechnologist;
-    public Long compExecutive;
-    public boolean setupComplete;
-    public String budgetCode;
-    public String code;
-    public String pafCode;
-    public String activityCode;
-    public Integer assessorCount;
-    public Boolean hasAssessmentPanel;
-    public Boolean hasInterviewStage;
-    public AssessorFinanceView assessorFinanceView;
-    public boolean published;
-    public FundingType fundingType;
-    public boolean inviteOnly;
-    public boolean nonIfs;
-    public String nonIfsUrl;
-    public CompetitionCompletionStage competitionCompletionStage;
-    public Boolean includeJesForm;
-    public ApplicationFinanceType applicationFinanceType;
-    public Boolean includeProjectGrowth;
-    public Boolean includeYourOrganisation;
-    public FundingRules fundingRules;
-    public Boolean alwaysOpen;
+    private Long id;
+    private String name;
+    private CompetitionTypeEnum competitionType;
+    private Set<Long> innovationAreas;
+    private String innovationSector;
+    private Set<Long> researchCategory;
+    private CollaborationLevel collaborationLevel;
+    private Set<OrganisationTypeEnum> leadApplicantTypes;
+    private Integer researchRatio;
+    private Boolean resubmission;
+    private Boolean multiStream;
+    private CompetitionStatus competitionStatus;
+    private Long leadTechnologist;
+    private Long compExecutive;
+    private boolean setupComplete;
+    private String budgetCode;
+    private String code;
+    private String pafCode;
+    private String activityCode;
+    private Integer assessorCount;
+    private Boolean hasAssessmentPanel;
+    private Boolean hasInterviewStage;
+    private AssessorFinanceView assessorFinanceView;
+    private boolean published;
+    private FundingType fundingType;
+    private boolean inviteOnly;
+    private boolean nonIfs;
+    private String nonIfsUrl;
+    private CompetitionCompletionStage competitionCompletionStage;
+    private Boolean includeJesForm;
+    private ApplicationFinanceType applicationFinanceType;
+    private Boolean includeProjectGrowth;
+    private Boolean includeYourOrganisation;
+    private FundingRules fundingRules;
+    private Boolean alwaysOpen;
 
     public CompetitionLine() {
     }
 
     public CompetitionLine(Long id,
                            String name,
-                           Long type,
+                           CompetitionTypeEnum competitionType,
                            Set<Long> innovationAreas,
                            String innovationSector,
                            Set<Long> researchCategory,
                            CollaborationLevel collaborationLevel,
-                           List<Long> leadApplicantTypes,
+                           Set<OrganisationTypeEnum> leadApplicantTypes,
                            Integer researchRatio,
                            Boolean resubmission,
                            Boolean multiStream,
@@ -84,7 +84,7 @@ public class CompetitionLine {
                            Boolean alwaysOpen) {
         this.id = id;
         this.name = name;
-        this.type = type;
+        this.competitionType = competitionType;
         this.innovationAreas = innovationAreas;
         this.innovationSector = innovationSector;
         this.researchCategory = researchCategory;
@@ -135,12 +135,12 @@ public class CompetitionLine {
         this.name = name;
     }
 
-    public Long getType() {
-        return type;
+    public CompetitionTypeEnum getCompetitionType() {
+        return competitionType;
     }
 
-    public void setType(Long type) {
-        this.type = type;
+    public void setCompetitionType(CompetitionTypeEnum competitionType) {
+        this.competitionType = competitionType;
     }
 
     public Set<Long> getInnovationAreas() {
@@ -175,11 +175,11 @@ public class CompetitionLine {
         this.collaborationLevel = collaborationLevel;
     }
 
-    public List<Long> getLeadApplicantTypes() {
+    public Set<OrganisationTypeEnum> getLeadApplicantTypes() {
         return leadApplicantTypes;
     }
 
-    public void setLeadApplicantTypes(List<Long> leadApplicantTypes) {
+    public void setLeadApplicantTypes(Set<OrganisationTypeEnum> leadApplicantTypes) {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 

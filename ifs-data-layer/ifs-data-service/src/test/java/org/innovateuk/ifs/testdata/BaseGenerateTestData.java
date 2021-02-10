@@ -321,7 +321,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitions.forEach(competition -> {
 
             CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
+                    Objects.equals(l.getName(), competition.getCompetition().getName()));
 
             applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
         });
