@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.roleprofile.form;
 
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 
 import javax.validation.constraints.NotNull;
@@ -10,10 +10,10 @@ public class ChangeRoleProfileForm {
     @NotNull(message = "{validation.changeroleprofileform.role.required}")
     private RoleProfileState roleProfileState;
 
-    @Length(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String unavailableReason;
 
-    @Length(max = 255, message = "{validation.field.too.many.characters}")
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String disabledReason;
 
     public String getUnavailableReason() {
