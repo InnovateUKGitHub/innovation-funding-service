@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.category.domain.InnovationArea.DIGITAL_MANUFACTORING_ID;
+import static org.innovateuk.ifs.category.domain.ResearchCategory.FEASIBILITY_STUDIES_ID;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.*;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.aCompetitionLine;
@@ -344,9 +346,9 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder grantCompetition() {
         return aCompetitionLine()
                 .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(22L)) // Digital manufacturing
+                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
                 .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(33L)) // Feasibility studies
+                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withResearchRatio(30)
@@ -375,9 +377,9 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder investorPartnershipCompetition() {
         return aCompetitionLine()
                 .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(22L)) // Digital manufacturing
+                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
                 .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(33L)) // Feasibility studies
+                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withResearchRatio(30)
@@ -406,9 +408,9 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder loanCompetition() {
         return aCompetitionLine()
                 .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(22L)) // Digital manufacturing
+                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
                 .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(33L)) // Feasibility studies
+                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withResearchRatio(30)
@@ -437,9 +439,9 @@ public class CompetitionWebTestData {
     private static CompetitionLineBuilder ktpCompetition() {
         return aCompetitionLine()
                 .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(22L)) // Digital manufacturing
+                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
                 .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(33L)) // Feasibility studies
+                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withResearchRatio(30)
