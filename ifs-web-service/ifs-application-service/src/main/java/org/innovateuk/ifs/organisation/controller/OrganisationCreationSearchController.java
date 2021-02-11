@@ -169,8 +169,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                           HttpServletRequest request,
                                                           HttpServletResponse response,
                                                           UserResource user) {
-        if(organisationForm.getAddressForm().getSelectedPostcodeIndex() < 0 ||
-                organisationForm.getAddressForm().getSelectedPostcodeIndex() == null ){
+        if (bindingResult.hasFieldErrors()) {
             return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
         }
 
@@ -178,9 +177,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         addManualOrganisation(organisationForm, model, request, organisationFormFromCookie);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
-        if (bindingResult.hasFieldErrors()) {
-            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-        }
         populateViewModelForSelectedOrgConfirmation(organisationForm, model, request);
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
