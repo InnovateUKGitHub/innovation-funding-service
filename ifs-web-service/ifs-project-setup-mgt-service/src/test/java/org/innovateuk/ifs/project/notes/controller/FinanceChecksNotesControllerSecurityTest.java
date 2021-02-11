@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.notes.controller;
 
-import java.util.List;
-import java.util.function.Consumer;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
@@ -13,8 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
@@ -162,7 +162,7 @@ public class FinanceChecksNotesControllerSecurityTest extends BaseProjectSetupCo
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.saveNewCommentAttachment(null, projectCompositeId.id(), 2L, 3L, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save a comment attachment without the project finance role");
@@ -183,7 +183,7 @@ public class FinanceChecksNotesControllerSecurityTest extends BaseProjectSetupCo
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.viewNewComment(projectCompositeId.id(), 2L, 3L, null, null, null, null);
                 Assert.fail("Should not have been able to show the add comment form without the project finance role");
@@ -203,7 +203,7 @@ public class FinanceChecksNotesControllerSecurityTest extends BaseProjectSetupCo
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, 4L, null, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to remove attachments from the create comment form without the project finance role");

@@ -78,7 +78,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private OverheadFileRestService overheadFileRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants, internal users and kta can view the Your project costs page")
     public String viewYourProjectCosts(Model model,
                                        UserResource user,

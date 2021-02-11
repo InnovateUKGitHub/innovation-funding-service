@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 @SecuredBySpring(value = "Controller",
         description = "Comp Admin, Project Finance and IFS admins can view and assign projects to Monitoring Officers",
         securedType = MonitoringOfficerController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
 public class MonitoringOfficerController {
 
     private static final String FORM = "form";
