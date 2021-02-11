@@ -20,7 +20,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = InnovationAreaAjaxController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class InnovationAreaAjaxController {
 
     @Autowired
