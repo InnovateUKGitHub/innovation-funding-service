@@ -8,6 +8,14 @@
     <th:block th:unless="${maximums.size() == 1}">
         <div class="table-overflow">
             <table class="govuk-table hidden-error-labels">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Business sizes</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric"
+                        th:each="category : ${model.categories}"
+                        th:text="${category.name}"></th>
+                </tr>
+                </thead>
                 <tbody class="govuk-table__body">
                 <thblock th:each="size : ${model.sizes}"
                          th:with="sizeIndex=${competitionSetupForm.indexForSize(maximums, size)}">
