@@ -10,15 +10,15 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.resource.Title.Miss;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.MISS;
+import static org.innovateuk.ifs.user.resource.Title.MR;
 import static org.junit.Assert.assertEquals;
 
 public class UserRegistrationResourceBuilderTest {
 
     @Test
     public void testBuildOne() {
-        Title expectedTitle = Title.Dr;
+        Title expectedTitle = Title.DR;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedPhoneNumber = "01234 567890";
@@ -50,7 +50,7 @@ public class UserRegistrationResourceBuilderTest {
 
     @Test
     public void testBuildMany() {
-        Title[] expectedTitles = {Mr, Miss};
+        Title[] expectedTitles = {MR, MISS};
         String[] expectedFirstNames = {"James", "Sarah"};
         String[] expectedLastNames = {"Smith", "Smythe"};
         String[] expectedPhoneNumbers = {"01234 567890", "02345 678901"};

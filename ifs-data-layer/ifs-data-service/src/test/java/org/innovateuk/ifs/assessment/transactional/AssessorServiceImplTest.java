@@ -96,7 +96,7 @@ import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newRevi
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.MR;
 import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -171,7 +171,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String email = "email@example.com";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
+                .withTitle(MR)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
@@ -253,7 +253,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String hash = "inviteHashNotExists";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
+                .withTitle(MR)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
@@ -279,7 +279,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
+                .withTitle(MR)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")

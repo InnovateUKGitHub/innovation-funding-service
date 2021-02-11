@@ -5,7 +5,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.MR;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class UserProfileResourceDocs {
@@ -27,7 +27,7 @@ public class UserProfileResourceDocs {
 
     public static final UserProfileResourceBuilder userProfileResourceBuilder = newUserProfileResource()
             .withUser(1L)
-            .withTitle(Mr)
+            .withTitle(MR)
             .withFirstName("First")
             .withLastName("Last")
             .withPhoneNumber("012434 567890")

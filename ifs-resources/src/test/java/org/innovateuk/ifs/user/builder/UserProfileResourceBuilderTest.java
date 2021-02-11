@@ -9,8 +9,8 @@ import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.resource.Title.Miss;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.MISS;
+import static org.innovateuk.ifs.user.resource.Title.MR;
 import static org.junit.Assert.assertEquals;
 
 public class UserProfileResourceBuilderTest {
@@ -18,7 +18,7 @@ public class UserProfileResourceBuilderTest {
     @Test
     public void testBuildOne() {
         Long expectedUser = 1L;
-        Title expectedTitle = Mr;
+        Title expectedTitle = MR;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedPhoneNumber = "01234 567890";
@@ -47,7 +47,7 @@ public class UserProfileResourceBuilderTest {
     @Test
     public void testBuildMany() {
         Long[] expectedUsers = {1L, 2L};
-        Title[] expectedTitles = {Mr, Miss};
+        Title[] expectedTitles = {MR, MISS};
         String[] expectedFirstNames = {"James", "Sarah"};
         String[] expectedLastNames = {"Smith", "Smythe"};
         String[] expectedPhoneNumbers = {"01234 567890", "02345 678901"};
