@@ -131,11 +131,7 @@ public class UserCreationResource {
     public UserResource toUserResource() {
         UserResource user = new UserResource();
 
-        if (role == IFS_ADMINISTRATOR) {
-            user.setRoles(newArrayList(IFS_ADMINISTRATOR, PROJECT_FINANCE));
-        } else {
-            user.setRoles(newArrayList(role));
-        }
+        user.setRoles(newArrayList(role));
 
         if (addLiveProjectUserRole) {
             user.getRoles().add(LIVE_PROJECTS_USER);
