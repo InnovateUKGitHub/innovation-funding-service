@@ -51,7 +51,7 @@ The competition admin creates The Prince's Trust Comp
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_PT}  SUBSIDY_CONTROL  GRANT
-    the user selects the Terms and Conditions
+    the user selects the Terms and Conditions               ${compType_PT}  SUBSIDY_CONTROL
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  false  single-or-collaborative  # 1 means 30%
     the user fills in the CS funding eligibility            false   ${compType_PT}
