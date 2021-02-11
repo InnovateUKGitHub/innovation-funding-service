@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/project-document")
 @SecuredBySpring(value = "Controller", description = "Only comp admin, project finance and IFS Admin can perform the below activities", securedType = CompetitionSetupDocumentController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
 public class CompetitionSetupDocumentController {
 
     public static final String PROJECT_DOCUMENT_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/project-document/landing-page";

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.ZonedDateTime;
@@ -97,6 +98,6 @@ public class ThreadViewModel {
     private boolean isLastPostProjectFinance() {
         return viewModelPosts
                 .get(viewModelPosts.size() -1)
-                .author.hasRole(PROJECT_FINANCE);
+                .author.hasAuthority(Authority.PROJECT_FINANCE);
     }
 }
