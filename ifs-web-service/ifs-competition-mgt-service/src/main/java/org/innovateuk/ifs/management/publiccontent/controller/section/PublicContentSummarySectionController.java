@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup/public-content/summary")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = PublicContentSummarySectionController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class PublicContentSummarySectionController extends AbstractContentGroupController<SummaryViewModel, SummaryForm> {
 
     @Autowired
