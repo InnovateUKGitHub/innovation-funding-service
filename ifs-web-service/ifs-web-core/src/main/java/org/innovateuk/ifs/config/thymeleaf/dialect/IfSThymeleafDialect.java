@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.config.thymeleaf.dialect;
 
+import org.innovateuk.ifs.config.thymeleaf.IfsThymeleafExpressionObjectFactory;
 import org.thymeleaf.dialect.AbstractDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.dialect.IProcessorDialect;
