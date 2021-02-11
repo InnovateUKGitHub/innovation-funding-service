@@ -41,7 +41,7 @@ public class QuestionnaireQuestionViewModelPopulator {
         List<QuestionnaireOptionResource> options = questionnaireOptionRestService.get(question.getOptions()).getSuccess();
 
 
-        return new QuestionnaireQuestionViewModel(questionnaire.getId(), question, options, previousQuestions(response, question));
+        return new QuestionnaireQuestionViewModel(questionnaireResponseId, question, options, previousQuestions(response, question));
     }
 
     private List<PreviousQuestionViewModel> previousQuestions(QuestionnaireResponseResource response, QuestionnaireQuestionResource question) {
@@ -53,7 +53,7 @@ public class QuestionnaireQuestionViewModelPopulator {
                 .filter(q -> q.getDepth() < question.getDepth())
                 .map(q -> {
                     QuestionnaireQuestionResponseResource questionResponse = responses.stream().filter(r -> r.getQuestion().equals(q.getId())).findAny().orElseThrow(ObjectNotFoundException::new);
-                    QuestionnaireOptionResource selectedOption = respondedOptions.stream().filter(r -> r.getId().equals(questionResponse.getId())).findAny().orElseThrow(ObjectNotFoundException::new);
+                    QuestionnaireOptionResource selectedOption = respondedOptions.stream().filter(r -> r.getId().equals(questionResponse.getOption())).findAny().orElseThrow(ObjectNotFoundException::new);
                     return new PreviousQuestionViewModel(response.getId(), q.getQuestion(), selectedOption.getText());
                 })
                 .collect(Collectors.toList());

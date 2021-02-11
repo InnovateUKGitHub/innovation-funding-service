@@ -38,8 +38,14 @@ public class QuestionnaireQuestionResponseServiceImpl extends AbstractIfsCrudSer
         if (domain.getQuestionnaireResponse() == null) {
             domain.setQuestionnaireResponse(questionnaireResponseRepository.findById(resource.getQuestionnaireResponse()).orElse(null));
         }
+        if (domain.getOption() != null && !domain.getOption().getId().equals(resource.getOption())) {
+            resetAnswersDeeperThanThis();
+        }
         domain.setOption(questionnaireOptionRepository.findById(resource.getOption()).orElse(null));
         return domain;
+    }
+
+    private void resetAnswersDeeperThanThis() {
     }
 
     @Override

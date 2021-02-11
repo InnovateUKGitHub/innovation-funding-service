@@ -67,7 +67,7 @@
                 <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.question}">Where is your business based?</td>
                 <td class="govuk-table__cell" th:text="${answer.answer}"></td>
                 <td class="govuk-table__cell alignright">
-                    <a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}/question/{questionId}(questionnaireResponseId=${model.questionnaireResponseId},questionId=${answer.questionId})}">Change answer</a></td>
+                    <a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}/question/{questionnaireQuestionId}(questionnaireResponseId=${model.questionnaireResponseId},questionnaireQuestionId=${answer.questionnaireQuestionId})}">Change answer</a></td>
             </tr>
             </tbody>
         </table>

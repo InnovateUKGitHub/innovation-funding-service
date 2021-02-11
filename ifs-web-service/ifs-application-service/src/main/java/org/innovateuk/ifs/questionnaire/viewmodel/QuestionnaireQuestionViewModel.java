@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class QuestionnaireQuestionViewModel {
 
-    private long questionnaireId;
+    private long questionnaireResponseId;
     private long questionnaireQuestionId;
     private String title;
     private String question;
@@ -17,8 +17,8 @@ public class QuestionnaireQuestionViewModel {
     private List<Pair<Long, String>> options;
     private List<PreviousQuestionViewModel> previousQuestions;
 
-    public QuestionnaireQuestionViewModel(long questionnaireId, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, List<PreviousQuestionViewModel> previousQuestions) {
-        this.questionnaireId = questionnaireId;
+    public QuestionnaireQuestionViewModel(long questionnaireResponseId, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, List<PreviousQuestionViewModel> previousQuestions) {
+        this.questionnaireResponseId = questionnaireResponseId;
         this.questionnaireQuestionId = question.getId();
         this.title = question.getTitle();
         this.question = question.getQuestion();
@@ -29,8 +29,8 @@ public class QuestionnaireQuestionViewModel {
         this.previousQuestions = previousQuestions;
     }
 
-    public long getQuestionnaireId() {
-        return questionnaireId;
+    public long getQuestionnaireResponseId() {
+        return questionnaireResponseId;
     }
 
     public long getQuestionnaireQuestionId() {
