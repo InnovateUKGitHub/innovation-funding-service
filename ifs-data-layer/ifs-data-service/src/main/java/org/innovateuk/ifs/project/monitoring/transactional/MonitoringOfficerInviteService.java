@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface MonitoringOfficerInviteService {
 
     @SecuredBySpring(value = "SAVE_MONITORING_OFFICER_INVITE", description = "Only comp admin, project finance or IFS admin can save a monitoring officer invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
     ServiceResult<Void> inviteMonitoringOfficer(User invitedUser, Project project);
 
     @PreAuthorize("hasAuthority('system_registrar')")

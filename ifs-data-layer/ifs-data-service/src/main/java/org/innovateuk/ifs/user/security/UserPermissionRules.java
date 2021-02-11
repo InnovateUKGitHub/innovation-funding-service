@@ -86,7 +86,7 @@ public class UserPermissionRules {
     @PermissionRule(value = "CREATE", description = "An internal user can invite a monitoring officer and create the pending user associated.")
     public boolean compAdminProjectFinanceCanCreateMonitoringOfficer(UserCreationResource userToCreate, UserResource user) {
         return userToCreate.getRole() == MONITORING_OFFICER &&
-                (isCompAdmin(user) || isProjectFinanceUser(user));
+                (isCompAdmin(user) || hasProjectFinanceAuthority(user));
     }
 
     @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
@@ -142,7 +142,7 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ", description = "Comp admins and project finance can view assessors")
     public boolean compAdminAndProjectFinanceCanViewAssessors(UserPageResource usersToView, UserResource user) {
         return usersToView.getContent().stream().allMatch(u -> u.hasRole(ASSESSOR)) &&
-                user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE);
+                user.hasAuthority(Authority.COMP_ADMIN);
     }
 
     @PermissionRule(value = "READ", description = "Consortium members (Lead Applicants and Collaborators) can view the others in their Consortium Teams on their various Applications")
@@ -348,7 +348,7 @@ public class UserPermissionRules {
     }
 
     private boolean hasPermissionToGrantRole(UserResource user) {
-        return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.COMP_ADMIN);
     }
 
     private boolean userIsInCompetitionAssignedToStakeholder(long userToViewId, UserResource stakeholder) {

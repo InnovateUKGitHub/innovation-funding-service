@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 
 /**
  * Provides the permissions around CRUD for ApplicationProcurementMilestones
@@ -21,7 +21,7 @@ public class ProjectProcurementMilestonePermissionRules extends BasePermissionRu
 
     @PermissionRule(value = "EDIT", description = "Project finance users users can update the project finances of a project")
     public boolean internalUsersCanUpdateProjectFinance(final ProjectProcurementMilestoneResource financeResource, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "VIEW", description = "Project partners can see the project finances of their own project")
