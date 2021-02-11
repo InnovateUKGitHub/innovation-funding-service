@@ -88,21 +88,21 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "SAVE_MILESTONE_CHECK",
             description = "Project Finance Users can save Milestone Check")
     public boolean projectFinanceUserCanSaveMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(
             value = "RESET_MILESTONE_CHECK",
             description = "Project Finance Users can save Milestone Check")
     public boolean projectFinanceUserCanResetMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(
             value = "VIEW_MILESTONE_STATUS",
             description = "Project Finance Users can view Milestone Check")
     public boolean projectFinanceUserCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(
