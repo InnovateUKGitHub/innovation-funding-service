@@ -113,14 +113,10 @@ public class CompetitionWebTestData {
                         .withName("Connect competition"),
                 grantCompetition()
                         .withName("Innovation continuity loan competition"),
-                grantCompetition()
-                        .withName("The Sustainable Innovation Fund: SBRI phase 1")
-                        .withResearchRatio(100)
-                        .withInnovationAreas(null),
-                grantCompetition()
-                        .withName("SBRI competition")
-                        .withResearchRatio(100)
-                        .withInnovationAreas(null),
+                procurementCompetition()
+                        .withName("The Sustainable Innovation Fund: SBRI phase 1"),
+                procurementCompetition()
+                        .withName("SBRI competition"),
                 ktpCompetition()
                         .withName("KTP Africa project setup"),
                 grantCompetition()
@@ -247,9 +243,9 @@ public class CompetitionWebTestData {
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
                 grantCompetition()
                         .withName("Performance testing competition"),
-                grantCompetition()
+                procurementCompetition()
                         .withName("Procurement Competition"),
-                grantCompetition()
+                procurementCompetition()
                         .withName("Procurement Competition"),
                 loanCompetition()
                         .withName("Loan Competition"),
@@ -369,6 +365,36 @@ public class CompetitionWebTestData {
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
                 .withIncludeProjectGrowth(true)
                 .withIncludeYourOrganisation(true)
+                .withFundingRules(FundingRules.STATE_AID)
+                .withPublished(true)
+                .withAlwaysOpen(false);
+    }
+
+    private static CompetitionLineBuilder procurementCompetition() {
+        return aCompetitionLine()
+                .withCompetitionType(PROGRAMME)
+                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
+                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
+                .withLeadApplicantTypes(asSet(BUSINESS))
+                .withResearchRatio(100)
+                .withResubmission(false)
+                .withMultiStream(false)
+                .withHasAssessmentPanel(false)
+                .withHasInterviewStage(false)
+                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
+                .withCompExecutive(EXECUTIVE_ID)
+                .withSetupComplete(true)
+                .withPafCode("875")
+                .withBudgetCode("DET1536/1537")
+                .withActivityCode("16014")
+                .withCode("2/1/1506")
+                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withFundingType(FundingType.PROCUREMENT)
+                .withNonIfs(false)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withIncludeJesForm(true)
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
+                .withIncludeYourOrganisation(false)
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
