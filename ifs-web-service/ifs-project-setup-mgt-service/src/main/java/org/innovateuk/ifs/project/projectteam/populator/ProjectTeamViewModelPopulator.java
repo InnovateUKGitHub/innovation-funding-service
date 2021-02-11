@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.viewmodel.*;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -113,13 +114,13 @@ public class ProjectTeamViewModelPopulator {
         boolean isSingle = competitionRestService.getCompetitionById(project.getCompetition())
                 .getSuccess()
                 .getCollaborationLevel() == CollaborationLevel.SINGLE;
-        return !isSingle && user.hasRole(PROJECT_FINANCE)
+        return !isSingle && user.hasAuthority(Authority.PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }
 
     private boolean userCanAddAndRemoveOrganisations(ProjectResource project, UserResource user) {
-        return user.hasRole(PROJECT_FINANCE)
+        return user.hasAuthority(Authority.PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }

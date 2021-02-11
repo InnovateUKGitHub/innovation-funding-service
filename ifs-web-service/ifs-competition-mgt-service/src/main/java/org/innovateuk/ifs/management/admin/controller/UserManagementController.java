@@ -41,7 +41,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -247,12 +246,7 @@ public class UserManagementController extends AsyncAdaptor {
         EditUserForm form = new EditUserForm();
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
-
-        if (user.getRoles().contains(IFS_ADMINISTRATOR)) {
-            form.setRole(IFS_ADMINISTRATOR);
-        } else {
-            form.setRole(user.getRoles().stream().findFirst().get());
-        }
+        form.setRole(user.getRoles().stream().findFirst().get());
 
         if (user.getRoles().contains(SUPPORTER)) {
            UserProfileResource userProfileResource = profileRestService.getUserProfile(user.getId()).getSuccess();
