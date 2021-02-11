@@ -313,10 +313,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findDistinctByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
-                externalRoles()
-                        .stream()
-                        .map(r -> Role.getByName(r.getName()))
-                        .collect(toSet()),
+                externalRoles(),
                 pageable
         );
         List<ManageUserResource> userResources = pagedResult.getContent()
