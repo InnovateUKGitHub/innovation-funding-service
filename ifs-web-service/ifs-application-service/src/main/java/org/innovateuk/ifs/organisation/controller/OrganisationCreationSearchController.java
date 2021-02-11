@@ -249,7 +249,9 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                              Model model,
                              HttpServletRequest request, HttpServletResponse response,
                              @RequestHeader(value = REFERER, required = false) final String referer){
-
+        if(organisationForm.getSicCodes().size() > 3){
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
         populateViewModel(organisationForm, model, request);
 
         organisationForm.getSicCodes().add(new OrganisationSicCodeResource());
