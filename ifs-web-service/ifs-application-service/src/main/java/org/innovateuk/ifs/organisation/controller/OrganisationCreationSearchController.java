@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -168,6 +169,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                           HttpServletRequest request,
                                                           HttpServletResponse response,
                                                           UserResource user) {
+        if(organisationForm.getAddressForm().getSelectedPostcodeIndex() < 0 ||
+                organisationForm.getAddressForm().getSelectedPostcodeIndex() == null ){
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
+
         OrganisationCreationForm organisationFormFromCookie = getFormDataForManualEntryFromCookie(organisationForm, request);
         addManualOrganisation(organisationForm, model, request, organisationFormFromCookie);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
