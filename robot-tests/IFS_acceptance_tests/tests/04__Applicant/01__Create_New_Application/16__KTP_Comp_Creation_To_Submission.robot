@@ -1345,7 +1345,7 @@ MO should see read only view of project details
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT") ~ td:contains("Complete")
     the user should see the element             jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
     the user should see the element             jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
-    the user should not see the element         jQuery = button:contains("Edit")
+    the user should not see the element         jQThe applicants should not see knowledge baseduery = button:contains("Edit")
 
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
