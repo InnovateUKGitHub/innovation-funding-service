@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config.thymeleaf.dialect;
+package org.innovateuk.ifs.config;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;

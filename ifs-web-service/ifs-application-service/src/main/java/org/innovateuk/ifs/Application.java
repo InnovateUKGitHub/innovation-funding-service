@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableCircuitBreaker
 @PropertySource(value = { "classpath:/application.properties", "classpath:/applicationservice.properties" })
-@SpringBootApplication
+@SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync
 @Import(IfsApplicationServiceApplicationConfiguration.class)
