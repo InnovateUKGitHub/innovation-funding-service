@@ -189,7 +189,7 @@ public class RegistrationCookieService {
 
     public boolean isSelectedExistingOrganisationJourney(HttpServletRequest request) {
         Optional<OrganisationCreationForm> organisationCreationForm = Optional.ofNullable(
-                getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_FORM), OrganisationCreationForm.class));
+                getObjectFromJson(compressedCookieService.getCookieValue(request, ORGANISATION_FORM), OrganisationCreationForm.class));
         return organisationCreationForm.isPresent()
                 && (organisationCreationForm.get().getSelectedExistingOrganisationId() != null);
     }
