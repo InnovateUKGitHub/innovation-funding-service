@@ -9,5 +9,5 @@ public interface QuestionnaireQuestionResponseRepository extends CrudRepository<
 
     Optional<QuestionnaireQuestionResponse> findByOptionQuestionIdAndQuestionnaireResponseId(long questionId, long responseId);
 
-    void deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThan(long questionnaireResponseId, int depth);
+    void deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThanEqualAndIdNot(long questionnaireResponseId, int depth, long id);
 }

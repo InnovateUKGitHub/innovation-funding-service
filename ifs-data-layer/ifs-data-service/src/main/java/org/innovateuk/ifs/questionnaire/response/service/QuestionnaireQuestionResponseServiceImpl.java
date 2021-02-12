@@ -40,16 +40,16 @@ public class QuestionnaireQuestionResponseServiceImpl extends AbstractIfsCrudSer
         if (domain.getQuestionnaireResponse() == null) {
             domain.setQuestionnaireResponse(questionnaireResponseRepository.findById(resource.getQuestionnaireResponse()).orElse(null));
         }
-        if (domain.getOption() != null && !domain.getOption().getId().equals(resource.getOption())) {
-            resetAnswersDeeperThanThis(resource.getOption(), domain.getQuestionnaireResponse().getId());
+        if (domain.getId() != null && domain.getOption() != null && !domain.getOption().getId().equals(resource.getOption())) {
+            resetAnswersDeeperThanThis(resource.getOption(), domain.getQuestionnaireResponse().getId(), domain.getId());
         }
         domain.setOption(questionnaireOptionRepository.findById(resource.getOption()).orElseThrow(NotFoundException::new));
         return domain;
     }
 
-    private void resetAnswersDeeperThanThis(long optionId, long questionnaireResponseId) {
+    private void resetAnswersDeeperThanThis(long optionId, long questionnaireResponseId, long questionResponseId) {
         int questionDepth = questionnaireOptionRepository.findById(optionId).orElseThrow(NotFoundException::new).getQuestion().getDepth();
-        questionnaireQuestionResponseRepository.deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThan(questionnaireResponseId, questionDepth);
+        questionnaireQuestionResponseRepository.deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThanEqualAndIdNot(questionnaireResponseId, questionDepth, questionResponseId);
     }
 
     @Override

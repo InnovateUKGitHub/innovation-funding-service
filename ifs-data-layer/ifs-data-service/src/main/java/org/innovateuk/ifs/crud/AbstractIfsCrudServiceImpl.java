@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends R
 
 
     @Override
+    @Transactional
     public ServiceResult<Resource> update(Id id, Resource resource) {
         return findById(id)
                 .andOnSuccess(domain -> {
@@ -48,12 +50,14 @@ public abstract class AbstractIfsCrudServiceImpl<Resource, Domain, Id> extends R
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> delete(Id id) {
         crudRepository().deleteById(id);
         return serviceSuccess();
     }
 
     @Override
+    @Transactional
     public ServiceResult<Resource> create(Resource resource) {
         Domain domain = null;
         try {
