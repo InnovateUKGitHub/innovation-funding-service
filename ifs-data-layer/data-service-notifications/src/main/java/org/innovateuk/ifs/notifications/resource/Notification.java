@@ -58,7 +58,7 @@ public class Notification {
         return to;
     }
 
-    public Enum<?> getMessageKey() {
+    public Enum getMessageKey() {
         return messageKey;
     }
 
