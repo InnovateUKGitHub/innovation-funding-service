@@ -71,9 +71,9 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
-        long yourFundingSectionId = getYourFundingSectionId(section);
+        Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
-        long yourFecCostSectionId = getYourFecCostSectionId(section);
+        Long yourFecCostSectionId = getYourFecCostSectionId(section);
         boolean yourFecCostRequired = !completedSectionIds.contains(yourFecCostSectionId);
         boolean projectCostSectionLocked = isProjectCostSectionLocked(section, open, yourFundingRequired, yourFecCostRequired);
 
@@ -105,18 +105,26 @@ public class YourProjectCostsViewModelPopulator {
         return String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId);
     }
 
-    private long getYourFundingSectionId(ApplicantSectionResource section) {
-        SectionResource yourFundingSection = sectionService.getFundingFinanceSection(section.getCompetition().getId());
-        return yourFundingSection.getId();
+    private Long getYourFundingSectionId(ApplicantSectionResource section) {
+        if (competitionIsKtp(section)) {
+            SectionResource yourFundingSection = sectionService.getFundingFinanceSection(section.getCompetition().getId());
+            return yourFundingSection.getId();
+        } else {
+            return null;
+        }
     }
 
-    private long getYourFecCostSectionId(ApplicantSectionResource section) {
-        SectionResource yourFecCostSection = sectionService.getFecCostFinanceSection(section.getCompetition().getId());
-        return yourFecCostSection.getId();
+    private Long getYourFecCostSectionId(ApplicantSectionResource section) {
+        if (competitionIsKtp(section)) {
+            SectionResource yourFecCostSection = sectionService.getFecCostFinanceSection(section.getCompetition().getId());
+            return yourFecCostSection.getId();
+        } else {
+            return null;
+        }
     }
 
     private boolean competitionIsKtp(ApplicantSectionResource section) {
-        return KTP.equals(section.getCompetition().getFundingType());
+        return FundingType.KTP == section.getCompetition().getFundingType();
     }
 
     private boolean isOrganisationTypeKnowledgeBase(ApplicantSectionResource section) {
@@ -125,6 +133,10 @@ public class YourProjectCostsViewModelPopulator {
 
     private boolean isProjectCostSectionLocked(ApplicantSectionResource section, boolean open, boolean yourFundingRequired, boolean yourFecCostRequired) {
         boolean fieldsRequired = yourFundingRequired || yourFecCostRequired;
-        return fecFinanceModelEnabled && fieldsRequired && competitionIsKtp(section) && open && isOrganisationTypeKnowledgeBase(section);
+        return fecFinanceModelEnabled
+                && competitionIsKtp(section)
+                && open
+                && isOrganisationTypeKnowledgeBase(section)
+                && fieldsRequired;
     }
 }

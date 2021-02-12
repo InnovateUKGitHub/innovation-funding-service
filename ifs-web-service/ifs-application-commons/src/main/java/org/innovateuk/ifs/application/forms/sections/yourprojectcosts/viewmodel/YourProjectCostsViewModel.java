@@ -72,9 +72,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean showJustificationForm,
                                      boolean projectCostSectionLocked,
                                      boolean yourFundingRequired,
-                                     long yourFundingSectionId,
+                                     Long yourFundingSectionId,
                                      boolean yourFecCostRequired,
-                                     long yourFecCostSectionId) {
+                                     Long yourFecCostSectionId) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;

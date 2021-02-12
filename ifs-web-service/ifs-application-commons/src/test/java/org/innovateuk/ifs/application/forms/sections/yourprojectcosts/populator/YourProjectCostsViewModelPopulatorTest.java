@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder;
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -9,6 +12,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.form.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,11 +21,14 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -47,10 +55,14 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     @Mock
     private ProcessRoleRestService processRoleRestService;
 
+    @Mock
+    private ApplicantRestService applicantRestService;
 
     @Override
     protected YourProjectCostsViewModelPopulator supplyServiceUnderTest() {
-        return new YourProjectCostsViewModelPopulator();
+        YourProjectCostsViewModelPopulator populator = new YourProjectCostsViewModelPopulator();
+        ReflectionTestUtils.setField(populator, "fecFinanceModelEnabled", false);
+        return populator;
     }
 
     @Test
@@ -69,6 +81,14 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withName("Name")
                 .build();
         UserResource user = newUserResource().build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(competition.getId())
+                .build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource()
+                .withSection(section)
+                .withCompetition(competition)
+                .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -77,6 +97,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+        when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
