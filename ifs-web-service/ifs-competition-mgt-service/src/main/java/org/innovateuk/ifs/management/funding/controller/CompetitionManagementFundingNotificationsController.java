@@ -42,7 +42,7 @@ import static java.util.Optional.of;
 @Controller
 @RequestMapping("/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingNotificationsController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController<FundingNotificationSelectionCookie> {
 
     private static final Log LOG = LogFactory.getLog(CompetitionManagementFundingNotificationsController.class);

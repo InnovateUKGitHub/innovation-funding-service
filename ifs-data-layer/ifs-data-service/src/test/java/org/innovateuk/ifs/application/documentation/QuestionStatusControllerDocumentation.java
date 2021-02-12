@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.documentation;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.QuestionStatusController;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
@@ -10,7 +11,6 @@ import org.mockito.Mock;
 import java.util.Set;
 
 import static java.util.Collections.emptyList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -98,7 +98,7 @@ public class QuestionStatusControllerDocumentation extends BaseControllerMockMVC
         final Long applicationId = 1L;
         final Long organisationId = 2L;
 
-        Set<Long> ids = asSet(1L,2L,3L);
+        Set<Long> ids = ImmutableSet.of(1L,2L,3L);
 
         when(questionStatusService.getMarkedAsComplete(applicationId, organisationId)).thenReturn(serviceSuccess(ids));
 

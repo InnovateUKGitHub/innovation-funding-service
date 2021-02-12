@@ -13,23 +13,23 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface InterviewApplicationFeedbackService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "UPLOAD_FEEDBACK",
             description = "Competition Admins and Project Finance users can upload feedback")
     ServiceResult<Void> uploadFeedback(String contentType, String contentLength, String originalFilename, long applicationId,
                                        HttpServletRequest request);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "DELETE_FEEDBACK",
             description = "Competition Admins and Project Finance users can delete feedback")
     ServiceResult<Void> deleteFeedback(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant', 'assessor', 'monitoring_officer')")
     @SecuredBySpring(value = "DOWNLOAD_FEEDBACK",
             description = "Competition Admins, Project Finance users, applicants and assessors can download feedback")
     ServiceResult<FileAndContents> downloadFeedback(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'applicant', 'assessor', 'monitoring_officer')")
     @SecuredBySpring(value = "FIND_FEEDBACK",
             description = "Competition Admins, Project Finance users, applicants and assessors can find feedback")
     ServiceResult<FileEntryResource> findFeedback(long applicationId);
