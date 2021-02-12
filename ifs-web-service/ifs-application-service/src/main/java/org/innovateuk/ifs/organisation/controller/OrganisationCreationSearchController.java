@@ -146,6 +146,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("currentPage", pageNumber);
 
         addPageSubtitleToModel(request, user, model);
         addPageResourceToModel(organisationForm, model, pageNumber);
