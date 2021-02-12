@@ -12,8 +12,8 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.MISS;
-import static org.innovateuk.ifs.user.resource.Title.MR;
+import static org.innovateuk.ifs.user.resource.Title.Miss;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.junit.Assert.assertEquals;
@@ -23,7 +23,7 @@ public class UserResourceBuilderTest {
     @Test
     public void buildOne() {
         Long expectedId = 1L;
-        Title expectedTitle = MR;
+        Title expectedTitle = Mr;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedInviteName = "Invite Name";
@@ -70,7 +70,7 @@ public class UserResourceBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        Title[] expectedTitles = {MISS, MR};
+        Title[] expectedTitles = {Miss, Mr};
         String[] expectedFirstNames = {"First 1", "First 2"};
         String[] expectedLastNames = {"Last 1", "Last 2"};
         String[] expectedInviteNames = {"Invite Name 1", "Invite Name 2"};

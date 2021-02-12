@@ -8,7 +8,7 @@ import java.util.Collections;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Title.MR;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
@@ -34,7 +34,7 @@ public class UserRegistrationResourceDocs {
     };
 
     public static final UserRegistrationResourceBuilder userRegistrationResourceBuilder = newUserRegistrationResource()
-            .withTitle(MR)
+            .withTitle(Mr)
             .withFirstName("First")
             .withLastName("Last")
             .withPhoneNumber("012434 567890")

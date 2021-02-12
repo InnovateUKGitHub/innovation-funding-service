@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.MR;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -61,7 +61,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
@@ -91,7 +91,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
@@ -144,7 +144,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String firstName = "A";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName(firstName)
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
@@ -170,7 +170,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String firstName = randomStringGeneratorAtoZ.generate(71);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName(firstName)
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
@@ -196,7 +196,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String lastName = "A";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName(lastName)
                 .withPhoneNumber("01234 56789890")
@@ -222,7 +222,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String lastName = randomStringGeneratorAtoZ.generate(71);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName(lastName)
                 .withPhoneNumber("01234 56789890")
@@ -248,7 +248,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String phoneNumber = "01234 567890 ext.123";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber(phoneNumber)
@@ -275,7 +275,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String phoneNumber = "1234567-+";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber(phoneNumber)
@@ -302,7 +302,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String phoneNumber = "123456789012345678901-+";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber(phoneNumber)
@@ -328,7 +328,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String password = randomStringGeneratorAtoZ.generate(7);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
@@ -354,7 +354,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(MR)
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")

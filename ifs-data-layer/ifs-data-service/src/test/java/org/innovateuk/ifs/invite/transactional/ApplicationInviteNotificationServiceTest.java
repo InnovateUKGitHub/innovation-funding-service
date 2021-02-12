@@ -134,7 +134,7 @@ public class ApplicationInviteNotificationServiceTest {
         Application application = newApplication().withCompetition(competition).withName("AppName").build();
 
         User leadApplicant = newUser()
-                .withTitle(Title.DR)
+                .withTitle(Title.Dr)
                 .withEmailAddress("Email@email.com")
                 .withFirstName("Nico").build();
 
@@ -183,7 +183,7 @@ public class ApplicationInviteNotificationServiceTest {
         Application application = newApplication().withName("AppName").build();
 
         User leadApplicant = newUser()
-                .withTitle(Title.DR)
+                .withTitle(Title.Dr)
                 .withEmailAddress("Email@email.com")
                 .withFirstName("Nico").build();
 
@@ -212,7 +212,7 @@ public class ApplicationInviteNotificationServiceTest {
         Application application = newApplication().withCompetition(competition).withName("AppName").build();
 
         User leadApplicant = newUser()
-                .withTitle(Title.DR)
+                .withTitle(Title.Dr)
                 .withEmailAddress("Email@email.com")
                 .withFirstName("Nico").build();
 
@@ -257,7 +257,7 @@ public class ApplicationInviteNotificationServiceTest {
                 .build();
 
         User leadApplicant = newUser()
-                .withTitle(Title.MR)
+                .withTitle(Title.Mr)
                 .withEmailAddress("email.address")
                 .withFirstName("Kieran").build();
 

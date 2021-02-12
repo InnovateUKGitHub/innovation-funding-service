@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.MRS;
-import static org.innovateuk.ifs.user.resource.Title.MS;
+import static org.innovateuk.ifs.user.resource.Title.Mrs;
+import static org.innovateuk.ifs.user.resource.Title.Ms;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -54,7 +54,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     public void loginUserForTest() {
 
         user = newUserResource()
-                .withTitle(MS)
+                .withTitle(Ms)
                 .withFirstName("firstname")
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
@@ -92,7 +92,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 "Mrs", "0987654321", false))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
-                .param("title", MRS.getDisplayName())
+                .param("title", Mrs.getDisplayName())
                 .param("firstName", "newfirstname")
                 .param("lastName", "newlastname")
                 .param("phoneNumber", "0987654321")

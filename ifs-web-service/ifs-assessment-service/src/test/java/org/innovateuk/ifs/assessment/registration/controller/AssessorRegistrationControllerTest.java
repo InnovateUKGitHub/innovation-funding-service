@@ -108,7 +108,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails() throws Exception {
-        Title title = Title.MR;
+        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -163,7 +163,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_weakPassword() throws Exception {
-        Title title = Title.MR;
+        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -221,7 +221,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_Incomplete() throws Exception {
-        Title title = Title.MR;
+        Title title = Title.Mr;
         String phoneNumber = "12345678";
         String password = "P@ssword1234";
 
@@ -264,7 +264,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_InvalidNames() throws Exception {
-        Title title = Title.MR;
+        Title title = Title.Mr;
         String phoneNumber = "12345678";
         String password = "P@ssword1234";
         String firstName = "abc^%$921";

@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationRe
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.MR;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
@@ -239,7 +239,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setPhoneNumber("testPhoneNumber");
         user.setFirstName("testFirstName");
         user.setLastName("testLastName");
-        user.setTitle(MR);
+        user.setTitle(Mr);
 
         when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
