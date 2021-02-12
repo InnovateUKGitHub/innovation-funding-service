@@ -58,9 +58,8 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String MANUALLY_ENTER_ORGANISATION_DETAILS = "manually-enter-organisation-details";
 
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
-    protected static final int  SEARCH_ITEMS_MAX = 10;
-    protected static final int  SEARCH_MAX_DSIPLAY = 1000;
-    protected static final int  SEARCH_TOTAL_PAGES = 100;
+    protected static final int SEARCH_ITEMS_MAX = 10;
+    protected static final int SEARCH_MAX_DSIPLAY = 1000;
     protected static final int DEFAULT_PAGE_NUMBER_VALUE = 1;
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -100,21 +99,20 @@ public abstract class AbstractOrganisationCreationController {
     protected Boolean isNewOrganisationSearchEnabled;
 
     protected OrganisationCreationForm getFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
-          return processedOrganisationCreationFormFromCookie(model, request).
+        return processedOrganisationCreationFormFromCookie(model, request).
                 orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
     }
 
     protected OrganisationCreationForm getImprovedSearchFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, int pageNumber, boolean isOrganisationSearching) {
-       if (isNewOrganisationSearchEnabled) {
-           return processedImprovedOrganisationCreationFormFromCookie(model, request, pageNumber, isOrganisationSearching).
-                   orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
-       }
-       else {
-          return getFormDataFromCookie(organisationForm, model, request);
-       }
+        if (isNewOrganisationSearchEnabled) {
+            return processedImprovedOrganisationCreationFormFromCookie(model, request, pageNumber, isOrganisationSearching).
+                    orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
+        } else {
+            return getFormDataFromCookie(organisationForm, model, request);
+        }
     }
 
-    protected OrganisationCreationForm getFormDataOfSavedManualEntryFromCookie(OrganisationCreationForm organisationForm,HttpServletRequest request) {
+    protected OrganisationCreationForm getFormDataOfSavedManualEntryFromCookie(OrganisationCreationForm organisationForm, HttpServletRequest request) {
         return processedManualEntryOrganisationCreationFormFromCookie(request).
                 orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
     }
@@ -127,27 +125,27 @@ public abstract class AbstractOrganisationCreationController {
         return organisationCreationFormFromCookie;
     }
 
-     protected OrganisationCreationForm getFormDataForManualEntryFromCookie(OrganisationCreationForm organisationForm,HttpServletRequest request) {
+    protected OrganisationCreationForm getFormDataForManualEntryFromCookie(HttpServletRequest request) {
         Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         OrganisationCreationForm manualEntryOrgForm = new OrganisationCreationForm();
         organisationCreationFormFromCookie.ifPresent(organisationCreationForm -> {
-            setOrganisationDataForManualEntry(organisationCreationForm, manualEntryOrgForm, organisationTypeIdFromCookie(request)) ;
+            setOrganisationDataForManualEntry(organisationCreationForm, manualEntryOrgForm, organisationTypeIdFromCookie(request));
         });
-      return manualEntryOrgForm;
+        return manualEntryOrgForm;
     }
 
     private void setOrganisationDataForManualEntry(OrganisationCreationForm organisationForm, OrganisationCreationForm manualEntryOrgForm, Optional<Long> organisationTypeId) {
-          addOrganisationType(organisationForm, organisationTypeId);
-          addOrganisationType(manualEntryOrgForm, organisationTypeId);
-          manualEntryOrgForm.setOrganisationSearchName(organisationForm.getOrganisationSearchName());
-          manualEntryOrgForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
-          manualEntryOrgForm.setOrganisationSearching(organisationForm.isOrganisationSearching());
-          manualEntryOrgForm.setOrganisationSearchResults(organisationForm.getOrganisationSearchResults());
-          manualEntryOrgForm.setTotalSearchResults(organisationForm.getTotalSearchResults());
-          manualEntryOrgForm.setManualEntry(true);
+        addOrganisationType(organisationForm, organisationTypeId);
+        addOrganisationType(manualEntryOrgForm, organisationTypeId);
+        manualEntryOrgForm.setOrganisationSearchName(organisationForm.getOrganisationSearchName());
+        manualEntryOrgForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
+        manualEntryOrgForm.setOrganisationSearching(organisationForm.isOrganisationSearching());
+        manualEntryOrgForm.setOrganisationSearchResults(organisationForm.getOrganisationSearchResults());
+        manualEntryOrgForm.setTotalSearchResults(organisationForm.getTotalSearchResults());
+        manualEntryOrgForm.setManualEntry(true);
     }
 
-    private OrganisationCreationForm processedOrganisationCreationFormFromRequest(OrganisationCreationForm organisationForm, HttpServletRequest request){
+    private OrganisationCreationForm processedOrganisationCreationFormFromRequest(OrganisationCreationForm organisationForm, HttpServletRequest request) {
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         return organisationForm;
     }
@@ -178,8 +176,8 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     private void populateOrganisationCreationForm(HttpServletRequest request, OrganisationCreationForm organisationCreationForm) {
-           searchOrganisation(organisationCreationForm);
-           addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
+        searchOrganisation(organisationCreationForm);
+        addOrganisationType(organisationCreationForm, organisationTypeIdFromCookie(request));
     }
 
     private void populateOrganisationCreationForm(HttpServletRequest request, OrganisationCreationForm organisationCreationForm, int pageNumber) {
@@ -246,23 +244,24 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     private int setTotalSearchResults(List<OrganisationSearchResult> searchResults) {
-       Optional<OrganisationSearchResult> searchResult = searchResults.stream().findFirst();
-        if(searchResult.isPresent()) {
+        Optional<OrganisationSearchResult> searchResult = searchResults.stream().findFirst();
+        if (searchResult.isPresent()) {
             String totalSearch = "";
-            totalSearch = (String)searchResult.get().getExtraAttributes().get("total_results");
-           return totalSearch.isEmpty() ? 0 : Integer.parseInt(totalSearch);
+            totalSearch = (String) searchResult.get().getExtraAttributes().get("total_results");
+            return totalSearch.isEmpty() ? 0 : Integer.parseInt(totalSearch);
         }
         return 0;
     }
 
+
     /**
      * after user has selected a organisation, get the details and add it to the form and the model.
      */
-    protected OrganisationSearchResult addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
+    protected void addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
         if (!organisationForm.isManualEntry() && isNotBlank(organisationForm.getSearchOrganisationId())) {
             OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationTypeId(), organisationForm.getSearchOrganisationId()).getSuccess();
             organisationForm.setOrganisationName(organisationSearchResult.getName());
-            if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
+            if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
                 String localDateString = (String) organisationSearchResult.getExtraAttributes().get("date_of_creation");
                 if (localDateString != null) {
                     organisationForm.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
@@ -272,15 +271,14 @@ public abstract class AbstractOrganisationCreationController {
                 organisationForm.setExecutiveOfficers(organisationSearchResult.getOrganisationExecutiveOfficers());
             }
             model.addAttribute("selectedOrganisation", organisationSearchResult);
-            return organisationSearchResult;
         }
-        return null;
     }
 
     /**
      * Add manually entered data to the form and the model
+     *
      * @param organisationForm the form
-     * @param model the model
+     * @param model            the model
      * @return OrganisationSearchResult populated with manually inputted data.
      */
     protected OrganisationSearchResult addManualOrganisation(final OrganisationCreationForm organisationForm, final Model model, HttpServletRequest request,
@@ -309,15 +307,16 @@ public abstract class AbstractOrganisationCreationController {
 
     /**
      * Returns the address resource from the form , from the address search fragment.
+     *
      * @param addressForm
      * @return AddressResource either manual or from the postcode lookup.
      */
-    protected AddressResource getAddressResourceFromForm (AddressForm addressForm) {
+    protected AddressResource getAddressResourceFromForm(AddressForm addressForm) {
         AddressResource addressResource = new AddressResource();
-        if(AddressForm.AddressType.MANUAL_ENTRY == addressForm.getAddressType()){
-            addressResource =  addressForm.getManualAddress();
-        } else if(AddressForm.AddressType.POSTCODE_LOOKUP == addressForm.getAddressType() ){
-            addressResource =  addressForm.getPostcodeResults().get(addressForm.getSelectedPostcodeIndex());
+        if (AddressForm.AddressType.MANUAL_ENTRY == addressForm.getAddressType()) {
+            addressResource = addressForm.getManualAddress();
+        } else if (AddressForm.AddressType.POSTCODE_LOOKUP == addressForm.getAddressType()) {
+            addressResource = addressForm.getPostcodeResults().get(addressForm.getSelectedPostcodeIndex());
         }
         return addressResource;
     }
@@ -357,7 +356,7 @@ public abstract class AbstractOrganisationCreationController {
         int totalPages = getTotalPagesToDisplay(totalElements);
         List<OrganisationSearchResult> content = organisationForm.getOrganisationSearchResults();
         int number = pageNumber - 1;
-        model.addAttribute("pagination", new PaginationViewModel(new OrganisationSearchResultPageResource(totalElements, totalPages, content, number,SEARCH_ITEMS_MAX)));
+        model.addAttribute("pagination", new PaginationViewModel(new OrganisationSearchResultPageResource(totalElements, totalPages, content, number, SEARCH_ITEMS_MAX)));
     }
 
     private int getTotalElements(OrganisationCreationForm organisationForm) {
@@ -369,14 +368,14 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     private int getTotalPagesToDisplay(long totalElements) {
-            int reminder = (int) (totalElements % SEARCH_ITEMS_MAX);
-            int pages = (int) (totalElements / SEARCH_ITEMS_MAX);
-            int totalPages = reminder > 0 ? pages + 1 : pages;
-           return totalPages;
+        int reminder = (int) (totalElements % SEARCH_ITEMS_MAX);
+        int pages = (int) (totalElements / SEARCH_ITEMS_MAX);
+        int totalPages = reminder > 0 ? pages + 1 : pages;
+        return totalPages;
     }
 
     private void addOrganisationSearchIndex(OrganisationCreationForm organisationForm, int pageNumber) {
-        int searchPageIndexPosition = pageNumber == 1 ? 0 : (pageNumber -1) * SEARCH_ITEMS_MAX;
+        int searchPageIndexPosition = pageNumber == 1 ? 0 : (pageNumber - 1) * SEARCH_ITEMS_MAX;
         organisationForm.setSearchPageIndexPosition(searchPageIndexPosition);
     }
 
@@ -385,5 +384,12 @@ public abstract class AbstractOrganisationCreationController {
         return addressLookupRestResult.handleSuccessOrFailure(
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
+    }
+
+    protected void addOrganisationSearchName(OrganisationCreationForm organisationForm, HttpServletRequest request) {
+        Optional<OrganisationCreationForm> organisationCreationFormFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+        organisationCreationFormFromCookie.ifPresent(organisationCreationForm -> {
+            organisationForm.setOrganisationSearchName(organisationCreationForm.getOrganisationSearchName());
+        });
     }
 }
