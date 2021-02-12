@@ -55,11 +55,9 @@ public class IfsThymeleafConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass(IfSThymeleafDialect.class)
     protected static class IfSThymeleafDialectDialectConfiguration {
 
         @Bean
-        @ConditionalOnMissingBean
         public IDialect ifSThymeleafDialect() {
             return new IfSThymeleafDialect();
         }
