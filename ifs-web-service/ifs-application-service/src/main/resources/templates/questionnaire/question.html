@@ -49,28 +49,8 @@
             <button class="govuk-button" type="submit">Submit</button>
         </form>
 
-        <table class="govuk-table govuk-!-margin-top-3" th:unless="${model.previousQuestions == null or model.previousQuestions.isEmpty()}">
-            <caption class="govuk-table__caption">
-                <h2 class="govuk-heading-m">Previous answers</h2>
-                <p class="govuk-body"><a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}(questionnaireResponseId=${model.questionnaireResponseId})}">Start again</a></p>
-            </caption>
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Question</th>
-                <th scope="col" class="govuk-table__header">Answer</th>
-                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Change answer</span></th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr th:each="answer : ${model.previousQuestions}"
-                class="govuk-table__row">
-                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.question}">Where is your business based?</td>
-                <td class="govuk-table__cell" th:text="${answer.answer}"></td>
-                <td class="govuk-table__cell alignright">
-                    <a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}/question/{questionnaireQuestionId}(questionnaireResponseId=${model.questionnaireResponseId},questionnaireQuestionId=${answer.questionnaireQuestionId})}">Change answer</a></td>
-            </tr>
-            </tbody>
-        </table>
+        <th:block th:insert="fragments :: answer-table('Previous answers', ${model.previousAnswers})" />
+
     </main>
 </div>
 

@@ -4,10 +4,12 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.core.ParameterizedTypeReference;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
 public abstract class AbstractIfsCrudRestServiceImpl<Resource, Id> extends BaseRestService implements IfsCrudRestService<Resource, Id> {
 
@@ -18,6 +20,9 @@ public abstract class AbstractIfsCrudRestServiceImpl<Resource, Id> extends BaseR
 
     @Override
     public RestResult<List<Resource>> get(List<Id> ids) {
+        if (ids.isEmpty()) {
+            return restSuccess(new ArrayList<>());
+        }
         return getWithRestResult(getBaseUrl() + "?ids=" + joinIds(ids), getListTypeReference());
     }
 

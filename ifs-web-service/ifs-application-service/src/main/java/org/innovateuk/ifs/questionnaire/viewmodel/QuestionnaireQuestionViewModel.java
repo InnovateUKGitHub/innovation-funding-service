@@ -15,9 +15,9 @@ public class QuestionnaireQuestionViewModel {
     private String question;
     private String guidance;
     private List<Pair<Long, String>> options;
-    private List<PreviousQuestionViewModel> previousQuestions;
+    private List<AnsweredQuestionViewModel> previousQuestions;
 
-    public QuestionnaireQuestionViewModel(long questionnaireResponseId, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, List<PreviousQuestionViewModel> previousQuestions) {
+    public QuestionnaireQuestionViewModel(long questionnaireResponseId, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, List<AnsweredQuestionViewModel> previousQuestions) {
         this.questionnaireResponseId = questionnaireResponseId;
         this.questionnaireQuestionId = question.getId();
         this.title = question.getTitle();
@@ -53,7 +53,7 @@ public class QuestionnaireQuestionViewModel {
         return options;
     }
 
-    public List<PreviousQuestionViewModel> getPreviousQuestions() {
+    public List<AnsweredQuestionViewModel> getPreviousQuestions() {
         return previousQuestions;
     }
 }

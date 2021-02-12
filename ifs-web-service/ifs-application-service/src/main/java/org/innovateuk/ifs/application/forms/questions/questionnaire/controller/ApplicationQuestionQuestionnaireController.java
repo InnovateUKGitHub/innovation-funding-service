@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel.Ap
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,9 +32,6 @@ public class ApplicationQuestionQuestionnaireController {
     @Autowired
     private QuestionRestService questionRestService;
 
-    @Autowired
-    private QuestionnaireResponseLinkRestService questionnaireResponseLinkRestService;
-
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) ApplicationQuestionQuestionnaireForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -47,9 +43,8 @@ public class ApplicationQuestionQuestionnaireController {
         QuestionResource question = questionRestService.findById(questionId).getSuccess();
         ApplicationQuestionQuestionnaireViewModel viewModel = populator.populate(user, applicationId, question, organisationId);
 
-        if (!viewModel.isReadOnly()) {
-            Long questionnaireResponseId = questionnaireResponseLinkRestService.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(question.getQuestionnaireId(), applicationId, organisationId).getSuccess();
-            return String.format("redirect:/questionnaire/%d", questionnaireResponseId);
+        if (viewModel.navigateStraightToQuestionnaireWelcome()) {
+            return String.format("redirect:/questionnaire/%d", viewModel.getQuestionnaireResponseId());
         }
         return ""; //TODO readonly view.
     }

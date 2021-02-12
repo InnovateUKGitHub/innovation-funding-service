@@ -14,6 +14,7 @@ import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
@@ -32,6 +34,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 @PreAuthorize("permitAll")
 public class QuestionnaireWebController {
 
+    private static final String REDIRECT_URL_COOKIE_KEY = "QUESTIONNAIRE_REDIRECT_URL";
     @Autowired
     private QuestionnaireRestService questionnaireRestService;
 
@@ -53,11 +56,17 @@ public class QuestionnaireWebController {
     @Autowired
     private QuestionnaireQuestionViewModelPopulator questionnaireQuestionViewModelPopulator;
 
+    @Autowired
+    private EncryptedCookieService encryptedCookieService;
+
     @GetMapping("/{questionnaireResponseId}")
     public String welcomeScreen(Model model,
                                 HttpServletRequest request,
                                 UserResource user,
-                                @PathVariable long questionnaireResponseId) {
+                                @PathVariable long questionnaireResponseId,
+                                @RequestParam String redirectUrl,
+                                HttpServletResponse httpServletResponse) {
+        encryptedCookieService.saveToCookie(httpServletResponse, REDIRECT_URL_COOKIE_KEY, redirectUrl);
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
         return "questionnaire/welcome";
@@ -133,6 +142,7 @@ public class QuestionnaireWebController {
                            @PathVariable long questionnaireResponseId,
                            @PathVariable long outcomeId) {
         model.addAttribute("model", questionnaireTextOutcomeRestService.get(outcomeId).getSuccess());
+        model.addAttribute("redirectUrl", encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY));
         return "questionnaire/outcome";
     }
 

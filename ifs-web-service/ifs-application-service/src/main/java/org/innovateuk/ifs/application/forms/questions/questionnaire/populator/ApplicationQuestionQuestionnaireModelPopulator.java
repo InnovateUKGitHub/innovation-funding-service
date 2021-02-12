@@ -8,6 +8,9 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRestService;
+import org.innovateuk.ifs.questionnaire.populator.AnsweredQuestionViewModelPopulator;
+import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -29,6 +32,12 @@ public class ApplicationQuestionQuestionnaireModelPopulator {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
+    @Autowired
+    private AnsweredQuestionViewModelPopulator answeredQuestionViewModelPopulator;
+
+    @Autowired
+    private QuestionnaireResponseLinkRestService questionnaireResponseLinkRestService;
+
     public ApplicationQuestionQuestionnaireViewModel populate(UserResource user,
                                                               long applicationId,
                                                               QuestionResource question,
@@ -47,13 +56,16 @@ public class ApplicationQuestionQuestionnaireModelPopulator {
                 .map(QuestionStatusResource::getMarkedAsComplete)
                 .orElse(false);
 
+        Long questionnaireResponseId = questionnaireResponseLinkRestService.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(question.getQuestionnaireId(), applicationId, organisationId).getSuccess();
+
         return new ApplicationQuestionQuestionnaireViewModel(
                 applicationId,
                 question.getId(),
                 organisationId,
                 open,
-                complete
-        );
+                complete,
+                questionnaireResponseId,
+                answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId));
 
     }
 }

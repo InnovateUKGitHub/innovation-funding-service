@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head"
+                  th:with="pageTitle=|${model.questionName} - ${applicationName}|"/>
+    </th:block>
+</head>
+
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to application overview',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicatioName}">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='${model.questionName}',subTitle=${applicationName},size='govuk-heading-xl'"/>
+        </th:block>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
+              enctype="multipart/form-data"
+              novalidate="novalidate">
+
+            <th:block th:insert="fragments :: answer-table('Answers', ${model.answers})" />
+
+            <th:block th:unless="${model.readonly}">
+            </th:block>
+
+            <!--/* Read only template */-->
+            <th:block th:if="${model.readonly}">
+            </th:block>
+            <div th:if="${model.open}" class="form-footer">
+                <button th:unless="${model.complete}" id="application-question-complete" type="submit" name="complete"
+                        class="button-clear">Mark as complete
+                </button>
+                <button th:if="${model.complete}" id="edit-application-details-button" type="submit" name="edit" class="button-clear">
+                    Edit
+                </button>
+            </div>
+            <div class="govuk-!-margin-top-6">
+                <a th:if="${model.readonly}"
+                   th:href="@{/application/{applicationId}(applicationId=${model.application.id})}"
+                   class="govuk-button">Return to application overview
+                </a>
+                <button th:unless="${model.readonly}" id="application-question-save" type="submit"
+                        class="govuk-button">Save and return to application overview
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>
