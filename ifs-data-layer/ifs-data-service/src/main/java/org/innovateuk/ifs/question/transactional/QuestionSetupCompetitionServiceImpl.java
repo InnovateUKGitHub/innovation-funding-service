@@ -125,6 +125,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setChoices(formInput.getMultipleChoiceOptions().stream()
                         .map(choice -> new MultipleChoiceOptionResource(choice.getId(), choice.getText()))
                         .collect(Collectors.toList()));
+                break;
             default:
                 // do nothing
         }
