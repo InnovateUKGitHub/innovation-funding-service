@@ -39,6 +39,7 @@
               novalidate="novalidate"
               method="post">
             <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
+            <input type="hidden" name="manualEntry" th:value="true" />
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s"
@@ -56,7 +57,7 @@
                        th:attr="data-required-errormessage=#{validation.manualentry.organisationname.required}"
                        maxlength="255"
                        required="required"
-                       value="" />
+                />
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationNumber}')} ? 'govuk-form-group--error'">
