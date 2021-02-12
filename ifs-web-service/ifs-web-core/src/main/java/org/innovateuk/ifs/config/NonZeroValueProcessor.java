@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config.thymeleaf.dialect;
+package org.innovateuk.ifs.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
