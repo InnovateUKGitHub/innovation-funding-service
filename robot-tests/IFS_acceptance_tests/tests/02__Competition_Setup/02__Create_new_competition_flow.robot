@@ -1003,7 +1003,7 @@ the comp admin creates competition with all sections details
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
-    ...  ELSE  the user selects the Terms and Conditions    ${fundingRule}
+    ...  ELSE  the user selects the Terms and Conditions    ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility            ${researchCategory}   ${compType}
