@@ -5,7 +5,7 @@ SET @system_maintenance_user_id = (
     FROM user
     WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
 
-SET @new_terms_id = 44;
+SET @new_terms_id = 46;
 
 INSERT INTO terms_and_conditions (id, name, template, version, type, created_by, created_on, modified_by, modified_on)
 VALUES (@new_terms_id, 'Advanced Propulsion Centre (APC) - Subsidy control', 'apc-subsidy-control-terms-and-conditions-v1', 1, 'GRANT',
