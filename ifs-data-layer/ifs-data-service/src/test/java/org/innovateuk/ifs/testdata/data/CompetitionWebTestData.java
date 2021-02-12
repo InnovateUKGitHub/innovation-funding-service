@@ -168,10 +168,7 @@ public class CompetitionWebTestData {
     private static List<CompetitionLineBuilder> getReadyToOpenCompetitionLineBuilders() {
         return asList(
                 grantCompetition()
-                        .withName("Photonics for health"),
-                grantCompetition()
-                        .withName("Reducing carbon footprints")
-                        .withInnovationAreas(asSet(21L))
+                        .withName("Photonics for health")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.READY_TO_OPEN))
@@ -209,9 +206,6 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Home and industrial efficiency programme"),
-                grantCompetition()
-                        .withName("Transforming big data")
-                        .withInnovationAreas(asSet(5L)),
                 grantCompetition()
                         .withName("Predicting market trends programme"),
                 grantCompetition()
@@ -336,7 +330,13 @@ public class CompetitionWebTestData {
                 nonIfsCompetition()
                         .withName("Webtest Non IFS Comp 19"),
                 nonIfsCompetition()
-                        .withName("Webtest Non IFS Comp 20"));
+                        .withName("Webtest Non IFS Comp 20"),
+                nonIfsCompetition()
+                        .withName("Transforming big data")
+                        .withInnovationAreas(asSet(5L)),
+                nonIfsCompetition()
+                        .withName("Reducing carbon footprints")
+                        .withInnovationAreas(asSet(21L)));
     }
 
     private static CompetitionLineBuilder grantCompetition() {
@@ -347,6 +347,7 @@ public class CompetitionWebTestData {
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
+                .withAssessorCount(5)
                 .withResearchRatio(30)
                 .withResubmission(false)
                 .withMultiStream(false)
@@ -376,6 +377,7 @@ public class CompetitionWebTestData {
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
+                .withAssessorCount(5)
                 .withResearchRatio(100)
                 .withResubmission(false)
                 .withMultiStream(false)
@@ -410,6 +412,7 @@ public class CompetitionWebTestData {
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withResearchRatio(30)
                 .withResubmission(true)
+                .withAssessorCount(5)
                 .withMultiStream(false)
                 .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
                 .withCompExecutive(EXECUTIVE_ID)
@@ -436,6 +439,7 @@ public class CompetitionWebTestData {
                 .withCompetitionType(PROGRAMME)
                 .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
                 .withInnovationSector("Materials and manufacturing")
+                .withAssessorCount(5)
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
@@ -471,6 +475,7 @@ public class CompetitionWebTestData {
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withResearchRatio(30)
+                .withAssessorCount(5)
                 .withResubmission(true)
                 .withMultiStream(false)
                 .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
