@@ -125,6 +125,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setChoices(formInput.getMultipleChoiceOptions().stream()
                         .map(choice -> new MultipleChoiceOptionResource(choice.getId(), choice.getText()))
                         .collect(Collectors.toList()));
+            default:
+                // do nothing
         }
     }
 
@@ -146,6 +148,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             case ASSESSOR_RESEARCH_CATEGORY:
                 setupResource.setResearchCategoryQuestion(formInput.getActive());
                 break;
+            default:
+                // do nothing
         }
     }
 
