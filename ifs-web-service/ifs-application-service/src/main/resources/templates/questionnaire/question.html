@@ -31,7 +31,7 @@
                           th:if="${#fields.hasErrors('option')}"
                           th:each="err : ${#fields.errors('option')}"
                           th:text="${err}"></span>
-                    <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios" th:classappend="${model.options.size() == 2} ? 'govuk-radios--inline'">
                         <div class="govuk-radios__item" th:each="option : ${model.options}">
                             <input th:value="${option.left}"
                                    th:id="${option.left}"

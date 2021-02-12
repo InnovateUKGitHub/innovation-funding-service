@@ -65,9 +65,11 @@ public class QuestionnaireWebController {
                                 HttpServletRequest request,
                                 UserResource user,
                                 @PathVariable long questionnaireResponseId,
-                                @RequestParam String redirectUrl,
+                                @RequestParam(required = false) String redirectUrl,
                                 HttpServletResponse httpServletResponse) {
-        encryptedCookieService.saveToCookie(httpServletResponse, REDIRECT_URL_COOKIE_KEY, redirectUrl);
+        if (redirectUrl != null) {
+            encryptedCookieService.saveToCookie(httpServletResponse, REDIRECT_URL_COOKIE_KEY, redirectUrl);
+        }
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
         return "questionnaire/welcome";
