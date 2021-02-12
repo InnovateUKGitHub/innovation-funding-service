@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
@@ -266,7 +267,8 @@ public class FinanceChecksQueriesAddQueryController {
                 organisationId,
                 FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL,
                 project.getApplication(),
-                competition.isProcurementMilestones()
+                competition.isProcurementMilestones(),
+                FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
         );
     }
 
