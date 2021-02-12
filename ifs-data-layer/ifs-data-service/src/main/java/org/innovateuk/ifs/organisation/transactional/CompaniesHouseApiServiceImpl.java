@@ -65,6 +65,10 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final String EMPTY_NAME_STRING = " ";
 
+    private static final String ITEMS = "items";
+
+    private static final String COMPANY_NUMBER = "company_number";
+
     @Autowired
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -119,7 +123,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     }
 
     private ServiceResult<List<OrganisationSearchResult>> getSearchOrganisationResults(JsonNode companiesResources, String totalResults) {
-        JsonNode companyItems = companiesResources.path("items");
+        JsonNode companyItems = companiesResources.path(ITEMS);
         List<OrganisationSearchResult> results = new ArrayList<>();
         companyItems.forEach(i -> results.add(companySearchMapper(i, totalResults)));
         return serviceSuccess(results);
@@ -136,7 +140,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private OrganisationSearchResult companySearchMapper(JsonNode jsonNode, String totalResults) {
         AddressResource officeAddress = getAddress(jsonNode, "address");
-        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("title").asText());
+        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path(COMPANY_NUMBER).asText(), jsonNode.path("title").asText());
         Map<String, Object> extras = new HashMap<>();
         extras.put("company_type", jsonNode.path("company_type").asText());
         extras.put("date_of_creation", jsonNode.path("date_of_creation").asText());
@@ -151,7 +155,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
         ObjectMapper mapper = new ObjectMapper();
 
-        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("company_name").asText());
+        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path(COMPANY_NUMBER).asText(), jsonNode.path("company_name").asText());
         org.setExtraAttributes(mapper.convertValue(jsonNode, Map.class));
         org.setOrganisationAddress(officeAddress);
         return org;
@@ -163,7 +167,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
             AddressResource registeredOfficeAddress = getAddress(companyItemsNode, "registered_office_address");
             ObjectMapper mapper = new ObjectMapper();
 
-            OrganisationSearchResult org = new OrganisationSearchResult(companyItemsNode.path("company_number").asText(), companyItemsNode.path("company_name").asText());
+            OrganisationSearchResult org = new OrganisationSearchResult(companyItemsNode.path(COMPANY_NUMBER).asText(), companyItemsNode.path("company_name").asText());
             org.setExtraAttributes(mapper.convertValue(companyItemsNode, Map.class));
             org.setOrganisationAddress(registeredOfficeAddress);
 
@@ -171,7 +175,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
             org.setOrganisationSicCodes(sicCodeResources);
 
             if (directorDetails.isPresent()) {
-                List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getCurrentDirectors(directorDetails.get(), "items");
+                List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getCurrentDirectors(directorDetails.get(), ITEMS);
                 org.setOrganisationExecutiveOfficers(executiveOfficerResources);
             }
             return org;
@@ -258,7 +262,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private List<OrganisationExecutiveOfficerResource> getCurrentDirectors(JsonNode jsonNode, String pathName) {
         List<OrganisationExecutiveOfficerResource> executiveOfficersResource = new ArrayList<>();
-        JsonNode directorsDetails = jsonNode.path("items");
+        JsonNode directorsDetails = jsonNode.path(ITEMS);
         if(directorsDetails != null) {
             directorsDetails.forEach(directorItem -> {
                 if (directorItem.get("resigned_on") == null) {
