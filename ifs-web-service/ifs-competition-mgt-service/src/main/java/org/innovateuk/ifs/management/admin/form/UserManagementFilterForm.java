@@ -7,9 +7,6 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public class UserManagementFilterForm extends BaseBindingResultTarget {
     private String filter;
 
-    public UserManagementFilterForm() {
-    }
-
     public String getFilter() {
         return filter;
     }
