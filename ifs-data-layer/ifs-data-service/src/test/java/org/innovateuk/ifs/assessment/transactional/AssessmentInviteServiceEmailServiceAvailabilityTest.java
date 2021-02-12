@@ -87,7 +87,7 @@ public class AssessmentInviteServiceEmailServiceAvailabilityTest extends Abstrac
             InnovationArea innovationArea = innovationAreaRepository.findAll().get(0);
 
             invite = testService.doWithinTransaction(() -> {
-                AssessmentInvite newInvite = new AssessmentInvite("Invite name", "asdf@example.com", "hash", competition, innovationArea);
+                AssessmentInvite newInvite = new AssessmentInvite("Invite name", "asdf@test.com", "hash", competition, innovationArea);
                 User compAdmin = testService.doWithinTransaction(() -> userRepository.findById(getCompAdmin().getId()).orElse(null));
                 newInvite.send(compAdmin, ZonedDateTime.now());
 

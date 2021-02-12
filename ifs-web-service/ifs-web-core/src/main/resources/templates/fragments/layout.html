@@ -225,7 +225,7 @@
         </th:block>
 
         <div class="deadline"
-             th:if="${currentCompetition != null && currentCompetition.open && !currentCompetition.isCovidCompetition()}">
+             th:if="${currentCompetition != null && currentCompetition.open && !currentCompetition.isCovidCompetition() && !currentCompetition.alwaysOpen}">
             <th:block th:text="${currentCompetition.getDaysLeft()}" />
             days left to submit
         </div>
