@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface QuestionnaireQuestionResponseRepository extends CrudRepository<QuestionnaireQuestionResponse, Long> {
 
     Optional<QuestionnaireQuestionResponse> findByOptionQuestionIdAndQuestionnaireResponseId(long questionId, long responseId);
+
+    void deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThan(long questionnaireResponseId, int depth);
 }

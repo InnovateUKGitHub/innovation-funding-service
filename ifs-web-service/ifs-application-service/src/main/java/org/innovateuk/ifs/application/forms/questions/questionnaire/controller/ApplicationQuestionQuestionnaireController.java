@@ -4,9 +4,7 @@ package org.innovateuk.ifs.application.forms.questions.questionnaire.controller;
 import org.innovateuk.ifs.application.forms.questions.questionnaire.form.ApplicationQuestionQuestionnaireForm;
 import org.innovateuk.ifs.application.forms.questions.questionnaire.populator.ApplicationQuestionQuestionnaireModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel.ApplicationQuestionQuestionnaireViewModel;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,8 +27,6 @@ public class ApplicationQuestionQuestionnaireController {
     @Autowired
     private ApplicationQuestionQuestionnaireModelPopulator populator;
 
-    @Autowired
-    private QuestionRestService questionRestService;
 
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) ApplicationQuestionQuestionnaireForm form,
@@ -40,12 +36,16 @@ public class ApplicationQuestionQuestionnaireController {
                        @PathVariable long organisationId,
                        @PathVariable long questionId,
                        UserResource user) {
-        QuestionResource question = questionRestService.findById(questionId).getSuccess();
-        ApplicationQuestionQuestionnaireViewModel viewModel = populator.populate(user, applicationId, question, organisationId);
+        ApplicationQuestionQuestionnaireViewModel viewModel = populator.populate(user, applicationId, questionId, organisationId);
 
         if (viewModel.navigateStraightToQuestionnaireWelcome()) {
-            return String.format("redirect:/questionnaire/%d", viewModel.getQuestionnaireResponseId());
+            return String.format("redirect:/questionnaire/%d?redirectUrl=%s", viewModel.getQuestionnaireResponseId(), viewRedirectUrl(applicationId, organisationId, questionId));
         }
-        return ""; //TODO readonly view.
+        model.addAttribute("model", viewModel);
+        return "application/questions/questionnaire";
+    }
+
+    private String viewRedirectUrl(long applicationId, long organisationId, long questionId) {
+        return String.format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId);
     }
 }

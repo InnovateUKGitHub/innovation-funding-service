@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -142,7 +143,8 @@ public class QuestionnaireWebController {
                            @PathVariable long questionnaireResponseId,
                            @PathVariable long outcomeId) {
         model.addAttribute("model", questionnaireTextOutcomeRestService.get(outcomeId).getSuccess());
-        model.addAttribute("redirectUrl", encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY));
+        model.addAttribute("redirectUrl", Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
+                .orElse("/"));
         return "questionnaire/outcome";
     }
 

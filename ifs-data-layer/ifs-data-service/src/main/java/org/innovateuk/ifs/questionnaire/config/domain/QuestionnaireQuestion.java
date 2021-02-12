@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 public class QuestionnaireQuestion extends QuestionnaireDecision {
 
-    private int depth;
+    private int depth = 0;
 
     private String title;
     private String question;

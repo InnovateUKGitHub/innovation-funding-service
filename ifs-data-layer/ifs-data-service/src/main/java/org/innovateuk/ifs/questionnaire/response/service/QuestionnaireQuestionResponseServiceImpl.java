@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.NotFoundException;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -39,13 +41,15 @@ public class QuestionnaireQuestionResponseServiceImpl extends AbstractIfsCrudSer
             domain.setQuestionnaireResponse(questionnaireResponseRepository.findById(resource.getQuestionnaireResponse()).orElse(null));
         }
         if (domain.getOption() != null && !domain.getOption().getId().equals(resource.getOption())) {
-            resetAnswersDeeperThanThis();
+            resetAnswersDeeperThanThis(resource.getOption(), domain.getQuestionnaireResponse().getId());
         }
-        domain.setOption(questionnaireOptionRepository.findById(resource.getOption()).orElse(null));
+        domain.setOption(questionnaireOptionRepository.findById(resource.getOption()).orElseThrow(NotFoundException::new));
         return domain;
     }
 
-    private void resetAnswersDeeperThanThis() {
+    private void resetAnswersDeeperThanThis(long optionId, long questionnaireResponseId) {
+        int questionDepth = questionnaireOptionRepository.findById(optionId).orElseThrow(NotFoundException::new).getQuestion().getDepth();
+        questionnaireQuestionResponseRepository.deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThan(questionnaireResponseId, questionDepth);
     }
 
     @Override
