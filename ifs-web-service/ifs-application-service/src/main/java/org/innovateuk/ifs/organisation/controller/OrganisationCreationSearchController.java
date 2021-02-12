@@ -88,7 +88,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
-           return displayImprovedSearchOrganisationResults(organisationForm, request, bindingResult);
+            return displayImprovedSearchOrganisationResults(organisationForm, request, bindingResult);
         }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
@@ -126,7 +126,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return addAttributesAndRedirect(organisationForm, model, user, request);
     }
 
-    @GetMapping(value = {"/" + SEARCH_RESULT_ORGANISATION + "/**" })
+    @GetMapping(value = {"/" + SEARCH_RESULT_ORGANISATION + "/**"})
     public String searchOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      UserResource user,
@@ -146,14 +146,15 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
     public String selectOrganisationForConfiramtion(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response,
-                                           UserResource user) {
+                                                    Model model,
+                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                    HttpServletRequest request,
+                                                    HttpServletResponse response,
+                                                    UserResource user) {
 
-        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
+        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm.setSearchOrganisationId(searchOrganisationId);
+        addOrganisationSearchName(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         populateViewModelForSelectedOrgConfirmation(organisationForm, model, request);
@@ -173,7 +174,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
             return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
         }
 
-        OrganisationCreationForm organisationFormFromCookie = getFormDataForManualEntryFromCookie(organisationForm, request);
+        OrganisationCreationForm organisationFormFromCookie = getFormDataForManualEntryFromCookie(request);
         addManualOrganisation(organisationForm, model, request, organisationFormFromCookie);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
@@ -182,12 +183,12 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
 
-     @GetMapping("/" + SELECTED_ORGANISATION_MANUAL)
-     public String displayMauallyEnteredOrgForConfirmation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                              BindingResult bindingResult,
-                                                              Model model,
-                                                              HttpServletRequest request,
-                                                              UserResource user) {
+    @GetMapping("/" + SELECTED_ORGANISATION_MANUAL)
+    public String displayMauallyEnteredOrgForConfirmation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                          BindingResult bindingResult,
+                                                          Model model,
+                                                          HttpServletRequest request,
+                                                          UserResource user) {
         OrganisationCreationForm organisationFormFromCookie = getFormDataOfSavedManualEntryFromCookie(organisationForm, request);
         populateManualEntryFormData(organisationFormFromCookie, model, request);
         populateViewModelForSelectedOrgConfirmation(organisationFormFromCookie, model, request);
@@ -196,7 +197,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
 
-    @PostMapping(value={"organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, "/" + SELECTED_ORGANISATION_MANUAL},  params = FORM_ACTION_PARAMETER)
+    @PostMapping(value = {"organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, "/" + SELECTED_ORGANISATION_MANUAL}, params = FORM_ACTION_PARAMETER)
     public String addressFormAction(Model model,
                                     @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                     BindingResult bindingResult,
@@ -214,7 +215,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 
-     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
+    @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
     public String manualOrganisationSave(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                          BindingResult bindingResult,
                                          Model model,
@@ -248,8 +249,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                              BindingResult bindingResult,
                              Model model,
                              HttpServletRequest request, HttpServletResponse response,
-                             @RequestHeader(value = REFERER, required = false) final String referer){
-        if(organisationForm.getSicCodes().size() > 3){
+                             @RequestHeader(value = REFERER, required = false) final String referer) {
+        if (organisationForm.getSicCodes().size() > 3) {
             return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
         }
         populateViewModel(organisationForm, model, request);
@@ -276,10 +277,10 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-exec-officer")
     public String addExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                             BindingResult bindingResult,
-                             Model model,
-                             HttpServletRequest request, HttpServletResponse response,
-                             @RequestHeader(value = REFERER, required = false) final String referer){
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      HttpServletRequest request, HttpServletResponse response,
+                                      @RequestHeader(value = REFERER, required = false) final String referer) {
 
         populateViewModel(organisationForm, model, request);
 
@@ -290,11 +291,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-exec-officer")
     public String removeExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                BindingResult bindingResult,
-                                Model model,
-                                HttpServletRequest request, HttpServletResponse response,
-                                @RequestParam("remove-exec-officer") int index,
-                                @RequestHeader(value = REFERER, required = false) final String referer) {
+                                         BindingResult bindingResult,
+                                         Model model,
+                                         HttpServletRequest request, HttpServletResponse response,
+                                         @RequestParam("remove-exec-officer") int index,
+                                         @RequestHeader(value = REFERER, required = false) final String referer) {
 
         populateViewModel(organisationForm, model, request);
 

@@ -27,6 +27,7 @@ ${address_line_3}          Paradise
 ${address_town}            London
 ${address_county}          Middlesex
 ${address_postcode}        NW11 8AJ
+${applicant_email}         sherlock@holmes.com
 
 *** Test Cases ***
 Companies House: Valid company name
@@ -169,29 +170,34 @@ the applicant enters address manually
     the user enters text to a text field     id = addressForm.manualAddress.postcode                ${address_postcode}
 
 the applicant confirms and saves company details
-    the user should see the element     jQuery = h1:contains("Confirm your organisation")
-    the user should see the element     jQuery = dt:contains("Organisation type")
-    the user should see the element     jQuery = dd:contains("Business")
-    the user should see the element     jQuery = dt:contains("Business type")
-    the user should see the element     jQuery = dd:contains("${business_type}")
-    the user should see the element     jQuery = dt:contains("Is your organisation based in the UK?")
-    the user should see the element     jQuery = dd:contains("Yes")
-    the user should see the element     jQuery = dt:contains("Organisation name")
-    the user should see the element     jQuery = dd:contains("${organisation_name}")
-    the user should see the element     jQuery = dt:contains("Organisation number")
-    the user should see the element     jQuery = dd:contains("${organisation_number}")
-    the user should see the element     jQuery = dt:contains("SIC code")
-    the user should see the element     jQuery = dd div:contains("${sic_code}")
-    the user should see the element     jQuery = dt:contains("Executive officers")
-    the user should see the element     jQuery = dd div:contains("${executive_officer}")
-    the user should see the element     jQuery = dt:contains("Registered address")
-    the user should see the element     jQuery = dd div:contains("${address_line_1}")
-    the user should see the element     jQuery = dd div:contains("${address_line_2}")
-    the user should see the element     jQuery = dd div:contains("${address_line_3}")
-    the user should see the element     jQuery = dd div:contains("${address_town}")
-    the user should see the element     jQuery = dd div:contains("${address_county}")
-    the user should see the element     jQuery = dd div:contains("${address_postcode}")
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user should see the element     jQuery = h1:contains("Your details")
-    the user clicks the button/link     link = Back to confirm your organisation
-    the user should see the element     jQuery = h1:contains("Confirm your organisation")
+    the user should see the element                    jQuery = h1:contains("Confirm your organisation")
+    the user should see the element                    jQuery = dt:contains("Organisation type")
+    the user should see the element                    jQuery = dd:contains("Business")
+    the user should see the element                    jQuery = dt:contains("Business type")
+    the user should see the element                    jQuery = dd:contains("${business_type}")
+    the user should see the element                    jQuery = dt:contains("Is your organisation based in the UK?")
+    the user should see the element                    jQuery = dd:contains("Yes")
+    the user should see the element                    jQuery = dt:contains("Organisation name")
+    the user should see the element                    jQuery = dd:contains("${organisation_name}")
+    the user should see the element                    jQuery = dt:contains("Organisation number")
+    the user should see the element                    jQuery = dd:contains("${organisation_number}")
+    the user should see the element                    jQuery = dt:contains("SIC code")
+    the user should see the element                    jQuery = dd div:contains("${sic_code}")
+    the user should see the element                    jQuery = dt:contains("Executive officers")
+    the user should see the element                    jQuery = dd div:contains("${executive_officer}")
+    the user should see the element                    jQuery = dt:contains("Registered address")
+    the user should see the element                    jQuery = dd div:contains("${address_line_1}")
+    the user should see the element                    jQuery = dd div:contains("${address_line_2}")
+    the user should see the element                    jQuery = dd div:contains("${address_line_3}")
+    the user should see the element                    jQuery = dd div:contains("${address_town}")
+    the user should see the element                    jQuery = dd div:contains("${address_county}")
+    the user should see the element                    jQuery = dd div:contains("${address_postcode}")
+    the user clicks the button/link                    jQuery = button:contains("Save and continue")
+    the user should see the element                    jQuery = h1:contains("Your details")
+    the user clicks the button/link                    link = Back to confirm your organisation
+    the user clicks the button/link                    jQuery = button:contains("Save and continue")
+    the user creates an account and verifies email     Sherlock  Holmes  ${applicant_email}  ${shortpassword}
+    logging in and Error Checking                      ${applicant_email}  ${shortpassword}
+    the user clicks the button/link                    link = Untitled application (start here)
+    the user clicks the button/link                    link = Application team
+    the user should see the element                    jQuery = h2:contains("${organisation_name}")
