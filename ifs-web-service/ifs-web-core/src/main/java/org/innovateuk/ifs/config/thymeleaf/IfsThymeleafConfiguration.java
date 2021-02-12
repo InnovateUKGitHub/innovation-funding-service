@@ -37,23 +37,6 @@ public class IfsThymeleafConfiguration {
     private static final Log logger = LogFactory
             .getLog(IfsThymeleafConfiguration.class);
 
-
-    @Scheduled(fixedDelay = 10000L)
-    public void log() {
-        if (springTemplateEngine == null) {
-            logger.error("null springTemplateEngine");
-        } else {
-            if (springTemplateEngine.getDialects() == null) {
-                logger.error("null getDialects");
-            } else {
-                for (IDialect dialect : springTemplateEngine.getDialects()) {
-                    logger.error("dialect " + dialect.getClass());
-                    logger.error("dialect " + dialect.getName());
-                }
-            }
-        }
-    }
-
     @Configuration
     protected static class IfSThymeleafDialectDialectConfiguration {
 
