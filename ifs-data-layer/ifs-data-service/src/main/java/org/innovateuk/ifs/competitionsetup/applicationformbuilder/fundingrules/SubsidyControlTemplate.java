@@ -146,14 +146,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         animalDogOption.setDecisionType(DecisionType.QUESTION);
         animalDogOption.setDecision(dogQuestion.getId());
         animalDogOption.setText("Dog");
-        animalCatOption = questionnaireOptionService.create(animalCatOption).getSuccess();
+        animalCatOption = questionnaireOptionService.create(animalDogOption).getSuccess();
 
         QuestionnaireOptionResource animalBirdOption = new QuestionnaireOptionResource();
         animalBirdOption.setQuestion(animalQuestion.getId());
         animalBirdOption.setDecisionType(DecisionType.QUESTION);
         animalBirdOption.setDecision(birdQuestion.getId());
         animalBirdOption.setText("Bird");
-        animalCatOption = questionnaireOptionService.create(animalCatOption).getSuccess();
+        animalCatOption = questionnaireOptionService.create(animalBirdOption).getSuccess();
 
         QuestionnaireOptionResource catMaineCoonOption = new QuestionnaireOptionResource();
         catMaineCoonOption.setQuestion(catQuestion.getId());
