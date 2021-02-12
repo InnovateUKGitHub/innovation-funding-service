@@ -43,6 +43,7 @@ public class QuestionnaireOption {
 
     public void setDecision(QuestionnaireDecision decision) {
         this.decision = decision;
+        decision.getOptionsLinkedToThisDecision().add(this);
     }
 
     public QuestionnaireQuestion getQuestion() {
