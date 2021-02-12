@@ -43,6 +43,16 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean showJustificationForm;
 
+    private final boolean projectCostSectionLocked;
+
+    private final boolean yourFundingRequired;
+
+    private final Long yourFundingSectionId;
+
+    private final boolean yourFecCostRequired;
+
+    private final Long yourFecCostSectionId;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -59,7 +69,12 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      List<FinanceRowType> financeRowTypes,
                                      boolean overheadAlwaysTwenty,
                                      boolean showCovidGuidance,
-                                     boolean showJustificationForm) {
+                                     boolean showJustificationForm,
+                                     boolean projectCostSectionLocked,
+                                     boolean yourFundingRequired,
+                                     long yourFundingSectionId,
+                                     boolean yourFecCostRequired,
+                                     long yourFecCostSectionId) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -78,6 +93,11 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.overheadAlwaysTwenty = overheadAlwaysTwenty;
         this.showCovidGuidance = showCovidGuidance;
         this.showJustificationForm = showJustificationForm;
+        this.projectCostSectionLocked = projectCostSectionLocked;
+        this.yourFundingRequired = yourFundingRequired;
+        this.yourFundingSectionId = yourFundingSectionId;
+        this.yourFecCostRequired = yourFecCostRequired;
+        this.yourFecCostSectionId = yourFecCostSectionId;
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
@@ -100,6 +120,11 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.includeVat = false;
         this.showCovidGuidance = false;
         this.showJustificationForm = false;
+        this.projectCostSectionLocked = false;
+        this.yourFundingRequired = false;
+        this.yourFundingSectionId = null;
+        this.yourFecCostRequired = false;
+        this.yourFecCostSectionId = null;
     }
 
     @Override
@@ -191,5 +216,25 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public String getStateAidCheckboxLabelFragment() {
         return isKtpCompetition() ? "ktp_state_aid_checkbox_label" : "state_aid_checkbox_label";
+    }
+
+    public boolean isProjectCostSectionLocked() {
+        return projectCostSectionLocked;
+    }
+
+    public boolean isYourFundingRequired() {
+        return yourFundingRequired;
+    }
+
+    public Long getYourFundingSectionId() {
+        return yourFundingSectionId;
+    }
+
+    public boolean isYourFecCostRequired() {
+        return yourFecCostRequired;
+    }
+
+    public Long getYourFecCostSectionId() {
+        return yourFecCostSectionId;
     }
 }
