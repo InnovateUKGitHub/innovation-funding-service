@@ -15,19 +15,19 @@ import java.util.List;
  */
 public interface ApplicationAssessmentSummaryService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
     ServiceResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, String assessorNameFilter, ApplicationAvailableAssessorResource.Sort sort);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
     ServiceResult<List<Long>> getAvailableAssessorIds(long applicationId, String assessorNameFilter);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
     ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Application assessment summaries across the whole system", securedType = ApplicationAssessmentSummaryResource.class)
     ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(long applicationId);
 

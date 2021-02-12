@@ -53,7 +53,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             value = "VIEW_SPEND_PROFILE",
             description = "Project Finance Users can view their own Spend Profile data")
     public boolean projectFinanceUserCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(

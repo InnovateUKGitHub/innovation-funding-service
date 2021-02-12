@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -30,7 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "false")
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     protected static final int  INDEX_POSITION = 0;
-    private static final String TOTAL_SEARCH_RESULTS = "11";
+    private static final String TOTAL_SEARCH_RESULTS = "14";
 
     @Value("${ifs.new.organisation.search.enabled}")
     private boolean isImprovedSearchEnabled = false;
@@ -59,12 +56,12 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     }
 
     private List<OrganisationSearchResult> getFirstPageSearchResults() {
-        return asList(getAmadeus(), getASOS(), getAVIVA(), getBBC(), getCineWorld(), getFirstGroupPlc(),
-                getITV(), getRoyalMail(), getSAGA(), getTesco());
+        return asList(getAmadeus(true), getASOS(true), getAVIVA(true), getBBC(true), getCineWorld(true), getFirstGroupPlc(true),
+                getITV(true), getRoyalMail(true), getSAGA(true), getTescoAqua(true));
     }
 
     private List<OrganisationSearchResult> getSecondPageSearchResults() {
-        return asList(getVirginMoney());
+        return asList( getTesco(true), getUniace(true), getVirginMoney(true), getWorth(true));
 
     }
 
@@ -89,18 +86,21 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     private OrganisationSearchResult getImprovedResultById(String id) {
         switch(id) {
-            case "02276684" : return getAmadeus();
-            case "04006623" : return getASOS();
-            case "02468686" : return getAVIVA();
-            case "07520089" : return getBBC();
-            case "04081830" : return getCineWorld();
-            case "SC157176" : return getFirstGroupPlc();
-            case "04967001" : return getITV();
-            case "08680755" : return getRoyalMail();
-            case "08804263" : return getSAGA();
-            case "00445790" : return getTesco();
-            case "09595911" : return getVirginMoney();
-            default : return getRoyalMail();
+            case "02276684" : return getAmadeus(false);
+            case "04006623" : return getASOS(false);
+            case "02468686" : return getAVIVA(false);
+            case "07520089" : return getBBC(false);
+            case "04081830" : return getCineWorld(false);
+            case "SC157176" : return getFirstGroupPlc(false);
+            case "04967001" : return getITV(false);
+            case "08680755" : return getRoyalMail(false);
+            case "08804263" : return getSAGA(false);
+            case "05888959" : return getTescoAqua(false);
+            case "00445790" : return getTesco(false);
+            case "09400267" : return  getUniace(false);
+            case "09595911" : return getVirginMoney(false);
+            case "05337108" : return  getWorth(false);
+            default : return getRoyalMail(false);
         }
     }
 
@@ -179,8 +179,10 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                                 "RC000660");
     }
 
-    private OrganisationSearchResult getAmadeus() {
-        return buildDummyOrganisationSearchResult("3rd Floor First Point",
+    private OrganisationSearchResult getAmadeus(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "3rd Floor First Point, Buckingham Gate London Gatwick Airport, Gatwick, West Sussex, RH6 0NT",
+                "3rd Floor First Point",
                 "Buckingham Gate London Gatwick Airport",
                 "",
                 "Gatwick",
@@ -189,13 +191,17 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "02276684",
                 "AMADEUS IT SERVICES UK LIMITED",
                 "Business",
+                "active",
                 "1988-07-13",
                 "02276684 - Incorporated on 13 July 1988",
                 asList("62020","63990","79909"),
                 asList("BOUSQUET, Christophe","KRAFT ANTELYES, Diana","MAGESH, Champa Hariharan","SANCHEZ QUINONES, Arturo"));
     }
-    private OrganisationSearchResult getASOS() {
-        return buildDummyOrganisationSearchResult("Greater London House",
+
+    private OrganisationSearchResult getASOS(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "Greater London House, Hampstead Road, London, England, NW1 7FB",
+                "Greater London House",
                 "Hampstead Road",
                 " ",
                 "London",
@@ -204,14 +210,16 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "04006623",
                 "ASOS PLC",
                 "plc",
+                "active",
                 "2000-06-02",
                 "04006623 - Incorporated on 2 June 2000",
                  asList("70100"),
                  asList("BEIGHTON, Nicholas Timothy", "CROZIER, Adam Alexander", "DUNN, Mathew James", "DYSON, Ian","FYFIELD, Rowenna Mai",
                         "GEARY, Karen Mary", "JENSEN, Luke Giles William", "ROBERTSON, Nicholas John", "ULASEWICZ, Eugenia Marie"));
     }
-    private OrganisationSearchResult getAVIVA() {
-        return buildDummyOrganisationSearchResult("St Helen's",
+    private OrganisationSearchResult getAVIVA(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "St Helen's, 1 Undershaft, London, EC3P 3DQ","St Helen's",
                 "1 Undershaft",
                 " ",
                 "London",
@@ -220,14 +228,17 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "02468686",
                 "Aviva Plc",
                 "plc",
+                "active",
                 "1990-02-09",
                 "02468686 - Incorporated on 9 February 1990",
                 asList("70100"), asList("BLANC, Amanda Jayne", "CROSS, Patricia Anne","CULMER, Mark George","FLYNN, Patrick Gerard","JOSHI, Mohit",
                                         "MCCONVILLE, James","Michael Philip","ROMANA GARCIA, Belen","WINDSOR, Jason Michael"));
 
     }
-    private OrganisationSearchResult getBBC() {
-           return buildDummyOrganisationSearchResult("Unit 2 Restormel Estate",
+    private OrganisationSearchResult getBBC(boolean isSearch) {
+           return buildDummyOrganisationSearchResult(isSearch,
+                "Unit 2 Restormel Estate, Liddicoat Road, Lostwithiel, Cornwall, PL22 0HG",
+                "Unit 2 Restormel Estate",
                 "Liddicoat Road",
                 " ",
                 "Lostwithiel",
@@ -236,14 +247,17 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "07520089",
                 "BBC AND CO LIMITED",
                 "ltd",
+                "active",
                 "2011-02-07",
                 "07520089 - Incorporated on 7 February 2011",
-                asList("69201","69202","69203"),
-                asList("BATE, Philip Henry"));
+                 asList("69201","69202","69203"),
+                 asList("BATE, Philip Henry"));
     }
 
-    private OrganisationSearchResult getCineWorld() {
-        return buildDummyOrganisationSearchResult("778 Rivington St",
+    private OrganisationSearchResult getCineWorld(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "778 Rivington St, London, England, EC2A 3FF",
+                "778 Rivington St",
                 "",
                 " ",
                 "London",
@@ -252,13 +266,16 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "04081830",
                 "CINEWORLD LIMITED",
                 "ltd",
+                "active",
                 "1995-03-16",
                 "04081830 - Incorporated on 16 March 1995",
-                asList("74909"),
-                asList("LANGEMANN, Cordula"));
+                 asList("74909"),
+                 asList("LANGEMANN, Cordula"));
     }
-    private OrganisationSearchResult getFirstGroupPlc() {
-            return buildDummyOrganisationSearchResult("395 King Street",
+    private OrganisationSearchResult getFirstGroupPlc(boolean isSearch) {
+            return buildDummyOrganisationSearchResult(isSearch,
+                "395 King Street, Aberdeen, AB24 5RP",
+                "395 King Street",
                 "",
                 " ",
                 "Aberdeen",
@@ -267,15 +284,18 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "SC157176",
                 "FIRSTGROUP PLC",
                 "plc",
+                "active",
                 "1995-03-31",
                 "SC157176 - Incorporated on 31 March 1995",
-                asList("49100", "49319"),
-                asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
+                 asList("49100", "49319"),
+                 asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
                         "MARTIN, David Robert","ROBBIE, David Andrew"));
        }
 
-    private OrganisationSearchResult getITV() {
-        return buildDummyOrganisationSearchResult("Waterhouse Square",
+    private OrganisationSearchResult getITV(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "2 Waterhouse Square, 140 Holborn, London, United Kingdom, EC1N 2AE",
+                "Waterhouse Square",
                 "",
                 "",
                 "London",
@@ -284,16 +304,19 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "04967001",
                 "ITV PLC",
                 "plc",
+                "active",
                 "2003-11-18",
                 "04967001 - Incorporated on 18 November 2003",
-                asList("82990"),
-                asList("AMIN, Salman","BAZALGETTE, Sir Peter Lytton","BONHAM CARTER, Edward Henry","COOKE, " +
+                 asList("82990"),
+                 asList("AMIN, Salman","BAZALGETTE, Sir Peter Lytton","BONHAM CARTER, Edward Henry","COOKE, " +
                         "Graham Christopher","EWING, Margaret","HARRIS, Mary Elaine","KENNEDY, Christopher John",
                         "MANZ, Anna Olive Magdelene","MCCALL, Carolyn Julia, Dame"));
 
     }
-    private OrganisationSearchResult getRoyalMail() {
-        return buildDummyOrganisationSearchResult("100 Victoria Embankment",
+    private OrganisationSearchResult getRoyalMail(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "100 Victoria Embankment, London, United Kingdom, EC4Y 0HQ",
+                "100 Victoria Embankment",
                 "",
                 "",
                 "London",
@@ -302,14 +325,17 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "08680755",
                 "ROYAL MAIL PLC",
                 "plc",
+                "active",
                 "2013-09-06",
                 "08680755 - Incorporated on 6 September 2013",
                  asList("64209"),
                  asList("HOGG, Sarah Elizabeth Mary, Baroness","PEACOCK, Lynne","SILVA, Maria Juana Da Cunha Da",
                          "SIMPSON, Stuart Campbell","THOMPSON, Simon","WILLIAMS, Keith"));
     }
-    private OrganisationSearchResult getSAGA() {
-        return buildDummyOrganisationSearchResult("Enbrook Park",
+    private OrganisationSearchResult getSAGA(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "Enbrook Park, Sandgate, Folkestone, Kent, CT20 3SE",
+                "Enbrook Park",
                 "Sandgate",
                 "",
                 "Folkestone",
@@ -318,16 +344,36 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "08804263",
                 "SAGA PLC",
                 "plc",
+                "active",
                 "2013-12-05",
                 "08804263 - Incorporated on 5 December 2013",
                  asList("70100"),
-                asList("EISENSCHIMMEL, Eva Kristina","HOPES, Julie","HOSKIN, Gareth John","NI-CHIONNA, Orna Gabrielle",
+                 asList("EISENSCHIMMEL, Eva Kristina","HOPES, Julie","HOSKIN, Gareth John","NI-CHIONNA, Orna Gabrielle",
                         "QUIN, James","SUTHERLAND, Euan Angus","WILLIAMS, Gareth"));
     }
+    private OrganisationSearchResult getTescoAqua(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "1 More London Place, London, SE1 2AF",
+                "More London Place",
+                "",
+                "",
+                "London",
+                "",
+                "SE1 2AF",
+                "05888959",
+                "TESCO AQUA (FINCO1) LIMITED",
+                "ltd",
+                "liquidation",
+                "2006-07-27",
+                "05888959 - Incorporated on 27 July 2006 - Liquidation",
+                 Collections.emptyList(),
+                 Collections.emptyList());
+    }
 
-
-    private OrganisationSearchResult getTesco() {
-        return buildDummyOrganisationSearchResult("Kestrel Way",
+    private OrganisationSearchResult getTesco(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "Tesco House, Shire Park, Kestrel Way, Welwyn Garden City, United Kingdom, AL7 1GA",
+                "Kestrel Way",
                 "Tesco House, Shire Park",
                 "",
                 "Welwyn Garden City",
@@ -336,16 +382,37 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "00445790",
                 "TESCO PLC",
                 "plc",
+                "active",
                 "1947-11-27",
                 "00445790 - Incorporated on 27 November 1947",
                 asList("47110"),
-                asList("BETHELL, Melissa","GILLILAND, Stewart Charles","GOLSBY, Stephen William","GROTE, Byron Elmer","MURPHY, Ken",
-                        "OLSSON, Anders Bertil Mikael","OPPENHEIMER, Deanna Watson"));
-
+                asList("BETHELL, Melissa", "GILLILAND, Stewart Charles", "GOLSBY, Stephen William", "GROTE, Byron Elmer", "MURPHY, Ken",
+                        "OLSSON, Anders Bertil Mikael", "OPPENHEIMER, Deanna Watson"));
     }
 
-    private OrganisationSearchResult getVirginMoney() {
-          return buildDummyOrganisationSearchResult("Gosforth",
+    private OrganisationSearchResult getUniace(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "174 Maygrove Road, London, NW6 2EP",
+                "Maygrove Road",
+                "",
+                "",
+                "London",
+                "",
+                "NW6 2EP",
+                "09400267",
+                "UNIACE LIMITED",
+                "ltd",
+                "dissolved",
+                "2017-03-07",
+                "09400267 - Dissolved on  7 March 2017",
+                 Collections.emptyList(),
+                 Collections.emptyList());
+    }
+
+    private OrganisationSearchResult getVirginMoney(boolean isSearch) {
+          return buildDummyOrganisationSearchResult(isSearch,
+                "Jubilee House, Gosforth, Newcastle Upon Tyne, England, NE3 4PL",
+                "Gosforth",
                 "",
                 "",
                 "Gosforth",
@@ -354,11 +421,31 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "09595911",
                 "VIRGIN MONEY UK PLC",
                 "plc",
+                "active",
                 "2015-05-18",
                 "09595911 - Incorporated on 18 May 2015",
                 asList("70100"),
                 asList("COBY, Paul Jonathan","DUFFY, David Joseph","GOPALAN, Geeta","POPE, Darren Scott","STIRLING, Amy Elizabeth",
                           "WADE, Timothy Cardwell"));
+    }
+
+    private OrganisationSearchResult getWorth(boolean isSearch) {
+        return buildDummyOrganisationSearchResult(isSearch,
+                "Suite B 29 Harley Street London, England, W1G 9QR",
+                "29 Harley Street London",
+                "",
+                "",
+                "London",
+                "",
+                "W1G 9QR",
+                "05337108",
+                "WORTH LTD",
+                "ltd",
+                "dissolved",
+                "2013-12-17",
+                "05337108 - Dissolved on 17 December 2013",
+                Collections.emptyList(),
+                Collections.emptyList());
     }
     private OrganisationSearchResult buildDummyResult(String addressLine1,
                                                       String addressLine2,
@@ -387,7 +474,9 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
         org.setExtraAttributes(extras);
         return org;
     }
-    private OrganisationSearchResult buildDummyOrganisationSearchResult(String addressLine1,
+    private OrganisationSearchResult buildDummyOrganisationSearchResult(boolean isSearch,
+                                                                        String addressSnippet,
+                                                                        String addressLine1,
                                                                         String addressLine2,
                                                                         String addressLine3,
                                                                         String town,
@@ -396,21 +485,25 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                                                                         String id,
                                                                         String name,
                                                                         String companyType,
+                                                                        String companyStatus,
                                                                         String dateOfCreation,
                                                                         String description,
                                                                         List<String> sicCodes,
                                                                         List<String> directors) {
-
-        AddressResource address = new AddressResource(addressLine1,
-                addressLine2,
-                addressLine3,
-                town,
-                county,
-                postcode);
-
+          AddressResource  address = new AddressResource(addressLine1,
+                    addressLine2,
+                    addressLine3,
+                    town,
+                    county,
+                    postcode);
         OrganisationSearchResult org = new OrganisationSearchResult(id, name);
         org.setOrganisationSicCodes(getSicCodes(sicCodes));
-        org.setOrganisationAddress(address);
+        if (isSearch) {
+            org.setOrganisationAddressSnippet(addressSnippet);
+        } else {
+            org.setOrganisationAddress(address);
+        }
+        org.setOrganisationStatus(companyStatus);
         org.setOrganisationExecutiveOfficers(getDirectors(directors));
 
         Map<String, Object> extras = new HashMap<>();

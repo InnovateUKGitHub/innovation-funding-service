@@ -51,14 +51,14 @@ public class CompetitionStatusController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId,
                                            @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString,
