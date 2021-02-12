@@ -6,9 +6,7 @@ ext {
 
 dependencies {
 
-    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}") {
-        exclude group: 'org.thymeleaf', module: 'thymeleaf-spring5'
-    }
+    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
 
     implementation('org.apache.commons:commons-text') {
@@ -59,13 +57,6 @@ dependencies {
     implementation('com.opencsv:opencsv') {
         version {
             strictly '4.3.2'
-        }
-    }
-
-    // This is tech debt captured in another ticket
-    implementation('org.thymeleaf:thymeleaf-spring5') {
-        version {
-            strictly '3.0.8.RELEASE'
         }
     }
 
