@@ -29,12 +29,6 @@ public abstract class AbstractProcurementMilestoneController {
         return getView();
     }
 
-    protected String viewProjectSetupMilestones(Model model, UserResource userResource, ProcurementMilestonesForm form) {
-        model.addAttribute("form", form);
-        return viewMilestonesPage(model, form, userResource);
-    }
-
-
     protected String addAjaxRow(Model model) {
         ProcurementMilestonesForm form = new ProcurementMilestonesForm();
         getSaver().addRowForm(form);

@@ -162,6 +162,11 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         return addAjaxRow(model);
     }
 
+    protected String viewProjectSetupMilestones(Model model, UserResource userResource, ProcurementMilestonesForm form) {
+        model.addAttribute("form", form);
+        return viewMilestonesPage(model, form, userResource);
+    }
+
     private Supplier<String> redirectToFinanceChecks(long projectId) {
         return () -> String.format("redirect:/project/%d/finance-check", projectId);
     }
