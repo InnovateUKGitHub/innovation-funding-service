@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.registration.form.*;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class RegistrationCookieService {
     @Autowired
     private EncryptedCookieService cookieUtil;
 
+    @Autowired
+    private CompressedCookieService compressedCookieService;
+
     public void saveToOrganisationTypeCookie(OrganisationTypeForm organisationTypeForm, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
     }
@@ -39,7 +43,7 @@ public class RegistrationCookieService {
     }
 
     public void saveToOrganisationCreationCookie(OrganisationCreationForm organisationFormForCookie, HttpServletResponse response) {
-        cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationFormForCookie));
+        compressedCookieService.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationFormForCookie));
     }
 
     public void saveToOrganisationInternationalDetailsCookie(OrganisationInternationalDetailsForm organisationFormForCookie, HttpServletResponse response) {
@@ -79,7 +83,7 @@ public class RegistrationCookieService {
     }
 
     public Optional<OrganisationCreationForm> getOrganisationCreationCookieValue(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_FORM), OrganisationCreationForm.class));
+        return Optional.ofNullable(getObjectFromJson(compressedCookieService.getCookieValue(request, ORGANISATION_FORM), OrganisationCreationForm.class));
     }
 
     public Optional<OrganisationInternationalDetailsForm> getOrganisationInternationalDetailsValue(HttpServletRequest request) {
@@ -121,7 +125,7 @@ public class RegistrationCookieService {
     }
 
     public void deleteOrganisationCreationCookie(HttpServletResponse response) {
-        cookieUtil.removeCookie(response, ORGANISATION_FORM);
+        compressedCookieService.removeCookie(response, ORGANISATION_FORM);
     }
 
     public void deleteKnowledgeBaseDetailsCookie(HttpServletResponse response) {
