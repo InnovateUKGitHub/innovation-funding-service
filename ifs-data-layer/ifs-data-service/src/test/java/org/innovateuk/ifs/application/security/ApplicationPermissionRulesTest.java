@@ -387,7 +387,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     .build();
             ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
             when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
-            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)) {
+            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)) {
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {
                 assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));

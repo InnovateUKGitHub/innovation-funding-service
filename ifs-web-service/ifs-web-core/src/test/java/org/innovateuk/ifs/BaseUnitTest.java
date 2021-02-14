@@ -5,7 +5,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 
-public class BaseUnitTest {
+public abstract class BaseUnitTest {
 
     @Before
     public void setup() {

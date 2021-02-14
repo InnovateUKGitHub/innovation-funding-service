@@ -313,10 +313,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findDistinctByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
-                externalRoles()
-                        .stream()
-                        .map(r -> Role.getByName(r.getName()))
-                        .collect(toSet()),
+                externalRoles(),
                 pageable
         );
         List<ManageUserResource> userResources = pagedResult.getContent()
@@ -516,7 +513,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setEmail(emailToUpdate);
         User user = userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccessReturnVoid(() -> logEmailChange(oldEmail, emailToUpdate))
                 .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
                 .andOnSuccessReturn(() -> user);
     }

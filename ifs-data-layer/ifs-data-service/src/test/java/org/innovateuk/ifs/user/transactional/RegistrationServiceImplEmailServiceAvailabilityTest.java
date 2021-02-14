@@ -62,7 +62,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                 UserCreationResource registrationInfo = anUserCreationResource().
                         withFirstName("Bob").
                         withLastName("Spiggot").
-                        withEmail("thebspig@example.com").
+                        withEmail("thebspig@test.com").
                         withPassword("thebspig").
                         withRole(Role.APPLICANT).
                         build();
@@ -88,7 +88,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                 UserCreationResource registrationInfo = anUserCreationResource().
                         withFirstName("Bob").
                         withLastName("Spiggot").
-                        withEmail("thebspig@example.com").
+                        withEmail("thebspig@test.com").
                         withPassword("thebspig").
                         withRole(Role.APPLICANT).
                         build();
@@ -119,7 +119,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                 UserCreationResource registrationInfo = anUserCreationResource().
                         withFirstName("Bob").
                         withLastName("Spiggot").
-                        withEmail("thebspig@example.com").
+                        withEmail("thebspig@test.com").
                         withPassword("thebspig").
                         withRole(Role.APPLICANT).
                         build();
