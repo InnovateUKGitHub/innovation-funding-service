@@ -10,6 +10,9 @@ import javax.validation.constraints.NotNull;
  */
 public class YourFECModelForm {
 
+    @NotNull(message = "{ifs.section.finances.projectfinances.yourfeccosts}")
+    private Boolean fecModelEnabled;
+
     public Boolean getFecModelEnabled() {
         return fecModelEnabled;
     }
@@ -17,9 +20,6 @@ public class YourFECModelForm {
     public void setFecModelEnabled(Boolean fecModelEnabled) {
         this.fecModelEnabled = fecModelEnabled;
     }
-
-    @NotNull(message = "{validation.supporter.response.decision.required}")
-    private Boolean fecModelEnabled;
 
     public YourFECModelForm() {
     }

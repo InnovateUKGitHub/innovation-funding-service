@@ -24,6 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -82,11 +84,11 @@ public class YourFECCostsController extends AsyncAdaptor {
             UserResource loggedInUser,
             Model model) {
 
-        Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, organisationId, loggedInUser));
+       CommonYourProjectFinancesViewModel commonViewModelRequest =
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
-        Future<YourFECModelForm> formRequest = async(() ->
-                formPopulator.populate(applicationId, organisationId));
+       YourFECModelForm formRequest =
+                formPopulator.populate(applicationId, organisationId);
 
         model.addAttribute("model", commonViewModelRequest);
         model.addAttribute("form", formRequest);
@@ -127,7 +129,7 @@ public class YourFECCostsController extends AsyncAdaptor {
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
             @Valid @ModelAttribute("form") YourFECModelForm form,
-            @SuppressWarnings("unused") BindingResult bindingResult,
+            BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model) {
 
@@ -150,7 +152,7 @@ public class YourFECCostsController extends AsyncAdaptor {
         };
 
         return validationHandler.
-                addAnyErrors(validateFECModelEnabled(organisationId, form)).
+                addAnyErrors(validateFECModelEnabled(bindingResult, organisationId, form)).
                 failNowOrSucceedWith(failureHandler, successHandler);
     }
 
@@ -180,8 +182,8 @@ public class YourFECCostsController extends AsyncAdaptor {
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
-    private List<Error> validateFECModelEnabled(Long organisationId, YourFECModelForm form) {
-
+    private List<Error> validateFECModelEnabled(Errors errors, Long organisationId, YourFECModelForm form) {
+        ValidationUtils.rejectIfEmpty(errors, "fecModelEnabled", "validation.finance.fecmodel.fecModelEnabled.blank");
         //OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
 
