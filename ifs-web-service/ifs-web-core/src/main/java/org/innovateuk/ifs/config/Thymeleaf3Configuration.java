@@ -35,9 +35,6 @@ public class Thymeleaf3Configuration implements WebMvcConfigurer, ApplicationCon
     @Autowired
     private ThymeleafProperties properties;
 
-    @Autowired
-    protected Environment env;
-
     private ApplicationContext applicationContext;
 
     @Override
@@ -46,16 +43,16 @@ public class Thymeleaf3Configuration implements WebMvcConfigurer, ApplicationCon
     }
 
     @Bean
-    public ViewResolver viewResolver() {
+    public ViewResolver viewResolver(ISpringTemplateEngine templateEngine) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setOrder(2147483642);
-        resolver.setTemplateEngine(templateEngine());
+        resolver.setTemplateEngine(templateEngine);
         resolver.setCharacterEncoding("UTF-8");
         return resolver;
     }
 
     @Bean
-    public ISpringTemplateEngine templateEngine() {
+    public ISpringTemplateEngine templateEngine(Environment env) {
 
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());

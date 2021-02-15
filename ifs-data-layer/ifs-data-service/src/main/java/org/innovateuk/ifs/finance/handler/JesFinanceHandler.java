@@ -68,7 +68,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
-        FinanceRowHandler handler = null;
+        FinanceRowHandler handler;
         switch (costType) {
             case LABOUR:
             case CAPITAL_USAGE:
@@ -89,6 +89,8 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
             case GRANT_CLAIM_AMOUNT:
                 handler = grantClaimAmountHandler;
                 break;
+            default:
+                handler = null;
         }
         if (handler != null) {
             return handler;

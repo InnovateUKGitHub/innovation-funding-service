@@ -11,9 +11,6 @@ public class FileTypeResource {
 
     private String extension;
 
-    public FileTypeResource() {
-    }
-
     public Long getId() {
         return id;
     }
