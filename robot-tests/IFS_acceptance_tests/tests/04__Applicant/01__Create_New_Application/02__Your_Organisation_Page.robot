@@ -105,7 +105,7 @@ Not in Companies House: Manually add the details as a new user and pass to the c
     Given the user manually adds company details                         ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
     And the user enters address manually                                 ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
     When the user clicks the button/link                                 jQuery = button:contains("Save and continue")
-    Then the user confirms and saves company details                     ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  true
+    Then the user confirms and saves company details                     Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  true
     And user checks back link and click save and continue
     And the user verifies his email and checks his organisation name     ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}
 

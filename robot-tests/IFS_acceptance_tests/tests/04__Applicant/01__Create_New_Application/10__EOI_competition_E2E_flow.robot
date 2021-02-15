@@ -203,7 +203,7 @@ logged in user applies to competition
     the user manually adds company details                     ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
     the user enters address manually                           ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-    the user confirms and saves company details                ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
+    the user confirms and saves company details                Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
     the user selects the checkbox                              agree
     the user clicks the button/link                            css = .govuk-button[type="submit"]    #Continue
 

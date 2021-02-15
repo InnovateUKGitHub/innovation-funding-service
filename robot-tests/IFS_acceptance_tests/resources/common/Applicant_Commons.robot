@@ -490,10 +490,10 @@ the user enters address manually
     the user enters text to a text field     id = addressForm.manualAddress.postcode                ${address_postcode}
 
 the user confirms and saves company details
-    [Arguments]  ${business_type}  ${org_name}  ${org_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  ${is_international}
+    [Arguments]  ${org_type}  ${business_type}  ${org_name}  ${org_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  ${is_international}
     the user should see the element     jQuery = h1:contains("Confirm your organisation")
     the user should see the element     jQuery = dt:contains("Organisation type")
-    the user should see the element     jQuery = dd:contains("Business")
+    the user should see the element     jQuery = dd:contains("${org_type}")
     the user should see the element     jQuery = dt:contains("Business type")
     the user should see the element     jQuery = dd:contains("${business_type}")
     Run Keyword If  '${is_international}' == 'true'  Run keywords  the user should see the element         jQuery = dt:contains("Is your organisation based in the UK?")
