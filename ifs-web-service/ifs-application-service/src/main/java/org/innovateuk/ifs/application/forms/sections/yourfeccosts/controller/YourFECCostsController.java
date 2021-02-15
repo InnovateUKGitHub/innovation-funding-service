@@ -51,7 +51,6 @@ public class YourFECCostsController extends AsyncAdaptor {
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private ProcessRoleRestService processRoleRestService;
-    //private OrganisationRestService organisationRestService;
 
     public YourFECCostsController() {
     }
@@ -70,7 +69,6 @@ public class YourFECCostsController extends AsyncAdaptor {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.processRoleRestService = processRoleRestService;
-        //this.organisationRestService = organisationRestService;
     }
 
     @GetMapping
