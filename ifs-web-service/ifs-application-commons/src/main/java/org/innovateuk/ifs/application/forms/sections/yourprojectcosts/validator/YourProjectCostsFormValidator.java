@@ -104,6 +104,8 @@ public class YourProjectCostsFormValidator {
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+            default:
+                // do nothing
         }
     }
 

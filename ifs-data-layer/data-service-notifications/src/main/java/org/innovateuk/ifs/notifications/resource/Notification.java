@@ -25,7 +25,7 @@ public class Notification {
     /**
      * A key with which the end "sending" services can use to find the appropriate message body for the medium they represent
      */
-    private Enum<?> messageKey;
+    private Enum messageKey;
 
     /**
      * The arguments that are applicable to all Notification Targets that are available to use as replacement tokens in the message to be constructed by the end "sending" services
@@ -58,7 +58,7 @@ public class Notification {
         return to;
     }
 
-    public Enum<?> getMessageKey() {
+    public Enum getMessageKey() {
         return messageKey;
     }
 
