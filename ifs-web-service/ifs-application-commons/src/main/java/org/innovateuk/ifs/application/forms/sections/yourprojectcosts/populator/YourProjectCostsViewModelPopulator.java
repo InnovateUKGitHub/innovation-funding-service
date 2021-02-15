@@ -57,6 +57,7 @@ public class YourProjectCostsViewModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
@@ -69,8 +70,8 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
-        if (competition.isKtp() && fecFinanceModelEnabled) {
-            return getYourFecProjectCostsViewModel(applicationId, sectionId, organisationId, user, application, competition, organisation, completedSectionIds, open, complete, includeVat);
+        if (isUserCanEditFecFinance(competition, section, open)) {
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, completedSectionIds, open, complete, includeVat);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -92,28 +93,33 @@ public class YourProjectCostsViewModelPopulator {
         }
     }
 
-    private YourProjectCostsViewModel getYourFecProjectCostsViewModel(long applicationId, long sectionId, long organisationId,
-                                                                      UserResource user, ApplicationResource application,
-                                                                      CompetitionResource competition, OrganisationResource organisation,
+    private boolean isUserCanEditFecFinance(CompetitionResource competition, ApplicantSectionResource section, boolean open) {
+        return competition.isKtp()
+                && fecFinanceModelEnabled
+                && open
+                && isOrganisationTypeKnowledgeBase(section);
+    }
+
+    private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
+                                                                      OrganisationResource organisation, ApplicantSectionResource section,
                                                                       List<Long> completedSectionIds, boolean open, boolean complete, boolean includeVat) {
-        ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
         boolean yourFecCostRequired = !completedSectionIds.contains(yourFecCostSectionId);
-        boolean projectCostSectionLocked = isProjectCostSectionLocked(section, open, yourFundingRequired, yourFecCostRequired);
+        boolean projectCostSectionLocked = isProjectCostSectionLocked(yourFundingRequired, yourFecCostRequired);
 
-        return new YourProjectCostsViewModel(applicationId,
+        return new YourProjectCostsViewModel(application.getId(),
                 competition.getName(),
-                sectionId,
+                section.getSection().getId(),
                 competition.getId(),
-                organisationId,
+                organisation.getId(),
                 complete,
                 open,
                 includeVat,
                 application.getName(),
                 organisation.getName(),
-                getYourFinancesUrl(applicationId, organisationId),
+                getYourFinancesUrl(application.getId(), organisation.getId()),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
                 competition.getFinanceRowTypes(),
@@ -145,10 +151,7 @@ public class YourProjectCostsViewModelPopulator {
         return section.getCurrentApplicant().getOrganisation().getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
     }
 
-    private boolean isProjectCostSectionLocked(ApplicantSectionResource section, boolean open, boolean yourFundingRequired, boolean yourFecCostRequired) {
-        boolean fieldsRequired = yourFundingRequired || yourFecCostRequired;
-        return open
-                && isOrganisationTypeKnowledgeBase(section)
-                && fieldsRequired;
+    private boolean isProjectCostSectionLocked(boolean yourFundingRequired, boolean yourFecCostRequired) {
+        return yourFundingRequired || yourFecCostRequired;
     }
 }
