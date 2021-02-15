@@ -105,7 +105,7 @@ public class CompetitionWebTestData {
                         .withName("Project setup loan comp"),
                 grantCompetition()
                         .withName("583 Covid deminis round 1 project setup")
-                        .withIncludeProjectGrowth(null)
+                        .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Post award service competition"),
@@ -145,7 +145,7 @@ public class CompetitionWebTestData {
                         .withName("Living models for the future"),
                 grantCompetition()
                         .withName("583 Covid deminis round 1")
-                        .withIncludeProjectGrowth(null)
+                        .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice assessed"),
@@ -260,12 +260,12 @@ public class CompetitionWebTestData {
                         .withName("International Competition"),
                 grantCompetition()
                         .withName("596 Covid grants framework group")
-                        .withIncludeProjectGrowth(null)
+                        .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false)
                         .withResubmission(true),
                 grantCompetition()
                         .withName("599 Covid de minimis round 2")
-                        .withIncludeProjectGrowth(null)
+                        .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice open"),
