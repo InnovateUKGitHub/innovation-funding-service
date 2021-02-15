@@ -44,46 +44,46 @@ Resource          ../../resources/common/Applicant_Commons.robot
 
 
 *** Variables ***
-${newProjecTeamPage}         ${server}/project-setup/project/${PS_PD_Project_Id}/team
-${moProjectID}               ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
-${addPartnerOrgCompId}       ${competition_ids["Project Setup Comp 7"]}
-${addNewPartnerOrgProjID}    ${project_ids["PSC application 7"]}
-${addNewPartnerOrgAppID}     ${application_ids["PSC application 7"]}
-${addNewPartnerOrgAppID6}    ${application_ids["PSC application 6"]}
-${addPartnerOrgCompId6}      ${competition_ids["Project Setup Comp 6"]}
-${addNewPartnerOrgProjID6}   ${project_ids["PSC application 6"]}
-${addNewPartnerOrgAppID6}    ${application_ids["PSC application 6"]}
-${leadApplicantEmail}        troy.ward@gmail.com
-${partnerApplicantEmail}     belle.smith@gmail.com
-${reserachApplicantEmail}    nicole.brown@gmail.com
-${addNewPartnerOrgProjPage}  ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team/partner
-${steakHolderCompId}         ${competition_ids["Rolling stock future developments"]}
-${steakHolderProjectId}      ${project_ids["High-speed rail and its effects on water quality"]}
-${leadNewMemberEmail}        test@test.nom
-${nonLeadNewMemberEmail}     testerina@test.nom
-${removeInviteEmail}         remove@test.nom
-${internalViewTeamPage}      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
-${internalInviteeEmail}      internal@invitee.com
-${ifsAdminAddOrgEmail}       admin@addorg.com
-${ifsPendingAddOrgEmail}     pending@pending.com
-${intFinanceAddOrgEmail}     finance@addorg.com
-${applicationName}           PSC application 7
-${orgInviterName}            Ward Ltd
-${PSCapplicationTeamPage}    ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 5"]}/project/${project_ids["PSC application 5"]}/team
-${business_type}             Partnership
-${organisation_name}         Terrific Test Company
-${organisation_number}       0987656789
-${sic_code}                  33300
-${executive_officer}         Marshall Mathers
-${address_line_1}            123
-${address_line_2}            Excellent Test Street
-${address_line_3}            Tranquil
-${address_town}              London
-${address_county}            Middlesex
-${address_postcode}          NW11 8AJ
-${applicant_first_name}      Roy
-${applicant_last_name}       Keane
-${applicant_email}           roy@keane.com
+${newProjecTeamPage}                ${server}/project-setup/project/${PS_PD_Project_Id}/team
+${moProjectID}                      ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
+${addPartnerOrgCompId}              ${competition_ids["Project Setup Comp 7"]}
+${addNewPartnerOrgProjID}           ${project_ids["PSC application 7"]}
+${addNewPartnerOrgAppID}            ${application_ids["PSC application 7"]}
+${addNewPartnerOrgAppID6}           ${application_ids["PSC application 6"]}
+${addPartnerOrgCompId6}             ${competition_ids["Project Setup Comp 6"]}
+${addNewPartnerOrgProjID6}          ${project_ids["PSC application 6"]}
+${addNewPartnerOrgAppID6}           ${application_ids["PSC application 6"]}
+${leadApplicantEmail}               troy.ward@gmail.com
+${partnerApplicantEmail}            belle.smith@gmail.com
+${reserachApplicantEmail}           nicole.brown@gmail.com
+${addNewPartnerOrgProjPage}         ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team/partner
+${steakHolderCompId}                ${competition_ids["Rolling stock future developments"]}
+${steakHolderProjectId}             ${project_ids["High-speed rail and its effects on water quality"]}
+${leadNewMemberEmail}               test@test.nom
+${nonLeadNewMemberEmail}            testerina@test.nom
+${removeInviteEmail}                remove@test.nom
+${internalViewTeamPage}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
+${internalInviteeEmail}             internal@invitee.com
+${ifsAdminAddOrgEmail}              admin@addorg.com
+${ifsPendingAddOrgEmail}            pending@pending.com
+${intFinanceAddOrgEmail}            finance@addorg.com
+${applicationName}                  PSC application 7
+${orgInviterName}                   Ward Ltd
+${PSCapplicationTeamPage}           ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 5"]}/project/${project_ids["PSC application 5"]}/team
+${business_type}                    Partnership
+${organisation_name}                Terrific Test Company
+${organisation_number}              0987656789
+${sic_code}                         33300
+${executive_officer}                Marshall Mathers
+${address_line_1}                   123
+${address_line_2}                   Excellent Test Street
+${address_line_3}                   Tranquil
+${address_town}                     London
+${address_county}                   Middlesex
+${address_postcode}                 NW11 8AJ
+${applicant_first_name}             Roy
+${applicant_last_name}              Keane
+${applicant_email}                  roy@keane.com
 
 *** Test Cases ***
 Monitoring Officers has a read only view of the Project team page
@@ -218,12 +218,27 @@ Project finance is able to remove a partner organisation
     When the user removes a partner organisation           Red Planet
     Then the relevant users recieve an email notification  Red Planet
 
+Ifs Admin is able to add a new partner organisation by entering details manually
+    [Documentation]  IFS-7724
+    [Setup]  log in as a different user                                                 &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                                ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                                       ${organisation_name}  ${applicant_first_name} ${applicant_last_name}  ${applicant_email}
+    Then a new organisation not in companies house is able to accept project invite     ${applicant_email}
+
+Two organisations with the same name are able to join by entering details manually
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723
+    [Setup]  log in as a different user                                                 &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                                ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                                       Amazing Test Org Name  ${applicant_first_name} ${applicant_last_name}  amazing@test.com
+    Then a new organisation not in companies house is able to accept project invite     amazing@test.com
+    [Teardown]  the user navigates to the page                 ${LOGIN_URL}
+
 Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505  IFS-7723  IFS-7724
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  ROYAL  ROYAL MAIL PLC
 
 IFS admin checks for staus update after new org added
     [Documentation]  IFS-6783
@@ -231,11 +246,11 @@ IFS admin checks for staus update after new org added
     Then the internal user checks for status after new org added/removed
 
 Two organisations with the same name are not able to join
-    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723  IFS-7724
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
-    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  ROYAL  ROYAL MAIL PLC
     [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
@@ -343,19 +358,32 @@ lead able to submit only exploitation plan when all partners removed from projec
 
 *** Keywords ***
 the same organisation isnt able to join the project
-    [Arguments]  ${fname}  ${sname}  ${email}
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
     the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
-    the user accepts invitation and selects organisation type
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user should see the element                               jQuery = h1:contains("Contact our Customer Support team")
 
-a new organisation is able to accept project invite
-    [Arguments]  ${fname}  ${sname}  ${email}
+a new organisation not in companies house is able to accept project invite
+    [Arguments]  ${email}
     logout as user
     the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
-    the user accepts invitation and selects organisation type
+    the user accepts invitation and selects organisation type not in companies house
+    the user fills in account details                             ${applicant_first_name}  ${applicant_last_name}
+    the user clicks the button/link                               jQuery = button:contains("Create account")
+    the user verifies their account                               ${email}
+    a new organisation logs in and sees the project               ${email}
+    the user should see the element                               jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
+    the user clicks the button/link                               link = PSC application 7
+    the user should see the element                               jQuery = h1:contains("Join project")
+
+a new organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
+    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user verifies their account                               ${email}
@@ -370,9 +398,12 @@ A new organisation logs in and sees the project
     Logging in and Error Checking     ${email}  ${short_password}
 
 The user accepts invitation and selects organisation type
-    the user clicks the button/link                        jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                      organisationTypeId    1
-    the user clicks the button/link                        jQuery = .govuk-button:contains("Save and continue")
+    [Arguments]   ${orgId}  ${orgName}
+    the user selects organisation type
+    the user selects his organisation in Companies House     ${orgId}  ${orgName}
+
+the user accepts invitation and selects organisation type not in companies house
+    the user selects organisation type
     the user searches for organisation                     Not exist
     the user clicks link to find out what to do
     the user clicks link to enter its details manually
@@ -380,6 +411,11 @@ The user accepts invitation and selects organisation type
     the user enters address manually                       ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
     the user clicks the button/link                        jQuery = button:contains("Save and continue")
     the user confirms and saves company details            Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
+
+the user selects organisation type
+    the user clicks the button/link       jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button     organisationTypeId    1
+    the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
 
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
