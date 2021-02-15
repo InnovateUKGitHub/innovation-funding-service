@@ -12,10 +12,6 @@ import java.time.YearMonth;
 public class PastYearMonthValidator implements ConstraintValidator<PastYearMonth, YearMonth> {
 
     @Override
-    public void initialize(PastYearMonth constraintAnnotation) {
-    }
-
-    @Override
     public boolean isValid(YearMonth value, ConstraintValidatorContext context) {
 
         if (value == null) {

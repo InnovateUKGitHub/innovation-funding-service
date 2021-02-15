@@ -7,7 +7,11 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               IFS-7722 Improvement to company search journey
 ...
+<<<<<<< HEAD
 ...               IFS-7724 Input organisation details manually
+=======
+...               IFS-9103 Companies House API: Return more relevant results
+>>>>>>> development
 ...
 Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
@@ -35,8 +39,14 @@ ${applicant_email}          sherlock@holmes.com
 Companies House: Valid company name
     [Documentation]    INFUND-887  IFS-7723
     [Tags]  HappyPath
+<<<<<<< HEAD
     When the user searches for organisation     ROYAL
     Then the user should see the element        link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+=======
+    When the user enters text to a text field    id = organisationSearchName    ROYAL MAIL
+    And the user clicks the button/link          id = org-search
+    Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+>>>>>>> development
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887  IFS-7723
@@ -60,8 +70,15 @@ Companies House: Invalid company name
 Companies House: Valid registration number
     [Documentation]    INFUND-8870  IFS-7723
     [Tags]  HappyPath
+<<<<<<< HEAD
     When the user searches for organisation     00445790
     Then the user should see the element        link = TESCO PLC
+=======
+    When the user enters text to a text field    id = organisationSearchName    00445790
+    And the user clicks the button/link          id = org-search
+    Then the user clicks the button/link         jQuery = a:contains("Next")
+    And the user should see the element          Link = TESCO PLC
+>>>>>>> development
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887  IFS-7723
@@ -76,6 +93,7 @@ Companies House: Empty company name field validation message
     When the user searches for organisation                ${EMPTY}
     Then the user should see a field and summary error     You must enter an organisation name or company registration number.
 
+<<<<<<< HEAD
 Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888  IFS-7724
     [Tags]
@@ -108,6 +126,37 @@ Not in Companies House: Manually add the details as a new user and pass to the c
     Then the user confirms and saves company details                     Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  true
     And user checks back link and click save and continue
     And the user verifies his email and checks his organisation name     ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}
+=======
+Companies House: Search for a dissolved company and the result should be disabled
+    [Documentation]    IFS-9103
+    When the user enters text to a text field     id = organisationSearchName    UNIACE
+    And the user clicks the button/link           id = org-search
+    And the user clicks the button/link           jQuery = a:contains("Next")
+    Then the user should not see the element      link = UNIACE LIMITED
+    And the user should see the element           jQuery = span p:contains("UNIACE LIMITED")
+
+Companies House: Search for a liquidated company and the result should be disabled
+    [Documentation]    IFS-9103
+    When the user enters text to a text field     id = organisationSearchName    TESCO AQUA
+    And the user clicks the button/link           id = org-search
+    Then the user should not see the element      link = TESCO AQUA (FINCO1) LIMITED
+    And the user should see the element           jQuery = span p:contains("TESCO AQUA (FINCO1) LIMITED")
+
+Companies House: No content message should be displayed when the search results are less than 400
+    [Documentation]    IFS-9103
+    When the user clicks the button/link         jQuery = a:contains("Next")
+    Then the user should not see the element     jQuery = p:contains("This is the last page of search results and we have shown you the closest 400 matches.")
+
+# TODO should be implemented on ifs-7724
+#Manually add the details and pass to the confirmation page
+#    [Documentation]    INFUND-888
+#    [Tags]  HappyPath
+#    [Setup]  the user expands enter details manually
+#    Given the user enters text to a text field    name = organisationName    Top of the Popps
+#    When the user clicks the button/link          jQuery = button:contains("Continue")
+#    Then the user should see the element          jQuery = dt:contains("Organisation type")~ dd:contains("Business")
+#    And the user should see the element           jQuery = dt:contains("Organisation name")~ dd:contains("Top of the Popps")
+>>>>>>> development
 
 *** Keywords ***
 Applicant goes to the organisation search page

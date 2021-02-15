@@ -74,7 +74,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     private String addAttributesAndRedirect(OrganisationCreationForm organisationForm, Model model, UserResource user, HttpServletRequest request) {
-        populateViewModelForSearch(organisationForm, model, request);
+        populateViewModelForSearch(organisationForm, model, request, 1);
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
@@ -138,7 +138,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, pageNumber, true);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
-        populateViewModelForSearch(organisationForm, model, request);
+        populateViewModelForSearch(organisationForm, model, request, pageNumber);
         addPageSubtitleToModel(request, user, model);
         addPageResourceToModel(organisationForm, model, pageNumber);
         return TEMPLATE_PATH + "/" + SEARCH_RESULT_ORGANISATION;
@@ -304,7 +304,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 
-    private void populateViewModelForSearch(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
+    private void populateViewModelForSearch(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, int pageNumber) {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
@@ -312,6 +312,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
+        model.addAttribute("currentPage", pageNumber);
     }
 
     private void populateViewModelForSelectedOrgConfirmation(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {

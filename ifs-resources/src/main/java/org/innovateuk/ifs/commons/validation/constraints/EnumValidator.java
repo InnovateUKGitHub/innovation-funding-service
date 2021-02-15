@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @ReportAsSingleViolation
 public @interface EnumValidator {
 
-    Class<? extends Enum<?>> enumClazz();
+    Class<? extends Enum> enumClazz();
 
     String message() default "Value is not valid";
 

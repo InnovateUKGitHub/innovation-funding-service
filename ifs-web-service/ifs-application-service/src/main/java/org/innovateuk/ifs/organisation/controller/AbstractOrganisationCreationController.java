@@ -58,8 +58,9 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String MANUALLY_ENTER_ORGANISATION_DETAILS = "manually-enter-organisation-details";
 
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
-    protected static final int SEARCH_ITEMS_MAX = 10;
-    protected static final int SEARCH_MAX_DSIPLAY = 1000;
+    protected static final int  SEARCH_ITEMS_MAX = 10;
+    protected static final int  SEARCH_MAX_DSIPLAY = 400;
+
     protected static final int DEFAULT_PAGE_NUMBER_VALUE = 1;
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -263,7 +264,7 @@ public abstract class AbstractOrganisationCreationController {
             organisationForm.setOrganisationName(organisationSearchResult.getName());
             if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
                 String localDateString = (String) organisationSearchResult.getExtraAttributes().get("date_of_creation");
-                if (localDateString != null) {
+                if (localDateString != null && !localDateString.isEmpty()) {
                     organisationForm.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
                 }
                 organisationForm.setOrganisationAddress(organisationSearchResult.getOrganisationAddress());
