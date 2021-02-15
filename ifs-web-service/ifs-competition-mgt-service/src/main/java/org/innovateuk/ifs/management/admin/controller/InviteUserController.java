@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 public class InviteUserController {
 
     private static final String FORM_ATTR_NAME = "form";
-    private static final String Model_ATTR_NAME = "model";
+    private static final String MODEL_ATTR_NAME = "model";
 
     @Autowired
     private InviteUserService inviteUserService;
@@ -86,7 +86,7 @@ public class InviteUserController {
         InviteUserViewModel viewModel = new InviteUserViewModel(type, roles);
 
         model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute(Model_ATTR_NAME, viewModel);
+        model.addAttribute(MODEL_ATTR_NAME, viewModel);
 
         return "admin/invite-new-user";
     }

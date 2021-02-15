@@ -9,9 +9,6 @@ public class MonitoringOfficerAssignProjectForm extends BaseBindingResultTarget 
     @NotNull(message = "{validation.monitoring-officer.assign.required}")
     private Long projectId;
 
-    public MonitoringOfficerAssignProjectForm() {
-    }
-
     public Long getProjectId() {
         return projectId;
     }

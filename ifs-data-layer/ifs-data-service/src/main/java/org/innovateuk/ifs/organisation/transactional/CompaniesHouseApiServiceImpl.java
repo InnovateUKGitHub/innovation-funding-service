@@ -67,6 +67,10 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final String EMPTY_NAME_STRING = " ";
 
+    private static final String ITEMS = "items";
+
+    private static final String COMPANY_NUMBER = "company_number";
+
     @Autowired
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -121,14 +125,14 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     }
 
     private ServiceResult<List<OrganisationSearchResult>> getSearchOrganisationResults(JsonNode companiesResources) {
-        JsonNode organisationItems = companiesResources.path("items");
+        JsonNode organisationItems = companiesResources.path(ITEMS);
         List<OrganisationSearchResult> results = new ArrayList<>();
         organisationItems.forEach(i -> results.add(organisationSearchMapper(i)));
         return serviceSuccess(results);
     }
 
     private ServiceResult<List<OrganisationSearchResult>> getImprovedSearchOrganisationResults(JsonNode organisationsResources, String totalResults) {
-        JsonNode organisationItems = organisationsResources.path("items");
+        JsonNode organisationItems = organisationsResources.path(ITEMS);
         List<OrganisationSearchResult> results = new ArrayList<>();
         organisationItems.forEach(i -> results.add(improvedOrganisationSearchMapper(i, totalResults)));
         return serviceSuccess(results);
@@ -145,7 +149,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private OrganisationSearchResult organisationSearchMapper(JsonNode jsonNode) {
         AddressResource officeAddress = getAddress(jsonNode, "address");
-        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("title").asText());
+        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path(COMPANY_NUMBER).asText(), jsonNode.path("title").asText());
         Map<String, Object> extras = getExtraAttributesOfCHSearch(jsonNode);
         org.setExtraAttributes(extras);
         org.setOrganisationAddress(officeAddress);
@@ -172,7 +176,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private OrganisationSearchResult getOrganisationBasicDetailsFromSearchResults(JsonNode organisationNode) {
         String organisationName = organisationNode.path("title").asText();
-        String registrationNumber = organisationNode.path("company_number").asText();
+        String registrationNumber = organisationNode.path(COMPANY_NUMBER).asText();
         String organisationStatus = organisationNode.path("company_status").asText();
         OrganisationSearchResult orgSearchResult = new OrganisationSearchResult(registrationNumber, organisationName);
         orgSearchResult.setOrganisationStatus(organisationStatus);
@@ -190,7 +194,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
         ObjectMapper mapper = new ObjectMapper();
 
-        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("company_name").asText());
+        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path(COMPANY_NUMBER).asText(), jsonNode.path("company_name").asText());
         org.setExtraAttributes(mapper.convertValue(jsonNode, Map.class));
         org.setOrganisationAddress(officeAddress);
         return org;
@@ -202,7 +206,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
             AddressResource registeredOfficeAddress = getAddress(organisationItemsNode, "registered_office_address");
             ObjectMapper mapper = new ObjectMapper();
 
-            OrganisationSearchResult org = new OrganisationSearchResult(organisationItemsNode.path("company_number").asText(), organisationItemsNode.path("company_name").asText());
+            OrganisationSearchResult org = new OrganisationSearchResult(organisationItemsNode.path(COMPANY_NUMBER).asText(), organisationItemsNode.path("company_name").asText());
             org.setExtraAttributes(mapper.convertValue(organisationItemsNode, Map.class));
             org.setOrganisationAddress(registeredOfficeAddress);
 
@@ -210,7 +214,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
             org.setOrganisationSicCodes(sicCodeResources);
 
             if (directorDetails.isPresent()) {
-                List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getCurrentDirectors(directorDetails.get(), "items");
+                List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getCurrentDirectors(directorDetails.get(), ITEMS);
                 org.setOrganisationExecutiveOfficers(executiveOfficerResources);
             }
             return org;
@@ -303,7 +307,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private List<OrganisationExecutiveOfficerResource> getCurrentDirectors(JsonNode jsonNode, String pathName) {
         List<OrganisationExecutiveOfficerResource> executiveOfficersResource = new ArrayList<>();
-        JsonNode directorsDetails = jsonNode.path("items");
+        JsonNode directorsDetails = jsonNode.path(ITEMS);
         if (directorsDetails != null) {
             directorsDetails.forEach(directorItem -> {
                 if (directorItem.get("resigned_on") == null) {

@@ -21,9 +21,6 @@ public class LandingPageForm extends BaseBindingResultTarget {
         this.enabledIds = enabledIds;
     }
 
-    public LandingPageForm() {
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
