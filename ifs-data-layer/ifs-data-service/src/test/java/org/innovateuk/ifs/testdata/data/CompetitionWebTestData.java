@@ -136,6 +136,8 @@ public class CompetitionWebTestData {
                         .withName("Assessments of load capabilities"),
                 grantCompetition()
                         .withName("Expression of Interest: Assistive technologies for caregivers")
+                        .withHasAssessmentPanel(true)
+                        .withHasInterviewStage(true)
                         .withCompetitionType(EXPRESSION_OF_INTEREST),
                 grantCompetition()
                         .withName("Living models for the future"),
@@ -205,9 +207,11 @@ public class CompetitionWebTestData {
     private static List<CompetitionLineBuilder> getOpenCompetitionLineBuilders() {
         return asList(
                 grantCompetition()
-                        .withName("Home and industrial efficiency programme"),
+                        .withName("Home and industrial efficiency programme")
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO)),
                 grantCompetition()
-                        .withName("Predicting market trends programme"),
+                        .withName("Predicting market trends programme")
+                        .withAssessorCount(5),
                 grantCompetition()
                         .withCompetitionType(SECTOR)
                         .withName("Aerospace technology investment sector")
@@ -250,7 +254,8 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("International Competition"),
                 grantCompetition()
-                        .withName("596 Covid grants framework group"),
+                        .withName("596 Covid grants framework group")
+                        .withResubmission(true),
                 grantCompetition()
                         .withName("599 Covid de minimis round 2"),
                 grantCompetition()
@@ -260,7 +265,9 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP new competition"),
                 loanCompetition()
-                        .withName("Competition not submitted before the deadline"),
+                        .withName("Competition not submitted before the deadline")
+                        .withInnovationSector("Infrastructure systems")
+                        .withAssessorCount(5),
                 loanCompetition()
                         .withName("Competition for application submitted before competition closing time"),
                 grantCompetition()
