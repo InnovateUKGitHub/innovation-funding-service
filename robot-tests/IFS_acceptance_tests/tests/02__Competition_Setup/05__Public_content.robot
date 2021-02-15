@@ -475,7 +475,7 @@ User creates a new competition
     Given the user navigates to the page              ${CA_UpcomingComp}
     When the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
     When the user fills in the CS Initial details     ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
-    And the user selects the Terms and Conditions     SUBSIDY_CONTROL
+    And the user selects the Terms and Conditions     ${compType_Programme}  SUBSIDY_CONTROL
     And the user fills in the CS Milestones           PROJECT_SETUP   ${month}   ${nextyear}
 
 the user enters valid data in the summary details
