@@ -126,7 +126,6 @@ dependencies {
     compile "org.apache.commons:commons-pool2"
 
     compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "org.mariadb.jdbc:mariadb-java-client"
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert"
     compile "com.jayway.jsonpath:json-path"

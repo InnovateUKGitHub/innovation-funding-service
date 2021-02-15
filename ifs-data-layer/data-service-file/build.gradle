@@ -35,5 +35,4 @@ dependencies {
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
 
-    testCompile "com.h2database:h2"
 }

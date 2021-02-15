@@ -88,7 +88,6 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.mariadb.jdbc:mariadb-java-client"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
@@ -97,7 +96,6 @@ dependencies {
     compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile 'com.h2database:h2'
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
