@@ -490,15 +490,15 @@ the user enters address manually
     the user enters text to a text field     id = addressForm.manualAddress.postcode                ${address_postcode}
 
 the user confirms and saves company details
-    [Arguments]  ${business_type}  ${org_name}  ${org_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  ${application_type}
+    [Arguments]  ${business_type}  ${org_name}  ${org_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  ${is_international}
     the user should see the element     jQuery = h1:contains("Confirm your organisation")
     the user should see the element     jQuery = dt:contains("Organisation type")
     the user should see the element     jQuery = dd:contains("Business")
     the user should see the element     jQuery = dt:contains("Business type")
     the user should see the element     jQuery = dd:contains("${business_type}")
-    Run Keyword If  '${application_type}' == '1'  Run keywords  the user should not see the element     jQuery = dt:contains("Is your organisation based in the UK?")
-    ...     ELSE                                  Run keywords  the user should see the element         jQuery = dt:contains("Is your organisation based in the UK?")
-    ...                                                    AND  the user should see the element         jQuery = dd:contains("Yes")
+    Run Keyword If  '${is_international}' == 'true'  Run keywords  the user should see the element         jQuery = dt:contains("Is your organisation based in the UK?")
+    ...                                                    AND     the user should see the element         jQuery = dd:contains("Yes")
+    ...     ELSE                                  Run keyword      the user should not see the element     jQuery = dt:contains("Is your organisation based in the UK?")
     the user should see the element     jQuery = dt:contains("Organisation name")
     the user should see the element     jQuery = dd:contains("${org_name}")
     the user should see the element     jQuery = dt:contains("Organisation number")

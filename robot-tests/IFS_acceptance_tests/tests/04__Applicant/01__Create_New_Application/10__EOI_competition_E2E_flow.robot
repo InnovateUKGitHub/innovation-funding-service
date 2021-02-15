@@ -62,7 +62,7 @@ Comp Admin Creates EOI type competition
     Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080  IFS-7723  IFS-7723
+    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080  IFS-7723  IFS-7724
     [Setup]  get competition id and set open date to yesterday  ${comp_name}
     Given Log in as a different user            &{assessor_bob_credentials}
     Then logged in user applies to competition  ${comp_name}  1
@@ -203,7 +203,7 @@ logged in user applies to competition
     the user manually adds company details                     ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
     the user enters address manually                           ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-    the user confirms and saves company details                ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  ${applicationType}
+    the user confirms and saves company details                ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
     the user selects the checkbox                              agree
     the user clicks the button/link                            css = .govuk-button[type="submit"]    #Continue
 
