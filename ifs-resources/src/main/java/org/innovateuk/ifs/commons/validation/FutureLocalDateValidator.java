@@ -12,11 +12,6 @@ import java.time.LocalDate;
  */
 public class FutureLocalDateValidator implements ConstraintValidator<FutureLocalDate, LocalDate> {
 
-
-    @Override
-    public void initialize(FutureLocalDate constraintAnnotation) {
-    }
-
     @Override
     public boolean isValid(LocalDate value, ConstraintValidatorContext context) {
         return DateUtil.isFutureDate(value);
