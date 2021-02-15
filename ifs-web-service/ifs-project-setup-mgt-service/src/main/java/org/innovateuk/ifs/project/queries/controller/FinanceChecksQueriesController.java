@@ -36,6 +36,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -84,6 +85,8 @@ public class FinanceChecksQueriesController {
     private FinanceCheckService financeCheckService;
     @Autowired
     private ThreadViewModelPopulator threadViewModelPopulator;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
@@ -340,7 +343,7 @@ public class FinanceChecksQueriesController {
                 project.getApplication(),
                 project.getProjectState().isActive(),
                 competition.isProcurementMilestones(),
-                FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
+                northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules())
         );
     }
 
