@@ -181,7 +181,7 @@ public class YourFECCostsController extends AsyncAdaptor {
     }
 
     private List<Error> validateFECModelEnabled(Errors errors, Long organisationId, YourFECModelForm form) {
-        ValidationUtils.rejectIfEmpty(errors, "fecModelEnabled", "validation.finance.fecmodel.fecModelEnabled.blank");
+        //ValidationUtils.rejectIfEmpty(errors, "fecModelEnabled", "validation.finance.fecmodel.fecModelEnabled.blank");
         //OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
 

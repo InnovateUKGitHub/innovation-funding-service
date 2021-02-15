@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  */
 public class YourFECModelForm {
 
-    @NotNull(message = "{ifs.section.finances.projectfinances.yourfeccosts}")
+    @NotNull(message = "{validation.finance.fecmodel.fecModelEnabled.blank}")
     private Boolean fecModelEnabled;
 
     public Boolean getFecModelEnabled() {
@@ -27,7 +27,6 @@ public class YourFECModelForm {
     public YourFECModelForm(Boolean fecModelEnabled) {
         this.fecModelEnabled = fecModelEnabled;
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -6,7 +6,7 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your fEC Model - ${applicationName}|"/>
     </th:block>
 </head>
-<body class="govuk-template__body your-project-location app-form">
+<body class="govuk-template__body your-fec-model app-form">
 <th:block th:insert="fragments/layout :: global-header"/>
 <div class="govuk-width-container">
 
@@ -28,77 +28,77 @@
                       th:with="pageTitle='Your fEC Model',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
-        <!--<th:block
-            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">-->
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+            Will you be using the full economic costing (fEC) funding model?
+        </legend>
 
-<!--            <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle='Your fEC Model',subTitle=${model.applicationName},size='govuk-heading-xl'"/>-->
+        <th:block
+            th:insert="question-type/form-elements :: form-hint (hint='This is very important for calculating your project costs.')"/>
 
-<!--            <b><p class="govuk-body"
-                  th:text="'Will you be using the full economic costing (fEC) funding model?'"></p></b>-->
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:attr="data-autosave='autosaveFormPost'"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
 
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                Will you be using the full economic costing (fEC) funding model?
-            </legend>
+            <div class="govuk-form-group">
+                <th:block th:if="${#fields.hasErrors('*{fecModelEnabled}')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}"></span>
+                </th:block>
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               th:field="*{fecModelEnabled}"
+                               id="fecModelEnabled-yes"
+                               type="radio"
+                               value="true"
+                               required="required"
+                        >
+                        <label class="govuk-label govuk-radios__label" for="fecModelEnabled-yes">
+                            Yes
+                        </label>
+                    </div>
 
-            <th:block th:insert="question-type/form-elements :: form-hint (hint='This is very important for calculating your project costs.')" />
-
-            <form th:object="${form}"
-                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-                  th:attr="data-autosave='autosaveFormPost'"
-                  enctype="multipart/form-data"
-                  novalidate="novalidate"
-                  method="POST">
-
-                <div class="govuk-form-group">
-                    <div class="govuk-radios govuk-radios--inline">
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input"
-                                   th:field="*{fecModelEnabled}"
-                                   id="fecModelEnabled-yes"
-                                   type="radio"
-                                   value="true"
-                                   required="required"
-                            >
-                            <label class="govuk-label govuk-radios__label" for="fecModelEnabled-yes">
-                                Yes
-                            </label>
-                        </div>
-
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input"
-                                   th:field="*{fecModelEnabled}"
-                                   id="fecModelEnabled-no"
-                                   type="radio"
-                                   value="false"
-                                   required="required"
-                            >
-                            <label class="govuk-label govuk-radios__label" for="fecModelEnabled-no">
-                                No
-                            </label>
-                        </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input"
+                               th:field="*{fecModelEnabled}"
+                               id="fecModelEnabled-no"
+                               type="radio"
+                               value="false"
+                               required="required"
+                        >
+                        <label class="govuk-label govuk-radios__label" for="fecModelEnabled-no">
+                            No
+                        </label>
                     </div>
                 </div>
-                <div class="form-footer" th:if="${model.open}">
-                    <div class="form-footer__actions">
-                        <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
-                                class="button-clear" value="true">Mark as complete
-                        </button>
-                    </div>
-                </div>
-                <div>
-                    <a th:href="${model.financesUrl}"
-                       th:if="${model.readOnly}"
-                       class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
-                    </a>
-                    <button type="submit" th:unless="${model.readOnly}"
-                            class="govuk-!-margin-top-6 govuk-button">
-                        Save and return to finances
+            </div>
+            <div class="form-footer" th:if="${model.open}">
+                <div class="form-footer__actions">
+                    <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
+                            class="button-clear" value="true">Mark as complete
+                    </button>
+                    <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete"
+                            class="button-clear" value="true"
+                            th:text="${'Edit your fEC Model'}">Edit
                     </button>
                 </div>
-            </form>
+            </div>
+            <div>
+                <a th:href="${model.financesUrl}"
+                   th:if="${model.readOnly}"
+                   class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
+                </a>
+                <button type="submit" th:unless="${model.readOnly}"
+                        class="govuk-!-margin-top-6 govuk-button">
+                    Save and return to finances
+                </button>
+            </div>
+        </form>
         <th:block th:fragment="main-content-end">
-            <p class="govuk-body govuk-!-margin-top-9 user-feedback"><span class="govuk-!-font-weight-bold">Need help with this service?</span> <a class="govuk-link" href="/info/contact">Contact us</a></p>
+            <p class="govuk-body govuk-!-margin-top-9 user-feedback"><span class="govuk-!-font-weight-bold">Need help with this service?</span>
+                <a class="govuk-link" href="/info/contact">Contact us</a></p>
         </th:block>
     </main>
 
@@ -106,5 +106,6 @@
 <th:block th:insert="fragments/layout :: footer"/>
 <th:block th:insert="fragments/layout :: body-end"/>
 <th:block th:insert="fragments/service-layout :: body-end"/>
+'
 </body>
 </html>
