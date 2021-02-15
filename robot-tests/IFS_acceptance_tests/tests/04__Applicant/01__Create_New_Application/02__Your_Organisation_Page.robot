@@ -16,25 +16,27 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${business_type}           Partnership
-${organisation_name}       Best Test Company
-${organisation_number}     1234567890
-${sic_code}                54321
-${executive_officer}       Phil Mitchell
-${address_line_1}          123
-${address_line_2}          Test Street
-${address_line_3}          Paradise
-${address_town}            London
-${address_county}          Middlesex
-${address_postcode}        NW11 8AJ
-${applicant_email}         sherlock@holmes.com
+${business_type}            Partnership
+${organisation_name}        Best Test Company
+${organisation_number}      1234567890
+${sic_code}                 54321
+${executive_officer}        Phil Mitchell
+${address_line_1}           123
+${address_line_2}           Test Street
+${address_line_3}           Paradise
+${address_town}             London
+${address_county}           Middlesex
+${address_postcode}         NW11 8AJ
+${applicant_first_name}     Sherlock
+${applicant_last_name}      Holmes
+${applicant_email}          sherlock@holmes.com
 
 *** Test Cases ***
 Companies House: Valid company name
     [Documentation]    INFUND-887  IFS-7723
     [Tags]  HappyPath
-    When the applicant searches for organisation     ROYAL
-    Then the user should see the element             link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
+    When the user searches for organisation     ROYAL
+    Then the user should see the element        link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887  IFS-7723
@@ -49,37 +51,37 @@ Companies House: User can choose the organisation address
 Companies House: Invalid company name
     [Documentation]    INFUND-887  IFS-7723
     [Tags]
-    Given the user clicks the button/link            link = Back to companies house search results
-    When the applicant searches for organisation     innoavte
-    When the user enters text to a text field        id = organisationSearchName    innoavte
-    And the user clicks the button/link              id = org-search
-    Then the user should see the element             jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies") + span:contains("innoavte")
+    Given the user clicks the button/link         link = Back to companies house search results
+    When the user searches for organisation       innoavte
+    When the user enters text to a text field     id = organisationSearchName    innoavte
+    And the user clicks the button/link           id = org-search
+    Then the user should see the element          jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies") + span:contains("innoavte")
 
 Companies House: Valid registration number
     [Documentation]    INFUND-8870  IFS-7723
     [Tags]  HappyPath
-    When the applicant searches for organisation     00445790
-    Then the user should see the element             link = TESCO PLC
+    When the user searches for organisation     00445790
+    Then the user should see the element        link = TESCO PLC
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887  IFS-7723
     [Tags]
-    When the applicant searches for organisation     ${EMPTY}
-    Then the user should see the element             jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
+    When the user searches for organisation     ${EMPTY}
+    Then the user should see the element        jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
 
 Companies House: Empty company name field validation message
     [Documentation]    IFS-7723  IFS-7722
     [Tags]
     Given the user clicks the button/link                  link = Back to enter your organisation's details
-    When the applicant searches for organisation           ${EMPTY}
+    When the user searches for organisation                ${EMPTY}
     Then the user should see a field and summary error     You must enter an organisation name or company registration number.
 
 Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888  IFS-7724
     [Tags]
-    Given the applicant searches for organisation                    Not exist
-    When the applicant clicks link to find out what to do
-    Then the applicant clicks link to enter its details manually
+    Given the user searches for organisation                    Not exist
+    When the user clicks link to find out what to do
+    Then the user clicks link to enter its details manually
 
 Not in Companies House: Return to the original search page
      [Documentation]    INFUND-888  IFS-7724
@@ -97,12 +99,15 @@ Not in Companies House: Manually add the details validation message
     And the user should see a field and summary error      You must enter your organisation's name.
     Then the user should see a field and summary error     Search using a valid postcode or enter the address manually.
 
-Not in Companies House: Manually add the details and pass to the confirmation page
+Not in Companies House: Manually add the details as a new user and pass to the confirmation page
     [Documentation]    INFUND-888  IFS-7724
     [Tags]
-    Given the applicant manually adds company details
-    When the user clicks the button/link                      jQuery = button:contains("Save and continue")
-    Then the applicant confirms and saves company details
+    Given the user manually adds company details                         ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
+    And the user enters address manually                                 ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
+    When the user clicks the button/link                                 jQuery = button:contains("Save and continue")
+    Then the user confirms and saves company details                     ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  2
+    And user checks back link and click save and continue
+    And the user verifies his email and checks his organisation name     ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}
 
 *** Keywords ***
 Applicant goes to the organisation search page
@@ -119,85 +124,7 @@ user selects where is organisation based
     the user selects the radio button     international  isNotInternational
     the user clicks the button/link       id = international-organisation-cta
 
-the applicant searches for organisation
-    [Arguments]  ${searchTerm}
-    the user enters text to a text field     id = organisationSearchName     ${searchTerm}
-    the user clicks the button/link          id = org-search
+user checks back link and click save and continue
+    the user clicks the button/link     link = Back to confirm your organisation
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
-the applicant clicks link to find out what to do
-    the user clicks the button/link     link = Find out what to do
-    the user should see the element     jQuery = h1:contains("Organisations not registered on Companies House")
-
-the applicant clicks link to enter its details manually
-    the user clicks the button/link     link = enter its details manually
-    the user should see the element     jQuery = h1:contains("Manually enter your organisation's details")
-
-the applicant manually adds company details
-    the user enters text to a text field       name = organisationName              ${organisation_name}
-    the user enters text to a text field       name = organisationNumber            ${organisation_number}
-    the user enters text to a text field       name = businessType                  ${business_type}
-    the user enters text to a text field       name = sicCodes[0].sicCode           ${sic_code}
-    the applicant adds SIC code
-    the applicant removes SIC code
-    the user enters text to a text field       name = executiveOfficers[0].name     ${executive_officer}
-    the applicant adds Executive officer
-    the applicnt removes Executive officer
-    the applicant enters address manually
-
-the applicant adds SIC code
-    the user clicks the button/link          jQuery = button:contains("+ Add SIC code")
-    the user enters text to a text field     name = sicCodes[1].sicCode                     44444
-
-the applicant removes SIC code
-    the user clicks the button/link          jQuery = #sic-code-row-1 button:contains("Remove")
-    the user should not see the element      id = sic-code-row-1
-
-the applicant adds Executive officer
-    the user clicks the button/link          jQuery = button:contains("+ Add executive officer")
-    the user enters text to a text field     name = executiveOfficers[1].name                        Barrington Levy
-
-the applicnt removes Executive officer
-    the user clicks the button/link          jQuery = #exec-officer-row-1 button:contains("Remove")
-    the user should not see the element      id = exec-officer-row-1
-
-the applicant enters address manually
-    the user clicks the button/link          jQuery = button:contains("Enter address manually")
-    the user enters text to a text field     id = addressForm.manualAddress.addressLine1            ${address_line_1}
-    the user enters text to a text field     id = addressForm.manualAddress.addressLine2            ${address_line_2}
-    the user enters text to a text field     id = addressForm.manualAddress.addressLine3            ${address_line_3}
-    the user enters text to a text field     id = addressForm.manualAddress.town                    ${address_town}
-    the user enters text to a text field     id = addressForm.manualAddress.county                  ${address_county}
-    the user enters text to a text field     id = addressForm.manualAddress.postcode                ${address_postcode}
-
-the applicant confirms and saves company details
-    the user should see the element                    jQuery = h1:contains("Confirm your organisation")
-    the user should see the element                    jQuery = dt:contains("Organisation type")
-    the user should see the element                    jQuery = dd:contains("Business")
-    the user should see the element                    jQuery = dt:contains("Business type")
-    the user should see the element                    jQuery = dd:contains("${business_type}")
-    the user should see the element                    jQuery = dt:contains("Is your organisation based in the UK?")
-    the user should see the element                    jQuery = dd:contains("Yes")
-    the user should see the element                    jQuery = dt:contains("Organisation name")
-    the user should see the element                    jQuery = dd:contains("${organisation_name}")
-    the user should see the element                    jQuery = dt:contains("Organisation number")
-    the user should see the element                    jQuery = dd:contains("${organisation_number}")
-    the user should see the element                    jQuery = dt:contains("SIC code")
-    the user should see the element                    jQuery = dd div:contains("${sic_code}")
-    the user should see the element                    jQuery = dt:contains("Executive officers")
-    the user should see the element                    jQuery = dd div:contains("${executive_officer}")
-    the user should see the element                    jQuery = dt:contains("Registered address")
-    the user should see the element                    jQuery = dd div:contains("${address_line_1}")
-    the user should see the element                    jQuery = dd div:contains("${address_line_2}")
-    the user should see the element                    jQuery = dd div:contains("${address_line_3}")
-    the user should see the element                    jQuery = dd div:contains("${address_town}")
-    the user should see the element                    jQuery = dd div:contains("${address_county}")
-    the user should see the element                    jQuery = dd div:contains("${address_postcode}")
-    the user clicks the button/link                    jQuery = button:contains("Save and continue")
-    the user should see the element                    jQuery = h1:contains("Your details")
-    the user clicks the button/link                    link = Back to confirm your organisation
-    the user clicks the button/link                    jQuery = button:contains("Save and continue")
-    the user creates an account and verifies email     Sherlock  Holmes  ${applicant_email}  ${shortpassword}
-    logging in and Error Checking                      ${applicant_email}  ${shortpassword}
-    the user clicks the button/link                    link = Untitled application (start here)
-    the user clicks the button/link                    link = Application team
-    the user should see the element                    jQuery = h2:contains("${organisation_name}")
