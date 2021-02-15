@@ -89,11 +89,11 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
             case SKILL_AREAS:
                 return Sort.by(ASC, "profile.skillsAreas");
             case TOTAL_APPLICATIONS:
-                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.totalApplications);
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.TOTAL_APPLICATIONS);
             case ASSIGNED:
-                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.assigned);
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.ASSIGNED);
             case SUBMITTED:
-                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.submitted);
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.SUBMITTED);
         }
         throw new IFSRuntimeException("Unknown sort type " + sort.name());
     }

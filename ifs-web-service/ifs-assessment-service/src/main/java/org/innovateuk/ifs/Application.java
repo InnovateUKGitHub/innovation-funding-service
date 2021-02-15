@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = { "classpath:/application.properties", "classpath:/assessmentapplication.properties" })
-@SpringBootApplication
+@SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class Application extends SpringBootServletInitializer {
 

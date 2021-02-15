@@ -46,6 +46,8 @@ public class ApplicationProcurementMilestoneFormSaver extends AbstractProcuremen
             case "successCriteria":
                 milestone.setSuccessCriteria(value);
                 break;
+            default:
+                // do nothing
         }
         service.update(milestone);
         return Optional.of(milestone.getId());

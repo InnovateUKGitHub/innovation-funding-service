@@ -79,8 +79,9 @@ public class ManageProjectStateController {
                 return projectStateRestService.completeProjectOffline(projectId);
             case ON_HOLD:
                 return projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource(form.getOnHoldReason(), form.getOnHoldDetails()));
+            default:
+                throw new IFSRuntimeException("Unknown project state");
         }
-        throw new IFSRuntimeException("Unknown project state");
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {

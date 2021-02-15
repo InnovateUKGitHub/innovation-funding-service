@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config.thymeleaf;
+package org.innovateuk.ifs.config;
 
 import org.innovateuk.ifs.util.ThymeleafUtil;
 import org.thymeleaf.context.IExpressionContext;
