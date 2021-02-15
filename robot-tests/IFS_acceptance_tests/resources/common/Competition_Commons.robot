@@ -13,7 +13,7 @@ The competition admin creates competition
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
-    Run Keyword If  '${fundingType}' == 'PROCUREMENT' and ${fundingRule} != "STATE_AID"  the user selects procurement Terms and Conditions
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT' and "${fundingRule}" != "SUBSIDY_CONTROL"  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions    ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
@@ -86,15 +86,17 @@ the user fills in the CS Initial details
 
 the user selects procurement Terms and Conditions
     the user clicks the button/link                                     link = Terms and conditions
-    the user clicks the button/link                                     jQuery = label:contains("Procurement")
+    #the user clicks the button/link                                     jQuery = label:contains("Procurement")
     the user performs procurement Terms and Conditions validations
     the user uploads the file                                           css = .inputfile  ${valid_pdf}
     the user clicks the button/link                                     jQuery = button:contains("Done")
+    #the user clicks the button/link                                     jQuery = button:contains("Done")
+    the user should see the element                                     jQuery = a:contains("Procurement (opens in a new window)")
     the user clicks the button/link                                     link = Back to competition details
     the user should see the element                                     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user performs procurement Terms and Conditions validations
-    the user clicks the button/link                   jQuery = button:contains("Done")
+    the user clicks the button/link                   jQuery = button:contains("Done")   #Is this needed?
     the user should see a field and summary error     Upload a terms and conditions document.
     the user uploads the file                         css = .inputfile  ${ods_file}
     the user should see the element                   jQuery = :contains("${wrong_filetype_validation_error}")
