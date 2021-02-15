@@ -98,7 +98,7 @@ The competition admin creates a competition for
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  SUBSIDY_CONTROL  GRANT
-    the user selects the Terms and Conditions               SUBSIDY_CONTROL
+    the user selects the Terms and Conditions               ${compType_Generic}  SUBSIDY_CONTROL
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%
     the user fills in the CS funding eligibility            true   ${compType_Generic}
