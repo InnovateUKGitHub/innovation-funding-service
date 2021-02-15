@@ -93,13 +93,13 @@
                 <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
                     <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
                        class="govuk-link">your project finances</a>
+                </p>
             </th:block>
             <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
                     You can also <a
                     th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
                     class="govuk-link">view the project finance overview</a>.
             </th:block>
-            </p>
         </th:block>
 
         <th:block th:unless="${model.noQueries()}">
