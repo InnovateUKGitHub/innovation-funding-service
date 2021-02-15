@@ -93,7 +93,7 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     }
 
     private String replaceNewline(String html) {
-        return html.replaceAll("\n", "");
+        return html.replace("\n", "");
     }
 
     private ApplicationNotificationTemplateResource toResource(String content) {
