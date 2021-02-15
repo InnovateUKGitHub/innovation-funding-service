@@ -337,7 +337,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(true, result.isSuccess());
         assertNotEquals(appendixEnabled, appendixFormInput.getActive());
-        assertNotEquals(allowedFileTypes, appendixFormInput.getAllowedFileTypes());
+        assertNull(appendixFormInput.getAllowedFileTypes());
         assertNotEquals(guidanceAnswer, appendixFormInput.getGuidanceAnswer());
     }
 

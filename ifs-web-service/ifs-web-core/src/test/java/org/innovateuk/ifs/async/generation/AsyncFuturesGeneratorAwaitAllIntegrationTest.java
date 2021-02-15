@@ -77,7 +77,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         CompletableFuture<Integer> future = generator.async(() -> 3);
         CompletableFuture<Integer> awaitingFuture = generator.awaitAll(future).thenApply(result -> result * 3);
 
-        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
             assertEquals(2, registeredFutures.size());
         assertEquals(future, registeredFutures.get(0).getFuture());
         assertEquals(awaitingFuture, registeredFutures.get(1).getFuture());
@@ -98,7 +98,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         Integer finalResult = awaitingFuture.get();
         assertEquals(Integer.valueOf(7), finalResult);
 
-        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
         assertEquals(3, registeredFutures.size());
         assertEquals(future1, registeredFutures.get(0).getFuture());
         assertEquals(future2, registeredFutures.get(1).getFuture());
@@ -121,7 +121,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         Integer finalResult = awaitingFuture.get();
         assertEquals(Integer.valueOf(12), finalResult);
 
-        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
         assertEquals(4, registeredFutures.size());
         assertEquals(future1, registeredFutures.get(0).getFuture());
         assertEquals(future2, registeredFutures.get(1).getFuture());
@@ -146,7 +146,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         Integer finalResult = awaitingFuture.get();
         assertEquals(Integer.valueOf(18), finalResult);
 
-        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
         assertEquals(5, registeredFutures.size());
         assertEquals(future1, registeredFutures.get(0).getFuture());
         assertEquals(future2, registeredFutures.get(1).getFuture());
@@ -184,7 +184,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         awaitingFuture.get();
         assertEquals(asList(3, 4, 5, 6, 7), results);
 
-        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
         assertEquals(6, registeredFutures.size());
         assertEquals(future1, registeredFutures.get(0).getFuture());
         assertEquals(future2, registeredFutures.get(1).getFuture());
@@ -305,7 +305,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
 
         awaitAll.get();
 
-        List<RegisteredAsyncFutureDetails<?>> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
         List<String> futureNames = simpleMap(registeredFutures, RegisteredAsyncFutureDetails::getFutureName);
         assertThat(futureNames, contains("future", "Waiting for future", "childFuture", "Waiting for childFuture"));
     }
