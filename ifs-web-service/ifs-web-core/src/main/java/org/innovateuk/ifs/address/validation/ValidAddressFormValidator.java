@@ -11,10 +11,6 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 public class ValidAddressFormValidator implements ConstraintValidator<ValidAddressForm, AddressForm> {
 
     @Override
-    public void initialize(ValidAddressForm constraintAnnotation) {
-    }
-
-    @Override
     public boolean isValid(AddressForm value, ConstraintValidatorContext context) {
         boolean valid;
         if (value.getAction().equals(AddressForm.Action.SAVE)) {

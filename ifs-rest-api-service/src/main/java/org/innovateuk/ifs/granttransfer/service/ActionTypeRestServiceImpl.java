@@ -13,16 +13,16 @@ import java.util.List;
  */
 @Service
 public class ActionTypeRestServiceImpl extends BaseRestService implements ActionTypeRestService {
-    private static final String baseURL = "/action-type";
+    private static final String BASE_URL = "/action-type";
 
     @Override
     public RestResult<List<EuActionTypeResource>> findAll() {
-        return getWithRestResult(baseURL + "/find-all", euActionTypeResourceListType());
+        return getWithRestResult(BASE_URL + "/find-all", euActionTypeResourceListType());
     }
 
     @Override
     public RestResult<EuActionTypeResource> getById(long id) {
-        return getWithRestResult(baseURL + "/get-by-id/" + id, EuActionTypeResource.class);
+        return getWithRestResult(BASE_URL + "/get-by-id/" + id, EuActionTypeResource.class);
     }
 
     public static ParameterizedTypeReference<List<EuActionTypeResource>> euActionTypeResourceListType() {

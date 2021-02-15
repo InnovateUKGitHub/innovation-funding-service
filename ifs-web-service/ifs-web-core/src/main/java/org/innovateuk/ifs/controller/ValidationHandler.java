@@ -106,7 +106,7 @@ public class ValidationHandler {
         return (bindingResult.getAllErrors().size() > (totalFieldErrorCount - filteredFieldErrorCount)) || filteredFieldErrorCount > 0;
     }
 
-    public List<? extends ObjectError> getAllErrors() {
+    public List<ObjectError> getAllErrors() {
         return bindingResult.getAllErrors();
     }
 
