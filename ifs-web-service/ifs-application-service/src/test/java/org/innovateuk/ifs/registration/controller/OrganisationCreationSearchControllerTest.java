@@ -103,6 +103,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         organisationSearchResult.setOrganisationExecutiveOfficers(DIRECTORS);
         organisationSearchResult.setOrganisationSicCodes(SIC_CODES);
+        organisationSearchResult.getExtraAttributes().put("date_of_creation",DATE_OF_INCORPORATION.toString());
 
         when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
