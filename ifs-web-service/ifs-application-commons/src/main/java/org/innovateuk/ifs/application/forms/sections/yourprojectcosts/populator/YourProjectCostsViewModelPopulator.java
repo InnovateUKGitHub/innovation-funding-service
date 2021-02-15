@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 
 @Component
@@ -58,7 +57,6 @@ public class YourProjectCostsViewModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
@@ -71,6 +69,34 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
+        if (competition.isKtp() && fecFinanceModelEnabled) {
+            return getYourFecProjectCostsViewModel(applicationId, sectionId, organisationId, user, application, competition, organisation, completedSectionIds, open, complete, includeVat);
+        } else {
+            return new YourProjectCostsViewModel(applicationId,
+                    competition.getName(),
+                    sectionId,
+                    competition.getId(),
+                    organisationId,
+                    complete,
+                    open,
+                    includeVat,
+                    application.getName(),
+                    organisation.getName(),
+                    getYourFinancesUrl(applicationId, organisationId),
+                    FundingType.PROCUREMENT == competition.getFundingType(),
+                    FundingType.KTP == competition.getFundingType(),
+                    competition.getFinanceRowTypes(),
+                    competition.isOverheadsAlwaysTwenty(),
+                    CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
+                    organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()));
+        }
+    }
+
+    private YourProjectCostsViewModel getYourFecProjectCostsViewModel(long applicationId, long sectionId, long organisationId,
+                                                                      UserResource user, ApplicationResource application,
+                                                                      CompetitionResource competition, OrganisationResource organisation,
+                                                                      List<Long> completedSectionIds, boolean open, boolean complete, boolean includeVat) {
+        ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
@@ -106,25 +132,13 @@ public class YourProjectCostsViewModelPopulator {
     }
 
     private Long getYourFundingSectionId(ApplicantSectionResource section) {
-        if (competitionIsKtp(section)) {
-            SectionResource yourFundingSection = sectionService.getFundingFinanceSection(section.getCompetition().getId());
-            return yourFundingSection.getId();
-        } else {
-            return null;
-        }
+        SectionResource yourFundingSection = sectionService.getFundingFinanceSection(section.getCompetition().getId());
+        return yourFundingSection.getId();
     }
 
     private Long getYourFecCostSectionId(ApplicantSectionResource section) {
-        if (competitionIsKtp(section)) {
-            SectionResource yourFecCostSection = sectionService.getFecCostFinanceSection(section.getCompetition().getId());
-            return yourFecCostSection.getId();
-        } else {
-            return null;
-        }
-    }
-
-    private boolean competitionIsKtp(ApplicantSectionResource section) {
-        return FundingType.KTP == section.getCompetition().getFundingType();
+        SectionResource yourFecCostSection = sectionService.getFecCostFinanceSection(section.getCompetition().getId());
+        return yourFecCostSection.getId();
     }
 
     private boolean isOrganisationTypeKnowledgeBase(ApplicantSectionResource section) {
@@ -133,9 +147,7 @@ public class YourProjectCostsViewModelPopulator {
 
     private boolean isProjectCostSectionLocked(ApplicantSectionResource section, boolean open, boolean yourFundingRequired, boolean yourFecCostRequired) {
         boolean fieldsRequired = yourFundingRequired || yourFecCostRequired;
-        return fecFinanceModelEnabled
-                && competitionIsKtp(section)
-                && open
+        return open
                 && isOrganisationTypeKnowledgeBase(section)
                 && fieldsRequired;
     }

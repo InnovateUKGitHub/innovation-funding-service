@@ -100,6 +100,28 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.yourFecCostSectionId = yourFecCostSectionId;
     }
 
+    public YourProjectCostsViewModel(long applicationId,
+                                     String competitionName,
+                                     long sectionId,
+                                     long competitionId,
+                                     long organisationId,
+                                     boolean complete,
+                                     boolean open,
+                                     boolean includeVat,
+                                     String applicationName,
+                                     String organisationName,
+                                     String financesUrl,
+                                     boolean procurementCompetition,
+                                     boolean ktpCompetition,
+                                     List<FinanceRowType> financeRowTypes,
+                                     boolean overheadAlwaysTwenty,
+                                     boolean showCovidGuidance,
+                                     boolean showJustificationForm) {
+        this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
+                includeVat, applicationName, organisationName, financesUrl, procurementCompetition, ktpCompetition, financeRowTypes,
+                overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false, false, null, false, null);
+    }
+
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
