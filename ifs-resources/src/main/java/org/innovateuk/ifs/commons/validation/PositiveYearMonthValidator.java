@@ -12,10 +12,6 @@ import java.time.YearMonth;
 public class PositiveYearMonthValidator implements ConstraintValidator<PositiveYearMonth, YearMonth> {
 
     @Override
-    public void initialize(PositiveYearMonth constraintAnnotation) {
-    }
-
-    @Override
     public boolean isValid(YearMonth value, ConstraintValidatorContext context) {
 
         if (value == null) {
