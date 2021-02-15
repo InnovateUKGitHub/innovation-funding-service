@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRestService;
-import org.innovateuk.ifs.questionnaire.populator.AnsweredQuestionViewModelPopulator;
+import org.innovateuk.ifs.questionnaire.response.populator.AnsweredQuestionViewModelPopulator;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.populator;
+package org.innovateuk.ifs.questionnaire.response.populator;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestService;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRest
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
-import org.innovateuk.ifs.questionnaire.viewmodel.AnsweredQuestionViewModel;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.AnsweredQuestionViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

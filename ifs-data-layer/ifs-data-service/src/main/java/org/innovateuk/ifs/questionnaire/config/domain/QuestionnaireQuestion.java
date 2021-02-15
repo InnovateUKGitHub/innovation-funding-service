@@ -5,6 +5,7 @@ import org.innovateuk.ifs.questionnaire.resource.DecisionType;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class QuestionnaireQuestion extends QuestionnaireDecision {
@@ -74,5 +75,11 @@ public class QuestionnaireQuestion extends QuestionnaireDecision {
     @Override
     public DecisionType getDecisionType() {
         return DecisionType.QUESTION;
+    }
+
+    public List<QuestionnaireQuestion> getPreviousQuestions() {
+        return getOptionsLinkedToThisDecision().stream()
+                .map(QuestionnaireOption::getQuestion)
+                .collect(Collectors.toList());
     }
 }

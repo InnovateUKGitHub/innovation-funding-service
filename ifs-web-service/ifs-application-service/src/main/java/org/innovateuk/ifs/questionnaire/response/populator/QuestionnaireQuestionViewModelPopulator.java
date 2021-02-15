@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.populator;
+package org.innovateuk.ifs.questionnaire.response.populator;
 
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRestService;
@@ -8,7 +8,7 @@ import org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResource;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireResource;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireResponseResource;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
-import org.innovateuk.ifs.questionnaire.viewmodel.QuestionnaireQuestionViewModel;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.QuestionnaireQuestionViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

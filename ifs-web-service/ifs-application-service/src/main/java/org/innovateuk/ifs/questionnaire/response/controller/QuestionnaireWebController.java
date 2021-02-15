@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.controller;
+package org.innovateuk.ifs.questionnaire.response.controller;
 
 
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -8,8 +8,8 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestSe
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeRestService;
-import org.innovateuk.ifs.questionnaire.form.QuestionnaireQuestionForm;
-import org.innovateuk.ifs.questionnaire.populator.QuestionnaireQuestionViewModelPopulator;
+import org.innovateuk.ifs.questionnaire.response.form.QuestionnaireQuestionForm;
+import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestionViewModelPopulator;
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;

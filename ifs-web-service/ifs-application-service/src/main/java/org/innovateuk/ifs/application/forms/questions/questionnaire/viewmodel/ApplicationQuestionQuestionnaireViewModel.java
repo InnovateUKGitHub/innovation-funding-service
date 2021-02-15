@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.questionnaire.viewmodel.AnsweredQuestionViewModel;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.AnsweredQuestionViewModel;
 
 import java.util.List;
 import java.util.Objects;

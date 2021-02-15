@@ -13,7 +13,7 @@ public class QuestionnaireOption {
 
     private String text;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="questionnaireDecisionId", referencedColumnName="id")
     private QuestionnaireDecision decision;
 

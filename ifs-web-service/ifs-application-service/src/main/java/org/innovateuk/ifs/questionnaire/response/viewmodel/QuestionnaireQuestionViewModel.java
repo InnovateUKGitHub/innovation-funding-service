@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.viewmodel;
+package org.innovateuk.ifs.questionnaire.response.viewmodel;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireOptionResource;

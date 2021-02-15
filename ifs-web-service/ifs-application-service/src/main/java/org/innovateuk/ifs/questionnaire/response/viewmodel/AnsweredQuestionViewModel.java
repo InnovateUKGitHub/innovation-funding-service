@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.viewmodel;
+package org.innovateuk.ifs.questionnaire.response.viewmodel;
 
 public class AnsweredQuestionViewModel {
 

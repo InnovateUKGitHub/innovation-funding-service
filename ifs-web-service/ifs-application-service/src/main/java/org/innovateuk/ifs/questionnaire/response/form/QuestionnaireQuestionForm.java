@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.form;
+package org.innovateuk.ifs.questionnaire.response.form;
 
 import javax.validation.constraints.NotNull;
 

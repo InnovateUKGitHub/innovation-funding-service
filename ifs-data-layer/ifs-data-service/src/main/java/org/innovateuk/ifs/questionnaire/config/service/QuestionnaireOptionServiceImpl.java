@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.service;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crud.AbstractIfsCrudServiceImpl;
 import org.innovateuk.ifs.questionnaire.config.domain.QuestionnaireOption;
 import org.innovateuk.ifs.questionnaire.config.domain.QuestionnaireQuestion;
@@ -13,6 +14,9 @@ import org.innovateuk.ifs.questionnaire.resource.QuestionnaireOptionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class QuestionnaireOptionServiceImpl extends AbstractIfsCrudServiceImpl<QuestionnaireOptionResource, QuestionnaireOption, Long> implements QuestionnaireOptionService {
@@ -60,6 +64,19 @@ public class QuestionnaireOptionServiceImpl extends AbstractIfsCrudServiceImpl<Q
         }
         domain.setText(resource.getText());
         return domain;
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> delete(Long id) {
+        return get(id)
+                .andOnSuccess(option -> {
+                    if (option.getDecisionType() == DecisionType.TEXT_OUTCOME) {
+                        questionnaireTextOutcomeRepository.deleteById(option.getDecision());
+                    }
+                    return serviceSuccess();
+                })
+                .andOnSuccess(() -> super.delete(id));
     }
 
     private int calculateDepth(QuestionnaireQuestion question) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<!--/*@thymesVar id="answers" type="java.util.List<org.innovateuk.ifs.questionnaire.viewmodel.AnsweredQuestionViewModel>"*/-->
+<!--/*@thymesVar id="answers" type="java.util.List<org.innovateuk.ifs.questionnaire.response.viewmodel.AnsweredQuestionViewModel>"*/-->
 <!--/*@thymesVar id="title" type="java.lang.String"*/-->
 <th:block th:fragment="answer-table(title, answers)">
     <table class="govuk-table govuk-!-margin-top-3" th:unless="${answers == null or answers.isEmpty()}">

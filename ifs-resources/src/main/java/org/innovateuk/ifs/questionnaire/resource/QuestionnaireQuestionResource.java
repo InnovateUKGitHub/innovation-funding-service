@@ -15,6 +15,8 @@ public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource
 
     private List<Long> options = new ArrayList<>();
 
+    private List<Long> previousQuestions = new ArrayList<>();
+
     public int getDepth() {
         return depth;
     }
@@ -61,5 +63,13 @@ public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource
 
     public void setOptions(List<Long> options) {
         this.options = options;
+    }
+
+    public List<Long> getPreviousQuestions() {
+        return previousQuestions;
+    }
+
+    public void setPreviousQuestions(List<Long> previousQuestions) {
+        this.previousQuestions = previousQuestions;
     }
 }
