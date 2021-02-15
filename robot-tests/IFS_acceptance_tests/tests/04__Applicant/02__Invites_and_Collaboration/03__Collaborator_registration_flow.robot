@@ -92,7 +92,7 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     When the user clicks the button/link                                jQuery = .govuk-button:contains("Search")
     And the user should see a field error                               You must enter an organisation name or company registration number.
     When the user searches for organisation                             Not exist
-    And the user navigates to enter Companie House details manually
+    And the user navigates to enter Companies House details manually
     And the user manually adds company details                          ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
     And the user enters address manually                                ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
     And the user clicks the button/link                                 jQuery = button:contains("Save and continue")
@@ -148,7 +148,7 @@ the user enters organisation details
     the user clicks the button/link            link = ROYAL MAIL PLC
     the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
 
-the user navigates to enter Companie House details manually
+the user navigates to enter Companies House details manually
     the user clicks link to find out what to do
     the user clicks link to enter its details manually
 

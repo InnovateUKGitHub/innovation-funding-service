@@ -564,12 +564,7 @@ the user applies to competition and enters organisation type link
     The user clicks the button/link                     link = Continue and create an account
     the user selects the radio button                   organisationTypeId  ${organisationType}
     the user clicks the button/link                     jQuery = button:contains("Save and continue")
-#  TODO should uncommnet on ifs-7224
-#    the user clicks the Not on companies house link     ${organisationName}
-#    the user clicks the button/link                     jQuery = button:contains("Save and continue")
-#  TODO should remove on ifs-7224
     the user search for organisation name on Companies house   ITV  ${organisationName}
-
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}

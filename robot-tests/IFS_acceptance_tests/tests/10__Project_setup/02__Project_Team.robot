@@ -35,6 +35,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-7723 Improvement to company search results
 ...
+...             IFS-7724 Input organisation details manually
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/common/PS_Common.robot
@@ -68,6 +70,20 @@ ${intFinanceAddOrgEmail}     finance@addorg.com
 ${applicationName}           PSC application 7
 ${orgInviterName}            Ward Ltd
 ${PSCapplicationTeamPage}    ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 5"]}/project/${project_ids["PSC application 5"]}/team
+${business_type}             Partnership
+${organisation_name}         Terrific Test Company
+${organisation_number}       0987656789
+${sic_code}                  33300
+${executive_officer}         Marshall Mathers
+${address_line_1}            123
+${address_line_2}            Excellent Test Street
+${address_line_3}            Tranquil
+${address_town}              London
+${address_county}            Middlesex
+${address_postcode}          NW11 8AJ
+${applicant_first_name}      Roy
+${applicant_last_name}       Keane
+${applicant_email}           roy@keane.com
 
 *** Test Cases ***
 Monitoring Officers has a read only view of the Project team page
@@ -203,11 +219,11 @@ Project finance is able to remove a partner organisation
     Then the relevant users recieve an email notification  Red Planet
 
 Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505  IFS-7723
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723  IFS-7724
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  ROYAL  ROYAL MAIL PLC
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}
 
 IFS admin checks for staus update after new org added
     [Documentation]  IFS-6783
@@ -215,11 +231,11 @@ IFS admin checks for staus update after new org added
     Then the internal user checks for status after new org added/removed
 
 Two organisations with the same name are not able to join
-    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723  IFS-7724
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
-    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  ROYAL  ROYAL MAIL PLC
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom
     [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
@@ -239,7 +255,7 @@ Ifs Admin is able to remove a pending partner organisation
     Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505  IFS-7723
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723  IFS-7724
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
@@ -327,19 +343,19 @@ lead able to submit only exploitation plan when all partners removed from projec
 
 *** Keywords ***
 the same organisation isnt able to join the project
-    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
+    [Arguments]  ${fname}  ${sname}  ${email}
     logout as user
     the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
-    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user accepts invitation and selects organisation type
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user should see the element                               jQuery = h1:contains("Contact our Customer Support team")
 
 a new organisation is able to accept project invite
-    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
+    [Arguments]  ${fname}  ${sname}  ${email}
     logout as user
     the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
-    the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
+    the user accepts invitation and selects organisation type
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user verifies their account                               ${email}
@@ -354,11 +370,16 @@ A new organisation logs in and sees the project
     Logging in and Error Checking     ${email}  ${short_password}
 
 The user accepts invitation and selects organisation type
-    [Arguments]   ${orgId}  ${orgName}
-    the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationTypeId    1
-    the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House  ${orgId}  ${orgName}
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button                      organisationTypeId    1
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Save and continue")
+    the user searches for organisation                     Not exist
+    the user clicks link to find out what to do
+    the user clicks link to enter its details manually
+    the user manually adds company details                 ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
+    the user enters address manually                       ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
+    the user clicks the button/link                        jQuery = button:contains("Save and continue")
+    the user confirms and saves company details            Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
 
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
