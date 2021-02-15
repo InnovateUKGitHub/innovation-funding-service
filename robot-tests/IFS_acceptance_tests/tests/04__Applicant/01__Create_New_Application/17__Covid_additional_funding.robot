@@ -45,7 +45,7 @@ New external project finance can create account
     Then The user should not see the element             link = ${COVIDcompetitionTitle}
 
 Create application to covid comp
-    [Documentation]  IFS-7441
+    [Documentation]  IFS-7441 comp=turnrgiun
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page   ${server}/competition/${COVIDcompetitionId}/overview
     Then the user completes covid application

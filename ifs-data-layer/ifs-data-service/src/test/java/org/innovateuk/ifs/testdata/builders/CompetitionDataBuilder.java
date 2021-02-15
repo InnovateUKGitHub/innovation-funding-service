@@ -454,7 +454,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     = new CompetitionSetupFinanceResource();
             competitionSetupFinanceResource.setCompetitionId(data.getCompetition().getId());
             competitionSetupFinanceResource.setApplicationFinanceType(line.getApplicationFinanceType());
-            competitionSetupFinanceResource.setIncludeGrowthTable(line.getIncludeProjectGrowth());
+            if (line.getIncludeProjectGrowth() != null) {
+                competitionSetupFinanceResource.setIncludeGrowthTable(line.getIncludeProjectGrowth());
+            }
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(line.getIncludeYourOrganisation());
             competitionSetupFinanceResource.setIncludeJesForm(line.getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);

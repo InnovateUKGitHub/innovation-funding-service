@@ -104,7 +104,9 @@ public class CompetitionWebTestData {
                 loanCompetition()
                         .withName("Project setup loan comp"),
                 grantCompetition()
-                        .withName("583 Covid deminis round 1 project setup"),
+                        .withName("583 Covid deminis round 1 project setup")
+                        .withIncludeProjectGrowth(null)
+                        .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Post award service competition"),
                 grantCompetition()
@@ -142,7 +144,9 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Living models for the future"),
                 grantCompetition()
-                        .withName("583 Covid deminis round 1"),
+                        .withName("583 Covid deminis round 1")
+                        .withIncludeProjectGrowth(null)
+                        .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice assessed"),
                 ktpCompetition()
@@ -208,6 +212,7 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Home and industrial efficiency programme")
+                        .withAssessorCount(1)
                         .withLeadApplicantTypes(asSet(BUSINESS, RTO)),
                 grantCompetition()
                         .withName("Predicting market trends programme")
@@ -255,9 +260,13 @@ public class CompetitionWebTestData {
                         .withName("International Competition"),
                 grantCompetition()
                         .withName("596 Covid grants framework group")
+                        .withIncludeProjectGrowth(null)
+                        .withIncludeYourOrganisation(false)
                         .withResubmission(true),
                 grantCompetition()
-                        .withName("599 Covid de minimis round 2"),
+                        .withName("599 Covid de minimis round 2")
+                        .withIncludeProjectGrowth(null)
+                        .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice open"),
                 grantCompetition()
