@@ -226,7 +226,7 @@ Ifs Admin is able to add a new partner organisation by entering details manually
     Then a new organisation not in companies house is able to accept project invite     ${applicant_email}
 
 Two organisations with the same name are able to join by entering details manually
-    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723  IFS-7724
     [Setup]  log in as a different user                                                 &{ifs_admin_user_credentials}
     Given the user navigates to the page                                                ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation                                       Amazing Test Org Name  ${applicant_first_name} ${applicant_last_name}  amazing@test.com
