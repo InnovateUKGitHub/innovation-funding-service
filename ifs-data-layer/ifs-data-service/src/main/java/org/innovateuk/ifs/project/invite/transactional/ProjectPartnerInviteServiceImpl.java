@@ -230,7 +230,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
                                     Competition competition = project.getApplication().getCompetition();
 
-                                    if (competition.isProcurement()) {
+                                    if (competition.isProcurementMilestones()) {
                                         paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     }
 

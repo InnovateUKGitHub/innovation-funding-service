@@ -95,6 +95,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 case SPREADSHEET_FILE_TYPE:
                     validMediaTypes.addAll(SPREADSHEET.getMimeTypes());
                     break;
+                default:
+                    // do nothing
             }
         }
         return validMediaTypes;

@@ -90,6 +90,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case ADDITIONAL_COMPANY_COSTS:
                     messages.addAll(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance).get());
                     break;
+                default:
+                    // do nothing
             }
             if (messages.getErrors().isEmpty()) {
                 return serviceSuccess();

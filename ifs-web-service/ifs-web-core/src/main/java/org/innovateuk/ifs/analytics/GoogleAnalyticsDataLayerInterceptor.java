@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.lang.Long.parseLong;
 import static org.innovateuk.ifs.util.CollectionFunctions.negate;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 
 /**
@@ -110,10 +109,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         if (auth instanceof UserAuthentication) {
             UserAuthentication userAuth = (UserAuthentication) auth;
 
-            List<String> userRoles = simpleMap(
-                    userAuth.getAuthorities(),
-                    authority -> Role.getByName(authority.getAuthority().toLowerCase()).name()
-            );
+            List<String> userRoles = userAuth.getDetails()
+                    .getRoles()
+                    .stream()
+                    .map(Enum::name)
+                    .collect(Collectors.toList());
 
             dataLayer.setUserRoles(userRoles);
         }

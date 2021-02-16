@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "Controller for managing innovation leads", securedType = CompetitionSetupInnovationLeadController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupInnovationLeadController {
     private static final String COMPETITION_ID_KEY = "competitionId";
     private static final String MODEL = "model";

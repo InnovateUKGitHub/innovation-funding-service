@@ -122,6 +122,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Emails
      */
     EMAILS_NOT_SENT_MULTIPLE(INTERNAL_SERVER_ERROR),
+    EMAILS_FAILED_WHITELIST_BLACKLIST_CHECK(METHOD_NOT_ALLOWED),
 
     /**
      * Users

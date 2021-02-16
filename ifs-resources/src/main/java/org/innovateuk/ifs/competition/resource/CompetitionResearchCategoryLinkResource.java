@@ -7,10 +7,6 @@ public class CompetitionResearchCategoryLinkResource extends CategoryLinkResourc
 
     private CompetitionResource competition;
 
-    public CompetitionResearchCategoryLinkResource() {
-
-    }
-
     @Override
     public CompetitionResource getEntity() {
         return competition;

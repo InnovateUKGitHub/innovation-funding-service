@@ -12,6 +12,7 @@ import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionS
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/previous")
 @SecuredBySpring(value = "COMPETITION_PREVIOUS", description = "Only internal users can see previous applications")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
 public class PreviousCompetitionController {
 
     @Autowired
@@ -65,7 +65,7 @@ public class PreviousCompetitionController {
                 competitionResource,
                 applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
                 internalProjectSetupRows,
-                user.hasRole(PROJECT_FINANCE),
+                user.hasAuthority(Authority.PROJECT_FINANCE),
                 user.hasRole(Role.IFS_ADMINISTRATOR),
                 user.hasRole(Role.EXTERNAL_FINANCE))
         );
