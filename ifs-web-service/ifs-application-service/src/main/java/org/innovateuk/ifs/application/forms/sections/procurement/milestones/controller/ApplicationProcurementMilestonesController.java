@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.ApplicationProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
+import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -28,7 +28,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,7 +37,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/procurement-milestones/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "Applicants can update procurement milestones.")
-public class ApplicationProcurementMilestonesController {
+public class ApplicationProcurementMilestonesController extends AbstractProcurementMilestoneController {
     private static final String VIEW = "application/sections/procurement-milestones/application-procurement-milestones";
     private static final Log LOG = LogFactory.getLog(ApplicationProcurementMilestonesController.class);
 
@@ -179,21 +178,13 @@ public class ApplicationProcurementMilestonesController {
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
                              @PathVariable long sectionId) {
-        ProcurementMilestonesForm form = new ProcurementMilestonesForm();
-        saver.addRowForm(form);
-        Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
-
-        model.addAttribute("form", form);
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
-        model.addAttribute("id", entry.getKey());
-        model.addAttribute("row", entry.getValue());
-        return "application/procurement-milestones :: ajax-milestone-row";
+        return addAjaxRow(model);
     }
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
-        form.reorderMilestones();
-        return VIEW;
+        return viewMilestonesPage(model, form, user);
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
@@ -206,5 +197,15 @@ public class ApplicationProcurementMilestonesController {
 
     private String redirectToYourFinances(long applicationId) {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
+    }
+
+    @Override
+    protected String getView() {
+        return VIEW;
+    }
+
+    @Override
+    public ApplicationProcurementMilestoneFormSaver getSaver() {
+        return saver;
     }
 }

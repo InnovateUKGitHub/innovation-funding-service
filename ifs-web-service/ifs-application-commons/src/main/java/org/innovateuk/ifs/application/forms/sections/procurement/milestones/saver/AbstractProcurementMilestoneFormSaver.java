@@ -61,4 +61,14 @@ public abstract class AbstractProcurementMilestoneFormSaver<R extends Procuremen
         form.getMilestones().put(generateUnsavedRowId(), row);
     }
 
+    protected abstract ProcurementMilestoneResource getResource(String id, long targetId, long organisationId);
+
+    protected String idFromRowPath(String field) {
+        return field.substring(field.indexOf('[') + 1, field.indexOf(']'));
+    }
+
+    protected String fieldFromRowPath(String field) {
+        return field.substring(field.indexOf("].") + 2);
+    }
+
 }

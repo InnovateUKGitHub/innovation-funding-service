@@ -8,11 +8,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
@@ -76,7 +76,7 @@ public class FinanceChecksQueriesAddQueryController {
     @Autowired
     private EncryptedCookieService cookieUtil;
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceRestService;
     @Autowired
     private FinanceCheckService financeCheckService;
 
@@ -130,7 +130,7 @@ public class FinanceChecksQueriesAddQueryController {
             }
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
 
-            ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+            ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
 
             List<AttachmentResource> attachmentResources = new ArrayList<>();
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
