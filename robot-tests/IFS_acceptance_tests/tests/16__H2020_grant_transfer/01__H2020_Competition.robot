@@ -9,6 +9,8 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-6775 Initial details type ahead
 ...
+...            IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -40,7 +42,7 @@ User can populate the Completion Stage, Milestones and Public content
      [Teardown]  the user clicks the button/link                                    link = Return to setup overview
 
 User can populate Terms and Conditions
-    [Documentation]  IFS-5158
+    [Documentation]  IFS-5158  IFS-9124
     Given the user clicks the button/link           link = Terms and conditions
     When the user clicks the button/link            jQuery = button:contains("Done")
     And the user selects the radio button           termsAndConditionsId  24

@@ -25,6 +25,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8940 SBRI Milestones - Edit project duration in application
 ...
+...             IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -43,7 +45,7 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
     Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  2  false  single-or-collaborative
 
