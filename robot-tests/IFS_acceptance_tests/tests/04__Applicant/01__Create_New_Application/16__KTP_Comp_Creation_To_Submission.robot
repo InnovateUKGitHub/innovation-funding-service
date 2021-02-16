@@ -688,9 +688,9 @@ The lead should be able to access the finance overview page before approval
     [Documentation]  IFS-8328  IFS-7723
     When the user clicks the button/link                                             link = view the project finance overview
     Then the user should see the changes in the finance table in Overview screen
-    And The user should see the element                                              jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
-    And The user should not see the element                                          link = Change funding level percentages
-    [Teardown]  the user clicks the button/link                                      link = Back to finance checks
+    And The user should see the element                                               jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
+    And The user should not see the element                                           link = Change funding level percentages
+    [Teardown]  the user clicks the button/link                                       link = Back to finance checks
 
 The partner views the Project team section as Complete at all times
     [Documentation]  IFS-8116
@@ -1353,7 +1353,7 @@ MO should see read only view of project details
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT") ~ td:contains("Complete")
     the user should see the element             jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
     the user should see the element             jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
-    the user should not see the element         jQuery = button:contains("Edit")
+    the user should not see the element         jQThe applicants should not see knowledge baseduery = button:contains("Edit")
 
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
