@@ -16,10 +16,6 @@ public class MonitoringOfficerAssignRoleForm extends BaseBindingResultTarget {
     @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    // for spring form binding
-    public MonitoringOfficerAssignRoleForm() {
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }

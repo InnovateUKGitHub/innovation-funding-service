@@ -43,9 +43,6 @@ public class InviteCompetitionFinanceForm extends BaseBindingResultTarget {
         this.visible = visible;
     }
 
-    public InviteCompetitionFinanceForm() {
-    }
-
     public String getFirstName() {
         return firstName;
     }
