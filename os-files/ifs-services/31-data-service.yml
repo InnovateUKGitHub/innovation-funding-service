@@ -232,6 +232,11 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_EMAIL_BLACKLIST
+                - name: IFS_SYSTEM_EMAIL_ADDRESS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_EMAIL_ADDRESS
                 - name: IFS_DOCUSIGN_API_ACCOUNT
                   valueFrom:
                     configMapKeyRef:
