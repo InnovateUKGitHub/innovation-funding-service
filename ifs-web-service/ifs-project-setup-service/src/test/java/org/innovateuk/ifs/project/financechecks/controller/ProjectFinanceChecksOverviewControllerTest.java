@@ -5,19 +5,20 @@ import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -47,10 +48,10 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
-    private CompetitionRestService competitionRestService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Mock
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
@@ -78,6 +79,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId())).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(get(PROJECT_FINANCE_CHECKS_BASE_URL, project.getId()))
                 .andExpect(status().isOk())
