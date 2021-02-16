@@ -18,6 +18,7 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
     private final boolean procurementCompetition;
     private final boolean international;
 
+
     public CommonYourProjectFinancesViewModel(String financesUrl,
                                               String competitionName,
                                               String applicationName,
