@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -68,11 +69,17 @@ public class OrganisationJourneyEnd {
     @Autowired
     private  CompaniesHouseRestService companiesHouseRestService;
 
+    @Value("${ifs.new.organisation.search.enabled:false}")
+    private Boolean newOrganisationSearchEnabled;
+
+
 
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
 
         if (user != null) {
-            updateExistingCompaniesHouseData(organisationId);
+            if(newOrganisationSearchEnabled) {
+                updateExistingCompaniesHouseData(organisationId);
+            }
             return handleExistingUser(request, response, user, organisationId);
         } else {
             registrationCookieService.saveToOrganisationIdCookie(organisationId, response);
@@ -81,9 +88,8 @@ public class OrganisationJourneyEnd {
     }
 
     private void updateExistingCompaniesHouseData(final long organisationId) {
-
         CompaniesHouseSyncTask companiesHouseSyncTask = new CompaniesHouseSyncTask(organisationId, organisationRestService,companiesHouseRestService);
-       taskExecutor.execute(companiesHouseSyncTask);
+        taskExecutor.execute(companiesHouseSyncTask);
 
     }
 
@@ -135,5 +141,9 @@ public class OrganisationJourneyEnd {
 
     private String redirectToApplicationOverview(long applicationId) {
         return format("redirect:/application/%s", applicationId);
+    }
+
+    public void setNewOrganisationSearchEnabled(Boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
     }
 }

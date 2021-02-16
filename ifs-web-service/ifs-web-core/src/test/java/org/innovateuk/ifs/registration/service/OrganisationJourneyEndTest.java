@@ -210,6 +210,8 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Override
     protected OrganisationJourneyEnd supplyServiceUnderTest() {
-        return new OrganisationJourneyEnd();
+        OrganisationJourneyEnd organisationJourneyEnd = new OrganisationJourneyEnd();
+        organisationJourneyEnd.setNewOrganisationSearchEnabled(Boolean.TRUE);
+        return  organisationJourneyEnd;
     }
 }
