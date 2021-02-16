@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.constraints.NotNull;
 
 /**
- * Form used to capture project location information
+ * Form used to capture project fEC Model information
  */
 public class YourFECModelForm {
 

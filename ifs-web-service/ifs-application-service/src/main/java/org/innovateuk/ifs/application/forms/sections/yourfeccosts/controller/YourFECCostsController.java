@@ -180,17 +180,8 @@ public class YourFECCostsController extends AsyncAdaptor {
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
+    // Note: intentionally added since we need to do file upload in the same page and may need some validations there.
     private List<Error> validateFECModelEnabled(Errors errors, Long organisationId, YourFECModelForm form) {
-        //ValidationUtils.rejectIfEmpty(errors, "fecModelEnabled", "validation.finance.fecmodel.fecModelEnabled.blank");
-        //OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-
-
-/*            String postcode = form.getPostcode();
-            if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
-                return emptyList();
-            }
-
-            return singletonList(fieldError("postcode", postcode, "APPLICATION_FEC_COSTS_REQUIRED"));*/
         return Collections.emptyList();
     }
 
