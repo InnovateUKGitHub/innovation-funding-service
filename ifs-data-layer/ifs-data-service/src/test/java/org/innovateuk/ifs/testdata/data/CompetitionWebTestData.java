@@ -151,6 +151,7 @@ public class CompetitionWebTestData {
                         .withName("Multiple choice assessed"),
                 ktpCompetition()
                         .withName("KTP assessment")
+                        .withAssessorFinanceView(AssessorFinanceView.ALL)
                         .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false)
         )
