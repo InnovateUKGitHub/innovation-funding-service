@@ -95,26 +95,26 @@ Custom Suite Setup
 
 The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  SUBSIDY_CONTROL  GRANT
-    the user selects the Terms and Conditions               ${compType_Generic}  SUBSIDY_CONTROL
+    the user navigates to the page                            ${CA_UpcomingComp}
+    the user clicks the button/link                           jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details                  ${competition}  ${month}  ${nextyear}  ${compType_Generic}  SUBSIDY_CONTROL  GRANT
+    the user selects the Terms and Conditions                 ${compType_Generic}  SUBSIDY_CONTROL
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%
-    the user fills in the CS funding eligibility            true   ${compType_Generic}
-    the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
+    the user fills in the CS Project eligibility              ${orgType}  1  true  collaborative     # 1 means 30%
+    the user fills in the CS funding eligibility              true   ${compType_Generic}
+    the user selects the organisational eligibility to no     false
+    the user fills in the CS Milestones                       PROJECT_SETUP   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user removes the Project details questions and marks the Application section as done  yes  Generic  ${competition}
-    the user fills in the CS Assessors                      GRANT
+    the user fills in the CS Assessors                        GRANT
     the user fills in the CS Documents in other projects
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         jQuery = a:contains("Complete")
-    the user clicks the button/link                         css = button[type = "submit"]
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user clicks the button/link                           link = Public content
+    the user fills in the Public content and publishes        ${extraKeyword}
+    the user clicks the button/link                           link = Return to setup overview
+    the user clicks the button/link                           jQuery = a:contains("Complete")
+    the user clicks the button/link                           css = button[type = "submit"]
+    the user navigates to the page                            ${CA_UpcomingComp}
+    the user should see the element                           jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user removes some of the Project details questions
     [Documentation]  IFS-2832  IFS-7718

@@ -41,13 +41,13 @@ User can populate the Completion Stage, Milestones and Public content
 
 User can populate Terms and Conditions
     [Documentation]  IFS-5158
-    Given the user clicks the button/link                   link = Terms and conditions
-    Then the user clicks the button/link                    jQuery = button:contains("Done")
-    And the user selects the radio button                   termsAndConditionsId  24   #Keyword??
-    Then the user clicks the button/link                    jQuery = button:contains("Done")
-    And the user should see the element                     jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Horizon 2020")
-    And the user should see the element                     jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Horizon 2020")
-    [Teardown]  the user clicks the button/link             link = Return to setup overview
+    Given the user clicks the button/link           link = Terms and conditions
+    When the user clicks the button/link            jQuery = button:contains("Done")
+    And the user selects the radio button           termsAndConditionsId  24
+    Then the user clicks the button/link            jQuery = button:contains("Done")
+    And the user should see the element             jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Horizon 2020")
+    And the user should see the element             jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Horizon 2020")
+    [Teardown]  the user clicks the button/link     link = Return to setup overview
 
 User can populate Funding information and Project eligibility
     [Documentation]  IFS-5158

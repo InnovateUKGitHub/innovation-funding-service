@@ -21,7 +21,6 @@ Creating a new comp to confirm ATI subsidy control T&C's
     [Documentation]  IFS-8994  IFS-9137
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    #Then the user should see the element        link = ${atiSubsidyControl}  #KTP is defaulted, is this correct?
     And the user selects the radio button       termsAndConditionsId  45
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user selects the radio button       termsAndConditionsId  35

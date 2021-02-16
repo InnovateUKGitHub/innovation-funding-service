@@ -5,6 +5,8 @@ Documentation     IFS-8002  New set of T&Cs for innovation continuity loan
 ...
 ...               IFS-9071 Subsidy Control - Update Innovation Continuity Loan T&Cs
 ...
+...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -29,26 +31,26 @@ ${applicationT&CLink}                Award terms and conditions
 
 *** Test Cases ***
 Innovation continuity loan T&C's can be confirmed
-    [Documentation]  IFS-8002  IFS-8779
+    [Documentation]  IFS-8002  IFS-8779  IFS-9124
     Given the user fills in initial details
-    When the user clicks the button/link             link = Terms and conditions
-    And the user should see the element              jQuery = p:contains("These are the terms and conditions applicants must accept for this competition.")
+    When the user clicks the button/link            link = Terms and conditions
+    And the user should see the element             jQuery = p:contains("These are the terms and conditions applicants must accept for this competition.")
     And the user confirmed terms and conditions
     And the user confirmed terms and conditions
     And the user should see the element             jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Innovation Continuity Loan")
     And the user should see the element             jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovation Continuity Loan")
-    And the user clicks the button/link             link = Return to setup overview
+    Then the user clicks the button/link            link = Return to setup overview
 
 Innovation continuity loan T&C's can be edited
-    [Documentation]  IFS-8002
+    [Documentation]  IFS-8002  IFS-9124
     Given the user clicks the button/link       link = Terms and conditions
     When the user clicks the button/link        jQuery = button:contains("Edit")
-    And the user selects the radio button       termsAndConditionsId  43   #Keyword??
+    And the user selects the radio button       termsAndConditionsId  43
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user selects the radio button       termsAndConditionsId  43   #Keyword??
+    And the user selects the radio button       termsAndConditionsId  43
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user clicks the button/link         jQuery = button:contains("Edit")
-    Then the user should see the element        link = ${continuityLoanT&CLink}
+    Then the user clicks the button/link        jQuery = button:contains("Edit")
+    And the user should see the element         link = ${continuityLoanT&CLink}
 
 Internal user is able to see correct T&C's
     [Documentation]  IFS-8002
