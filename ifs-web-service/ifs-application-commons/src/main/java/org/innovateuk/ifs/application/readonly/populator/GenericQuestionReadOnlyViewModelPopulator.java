@@ -181,6 +181,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return ImmutableSet.of(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT);
+        return ImmutableSet.of(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT, NORTHERN_IRELAND_DECLARATION);
     }
 }

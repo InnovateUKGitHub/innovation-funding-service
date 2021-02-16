@@ -364,6 +364,7 @@ public class CsvUtils {
         public boolean resubmission;
         public boolean markQuestionsComplete;
         public String ineligibleReason;
+        public boolean northernIrelandDeclarationComplete;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -384,6 +385,7 @@ public class CsvUtils {
             resubmission = nullableBoolean(line.get(i++));
             markQuestionsComplete = nullableBoolean(line.get(i++));
             ineligibleReason = nullable(line.get(i++));
+            northernIrelandDeclarationComplete = nullableBoolean(line.get(i++));
         }
     }
 

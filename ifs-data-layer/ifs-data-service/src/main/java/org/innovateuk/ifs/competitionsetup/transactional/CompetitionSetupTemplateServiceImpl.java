@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.northernIrelandDeclaration;
 
 /**
  * Service that can create Competition template copies
@@ -68,6 +71,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
+
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
     private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
@@ -108,6 +114,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         List<SectionBuilder> sectionBuilders = template.sections();
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
+
+        if (northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules())) {
+            insertNorthernIrelandDeclaration(sectionBuilders);
+        }
+
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
         template.initialiseOrganisationConfig(competition);
@@ -118,6 +129,15 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
         return serviceSuccess(competitionRepository.save(competition));
+    }
+
+    private void insertNorthernIrelandDeclaration(List<SectionBuilder> sectionBuilders) {
+        sectionBuilders.stream()
+                .filter(section -> "Project details".equals(section.getName()))
+                .findAny()
+                .ifPresent(section -> {
+                    section.getQuestions().add(0, northernIrelandDeclaration());
+        });
     }
 
     private void setDefaultProjectDocuments(Competition competition) {
