@@ -43,6 +43,11 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         return viewProjectSetupMilestones(model, userResource, form);
     }
 
+    protected String viewProjectSetupMilestones(Model model, UserResource userResource, ProcurementMilestonesForm form) {
+        model.addAttribute("form", form);
+        return viewMilestonesPage(model, form, userResource);
+    }
+
     @Override
     protected String getView() {
         return VIEW;

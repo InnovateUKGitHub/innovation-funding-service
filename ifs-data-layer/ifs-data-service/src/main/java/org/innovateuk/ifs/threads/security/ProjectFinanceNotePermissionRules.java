@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 
 @Component
 @PermissionRules
@@ -28,7 +28,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Notes")
     public boolean onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+        return hasProjectFinanceAuthority(user) && isProjectActive(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
     @PermissionRule(value = "PF_CREATE", description = "Only External Finance Users can create notes")
@@ -51,7 +51,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
     public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk);
+        return hasProjectFinanceAuthority(user) && isProjectActive(note.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "External Finance users can add posts to a note")
@@ -61,7 +61,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
     public boolean onlyProjectFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "NOTES_READ", description = "All internal users are able to see notes")

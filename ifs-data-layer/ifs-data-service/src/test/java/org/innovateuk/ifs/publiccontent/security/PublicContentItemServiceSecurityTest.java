@@ -52,7 +52,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRoleGlobal(Role.getByName(roleType.getName()))
+                        .withRoleGlobal(roleType)
                         .build());
         serviceCall.run();
     }

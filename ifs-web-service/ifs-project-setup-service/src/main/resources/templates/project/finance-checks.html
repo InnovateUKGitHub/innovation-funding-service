@@ -70,27 +70,35 @@
             </th:block>
 
         </th:block>
-        <th:block class="govuk-body" th:unless="${model.isApproved()}">
-            <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the
-                project finances. You can view the
-                <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
-                   class="govuk-link">project finance overview</a>.</p>
 
-            <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing</p>
-            <ul class="govuk-list--bullet">
-                <li><a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
-                       class="govuk-link">your project finances</a></li>
+        <th:block th:unless="${model.isApproved()}">
 
-                <li th:if="${model.paymentMilestonesLink}">
-                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-                       class="govuk-link">payment milestones</a>
-                </li>
-            </ul>
-
+            <th:block th:if="${model.paymentMilestonesLink}">
+                <p class="govuk-body">Innovate Uk is reviewing:</p>
+                <ul class="govuk-list--bullet">
+                    <li>
+                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                           class="govuk-link">payment milestones</a>
+                    </li>
+                    <li>
+                    <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
+                       class="govuk-link">your project finances</a>
+                    </li>
+                </ul>
+            </th:block>
+            <th:block th:unless="${model.paymentMilestonesLink}">
+                <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
+                    <a th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
+                       class="govuk-link">project finance overview</a>.</p>
+                <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
+                    <a th:href="@{/project/{projectId}/finance-check/eligibility(projectId=${model.projectId})}"
+                       class="govuk-link">your project finances</a>
+                </p>
+            </th:block>
             <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
-                and you can also <a
-                th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
-                class="govuk-link">view the project finance overview</a>.
+                    You can also <a
+                    th:href="@{/project/{projectId}/finance-check/overview(projectId=${model.projectId})}"
+                    class="govuk-link">view the project finance overview</a>.
             </th:block>
         </th:block>
 
