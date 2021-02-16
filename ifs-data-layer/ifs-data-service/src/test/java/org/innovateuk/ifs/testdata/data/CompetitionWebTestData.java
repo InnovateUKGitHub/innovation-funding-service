@@ -20,6 +20,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 public class CompetitionWebTestData {
 
     private static Long LEAD_TECHNOLOGIST_ID = 24L;
+    private static Long PETER_FREEMAN_ID = 25L;
     private static Long EXECUTIVE_ID = 20L;
 
     public static List<CompetitionLine> buildCompetitionLines() {
@@ -47,9 +48,11 @@ public class CompetitionWebTestData {
                         .withName("New designs for a circular economy"),
                 grantCompetition()
                         .withName("Rolling stock future developments")
+                        .withLeadTechnologist(PETER_FREEMAN_ID)
                         .withResearchRatio(100),
                 grantCompetition()
                         .withName("Biosciences round three: plastic recovery in the industrial sector")
+                        .withLeadTechnologist(PETER_FREEMAN_ID)
                         .withResearchRatio(50),
                 grantCompetition()
                         .withName("Integrated delivery programme - solar vehicles"),
@@ -102,7 +105,8 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Project Setup Comp 20"),
                 loanCompetition()
-                        .withName("Project setup loan comp"),
+                        .withName("Project setup loan comp")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("583 Covid deminis round 1 project setup")
                         .withIncludeProjectGrowth(false)
@@ -163,7 +167,8 @@ public class CompetitionWebTestData {
     private static List<CompetitionLineBuilder> getFundersPanelCompetitionLineBuilders() {
         return asList(
                 grantCompetition()
-                        .withName("Internet of Things"),
+                        .withName("Internet of Things")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 ktpCompetition()
                         .withName("KTP in panel"),
                 ktpCompetition()
@@ -178,6 +183,7 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Photonics for health")
+                        .withLeadTechnologist(PETER_FREEMAN_ID)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.READY_TO_OPEN))
@@ -233,15 +239,19 @@ public class CompetitionWebTestData {
                         .withInnovationAreas(asSet(22L, 23L)),
                 grantCompetition()
                         .withCompetitionType(GENERIC)
-                        .withName("Generic innovation"),
+                        .withName("Generic innovation")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
-                        .withName("Photonics for Research"),
+                        .withName("Photonics for Research")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
-                        .withName("Photonics for Public"),
+                        .withName("Photonics for Public")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("Photonics for RTO and Business"),
                 grantCompetition()
-                        .withName("Photonics for All"),
+                        .withName("Photonics for All")
+                        .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("Expression of Interest: Quantum Computing algorithms for combating antibiotic resistance through simulation")
                         .withCompetitionType(EXPRESSION_OF_INTEREST),
