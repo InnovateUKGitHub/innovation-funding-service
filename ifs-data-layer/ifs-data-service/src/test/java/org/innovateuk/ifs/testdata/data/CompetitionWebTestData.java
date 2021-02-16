@@ -221,6 +221,11 @@ public class CompetitionWebTestData {
                         .withLeadApplicantTypes(asSet(BUSINESS, RTO)),
                 grantCompetition()
                         .withName("Predicting market trends programme")
+                        .withLeadApplicantTypes(asSet(RTO))
+                        .withResearchRatio(50)
+                        .withResubmission(true)
+                        .withIncludeProjectGrowth(false)
+                        .withIncludeYourOrganisation(false)
                         .withAssessorCount(5),
                 grantCompetition()
                         .withCompetitionType(SECTOR)
