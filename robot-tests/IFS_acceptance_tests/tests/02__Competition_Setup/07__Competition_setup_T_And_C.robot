@@ -3,7 +3,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9137  Update Subsidy control T&Cs for Innovate UK & ATI
 ...
-
+...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -18,7 +19,7 @@ ${innovateUKStateAid}           Innovate UK (opens in a new window)
 
 *** Test Cases ***
 Creating a new comp to confirm ATI subsidy control T&C's
-    [Documentation]  IFS-8994  IFS-9137
+    [Documentation]  IFS-8994  IFS-9137  IFS-9124
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
     And the user selects the radio button       termsAndConditionsId  45
@@ -31,7 +32,7 @@ Creating a new comp to confirm ATI subsidy control T&C's
 
 
 ATI subsidy control t&c's are correct
-    [Documentation]  IFS-8994
+    [Documentation]  IFS-8994  IFS-9124
     Given the user clicks the button/link                link = Terms and conditions
     And the user clicks the button/link                  jQuery = button:contains("Edit")
     When the user clicks the button/link                 link = ${atiSubsidyControl}
@@ -41,7 +42,7 @@ ATI subsidy control t&c's are correct
     [Teardown]   the user closes the last opened tab
 
 ATI State aid t&c's are correct
-    [Documentation]  IFS-8994
+    [Documentation]  IFS-8994  IFS-9124
     When the user clicks the button/link        jQuery = button:contains("Done")
     And the user clicks the button/link         link = ${atiStateAid}
     And select window                           title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
@@ -67,7 +68,7 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
 
 Innovateuk subsidy control t&c's are correct
-    [Documentation]  IFS-8994
+    [Documentation]  IFS-8994  IFS-9124
     When the user clicks the button/link                 jQuery = button:contains("Edit")
     And the user clicks the button/link                  link = ${innovateUKSubsidyControl}
     And select window                                    title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service

@@ -87,6 +87,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7723 Improvement to company search results
 ...
+...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -178,7 +180,7 @@ The knowledge transfer partnership t&c's are correct
     [Teardown]   the user goes back to the previous page
 
 T&c's can be confirmed
-    [Documentation]  IFS-7213
+    [Documentation]  IFS-7213  IFS-9124
     Given the user clicks the button/link                    jQuery = button:contains("Done")
     When the user sees that the radio button is selected     termsAndConditionsId  34
     And the user should see the element                      link = Innovate UK (opens in a new window)
