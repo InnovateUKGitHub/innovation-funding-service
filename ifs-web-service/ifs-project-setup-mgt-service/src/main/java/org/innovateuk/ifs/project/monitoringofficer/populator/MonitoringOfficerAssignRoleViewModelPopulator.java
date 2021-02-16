@@ -13,9 +13,6 @@ public class MonitoringOfficerAssignRoleViewModelPopulator {
     @Autowired
     private UserRestService userRestService;
 
-    public MonitoringOfficerAssignRoleViewModelPopulator() {
-    }
-
     public MonitoringOfficerAssignRoleViewModel populate(long userId) {
 
         UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();

@@ -55,16 +55,36 @@ public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
             if(costValue.getFinanceRowMetaField() != null && costValue.getFinanceRowMetaField().getTitle() != null){
                 String title = costValue.getFinanceRowMetaField().getTitle();
                 if (title.equals(COST_FIELD_EXISTING)) {
-                    existing = "null".equals(costValue.getValue()) ? null : costValue.getValue();
+                    existing = parseString(costValue.getValue());
                 } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
-                    residualValue = "null".equals(costValue.getValue()) ? null : new BigDecimal(costValue.getValue());
+                    residualValue = parseBigDecimal(costValue.getValue());
                 } else if (title.equals(COST_FIELD_UTILISATION)) {
-                    utilisation = "null".equals(costValue.getValue()) ? null : Integer.valueOf(costValue.getValue());
+                    utilisation = parseInteger(costValue.getValue());
                 }
             }
         }
 
         return new CapitalUsage(cost.getId(), cost.getQuantity(), cost.getDescription(), existing, cost.getCost(), residualValue, utilisation, cost.getTarget().getId());
+    }
+
+    private String parseString(String value) {
+        return "null".equals(value) ? null : value;
+    }
+
+    private BigDecimal parseBigDecimal(String value) {
+        String parsed = parseString(value);
+        if (parsed == null) {
+            return null;
+        }
+        return new BigDecimal(parsed);
+    }
+
+    private Integer parseInteger(String value) {
+        String parsed = parseString(value);
+        if (parsed == null) {
+            return null;
+        }
+        return Integer.valueOf(parsed);
     }
 
     private ApplicationFinanceRow mapCapitalUsage(FinanceRowItem costItem) {

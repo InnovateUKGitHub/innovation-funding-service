@@ -8,7 +8,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 public class KtpFinanceModel {
 
-    private static final int kbPartnerOverheadsRate = 46;
+    private static final int KB_PARTNER_OVERHEADS_RATE = 46;
 
     private final KtpFinanceRowModel associateEmployment;
     private final KtpFinanceRowModel associateDevelopment;
@@ -110,7 +110,7 @@ public class KtpFinanceModel {
     }
 
     public int getContributionToKbPartnerOverheads() {
-        return (associateEmployment.getFunding() + academicAndSecretarialSupport.getFunding()) * kbPartnerOverheadsRate / 100;
+        return (associateEmployment.getFunding() + academicAndSecretarialSupport.getFunding()) * KB_PARTNER_OVERHEADS_RATE / 100;
     }
 
     public int getMaximumAmountOfGovtGrant() {
