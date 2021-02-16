@@ -101,12 +101,12 @@ the user performs procurement Terms and Conditions validations
 
 the user selects the Terms and Conditions
     [Arguments]  ${compType}  ${fundingRule}  
-    the user clicks the button/link       link = Terms and conditions
-    the user clicks the button/link       jQuery = button:contains("Done")
-    Run Keyword If  '${fundingRule}' == 'SUBSIDY_CONTROL' and "${compType}" != "Expression of interest"  the user selects the radio button   termsAndConditionsId  34
-    Run Keyword If  '${fundingRule}' == 'SUBSIDY_CONTROL' and "${compType}" != "Expression of interest"  the user clicks the button/link     jQuery = button:contains("Done")
-    the user clicks the button/link       link = Back to competition details
-    the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
+    the user clicks the button/link                    link = Terms and conditions
+    the user clicks the button/link                    jQuery = button:contains("Done")
+    Run Keyword If  '${fundingRule}' == 'SUBSIDY_CONTROL' and "${compType}" != "Expression of interest"  Run keywords  the user selects the radio button     termsAndConditionsId  34
+    ...   AND  the user clicks the button/link         jQuery = button:contains("Done")
+    the user clicks the button/link                    link = Back to competition details
+    the user should see the element                    jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user fills in the CS Funding Information
     the user clicks the button/link                   link = Funding information

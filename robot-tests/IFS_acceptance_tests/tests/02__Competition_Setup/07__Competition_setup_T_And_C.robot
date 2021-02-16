@@ -26,14 +26,13 @@ Creating a new comp to confirm ATI subsidy control T&C's
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user selects the radio button       termsAndConditionsId  35
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user should see the element         jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Aerospace Technology Institute (ATI) - Subsidy control")
+    Then the user should see the element        jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Aerospace Technology Institute (ATI) - Subsidy control")
     And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Aerospace Technology Institute (ATI)")
-    And the user clicks the button/link         link = Return to setup overview
-
 
 ATI subsidy control t&c's are correct
     [Documentation]  IFS-8994  IFS-9124
-    Given the user clicks the button/link                link = Terms and conditions
+    Given the user clicks the button/link                link = Return to setup overview
+    And the user clicks the button/link                  link = Terms and conditions
     And the user clicks the button/link                  jQuery = button:contains("Edit")
     When the user clicks the button/link                 link = ${atiSubsidyControl}
     And select window                                    title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
