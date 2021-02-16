@@ -151,6 +151,8 @@ public class CompetitionWebTestData {
                         .withName("Multiple choice assessed"),
                 ktpCompetition()
                         .withName("KTP assessment")
+                        .withIncludeProjectGrowth(false)
+                        .withIncludeYourOrganisation(false)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT))
@@ -195,7 +197,9 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Machine learning for transport infrastructure")
-                        .withInnovationAreas(asSet(29L)),
+                        .withInnovationAreas(asSet(29L))
+                        .withInnovationSector("Infrastructure systems")
+                        .withAssessorCount(3),
                 grantCompetition()
                         .withName("Personalised Smart HUDs for space helmets")
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
@@ -245,7 +249,8 @@ public class CompetitionWebTestData {
                         .withName("Investor")
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
                 grantCompetition()
-                        .withName("Performance testing competition"),
+                        .withName("Performance testing competition")
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO, RESEARCH, PUBLIC_SECTOR_OR_CHARITY)),
                 procurementCompetition()
                         .withName("Procurement Competition"),
                 procurementCompetition()
@@ -349,6 +354,7 @@ public class CompetitionWebTestData {
                         .withName("Webtest Non IFS Comp 20"),
                 nonIfsCompetition()
                         .withName("Transforming big data")
+                        .withFundingType(FundingType.GRANT)
                         .withInnovationAreas(asSet(5L)),
                 nonIfsCompetition()
                         .withName("Reducing carbon footprints")

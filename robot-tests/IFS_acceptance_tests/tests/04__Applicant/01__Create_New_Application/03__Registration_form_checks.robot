@@ -19,6 +19,7 @@ Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Your details: Server-side validations
@@ -92,5 +93,10 @@ User can not verify email with invalid hash
 *** Keywords ***
 Applicant goes to the registration form
     the user navigates to the page                            ${frontDoor}
+    the user searches for a competition                               ${createApplicationOpenCompetition}
     the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
     the user follows the flow to register their organisation  radio-1
+
+User searches for a competition
+    Given the user enters text to a text field   id = keywords  "Home and industrial efficiency programme"
+    When the user clicks the button/link         css = input[type="submit"]
