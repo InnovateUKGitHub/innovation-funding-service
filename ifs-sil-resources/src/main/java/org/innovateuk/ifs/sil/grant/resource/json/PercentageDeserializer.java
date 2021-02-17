@@ -12,6 +12,6 @@ public class PercentageDeserializer extends JsonDeserializer<BigDecimal> {
     @Override
     public BigDecimal deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         JsonNode node = parser.getCodec().readTree(parser);
-        return new BigDecimal(node.asText().replaceAll("%", ""));
+        return new BigDecimal(node.asText().replace("%", ""));
     }
 }
