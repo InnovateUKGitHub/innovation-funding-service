@@ -29,23 +29,25 @@ public class QuestionnaireQuestionConfigViewModelPopulator {
     private QuestionnaireQuestionRestService questionnaireQuestionRestService;
 
     public QuestionnaireQuestionConfigViewModel populate(long questionnaireId, QuestionnaireQuestionResource question) {
-        boolean linked = !question.getPreviousQuestions().isEmpty();
+        QuestionnaireResource questionnaire = questionnaireRestService.get(questionnaireId).getSuccess();
+        List<QuestionnaireQuestionResource> allQuestions = questionnaireQuestionRestService.get(questionnaire.getQuestions())
+                .getSuccess();
+        QuestionnaireQuestionResource questionInList = findInList(allQuestions, question);
+        boolean linked = !questionInList.getPreviousQuestions().isEmpty();
+        boolean first = allQuestions.indexOf(questionInList) == 0;
         List<QuestionnaireQuestionListItem> availableQuestions;
         List<QuestionnaireQuestionListItem> previousQuestions;
-        if (linked) {
-            QuestionnaireResource questionnaire = questionnaireRestService.get(questionnaireId).getSuccess();
-            List<QuestionnaireQuestionResource> allQuestions = questionnaireQuestionRestService.get(questionnaire.getQuestions())
-                    .getSuccess();
+        if (linked || first) {
             Map<Long, QuestionnaireQuestionResource> indexedQuestions = allQuestions
                     .stream()
                     .collect(toMap(QuestionnaireDecisionResource::getId, Function.identity()));
             List<QuestionnaireQuestionResource> questionsInThisTree = new ArrayList<>();
-            addRecusively(findInList(allQuestions, question), questionsInThisTree, indexedQuestions);
+            addRecusively(questionInList, questionsInThisTree, indexedQuestions);
             availableQuestions = allQuestions.stream()
                     .filter(q -> !questionsInThisTree.contains(q))
                     .map(q -> new QuestionnaireQuestionListItem(q.getId(), q.getTitle()))
                     .collect(Collectors.toList());
-            previousQuestions = question.getPreviousQuestions().stream()
+            previousQuestions = questionInList.getPreviousQuestions().stream()
                     .map(indexedQuestions::get)
                     .map(q -> new QuestionnaireQuestionListItem(q.getId(), q.getTitle()))
                     .collect(Collectors.toList());
@@ -53,7 +55,7 @@ public class QuestionnaireQuestionConfigViewModelPopulator {
             availableQuestions = new ArrayList<>();
             previousQuestions = new ArrayList<>();
         }
-        return new QuestionnaireQuestionConfigViewModel(questionnaireId, linked, availableQuestions, previousQuestions);
+        return new QuestionnaireQuestionConfigViewModel(questionnaireId, first, linked, availableQuestions, previousQuestions);
     }
 
     private void addRecusively(QuestionnaireQuestionResource question, List<QuestionnaireQuestionResource> questionsInThisTree, Map<Long, QuestionnaireQuestionResource> indexedQuestions) {

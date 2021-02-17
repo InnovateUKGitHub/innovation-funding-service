@@ -20,7 +20,7 @@ public class QuestionnaireQuestionResponseController extends AbstractCrudControl
 
     @GetMapping("/question/{questionId}/response/{responseId}")
     public RestResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(@PathVariable long questionId,
-                                                                                                                     @PathVariable long responseId) {
+                                                                                                                     @PathVariable String responseId) {
         return questionnaireQuestionResponseService.findByQuestionnaireQuestionIdAndQuestionnaireResponseId(questionId, responseId).toGetResponse();
     }
 

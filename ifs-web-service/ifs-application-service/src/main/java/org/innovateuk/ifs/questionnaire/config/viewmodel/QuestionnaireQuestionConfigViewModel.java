@@ -7,21 +7,23 @@ public class QuestionnaireQuestionConfigViewModel {
 
     private final long questionnaireId;
     private final boolean create;
+    private final boolean first;
     private final boolean linked;
     private final List<QuestionnaireQuestionListItem> availableQuestions;
     private final List<QuestionnaireQuestionListItem> previousQuestions;
 
     private QuestionnaireQuestionConfigViewModel(long questionnaireId) {
-        this(questionnaireId, true, false, new ArrayList<>(), new ArrayList<>());
+        this(questionnaireId, true, false, false, new ArrayList<>(), new ArrayList<>());
     }
 
-    public QuestionnaireQuestionConfigViewModel(long questionnaireId, boolean linked, List<QuestionnaireQuestionListItem> availableQuestions, List<QuestionnaireQuestionListItem> previousQuestions) {
-        this(questionnaireId, false, linked, availableQuestions, previousQuestions);
+    public QuestionnaireQuestionConfigViewModel(long questionnaireId, boolean first, boolean linked, List<QuestionnaireQuestionListItem> availableQuestions, List<QuestionnaireQuestionListItem> previousQuestions) {
+        this(questionnaireId, false, first, linked, availableQuestions, previousQuestions);
     }
 
-    private  QuestionnaireQuestionConfigViewModel(long questionnaireId, boolean create, boolean linked, List<QuestionnaireQuestionListItem> availableQuestions, List<QuestionnaireQuestionListItem> previousQuestions) {
+    private  QuestionnaireQuestionConfigViewModel(long questionnaireId, boolean create, boolean first, boolean linked, List<QuestionnaireQuestionListItem> availableQuestions, List<QuestionnaireQuestionListItem> previousQuestions) {
         this.questionnaireId = questionnaireId;
         this.create = create;
+        this.first = first;
         this.linked = linked;
         this.availableQuestions = availableQuestions;
         this.previousQuestions = previousQuestions;
@@ -33,6 +35,10 @@ public class QuestionnaireQuestionConfigViewModel {
 
     public boolean isCreate() {
         return create;
+    }
+
+    public boolean isFirst() {
+        return first;
     }
 
     public boolean isLinked() {

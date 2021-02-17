@@ -2,19 +2,19 @@ package org.innovateuk.ifs.questionnaire.response.viewmodel;
 
 public class AnsweredQuestionViewModel {
 
-    private final long questionnaireResponseId;
+    private final String questionnaireResponseId;
     private final long questionnaireQuestionId;
     private final String question;
     private final String answer;
 
-    public AnsweredQuestionViewModel(long questionnaireResponseId, long questionnaireQuestionId, String question, String answer) {
+    public AnsweredQuestionViewModel(String questionnaireResponseId, long questionnaireQuestionId, String question, String answer) {
         this.questionnaireResponseId = questionnaireResponseId;
         this.questionnaireQuestionId = questionnaireQuestionId;
         this.question = question;
         this.answer = answer;
     }
 
-    public long getQuestionnaireResponseId() {
+    public String getQuestionnaireResponseId() {
         return questionnaireResponseId;
     }
 

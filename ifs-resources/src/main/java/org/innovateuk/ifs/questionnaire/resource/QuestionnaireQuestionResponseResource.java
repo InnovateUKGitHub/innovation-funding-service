@@ -6,7 +6,7 @@ public class QuestionnaireQuestionResponseResource {
 
     private Long option;
 
-    private Long questionnaireResponse;
+    private String questionnaireResponse;
 
     private Long question;
 
@@ -26,11 +26,11 @@ public class QuestionnaireQuestionResponseResource {
         this.option = option;
     }
 
-    public Long getQuestionnaireResponse() {
+    public String getQuestionnaireResponse() {
         return questionnaireResponse;
     }
 
-    public void setQuestionnaireResponse(Long questionnaireResponse) {
+    public void setQuestionnaireResponse(String questionnaireResponse) {
         this.questionnaireResponse = questionnaireResponse;
     }
 

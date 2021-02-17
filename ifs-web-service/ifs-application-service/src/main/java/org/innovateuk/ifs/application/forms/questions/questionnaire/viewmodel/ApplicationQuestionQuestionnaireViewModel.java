@@ -15,10 +15,10 @@ public class ApplicationQuestionQuestionnaireViewModel {
     private final long organisationId;
     private final boolean open;
     private final boolean complete;
-    private final long questionnaireResponseId;
+    private final String questionnaireResponseId;
     private final List<AnsweredQuestionViewModel> answers;
 
-    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, long questionnaireResponseId, List<AnsweredQuestionViewModel> answers) {
+    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, String questionnaireResponseId, List<AnsweredQuestionViewModel> answers) {
         this.applicationId = application.getId();
         this.applicationName = application.getName();
         this.questionId = question.getId();
@@ -58,7 +58,7 @@ public class ApplicationQuestionQuestionnaireViewModel {
         return complete;
     }
 
-    public long getQuestionnaireResponseId() {
+    public String getQuestionnaireResponseId() {
         return questionnaireResponseId;
     }
 

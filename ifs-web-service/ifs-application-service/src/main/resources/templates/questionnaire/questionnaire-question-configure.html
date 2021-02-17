@@ -50,7 +50,7 @@
 
 
 
-            <th:block th:if="${model.linked}">
+            <th:block th:if="${model.linked or model.first}">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                         <h2 class="govuk-fieldset__heading">Options</h2>
@@ -115,7 +115,7 @@
                 <div><button name="add-option-question" class="button-clear">Add question outcome</button></div>
                 <div><button name="add-option-text" class="button-clear">Add text outcome</button></div>
             </th:block>
-            <th:block th:unless="${model.linked}">
+            <th:block th:unless="${model.linked or model.first}">
                 <p class="govuk-body">You must save and link this question to another in order to add options.</p>
             </th:block>
 

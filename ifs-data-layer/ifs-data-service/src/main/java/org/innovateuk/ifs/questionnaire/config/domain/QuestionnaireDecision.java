@@ -14,7 +14,7 @@ public abstract class QuestionnaireDecision {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "decision", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "decision")
     private List<QuestionnaireOption> optionsLinkedToThisDecision = new ArrayList<>();
 
     public Long getId() {

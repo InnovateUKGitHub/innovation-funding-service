@@ -27,7 +27,7 @@ public class QuestionnaireQuestionResponseRestServiceImpl extends AbstractIfsCru
     }
 
     @Override
-    public RestResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(long questionnaireQuestionId, long questionnaireResponseId) {
-        return getWithRestResult(getBaseUrl() + String.format("/question/%d/response/%d", questionnaireQuestionId, questionnaireResponseId), getResourceClass());
+    public RestResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(long questionnaireQuestionId, String questionnaireResponseId) {
+        return getWithRestResult(getBaseUrl() + String.format("/question/%d/response/%s", questionnaireQuestionId, questionnaireResponseId), getResourceClass());
     }
 }

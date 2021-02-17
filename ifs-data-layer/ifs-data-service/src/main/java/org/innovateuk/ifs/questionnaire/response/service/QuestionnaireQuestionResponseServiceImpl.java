@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.NotFoundException;
 
+import java.util.UUID;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -38,7 +40,7 @@ public class QuestionnaireQuestionResponseServiceImpl extends AbstractIfsCrudSer
     @Override
     protected QuestionnaireQuestionResponse mapToDomain(QuestionnaireQuestionResponse domain, QuestionnaireQuestionResponseResource resource) {
         if (domain.getQuestionnaireResponse() == null) {
-            domain.setQuestionnaireResponse(questionnaireResponseRepository.findById(resource.getQuestionnaireResponse()).orElse(null));
+            domain.setQuestionnaireResponse(questionnaireResponseRepository.findById(UUID.fromString(resource.getQuestionnaireResponse())).orElse(null));
         }
         if (domain.getId() != null && domain.getOption() != null && !domain.getOption().getId().equals(resource.getOption())) {
             resetAnswersDeeperThanThis(resource.getOption(), domain.getQuestionnaireResponse().getId(), domain.getId());
@@ -47,14 +49,14 @@ public class QuestionnaireQuestionResponseServiceImpl extends AbstractIfsCrudSer
         return domain;
     }
 
-    private void resetAnswersDeeperThanThis(long optionId, long questionnaireResponseId, long questionResponseId) {
+    private void resetAnswersDeeperThanThis(long optionId, UUID questionnaireResponseId, long questionResponseId) {
         int questionDepth = questionnaireOptionRepository.findById(optionId).orElseThrow(NotFoundException::new).getQuestion().getDepth();
         questionnaireQuestionResponseRepository.deleteByQuestionnaireResponseIdAndOptionQuestionDepthGreaterThanEqualAndIdNot(questionnaireResponseId, questionDepth, questionResponseId);
     }
 
     @Override
-    public ServiceResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(long questionId, long responseId) {
-        return find(questionnaireQuestionResponseRepository.findByOptionQuestionIdAndQuestionnaireResponseId(questionId, responseId),
+    public ServiceResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(long questionId, String responseId) {
+        return find(questionnaireQuestionResponseRepository.findByOptionQuestionIdAndQuestionnaireResponseId(questionId, UUID.fromString(responseId)),
                 notFoundError(QuestionnaireQuestionResponse.class, questionId, responseId))
                 .andOnSuccessReturn(mapper::mapToResource);
     }

@@ -32,7 +32,7 @@ public class QuestionnaireQuestionViewModelPopulator {
     @Autowired
     private AnsweredQuestionViewModelPopulator answeredQuestionViewModelPopulator;
 
-    public QuestionnaireQuestionViewModel populate(long questionnaireResponseId, long questionId) {
+    public QuestionnaireQuestionViewModel populate(String questionnaireResponseId, long questionId) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
         QuestionnaireQuestionResource question = questionnaireQuestionRestService.get(questionId).getSuccess();

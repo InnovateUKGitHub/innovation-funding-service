@@ -6,5 +6,5 @@ import org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResponseRe
 
 public interface QuestionnaireQuestionResponseRestService extends IfsCrudRestService<QuestionnaireQuestionResponseResource, Long> {
 
-    RestResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(long questionnaireQuestionId, long questionnaireResponseId);
+    RestResult<QuestionnaireQuestionResponseResource> findByQuestionnaireQuestionIdAndQuestionnaireResponseId(long questionnaireQuestionId, String questionnaireResponseId);
 }

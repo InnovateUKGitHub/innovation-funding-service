@@ -60,7 +60,9 @@ public class ApplicationQuestionQuestionnaireModelPopulator {
                 .map(QuestionStatusResource::getMarkedAsComplete)
                 .orElse(false);
 
-        Long questionnaireResponseId = questionnaireResponseLinkRestService.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(question.getQuestionnaireId(), applicationId, organisationId).getSuccess();
+        String questionnaireResponseId = questionnaireResponseLinkRestService.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(question.getQuestionnaireId(), applicationId, organisationId)
+                .getSuccess()
+                .getContent();
 
         return new ApplicationQuestionQuestionnaireViewModel(
                 application,

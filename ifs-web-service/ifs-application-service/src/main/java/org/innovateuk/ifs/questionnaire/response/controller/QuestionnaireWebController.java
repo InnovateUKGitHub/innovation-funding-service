@@ -64,7 +64,7 @@ public class QuestionnaireWebController {
     public String welcomeScreen(Model model,
                                 HttpServletRequest request,
                                 UserResource user,
-                                @PathVariable long questionnaireResponseId,
+                                @PathVariable String questionnaireResponseId,
                                 @RequestParam(required = false) String redirectUrl,
                                 HttpServletResponse httpServletResponse) {
         if (redirectUrl != null) {
@@ -79,17 +79,17 @@ public class QuestionnaireWebController {
     public String start(Model model,
                         HttpServletRequest request,
                         UserResource user,
-                        @PathVariable long questionnaireResponseId) {
+                        @PathVariable String questionnaireResponseId) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
-        return String.format("redirect:/questionnaire/%d/question/%d", questionnaireResponseId, questionnaire.getQuestions().get(0));
+        return String.format("redirect:/questionnaire/%s/question/%d", questionnaireResponseId, questionnaire.getQuestions().get(0));
     }
 
     @GetMapping("/{questionnaireResponseId}/question/{questionId}")
     public String question(Model model,
                            HttpServletRequest request,
                            UserResource user,
-                           @PathVariable long questionnaireResponseId,
+                           @PathVariable String questionnaireResponseId,
                            @PathVariable long questionId) {
         QuestionnaireQuestionForm form = new QuestionnaireQuestionForm();
         questionnaireQuestionResponseRestService.findByQuestionnaireQuestionIdAndQuestionnaireResponseId(questionId, questionnaireResponseId)
@@ -110,14 +110,14 @@ public class QuestionnaireWebController {
                                        Model model,
                                        HttpServletRequest request,
                                        UserResource user,
-                                       @PathVariable long questionnaireResponseId,
+                                       @PathVariable String questionnaireResponseId,
                                        @PathVariable long questionId) {
         Supplier<String> successView = () -> {
             QuestionnaireOptionResource option = questionnaireOptionRestService.get(form.getOption()).getSuccess();
             if (option.getDecisionType() == DecisionType.QUESTION) {
-                return String.format("redirect:/questionnaire/%d/question/%d", questionnaireResponseId, option.getDecision());
+                return String.format("redirect:/questionnaire/%s/question/%d", questionnaireResponseId, option.getDecision());
             } else if (option.getDecisionType() == DecisionType.TEXT_OUTCOME) {
-                return String.format("redirect:/questionnaire/%d/outcome/%d", questionnaireResponseId, option.getDecision());
+                return String.format("redirect:/questionnaire/%s/outcome/%d", questionnaireResponseId, option.getDecision());
             }
             throw new IFSRuntimeException("Unknown decision type " + option.getDecisionType());
         };
@@ -142,7 +142,7 @@ public class QuestionnaireWebController {
     public String outcome(Model model,
                            HttpServletRequest request,
                            UserResource user,
-                           @PathVariable long questionnaireResponseId,
+                           @PathVariable String questionnaireResponseId,
                            @PathVariable long outcomeId) {
         model.addAttribute("model", questionnaireTextOutcomeRestService.get(outcomeId).getSuccess());
         model.addAttribute("redirectUrl", Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
@@ -150,7 +150,7 @@ public class QuestionnaireWebController {
         return "questionnaire/outcome";
     }
 
-    private String viewQuestion(Model model, long questionnaireResponseId, long questionId) {
+    private String viewQuestion(Model model, String questionnaireResponseId, long questionId) {
         model.addAttribute("model", questionnaireQuestionViewModelPopulator.populate(questionnaireResponseId, questionId));
         return "questionnaire/question";
     }

@@ -31,7 +31,7 @@ public class AnsweredQuestionViewModelPopulator {
     @Autowired
     private QuestionnaireResponseRestService questionnaireResponseRestService;
 
-    public List<AnsweredQuestionViewModel> allAnswers(long questionnaireResponseId) {
+    public List<AnsweredQuestionViewModel> allAnswers(String questionnaireResponseId) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         final QuestionnaireOptionResource[] selectedOption = {null};
         List<AnsweredQuestionViewModel> answers = getAnswers(response, (q) -> true, o -> selectedOption[0] = o);

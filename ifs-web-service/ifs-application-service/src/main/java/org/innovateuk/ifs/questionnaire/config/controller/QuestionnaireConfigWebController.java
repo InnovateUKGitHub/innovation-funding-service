@@ -72,7 +72,7 @@ public class QuestionnaireConfigWebController {
                           @PathVariable long questionnaireId,
                           @RequestParam("delete-question") long deleteId) {
         questionnaireQuestionRestService.delete(deleteId).getSuccess();
-        return String.format("redirect:/questionnaire-configure/%d/question/new", questionnaireId);
+        return String.format("redirect:/questionnaire-configure/%d", questionnaireId);
     }
 
     @GetMapping("/{questionnaireId}/question/new")
