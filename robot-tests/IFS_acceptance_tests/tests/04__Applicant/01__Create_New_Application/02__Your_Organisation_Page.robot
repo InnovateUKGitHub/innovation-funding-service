@@ -81,12 +81,11 @@ Companies House: Empty company name field validation message
 *** Keywords ***
 Applicant goes to the organisation search page
     Given the guest user opens the browser
-    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
-    When the user clicks the button/link    link = Start new application
-    And the user clicks the button/link     link = Continue and create an account
-    And the user clicks the button/link     jQuery = span:contains("Business")
-    And the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user navigates to the page                                   ${frontDoor}
+    Given the user select the competition and starts application     ${createApplicationOpenCompetition}
+    And the user clicks the button/link                              link = Continue and create an account
+    And the user clicks the button/link                              jQuery = span:contains("Business")
+    And the user clicks the button/link                              jQuery = button:contains("Save and continue")
 
 the backslash doesnt give errors
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = addressForm.selectedPostcodeIndex

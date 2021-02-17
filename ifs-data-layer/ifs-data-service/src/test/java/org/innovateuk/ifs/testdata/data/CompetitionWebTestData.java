@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.domain.InnovationArea.DIGITAL_MANUFACTORING_ID;
-import static org.innovateuk.ifs.category.domain.ResearchCategory.FEASIBILITY_STUDIES_ID;
+import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.*;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.aCompetitionLine;
@@ -223,8 +223,13 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Home and industrial efficiency programme")
+                        .withResubmission(true)
+                        .withIncludeYourOrganisation(false)
+                        .withIncludeProjectGrowth(false)
+                        .withResearchRatio(100)
                         .withAssessorCount(1)
-                        .withLeadApplicantTypes(asSet(BUSINESS, RTO)),
+                        .withLeadApplicantTypes(asSet(BUSINESS, RTO))
+                        .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID)),
                 grantCompetition()
                         .withName("Predicting market trends programme")
                         .withLeadApplicantTypes(asSet(RTO))
@@ -232,10 +237,11 @@ public class CompetitionWebTestData {
                         .withResubmission(true)
                         .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false)
-                        .withAssessorCount(5),
+                        .withAssessorCount(3),
                 grantCompetition()
                         .withCompetitionType(SECTOR)
                         .withName("Aerospace technology investment sector")
+                        .withResubmission(true)
                         .withInnovationAreas(asSet(22L, 23L)),
                 grantCompetition()
                         .withCompetitionType(GENERIC)
@@ -243,10 +249,12 @@ public class CompetitionWebTestData {
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("Photonics for Research")
+                        .withLeadApplicantTypes(asSet(RESEARCH))
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("Photonics for Public")
-                        .withLeadTechnologist(PETER_FREEMAN_ID),
+                        .withLeadTechnologist(PETER_FREEMAN_ID)
+                        .withLeadApplicantTypes(asSet(PUBLIC_SECTOR_OR_CHARITY)),
                 grantCompetition()
                         .withName("Photonics for RTO and Business"),
                 grantCompetition()
@@ -286,6 +294,8 @@ public class CompetitionWebTestData {
                         .withResubmission(true),
                 grantCompetition()
                         .withName("599 Covid de minimis round 2")
+                        .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
+                        .withResubmission(true)
                         .withIncludeProjectGrowth(false)
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
@@ -308,7 +318,8 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP cofunding"),
                 ktpCompetition()
-                        .withName("KTP assessment Detailed Finances"),
+                        .withName("KTP assessment Detailed Finances")
+                        .withAssessorFinanceView(AssessorFinanceView.DETAILED),
                 ktpCompetition()
                         .withName("KTP assessment Overview Finances"),
                 ktpCompetition()
@@ -321,6 +332,7 @@ public class CompetitionWebTestData {
                         .withName("WTO comp"),
                 grantCompetition()
                         .withName("Always open competition")
+                        .withAlwaysOpen(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

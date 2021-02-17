@@ -602,7 +602,7 @@ Public content is required for a Competition to be setup
     [Documentation]
     [Tags]  HappyPath
     Given the user clicks the button/link                     link = Public content
-    When the user fills in the Public content and publishes   GrowthTable
+    When the user fills in the Public content and publishes   ${competitionTitle}
     And the user clicks the button/link                       link = Return to setup overview
     Then the user should see the element                      jQuery = li:contains("Public content") .task-status-complete
 

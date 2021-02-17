@@ -105,7 +105,7 @@ the user makes the application unsuccessful and sends notification
      the user should see the element    jQuery = td:contains("${KTP_application}") ~ td:contains("Unsuccessful")
      the user clicks the button/link    link = Competition
      the user clicks the button/link    link = Manage funding notifications
-     the user selects the checkbox      app-row-301
+     the user selects the checkbox      app-row-235
      the user clicks the button/link    jQuery = button:contains("Write and send email")
      the user clicks the button/link    jQuery = button:contains("Send email to all applicants")
      the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
