@@ -11,10 +11,6 @@ public class AcademicAndSecretarialSupport extends AbstractFinanceRowItem {
 
     private Long id;
 
-    private String role;
-
-    private Integer duration;
-
     private BigInteger cost;
 
     private AcademicAndSecretarialSupport() {
@@ -25,11 +21,9 @@ public class AcademicAndSecretarialSupport extends AbstractFinanceRowItem {
         super(targetId);
     }
 
-    public AcademicAndSecretarialSupport(Long targetId, Long id, String role, Integer duration, BigInteger cost) {
+    public AcademicAndSecretarialSupport(Long targetId, Long id, BigInteger cost) {
         super(targetId);
         this.id = id;
-        this.role = role;
-        this.duration = duration;
         this.cost = cost;
     }
 
@@ -40,22 +34,6 @@ public class AcademicAndSecretarialSupport extends AbstractFinanceRowItem {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 
     public BigInteger getCost() {
