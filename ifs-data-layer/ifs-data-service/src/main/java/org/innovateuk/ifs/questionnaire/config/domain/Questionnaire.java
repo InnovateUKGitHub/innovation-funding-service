@@ -14,7 +14,8 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireQuestion> questions = new ArrayList<>();
 
-
+    @Enumerated(EnumType.STRING)
+    private QuestionnaireSecurityType securityType;
 
     public Long getId() {
         return id;
@@ -30,5 +31,13 @@ public class Questionnaire {
 
     public void setQuestions(List<QuestionnaireQuestion> questions) {
         this.questions = questions;
+    }
+
+    public QuestionnaireSecurityType getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(QuestionnaireSecurityType securityType) {
+        this.securityType = securityType;
     }
 }

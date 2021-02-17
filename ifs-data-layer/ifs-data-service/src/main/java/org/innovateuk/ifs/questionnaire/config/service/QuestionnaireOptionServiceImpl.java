@@ -53,13 +53,8 @@ public class QuestionnaireOptionServiceImpl extends AbstractIfsCrudServiceImpl<Q
             }
         } else if (resource.getDecisionType() == DecisionType.TEXT_OUTCOME) {
             if (domain.getDecision()== null || !domain.getDecision().getId().equals(resource.getDecision())) {
-                try {
-                    QuestionnaireTextOutcome outcome = questionnaireTextOutcomeRepository.findById(resource.getDecision()).orElseThrow(ObjectNotFoundException::new);
-
-                    domain.setDecision(outcome);
-                } catch (Exception e) {
-                    System.err.println("err");
-                }
+                QuestionnaireTextOutcome outcome = questionnaireTextOutcomeRepository.findById(resource.getDecision()).orElseThrow(ObjectNotFoundException::new);
+                domain.setDecision(outcome);
             }
         }
         domain.setText(resource.getText());

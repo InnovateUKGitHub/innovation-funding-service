@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.response.domain;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class QuestionnaireResponse {
+public class QuestionnaireResponse extends AuditableEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
