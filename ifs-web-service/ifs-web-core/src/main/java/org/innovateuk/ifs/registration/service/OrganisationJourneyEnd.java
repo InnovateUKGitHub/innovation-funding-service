@@ -21,6 +21,8 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.TaskDecorator;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,10 +58,10 @@ public class OrganisationJourneyEnd {
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     @Autowired
-    private AsyncTaskDecorator taskDecorator;
+    private TaskDecorator taskDecorator;
 
     @Autowired
-    private AsyncExecutionConfig taskExecutor;
+    private AsyncConfigurer taskExecutor;
 
     @Autowired
     private  CompaniesHouseRestService companiesHouseRestService;

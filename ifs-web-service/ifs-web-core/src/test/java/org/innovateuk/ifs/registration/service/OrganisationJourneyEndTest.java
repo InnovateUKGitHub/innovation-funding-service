@@ -19,6 +19,8 @@ import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskDecorator;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,10 +75,10 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
     private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
-    private AsyncTaskDecorator taskDecorator;
+    private TaskDecorator taskDecorator;
 
     @Mock
-    private AsyncExecutionConfig taskExecutor;
+    private AsyncConfigurer taskExecutor;
 
     @Mock
     Executor executor;
