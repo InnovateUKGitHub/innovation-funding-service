@@ -7,6 +7,8 @@ public class QuestionnaireResource {
 
     private Long id;
 
+    private QuestionnaireSecurityType securityType;
+
     private List<Long> questions = new ArrayList<>();
 
     public Long getId() {
@@ -15,6 +17,14 @@ public class QuestionnaireResource {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public QuestionnaireSecurityType getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(QuestionnaireSecurityType securityType) {
+        this.securityType = securityType;
     }
 
     public List<Long> getQuestions() {

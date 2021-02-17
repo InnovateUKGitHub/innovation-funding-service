@@ -71,7 +71,9 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         return competitionTypeSections;
     }
     private Questionnaire dummyQuestionnaire() {
-        QuestionnaireResource questionnaire = questionnaireService.create(new QuestionnaireResource()).getSuccess();
+        QuestionnaireResource questionnaire = new QuestionnaireResource();
+        questionnaire.setSecurityType(QuestionnaireSecurityType.LINK);
+        questionnaire = questionnaireService.create(questionnaire).getSuccess();
 
         QuestionnaireQuestionResource animalQuestion = new QuestionnaireQuestionResource();
         animalQuestion.setTitle("Animals");
@@ -379,6 +381,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private Questionnaire questionnaire() {
         //TODO replace with service calls.
         Questionnaire questionnaire = new Questionnaire();
+        questionnaire.setSecurityType(QuestionnaireSecurityType.LINK);
 
         QuestionnaireQuestion questionOne = new QuestionnaireQuestion();
         questionOne.setTitle("Question 1");
