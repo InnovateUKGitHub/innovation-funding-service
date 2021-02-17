@@ -411,7 +411,27 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
         verify(financeCheckRestService).resetEligibility(projectId, "something");
+    }
 
+    @Test
+    public void testResetEligibilityWithoutRetractionReason() throws Exception {
+
+        long projectId = project.getId();
+        long organisationId = industrialOrganisation.getId();
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        setUpViewEligibilityMocking(eligibility);
+
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
+                        param("reset-eligibility", "").
+                        param("retractionReason", "")).
+                andExpect(status().isOk()).
+                andExpect(model().attributeHasFieldErrors("form", "retractionReason")).
+                andExpect(view().name("project/financecheck/eligibility"));
     }
 
     @Test

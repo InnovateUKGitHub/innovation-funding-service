@@ -321,7 +321,8 @@
                                     rows="8"
                                     class="govuk-textarea"
                                     name="retractionReason"
-                                    required="required" ></textarea>
+                                    th:field="*{retractionReason}"
+                                    th:errorclass="govuk-textarea--error"></textarea>
                         </div>
                     </div>
                     <button class="govuk-button" name="reset-eligibility">Reset eligibility check</button>

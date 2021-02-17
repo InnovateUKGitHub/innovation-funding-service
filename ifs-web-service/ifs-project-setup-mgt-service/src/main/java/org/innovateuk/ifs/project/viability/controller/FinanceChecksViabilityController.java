@@ -97,10 +97,10 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, new FinanceChecksViabilityForm());
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
 
         if (StringUtils.isEmpty(form.getRetractionReason())) {
-            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason."));
+            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason for the reset."));
             return failureView.get();
         }
 

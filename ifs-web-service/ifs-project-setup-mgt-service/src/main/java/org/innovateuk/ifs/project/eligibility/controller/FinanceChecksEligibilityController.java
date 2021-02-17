@@ -282,10 +282,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, null, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, null, false);
 
         if (StringUtils.isEmpty(retractionReason)) {
-            bindingResult.addError(new FieldError(FORM_ATTR_NAME, "retractionReason", "Enter a reason."));
+            bindingResult.addError(new FieldError(FORM_ATTR_NAME, "retractionReason", "Enter a reason for the reset."));
             return failureView.get();
         }
 
