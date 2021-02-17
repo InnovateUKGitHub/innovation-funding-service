@@ -44,7 +44,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs"),
     PREVIOUS_FUNDING("previous_funding", "Other funding"),
     ACADEMIC_AND_SECRETARIAL_SUPPORT("academic_and_secretarial_support", "Academic and secretarial support", APPEARS_IN_PROJECT_COSTS_ACCORDION),
-    INDIRECT_COSTS("indirect costs", "Indirect costs");
+    INDIRECT_COSTS("indirect costs", "Indirect costs", APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
 
     enum FinanceRowOptions {
