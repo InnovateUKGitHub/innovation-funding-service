@@ -3,6 +3,8 @@ package org.innovateuk.ifs.registration.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.async.config.AsyncExecutionConfig;
+import org.innovateuk.ifs.async.executor.AsyncTaskDecorator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,6 +24,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -70,7 +73,13 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
     private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
-    private ThreadPoolTaskExecutor taskExecutor;
+    private AsyncTaskDecorator taskDecorator;
+
+    @Mock
+    private AsyncExecutionConfig taskExecutor;
+
+    @Mock
+    Executor executor;
 
     @Test
     public void completeProcess_newUser() {
@@ -112,6 +121,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
 
         String result = service.completeProcess(request, response, user, organisationId);
 
@@ -141,7 +151,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
-
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", application.getId()));
@@ -170,7 +180,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getInviteHashCookieValue(request)).thenReturn(Optional.of(inviteHash));
         when(inviteRestService.getInviteByHash(inviteHash)).thenReturn(restSuccess(invite));
         when(inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId)).thenReturn(restSuccess());
-
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", applicationId));
@@ -200,6 +210,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
 
         String result = service.completeProcess(request, response, user, organisationId);
 

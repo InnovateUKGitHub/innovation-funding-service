@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.registration.service;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.async.config.AsyncExecutionConfig;
+import org.innovateuk.ifs.async.executor.AsyncTaskDecorator;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -21,15 +21,12 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
-
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 import static java.lang.String.format;
 
@@ -59,7 +56,10 @@ public class OrganisationJourneyEnd {
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    private AsyncTaskDecorator taskDecorator;
+
+    @Autowired
+    private AsyncExecutionConfig taskExecutor;
 
     @Autowired
     private  CompaniesHouseRestService companiesHouseRestService;
@@ -68,7 +68,6 @@ public class OrganisationJourneyEnd {
     private Boolean newOrganisationSearchEnabled;
 
     private static final Log LOG = LogFactory.getLog(OrganisationJourneyEnd.class);
-
 
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
 
@@ -84,11 +83,11 @@ public class OrganisationJourneyEnd {
         }
     }
 
-    @AsyncMethod
-    private void updateExistingCompaniesHouseData(final long organisationId) {
 
+    private void updateExistingCompaniesHouseData(final long organisationId) {
         CompaniesHouseSyncTask companiesHouseSyncTask = new CompaniesHouseSyncTask(organisationId, organisationRestService,companiesHouseRestService);
-        taskExecutor.execute(companiesHouseSyncTask);
+        Executor executor = taskExecutor.getAsyncExecutor();
+        executor.execute(taskDecorator.decorate(companiesHouseSyncTask));
     }
 
 
