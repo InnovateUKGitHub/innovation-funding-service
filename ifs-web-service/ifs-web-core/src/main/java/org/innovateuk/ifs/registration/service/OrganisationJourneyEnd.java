@@ -1,18 +1,15 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.address.form.AddressForm;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
@@ -24,16 +21,14 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
+
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -72,12 +67,14 @@ public class OrganisationJourneyEnd {
     @Value("${ifs.new.organisation.search.enabled:false}")
     private Boolean newOrganisationSearchEnabled;
 
+    private static final Log LOG = LogFactory.getLog(OrganisationJourneyEnd.class);
 
 
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
 
         if (user != null) {
             if(newOrganisationSearchEnabled) {
+                LOG.error("JE: " +Thread.currentThread().getName());
                 updateExistingCompaniesHouseData(organisationId);
             }
             return handleExistingUser(request, response, user, organisationId);
@@ -87,10 +84,11 @@ public class OrganisationJourneyEnd {
         }
     }
 
+    @AsyncMethod
     private void updateExistingCompaniesHouseData(final long organisationId) {
+
         CompaniesHouseSyncTask companiesHouseSyncTask = new CompaniesHouseSyncTask(organisationId, organisationRestService,companiesHouseRestService);
         taskExecutor.execute(companiesHouseSyncTask);
-
     }
 
 
