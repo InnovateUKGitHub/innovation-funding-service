@@ -159,10 +159,18 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
+                    dbFinance = setFecModel(dbFinance, applicationFinance);
                     dbFinance = applicationFinanceRepository.save(dbFinance);
                     return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
                 })
         );
+    }
+
+    private ApplicationFinance setFecModel(ApplicationFinance dbFinance, ApplicationFinanceResource applicationFinance) {
+        dbFinance.setFecModelEnabled(applicationFinance.getFecModelEnabled());
+        dbFinance = setFecUpload(dbFinance, applicationFinance.getFecFileEntry());
+
+        return dbFinance;
     }
 
     /**
@@ -184,6 +192,18 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
             if (fileEntry.isPresent()) {
                 applicationFinance.setFinanceFileEntry(fileEntry.get());
+            }
+        }
+        return applicationFinance;
+    }
+
+    private ApplicationFinance setFecUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
+        if (fileEntryId == null || fileEntryId == 0L) {
+            applicationFinance.setFecFileEntry(null);
+        } else {
+            Optional<FileEntry> fileEntry = fileEntryRepository.findById(fileEntryId);
+            if (fileEntry.isPresent()) {
+                applicationFinance.setFecFileEntry(fileEntry.get());
             }
         }
         return applicationFinance;

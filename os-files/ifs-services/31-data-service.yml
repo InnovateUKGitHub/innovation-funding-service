@@ -52,6 +52,11 @@ items:
                     configMapKeyRef:
                       name: feature-toggle-config
                       key: IFS_NEW_ORGANISATION_SEARCH_ENABLED
+                - name: IFS_KTP_FEC_FINANCE_MODEL_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_KTP_FEC_FINANCE_MODEL_ENABLED
                 - name: SPRING_DATASOURCE_URL
                   valueFrom:
                     configMapKeyRef:
