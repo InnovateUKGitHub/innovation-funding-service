@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.FundingRulesTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
@@ -25,7 +26,6 @@ import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +40,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.northernIrelandDeclaration;
 
 /**
  * Service that can create Competition template copies
@@ -72,11 +71,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
 
-    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
-    private boolean northernIrelandSubsidyControlToggle;
-
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
     private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
+    private Map<FundingRules, FundingRulesTemplate> fundingRulesTemplates;
 
     @Autowired
     public void setCompetitionTemplates(List<CompetitionTemplate> templateBeans) {
@@ -88,6 +85,12 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     public void setFundingTypeTemplates(List<FundingTypeTemplate> templateBeans) {
         fundingTypeTemplates = templateBeans.stream()
                 .collect(toMap(FundingTypeTemplate::type, Function.identity()));
+    }
+
+    @Autowired
+    public void setFundingRulesTemplates(List<FundingRulesTemplate> templateBeans) {
+        fundingRulesTemplates = templateBeans.stream()
+                .collect(toMap(FundingRulesTemplate::type, Function.identity()));
     }
 
     @Override
@@ -110,14 +113,13 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         setDefaultProjectDocuments(competition);
 
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
-        FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
-
         List<SectionBuilder> sectionBuilders = template.sections();
+
+        FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
 
-        if (northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules())) {
-            insertNorthernIrelandDeclaration(sectionBuilders);
-        }
+        FundingRulesTemplate fundingRulesTemplate = fundingRulesTemplates.get(competition.getFundingRules());
+        sectionBuilders = fundingRulesTemplate.sections(sectionBuilders);
 
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
@@ -129,15 +131,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
         return serviceSuccess(competitionRepository.save(competition));
-    }
-
-    private void insertNorthernIrelandDeclaration(List<SectionBuilder> sectionBuilders) {
-        sectionBuilders.stream()
-                .filter(section -> "Project details".equals(section.getName()))
-                .findAny()
-                .ifPresent(section -> {
-                    section.getQuestions().add(0, northernIrelandDeclaration());
-        });
     }
 
     private void setDefaultProjectDocuments(Competition competition) {
