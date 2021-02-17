@@ -313,6 +313,34 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
+    public void resetViabilityWithoutRetractionReason() throws Exception {
+
+        Long projectId = project.getId();
+        Long organisationId = academicOrganisation.getId();
+
+        ViabilityResource viability = new ViabilityResource(ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+
+        when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
+        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(restSuccess(projectFinances));
+        when(financeCheckRestService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(viability));
+        when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(true));
+        when(projectService.getById(project.getId())).thenReturn(project);
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                        param("reset-viability", "").
+                        param("confirmViabilityChecked", "true").
+                        param("creditReportConfirmed", "true").
+                        param("retractionReason", "")).
+                andExpect(status().isOk()).
+                andExpect(model().attributeHasFieldErrors("form", "retractionReason")).
+                andExpect(view().name("project/financecheck/viability"));
+
+    }
+
+    @Test
     public void saveAndContinue() throws Exception {
 
         Long projectId = 123L;

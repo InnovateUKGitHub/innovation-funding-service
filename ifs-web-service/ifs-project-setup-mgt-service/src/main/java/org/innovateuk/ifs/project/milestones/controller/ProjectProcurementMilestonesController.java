@@ -112,7 +112,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
 
         if (StringUtils.isEmpty(form.getRetractionReason())) {
-            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason."));
+            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason for the reset."));
             return view.get();
         }
 

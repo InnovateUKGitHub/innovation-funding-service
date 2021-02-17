@@ -22,6 +22,7 @@ import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibility
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.eligibility.form.ResetEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
@@ -112,10 +113,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                   @RequestParam(value = "editAcademicFinances", required = false) boolean editAcademicFinances,
                                   Model model,
                                   UserResource user) {
-        return doViewEligibility(projectId, organisationId, model, null, null, null, rowType, editAcademicFinances);
+        return doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, null, rowType, editAcademicFinances);
     }
 
-    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, FinanceRowType rowType, boolean editAcademicFinances) {
+    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ResetEligibilityForm resetEligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, FinanceRowType rowType, boolean editAcademicFinances) {
         ProjectResource project = projectService.getById(projectId);
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
@@ -165,6 +166,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
+            model.addAttribute("resetForm", resetEligibilityForm);
             future.get();
 
             return "project/financecheck/eligibility";
@@ -193,7 +195,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                     UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, form, null, true);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, form, null, true);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(projectAcademicCostsSaver.save(form, projectId, organisationId));
@@ -214,7 +216,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                            UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, type, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), form, null, type, false);
         yourProjectCostsFormValidator.validateType(form, type, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId));
@@ -273,8 +275,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @AsyncMethod
     public String resetEligibility(@PathVariable long projectId,
                                      @PathVariable long organisationId,
-                                     @RequestParam String retractionReason,
-                                     @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
+                                     @ModelAttribute("resetForm") ResetEligibilityForm resetEligibilityForm,
                                      @SuppressWarnings("unused") BindingResult bindingResult,
                                      ValidationHandler validationHandler,
                                      Model model,
@@ -282,14 +283,14 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, null, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, resetEligibilityForm, null, null, null, false);
 
-        if (StringUtils.isEmpty(retractionReason)) {
-            bindingResult.addError(new FieldError(FORM_ATTR_NAME, "retractionReason", "Enter a reason."));
+        if (StringUtils.isEmpty(resetEligibilityForm.getRetractionReason())) {
+            bindingResult.addError(new FieldError("resetForm", "retractionReason", "Enter a reason for the reset."));
             return failureView.get();
         }
 
-        RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, retractionReason);
+        RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, resetEligibilityForm.getRetractionReason());
         return validationHandler
                 .addAnyErrors(resetEligibilityResult)
                 .failNowOrSucceedWith(failureView, successView);
@@ -322,7 +323,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model) {
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, form, null, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, new ResetEligibilityForm(), form, null, null, false);
 
         EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 
