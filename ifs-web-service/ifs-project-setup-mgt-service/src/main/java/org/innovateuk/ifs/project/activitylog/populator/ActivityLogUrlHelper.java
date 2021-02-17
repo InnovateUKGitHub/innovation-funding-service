@@ -65,6 +65,10 @@ public class ActivityLogUrlHelper {
             case GRANT_OFFER_LETTER_APPROVED:
             case GRANT_OFFER_LETTER_REJECTED:
                 return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());
+            case PAYMENT_MILESTONES_APPROVED:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case PAYMENT_MILESTONES_RESET:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
             default:
                 return null;
         }

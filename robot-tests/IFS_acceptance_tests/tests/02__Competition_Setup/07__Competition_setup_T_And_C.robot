@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
+...               IFS-9137  Update Subsidy control T&Cs for Innovate UK & ATI
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -14,10 +16,10 @@ ${innovateUKSubsidyControl}     Innovate UK - Subsidy control (opens in a new wi
 
 *** Test Cases ***
 Creating a new comp to confirm ATI subsidy control T&C's
-    [Documentation]  IFS-8994
+    [Documentation]  IFS-8994  IFS-9137
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  41
+    And the user selects the radio button       termsAndConditionsId  45
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${atiSubsidyControl}
 
@@ -35,10 +37,10 @@ ATI subsidy control T&C's section should be completed
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Creating a new comp to confirm Innovateuk subsidy control T&C's
-    [Documentation]  IFS-8994
+    [Documentation]  IFS-8994  IFS-9137
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  42
+    And the user selects the radio button       termsAndConditionsId  44
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${innovateUKSubsidyControl}
 
