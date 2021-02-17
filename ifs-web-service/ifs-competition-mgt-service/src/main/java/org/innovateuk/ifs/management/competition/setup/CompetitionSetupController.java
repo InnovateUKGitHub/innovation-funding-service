@@ -74,7 +74,7 @@ import static org.innovateuk.ifs.management.competition.setup.projectdocument.co
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
     public static final String COMPETITION_ID_KEY = "competitionId";
@@ -104,9 +104,6 @@ public class CompetitionSetupController {
 
     @Autowired
     private FundingLevelPercentageValidator fundingLevelPercentageValidator;
-
-    @Value("${ifs.subsidy.control.enabled:true}")
-    private boolean fundingRuleEnabled;
 
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
@@ -210,10 +207,6 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
-        if (competitionSetupForm.getFundingRule() == null) {
-            String errorKey = fundingRuleEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
-            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));
-        }
 
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);
     }

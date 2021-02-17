@@ -37,7 +37,7 @@ import static java.util.Collections.emptyList;
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingDecisionController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
 
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);

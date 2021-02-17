@@ -40,8 +40,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.applicationProcess.activityState IN :states) " +
             "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
             "AND (:funding IS NULL " +
-            "	OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
-            "	OR a.fundingDecision = :funding " +
+            "OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            "OR a.fundingDecision = :funding " +
             "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
             ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
@@ -51,10 +51,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.fundingDecision IS NOT NULL) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
             "AND (:sent IS NULL " +
-            "	OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) " +
-            "	OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
+            "OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) " +
+            "OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
             "AND (:funding IS NULL " +
-            "	OR (a.fundingDecision = :funding))";
+            "OR (a.fundingDecision = :funding))";
 
     String SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL = "SELECT a FROM Application a " +
             "WHERE " +

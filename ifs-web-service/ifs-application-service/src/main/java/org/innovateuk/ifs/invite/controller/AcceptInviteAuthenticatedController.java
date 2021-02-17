@@ -92,7 +92,6 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
 
                     if (!loggedInUser.hasRole(Role.APPLICANT)) {
                         userRestService.grantRole(loggedInUser.getId(), Role.APPLICANT).getSuccess();
-                        cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
                     }
                     // Success
                     inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccess();

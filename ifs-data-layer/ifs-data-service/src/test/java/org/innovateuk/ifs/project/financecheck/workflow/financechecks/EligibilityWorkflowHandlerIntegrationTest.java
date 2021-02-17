@@ -36,8 +36,6 @@ import static org.mockito.Mockito.*;
 public class EligibilityWorkflowHandlerIntegrationTest extends
         BaseWorkflowHandlerIntegrationTest<EligibilityWorkflowHandler, EligibilityProcessRepository, TestableTransitionWorkflowAction> {
 
-
-
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Autowired

@@ -22,7 +22,6 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -61,9 +60,6 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private NotificationService notificationService;
