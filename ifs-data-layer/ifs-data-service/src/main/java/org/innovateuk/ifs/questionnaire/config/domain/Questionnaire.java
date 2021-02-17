@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
+import org.innovateuk.ifs.questionnaire.resource.QuestionnaireSecurityType;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

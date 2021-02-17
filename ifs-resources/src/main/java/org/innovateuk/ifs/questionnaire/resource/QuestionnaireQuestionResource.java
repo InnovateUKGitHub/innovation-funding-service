@@ -6,6 +6,7 @@ import java.util.List;
 public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource {
 
     private int depth;
+    private QuestionnaireSecurityType securityType;
 
     private String title;
     private String question;
@@ -23,6 +24,14 @@ public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource
 
     public void setDepth(int depth) {
         this.depth = depth;
+    }
+
+    public QuestionnaireSecurityType getSecurityType() {
+        return securityType;
+    }
+
+    public void setSecurityType(QuestionnaireSecurityType securityType) {
+        this.securityType = securityType;
     }
 
     public String getTitle() {

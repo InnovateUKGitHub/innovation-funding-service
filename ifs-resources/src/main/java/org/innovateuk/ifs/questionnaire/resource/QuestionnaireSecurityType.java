@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.questionnaire.config.domain;
+package org.innovateuk.ifs.questionnaire.resource;
 
 public enum QuestionnaireSecurityType {
 
