@@ -14,7 +14,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null"/>
+              th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"/>
     <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"/>
 
@@ -152,7 +152,7 @@
                     discussed with your Project Manager.</p>
                 <p class="govuk-body"><a
                     th:if="${summaryModel.showChangesLink}"
-                    th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
+                    th:href="@{/project/{projectId}/finance-check/eligibility/changes(projectId=${summaryModel.projectId})}"
                     class="govuk-link">View changes to finances</a></p>
             </th:block>
 

@@ -67,6 +67,8 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                         case NOTIFICATIONS:
                             publicContentDate.setContent("Applicants notified");
                             break;
+                        default:
+                            // do nothing
                 }
             publicContentDates.add(publicContentDate);
         });
