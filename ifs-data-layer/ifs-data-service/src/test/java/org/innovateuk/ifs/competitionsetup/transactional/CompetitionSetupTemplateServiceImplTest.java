@@ -38,8 +38,7 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -254,7 +253,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(grantTemplate.sections(any())).thenReturn(newArrayList(aSection()
-                .withName("Project Details")
+                .withName("Project details")
                 .withQuestions(newArrayList(aQuestion()
                         .withName("question1")))));
         when(grantTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
@@ -270,9 +269,12 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         assertTrue(result.isSuccess());
 
-        Section firstSection = result.getSuccess().getSections().get(0);
-        assertEquals(2, firstSection.getQuestions().size());
-        assertEquals(QuestionSetupType.NORTHERN_IRELAND_DECLARATION, firstSection.getQuestions().get(0).getQuestionSetupType());
-        verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+        verify(questionPriorityOrderService).persistAndPrioritiseSections(eq(competition), argThat( sections -> {
+            Section firstSection = sections.get(0);
+            if (firstSection.getQuestions().size() != 2) {
+                return false;
+            }
+            return QuestionSetupType.NORTHERN_IRELAND_DECLARATION == firstSection.getQuestions().get(0).getQuestionSetupType();
+        }), isNull());
     }
 }
