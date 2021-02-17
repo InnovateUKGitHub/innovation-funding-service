@@ -19,6 +19,12 @@
               th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${resetForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to update eligibility.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(resetForm)" />
+        </div>
+
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName}|,subTitle=|${summaryModel.applicationId}: ${summaryModel.projectName}|,size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation and summaryModel.collaborativeProject} ? '(Lead Partner)'"/>
 
@@ -301,7 +307,7 @@
         </div>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
-              th:object="${eligibilityForm}"
+              th:object="${resetForm}"
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
@@ -315,19 +321,31 @@
                     <p class="govuk-body">Reset eligibility check for <th:block th:text="${summaryModel.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
                     <div class="govuk-form-group govuk-!-margin-top-6">
                         <label class="govuk-label govuk-!-font-weight-bold"
-                               for="reset-reason">Reason for retracting approval</label>
+                               for="retractionReason">Reason for retracting approval</label>
                         <div class="textarea-wrapped">
-                          <textarea id="reset-reason"
+                            <div class="govuk-form-group"
+                                 th:classappend="${#fields.hasErrors('retractionReason')} ? 'govuk-form-group--error'">
+                                <th:block th:if="${#fields.hasErrors('retractionReason')}">
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('retractionReason')}" th:text="${err}"></span>
+                                </th:block>
+                          <textarea id="retractionReason"
                                     rows="8"
                                     class="govuk-textarea"
                                     name="retractionReason"
                                     th:field="*{retractionReason}"
                                     th:errorclass="govuk-textarea--error"></textarea>
+                            </div>
                         </div>
                     </div>
                     <button class="govuk-button" name="reset-eligibility">Reset eligibility check</button>
                 </div>
             </details>
+        </form>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+              th:object="${eligibilityForm}"
+              th:unless="${summaryModel.isExternalView()}"
+              th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>

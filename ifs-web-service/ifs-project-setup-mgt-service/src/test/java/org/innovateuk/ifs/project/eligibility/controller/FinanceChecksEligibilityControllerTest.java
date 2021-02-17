@@ -430,7 +430,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                         param("reset-eligibility", "").
                         param("retractionReason", "")).
                 andExpect(status().isOk()).
-                andExpect(model().attributeHasFieldErrors("form", "retractionReason")).
+                andExpect(model().attributeHasFieldErrors("resetForm", "retractionReason")).
                 andExpect(view().name("project/financecheck/eligibility"));
     }
 
