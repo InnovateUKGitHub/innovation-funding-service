@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.KtpTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.LoanTemplate;
@@ -18,10 +19,13 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.Progr
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -30,17 +34,21 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.PROGRAMME;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest<CompetitionSetupTemplateServiceImpl> {
 
     public CompetitionSetupTemplateServiceImpl supplyServiceUnderTest() {
-        return new CompetitionSetupTemplateServiceImpl();
+        CompetitionSetupTemplateServiceImpl service = new CompetitionSetupTemplateServiceImpl();
+        ReflectionTestUtils.setField(service, "northernIrelandSubsidyControlToggle", true);
+        return service;
     }
 
     @Mock
@@ -194,7 +202,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
-//        assertEquals(result.getSuccess().getTermsAndConditions(), fundingTypeTerms);
     }
 
     @Test
@@ -228,5 +235,44 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         assertTrue(result.isSuccess());
         assertEquals(AssessorFinanceView.ALL, result.getSuccess().getCompetitionAssessmentConfig().getAssessorFinanceView());
+    }
+
+    @Test
+    public void injectSubsidyControlSection() {
+
+        CompetitionType competitionType = newCompetitionType()
+                .withName(PROGRAMME.getText())
+                .withId(1L)
+                .build();
+
+        Competition competition = newCompetition()
+                .withId(3L)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFundingType(FundingType.GRANT)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .build();
+
+        when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
+        when(grantTemplate.sections(any())).thenReturn(newArrayList(aSection()
+                .withName("Project Details")
+                .withQuestions(newArrayList(aQuestion()
+                        .withName("question1")))));
+        when(grantTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
+        when(grantTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
+        when(grantTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(grantTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
+
+        ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+
+        assertTrue(result.isSuccess());
+
+        Section firstSection = result.getSuccess().getSections().get(0);
+        assertEquals(2, firstSection.getQuestions().size());
+        assertEquals(QuestionSetupType.NORTHERN_IRELAND_DECLARATION, firstSection.getQuestions().get(0).getQuestionSetupType());
+        verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
     }
 }
