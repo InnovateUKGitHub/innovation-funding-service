@@ -108,6 +108,4 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
         return organisationResource;
     }
-
-
 }
