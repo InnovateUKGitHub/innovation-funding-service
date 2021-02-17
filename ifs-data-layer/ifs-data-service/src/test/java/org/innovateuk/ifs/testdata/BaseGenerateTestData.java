@@ -461,14 +461,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
-        for (ExternalUserLine externalUserLine : externalUserLines) {
-            try {
-                userDataBuilderService.createExternalUser(externalUserLine);
-            } catch (Exception ex) {
-                // TODO this needs investigation
-                System.err.println("Failed with: " + externalUserLine.emailAddress);
-            }
-        }
+        externalUserLines.forEach(userDataBuilderService::createExternalUser);
     }
 
     private void createCompetitionFunders(List<CompetitionData> competitions) {
