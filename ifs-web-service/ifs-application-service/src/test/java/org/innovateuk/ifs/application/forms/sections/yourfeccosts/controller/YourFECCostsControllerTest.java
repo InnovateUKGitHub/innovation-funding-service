@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;

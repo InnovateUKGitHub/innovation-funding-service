@@ -7,8 +7,6 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.async.annotations.AsyncMethod;
-import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -42,7 +40,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-fec-model/organisation/{organisationId}/section/{sectionId}")
-public class YourFECCostsController extends AsyncAdaptor {
+public class YourFECCostsController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
 
@@ -72,7 +70,6 @@ public class YourFECCostsController extends AsyncAdaptor {
     }
 
     @GetMapping
-    @AsyncMethod
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_FEC_COSTS", description = "Applicants, stakeholders, internal users and kta can view the Your FEC costs page")
     public String viewPage(
