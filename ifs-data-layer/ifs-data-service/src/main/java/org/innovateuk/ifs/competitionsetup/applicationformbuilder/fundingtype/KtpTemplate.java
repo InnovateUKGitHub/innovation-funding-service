@@ -15,6 +15,7 @@ import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,7 +25,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestionWithMultipleStatuses;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSubSection;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
@@ -32,6 +35,9 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 public class KtpTemplate implements FundingTypeTemplate {
 
     private static final Integer MAXIMUM_ASSESSOR_SCORE = 10;
+
+    @Value("${ifs.ktp.fec.finance.model.enabled}")
+    private boolean fecFinanceModel;
 
     @Autowired
     private CommonBuilders commonBuilders;
@@ -47,13 +53,30 @@ public class KtpTemplate implements FundingTypeTemplate {
         competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
                 .findAny()
                 .ifPresent(financeSection ->
-                        financeSection.withAssessorGuidanceDescription("The knowledge base partner is required to submit their project finance details."));
+                {
+                    financeSection.withAssessorGuidanceDescription("The knowledge base partner is required to submit their project finance details.");
+                    if (fecFinanceModel) {
+                        financeSection.getChildSections().stream().filter(childSection ->
+                                childSection.getName().equals("Your project finances")).findAny().ifPresent(yourProjectFinancesSection ->
+                                yourProjectFinancesSection.getChildSections().add(0, fecCostsSection()));
+                    }
+                });
+
         competitionTypeSections.add(
                 ktpAssessmentSection()
                         .withQuestions(ktpDefaultQuestions())
         );
 
         return overrideApplicationQuestionFormInputs(competitionTypeSections);
+   }
+
+    public static SectionBuilder fecCostsSection() {
+        return aSubSection()
+                .withName("Your fEC costs")
+                .withType(SectionType.FEC_COSTS_FINANCES)
+                .withQuestions(newArrayList(
+                        aQuestionWithMultipleStatuses()));
+
     }
 
     @Override
