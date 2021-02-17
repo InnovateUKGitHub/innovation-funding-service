@@ -1,16 +1,20 @@
 package org.innovateuk.ifs.questionnaire.response.domain;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class QuestionnaireResponse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="questionnaireId", referencedColumnName="id")
@@ -19,11 +23,11 @@ public class QuestionnaireResponse {
     @OneToMany(mappedBy = "questionnaireResponse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<QuestionnaireQuestionResponse> questionnaireQuestionResponse;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

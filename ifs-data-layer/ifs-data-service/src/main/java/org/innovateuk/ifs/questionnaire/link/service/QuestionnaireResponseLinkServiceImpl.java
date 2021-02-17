@@ -11,6 +11,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -30,7 +31,7 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
     private QuestionnaireResponseRepository questionnaireResponseRepository;
 
     @Override
-    public ServiceResult<Long> getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(long applicationId, long organisationId, long questionnaireId) {
+    public ServiceResult<UUID> getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(long applicationId, long organisationId, long questionnaireId) {
         if (applicationOrganisationQuestionnaireResponseRepository.existsByApplicationIdAndOrganisationIdAndQuestionnaireResponseQuestionnaireId(applicationId, organisationId, questionnaireId)) {
             return find(applicationOrganisationQuestionnaireResponseRepository.findByApplicationIdAndOrganisationIdAndQuestionnaireResponseQuestionnaireId(applicationId, organisationId, questionnaireId),
                     notFoundError(ApplicationOrganisationQuestionnaireResponse.class, applicationId, organisationId, questionnaireId))

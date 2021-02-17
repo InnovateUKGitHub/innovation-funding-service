@@ -8,14 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
-public class QuestionnaireResponseServiceImpl extends AbstractIfsCrudServiceImpl<QuestionnaireResponseResource, QuestionnaireResponse, Long> implements QuestionnaireResponseService {
+public class QuestionnaireResponseServiceImpl extends AbstractIfsCrudServiceImpl<QuestionnaireResponseResource, QuestionnaireResponse, UUID> implements QuestionnaireResponseService {
 
     @Autowired
     private QuestionnaireResponseRepository questionnaireResponseRepository;
 
     @Override
-    protected CrudRepository<QuestionnaireResponse, Long> crudRepository() {
+    protected CrudRepository<QuestionnaireResponse, UUID> crudRepository() {
         return questionnaireResponseRepository;
     }
 

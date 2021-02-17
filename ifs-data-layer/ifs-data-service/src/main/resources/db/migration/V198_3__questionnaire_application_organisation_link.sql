@@ -1,6 +1,6 @@
 CREATE TABLE application_organisation_questionnaire_response (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  questionnaire_response_id BIGINT(20) NOT NULL,
+  questionnaire_response_id BINARY(16) NOT NULL,
   application_id BIGINT(20) NOT NULL,
   organisation_id BIGINT(20) NOT NULL,
 

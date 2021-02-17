@@ -4,18 +4,18 @@ import java.util.List;
 
 public class QuestionnaireResponseResource {
 
-    private Long id;
+    private String uid;
 
     private Long questionnaire;
 
     private List<Long> questionnaireQuestionResponse;
 
-    public Long getId() {
-        return id;
+    public String getUid() {
+        return uid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public Long getQuestionnaire() {

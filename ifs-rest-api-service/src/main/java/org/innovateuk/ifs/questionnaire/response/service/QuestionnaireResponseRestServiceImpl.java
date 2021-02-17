@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class QuestionnaireResponseRestServiceImpl extends AbstractIfsCrudRestServiceImpl<QuestionnaireResponseResource, Long> implements QuestionnaireResponseRestService {
+public class QuestionnaireResponseRestServiceImpl extends AbstractIfsCrudRestServiceImpl<QuestionnaireResponseResource, String> implements QuestionnaireResponseRestService {
 
     @Override
     protected String getBaseUrl() {

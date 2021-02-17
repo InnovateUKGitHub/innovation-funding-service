@@ -14,6 +14,8 @@ public class Questionnaire {
     @OneToMany(mappedBy = "questionnaire", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionnaireQuestion> questions = new ArrayList<>();
 
+
+
     public Long getId() {
         return id;
     }

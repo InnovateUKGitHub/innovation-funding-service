@@ -1,5 +1,5 @@
 CREATE TABLE questionnaire_response (
-  id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+  id BINARY(16) NOT NULL PRIMARY KEY,
   questionnaire_id BIGINT(20) NOT NULL,
 
   KEY questionnaire_response_to_questionnaire (questionnaire_id),
@@ -8,7 +8,7 @@ CREATE TABLE questionnaire_response (
 
 CREATE TABLE questionnaire_question_response (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  questionnaire_response_id BIGINT(20) NOT NULL,
+  questionnaire_response_id BINARY(16) NOT NULL,
   questionnaire_option_id BIGINT(20) NOT NULL,
 
   KEY questionnaire_question_response_to_questionnaire_response (questionnaire_response_id),
