@@ -12,6 +12,7 @@ buildscript {
 }
 
 dependencies {
+    implementation enforcedPlatform("org.flywaydb:flyway-core:5.2.4")
     // Commented are the natural versions in boot 2.4.2
     compile "org.flywaydb:flyway-core:5.2.4" //7.1.1!!!
     compile "org.mariadb.jdbc:mariadb-java-client:2.2.6" //2.7.1
