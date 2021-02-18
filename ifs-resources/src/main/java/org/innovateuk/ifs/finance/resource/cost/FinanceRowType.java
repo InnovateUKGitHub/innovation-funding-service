@@ -2,8 +2,11 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 import com.google.common.collect.Sets;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.COST;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.INCLUDE_IN_SPEND_PROFILE;
@@ -100,5 +103,20 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
                 FinanceRowType.values(),
                 frt -> frt.getDisplayName().equals(name)
         );
+    }
+
+    public static List<FinanceRowType> getFecSpecificFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.KNOWLEDGE_BASE
+                        || financeRowType == FinanceRowType.ASSOCIATE_SUPPORT
+                        || financeRowType == FinanceRowType.ESTATE_COSTS))
+                .collect(Collectors.toList());
+    }
+
+    public static List<FinanceRowType> getNonFecSpecificFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT
+                        || financeRowType == FinanceRowType.INDIRECT_COSTS))
+                .collect(Collectors.toList());
     }
 }
