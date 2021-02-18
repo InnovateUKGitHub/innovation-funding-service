@@ -26,11 +26,11 @@ public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessme
         this.interviewAllocationRestService = interviewAllocationRestService;
     }
 
-    public InterviewAcceptedAssessorsViewModel populateModel(CompetitionResource competition) {
+    public InterviewAcceptedAssessorsViewModel populateModel(CompetitionResource competition, int page) {
 
         InterviewAcceptedAssessorsPageResource pageResource = interviewAllocationRestService.getInterviewAcceptedAssessors(
                 competition.getId(),
-                0)
+                page)
                 .getSuccess();
 
         InterviewAcceptedAssessorsViewModel model = new InterviewAcceptedAssessorsViewModel(
