@@ -5,12 +5,8 @@ package org.innovateuk.ifs.project.monitoringofficer.form;
  */
 public class MonitoringOfficerViewAllForm {
 
-
     private Long userId;
 
-    public MonitoringOfficerViewAllForm() {
-
-    }
     public Long getUserId() {
         return userId;
     }

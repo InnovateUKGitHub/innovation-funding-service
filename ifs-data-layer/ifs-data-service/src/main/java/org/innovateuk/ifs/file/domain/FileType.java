@@ -13,9 +13,6 @@ public class FileType {
 
     private String extension;
 
-    public FileType() {
-    }
-
     public Long getId() {
         return id;
     }

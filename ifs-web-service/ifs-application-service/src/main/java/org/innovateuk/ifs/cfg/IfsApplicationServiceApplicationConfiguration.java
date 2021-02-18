@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.cfg;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,16 +12,13 @@ import static org.innovateuk.ifs.virtualassistant.VirtualAssistantAuthRestClient
 @Configuration
 public class IfsApplicationServiceApplicationConfiguration {
 
-    @Autowired
-    private RestTemplateBuilder restTemplateBuilder;
-
     @Bean(AZURE_CHAT_BOT_REST_TEMPLATE_QUALIFIER)
-    public RestTemplate azureChatBotRestTemplate() {
+    public RestTemplate azureChatBotRestTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build(RestTemplate.class);
     }
 
     @Bean
-    public static ConversionService conversionService() {
+    public ConversionService conversionService() {
         return new DefaultFormattingConversionService();
     }
 

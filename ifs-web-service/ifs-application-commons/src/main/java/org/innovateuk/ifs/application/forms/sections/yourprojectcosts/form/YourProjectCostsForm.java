@@ -229,6 +229,8 @@ public class YourProjectCostsForm {
                     return getTotalLabourCosts().multiply(new BigDecimal("0.2"));
                 case TOTAL:
                     return Optional.ofNullable(getOverhead().getTotalSpreadsheet()).map(BigDecimal::valueOf).orElse(BigDecimal.ZERO);
+                default:
+                    return BigDecimal.ZERO;
             }
         }
         return BigDecimal.ZERO;

@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -81,12 +80,11 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     @GetMapping("/allocate-assessors")
     public String overview(Model model,
                            @PathVariable("competitionId") long competitionId,
-                           @RequestParam MultiValueMap<String, String> queryParams,
                            @RequestParam(value = "page", defaultValue = "0") int page) {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         model.addAttribute("model", interviewAcceptedAssessorsModelPopulator.populateModel(
-                competitionResource
+                competitionResource, page
         ));
 
         return "assessors/interview/allocate-accepted-assessors";

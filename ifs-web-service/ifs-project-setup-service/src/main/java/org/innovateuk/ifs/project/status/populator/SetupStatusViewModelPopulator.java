@@ -145,112 +145,148 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         ProjectPartnerStatusResource ownOrganisation = resolve(teamStatusRequest).getPartnerStatusForOrganisation(resolve(organisationRequest).getId()).get();
         switch (stage) {
             case PROJECT_DETAILS:
-                boolean isProjectDetailsProcessCompleted =
-                        isLeadPartner ?
-                                checkLeadPartnerProjectDetailsProcessCompleted(resolve(teamStatusRequest))
-                                : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest));
-                boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest));
-                return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        projectComplete ? "Confirm the proposed start date and location of the project."
-                                : competition.isProcurement() ? "The start date and location of this project." : "The proposed start date and location of the project.",
-                        projectComplete ? format("/project/%d/details/readonly", project.getId())
-                                : format("/project/%d/details", project.getId()),
-                        sectionStatus.projectDetailsSectionStatus(
-                                isProjectDetailsProcessCompleted,
-                                awaitingProjectDetailsActionFromOtherPartners,
-                                isLeadPartner),
-                        statusAccessor.canAccessProjectDetailsSection(resolve(organisationRequest))
-                );
+                return projectDetailsStageViewModel(stage, project, competition, teamStatusRequest, organisationRequest, statusAccessor, projectComplete, isLeadPartner);
             case PROJECT_TEAM:
-                return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        projectComplete ? "Add people to your project."
-                                : "The people on your project.",
-                        projectComplete ? format("/project/%d/team", project.getId())
-                                : format("/project/%d/team", project.getId()),
-                        sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
-                        statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))
-                );
+                return projectTeamStageViewModel(stage, project, organisationRequest, statusAccessor, projectComplete, ownOrganisation);
             case DOCUMENTS:
-                boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
-                return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        isProjectManager ? "You must upload supporting documents to be reviewed."
-                                : "The Project Manager must upload supporting documents to be reviewed.",
-                        format("/project/%d/document/all", project.getId()),
-                        sectionStatus.documentsSectionStatus(
-                                isProjectManager,
-                                project,
-                                competition
-                        ),
-                        statusAccessor.canAccessDocumentsSection(resolve(organisationRequest))
-                );
+                return documentsStageViewModel(stage, project, competition, user, organisationRequest, statusAccessor);
             case MONITORING_OFFICER:
-                Optional<MonitoringOfficerResource> maybeMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
-                boolean isProjectDetailsSubmitted = COMPLETE.equals(resolve(teamStatusRequest).getLeadPartnerStatus().getProjectDetailsStatus());
-                boolean requiredProjectDetailsForMonitoringOfficerComplete =
-                        requiredProjectDetailsForMonitoringOfficerComplete(isProjectDetailsSubmitted, resolve(teamStatusRequest));
-                return new SetupStatusStageViewModel(stage, "Monitoring Officer",
-                        maybeMonitoringOfficer.isPresent() ? format(getMonitoringOfficerText(competition.isKtp()) + " %s.", maybeMonitoringOfficer.get().getFullName())
-                                : "We will assign the project a Monitoring Officer.",
-                        projectComplete ? format("/project/%d/monitoring-officer/readonly", project.getId())
-                                : format("/project/%d/monitoring-officer", project.getId()),
-                        sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
-                                requiredProjectDetailsForMonitoringOfficerComplete),
-                        statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest)),
-                        maybeMonitoringOfficer.isPresent() ? null : "awaiting-assignment"
-                );
+                return monitoringOfficerStageViewModel(stage, project, competition, teamStatusRequest, organisationRequest, statusAccessor, projectComplete);
             case BANK_DETAILS:
-                return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        "We need your organisation's bank details.",
-                        projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
-                                : format("/project/%d/bank-details", project.getId()),
-                        sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
-                );
+                return bankDetailsStageViewModel(stage, project, monitoringOfficer, organisationRequest, statusAccessor, projectComplete, ownOrganisation);
             case FINANCE_CHECKS:
-                SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
-                SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
-                        ownOrganisation.getFinanceChecksStatus(),
-                        financeChecksAccess
-                );
-                boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
-
-                return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        "We will review your financial information.",
-                        format("/project/%d/finance-checks", project.getId()),
-                        financeChecksStatus,
-                        monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
-                        pendingQueries ? "pending-query" : null
-                );
+                return financeChecksStageViewModel(stage, project, monitoringOfficer, organisationRequest, statusAccessor, ownOrganisation);
             case SPEND_PROFILE:
-                return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        "Once we have approved your project finances you can change your project spend profile.",
-                        format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
-                        sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
-                        statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
-                );
+                return spendProfileStageViewModel(stage, project, organisationRequest, statusAccessor, ownOrganisation);
             case GRANT_OFFER_LETTER:
-                String title = competition.isProcurement() ? "Contract" : "Grant offer letter";
-                return new SetupStatusStageViewModel(stage, title,
-                        getGrantOfferLetterSubtitle(title, competition.isKtp()),
-                        format("/project/%d/offer", project.getId()),
-                        sectionStatus.grantOfferLetterSectionStatus(
-                                ownOrganisation.getGrantOfferLetterStatus(),
-                                isLeadPartner
-                        ),
-                        statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
-                );
+                return grantOfferLetterStageViewModel(stage, project, competition, organisationRequest, statusAccessor, isLeadPartner, ownOrganisation);
             case PROJECT_SETUP_COMPLETE:
-                SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
-                return new SetupStatusStageViewModel(stage,
-                        stage.getShortName(),
-                        "Once all tasks are complete Innovate UK will review your application.",
-                        String.format("/project/%d/setup", project.getId()),
-                        projectSetupCompleteStatus,
-                        statusAccessor.canAccessProjectSetupCompleteSection(),
-                        projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
-                );
+                return projectSetupCompleteStageViewModel(stage, project, statusAccessor, ownOrganisation);
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
+    }
+
+    private SetupStatusStageViewModel projectSetupCompleteStageViewModel(ProjectSetupStage stage, ProjectResource project, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
+        SectionStatus projectSetupCompleteStatus = sectionStatus.projectSetupCompleteStatus(ownOrganisation.getProjectSetupCompleteStatus());
+        return new SetupStatusStageViewModel(stage,
+                stage.getShortName(),
+                "Once all tasks are complete Innovate UK will review your application.",
+                String.format("/project/%d/setup", project.getId()),
+                projectSetupCompleteStatus,
+                statusAccessor.canAccessProjectSetupCompleteSection(),
+                projectSetupCompleteStatus.equals(TICK) ? null : "awaiting-review"
+        );
+    }
+
+    private SetupStatusStageViewModel grantOfferLetterStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, boolean isLeadPartner, ProjectPartnerStatusResource ownOrganisation) {
+        String title = competition.isProcurement() ? "Contract" : "Grant offer letter";
+        return new SetupStatusStageViewModel(stage, title,
+                getGrantOfferLetterSubtitle(title, competition.isKtp()),
+                format("/project/%d/offer", project.getId()),
+                sectionStatus.grantOfferLetterSectionStatus(
+                        ownOrganisation.getGrantOfferLetterStatus(),
+                        isLeadPartner
+                ),
+                statusAccessor.canAccessGrantOfferLetterSection(resolve(organisationRequest))
+        );
+    }
+
+    private SetupStatusStageViewModel spendProfileStageViewModel(ProjectSetupStage stage, ProjectResource project, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
+        return new SetupStatusStageViewModel(stage, stage.getShortName(),
+                "Once we have approved your project finances you can change your project spend profile.",
+                format("/project/%d/partner-organisation/%d/spend-profile", project.getId(), resolve(organisationRequest).getId()),
+                sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus()),
+                statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
+        );
+    }
+
+    private SetupStatusStageViewModel financeChecksStageViewModel(ProjectSetupStage stage, ProjectResource project, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, ProjectPartnerStatusResource ownOrganisation) {
+        SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(resolve(organisationRequest));
+        SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(
+                ownOrganisation.getFinanceChecksStatus(),
+                financeChecksAccess
+        );
+        boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
+
+        return new SetupStatusStageViewModel(stage, stage.getShortName(),
+                "We will review your financial information.",
+                format("/project/%d/finance-check", project.getId()),
+                financeChecksStatus,
+                monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,
+                pendingQueries ? "pending-query" : null
+        );
+    }
+
+    private SetupStatusStageViewModel bankDetailsStageViewModel(ProjectSetupStage stage, ProjectResource project, boolean monitoringOfficer, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, boolean projectComplete, ProjectPartnerStatusResource ownOrganisation) {
+        return new SetupStatusStageViewModel(stage, stage.getShortName(),
+                "We need your organisation's bank details.",
+                projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
+                        : format("/project/%d/bank-details", project.getId()),
+                sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
+                monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : statusAccessor.canAccessBankDetailsSection(resolve(organisationRequest))
+        );
+    }
+
+    private SetupStatusStageViewModel monitoringOfficerStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, CompletableFuture<ProjectTeamStatusResource> teamStatusRequest, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, boolean projectComplete) {
+        Optional<MonitoringOfficerResource> maybeMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
+        boolean isProjectDetailsSubmitted = COMPLETE.equals(resolve(teamStatusRequest).getLeadPartnerStatus().getProjectDetailsStatus());
+        boolean requiredProjectDetailsForMonitoringOfficerComplete =
+                requiredProjectDetailsForMonitoringOfficerComplete(isProjectDetailsSubmitted, resolve(teamStatusRequest));
+        return new SetupStatusStageViewModel(stage, "Monitoring Officer",
+                maybeMonitoringOfficer.isPresent() ? format(getMonitoringOfficerText(competition.isKtp()) + " %s.", maybeMonitoringOfficer.get().getFullName())
+                        : "We will assign the project a Monitoring Officer.",
+                projectComplete ? format("/project/%d/monitoring-officer/readonly", project.getId())
+                        : format("/project/%d/monitoring-officer", project.getId()),
+                sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
+                        requiredProjectDetailsForMonitoringOfficerComplete),
+                statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest)),
+                maybeMonitoringOfficer.isPresent() ? null : "awaiting-assignment"
+        );
+    }
+
+    private SetupStatusStageViewModel documentsStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor) {
+        boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
+        return new SetupStatusStageViewModel(stage, stage.getShortName(),
+                isProjectManager ? "You must upload supporting documents to be reviewed."
+                        : "The Project Manager must upload supporting documents to be reviewed.",
+                format("/project/%d/document/all", project.getId()),
+                sectionStatus.documentsSectionStatus(
+                        isProjectManager,
+                        project,
+                        competition
+                ),
+                statusAccessor.canAccessDocumentsSection(resolve(organisationRequest))
+        );
+    }
+
+    private SetupStatusStageViewModel projectTeamStageViewModel(ProjectSetupStage stage, ProjectResource project, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, boolean projectComplete, ProjectPartnerStatusResource ownOrganisation) {
+        return new SetupStatusStageViewModel(stage, stage.getShortName(),
+                projectComplete ? "Add people to your project."
+                        : "The people on your project.",
+                projectComplete ? format("/project/%d/team", project.getId())
+                        : format("/project/%d/team", project.getId()),
+                sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
+                statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))
+        );
+    }
+
+    private SetupStatusStageViewModel projectDetailsStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, CompletableFuture<ProjectTeamStatusResource> teamStatusRequest, CompletableFuture<OrganisationResource> organisationRequest, SetupSectionAccessibilityHelper statusAccessor, boolean projectComplete, boolean isLeadPartner) {
+        boolean isProjectDetailsProcessCompleted =
+                isLeadPartner ?
+                        checkLeadPartnerProjectDetailsProcessCompleted(resolve(teamStatusRequest))
+                        : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest));
+        boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest));
+        return new SetupStatusStageViewModel(stage, stage.getShortName(),
+                projectComplete ? "Confirm the proposed start date and location of the project."
+                        : competition.isProcurement() ? "The start date and location of this project." : "The proposed start date and location of the project.",
+                projectComplete ? format("/project/%d/details/readonly", project.getId())
+                        : format("/project/%d/details", project.getId()),
+                sectionStatus.projectDetailsSectionStatus(
+                        isProjectDetailsProcessCompleted,
+                        awaitingProjectDetailsActionFromOtherPartners,
+                        isLeadPartner),
+                statusAccessor.canAccessProjectDetailsSection(resolve(organisationRequest))
+        );
     }
 
     private String getGrantOfferLetterSubtitle(String title, boolean isKtp) {
