@@ -431,6 +431,7 @@ public class CompetitionWebTestData {
                 .withCompetitionType(PROGRAMME)
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
+                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withAssessorCount(5)
                 .withResearchRatio(100)
