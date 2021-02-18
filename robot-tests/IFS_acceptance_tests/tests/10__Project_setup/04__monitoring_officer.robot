@@ -312,7 +312,7 @@ The SBRI MO assignee has been changed
     log in as a different user                  &{Comp_admin1_credentials}
     the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
     the user clicks the button/link             link = Change monitoring officer
-    internal user assigns mo to application     255  SBRI application  Orvill  Orville Gibbs
+    internal user assigns mo to application     302  SBRI application  Orvill  Orville Gibbs
 
 Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}

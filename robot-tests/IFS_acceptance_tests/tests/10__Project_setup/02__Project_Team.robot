@@ -293,7 +293,7 @@ New partner can join project
 New partner can provide bank details
     [Documentation]  IFS-6871  IFS-7723
     ${organisationId} =  get organisation id by name  FIRSTGROUP PLC
-    Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
+    Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  30
     When the applicant fills in bank details
     Then internal and external users see correct status
 
