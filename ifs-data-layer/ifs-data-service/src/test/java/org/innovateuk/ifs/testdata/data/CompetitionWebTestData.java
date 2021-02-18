@@ -315,7 +315,7 @@ public class CompetitionWebTestData {
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice open"),
-                grantCompetition()
+                procurementCompetition()
                         .withName("SBRI type one competition"),
                 ktpCompetition()
                         .withName("KTP new competition"),
