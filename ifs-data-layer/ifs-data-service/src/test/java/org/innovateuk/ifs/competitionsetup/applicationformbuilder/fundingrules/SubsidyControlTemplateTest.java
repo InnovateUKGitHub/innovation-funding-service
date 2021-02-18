@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class SubsidyControlTemplateTest {
     @Before
     public void setUp() {
         template = new SubsidyControlTemplate();
-        ReflectionTestUtils.setField(template, "northernIrelandSubsidyControlToggle", true);
+        ReflectionTestUtils.setField(template, "subsidyControlNorthernIrelandMode", SubsidyControlNorthernIrelandMode.TACTICAL);
     }
 
     @Test

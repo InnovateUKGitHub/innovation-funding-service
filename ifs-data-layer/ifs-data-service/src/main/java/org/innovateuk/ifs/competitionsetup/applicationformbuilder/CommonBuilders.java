@@ -187,30 +187,6 @@ public class CommonBuilders {
                 ));
     }
 
-    public static QuestionBuilder northernIrelandDeclaration() {
-        return aQuestion()
-                .withShortName("Subsidy basis")
-                .withName("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")
-                .withDescription("For example, if the project or related activities are undertaken in Northern Ireland that would be a 'Yes' etc")
-                .withAssignEnabled(true)
-                .withMarkAsCompletedEnabled(true)
-                .withMultipleStatuses(false)
-                .withType(QuestionType.GENERAL)
-                .withQuestionSetupType(QuestionSetupType.NORTHERN_IRELAND_DECLARATION)
-                .withFormInputs(newArrayList(
-                        aFormInput()
-                                .withType(FormInputType.MULTIPLE_CHOICE)
-                                .withActive(true)
-                                .withScope(FormInputScope.APPLICATION)
-                                .withMultipleChoiceOptions(newArrayList(
-                                        aMultipleChoiceOption()
-                                                .withText("Yes"),
-                                        aMultipleChoiceOption()
-                                                .withText("No")
-                                ))
-                ));
-    }
-
     public static QuestionBuilder projectSummary() {
         return aQuestion()
                 .withShortName("Project summary")
