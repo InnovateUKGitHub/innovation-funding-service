@@ -224,7 +224,9 @@ public class CompetitionWebTestData {
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
                 grantCompetition()
                         .withName("Smart monitoring in high-pressure engineering systems")
-                        .withCompetitionType(ADVANCED_PROPULSION_CENTRE)
+                        .withCompetitionType(ADVANCED_PROPULSION_CENTRE),
+                procurementCompetition()
+                        .withName("SBRI type one competition")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.CLOSED))
@@ -316,8 +318,6 @@ public class CompetitionWebTestData {
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice open"),
-                procurementCompetition()
-                        .withName("SBRI type one competition"),
                 ktpCompetition()
                         .withName("KTP new competition"),
                 loanCompetition()
