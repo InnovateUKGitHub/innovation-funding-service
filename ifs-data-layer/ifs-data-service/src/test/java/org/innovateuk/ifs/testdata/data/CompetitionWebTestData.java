@@ -157,7 +157,18 @@ public class CompetitionWebTestData {
                         .withName("KTP assessment")
                         .withAssessorFinanceView(AssessorFinanceView.ALL)
                         .withIncludeProjectGrowth(false)
-                        .withIncludeYourOrganisation(false)
+                        .withIncludeYourOrganisation(false),
+                ktpCompetition()
+                        .withName("KTP assessment Detailed Finances")
+                        .withAssessorFinanceView(AssessorFinanceView.DETAILED),
+                ktpCompetition()
+                        .withName("KTP assessment Overview Finances"),
+                ktpCompetition()
+                        .withName("KTP cofunding"),
+                ktpCompetition()
+                        .withName("Non KTP competition all finance overview"),
+                ktpCompetition()
+                        .withName("KTP cofunding single application")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT))
@@ -320,17 +331,6 @@ public class CompetitionWebTestData {
                         .withName("KTP Africa Comp")
                         .withCompetitionType(AEROSPACE_TECHNOLOGY_INSTITUTE),
                 ktpCompetition()
-                        .withName("KTP cofunding"),
-                ktpCompetition()
-                        .withName("KTP assessment Detailed Finances")
-                        .withAssessorFinanceView(AssessorFinanceView.DETAILED),
-                ktpCompetition()
-                        .withName("KTP assessment Overview Finances"),
-                ktpCompetition()
-                        .withName("Non KTP competition all finance overview"),
-                ktpCompetition()
-                        .withName("KTP cofunding single application"),
-                ktpCompetition()
                         .withName("No aid comp"),
                 grantCompetition()
                         .withName("WTO comp"),
@@ -431,7 +431,8 @@ public class CompetitionWebTestData {
                 .withCompetitionType(PROGRAMME)
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
+                .withInnovationSector("None")
+                .withInnovationAreas(asSet(67L))
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withAssessorCount(5)
                 .withResearchRatio(100)
