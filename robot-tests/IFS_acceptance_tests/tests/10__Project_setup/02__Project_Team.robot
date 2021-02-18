@@ -124,7 +124,7 @@ The lead partner is able to add a new team member
 
 A new team member is able to accept the invitation from lead partner and see project set up
     [Documentation]  IFS-5719
-    Given the user reads his email and clicks the link   ${leadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
+    Given the user reads his email and clicks the link   ${leadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 245.  You have been invited to join the project Magic material by Empire Ltd.  1
     When the user creates a new account                  Tester   Testington   ${leadNewMemberEmail}
     Then the user is able to access the project          ${leadNewMemberEmail}
 
@@ -139,7 +139,7 @@ Non Lead partner is able to add a new team member
 
 A new team member is able to accept the invitation from non lead partner and see projec set up
     [Documentation]  IFS-5719
-    Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Ludlow.  1
+    Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 245.  You have been invited to join the project Magic material by Ludlow.  1
     When the user creates a new account                     Testerina   Testington   ${nonLeadNewMemberEmail}
     Then the user is able to access the project             ${nonLeadNewMemberEmail}
 
@@ -163,7 +163,7 @@ A user is able to re-send an invitation
     And the user clicks the button/link                    jQuery = button:contains("Add team member")
     When The user adds a new team member                   Removed   ${removeInviteEmail}
     Then the user is able to re-send an invitation
-    And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.
+    And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 245.  You have been invited to join the project Magic material by Empire Ltd.
 
 A partner is able to remove a pending invitation
     [Documentation]  IFS-5723
@@ -455,7 +455,7 @@ The user is able to re-send an invitation
 
 Removed invitee is not able to accept the invite
     [Arguments]    ${email}
-    the user reads his email and clicks the link   ${email}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
+    the user reads his email and clicks the link   ${email}  New designs for a circular economy: Magic material: Invitation for project 245.  You have been invited to join the project Magic material by Empire Ltd.  1
     the user should see the element                jQuery = h1:contains("Sorry, you are unable to accept this invitation.")
 
 The user is abe to remove the pending invitation

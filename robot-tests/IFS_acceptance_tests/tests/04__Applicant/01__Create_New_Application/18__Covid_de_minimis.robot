@@ -144,11 +144,11 @@ Internal user is able to approve the GOL and the project is now Live
 
 Competition goes into previous
     [Documentation]   IFS-7441
-    [Setup]  log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link    jQuery = a:contains("Project setup (")
-    And The user should not see the element  link = ${COVIDdeminimuscompetitionTitle}
-    when the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then the user should see the element     link = ${COVIDdeminimuscompetitionTitle}
+    [Setup]  log in as a different user                            &{Comp_admin1_credentials}
+    Given the user clicks the button/link                          jQuery = a:contains("Project setup (")
+    And The user should not see the element                        link = ${COVIDdeminimuscompetitionTitle}
+    when the user clicks the button/link                           jQuery = a:contains("Previous (")
+    Then the user should see the element in the paginated list     link = ${COVIDdeminimuscompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup

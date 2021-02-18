@@ -45,7 +45,7 @@ New external project finance can create account
     Then The user should not see the element             link = ${COVIDcompetitionTitle}
 
 Create application to covid comp
-    [Documentation]  IFS-7441 comp=turnrgiun
+    [Documentation]  IFS-7441
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page   ${server}/competition/${COVIDcompetitionId}/overview
     Then the user completes covid application
@@ -206,11 +206,11 @@ Internal user is able to approve the GOL and the project is now Live
 
 Competition goes into previous
     [Documentation]   IFS-7441
-    [Setup]  log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link    jQuery = a:contains("Project setup (")
-    And The user should not see the element  link = ${COVIDcompetitionTitle}
-    when the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then the user should see the element     link = ${COVIDcompetitionTitle}
+    [Setup]  log in as a different user                            &{Comp_admin1_credentials}
+    Given the user clicks the button/link                          jQuery = a:contains("Project setup (")
+    And The user should not see the element                        link = ${COVIDcompetitionTitle}
+    when the user clicks the button/link                           jQuery = a:contains("Previous (")
+    Then the user should see the element in the paginated list     link = ${COVIDcompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup

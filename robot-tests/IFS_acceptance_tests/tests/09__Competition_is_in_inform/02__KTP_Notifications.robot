@@ -49,7 +49,7 @@ Internal user checks the status of the application
     Given the user navigates to the page                          ${server}/management/dashboard/previous
     When the user clicks the button/link                          link = ${KTP_competiton}
     And the user clicks the button/link                           jQuery = button:contains("Projects")
-    Then the user should see the element                          jQuery = tbody div:contains("${KTP_application}") ~ div:contains("Unsuccessful")
+    Then The user should see the element in the paginated list    jQuery = tbody div:contains("${KTP_application}") ~ div:contains("Unsuccessful")
     And the user cannot make any changes in the project setup
 
 The lead checks the status of the application

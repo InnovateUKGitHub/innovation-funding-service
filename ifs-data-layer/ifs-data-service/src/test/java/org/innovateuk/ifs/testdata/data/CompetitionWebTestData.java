@@ -168,6 +168,7 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Internet of Things")
+                        .withResearchRatio(100)
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 ktpCompetition()
                         .withName("KTP in panel"),
@@ -232,6 +233,7 @@ public class CompetitionWebTestData {
                         .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID)),
                 grantCompetition()
                         .withName("Predicting market trends programme")
+                        .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
                         .withLeadApplicantTypes(asSet(RTO))
                         .withResearchRatio(50)
                         .withResubmission(true)
@@ -241,6 +243,7 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withCompetitionType(SECTOR)
                         .withName("Aerospace technology investment sector")
+                        .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
                         .withResubmission(true)
                         .withInnovationAreas(asSet(22L, 23L)),
                 grantCompetition()
@@ -253,6 +256,7 @@ public class CompetitionWebTestData {
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("Photonics for Public")
+                        .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
                         .withLeadTechnologist(PETER_FREEMAN_ID)
                         .withLeadApplicantTypes(asSet(PUBLIC_SECTOR_OR_CHARITY)),
                 grantCompetition()
@@ -300,7 +304,7 @@ public class CompetitionWebTestData {
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice open"),
-                grantCompetition()
+                procurementCompetition()
                         .withName("SBRI type one competition"),
                 ktpCompetition()
                         .withName("KTP new competition"),
@@ -326,13 +330,14 @@ public class CompetitionWebTestData {
                         .withName("Non KTP competition all finance overview"),
                 ktpCompetition()
                         .withName("KTP cofunding single application"),
-                grantCompetition()
+                ktpCompetition()
                         .withName("No aid comp"),
                 grantCompetition()
                         .withName("WTO comp"),
                 grantCompetition()
                         .withName("Always open competition")
                         .withAlwaysOpen(true)
+                        .withResubmission(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

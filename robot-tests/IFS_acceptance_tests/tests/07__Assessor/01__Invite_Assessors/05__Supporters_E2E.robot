@@ -27,7 +27,7 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 *** Variables ***
 ${supporterApplicationTitle}     	      Reconfiguring an immune response
 &{Supporter01_credentials}                email=mister.branches@money.com    password=${short_password}
-${KTP_Application_URL}                    ${server}/assessment/supporter/application/266/response
+${KTP_Application_URL}                    ${server}/assessment/supporter/application/58/response
 ${ktpCofundingCompetitionNavigation}      Co funder dashboard - application level
 ${supporterUserUsername}                  Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
