@@ -65,13 +65,6 @@ public class IFSWebConfiguration implements WebMvcConfigurer {
         registry.addFormatter(new RejectionReasonFormatter());
     }
 
-    public IfSThymeleafDialect getIfsThymeleafDialect() {
-        return new IfSThymeleafDialect();
-    }
-
-    public IfsThymeleafPostProcessorDialect getIfsThymeleafPostProcessorDialect() {
-        return new IfsThymeleafPostProcessorDialect();
-    }
 
     @Bean
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {
