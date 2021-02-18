@@ -104,19 +104,21 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @PostMapping(params = "reset-milestones")
     public String resetPaymentMilestones(@PathVariable long projectId,
                                            @PathVariable long organisationId,
-                                           @ModelAttribute("form") ProjectProcurementMilestoneApprovalForm form,
+                                           @ModelAttribute("projectProcurementMilestoneApprovalForm") ProjectProcurementMilestoneApprovalForm approvalsForm,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
                                            UserResource user) {
-        Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
+        ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
 
-        if (StringUtils.isEmpty(form.getRetractionReason())) {
-            bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason for the reset."));
+        Supplier<String> view = () -> viewProjectMilestones(projectId, organisationId, false, user, model, form, approvalsForm);
+
+        if (StringUtils.isEmpty(approvalsForm.getRetractionReason())) {
+            bindingResult.addError(new FieldError("projectProcurementMilestoneApprovalForm", "retractionReason", "Enter a reason for the reset."));
             return view.get();
         }
 
-        RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, form.getRetractionReason());
+        RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, approvalsForm.getRetractionReason());
         return validationHandler
                 .addAnyErrors(resetPaymentMilestoneState)
                 .failNowOrSucceedWith(view, view);
