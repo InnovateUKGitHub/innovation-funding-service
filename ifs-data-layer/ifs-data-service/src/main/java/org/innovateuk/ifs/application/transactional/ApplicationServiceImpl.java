@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -196,7 +197,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationState(long applicationId,
                                                                      ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(applicationId)) {
-            return serviceFailure(APPLICATION_NOT_READY_TO_BE_SUBMITTED);
+            Application application = applicationRepository.findById(applicationId).get();
+            return serviceFailure(new Error(APPLICATION_NOT_READY_TO_BE_SUBMITTED, Application.class, application.getName()));
         }
 
         return find(application(applicationId)).andOnSuccess((application) -> {
