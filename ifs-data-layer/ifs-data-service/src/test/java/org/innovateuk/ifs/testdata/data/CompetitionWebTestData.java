@@ -267,6 +267,7 @@ public class CompetitionWebTestData {
                         .withLeadTechnologist(PETER_FREEMAN_ID),
                 grantCompetition()
                         .withName("Photonics for Public")
+                        .withIncludeProjectGrowth(false)
                         .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
                         .withLeadTechnologist(PETER_FREEMAN_ID)
                         .withLeadApplicantTypes(asSet(PUBLIC_SECTOR_OR_CHARITY)),
@@ -431,8 +432,8 @@ public class CompetitionWebTestData {
                 .withCompetitionType(PROGRAMME)
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-//                .withInnovationSector("None")
-//                .withInnovationAreas(asSet(67L))
+                .withInnovationSector("None")
+                .withInnovationAreas(asSet(67L))
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withAssessorCount(5)
                 .withResearchRatio(100)

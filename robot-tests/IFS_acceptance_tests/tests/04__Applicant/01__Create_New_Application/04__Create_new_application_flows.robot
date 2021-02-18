@@ -113,9 +113,10 @@ The user can see this new application on their dashboard
     the user should see the element           link = ${application_name}
 
 Applicant goes to the registration form
-    the user navigates to the page   ${frontDoor}
-    the user clicks the button/link in the paginated list   link = ${createApplicationOpenCompetition}
-    And the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
+    the user navigates to the page                                  ${frontDoor}
+    the user searches for a competition                             ${createApplicationOpenCompetition}
+    the user clicks the button/link in the paginated list           link = ${createApplicationOpenCompetition}
+    And the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}
