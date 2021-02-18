@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.populator;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -132,19 +134,37 @@ public class ApplicationFundingBreakdownViewModelPopulator {
             financeLink = Optional.empty();
         }
         boolean lead = organisation.getId().equals(leadOrganisationId);
+        List<FinanceRowType> financeRowTypes  = getFinanceRowTypes(competition, finance);
+
         return new BreakdownTableRow(
                 organisation.getId(),
                 organisation.getName(),
                 organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
-                competition.getFinanceRowTypes().stream()
+                financeRowTypes.stream()
                     .filter(FinanceRowType::isCost)
                         .collect(toMap(Function.identity(),
                                 type -> finance.map(f -> f.getFinanceOrganisationDetails().get(type).getTotal()).orElse(BigDecimal.ZERO)
                         )),
                 finance.map(BaseFinanceResource::getTotal).orElse(BigDecimal.ZERO)
         );
+    }
+
+    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, Optional<BaseFinanceResource> finance) {
+        List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
+
+        if (competition.isKtp() && finance.isPresent()) {
+            BaseFinanceResource orgFinance = finance.get();
+            costTypes = costTypes.stream()
+                    .filter(financeRowType -> BooleanUtils.isFalse(orgFinance.getFecModelEnabled())
+                            && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .filter(financeRowType -> BooleanUtils.isTrue(orgFinance.getFecModelEnabled())
+                            && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .collect(Collectors.toList());
+        }
+
+        return costTypes;
     }
 
     private String organisationText(ApplicationResource application, boolean lead) {
