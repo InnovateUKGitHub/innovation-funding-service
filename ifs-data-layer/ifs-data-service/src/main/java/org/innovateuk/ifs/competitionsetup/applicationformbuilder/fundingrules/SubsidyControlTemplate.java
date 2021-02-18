@@ -45,7 +45,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     }
 
     private boolean generatingWebtestDataForComp(Competition competition) {
-        return Arrays.stream(environment.getActiveProfiles()).anyMatch(profile -> "automated".equals(profile))
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch(profile -> "integration-test".equals(profile))
                 && competition.getName().contains("Subsidy control tactical");
     }
 
