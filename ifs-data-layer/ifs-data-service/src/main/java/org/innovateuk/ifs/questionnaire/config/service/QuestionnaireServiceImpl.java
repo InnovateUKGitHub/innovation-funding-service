@@ -28,6 +28,7 @@ public class QuestionnaireServiceImpl
 
     @Override
     protected Questionnaire mapToDomain(Questionnaire questionnaire, QuestionnaireResource questionnaireResource) {
+        questionnaire.setSecurityType(questionnaireResource.getSecurityType());
         return questionnaire;
     }
 }

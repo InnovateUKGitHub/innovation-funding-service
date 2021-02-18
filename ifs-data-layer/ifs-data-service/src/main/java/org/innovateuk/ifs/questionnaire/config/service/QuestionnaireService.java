@@ -17,14 +17,14 @@ public interface QuestionnaireService extends IfsCrudService<QuestionnaireResour
     ServiceResult<List<QuestionnaireResource>> get(List<Long> longs);
 
     @Override
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<QuestionnaireResource> update(Long aLong, QuestionnaireResource questionnaireResource);
 
     @Override
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<Void> delete(Long aLong);
 
     @Override
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<QuestionnaireResource> create(QuestionnaireResource questionnaireResource);
 }

@@ -50,15 +50,16 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
          aSection()
                 .withName("Initial Details")
                 .withType(SectionType.INITIAL_DETAILS)
-                .withQuestions(newArrayList(aQuestion()
-                            .withShortName("Northern ireland declaration")
-                            .withName("Northern ireland declaration")
-                            .withDescription("Northern ireland declaration")
-                            .withMarkAsCompletedEnabled(true)
-                            .withMultipleStatuses(true)
-                            .withAssignEnabled(false)
-                            .withQuestionSetupType(QuestionSetupType.QUESTIONNAIRE)
-                            .withQuestionnaire(questionnaire()),
+                .withQuestions(newArrayList(
+//                        aQuestion()
+//                            .withShortName("Northern ireland declaration")
+//                            .withName("Northern ireland declaration")
+//                            .withDescription("Northern ireland declaration")
+//                            .withMarkAsCompletedEnabled(true)
+//                            .withMultipleStatuses(true)
+//                            .withAssignEnabled(false)
+//                            .withQuestionSetupType(QuestionSetupType.QUESTIONNAIRE)
+//                            .withQuestionnaire(questionnaire()),
                         aQuestion()
                             .withShortName("Dummy questionnaire")
                             .withName("Dummy questionnaire")
@@ -381,52 +382,52 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private Questionnaire questionnaire() {
         //TODO replace with service calls.
         Questionnaire questionnaire = new Questionnaire();
-        questionnaire.setSecurityType(QuestionnaireSecurityType.LINK);
-
-        QuestionnaireQuestion questionOne = new QuestionnaireQuestion();
-        questionOne.setTitle("Question 1");
-        questionOne.setQuestion("Is your business based in NI?");
-        questionOne.setDepth(0);
-        questionOne.setQuestionnaire(questionnaire);
-
-        QuestionnaireOption questionOneYes = new QuestionnaireOption();
-        questionOneYes.setText("Yes");
-        questionOneYes.setQuestion(questionOne);
-
-        QuestionnaireTextOutcome questionOneYesOutcome = new QuestionnaireTextOutcome();
-        questionOneYesOutcome.setText("You are from NI, please apply with state aid");
-        questionOneYesOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
-        questionOneYes.setDecision(questionOneYesOutcome);
-
-        QuestionnaireOption questionOneNo = new QuestionnaireOption();
-        questionOneNo.setText("No");
-        questionOneNo.setQuestion(questionOne);
-
-        QuestionnaireQuestion questionTwo = new QuestionnaireQuestion();
-        questionTwo.setTitle("Question 2");
-        questionTwo.setQuestion("Do you trade in NI?");
-        questionTwo.setDepth(1);
-        questionTwo.setQuestionnaire(questionnaire);
-
-        questionOneNo.setDecision(questionTwo);
-
-        QuestionnaireOption questionTwoYes = new QuestionnaireOption();
-        questionTwoYes.setText("Yes");
-        questionTwoYes.setQuestion(questionTwo);
-
-        QuestionnaireTextOutcome questionTwoYesOutcome = new QuestionnaireTextOutcome();
-        questionTwoYesOutcome.setText("You trade with NI, please apply with state aid");
-        questionTwoYesOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
-        questionTwoYes.setDecision(questionTwoYesOutcome);
-
-        QuestionnaireOption questionTwoNo = new QuestionnaireOption();
-        questionTwoNo.setText("No");
-        questionTwoNo.setQuestion(questionTwo);
-
-        QuestionnaireTextOutcome questionTwoNoOutcome = new QuestionnaireTextOutcome();
-        questionTwoNoOutcome.setText("You do not operate with NI, please apply with subsidy control");
-        questionTwoNoOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_FALSE);
-        questionTwoNo.setDecision(questionTwoNoOutcome);
+//        questionnaire.setSecurityType(QuestionnaireSecurityType.LINK);
+//
+//        QuestionnaireQuestion questionOne = new QuestionnaireQuestion();
+//        questionOne.setTitle("Question 1");
+//        questionOne.setQuestion("Is your business based in NI?");
+//        questionOne.setDepth(0);
+//        questionOne.setQuestionnaire(questionnaire);
+//
+//        QuestionnaireOption questionOneYes = new QuestionnaireOption();
+//        questionOneYes.setText("Yes");
+//        questionOneYes.setQuestion(questionOne);
+//
+//        QuestionnaireTextOutcome questionOneYesOutcome = new QuestionnaireTextOutcome();
+//        questionOneYesOutcome.setText("You are from NI, please apply with state aid");
+//        questionOneYesOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
+//        questionOneYes.setDecision(questionOneYesOutcome);
+//
+//        QuestionnaireOption questionOneNo = new QuestionnaireOption();
+//        questionOneNo.setText("No");
+//        questionOneNo.setQuestion(questionOne);
+//
+//        QuestionnaireQuestion questionTwo = new QuestionnaireQuestion();
+//        questionTwo.setTitle("Question 2");
+//        questionTwo.setQuestion("Do you trade in NI?");
+//        questionTwo.setDepth(1);
+//        questionTwo.setQuestionnaire(questionnaire);
+//
+//        questionOneNo.setDecision(questionTwo);
+//
+//        QuestionnaireOption questionTwoYes = new QuestionnaireOption();
+//        questionTwoYes.setText("Yes");
+//        questionTwoYes.setQuestion(questionTwo);
+//
+//        QuestionnaireTextOutcome questionTwoYesOutcome = new QuestionnaireTextOutcome();
+//        questionTwoYesOutcome.setText("You trade with NI, please apply with state aid");
+//        questionTwoYesOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
+//        questionTwoYes.setDecision(questionTwoYesOutcome);
+//
+//        QuestionnaireOption questionTwoNo = new QuestionnaireOption();
+//        questionTwoNo.setText("No");
+//        questionTwoNo.setQuestion(questionTwo);
+//
+//        QuestionnaireTextOutcome questionTwoNoOutcome = new QuestionnaireTextOutcome();
+//        questionTwoNoOutcome.setText("You do not operate with NI, please apply with subsidy control");
+//        questionTwoNoOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_FALSE);
+//        questionTwoNo.setDecision(questionTwoNoOutcome);
 
         return questionnaire;
     }
