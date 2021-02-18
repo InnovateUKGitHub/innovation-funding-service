@@ -79,7 +79,8 @@ public class YourFECCostsControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
-        YourFECModelForm form = new YourFECModelForm(true);
+        //TODO Need to update
+        YourFECModelForm form = new YourFECModelForm(true, 0L, "");
 
         when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonFinancesViewModel);
         when(formPopulatorMock.populate(applicationId, organisationId)).thenReturn(form);

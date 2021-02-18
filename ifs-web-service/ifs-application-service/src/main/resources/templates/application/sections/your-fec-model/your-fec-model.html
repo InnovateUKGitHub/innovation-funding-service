@@ -47,19 +47,46 @@
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}"></span>
                 </th:block>
                 <div class="govuk-radios">
-                    <div class="govuk-radios__item">
+                    <div class="govuk-radios__item" data-target="upload-fec"
+                         data-target-clear-validation="true" data-target-clear-form="true">
                         <input class="govuk-radios__input"
                                th:field="*{fecModelEnabled}"
                                id="fecModelEnabled-yes"
                                type="radio"
                                value="true"
-                               required="required"
-                        >
+                               required="required">
                         <label class="govuk-label govuk-radios__label" for="fecModelEnabled-yes">
                             Yes
                         </label>
                     </div>
-
+                    <div id="upload-fec" class="upload-section ">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            Upload your fEC certificate
+                        </legend>
+                        <p class="govuk-body  govuk-!-margin-top-1">You must upload your fEC certificate before you can mark this page as complete.
+                                                                    We need this to verify your fEC funding model. </p>
+                        <details class="govuk-details govuk-!-margin-bottom-1" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">What can I upload?</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your fEC certificate must be:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>in portable document format (PDF) </li>
+                                    <li>less than 10 MB in size</li>
+                                </ul>
+                            </div>
+                        </details>
+                        <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    ${model.financesUrl},
+                                    ${fecCertificateFileName},
+                                    fecCertificateFile,
+                                    fecCertificateFile,
+                                    true,
+                                    remove_fecCertificateFile,
+                                    upload_fecCertificateFile)"/>
+                    </div>
+                </div>
                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input"
                                th:field="*{fecModelEnabled}"
@@ -73,7 +100,6 @@
                         </label>
                     </div>
                 </div>
-            </div>
             <div class="form-footer" th:if="${model.open}">
                 <div class="form-footer__actions">
                     <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
