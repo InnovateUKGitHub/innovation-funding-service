@@ -164,7 +164,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(grantTemplate.sections(any())).thenReturn(newArrayList(aSection()));
-        when(subsidyControlTemplate.sections(any())).thenReturn(newArrayList(aSection()));
+        when(subsidyControlTemplate.sections(any(), any())).thenReturn(newArrayList(aSection()));
         when(grantTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(grantTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(grantTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
@@ -199,7 +199,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(loanTemplate.sections(any())).thenReturn(newArrayList(aSection()));
-        when(subsidyControlTemplate.sections(any())).thenReturn(newArrayList(aSection()));
+        when(subsidyControlTemplate.sections(any(), any())).thenReturn(newArrayList(aSection()));
         when(loanTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(loanTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(loanTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
@@ -235,7 +235,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(ktpTemplate.sections(any())).thenReturn(newArrayList(aSection()));
-        when(subsidyControlTemplate.sections(any())).thenReturn(newArrayList(aSection()));
+        when(subsidyControlTemplate.sections(any(), any())).thenReturn(newArrayList(aSection()));
         when(ktpTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(ktpTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(ktpTemplate.overrideTermsAndConditions(any())).thenReturn(competition);

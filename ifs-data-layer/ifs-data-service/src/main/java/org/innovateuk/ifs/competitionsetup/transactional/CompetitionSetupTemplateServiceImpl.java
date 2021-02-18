@@ -119,7 +119,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
 
         FundingRulesTemplate fundingRulesTemplate = fundingRulesTemplates.get(competition.getFundingRules());
-        sectionBuilders = fundingRulesTemplate.sections(sectionBuilders);
+        sectionBuilders = fundingRulesTemplate.sections(competition, sectionBuilders);
 
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);

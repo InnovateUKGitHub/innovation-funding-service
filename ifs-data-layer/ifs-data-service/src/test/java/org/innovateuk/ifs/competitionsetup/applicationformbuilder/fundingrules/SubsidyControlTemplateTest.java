@@ -32,7 +32,7 @@ public class SubsidyControlTemplateTest {
                         .withName("question1"))),
                 aSection().withName("Something else"));
 
-        sections = template.sections(sections);
+        sections = template.sections(null, sections);
 
         assertThat(sections).hasSize(2);
         assertThat(sections.get(0).getQuestions()).hasSize(2);
