@@ -70,7 +70,7 @@ public class CompetitionSetupFundingLevelPercentageController {
                 return format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath(), competition.getFundingRules().toUrl());
             }
         }
-        return view(model, competition, loggedInUser, null);
+        return view(model, competition, loggedInUser, null, null);
     }
 
     @GetMapping("/funding-rule/{fundingRules}")
@@ -80,7 +80,7 @@ public class CompetitionSetupFundingLevelPercentageController {
                                          UserResource loggedInUser) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return view(model, competition, loggedInUser, fundingRules);
+        return view(model, competition, loggedInUser, fundingRules, null);
     }
 
     @PostMapping(params = "reset-maximum-funding-levels")
@@ -108,7 +108,7 @@ public class CompetitionSetupFundingLevelPercentageController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         fundingLevelPercentageValidator.validate(competitionSetupForm, validationHandler);
 
-        Supplier<String> failureView = () -> view(model, competition, loggedInUser, null);
+        Supplier<String> failureView = () -> view(model, competition, loggedInUser, null, competitionSetupForm);
         Supplier<String> successView = () ->
                 validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE))
                         .failNowOrSucceedWith(failureView, () ->
@@ -127,7 +127,7 @@ public class CompetitionSetupFundingLevelPercentageController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         fundingLevelPercentageValidator.validate(competitionSetupForm, validationHandler);
 
-        Supplier<String> failureView = () -> view(model, competition, loggedInUser, null);
+        Supplier<String> failureView = () -> view(model, competition, loggedInUser, fundingRules, competitionSetupForm);
         Supplier<String> successView = () ->
                 fundingRules == FundingRules.STATE_AID ?
                         validationHandler.addAnyErrors(competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, FUNDING_LEVEL_PERCENTAGE))
@@ -144,18 +144,20 @@ public class CompetitionSetupFundingLevelPercentageController {
     private String view(Model model,
                         CompetitionResource competition,
                         UserResource loggedInUser,
-                        FundingRules fundingRules) {
+                        FundingRules fundingRules,
+                        CompetitionSetupForm form) {
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competition.getId())) {
             return "redirect:/competition/setup/" + competition.getId();
         }
         CompetitionSetupViewModel viewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, FUNDING_LEVEL_PERCENTAGE);
         FundingLevelPercentageFormPopulator populator = (FundingLevelPercentageFormPopulator) competitionSetupService.getSectionFormPopulator(FUNDING_LEVEL_PERCENTAGE);
-        CompetitionSetupForm form;
-        if (fundingRules != null && viewModel.getGeneral().isEditable()) {
-            form = populator.populateForm(competition, fundingRules);
-        } else {
-            form = populator.populateForm(competition);
+        if (form == null) {
+            if (fundingRules != null && viewModel.getGeneral().isEditable()) {
+                form = populator.populateForm(competition, fundingRules);
+            } else {
+                form = populator.populateForm(competition);
+            }
         }
         model.addAttribute(MODEL, viewModel);
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);

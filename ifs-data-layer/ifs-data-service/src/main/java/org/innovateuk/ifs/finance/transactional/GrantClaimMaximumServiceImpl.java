@@ -115,7 +115,11 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
         } else {
             maximums.addAll(getBlankGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.SUBSIDY_CONTROL)).collect(toList()));
         }
-        maximums.addAll(getStateAidGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.STATE_AID)).collect(toList()));
+        if (!competition.getResearchCategories().isEmpty()) {
+            maximums.addAll(getStateAidGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.STATE_AID)).collect(toList()));
+        } else {
+            maximums.addAll(getBlankGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.STATE_AID)).collect(toList()));
+        }
         return maximums;
     }
 
