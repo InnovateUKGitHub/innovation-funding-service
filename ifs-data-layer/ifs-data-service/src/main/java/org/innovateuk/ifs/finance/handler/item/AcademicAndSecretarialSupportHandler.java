@@ -18,12 +18,12 @@ public class AcademicAndSecretarialSupportHandler extends FinanceRowHandler<Acad
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(AcademicAndSecretarialSupport cost) {
-        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, null, null, cost.getTotal(), null, cost.getCostType());
+        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, null, 1, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(AcademicAndSecretarialSupport cost) {
-        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, null, null, cost.getTotal(), null, cost.getCostType());
+        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, null, 1, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override

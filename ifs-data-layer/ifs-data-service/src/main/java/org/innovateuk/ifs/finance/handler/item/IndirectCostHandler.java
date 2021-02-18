@@ -18,12 +18,12 @@ public class IndirectCostHandler extends FinanceRowHandler<IndirectCosts> {
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(IndirectCosts cost) {
-        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, null, null, cost.getTotal(), null, cost.getCostType());
+        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, null, 1, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(IndirectCosts cost) {
-        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, null, null, cost.getTotal(), null, cost.getCostType());
+        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, null, 1, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
