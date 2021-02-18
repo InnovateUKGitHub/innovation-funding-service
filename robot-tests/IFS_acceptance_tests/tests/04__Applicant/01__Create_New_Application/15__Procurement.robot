@@ -158,14 +158,14 @@ Allocated assessor assess the application
     Then the user can see multiple appendices uploaded to the application question
     And the assessor submits the assessment
 
-the comp admin closes the assessment and releases feedback
+Comp admin closes the assessment and releases feedback
     [Documentation]  IFS-2376
     Given log in as a different user                     &{Comp_admin1_credentials}
     When making the application a successful project     ${competitionId}    ${appl_name}
     And moving competition to Project Setup              ${competitionId}
     Then the user should not see an error in the page
 
-the procurement comp moves to project setup tab
+Procurement comp moves to project setup tab
     [Documentation]  IFS-2376  IFS-6368
     Given the user clicks the button/link       link = Dashboard
     When the user clicks the button/link        jQuery = a:contains("Project setup")
@@ -188,9 +188,9 @@ Project finance completes finance checks then reverts them
     When the internal user approves the viability
     And the internal user approves the eligibility
     And the internal user approves the payment milestones
-    Then the internal user reverts the payment milestones     #No validation required - Later ticket - TBC
-    And the internal user reverts the eligibility             #No validation required - Later ticket - TBC
-    And the internal user reverts the viability               #No validation required - Later ticket - TBC
+    Then the internal user reverts the payment milestones     #Validation required
+    And the internal user reverts the eligibility             #Validation required
+    And the internal user reverts the viability               #Validation required
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6368  IFS-8947
@@ -364,7 +364,7 @@ internal user generate SP
     And the internal user approves payment milestone
     the user clicks the button/link                       link = Return to finance checks
     the user clicks the button/link                       css = .generate-spend-profile-main-button
-    the user clicks the button/link                     css = #generate-spend-profile-modal-button
+    the user clicks the button/link                       css = #generate-spend-profile-modal-button
 
 the internal user approves the viability
     the user clicks the button/link                         jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
@@ -393,11 +393,17 @@ the internal user reverts the payment milestones
     the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Approved")
     the user clicks the button/link     jQuery = span:contains("Reset payment milestone check")
     the user clicks the button/link     jQuery = button:contains("Reset payment milestone check")
+    the user clicks the button/link     jQuery = span:contains("This field cannot be left blank")
+    the user enters text to a text field  id = reset-reason   Reset
+    the user clicks the button/link     jQuery = button:contains("Reset payment milestone check")
     the user clicks the button/link     link = Return to finance checks
 
 the internal user reverts the eligibility
     the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
     the user clicks the button/link     jQuery = span:contains("Reset eligibility check")
+    the user clicks the button/link     jQuery = button:contains("Reset eligibility check")
+    the user clicks the button/link     jQuery = span:contains("This field cannot be left blank")
+    the user enters text to a text field  id = reset-reason   Reset
     the user clicks the button/link     jQuery = button:contains("Reset eligibility check")
     the user clicks the button/link     link = Return to finance checks
 
@@ -405,7 +411,10 @@ the internal user reverts the viability
     the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
     the user clicks the button/link     jQuery = span:contains("Reset viability check")
     the user clicks the button/link     jQuery = button:contains("Reset viability check")
-    the user clicks the button/link     jQuery = button:contains("Save and return to finance checks")
+    the user clicks the button/link     jQuery = span:contains("This field cannot be left blank")
+    the user enters text to a text field  id = reset-reason   Reset
+    the user clicks the button/link     jQuery = button:contains("Reset viability check")
+    the user clicks the button/link     link = Return to finance checks
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}
