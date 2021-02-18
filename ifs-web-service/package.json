@@ -13,7 +13,8 @@
     "jshint-stylish": "^2.2.1",
     "resolve": "^1.7.1",
     "sshpk": "^1.15.1",
-    "tablesorter": "^2.31.1"
+    "tablesorter": "^2.31.3",
+    "yargs-parser": "^20.2.5"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
@@ -25,6 +26,7 @@
     "gulp-standard": "^11.0.0",
     "gulp-uglify": "^3.0.0",
     "jest": "^24.9.0",
+    "kind-of": "^6.0.3",
     "lodash": "^4.17.20"
   },
   "engines": {
