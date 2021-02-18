@@ -315,7 +315,7 @@ public class CompetitionWebTestData {
                         .withIncludeYourOrganisation(false),
                 grantCompetition()
                         .withName("Multiple choice open"),
-                procurementCompetition()
+                grantCompetition()
                         .withName("SBRI type one competition"),
                 ktpCompetition()
                         .withName("KTP new competition"),
@@ -431,8 +431,8 @@ public class CompetitionWebTestData {
                 .withCompetitionType(PROGRAMME)
                 .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
                 .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withInnovationSector("None")
-                .withInnovationAreas(asSet(67L))
+//                .withInnovationSector("None")
+//                .withInnovationAreas(asSet(67L))
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withAssessorCount(5)
                 .withResearchRatio(100)
