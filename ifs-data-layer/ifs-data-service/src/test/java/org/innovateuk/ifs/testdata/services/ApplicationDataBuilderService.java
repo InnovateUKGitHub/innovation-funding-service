@@ -697,9 +697,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, Boolean fecModelEnabled) {
         return competition.getFinanceRowTypes().stream()
                 .filter(financeRowType -> BooleanUtils.isFalse(fecModelEnabled)
-                        && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
-                .filter(financeRowType -> BooleanUtils.isTrue(fecModelEnabled)
-                        && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                        ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                        : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
     }
 
