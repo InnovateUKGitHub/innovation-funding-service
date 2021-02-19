@@ -1,6 +1,6 @@
 
 ext {
-    bomSpringBootVersion = '2.2.13.RELEASE'
+    bomSpringBootVersion = '2.2.12.RELEASE'
     bomSpringCloudVersion = 'Hoxton.SR10'
 }
 
