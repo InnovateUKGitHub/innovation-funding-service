@@ -4,6 +4,8 @@ public class QuestionnaireTextOutcomeResource extends QuestionnaireDecisionResou
 
     private String text;
 
+    private QuestionnaireDecisionImplementation implementation;
+
     public String getText() {
         return text;
     }
@@ -12,4 +14,11 @@ public class QuestionnaireTextOutcomeResource extends QuestionnaireDecisionResou
         this.text = text;
     }
 
+    public QuestionnaireDecisionImplementation getImplementation() {
+        return implementation;
+    }
+
+    public void setImplementation(QuestionnaireDecisionImplementation implementation) {
+        this.implementation = implementation;
+    }
 }

@@ -37,13 +37,14 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId));
                 case RESEARCH_CATEGORY:
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
-                case QUESTIONNAIRE:
-                    return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
                 default:
                     // do nothing
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
+            }
+            if (questionType.isQuestionnaire()) {
+                return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
             }
         }
         return Optional.empty();

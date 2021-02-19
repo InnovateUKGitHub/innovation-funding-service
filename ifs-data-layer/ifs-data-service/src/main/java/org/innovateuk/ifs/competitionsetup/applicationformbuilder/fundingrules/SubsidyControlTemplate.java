@@ -77,12 +77,15 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         QuestionnaireTextOutcomeResource activitiesStateAidOutcome = new QuestionnaireTextOutcomeResource();
         activitiesStateAidOutcome.setText(null);
+        activitiesStateAidOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
         activitiesStateAidOutcome = textOutcomeService.create(activitiesStateAidOutcome).getSuccess();
         QuestionnaireTextOutcomeResource tradeStateAidOutcome = new QuestionnaireTextOutcomeResource();
         tradeStateAidOutcome.setText(null);
+        tradeStateAidOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_TRUE);
         tradeStateAidOutcome = textOutcomeService.create(tradeStateAidOutcome).getSuccess();
         QuestionnaireTextOutcomeResource tradeSubsidyControlOutcome = new QuestionnaireTextOutcomeResource();
         tradeSubsidyControlOutcome.setText(null);
+        tradeSubsidyControlOutcome.setImplementation(QuestionnaireDecisionImplementation.SET_NORTHERN_IRELAND_DECLARATION_FALSE);
         tradeSubsidyControlOutcome = textOutcomeService.create(tradeSubsidyControlOutcome).getSuccess();
 
         QuestionnaireOptionResource activitiesYes = new QuestionnaireOptionResource();

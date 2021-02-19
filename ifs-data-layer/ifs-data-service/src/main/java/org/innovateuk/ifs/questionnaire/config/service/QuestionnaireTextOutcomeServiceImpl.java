@@ -33,6 +33,7 @@ public class QuestionnaireTextOutcomeServiceImpl
     @Override
     protected QuestionnaireTextOutcome mapToDomain(QuestionnaireTextOutcome domain, QuestionnaireTextOutcomeResource resource) {
         domain.setText(resource.getText());
+        domain.setImplementation(resource.getImplementation());
         return domain;
     }
 

@@ -146,8 +146,12 @@ public class QuestionnaireWebController {
                            @PathVariable long outcomeId) {
         QuestionnaireTextOutcomeResource outcome = questionnaireTextOutcomeRestService.get(outcomeId).getSuccess();
         if (outcome.getText() == null) {
-            return "redirect:/" + Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
+            String redirectUrl =  "redirect:" + Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
                     .orElse("/");
+            if (outcome.getImplementation() != null) {
+                redirectUrl += "?outome=" + outcome.getImplementation().name();
+            }
+            return redirectUrl;
         }
 
         model.addAttribute("model", outcome);

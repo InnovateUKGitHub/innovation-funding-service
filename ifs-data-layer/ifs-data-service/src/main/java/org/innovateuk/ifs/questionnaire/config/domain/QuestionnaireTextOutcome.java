@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.questionnaire.config.domain;
 
 import org.innovateuk.ifs.questionnaire.resource.DecisionType;
+import org.innovateuk.ifs.questionnaire.resource.QuestionnaireDecisionImplementation;
 
 import javax.persistence.*;
 
