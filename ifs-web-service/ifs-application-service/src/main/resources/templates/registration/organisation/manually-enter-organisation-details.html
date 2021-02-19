@@ -43,14 +43,14 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s"
-                       for="name">
+                       for="organisationName">
                     Organisation name
                 </label>
                 <th:block th:if="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationName}')}" th:text="${err}" />
                 </th:block>
                 <input class="govuk-input govuk-!-width-one-half"
-                       id="name"
+                       id="organisationName"
                        th:field="*{organisationName}"
                        th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-input--error'"
                        type="text"
