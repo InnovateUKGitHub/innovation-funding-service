@@ -64,8 +64,8 @@
                 <label class="govuk-label govuk-label--s" for="number">
                     Organisation number
                 </label>
-                <div class="govuk-hint"><small>Enter your organisation’s unique identification number, such as your HMRC
-                    Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.</small></div>
+                <div class="govuk-hint" style="font-size:19px;">Enter your organisation’s unique identification number, such as your HMRC
+                    Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.</div>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="number"
                        th:field="*{organisationNumber}"
@@ -76,7 +76,7 @@
                        for="busType">
                     Business type
                 </label>
-                <div class="govuk-hint"><small>For example: charity, partnership, sole trader.</small></div>
+                <div class="govuk-hint" style="font-size:19px;">For example: charity, partnership, sole trader.</div>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="busType"
                        th:field="*{businessType}"
@@ -86,7 +86,7 @@
             <label class="govuk-label govuk-label--s" for="sicCode">
                 SIC code
             </label>
-            <div class="govuk-hint"><small>Enter your 5 digit Standard Industrial Classification code.</small></div>
+            <div class="govuk-hint" style="font-size:19px;">Enter your 5 digit Standard Industrial Classification code.</div>
             <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row govuk-!-margin-top-6" th:id="'sic-code-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                         <input id="sicCode" class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-3"
@@ -108,7 +108,7 @@
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="execOfficer">
                 Executive officers
             </label>
-            <div class="govuk-hint"><small>Enter the first and last names of all company directors, if your organisation has any.</small></div>
+            <div class="govuk-hint" style="font-size:19px;">Enter the first and last names of all company directors, if your organisation has any.</div>
             <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row govuk-!-margin-top-6" th:id="'exec-officer-row-'+${iteration.index}">
                 <div class="govuk-grid-column-two-thirds">
                     <input id="execOfficer" class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-2"
@@ -128,7 +128,7 @@
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer">+ Add executive officer</button>
             </div>
-            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s govuk-!-font-size-24" for="name">
+            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s govuk-!-font-size-24">
                 Registered address
             </label>
             <div id="custom-postcode" class="govuk-body">
