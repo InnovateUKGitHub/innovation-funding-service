@@ -149,7 +149,7 @@ public class QuestionnaireWebController {
             String redirectUrl =  "redirect:" + Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
                     .orElse("/");
             if (outcome.getImplementation() != null) {
-                redirectUrl += "?outome=" + outcome.getImplementation().name();
+                redirectUrl += "?outcome=" + outcome.getImplementation().name();
             }
             return redirectUrl;
         }

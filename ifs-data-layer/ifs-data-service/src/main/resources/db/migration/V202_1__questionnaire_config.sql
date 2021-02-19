@@ -1,6 +1,7 @@
 CREATE TABLE questionnaire (
   id BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
-  security_type VARCHAR(255) NOT NULL
+  security_type VARCHAR(255) NOT NULL,
+  description TEXT NULL;
 );
 
 CREATE TABLE questionnaire_decision (

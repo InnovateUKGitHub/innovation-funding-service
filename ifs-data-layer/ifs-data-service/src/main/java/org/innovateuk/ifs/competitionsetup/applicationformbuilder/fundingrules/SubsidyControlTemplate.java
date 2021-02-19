@@ -42,10 +42,10 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-
-        competitionTypeSections.get(0)
-                .getQuestions().add(
-                        aQuestion()
+        if (competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
+            competitionTypeSections.get(0)
+                    .getQuestions().add(
+                    aQuestion()
                             .withShortName("Subsidy basis")
                             .withName("Subsidy basis")
                             .withDescription("Subsidy basis")
@@ -54,12 +54,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                             .withAssignEnabled(false)
                             .withQuestionSetupType(QuestionSetupType.SUBSIDY_BASIS)
                             .withQuestionnaire(northernIrelandDeclaration()));
+        }
         return competitionTypeSections;
     }
 
     private Questionnaire northernIrelandDeclaration() {
         QuestionnaireResource questionnaire = new QuestionnaireResource();
         questionnaire.setSecurityType(QuestionnaireSecurityType.LINK);
+        questionnaire.setDescription("<p>Use this section to:</p><ul class=\"list-bullet\"><li>Do something</li></ul>");
         questionnaire = questionnaireService.create(questionnaire).getSuccess();
 
         QuestionnaireQuestionResource activitiesQuestion = new QuestionnaireQuestionResource();

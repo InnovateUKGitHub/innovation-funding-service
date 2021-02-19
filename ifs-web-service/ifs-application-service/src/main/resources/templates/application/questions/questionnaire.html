@@ -37,10 +37,28 @@
               enctype="multipart/form-data"
               novalidate="novalidate">
 
-            <th:block th:insert="questionnaire/fragments :: answer-table('Answers', ${model.answers})" />
+            <p class="govuk-body">Based on your answers, your subsidy basis has  been determined as falling under <th:block></th:block></p>
 
             <th:block th:unless="${model.readOnly}">
+                <h2 class="govuk-heading-m">Declaration</h2>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="agreement"
+                                   class="govuk-checkboxes__input"
+                                   type="checkbox"
+                                   th:field="*{agreement}"/>
+                            <label for="agreement"
+                                   class="govuk-label govuk-checkboxes__label">
+                                Based on the answers I have provided; I agree to the subsidy basis that has been determined for my organisation's application.
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
             </th:block>
+
+            <th:block th:insert="questionnaire/fragments :: answer-table('Provided answers', ${model.answers})" />
 
             <!--/* Read only template */-->
             <th:block th:if="${model.readOnly}">

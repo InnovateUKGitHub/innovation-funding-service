@@ -19,6 +19,8 @@ public class Questionnaire {
     @Enumerated(EnumType.STRING)
     private QuestionnaireSecurityType securityType;
 
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -41,5 +43,13 @@ public class Questionnaire {
 
     public void setSecurityType(QuestionnaireSecurityType securityType) {
         this.securityType = securityType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
