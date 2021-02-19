@@ -61,7 +61,7 @@
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationNumber}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="name">
+                <label class="govuk-label govuk-label--s" for="number">
                     Organisation number
                 </label>
                 <div class="govuk-hint"><small>Enter your organisation’s unique identification number, such as your HMRC
@@ -73,7 +73,7 @@
             </div>
             <div class="govuk-form-group">
                 <label class="govuk-label govuk-label--s"
-                       for="name">
+                       for="busType">
                     Business type
                 </label>
                 <div class="govuk-hint"><small>For example: charity, partnership, sole trader.</small></div>
@@ -83,7 +83,7 @@
                        maxlength="255"
                        type="text"/>
             </div>
-            <label class="govuk-label govuk-label--s" for="name">
+            <label class="govuk-label govuk-label--s" for="sicCode">
                 SIC code
             </label>
             <div class="govuk-hint"><small>Enter your 5 digit Standard Industrial Classification code.</small></div>
@@ -105,7 +105,7 @@
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode">+ Add SIC code</button>
             </div>
-            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
+            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="execOfficer">
                 Executive officers
             </label>
             <div class="govuk-hint"><small>Enter the first and last names of all company directors, if your organisation has any.</small></div>
