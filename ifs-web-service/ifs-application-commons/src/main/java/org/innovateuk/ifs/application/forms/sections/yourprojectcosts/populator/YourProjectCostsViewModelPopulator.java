@@ -57,7 +57,6 @@ public class YourProjectCostsViewModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
@@ -83,16 +82,17 @@ public class YourProjectCostsViewModelPopulator {
                 getYourFinancesUrl(applicationId, organisationId),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
-                getFinanceRowTypes(competition, applicationFinance),
+                getFinanceRowTypes(competition, applicationId, organisationId),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
                 organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()));
     }
 
-    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, ApplicationFinanceResource applicationFinance) {
+    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, long applicationId, long organisationId) {
         List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
 
         if (competition.isKtp()) {
+            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
             costTypes = costTypes.stream()
                     .filter(financeRowType -> BooleanUtils.isFalse(applicationFinance.getFecModelEnabled())
                             ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)

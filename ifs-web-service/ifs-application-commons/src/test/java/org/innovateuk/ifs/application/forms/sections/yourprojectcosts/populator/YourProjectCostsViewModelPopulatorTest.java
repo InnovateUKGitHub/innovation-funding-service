@@ -9,6 +9,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.ApplicationFinanceType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -21,6 +24,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -47,6 +51,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     @Mock
     private ProcessRoleRestService processRoleRestService;
 
+    @Mock
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
     protected YourProjectCostsViewModelPopulator supplyServiceUnderTest() {
@@ -113,7 +119,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
 
-
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -133,6 +138,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
@@ -145,6 +151,10 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
 
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
+                .withFecEnabled(true)
+                .build();
+
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
@@ -152,6 +162,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 

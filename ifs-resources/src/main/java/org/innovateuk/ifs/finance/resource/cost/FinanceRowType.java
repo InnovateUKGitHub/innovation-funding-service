@@ -119,4 +119,20 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
                         || financeRowType == FinanceRowType.INDIRECT_COSTS))
                 .collect(Collectors.toList());
     }
+
+    public static List<FinanceRowType> getKtpFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.ASSOCIATE_SALARY_COSTS
+                        || financeRowType == FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS
+                        || financeRowType == FinanceRowType.CONSUMABLES
+                        || financeRowType == FinanceRowType.ASSOCIATE_SUPPORT
+                        || financeRowType == FinanceRowType.KNOWLEDGE_BASE
+                        || financeRowType == FinanceRowType.ESTATE_COSTS
+                        || financeRowType == FinanceRowType.KTP_TRAVEL
+                        || financeRowType == FinanceRowType.ADDITIONAL_COMPANY_COSTS
+                        || financeRowType == FinanceRowType.PREVIOUS_FUNDING
+                        || financeRowType == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT
+                        || financeRowType == FinanceRowType.INDIRECT_COSTS))
+                .collect(Collectors.toList());
+    }
 }
