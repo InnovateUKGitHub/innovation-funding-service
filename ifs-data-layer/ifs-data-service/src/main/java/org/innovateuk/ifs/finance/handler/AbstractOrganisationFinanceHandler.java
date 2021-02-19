@@ -116,7 +116,6 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories(competition, finance);
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
-
         return costCategories;
     }
 
