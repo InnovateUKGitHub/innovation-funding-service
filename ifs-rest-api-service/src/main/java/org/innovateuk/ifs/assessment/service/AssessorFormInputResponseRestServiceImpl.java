@@ -18,16 +18,16 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ass
 @Service
 public class AssessorFormInputResponseRestServiceImpl extends BaseRestService implements AssessorFormInputResponseRestService {
 
-    static final String assessorFormInputResponseRestUrl = "/assessor-form-input-response";
+    static final String ASSESSOR_FORM_INPUT_RESPONSE_REST_URL = "/assessor-form-input-response";
 
     @Override
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
-        return getWithRestResult(format("%s/assessment/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType());
+        return getWithRestResult(format("%s/assessment/%s", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, assessmentId), assessorFormInputResponseResourceListType());
     }
 
     @Override
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
-        return getWithRestResult(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), assessorFormInputResponseResourceListType());
+        return getWithRestResult(format("%s/assessment/%s/question/%s", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, assessmentId, questionId), assessorFormInputResponseResourceListType());
     }
 
     @Override
@@ -38,31 +38,31 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
 
     @Override
     public RestResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource assessorFormInputResponseResources) {
-        return putWithRestResult(format("%s", assessorFormInputResponseRestUrl), assessorFormInputResponseResources, Void.class);
+        return putWithRestResult(format("%s", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL), assessorFormInputResponseResources, Void.class);
     }
 
     @Override
     public RestResult<ApplicationAssessmentsResource> getApplicationAssessments(long applicationId) {
-        return getWithRestResult(format("%s/application/%d", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentsResource.class);
+        return getWithRestResult(format("%s/application/%d", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, applicationId), ApplicationAssessmentsResource.class);
     }
 
     @Override
     public RestResult<ApplicationAssessmentResource> getApplicationAssessment(long applicationId, long assessment) {
-        return getWithRestResult(format("%s/application/%d/assessment/%d", assessorFormInputResponseRestUrl, applicationId, assessment), ApplicationAssessmentResource.class);
+        return getWithRestResult(format("%s/application/%d/assessment/%d", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, applicationId, assessment), ApplicationAssessmentResource.class);
     }
 
     @Override
     public RestResult<ApplicationAssessmentAggregateResource> getApplicationAssessmentAggregate(long applicationId) {
-        return getWithRestResult(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class);
+        return getWithRestResult(format("%s/application/%s/scores", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, applicationId), ApplicationAssessmentAggregateResource.class);
     }
 
     @Override
     public RestResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
-        return getWithRestResult(format("%s/application/%s/question/%s/feedback", assessorFormInputResponseRestUrl, applicationId, questionId), AssessmentFeedbackAggregateResource.class);
+        return getWithRestResult(format("%s/application/%s/question/%s/feedback", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, applicationId, questionId), AssessmentFeedbackAggregateResource.class);
     }
 
     @Override
     public RestResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
-        return getWithRestResult(format("%s/assessment/%s/details", assessorFormInputResponseRestUrl, assessmentId), AssessmentDetailsResource.class);
+        return getWithRestResult(format("%s/assessment/%s/details", ASSESSOR_FORM_INPUT_RESPONSE_REST_URL, assessmentId), AssessmentDetailsResource.class);
     }
 }

@@ -167,7 +167,7 @@ Applicant - Finance contact can view the query
     [Documentation]    INFUND-4843
     [Tags]  HappyPath
     Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
+    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-check
     Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
     And the user should see the element              jQuery = h2:contains("a viability query's title")
 
@@ -281,7 +281,7 @@ Applicant can see the the queries resolved
     [Documentation]  IFS-1987 IFS-2746
     [Tags]
     Given log in as a different user      &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
+    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-check
     Then the user should see the element  jQuery = h2:contains("an eligibility query's title") .section-complete
     And the user should see the element   jQuery = h2:contains("a viability query's title") .section-complete
     And the user should not be able to respond to resolved queries

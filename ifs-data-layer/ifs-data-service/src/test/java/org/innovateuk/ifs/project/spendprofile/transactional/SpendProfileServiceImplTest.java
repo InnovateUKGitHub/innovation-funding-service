@@ -1232,33 +1232,46 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     private boolean costsMatch(Cost expectedCost, Cost actualCost) {
-        try {
-            CostGroup expectedCostGroup = expectedCost.getCostGroup();
-            CostGroup actualCostGroup = actualCost.getCostGroup();
-            assertEquals(expectedCostGroup != null, actualCostGroup != null);
-
-            if (expectedCostGroup != null) {
-                assertEquals(expectedCostGroup.getDescription(), actualCostGroup.getDescription());
-            }
-
-            assertEquals(expectedCost.getValue(), actualCost.getValue());
-            assertEquals(expectedCost.getCostCategory(), actualCost.getCostCategory());
-
-            CostTimePeriod expectedTimePeriod = expectedCost.getCostTimePeriod();
-            CostTimePeriod actualTimePeriod = actualCost.getCostTimePeriod();
-            assertEquals(expectedTimePeriod != null, actualTimePeriod != null);
-
-            if (expectedTimePeriod != null) {
-                assertEquals(expectedTimePeriod.getOffsetAmount(), actualTimePeriod.getOffsetAmount());
-                assertEquals(expectedTimePeriod.getOffsetUnit(), actualTimePeriod.getOffsetUnit());
-                assertEquals(expectedTimePeriod.getDurationAmount(), actualTimePeriod.getDurationAmount());
-                assertEquals(expectedTimePeriod.getDurationUnit(), actualTimePeriod.getDurationUnit());
-            }
-
-            return true;
-        } catch (AssertionError e) {
+        CostGroup expectedCostGroup = expectedCost.getCostGroup();
+        CostGroup actualCostGroup = actualCost.getCostGroup();
+        if ((expectedCostGroup != null) != (actualCostGroup != null)) {
             return false;
         }
+        if (expectedCostGroup != null) {
+            if (!(expectedCostGroup.getDescription().equals(actualCostGroup.getDescription()))) {
+                return false;
+            }
+        }
+
+        if (!(expectedCost.getValue().equals(actualCost.getValue()))) {
+            return false;
+        }
+        if (!(expectedCost.getCostCategory().equals(actualCost.getCostCategory()))) {
+            return false;
+        }
+
+        CostTimePeriod expectedTimePeriod = expectedCost.getCostTimePeriod();
+        CostTimePeriod actualTimePeriod = actualCost.getCostTimePeriod();
+        if ((expectedTimePeriod != null) != (actualTimePeriod != null)) {
+                return false;
+        }
+
+        if (expectedTimePeriod != null) {
+            if (!(expectedTimePeriod.getOffsetAmount().equals(actualTimePeriod.getOffsetAmount()))) {
+                return false;
+            }
+            if (!(expectedTimePeriod.getOffsetUnit().equals(actualTimePeriod.getOffsetUnit()))) {
+                return false;
+            }
+            if (!(expectedTimePeriod.getDurationAmount().equals(actualTimePeriod.getDurationAmount()))) {
+                return false;
+            }
+            if (!(expectedTimePeriod.getDurationUnit().equals(actualTimePeriod.getDurationUnit()))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private List<SpendProfile> getSpendProfilesAndSetWhenSpendProfileRepositoryMock(Long projectId) {

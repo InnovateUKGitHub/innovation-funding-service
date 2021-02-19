@@ -99,6 +99,8 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
             case NOTIFICATIONS:
                 dateViewModel.setContent("Applicants notified");
                 break;
+            default:
+                return dateViewModel;
         }
 
         return dateViewModel;

@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -22,4 +19,18 @@ public interface FinanceCheckRestService {
     RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
 
     RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
+
+    RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);
+
+    RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus);
+
+    RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId);
+
+    RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
+
+    RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId);
+
+    RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId);
+
+    RestResult<PaymentMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId);
 }
