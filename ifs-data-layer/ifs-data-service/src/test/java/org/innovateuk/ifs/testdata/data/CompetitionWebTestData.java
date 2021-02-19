@@ -317,7 +317,8 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Multiple choice open"),
                 procurementCompetition()
-                        .withName("SBRI type one competition"),
+                        .withName("SBRI type one competition")
+                        .withCompetitionCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE),
                 ktpCompetition()
                         .withName("KTP new competition"),
                 loanCompetition()
