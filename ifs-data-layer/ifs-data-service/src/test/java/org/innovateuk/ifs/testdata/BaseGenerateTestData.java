@@ -12,6 +12,7 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -173,6 +174,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private SupporterDataService supporterDataService;
 
+    @Autowired
+    private ProjectToBeCreatedService projectToBeCreatedService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -301,6 +305,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                                 supporterFutures,
                                 competitionAssessmentPeriodsFutures
         ).join();
+
+        Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate(0);
+        while (projectToCreated.isPresent()) {
+            LOG.info("project to be created {}", projectToCreated.get());
+            projectToBeCreatedService.createProject(projectToCreated.get());
+            projectToCreated = projectToBeCreatedService.findProjectToCreate(0);
+        }
 
         long after = System.currentTimeMillis();
 
