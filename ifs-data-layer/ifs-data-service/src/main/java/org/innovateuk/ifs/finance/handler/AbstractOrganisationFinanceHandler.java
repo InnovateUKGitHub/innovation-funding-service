@@ -96,9 +96,8 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
         if (finance.getApplication().getCompetition().isKtp()) {
             costs = costs.stream()
                     .filter(applicationFinanceRow -> BooleanUtils.isFalse(finance.getFecModelEnabled())
-                            && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType()))
-                    .filter(applicationFinanceRow -> BooleanUtils.isTrue(finance.getFecModelEnabled())
-                            && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType()))
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType())
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType()))
                     .collect(Collectors.toList());
         }
 

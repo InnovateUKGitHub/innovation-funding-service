@@ -70,9 +70,8 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         if (competition.isKtp()) {
             costTypes = costTypes.stream()
                     .filter(financeRowType -> BooleanUtils.isFalse(finance.getFecModelEnabled())
-                            && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
-                    .filter(financeRowType -> BooleanUtils.isTrue(finance.getFecModelEnabled())
-                            && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                     .collect(Collectors.toList());
         }
 

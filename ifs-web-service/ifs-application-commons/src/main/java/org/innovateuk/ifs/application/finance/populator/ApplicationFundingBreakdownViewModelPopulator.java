@@ -158,9 +158,8 @@ public class ApplicationFundingBreakdownViewModelPopulator {
             BaseFinanceResource orgFinance = finance.get();
             costTypes = costTypes.stream()
                     .filter(financeRowType -> BooleanUtils.isFalse(orgFinance.getFecModelEnabled())
-                            && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
-                    .filter(financeRowType -> BooleanUtils.isTrue(orgFinance.getFecModelEnabled())
-                            && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                     .collect(Collectors.toList());
         }
 
