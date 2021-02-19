@@ -19,7 +19,6 @@ public enum SectionType {
 	GENERAL,
     TERMS_AND_CONDITIONS,
     KTP_ASSESSMENT,
-    INITIAL_DETAILS,
     FEC_COSTS_FINANCES(FINANCE);
 
     private final SectionType parent;

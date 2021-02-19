@@ -2,6 +2,18 @@ CREATE TABLE questionnaire_response (
   id BINARY(16) NOT NULL PRIMARY KEY,
   questionnaire_id BIGINT(20) NOT NULL,
 
+  -- auditable fields
+  created_by BIGINT(20) NOT NULL,
+  created_on DATETIME NOT NULL,
+  modified_by BIGINT(20) NOT NULL,
+  modified_on DATETIME NOT NULL,
+
+  -- auditable constraints
+  KEY questionnaire_response_created_by_to_user_fk (created_by),
+  KEY questionnaire_response_modified_by_to_user_fk (modified_by),
+  CONSTRAINT questionnaire_response_created_by_to_user_fk FOREIGN KEY (created_by) REFERENCES user (id),
+  CONSTRAINT questionnaire_response_modified_by_to_user_fk FOREIGN KEY (modified_by) REFERENCES user (id),
+
   KEY questionnaire_response_to_questionnaire (questionnaire_id),
   CONSTRAINT questionnaire_response_to_questionnaire_fk FOREIGN KEY (questionnaire_id) REFERENCES questionnaire(id)
 );

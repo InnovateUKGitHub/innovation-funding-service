@@ -24,7 +24,7 @@ CREATE TABLE questionnaire_question (
 
 CREATE TABLE questionnaire_text_outcome (
   id BIGINT(20) PRIMARY KEY,
-  text VARCHAR(255) NOT NULL,
+  text VARCHAR(255) NULL,
   implementation VARCHAR(255) NULL,
 
   KEY questionnaire_text_outcome_to_questionnaire_decision (id),
