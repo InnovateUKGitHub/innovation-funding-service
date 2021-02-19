@@ -565,8 +565,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             String organisationName,
             OrganisationTypeEnum organisationType) {
 
-        LOG.info("In generateIndustrialCosts");
-
         UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
             final IndustrialCostDataBuilder[] builder = {costs};
 
