@@ -243,10 +243,10 @@ items:
                       name: data-service-config
                       key: IFS_SYSTEM_EMAIL_ADDRESS
                 - name: IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED
-                    valueFrom:
-                      configMapKeyRef:
-                        name: data-service-config
-                        key: IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED
                 - name: IFS_DOCUSIGN_API_ACCOUNT
                   valueFrom:
                     configMapKeyRef:
