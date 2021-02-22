@@ -36,7 +36,7 @@
             </th:block>
 
             <dt>Organisation name</dt>
-            <dd th:text="${organisationForm.organisationName}">name</dd>
+            <dd th:style="'word-break: break-word'" th:text="${organisationForm.organisationName}">name</dd>
 
             <th:block th:unless="${organisationForm.research}">
                 <th:block th:if="${selectedOrganisation?.organisationSearchId}">
@@ -47,7 +47,7 @@
 
             <th:block th:if="${organisationForm.manualEntry and organisationForm.organisationNumber != null}">
                 <dt>Organisation number</dt>
-                <dd th:text="${organisationForm.organisationNumber}"></dd>
+                <dd th:style="'word-break: break-word'" th:text="${organisationForm.organisationNumber}"></dd>
             </th:block>
 
             <th:block th:if="${organisationForm.manualEntry and organisationForm.sicCodes != null}">
