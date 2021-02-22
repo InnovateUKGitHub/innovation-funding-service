@@ -119,7 +119,7 @@
             </div>
             <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})"
                  class="govuk-grid-row exec-officer-row" th:id="'exec-officer-row-'+${iteration.index}">
-                <div class="govuk-grid-column-full">
+                <div class="govuk-grid-column-full govuk-!-padding-right-0">
                     <input id="execOfficer" class="govuk-input govuk-!-width-one-half govuk-!-margin-bottom-2"
                            th:field="${organisationForm.executiveOfficers[__${iteration.index}__].name}"
                            maxlength="50"

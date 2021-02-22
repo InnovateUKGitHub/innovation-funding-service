@@ -28,7 +28,7 @@
 
             <th:block th:if="${organisationForm.manualEntry and organisationForm.businessType != null}">
               <dt>Business type</dt>
-              <dd th:text="${organisationForm.businessType}">Business Type</dd>
+              <dd th:style="'word-break: break-word'" th:text="${organisationForm.businessType}">Business Type</dd>
             </th:block>
             <th:block th:if="${includeInternationalQuestion}">
                 <dt>Is your organisation based in the UK?</dt>
