@@ -20,7 +20,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <div th:if="${#fields.hasErrors('${resetForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <div th:if="${summaryModel.canReset && #fields.hasErrors('${resetForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to update eligibility.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(resetForm)" />
         </div>
@@ -306,12 +306,12 @@
                class="govuk-button govuk-button--secondary">Notes</a>
         </div>
 
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+        <form th:if="${summaryModel.canReset}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${resetForm}"
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
-            <details th:if="${summaryModel.canReset}" class="govuk-details" data-module="govuk-details">
+            <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
                       Reset eligibility check
