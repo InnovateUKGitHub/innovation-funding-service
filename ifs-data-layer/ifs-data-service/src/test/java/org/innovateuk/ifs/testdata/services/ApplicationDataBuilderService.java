@@ -462,6 +462,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 return builder.withOrganisationSize(OrganisationSize.findById(Long.valueOf(financeRow.metadata.get(0))));
             case "Work postcode":
                 return builder.withWorkPostcode(financeRow.metadata.get(0));
+            case "Fec model enabled":
+                return builder.withFecEnabled(Boolean.valueOf(financeRow.metadata.get(0)));
+            case "Fec file uploaded":
+                return builder.withUploadedFecFile();
             case "Labour":
                 return builder.withLabourEntry(
                         financeRow.metadata.get(0),
@@ -542,7 +546,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             return costsWithData;
         };
-
 
         return finance.
                 withIndustrialCosts(costBuilder);
@@ -657,15 +660,21 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
-            return builder[0].withOrganisationSize(SMALL).
-                    withLocation();
+            return builder[0].withOrganisationSize(SMALL)
+                    .withLocation()
+                    .withFecEnabled(getDefaultFecModel(organisationType));
         };
+
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
                 withIndustrialCosts(costBuilder);
+    }
+
+    private Boolean getDefaultFecModel(OrganisationTypeEnum organisationType) {
+        return organisationType == OrganisationTypeEnum.KNOWLEDGE_BASE ? false : null;
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(

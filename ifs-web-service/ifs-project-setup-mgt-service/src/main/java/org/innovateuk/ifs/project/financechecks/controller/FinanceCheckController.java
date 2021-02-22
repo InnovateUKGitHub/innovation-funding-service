@@ -9,11 +9,11 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.FileDownloadControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceCheckSummaryForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -57,7 +57,7 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -129,6 +129,6 @@ public class FinanceCheckController {
     }
 
     private boolean hasOrganisationSizeChanged(long projectId) {
-        return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
+        return projectFinanceRestService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).getSuccess();
     }
 }

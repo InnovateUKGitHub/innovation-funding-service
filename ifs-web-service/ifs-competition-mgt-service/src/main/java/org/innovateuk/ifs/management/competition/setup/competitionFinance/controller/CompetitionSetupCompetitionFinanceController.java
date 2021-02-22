@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "Controller for managing comp finance users", securedType = CompetitionSetupCompetitionFinanceController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
 public class CompetitionSetupCompetitionFinanceController {
 
     private static final String COMPETITION_ID_KEY = "competitionId";

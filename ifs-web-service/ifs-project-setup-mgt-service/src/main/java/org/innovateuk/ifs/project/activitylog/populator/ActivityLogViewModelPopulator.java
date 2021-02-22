@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -95,7 +96,7 @@ public class ActivityLogViewModelPopulator {
     private boolean userCanSeeLink(ActivityLogResource activity, UserResource user) {
         if (activity.isOrganisationRemoved() && ActivityLogUrlHelper.linkInvalidIfOrganisationRemoved(activity)) {
             return false;
-        } else if (user.hasRole(PROJECT_FINANCE)) {
+        } else if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
             return true;
         } else if (user.hasRole(COMP_ADMIN)) {
             return COMP_ADMIN_TYPES.contains(activity.getActivityType());
@@ -142,8 +143,7 @@ public class ActivityLogViewModelPopulator {
     }
 
     private String internalUserText(ActivityLogResource log) {
-        String role = log.isIfsAdmin() ? IFS_ADMINISTRATOR.getDisplayName()
-                : log.getAuthoredByRoles().iterator().next().getDisplayName();
+        String role = log.getAuthoredByRoles().iterator().next().getDisplayName();
         return log.getAuthoredByName() + ", " + role;
     }
 

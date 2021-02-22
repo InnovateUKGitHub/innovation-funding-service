@@ -42,7 +42,10 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ESTATE_COSTS("estate_costs", "Estate", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     KTP_TRAVEL("travel", "Travel and subsistence", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs"),
-    PREVIOUS_FUNDING("previous_funding", "Other funding");
+    PREVIOUS_FUNDING("previous_funding", "Other funding"),
+    ACADEMIC_AND_SECRETARIAL_SUPPORT("academic_and_secretarial_support", "Academic and secretarial support"),
+    INDIRECT_COSTS("indirect costs", "Indirect costs");
+
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,

@@ -37,17 +37,14 @@ public final class CompressionUtil {
     }
 
     public static String getDecompressedString(String compressedString) {
-        GZIPInputStream zis = null;
         String decompressedString = "";
 
-        try {
-            byte[] bytes = decodeBase64(compressedString);
-            zis = new GZIPInputStream(new ByteArrayInputStream(bytes));
+        byte[] bytes = decodeBase64(compressedString);
+
+        try (GZIPInputStream zis = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
             decompressedString = IOUtils.toString(zis, defaultCharset());
         } catch (IOException e) {
             LOG.error(e);
-        } finally {
-            closeQuietly(zis);
         }
         return decompressedString;
     }
