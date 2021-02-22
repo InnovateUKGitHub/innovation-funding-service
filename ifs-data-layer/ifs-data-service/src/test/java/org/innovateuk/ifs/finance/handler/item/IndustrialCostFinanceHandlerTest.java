@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
@@ -22,6 +23,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,9 +32,11 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static org.innovateuk.ifs.finance.builder.AcademicAndSecretarialSupportBuilder.newAcademicAndSecretarialSupport;
 import static org.innovateuk.ifs.finance.builder.CapitalUsageBuilder.newCapitalUsage;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newFinanceRowMetaValue;
+import static org.innovateuk.ifs.finance.builder.IndirectCostBuilder.newIndirectCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
@@ -91,11 +95,23 @@ public class IndustrialCostFinanceHandlerTest {
     private EstateCostHandler estateCostHandler;
     @Spy
     private KnowledgeBaseCostHandler knowledgeBaseCostHandler;
+
+    @Spy
+    private AcademicAndSecretarialSupportHandler academicAndSecretarialSupportHandler;
+
+    @Spy
+    private IndirectCostHandler indirectCostHandler;
+
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
+
     private ApplicationFinance applicationFinance;
     private Materials material;
     private FinanceRow materialCost;
+    private AcademicAndSecretarialSupport academicAndSecretarialSupport;
+    FinanceRow academicAndSecretarialSupportCost;
+    private IndirectCost indirect;
+    FinanceRow indirectCost;
 
     @Before
     public void setUp() throws Exception {
@@ -103,10 +119,15 @@ public class IndustrialCostFinanceHandlerTest {
         industrialCostFinanceHandler.setFinanceRowHandlers(asList(labourCostHandler, capitalUsageHandler, materialsHandler, otherCostHandler,
                 overheadsHandler, subContractingCostHandler, travelCostHandler, grantClaimAmountHandler, grantClaimHandler,
                 otherFundingHandler, vatHandler, procurementsOverheadsHandler, additionalCompanyCostHandler, associateDevelopmentCostHandler, associateSalaryCostHandler,
-                associateSupportCostHandler, consumableHandler, estateCostHandler, knowledgeBaseCostHandler));
+                associateSupportCostHandler, consumableHandler, estateCostHandler, knowledgeBaseCostHandler, academicAndSecretarialSupportHandler, indirectCostHandler));
 
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
+        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
 
+        setupGrantCompetitionFinance();
+    }
+
+    private void setupGrantCompetitionFinance() {
         Competition competition = newCompetition()
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
@@ -114,8 +135,18 @@ public class IndustrialCostFinanceHandlerTest {
                 .build();
 
         Application application = newApplication().withCompetition(competition).build();
-        applicationFinance = newApplicationFinance().withApplication(application).build();
+        applicationFinance = newApplicationFinance()
+                .withApplication(application)
+                .withFecModelEnabled(true)
+                .build();
 
+        List<ApplicationFinanceRow> costs = initialiseFinanceTypesAndCost(applicationFinance);
+
+        when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
+        when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+    }
+
+    private List<ApplicationFinanceRow> initialiseFinanceTypesAndCost(ApplicationFinance applicationFinance) {
         List<ApplicationFinanceRow> costs = new ArrayList<>();
 
         Iterable<ApplicationFinanceRow> init;
@@ -252,9 +283,7 @@ public class IndustrialCostFinanceHandlerTest {
         vatCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow) vatCost);
 
-        when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
-        when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
-        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
+        return costs;
     }
 
     @Test
@@ -328,8 +357,10 @@ public class IndustrialCostFinanceHandlerTest {
                 Pair.of(OVERHEADS, OverheadsHandler.class),
                 Pair.of(OTHER_COSTS, OtherCostHandler.class),
                 Pair.of(OTHER_FUNDING, OtherFundingHandler.class),
+                Pair.of(ACADEMIC_AND_SECRETARIAL_SUPPORT, AcademicAndSecretarialSupportHandler.class),
+                Pair.of(INDIRECT_COSTS, IndirectCostHandler.class),
                 Pair.of(VAT, VatHandler.class)
-        ).forEach(pair -> {
+                ).forEach(pair -> {
             final FinanceRowType costType = pair.getKey();
             final Class<?> clazz = pair.getValue();
             assertTrue("Correct handler for " + costType, clazz.isAssignableFrom(industrialCostFinanceHandler.getCostHandler(costType).getClass()));
@@ -342,5 +373,118 @@ public class IndustrialCostFinanceHandlerTest {
         assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
         assertEquals(costItem.getName(), materialCost.getName());
         assertEquals(costItem.getId(), materialCost.getId());
+    }
+
+    private void setupKtpCompetitionFinance() {
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
+                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
+                .build();
+
+        Application application = newApplication().withCompetition(competition).build();
+        applicationFinance = newApplicationFinance()
+                .withApplication(application)
+                .withFecModelEnabled(false)
+                .build();
+
+        List<ApplicationFinanceRow> costs = initialiseFinanceTypesAndCost(applicationFinance);
+
+        academicAndSecretarialSupport = newAcademicAndSecretarialSupport()
+                .withId((Long) null)
+                .withCost(BigInteger.TEN)
+                .withTargetId(applicationFinance.getId())
+                .build();
+        academicAndSecretarialSupportCost = academicAndSecretarialSupportHandler.toApplicationDomain(academicAndSecretarialSupport);
+        academicAndSecretarialSupportCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) academicAndSecretarialSupportCost);
+
+        indirect = newIndirectCost()
+                .withId((Long) null)
+                .withCost(BigInteger.ONE)
+                .withTargetId(applicationFinance.getId())
+                .build();
+        indirectCost = indirectCostHandler.toApplicationDomain(indirect);
+        indirectCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) indirectCost);
+
+        when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
+        when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+    }
+
+    @Test
+    public void getOrganisationFinancesAcademicAndSecretarialSupport() {
+        setupKtpCompetitionFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
+        DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinances.get(ACADEMIC_AND_SECRETARIAL_SUPPORT);
+        assertEquals(1, defaultCostCategory.getCosts().size());
+        assertEquals(ACADEMIC_AND_SECRETARIAL_SUPPORT, defaultCostCategory.getCosts().get(0).getCostType());
+        assertEquals(0, BigDecimal.TEN.compareTo(defaultCostCategory.getCosts().get(0).getTotal()));
+    }
+
+    @Test
+    public void academicAndSecretarialSupportCostItemToApplicationCost() {
+        setupKtpCompetitionFinance();
+
+        FinanceRow academicAndSecretarialSupportCost = industrialCostFinanceHandler.toApplicationDomain(academicAndSecretarialSupport);
+        assertEquals(BigDecimal.TEN, academicAndSecretarialSupportCost.getCost());
+        assertEquals(Integer.valueOf(1), academicAndSecretarialSupportCost.getQuantity());
+    }
+
+    @Test
+    public void academicAndSecretarialSupportCostItemToProjectCost() {
+        setupKtpCompetitionFinance();
+
+        FinanceRow academicAndSecretarialSupportCost = industrialCostFinanceHandler.toProjectDomain(academicAndSecretarialSupport);
+        assertEquals(BigDecimal.TEN, academicAndSecretarialSupportCost.getCost());
+        assertEquals(Integer.valueOf(1), academicAndSecretarialSupportCost.getQuantity());
+    }
+
+    @Test
+    public void academicAndSecretarialSupportCostToCostItem() {
+        setupKtpCompetitionFinance();
+
+        final FinanceRowItem costItem = industrialCostFinanceHandler.toResource(academicAndSecretarialSupportCost);
+        assertEquals(costItem.getTotal(), academicAndSecretarialSupportCost.getCost().multiply(new BigDecimal(academicAndSecretarialSupportCost.getQuantity())));
+        assertEquals(costItem.getId(), academicAndSecretarialSupportCost.getId());
+    }
+
+    @Test
+    public void getOrganisationFinancesIndirectCost() {
+        setupKtpCompetitionFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
+        DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinances.get(INDIRECT_COSTS);
+        assertEquals(1, defaultCostCategory.getCosts().size());
+        assertEquals(INDIRECT_COSTS, defaultCostCategory.getCosts().get(0).getCostType());
+        assertEquals(0, BigDecimal.ONE.compareTo(defaultCostCategory.getCosts().get(0).getTotal()));
+    }
+
+    @Test
+    public void indirectCostCostItemToApplicationCost() {
+        setupKtpCompetitionFinance();
+
+        FinanceRow indirectCost = industrialCostFinanceHandler.toApplicationDomain(indirect);
+        assertEquals(BigDecimal.ONE, indirectCost.getCost());
+        assertEquals(Integer.valueOf(1), indirectCost.getQuantity());
+    }
+
+    @Test
+    public void indirectCostCostItemToProjectCost() {
+        setupKtpCompetitionFinance();
+
+        FinanceRow indirectCost = industrialCostFinanceHandler.toProjectDomain(indirect);
+        assertEquals(BigDecimal.ONE, indirectCost.getCost());
+        assertEquals(Integer.valueOf(1), indirectCost.getQuantity());
+    }
+
+    @Test
+    public void indirectCostCostToCostItem() {
+        setupKtpCompetitionFinance();
+
+        final FinanceRowItem costItem = industrialCostFinanceHandler.toResource(indirectCost);
+        assertEquals(costItem.getTotal(), indirectCost.getCost().multiply(new BigDecimal(indirectCost.getQuantity())));
+        assertEquals(costItem.getId(), indirectCost.getId());
     }
 }
