@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -10,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 
@@ -93,11 +90,6 @@ public class YourProjectCostsViewModelPopulator {
 
         if (competition.isKtp()) {
             ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
-            /*costTypes = costTypes.stream()
-                    .filter(financeRowType -> BooleanUtils.isFalse(applicationFinance.getFecModelEnabled())
-                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
-                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
-                    .collect(Collectors.toList());*/
             costTypes = competition.getFinanceRowTypesByFinance(Optional.of(applicationFinance));
         }
 

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,20 +62,6 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
 
         return costCategories;
     }
-
-    /*private List<FinanceRowType> getFinanceRowTypes(Competition competition, Finance finance) {
-        List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
-
-        if (competition.isKtp()) {
-            costTypes = costTypes.stream()
-                    .filter(financeRowType -> BooleanUtils.isFalse(finance.getFecModelEnabled())
-                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
-                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
-                    .collect(Collectors.toList());
-        }
-
-        return costTypes;
-    }*/
 
     @Override
     protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {

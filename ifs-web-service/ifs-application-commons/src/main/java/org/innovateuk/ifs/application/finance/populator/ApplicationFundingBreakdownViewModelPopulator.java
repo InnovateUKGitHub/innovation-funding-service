@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -134,7 +133,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
             financeLink = Optional.empty();
         }
         boolean lead = organisation.getId().equals(leadOrganisationId);
-        //List<FinanceRowType> financeRowTypes  = getFinanceRowTypes(competition, finance);
 
         return new BreakdownTableRow(
                 organisation.getId(),
@@ -150,21 +148,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 finance.map(BaseFinanceResource::getTotal).orElse(BigDecimal.ZERO)
         );
     }
-
-    /*private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, Optional<BaseFinanceResource> finance) {
-        List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
-
-        if (competition.isKtp() && finance.isPresent()) {
-            BaseFinanceResource orgFinance = finance.get();
-            costTypes = costTypes.stream()
-                    .filter(financeRowType -> BooleanUtils.isFalse(orgFinance.getFecModelEnabled())
-                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
-                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
-                    .collect(Collectors.toList());
-        }
-
-        return costTypes;
-    }*/
 
     private String organisationText(ApplicationResource application, boolean lead) {
         if (!application.isCollaborativeProject()) {
