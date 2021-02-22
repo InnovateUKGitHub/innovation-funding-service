@@ -7,21 +7,21 @@ import java.math.BigInteger;
 /**
  * {@code IndirectCosts} implements {@link FinanceRowItem}
  */
-public class IndirectCosts extends AbstractFinanceRowItem {
+public class IndirectCost extends AbstractFinanceRowItem {
 
     private Long id;
 
     private BigInteger cost;
 
-    private IndirectCosts() {
+    private IndirectCost() {
         this(null);
     }
 
-    public IndirectCosts(Long targetId) {
+    public IndirectCost(Long targetId) {
         super(targetId);
     }
 
-    public IndirectCosts(Long targetId, Long id, BigInteger cost) {
+    public IndirectCost(Long targetId, Long id, BigInteger cost) {
         super(targetId);
         this.id = id;
         this.cost = cost;

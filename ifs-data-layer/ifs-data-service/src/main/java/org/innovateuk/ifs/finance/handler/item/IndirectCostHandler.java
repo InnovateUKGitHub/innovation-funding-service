@@ -4,7 +4,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.IndirectCosts;
+import org.innovateuk.ifs.finance.resource.cost.IndirectCost;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -14,21 +14,21 @@ import java.util.Optional;
  * or for sending it over.
  */
 @Component
-public class IndirectCostHandler extends FinanceRowHandler<IndirectCosts> {
+public class IndirectCostHandler extends FinanceRowHandler<IndirectCost> {
 
     @Override
-    public ApplicationFinanceRow toApplicationDomain(IndirectCosts cost) {
+    public ApplicationFinanceRow toApplicationDomain(IndirectCost cost) {
         return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, null, 1, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
-    public ProjectFinanceRow toProjectDomain(IndirectCosts cost) {
+    public ProjectFinanceRow toProjectDomain(IndirectCost cost) {
         return new ProjectFinanceRow(cost.getId(), cost.getName() , null, null, 1, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
-    public IndirectCosts toResource(FinanceRow cost) {
-        return new IndirectCosts(cost.getTarget().getId(), cost.getId(), bigIntegerOrNull(cost.getCost()));
+    public IndirectCost toResource(FinanceRow cost) {
+        return new IndirectCost(cost.getTarget().getId(), cost.getId(), bigIntegerOrNull(cost.getCost()));
     }
 
     @Override
