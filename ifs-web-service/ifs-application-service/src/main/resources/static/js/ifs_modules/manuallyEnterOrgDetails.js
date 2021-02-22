@@ -83,17 +83,15 @@ IFS.manuallyEnter = (function () {
       }
       var html = '<div class="govuk-grid-row exec-officer-row" id="exec-officer-row-' + idCount + '">' +
                                '<div class="govuk-grid-column">' +
-                                   '<div class="govuk-grid-column-two-thirds">' +
-                                   '<input class="govuk-input govuk-input--width-23 govuk-!-margin-bottom-2"' +
+                                   '<div class="govuk-grid-column-full">' +
+                                   '<input class="govuk-input govuk-!-width-one-half govuk-!-margin-bottom-2"' +
                                    'id="execOfficer"' +
                                     'type="text" ' +
                                     'maxlength="255" ' +
                                     'name = "executiveOfficers[' + idCount + '].name"/>' +
-                                    '</div>' +
-                                     '<div class="alignright">' +
-                                       '<button class="button-clear alignright" data-remove-row-man="execOfficer"' +
+                                       '<button class="button-clear float-right" data-remove-row-man="execOfficer"' +
                                                  'type="button" name="remove-exec-officer"' +
-                                                     'th:value="' + idCount + ' "' +
+                                                   'th:value="' + idCount + ' "' +
                                                    'th:id="remove-exec-officer-row"' + idCount + ' ">Remove' +
                                         '</button>' +
                                       '</div>' +
