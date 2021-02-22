@@ -72,7 +72,7 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     public static SectionBuilder fecCostsSection() {
         return aSubSection()
-                .withName("Your fEC costs")
+                .withName("Your fEC model")
                 .withType(SectionType.FEC_COSTS_FINANCES)
                 .withQuestions(newArrayList(
                         aQuestionWithMultipleStatuses()));
