@@ -41,7 +41,7 @@ bootJar {
     mainClassName = 'org.innovateuk.ifs.Application'
 }
 
-ext.springCloudVersion = 'Hoxton.SR10'
+ext.springCloudVersion = '2020.0.1'
 
 dependencyManagement {
     imports {

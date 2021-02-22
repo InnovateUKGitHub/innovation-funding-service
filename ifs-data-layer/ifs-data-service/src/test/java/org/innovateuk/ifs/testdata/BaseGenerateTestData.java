@@ -82,7 +82,7 @@ import static org.mockito.Mockito.when;
  *    In conjunction with "ifs.generate.test.data.competition.filter=BY_NAME", this parameter allows you to specify a
  *    single Competition to generate.
  */
-@ActiveProfiles({"integration-test,seeding-db"})
+@ActiveProfiles({"integration-test","seeding-db"})
 @DirtiesContext
 @SpringBootTest(classes = GenerateTestDataConfiguration.class)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
