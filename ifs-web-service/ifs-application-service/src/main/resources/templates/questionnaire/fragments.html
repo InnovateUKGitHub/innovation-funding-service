@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--/*@thymesVar id="answers" type="java.util.List<org.innovateuk.ifs.questionnaire.response.viewmodel.AnsweredQuestionViewModel>"*/-->
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="readonly" type="java.lang.Boolean"*/-->
+<th:block th:fragment="answer-table(title, answers, readonly)">
+    <table class="govuk-table govuk-!-margin-top-3" th:unless="${answers == null or answers.isEmpty()}">
+        <caption class="govuk-table__caption ">
+            <h2 class="govuk-heading-m" th:text="${title}">Previous answers</h2>
+            <p class="govuk-body" th:unless="${readonly}"><a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}(questionnaireResponseId=${answers.get(0).questionnaireResponseId})}">Start again</a></p>
+        </caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Question</th>
+            <th scope="col" class="govuk-table__header">Answer</th>
+            <th scope="col" class="govuk-table__header" th:unless="${readonly}"><span class="govuk-visually-hidden">Change answer</span></th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        <tr th:each="answer : ${answers}"
+            class="govuk-table__row">
+            <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.question}">Where is your business based?</td>
+            <td class="govuk-table__cell" th:text="${answer.answer}"></td>
+            <td class="govuk-table__cell alignright" th:unless="${readonly}">
+                <a class="govuk-link" th:href="@{/questionnaire/{questionnaireResponseId}/question/{questionnaireQuestionId}(questionnaireResponseId=${answer.questionnaireResponseId},questionnaireQuestionId=${answer.questionnaireQuestionId})}"
+                    th:text="${answer.answer != null ? 'Change answer' : 'Continue'}">Change answer</a></td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+</html>

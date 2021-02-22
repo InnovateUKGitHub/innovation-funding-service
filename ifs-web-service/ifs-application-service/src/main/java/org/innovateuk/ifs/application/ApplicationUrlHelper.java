@@ -22,7 +22,7 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId) {
+    public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long organisationId, long applicationId) {
         if (questionType != null) {
             switch (questionType) {
                 case APPLICATION_DETAILS:
@@ -42,6 +42,9 @@ public class ApplicationUrlHelper {
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
+            }
+            if (questionType.isQuestionnaire()) {
+                return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
             }
         }
         return Optional.empty();

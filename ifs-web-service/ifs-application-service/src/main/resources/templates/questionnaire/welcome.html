@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${questionnaire.title}" />
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${questionnaire.title},size='govuk-heading-xl'" />
+
+        <div class="govuk-hint wysiwyg-styles" th:if="${questionnaire.description != null}" ifs:utext="${questionnaire.description}"></div>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                method="post">
+            <button class="govuk-button">Next</button>
+        </form>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
