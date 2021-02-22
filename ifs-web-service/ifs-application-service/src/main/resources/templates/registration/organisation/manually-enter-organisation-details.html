@@ -106,7 +106,7 @@
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-2  govuk-!-margin-left-3">
             </div>
             <div class="alignleft">
-                <button th:unless="${organisationForm.sicCodes.size() > 3}" class="button-clear" name="add-sic-code" data-add-row-man="sicCode">+ Add SIC code</button>
+                <button id="add-sic-code" th:unless="${organisationForm.sicCodes.size() > 3}" class="button-clear" name="add-sic-code" data-add-row-man="sicCode">+ Add SIC code</button>
             </div>
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="execOfficer">
                 Executive officers

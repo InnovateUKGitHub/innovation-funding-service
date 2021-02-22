@@ -22,6 +22,7 @@ IFS.manuallyEnter = (function () {
         case 'sicCode':
           inst.closest('[id^="sic-code-row-"]').remove()
           IFS.manuallyEnter.reindexRows('[id^="sic-code-row-"]')
+          jQuery('#add-sic-code').show()
           break
         case 'execOfficer':
           inst.closest('[id^="exec-officer-row-"]').remove()
@@ -33,6 +34,9 @@ IFS.manuallyEnter = (function () {
     addSicCode: function () {
       var idCount = 0
       if (jQuery('.sic-code-row').length) {
+        if (jQuery('.sic-code-row').length >= 3) {
+          jQuery('#add-sic-code').hide()
+        }
         idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
         if (idCount >= 4) {
           return
