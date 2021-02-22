@@ -134,7 +134,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
             financeLink = Optional.empty();
         }
         boolean lead = organisation.getId().equals(leadOrganisationId);
-        List<FinanceRowType> financeRowTypes  = getFinanceRowTypes(competition, finance);
+        //List<FinanceRowType> financeRowTypes  = getFinanceRowTypes(competition, finance);
 
         return new BreakdownTableRow(
                 organisation.getId(),
@@ -142,7 +142,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
-                financeRowTypes.stream()
+                competition.getFinanceRowTypesByFinance(finance).stream()
                     .filter(FinanceRowType::isCost)
                         .collect(toMap(Function.identity(),
                                 type -> finance.map(f -> f.getFinanceOrganisationDetails().get(type).getTotal()).orElse(BigDecimal.ZERO)
@@ -151,7 +151,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         );
     }
 
-    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, Optional<BaseFinanceResource> finance) {
+    /*private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, Optional<BaseFinanceResource> finance) {
         List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
 
         if (competition.isKtp() && finance.isPresent()) {
@@ -164,7 +164,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         }
 
         return costTypes;
-    }
+    }*/
 
     private String organisationText(ApplicationResource application, boolean lead) {
         if (!application.isCollaborativeProject()) {

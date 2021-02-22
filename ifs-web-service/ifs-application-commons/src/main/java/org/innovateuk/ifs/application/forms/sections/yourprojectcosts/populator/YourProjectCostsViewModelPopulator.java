@@ -93,11 +93,12 @@ public class YourProjectCostsViewModelPopulator {
 
         if (competition.isKtp()) {
             ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
-            costTypes = costTypes.stream()
+            /*costTypes = costTypes.stream()
                     .filter(financeRowType -> BooleanUtils.isFalse(applicationFinance.getFecModelEnabled())
                             ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
                             : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList());*/
+            costTypes = competition.getFinanceRowTypesByFinance(Optional.of(applicationFinance));
         }
 
         return costTypes;

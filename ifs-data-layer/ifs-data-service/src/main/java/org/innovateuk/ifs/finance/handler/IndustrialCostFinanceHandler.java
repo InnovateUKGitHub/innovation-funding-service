@@ -56,7 +56,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition, Finance finance) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
 
-        for (FinanceRowType costType : getFinanceRowTypes(competition, finance)) {
+        for (FinanceRowType costType : competition.getFinanceRowTypesByFinance(finance)) {
             FinanceRowCostCategory financeRowCostCategory = createCostCategoryByType(costType);
             costCategories.put(costType, financeRowCostCategory);
         }
@@ -64,7 +64,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         return costCategories;
     }
 
-    private List<FinanceRowType> getFinanceRowTypes(Competition competition, Finance finance) {
+    /*private List<FinanceRowType> getFinanceRowTypes(Competition competition, Finance finance) {
         List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
 
         if (competition.isKtp()) {
@@ -76,7 +76,7 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
         }
 
         return costTypes;
-    }
+    }*/
 
     @Override
     protected Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
@@ -250,6 +251,20 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public List<FinanceRowType> getFinanceRowTypes() {
         return competitionFinanceRowTypes.stream().map(CompetitionFinanceRowTypes::getFinanceRowType).collect(toList());
+    }
+
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Finance finance) {
+        List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
+
+        if (this.isKtp()) {
+            financeRowTypes = financeRowTypes.stream()
+                    .filter(financeRowType -> BooleanUtils.isFalse(finance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .collect(Collectors.toList());
+        }
+
+        return financeRowTypes;
     }
 
     public List<ProjectStages> getProjectStages() {
