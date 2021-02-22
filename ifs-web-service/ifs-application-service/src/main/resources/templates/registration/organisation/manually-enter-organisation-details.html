@@ -88,7 +88,9 @@
             </label>
             <div class="govuk-hint govuk-!-font-size-19">Enter your 5 digit Standard Industrial Classification code.
             </div>
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-grid-column-full govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+            <div class="govuk-!-margin-left-0 govuk-grid-row govuk-!-margin-right--1">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+            </div>
             <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row"
                  th:id="'sic-code-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
@@ -103,7 +105,7 @@
                             th:id="remove-sic-code-row"> Remove
                     </button>
                 </div>
-                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-2  govuk-!-margin-left-3">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-2  govuk-!-margin-left-3  govuk-!-margin-right-0">
             </div>
             <div class="alignleft">
                 <button th:unless="${organisationForm.sicCodes.size() > 3}" class="button-clear" name="add-sic-code" data-add-row-man="sicCode">+ Add SIC code</button>
@@ -111,8 +113,10 @@
             <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="execOfficer">
                 Executive officers
             </label>
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-2">
             <div class="govuk-hint govuk-!-font-size-19">Enter the first and last names of all company directors, if your organisation has any.</div>
+            <div class="govuk-!-margin-left-0 govuk-grid-row govuk-!-margin-right--1">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+            </div>
             <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})"
                  class="govuk-grid-row exec-officer-row" th:id="'exec-officer-row-'+${iteration.index}">
                 <div class="govuk-grid-column-full">
