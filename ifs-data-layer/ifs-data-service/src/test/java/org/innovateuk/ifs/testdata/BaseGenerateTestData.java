@@ -311,7 +311,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         ).join();
 
         UserResource user = UserResourceBuilder.newUserResource().withRoleGlobal(Role.SYSTEM_MAINTAINER).build();
-        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
+        setLoggedInUser(user);
 
         Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate(0);
         while (projectToCreated.isPresent()) {
