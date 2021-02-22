@@ -109,6 +109,16 @@ public class ApplicationQuestionQuestionnaireController {
         });
     }
 
+    @PostMapping(params = "edit")
+    public String edit(UserResource user,
+                       @PathVariable long applicationId,
+                       @PathVariable long organisationId,
+                       @PathVariable long questionId) {
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        questionStatusRestService.markAsInComplete(questionId, applicationId, processRole.getId()).getSuccess();
+        return "redirect:" + viewRedirectUrl(applicationId, organisationId, questionId);
+    }
+
     private void setNorthernIrelandDeclaration(long applicationId, long organisationId, boolean value) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         finance.setNorthernIrelandDeclaration(value);

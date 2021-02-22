@@ -66,14 +66,14 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         questionnaire = questionnaireService.create(questionnaire).getSuccess();
 
         QuestionnaireQuestionResource activitiesQuestion = new QuestionnaireQuestionResource();
-        activitiesQuestion.setTitle("Activities");
+        activitiesQuestion.setTitle("Subsidy basis");
         activitiesQuestion.setQuestion("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?");
         activitiesQuestion.setGuidance("For example, if the project or related activities are undertaken in Northern Ireland that would be a 'Yes' etc");
         activitiesQuestion.setQuestionnaire(questionnaire.getId());
         activitiesQuestion = questionnaireQuestionService.create(activitiesQuestion).getSuccess();
 
         QuestionnaireQuestionResource tradeQuestion = new QuestionnaireQuestionResource();
-        tradeQuestion.setTitle("Trade");
+        tradeQuestion.setTitle("Subsidy basis");
         tradeQuestion.setQuestion("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?");
         tradeQuestion.setQuestionnaire(questionnaire.getId());
         tradeQuestion = questionnaireQuestionService.create(tradeQuestion).getSuccess();

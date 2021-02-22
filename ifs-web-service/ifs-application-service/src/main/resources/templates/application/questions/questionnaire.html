@@ -58,7 +58,7 @@
                 </div>
             </th:block>
 
-            <th:block th:insert="questionnaire/fragments :: answer-table('Provided answers', ${model.answers})" />
+            <th:block th:insert="questionnaire/fragments :: answer-table('Provided answers', ${model.answers}, ${model.readOnly})" />
 
             <!--/* Read only template */-->
             <th:block th:if="${model.readOnly}">
@@ -73,7 +73,7 @@
             </div>
             <div class="govuk-!-margin-top-6">
                 <a th:if="${model.readOnly}"
-                   th:href="@{/application/{applicationId}(applicationId=${model.application.id})}"
+                   th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
                    class="govuk-button">Return to application overview
                 </a>
                 <button th:unless="${model.readOnly}" id="application-question-save" type="submit"
