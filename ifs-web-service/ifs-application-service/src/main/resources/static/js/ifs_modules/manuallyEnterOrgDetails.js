@@ -38,10 +38,10 @@ IFS.manuallyEnter = (function () {
           return
         }
       }
-      var html = '<div class="govuk-grid-row  sic-code-row govuk-!-margin-top-6" id="sic-code-row-' + idCount + '">' +
+      var html = '<div class="govuk-grid-row  sic-code-row" id="sic-code-row-' + idCount + '">' +
                                      '<div class="govuk-grid-column">' +
                                          '<div class="govuk-grid-column-two-thirds">' +
-                                         '<input class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-3"' +
+                                         '<input class="govuk-input govuk-input--width-5"' +
                                          'id="sicCode"' +
                                           'type="text" ' +
                                           'maxlength="5" ' +
@@ -54,7 +54,7 @@ IFS.manuallyEnter = (function () {
                                                          'th:id="remove-sic-code-row"' + idCount + ' ">Remove' +
                                               '</button>' +
                                             '</div>' +
-                                           '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3  govuk-!-margin-left-3">' +
+                                           '<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-left-3 govuk-!-margin-bottom-1 govuk-!-margin-top-2">' +
                                       '</div>'
       jQuery('.sic-code-row').last().after(html)
       jQuery('.sic-code-' + idCount).val('')
