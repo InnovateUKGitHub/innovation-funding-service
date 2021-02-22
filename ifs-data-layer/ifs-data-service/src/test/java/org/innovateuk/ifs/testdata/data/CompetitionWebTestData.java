@@ -184,7 +184,9 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP in panel"),
                 ktpCompetition()
-                        .withName("KTP notifications")
+                        .withName("KTP notifications"),
+                grantCompetition()
+                        .withName("Living models for the future world")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL))
@@ -339,7 +341,9 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Always open competition")
                         .withAlwaysOpen(true)
-                        .withResubmission(true)
+                        .withResubmission(true),
+                ktpCompetition()
+                        .withName("FEC KTP competition")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))
