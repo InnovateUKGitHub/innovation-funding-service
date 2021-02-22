@@ -10,6 +10,7 @@ public class QuestionnaireResource {
     private QuestionnaireSecurityType securityType;
 
     private String description;
+    private String title;
 
     private List<Long> questions = new ArrayList<>();
 
@@ -35,6 +36,14 @@ public class QuestionnaireResource {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public List<Long> getQuestions() {

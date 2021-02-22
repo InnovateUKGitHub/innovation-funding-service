@@ -20,6 +20,7 @@ public class Questionnaire {
     private QuestionnaireSecurityType securityType;
 
     private String description;
+    private String title;
 
     public Long getId() {
         return id;
@@ -51,5 +52,13 @@ public class Questionnaire {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

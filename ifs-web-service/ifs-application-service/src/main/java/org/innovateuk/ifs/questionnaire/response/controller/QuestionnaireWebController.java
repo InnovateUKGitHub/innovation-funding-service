@@ -72,6 +72,7 @@ public class QuestionnaireWebController {
         }
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
+        model.addAttribute("questionnaire", questionnaire);
         return "questionnaire/welcome";
     }
 
