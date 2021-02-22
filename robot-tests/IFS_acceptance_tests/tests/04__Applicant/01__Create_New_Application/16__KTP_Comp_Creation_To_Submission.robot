@@ -87,6 +87,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7723 Improvement to company search results
 ...
+...            IFS-9239 KTP fEC/Non-fEC: Your fEC model
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -316,11 +318,19 @@ New lead applicant completes the KTP application
     And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
+New lead applicant marks Your fEC model section as complete if No is selected
+     [Documentation]  IFS-9239
+     Given the user clicks the button/link                                   link = Your project finances
+     And the user clicks the button/link                                     link = Your fEC costs
+#     And the user clicks the button/link                                     link = Your fEC model
+     And the user should see the element                                     jQuery = h1:contains("Your fEC Model")
+     When the user checks fEC model validation
+     Then the user marks fEc model section as complete if no is selected
+
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
-    Given The user clicks the button/link                            link = Your project finances
-    And The user clicks the button/link                              jQuery = a:contains("Your project costs")
-    And The user clicks the button/link                              id = edit
+    Given the user clicks the button/link                            jQuery = a:contains("Your project costs")
+    And the user clicks the button/link                              id = edit
     When the user switch to the new tab on click guidance links      read our detailed guidance on KTP project costs (opens in a new window)
     Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
 
@@ -341,7 +351,7 @@ New lead applicant can declare any other government funding received
     And the user should see the readonly view of other funding received
 
 New lead applicant invites a new partner organisation user and fills in project finances
-    [Documentation]  IFS-7812  IFS-7814
+    [Documentation]  IFS-7812  IFS-7814  IFS-9239
     Given the user clicks the button/link                            link = Return to finances
     And the user clicks the button/link                              link = Back to application overview
     When the lead invites a partner and accepted the invitation
@@ -1004,6 +1014,14 @@ the lead applicant marks the KTP project costs & project location as complete
     the user enters the project location
     the user clicks the button/link          link = Back to application overview
 
+the user checks fEC model validation
+     the user clicks the button/link                   jQuery = button:contains("Mark as complete")
+     the user should see a field and summary error     You must select an option.
+
+the user marks fEc model section as complete if no is selected
+     the user selects the radio button     fecModelEnabled  fecModelEnabled-no
+     the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
 the partner applicant marks the KTP project location & organisation information as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
     the user enters the project location
@@ -1262,6 +1280,7 @@ the user should see KTP finance sections are complete
     the user should see the element     css = li:nth-of-type(1) .task-status-complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
+    the user should see the element     css = li:nth-of-type(4) .task-status-complete
 
 partner login to see your organisation details
     Logging in and Error Checking         &{ktpLeadApplicantCredentials}
