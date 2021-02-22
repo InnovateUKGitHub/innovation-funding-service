@@ -409,6 +409,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected Competition retrieveCompetitionByName(String competitionName) {
+        if (competitionRepository.findByName(competitionName).isEmpty()){
+            throw new RuntimeException("Unable to find competition with name:" + competitionName);
+        }
         return competitionRepository.findByName(competitionName).get(0);
     }
 
