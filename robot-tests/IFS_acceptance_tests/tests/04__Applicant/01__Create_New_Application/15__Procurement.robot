@@ -390,31 +390,31 @@ the internal user approves the payment milestones
     the user clicks the button/link     link = Return to finance checks
 
 the internal user reverts the payment milestones
-    the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Approved")
-    the user clicks the button/link     jQuery = span:contains("Reset payment milestone check")
-    the user clicks the button/link     jQuery = button:contains("Reset payment milestone check")
-    the user clicks the button/link     jQuery = span:contains("This field cannot be left blank")
-    the user enters text to a text field  id = reset-reason   Reset
-    the user clicks the button/link     jQuery = button:contains("Reset payment milestone check")
-    the user clicks the button/link     link = Return to finance checks
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Approved")
+    the user clicks the button/link          jQuery = span:contains("Reset payment milestone check")
+    the user clicks the button/link          jQuery = button:contains("Reset payment milestone check")
+    the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
+    the user enters text to a text field     id = retractionReason   Reset
+    the user clicks the button/link          jQuery = button:contains("Reset payment milestone check")
+    the user clicks the button/link          link = Return to finance checks
 
 the internal user reverts the eligibility
-    the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
-    the user clicks the button/link     jQuery = span:contains("Reset eligibility check")
-    the user clicks the button/link     jQuery = button:contains("Reset eligibility check")
-    the user clicks the button/link     jQuery = span:contains("This field cannot be left blank")
-    the user enters text to a text field  id = reset-reason   Reset
-    the user clicks the button/link     jQuery = button:contains("Reset eligibility check")
-    the user clicks the button/link     link = Return to finance checks
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
+    the user clicks the button/link          jQuery = span:contains("Reset eligibility check")
+    the user clicks the button/link          jQuery = button:contains("Reset eligibility check")
+    the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
+    the user enters text to a text field     id = retractionReason   Reset
+    the user clicks the button/link          jQuery = button:contains("Reset eligibility check")
+    the user clicks the button/link          link = Return to finance checks
 
 the internal user reverts the viability
-    the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
-    the user clicks the button/link     jQuery = span:contains("Reset viability check")
-    the user clicks the button/link     jQuery = button:contains("Reset viability check")
-    the user clicks the button/link     jQuery = span:contains("This field cannot be left blank")
-    the user enters text to a text field  id = reset-reason   Reset
-    the user clicks the button/link     jQuery = button:contains("Reset viability check")
-    the user clicks the button/link     link = Return to finance checks
+    the user clicks the button/link         jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
+    the user clicks the button/link          jQuery = span:contains("Reset viability check")
+    the user clicks the button/link          jQuery = button:contains("Reset viability check")
+    the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
+    the user enters text to a text field     id = retractionReason   Reset
+    the user clicks the button/link          jQuery = button:contains("Reset viability check")
+    the user clicks the button/link          link = Back to finance checks
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}
