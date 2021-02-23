@@ -73,12 +73,12 @@
                 </th:block>
 
                 <dd>
-                    <div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
-                    <div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
-                    <div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
-                    <div th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
-                    <div th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
-                    <div th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
+                    <div th:style="'word-break: break-word'" th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
+                    <div th:style="'word-break: break-word'" th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
+                    <div th:style="'word-break: break-word'" th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
+                    <div th:style="'word-break: break-word'" th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
+                    <div th:style="'word-break: break-word'" th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
+                    <div th:style="'word-break: break-word'" th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
                 </dd>
             </th:block>
         </dl>
