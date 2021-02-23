@@ -36,11 +36,11 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
 /**
- * The Controller for the "Your FEC Costs" page in the Application Form process.
+ * The Controller for the "Your FEC Model" page in the Application Form process.
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-fec-model/organisation/{organisationId}/section/{sectionId}")
-public class YourFECCostsController {
+public class YourFECModelController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
 
@@ -50,11 +50,11 @@ public class YourFECCostsController {
     private SectionService sectionService;
     private ProcessRoleRestService processRoleRestService;
 
-    public YourFECCostsController() {
+    public YourFECModelController() {
     }
 
     @Autowired
-    YourFECCostsController(
+    YourFECModelController(
             CommonYourFinancesViewModelPopulator commonViewModelPopulator,
             YourFECModelFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,

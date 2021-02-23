@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class YourFECCostsControllerTest extends AbstractAsyncWaitMockMVCTest<YourFECCostsController> {
+public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<YourFECModelController> {
 
     @Mock
     private CommonYourFinancesViewModelPopulator commonYourFinancesViewModelPopulatorMock;
@@ -200,9 +200,9 @@ public class YourFECCostsControllerTest extends AbstractAsyncWaitMockMVCTest<You
     }
 
     @Override
-    protected YourFECCostsController supplyControllerUnderTest() {
+    protected YourFECModelController supplyControllerUnderTest() {
 
-        return new YourFECCostsController(
+        return new YourFECModelController(
                 commonYourFinancesViewModelPopulatorMock,
                 formPopulatorMock,
                 applicationFinanceRestServiceMock,
