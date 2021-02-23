@@ -33,15 +33,13 @@ IFS.manuallyEnter = (function () {
     },
     addSicCode: function () {
       var idCount = 0
+      jQuery('#add-sic-code').show()
       if (jQuery('.sic-code-row').length) {
-        if (jQuery('.sic-code-row').length >= 3) {
+        if (jQuery('.sic-code-row').length === 3) {
           jQuery('#add-sic-code').hide()
         }
-        idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
-        if (idCount >= 4) {
-          return
-        }
       }
+      idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
       var html = '<div class="govuk-grid-row sic-code-row" id="sic-code-row-' + idCount + '">' +
                                      '<div class="govuk-grid-column">' +
                                          '<div class="govuk-grid-column-two-thirds">' +
