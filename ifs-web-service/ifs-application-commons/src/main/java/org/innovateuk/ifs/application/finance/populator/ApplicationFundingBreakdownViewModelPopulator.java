@@ -133,7 +133,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
             financeLink = Optional.empty();
         }
         boolean lead = organisation.getId().equals(leadOrganisationId);
-
         return new BreakdownTableRow(
                 organisation.getId(),
                 organisation.getName(),
