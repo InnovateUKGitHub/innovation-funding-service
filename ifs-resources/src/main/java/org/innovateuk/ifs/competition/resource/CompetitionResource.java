@@ -90,6 +90,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
+    private GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions;
     private GolTemplateResource golTemplate;
     private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
@@ -675,6 +676,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
+    public GrantTermsAndConditionsResource getOtherFundingRulesTermsAndConditions() {
+        return otherFundingRulesTermsAndConditions;
+    }
+
+    public void setOtherFundingRulesTermsAndConditions(GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions) {
+        this.otherFundingRulesTermsAndConditions = otherFundingRulesTermsAndConditions;
+    }
+
     public Integer getMinProjectDuration() {
         return minProjectDuration;
     }
@@ -884,6 +893,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
+                .append(otherFundingRulesTermsAndConditions, that.otherFundingRulesTermsAndConditions)
                 .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
@@ -948,6 +958,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
+                .append(otherFundingRulesTermsAndConditions)
                 .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)

@@ -127,6 +127,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "otherFundingRulesTermsAndConditionsId", referencedColumnName = "id")
+    private GrantTermsAndConditions otherFundingRulesTermsAndConditions;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "grant_claim_maximum_competition",
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
@@ -803,6 +807,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setTermsAndConditions(GrantTermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public GrantTermsAndConditions getOtherFundingRulesTermsAndConditions() {
+        return otherFundingRulesTermsAndConditions;
+    }
+
+    public void setOtherFundingRulesTermsAndConditions(GrantTermsAndConditions otherFundingRulesTermsAndConditions) {
+        this.otherFundingRulesTermsAndConditions = otherFundingRulesTermsAndConditions;
     }
 
     public Integer getMaxProjectDuration() {
