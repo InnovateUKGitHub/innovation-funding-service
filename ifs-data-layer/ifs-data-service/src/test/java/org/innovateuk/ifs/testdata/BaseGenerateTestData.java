@@ -313,12 +313,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         UserResource user = UserResourceBuilder.newUserResource().withRoleGlobal(Role.SYSTEM_MAINTAINER).build();
         setLoggedInUser(user);
 
-        Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate(0);
-        while (projectToCreated.isPresent()) {
-            LOG.info("project to be created {}", projectToCreated.get());
-            projectToBeCreatedService.createProject(projectToCreated.get());
-            projectToCreated = projectToBeCreatedService.findProjectToCreate(0);
-        }
+        projectToBeCreatedService.createAllPendingProjects();
 
         long after = System.currentTimeMillis();
 
