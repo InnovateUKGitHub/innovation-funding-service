@@ -231,7 +231,7 @@ Two organisations with the same name are able to join by entering details manual
     Given the user navigates to the page                                                ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation                                       Amazing Test Org Name  ${applicant_first_name} ${applicant_last_name}  amazing@test.com
     Then a new organisation not in companies house is able to accept project invite     amazing@test.com
-    [Teardown]  the user navigates to the page                 ${LOGIN_URL}
+    [Teardown]  the user navigates to the page                                          ${LOGIN_URL}
 
 Ifs Admin is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505  IFS-7723
@@ -369,15 +369,15 @@ the same organisation isnt able to join the project
 a new organisation not in companies house is able to accept project invite
     [Arguments]  ${email}
     logout as user
-    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
+    the user reads his email and clicks the link                                         ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
     the user accepts invitation and selects organisation type not in companies house
-    the user fills in account details                             ${applicant_first_name}  ${applicant_last_name}
-    the user clicks the button/link                               jQuery = button:contains("Create account")
-    the user verifies their account                               ${email}
-    a new organisation logs in and sees the project               ${email}
-    the user should see the element                               jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
-    the user clicks the button/link                               link = PSC application 7
-    the user should see the element                               jQuery = h1:contains("Join project")
+    the user fills in account details                                                    ${applicant_first_name}  ${applicant_last_name}
+    the user clicks the button/link                                                      jQuery = button:contains("Create account")
+    the user verifies their account                                                      ${email}
+    a new organisation logs in and sees the project                                      ${email}
+    the user should see the element                                                      jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
+    the user clicks the button/link                                                      link = PSC application 7
+    the user should see the element                                                      jQuery = h1:contains("Join project")
 
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}

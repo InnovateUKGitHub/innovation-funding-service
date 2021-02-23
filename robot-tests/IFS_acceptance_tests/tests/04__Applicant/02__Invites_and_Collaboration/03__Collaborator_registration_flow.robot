@@ -11,23 +11,23 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
-${SELECT_ORGANISATION}    ${SERVER}/organisation/create/organisation-type
+${INVITE_LINK}                   ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
+${SELECT_ORGANISATION}           ${SERVER}/organisation/create/organisation-type
 ${terms_and_conditions_user_id}  ${user_ids['${terms_and_conditions_login_credentials["email"]}']}
-${business_type}            Partnership
-${organisation_name}        Excellent Test Company
-${organisation_number}      0987654321
-${sic_code}                 89012
-${executive_officer}        Elton John
-${address_line_1}           123
-${address_line_2}           Excellent Test Street
-${address_line_3}           Tranquil
-${address_town}             London
-${address_county}           Middlesex
-${address_postcode}         NW11 8AJ
-${applicant_first_name}     Paul
-${applicant_last_name}      Scholes
-${applicant_email}          paul@scholes.com
+${business_type}                 Partnership
+${organisation_name}             Excellent Test Company
+${organisation_number}           0987654321
+${sic_code}                      89012
+${executive_officer}             Elton John
+${address_line_1}                123
+${address_line_2}                Excellent Test Street
+${address_line_3}                Tranquil
+${address_town}                  London
+${address_county}                Middlesex
+${address_postcode}              NW11 8AJ
+${applicant_first_name}          Paul
+${applicant_last_name}           Scholes
+${applicant_email}               paul@scholes.com
 # This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
