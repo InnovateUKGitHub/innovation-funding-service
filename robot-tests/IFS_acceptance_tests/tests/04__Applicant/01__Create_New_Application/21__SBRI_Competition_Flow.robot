@@ -559,11 +559,9 @@ the data is in the database correctly
      Should Be Equal As Integers   ${month2VAT}     0
      Should Be Equal As Integers   ${month3VAT}     33135
 
-Generate spend profile
-    confirm viability                   0
-    confirm eligibility                 0
-    confirm milestone                   0
-    the user clicks the button/link     css = .generate-spend-profile-main-button
+confirm viability and eligibility
+    confirm viability       0
+    confirm eligibility     0
 
 internal user generates the contract
     [Arguments]  ${projectID}
