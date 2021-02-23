@@ -6,7 +6,6 @@ import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -324,7 +322,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                                 competitionAssessmentPeriodsFutures
         ).join();
 
-        UserResource user = UserResourceBuilder.newUserResource().withRoleGlobal(Role.SYSTEM_MAINTAINER).build();
+        UserResource user = userService.findByEmail("ifs_system_maintenance_user@innovateuk.org").getSuccess();
         setLoggedInUser(user);
 
         projectToBeCreatedService.createAllPendingProjects();

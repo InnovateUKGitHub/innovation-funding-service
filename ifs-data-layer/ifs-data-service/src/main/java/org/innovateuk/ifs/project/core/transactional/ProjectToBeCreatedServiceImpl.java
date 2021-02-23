@@ -55,14 +55,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Trace(dispatcher = true)
     public ServiceResult<ScheduleResponse> createProject(long applicationId) {
         return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
-                .andOnSuccess(projectToBeCreated -> {
-                    projectToBeCreated.setPending(false);
-                    return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
-                            .andOnSuccessReturn(() -> {
-                                projectToBeCreated.setMessage("Success");
-                                return new ScheduleResponse("Project created: " + applicationId);
-                            });
-                });
+                .andOnSuccess(this::createProject);
     }
 
     @Override
@@ -82,14 +75,16 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Transactional
     public void createAllPendingProjects() {
         Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, Integer.MAX_VALUE, Direction.ASC, "application.id"));
-        page.getContent().forEach(projectToBeCreated -> {
-            projectToBeCreated.setPending(false);
-            createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
-                    .andOnSuccess(() -> {
-                        projectToBeCreated.setMessage("Success");
-                        projectToBeCreatedRepository.save(projectToBeCreated);
-                    });
-        });
+        page.getContent().forEach(this::createProject);
+    }
+
+    private ServiceResult<ScheduleResponse> createProject(ProjectToBeCreated projectToBeCreated) {
+        projectToBeCreated.setPending(false);
+        return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
+                .andOnSuccessReturn(() -> {
+                    projectToBeCreated.setMessage("Success");
+                    return new ScheduleResponse("Project created: " + projectToBeCreated.getApplication().getId());
+                });
     }
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {

@@ -42,7 +42,7 @@ public class KtpProjectNotificationServiceImpl implements KtpProjectNotification
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ServiceResult<Void> sendProjectSetupNotification(long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
