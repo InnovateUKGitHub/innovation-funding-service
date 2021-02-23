@@ -8,7 +8,9 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRestService;
 import org.innovateuk.ifs.questionnaire.response.populator.AnsweredQuestionViewModelPopulator;
 import org.innovateuk.ifs.user.resource.Role;
@@ -41,6 +43,9 @@ public class ApplicationQuestionQuestionnaireModelPopulator {
     @Autowired
     private QuestionRestService questionRestService;
 
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
     public ApplicationQuestionQuestionnaireViewModel populate(UserResource user,
                                                               long applicationId,
                                                               long questionId,
@@ -64,12 +69,18 @@ public class ApplicationQuestionQuestionnaireModelPopulator {
                 .getSuccess()
                 .getContent();
 
+        Boolean northernIrelandDeclaration = null;
+        if (question.getQuestionSetupType() == QuestionSetupType.SUBSIDY_BASIS) {
+            northernIrelandDeclaration = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess().getNorthernIrelandDeclaration();
+        }
+
         return new ApplicationQuestionQuestionnaireViewModel(
                 application,
                 question,
                 organisationId,
                 open,
                 complete,
+                northernIrelandDeclaration,
                 questionnaireResponseId,
                 answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId));
 

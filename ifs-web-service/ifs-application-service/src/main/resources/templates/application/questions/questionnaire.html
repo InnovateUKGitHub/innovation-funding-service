@@ -28,7 +28,7 @@
         </div>
 
         <th:block
-            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicatioName}">
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
             <th:block th:insert="fragments/layout :: page-title"
                       th:with="pageTitle=${model.questionName},subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
@@ -37,7 +37,7 @@
               enctype="multipart/form-data"
               novalidate="novalidate">
 
-            <p class="govuk-body">Based on your answers, your subsidy basis has  been determined as falling under <th:block></th:block></p>
+            <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">Based on your answers, your subsidy basis has  been determined as falling under <th:block th:if="${model.getNorthernIrelandDeclaration()}">state aid</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">subsidy control</th:block></p>
 
             <th:block th:unless="${model.readOnly}">
                 <h2 class="govuk-heading-m">Declaration</h2>

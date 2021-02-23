@@ -15,10 +15,11 @@ public class ApplicationQuestionQuestionnaireViewModel {
     private final long organisationId;
     private final boolean open;
     private final boolean complete;
+    private final Boolean northernIrelandDeclaration;
     private final String questionnaireResponseId;
     private final List<AnsweredQuestionViewModel> answers;
 
-    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, String questionnaireResponseId, List<AnsweredQuestionViewModel> answers) {
+    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, Boolean northernIrelandDeclaration, String questionnaireResponseId, List<AnsweredQuestionViewModel> answers) {
         this.applicationId = application.getId();
         this.applicationName = application.getName();
         this.questionId = question.getId();
@@ -26,6 +27,7 @@ public class ApplicationQuestionQuestionnaireViewModel {
         this.organisationId = organisationId;
         this.open = open;
         this.complete = complete;
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
         this.questionnaireResponseId = questionnaireResponseId;
         this.answers = answers;
     }
@@ -56,6 +58,10 @@ public class ApplicationQuestionQuestionnaireViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public Boolean getNorthernIrelandDeclaration() {
+        return northernIrelandDeclaration;
     }
 
     public String getQuestionnaireResponseId() {
