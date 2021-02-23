@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -22,9 +23,6 @@ public class ApcTemplate implements CompetitionTemplate {
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
-    @Autowired
-    private CommonBuilders commonBuilders;
-
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.ADVANCED_PROPULSION_CENTRE;
@@ -32,7 +30,20 @@ public class ApcTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC)"));
+
+        GrantTermsAndConditions apcTerms = grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC)");
+
+        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+            GrantTermsAndConditions subsidyControlTermsAndConditions = grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Advanced Propulsion Centre (APC) - Subsidy control");
+            if (subsidyControlTermsAndConditions != null) {
+                competition.setTermsAndConditions(subsidyControlTermsAndConditions);
+            } else {
+                competition.setTermsAndConditions(apcTerms);
+            }
+            competition.setOtherFundingRulesTermsAndConditions(apcTerms);
+        } else {
+            competition.setTermsAndConditions(apcTerms);
+        }
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(36);
