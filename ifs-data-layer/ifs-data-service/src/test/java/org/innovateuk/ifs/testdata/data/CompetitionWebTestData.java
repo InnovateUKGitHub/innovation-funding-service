@@ -200,7 +200,6 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Photonics for health")
                         .withLeadTechnologist(PETER_FREEMAN_ID)
-                        .withResearchRatio(50)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.READY_TO_OPEN))
@@ -275,7 +274,8 @@ public class CompetitionWebTestData {
                         .withIncludeProjectGrowth(false)
                         .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID, INDUSTRIAL_RESEARCH_ID, EXPERIMENTAL_DEVELOPMENT_ID))
                         .withLeadTechnologist(PETER_FREEMAN_ID)
-                        .withLeadApplicantTypes(asSet(PUBLIC_SECTOR_OR_CHARITY)),
+                        .withLeadApplicantTypes(asSet(PUBLIC_SECTOR_OR_CHARITY))
+                        .withResearchRatio(50),
                 grantCompetition()
                         .withName("Photonics for RTO and Business"),
                 grantCompetition()
