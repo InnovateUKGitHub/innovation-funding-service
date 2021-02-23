@@ -246,7 +246,9 @@ public class CompetitionTest {
         applicationFinance.setFecModelEnabled(true);
 
         List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(applicationFinance);
-        assertEquals(Arrays.asList(FinanceRowType.ASSOCIATE_SALARY_COSTS,
+        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
+                FinanceRowType.FINANCE,
+                FinanceRowType.ASSOCIATE_SALARY_COSTS,
                 FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
                 FinanceRowType.CONSUMABLES,
                 FinanceRowType.ASSOCIATE_SUPPORT,
@@ -270,7 +272,9 @@ public class CompetitionTest {
         applicationFinance.setFecModelEnabled(false);
 
         List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(applicationFinance);
-        assertEquals(Arrays.asList(FinanceRowType.ASSOCIATE_SALARY_COSTS,
+        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
+                FinanceRowType.FINANCE,
+                FinanceRowType.ASSOCIATE_SALARY_COSTS,
                 FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
                 FinanceRowType.CONSUMABLES,
                 FinanceRowType.KTP_TRAVEL,

@@ -49,7 +49,6 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ACADEMIC_AND_SECRETARIAL_SUPPORT("academic_and_secretarial_support", "Academic and secretarial support", APPEARS_IN_PROJECT_COSTS_ACCORDION),
     INDIRECT_COSTS("indirect costs", "Indirect costs", APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
-
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,
         COST,
@@ -122,7 +121,9 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
 
     public static List<FinanceRowType> getKtpFinanceRowTypes() {
         return Stream.of(values())
-                .filter(financeRowType -> (financeRowType == FinanceRowType.ASSOCIATE_SALARY_COSTS
+                .filter(financeRowType -> (financeRowType == FinanceRowType.OTHER_COSTS
+                        || financeRowType == FinanceRowType.FINANCE
+                        || financeRowType == FinanceRowType.ASSOCIATE_SALARY_COSTS
                         || financeRowType == FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS
                         || financeRowType == FinanceRowType.CONSUMABLES
                         || financeRowType == FinanceRowType.ASSOCIATE_SUPPORT
