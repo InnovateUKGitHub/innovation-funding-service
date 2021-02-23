@@ -559,10 +559,6 @@ the data is in the database correctly
      Should Be Equal As Integers   ${month2VAT}     0
      Should Be Equal As Integers   ${month3VAT}     33135
 
-confirm viability and eligibility
-    confirm viability       0
-    confirm eligibility     0
-
 internal user generates the contract
     [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send

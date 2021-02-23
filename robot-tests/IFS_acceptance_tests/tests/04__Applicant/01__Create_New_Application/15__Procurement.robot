@@ -183,14 +183,11 @@ Applicant completes project setup details
 
 Project finance completes finance checks then reverts them
     [Documentation]  IFS-8947
-    [Setup]  log in as a different user                       &{internal_finance_credentials}
-    Given the user navigates to the page                      ${server}/project-setup-management/project/${ProjectID}/finance-check
-    When the internal user approves the viability
-    And the internal user approves the eligibility
-    And the internal user approves the payment milestones
-    Then the internal user reverts the payment milestones
-    And the internal user reverts the eligibility
-    And the internal user reverts the viability
+    [Setup]  log in as a different user                               &{internal_finance_credentials}
+    Given the user navigates to the page                              ${server}/project-setup-management/project/${ProjectID}/finance-check
+    When confirm viability and eligibility
+    Then confirm milestone                                            0
+    And the user reverts the milestones eligibility and viability
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6368  IFS-8947
@@ -365,56 +362,6 @@ internal user generate SP
     the user clicks the button/link                       link = Return to finance checks
     the user clicks the button/link                       css = .generate-spend-profile-main-button
     the user clicks the button/link                       css = #generate-spend-profile-modal-button
-
-the internal user approves the viability
-    the user clicks the button/link                         jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
-    the user selects the checkbox                           project-viable
-    the user selects the option from the drop-down menu     Green  id = rag-rating
-    the user clicks the button/link                         css = #confirm-button
-    the user clicks the button/link                         css = [name="confirm-viability"]
-    the user clicks the button/link                         link = Back to finance checks
-
-the internal user approves the eligibility
-    the user clicks the button/link                         jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
-    the user selects the checkbox                           project-eligible
-    the user selects the option from the drop-down menu     Green  id = rag-rating
-    the user clicks the button/link                         css = #confirm-button
-    the user clicks the button/link                         css = [name="confirm-eligibility"]
-    the user clicks the button/link                         link = Return to finance checks
-
-the internal user approves the payment milestones
-    the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Review")
-    the user selects the checkbox       approve-milestones
-    the user clicks the button/link     css = #confirm-button
-    the user clicks the button/link     jQuery = div:nth-child(5) button:contains("Approve payment milestones")
-    the user clicks the button/link     link = Return to finance checks
-
-the internal user reverts the payment milestones
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Approved")
-    the user clicks the button/link          jQuery = span:contains("Reset payment milestone check")
-    the user clicks the button/link          jQuery = button:contains("Reset payment milestone check")
-    the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
-    the user enters text to a text field     id = retractionReason   Reset
-    the user clicks the button/link          jQuery = button:contains("Reset payment milestone check")
-    the user clicks the button/link          link = Return to finance checks
-
-the internal user reverts the eligibility
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
-    the user clicks the button/link          jQuery = span:contains("Reset eligibility check")
-    the user clicks the button/link          jQuery = button:contains("Reset eligibility check")
-    the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
-    the user enters text to a text field     id = retractionReason   Reset
-    the user clicks the button/link          jQuery = button:contains("Reset eligibility check")
-    the user clicks the button/link          link = Return to finance checks
-
-the internal user reverts the viability
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
-    the user clicks the button/link          jQuery = span:contains("Reset viability check")
-    the user clicks the button/link          jQuery = button:contains("Reset viability check")
-    the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
-    the user enters text to a text field     id = retractionReason   Reset
-    the user clicks the button/link          jQuery = button:contains("Reset viability check")
-    the user clicks the button/link          link = Back to finance checks
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}
