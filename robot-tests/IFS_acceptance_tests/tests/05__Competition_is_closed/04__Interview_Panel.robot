@@ -70,12 +70,20 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3571 Interview panels - Internal user view of applications and associated feedback
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-9301 Urgent - second page of assessors not showing for interview panel
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Assessor_Commons.robot
+
+*** Variables ***
+${interviewPanelCompName}     Living models for the future world
+${interviewPanelCompID}       ${competition_ids["${interviewPanelCompName}"]}
+${interviewPanelAppName}      New living with On Demand Services
 
 
 *** Test Cases ***
@@ -130,10 +138,10 @@ CompAdmin view invite sent to the applicant and resend invite
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
     [Tags]  HappyPath
-    Given an assessor logs in and accept the invite to interview panel
-    When the user navigates to the page        ${server}/assessment/assessor/dashboard
-    Then the user should not see the element   jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
-    And the user should see the element        jQuery = h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    Given an assessor logs in and accept the invite to interview panel     ${assessor_joel_email}   ${short_password}   ${CLOSED_COMPETITION_NAME}
+    When the user navigates to the page                                    ${server}/assessment/assessor/dashboard
+    Then the user should not see the element                               jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    And the user should see the element                                    jQuery = h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 Assessor can respond to email invite and decline
     [Documentation]  IFS-3143
@@ -233,6 +241,16 @@ Applicant can still see their feedback once the comp feedback has been released
     When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     And the user clicks the button/link       link = view application feedback
     Then the user should see the element      link = testing_5MB.pdf (opens in a new window)
+
+Internal user can see content in second page of assessors in interview panel while assigning applications
+    [Documentation]   IFS-9301
+    Given internal user invites assessor to interview panel
+    And an assessor logs in and accept the invite to interview panel           paul.plum@gmail.com   ${short_password}   ${interviewPanelCompName}
+    When internal user assigns all applications to interview panel
+    And internal user navigates to allocate applications to assessors page
+    And the user clicks the button/link                                        jQuery = span:contains("Next")
+    Then the user should see the element                                       jQuery = tr:contains("${interviewPanelAppName}")
+
 
 *** Keywords ***
 Custom Suite Setup
@@ -418,8 +436,9 @@ the comp admin resend invite to an applicant
     the user clicks the button/link     css = .govuk-button[type="submit"]  #Resend invite
 
 an assessor logs in and accept the invite to interview panel
-    log in as a different user           ${assessor_joel_email}   ${short_password}
-    the user clicks the button/link      jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    [Arguments]  ${username}  ${password}  ${compName}
+    log in as a different user           ${username}  ${password}
+    the user clicks the button/link      jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${compName}")
     the user selects the radio button    acceptInvitation  true
     the user clicks the button/link      css = .govuk-button[type="submit"]   #Confirm
 
@@ -484,6 +503,26 @@ an assessor can view feedback overview of an application
     the user should see the element     jQuery = h1:contains("Application overview")
     the user should see the element     jQuery = .message-alert p:contains("${message}")
     assessor should see the competition terms and conditions     Back to application overview
+
+internal user invites assessor to interview panel
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/management/assessment/interview/competition/${interviewPanelCompID}/assessors/find
+    the user clicks the button/link     jQuery = tr:contains("Paul Plum") label
+    the user clicks the button/link     css = .govuk-button[name="addSelected"]
+    the user clicks the button/link     link = Review and send invites
+    the user clicks the button/link     jQuery = button:contains("Send invite")
+
+internal user assigns all applications to interview panel
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/management/assessment/interview/competition/${interviewPanelCompID}/applications/find
+    the user selects the checkbox       select-all-check
+    the user clicks the button/link     css = .govuk-button[name="addSelected"]
+    the user clicks the button/link     link = Review and send invites
+    the user clicks the button/link     jQuery = button:contains("Send invite")
+
+internal user navigates to allocate applications to assessors page
+   the user navigates to the page     ${server}/management/assessment/interview/competition/${interviewPanelCompID}/assessors/allocate-assessors
+   the user clicks the button/link    jQuery = td:contains("Town Planning, Construction") ~ td a:contains("Allocate")
 
 Custom suite teardown
     Disconnect from database
