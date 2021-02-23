@@ -408,7 +408,7 @@ the internal user reverts the eligibility
     the user clicks the button/link          link = Return to finance checks
 
 the internal user reverts the viability
-    the user clicks the button/link         jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
+    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
     the user clicks the button/link          jQuery = span:contains("Reset viability check")
     the user clicks the button/link          jQuery = button:contains("Reset viability check")
     the user clicks the button/link          jQuery = span:contains("Enter a reason for the reset")
