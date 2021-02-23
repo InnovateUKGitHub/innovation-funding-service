@@ -21,7 +21,6 @@ import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.testdata.services.*;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
