@@ -85,9 +85,9 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
         page.getContent().forEach(projectToBeCreated -> {
             projectToBeCreated.setPending(false);
             createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
-                    .andOnSuccessReturn(() -> {
+                    .andOnSuccess(() -> {
                         projectToBeCreated.setMessage("Success");
-                        return new ScheduleResponse("Project created: " + projectToBeCreated.getApplication().getId());
+                        projectToBeCreatedRepository.save(projectToBeCreated);
                     });
         });
     }
