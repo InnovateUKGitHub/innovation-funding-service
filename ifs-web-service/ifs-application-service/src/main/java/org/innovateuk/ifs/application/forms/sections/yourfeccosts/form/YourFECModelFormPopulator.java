@@ -26,19 +26,21 @@ public class YourFECModelFormPopulator {
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
-    public YourFECModelForm populate(long applicationId, long organisationId) {
+    public YourFECModelForm populate(YourFECModelForm form, long applicationId, long organisationId) {
         ApplicationFinanceResource applicationFinance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         Boolean fecModelEnabled = applicationFinance.getFecModelEnabled();
+        form.setFecModelEnabled(fecModelEnabled);
         Long fecFileEntryId = applicationFinance.getFecFileEntry();
+        form.setFecFileEntryId(fecFileEntryId);
         String fecCertificateFileName = ofNullable(fecFileEntryId)
                 .map(fileEntryRestService::findOne)
                 .flatMap(RestResult::getOptionalSuccessObject)
                 .map(FileEntryResource::getName)
                 .orElse(null);
 
-
-        return new YourFECModelForm(fecModelEnabled, fecFileEntryId, fecCertificateFileName);
+        form.setFecCertificateFileName(fecCertificateFileName);
+        return form;
     }
 }

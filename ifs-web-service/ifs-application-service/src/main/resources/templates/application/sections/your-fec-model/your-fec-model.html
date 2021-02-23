@@ -8,6 +8,8 @@
 </head>
 <body class="govuk-template__body your-fec-model app-form">
 <th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/layout :: body-start" />
+
 <div class="govuk-width-container">
 
     <th:block th:insert="fragments/layout :: header-sub"
@@ -79,7 +81,7 @@
                         </details>
                         <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
                                     ${model.financesUrl},
-                                    ${fecCertificateFileName},
+                                    ${form.fecCertificateFileName},
                                     fecCertificateFile,
                                     fecCertificateFile,
                                     true,

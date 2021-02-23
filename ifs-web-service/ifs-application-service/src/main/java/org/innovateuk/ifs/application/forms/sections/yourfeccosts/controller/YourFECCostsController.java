@@ -2,15 +2,20 @@ package org.innovateuk.ifs.application.forms.sections.yourfeccosts.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
+import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -25,8 +30,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -43,31 +50,17 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 public class YourFECCostsController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
-
+    @Autowired
     private CommonYourFinancesViewModelPopulator commonViewModelPopulator;
+    @Autowired
     private YourFECModelFormPopulator formPopulator;
+    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private ProcessRoleRestService processRoleRestService;
 
-    public YourFECCostsController() {
-    }
-
-    @Autowired
-    YourFECCostsController(
-            CommonYourFinancesViewModelPopulator commonViewModelPopulator,
-            YourFECModelFormPopulator formPopulator,
-            ApplicationFinanceRestService applicationFinanceRestService,
-            SectionService sectionService,
-            ProcessRoleRestService processRoleRestService,
-            OrganisationRestService organisationRestService) {
-
-        this.commonViewModelPopulator = commonViewModelPopulator;
-        this.formPopulator = formPopulator;
-        this.applicationFinanceRestService = applicationFinanceRestService;
-        this.sectionService = sectionService;
-        this.processRoleRestService = processRoleRestService;
-    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
@@ -77,17 +70,13 @@ public class YourFECCostsController {
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
-            Model model) {
-
-       CommonYourProjectFinancesViewModel commonViewModelRequest =
+            Model model,
+            @ModelAttribute("form") YourFECModelForm form) {
+        formPopulator.populate(form, applicationId, organisationId);
+        CommonYourProjectFinancesViewModel commonViewModelRequest =
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
-       YourFECModelForm formRequest =
-                formPopulator.populate(applicationId, organisationId);
-
         model.addAttribute("model", commonViewModelRequest);
-        model.addAttribute("form", formRequest);
-
         return VIEW_PAGE;
     }
 
@@ -175,6 +164,30 @@ public class YourFECCostsController {
         finance.setFecModelEnabled(form.getFecModelEnabled());
 
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
+    }
+
+    @PostMapping(params = "upload_fecCertificateFile")
+    public String uploadFECCertificateFile(Model model,
+                                UserResource user,
+                                @PathVariable long applicationId,
+                                @PathVariable long organisationId,
+                                @PathVariable long sectionId,
+                                @ModelAttribute("form") YourFECModelForm form,
+                                BindingResult bindingResult) throws IOException {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        MultipartFile fecCertificateFile = form.getFecCertificateFile();
+        RestResult<FileEntryResource> result = applicationFinanceRestService.addFinanceDocument(finance.getId(), fecCertificateFile.getContentType(),
+                fecCertificateFile.getSize(), fecCertificateFile.getOriginalFilename(), fecCertificateFile.getBytes());
+        if(result.isFailure()) {
+            result.getErrors().forEach(error ->
+                    bindingResult.rejectValue("fecCertificateFile", error.getErrorKey(), error.getArguments().toArray(), "")
+            );
+        } else {
+               form.setFecCertificateFileName(result.getSuccess().getName());
+        }
+
+        model.addAttribute("model", getViewModel(applicationId, sectionId, organisationId, user));
+        return VIEW_PAGE;
     }
 
     // Note: intentionally added since we need to do file upload in the same page and may need some validations there.

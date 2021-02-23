@@ -20,12 +20,6 @@ public class YourFECModelForm {
     public YourFECModelForm() {
     }
 
-    public YourFECModelForm(Boolean fecModelEnabled, Long fecFileEntryId, String fecCertificateFileName) {
-        this.fecModelEnabled = fecModelEnabled;
-        this.fecFileEntryId = fecFileEntryId;
-        this.fecCertificateFileName = fecCertificateFileName;
-    }
-
     public Boolean getFecModelEnabled() {
         return fecModelEnabled;
     }
@@ -40,10 +34,6 @@ public class YourFECModelForm {
 
     public void setFecFileEntryId(Long fecFileEntryId) {
         this.fecFileEntryId = fecFileEntryId;
-    }
-
-    public Boolean hasfECCertificateUploaded() {
-        return fecFileEntryId != 0L;
     }
 
     public String getFecCertificateFileName() {
