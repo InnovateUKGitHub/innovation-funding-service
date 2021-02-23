@@ -215,6 +215,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
+    public CompetitionResourceBuilder withOtherFundingRulesTermsAndConditions(GrantTermsAndConditionsResource... value) {
+        return withArray((template, competition) -> competition.setOtherFundingRulesTermsAndConditions(template), value);
+    }
+
     public CompetitionResourceBuilder withFundingRules(FundingRules... fundingRules) {
         return withArraySetFieldByReflection("fundingRules", fundingRules);
     }
