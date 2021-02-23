@@ -270,7 +270,6 @@ public final class CompetitionLineBuilder {
         competitionLine.setIncludeYourOrganisation(includeYourOrganisation);
         competitionLine.setFundingRules(fundingRules);
         competitionLine.setAlwaysOpen(alwaysOpen);
-        competitionLine.setLineNumber(lineNumber);
         return competitionLine;
     }
 }
