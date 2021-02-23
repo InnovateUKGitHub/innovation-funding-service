@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -42,8 +43,8 @@ import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMateria
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -375,20 +376,16 @@ public class IndustrialCostFinanceHandlerTest {
         assertEquals(costItem.getId(), materialCost.getId());
     }
 
-    private void setupKtpCompetitionFinance() {
-        Competition competition = newCompetition()
-                .withFundingType(FundingType.KTP)
-                .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
-                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
-                .build();
+    private List<ApplicationFinanceRow> initialiseKtpFinanceTypesAndCost(ApplicationFinance applicationFinance) {
+        List<ApplicationFinanceRow> costs = new ArrayList<>();
 
-        Application application = newApplication().withCompetition(competition).build();
-        applicationFinance = newApplicationFinance()
-                .withApplication(application)
-                .withFecModelEnabled(false)
-                .build();
-
-        List<ApplicationFinanceRow> costs = initialiseFinanceTypesAndCost(applicationFinance);
+        Iterable<ApplicationFinanceRow> init;
+        for (FinanceRowType costType : FinanceRowType.getKtpFinanceRowTypes()) {
+            init = industrialCostFinanceHandler.initialiseCostType(applicationFinance, costType);
+            if (init != null) {
+                init.forEach(costs::add);
+            }
+        }
 
         academicAndSecretarialSupport = newAcademicAndSecretarialSupport()
                 .withId((Long) null)
@@ -408,13 +405,68 @@ public class IndustrialCostFinanceHandlerTest {
         indirectCost.setTarget(applicationFinance);
         costs.add((ApplicationFinanceRow) indirectCost);
 
+        return costs;
+    }
+
+    private void setupKtpCompetitionFinance(boolean fecModelEnabled) {
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
+
+        Application application = newApplication().withCompetition(competition).build();
+        applicationFinance = newApplicationFinance()
+                .withApplication(application)
+                .withFecModelEnabled(fecModelEnabled)
+                .build();
+
+        List<ApplicationFinanceRow> costs = initialiseKtpFinanceTypesAndCost(applicationFinance);
+
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
     }
 
     @Test
+    public void getOrganisationNonFecFinancesForKtp() {
+        setupKtpCompetitionFinance(false);
+
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
+        List<FinanceRowType> financeRowTypes = organisationFinances.entrySet().stream()
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        assertNotNull(financeRowTypes.size());
+        assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
+        assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
+    public void getOrganisationFecFinancesForKtp() {
+
+        setupKtpCompetitionFinance(true);
+
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
+        List<FinanceRowType> financeRowTypes = organisationFinances.entrySet().stream()
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        assertNotNull(financeRowTypes.size());
+        assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
+        assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
     public void getOrganisationFinancesAcademicAndSecretarialSupport() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
         DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinances.get(ACADEMIC_AND_SECRETARIAL_SUPPORT);
@@ -425,7 +477,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void academicAndSecretarialSupportCostItemToApplicationCost() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         FinanceRow academicAndSecretarialSupportCost = industrialCostFinanceHandler.toApplicationDomain(academicAndSecretarialSupport);
         assertEquals(BigDecimal.TEN, academicAndSecretarialSupportCost.getCost());
@@ -434,7 +486,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void academicAndSecretarialSupportCostItemToProjectCost() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         FinanceRow academicAndSecretarialSupportCost = industrialCostFinanceHandler.toProjectDomain(academicAndSecretarialSupport);
         assertEquals(BigDecimal.TEN, academicAndSecretarialSupportCost.getCost());
@@ -443,7 +495,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void academicAndSecretarialSupportCostToCostItem() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         final FinanceRowItem costItem = industrialCostFinanceHandler.toResource(academicAndSecretarialSupportCost);
         assertEquals(costItem.getTotal(), academicAndSecretarialSupportCost.getCost().multiply(new BigDecimal(academicAndSecretarialSupportCost.getQuantity())));
@@ -452,7 +504,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void getOrganisationFinancesIndirectCost() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
         DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinances.get(INDIRECT_COSTS);
@@ -463,7 +515,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void indirectCostCostItemToApplicationCost() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         FinanceRow indirectCost = industrialCostFinanceHandler.toApplicationDomain(indirect);
         assertEquals(BigDecimal.ONE, indirectCost.getCost());
@@ -472,7 +524,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void indirectCostCostItemToProjectCost() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         FinanceRow indirectCost = industrialCostFinanceHandler.toProjectDomain(indirect);
         assertEquals(BigDecimal.ONE, indirectCost.getCost());
@@ -481,7 +533,7 @@ public class IndustrialCostFinanceHandlerTest {
 
     @Test
     public void indirectCostCostToCostItem() {
-        setupKtpCompetitionFinance();
+        setupKtpCompetitionFinance(false);
 
         final FinanceRowItem costItem = industrialCostFinanceHandler.toResource(indirectCost);
         assertEquals(costItem.getTotal(), indirectCost.getCost().multiply(new BigDecimal(indirectCost.getQuantity())));
