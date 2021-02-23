@@ -294,3 +294,10 @@ get spend profile value
     ${result} =  get from list  ${result}  0
     ${result} =  get from list  ${result}  0
     [Return]  ${result}
+
+get details of existing organisation
+#    ${result} =  query  SELECT `${database_name}`.`organisation`.`name`, `${database_name}`.`organisation`.`date_of_incorporation`, `${database_name}`.`sic_code`.`sic_code`, `${database_name}`.`executive_officer`.`name`, `${database_name}`.`address`.`address_line1`, `${database_name}`.`address`.`address_line2`, `${database_name}`.`address`.`address_line3`, `${database_name}`.`address`.`town`, `${database_name}`.`address`.`postcode`, `${database_name}`.`address`.`county`, `${database_name}`.`address`.`country` FROM `${database_name}`.`organisation` JOIN `${database_name}`.`sic_code` ON `${database_name}`.`sic_code`.`organisation_id` = `${database_name}`.`organisation`.`id` JOIN `${database_name}`.`executive_officer` ON `${database_name}`.`executive_officer`.`organisation_id` = `${database_name}`.`organisation`.`id` JOIN `${database_name}`.`organisation_address` ON `${database_name}`.`organisation_address`.`id` = `${database_name}`.`organisation`.`id` JOIN `${database_name}`.`address` ON `${database_name}`.`address`.`id` = `${database_name}`.`organisation_address`.`address_id` WHERE `${database_name}`.`organisation`.`name` = 'HAMPSHIRE COUNTY CRICKET COMPANY LIMITED';
+    ${result} =  query  SELECT o.`name`, o.`date_of_incorporation`, s.`sic_code`, ef.`name`, a.`address_line1`, a.`address_line2`, a.`address_line3`, a.`town`, a.`postcode`, a.`county`, a.`country` FROM  `ifs`.`organisation` AS o JOIN `ifs`.`sic_code` AS s ON s.`organisation_id` = o.`id` JOIN `ifs`.`executive_officer` AS ef ON ef.`organisation_id` = o.`id` JOIN `ifs`.`organisation_address` AS oa ON oa.`id` = o.`id` JOIN `ifs`.`address` AS a ON a.`id` = oa.`address_id` WHERE o.`id` = '133';
+    log   ${result}
+    ${result} =  get from list  ${result}  0
+    [Return]  ${result}

@@ -9,6 +9,8 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               IFS-9103 Companies House API: Return more relevant results
 ...
+...               IFS-9156 update existing orgs at point of application
+...
 Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -91,6 +93,15 @@ Companies House: No content message should be displayed when the search results 
     When the user clicks the button/link         jQuery = a:contains("Next")
     Then the user should not see the element     jQuery = p:contains("This is the last page of search results and we have shown you the closest 400 matches.")
 
+Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
+    [Documentation]    IFS-9156
+    Given the user clicks the button/link       link = Sign in
+    and logging in and error checking           Test@hampshire.co.uk   Passw0rd1357
+    and the user navigates to the page          ${server}/organisation/select
+    When the user clicks the button/link        jQuery = button:contains("Save and continue")
+    Then the user can see organisation details in db
+
+
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
 #    [Documentation]    INFUND-888
@@ -118,3 +129,10 @@ the backslash doesnt give errors
 the user expands enter details manually
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]
+
+the user can see organisation details in db
+    Connect to Database    @{database}
+    ${result} =  get details of existing organisation
+    log   ${result}
+    Should Be Empty                        ${result}
+
