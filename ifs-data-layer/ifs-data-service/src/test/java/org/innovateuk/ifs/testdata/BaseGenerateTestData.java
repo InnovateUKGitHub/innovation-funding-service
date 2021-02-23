@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.io.FileUtils;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -22,6 +23,7 @@ import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -130,6 +133,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${spring.flyway.placeholders.ifs.system.user.uuid}")
     private String systemUserUUID;
+
+    @Value("${ifs.data.service.file.storage.base}")
+    private String storageLocation;
 
     @Autowired
     private RegistrationService registrationService;
@@ -241,6 +247,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
+    }
+
+    @After
+    public void tearDownFiles() throws Exception {
+        File f = new File(storageLocation);
+        if (f.exists()) {
+            FileUtils.deleteDirectory(new File(storageLocation));
+        }
     }
 
     @Test
