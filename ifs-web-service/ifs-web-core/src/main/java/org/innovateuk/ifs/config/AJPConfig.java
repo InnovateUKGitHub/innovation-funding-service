@@ -36,18 +36,22 @@ public class AJPConfig {
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> servletContainer() {
         return server -> {
             if(tomcatAjpEnabled) {
+
                 Connector ajpConnector = new Connector("AJP/1.3");
                 ajpConnector.setPort(ajpPort);
                 ajpConnector.setSecure(false);
                 ajpConnector.setAllowTrace(false);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setTomcatAuthentication(false);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setConnectionTimeout(connectionTimeout);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setAcceptCount(acceptCount);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setMaxConnections(maxConnections);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setMaxThreads(maxThreads);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setMinSpareThreads(20);
                 ajpConnector.setScheme("ajp");
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setSecretRequired(false);
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setTomcatAuthentication(false);
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setConnectionTimeout(connectionTimeout);
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setAcceptCount(acceptCount);
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setMaxConnections(maxConnections);
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setMaxThreads(maxThreads);
-                ((AbstractAjpProtocol) ajpConnector.getProtocolHandler()).setMinSpareThreads(20);
+                ajpConnector.setProperty("address","0.0.0.0");
+                ajpConnector.setProperty("allowedRequestAttributesPattern",".*");
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setSecretRequired(false);
+
                 server.addAdditionalTomcatConnectors(ajpConnector);
             }
         };
