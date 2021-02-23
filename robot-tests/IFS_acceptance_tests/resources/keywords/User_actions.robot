@@ -29,6 +29,10 @@ The user clicks the button/link in the paginated list
     [Arguments]    ${BUTTON}
     Do Keyword With Pagination     click element     ${BUTTON}
 
+The user clicks the button/link in the paged list
+    [Arguments]    ${BUTTON}
+    Do Keyword With Pagination Button        click element     ${BUTTON}
+
 the user clicks the button twice
     [Arguments]    ${element}
     the user clicks the button/link  ${element}
