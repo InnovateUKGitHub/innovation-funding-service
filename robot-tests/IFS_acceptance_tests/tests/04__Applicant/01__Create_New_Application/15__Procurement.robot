@@ -25,6 +25,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8940 SBRI Milestones - Edit project duration in application
 ...
+...             IFS-8944 SBRI Milestones - Record changes to milestones
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -36,10 +38,12 @@ Resource        ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${comp_name}                  Procurement AT Comp
 ${appl_name}                  Procurement app
+${appl_name2}                 SBRI application
 ${ods_file}                   file_example_ODS.ods
 ${excel_file}                 testing.xlsx
 ${pdf_file}                   testing.pdf
 ${multiple_choice_answer}     option2
+
 
 *** Test Cases ***
 Comp Admin creates procurement competition
@@ -193,6 +197,15 @@ Internal user generate the contract
     Then Lead applicant upload the contract
     And the internal user approve the contract               ${ProjectID}
 
+Project finance makes changes to the project milestones
+    [Documentation]   IFS-8944
+    Given Requesting SBRI Project ID of this Project
+    And log in as a different user                           &{becky_mason_credentials}
+    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_ProjectID}/finance-check/organisation/116/procurement-milestones
+    And the user makes changes to the payment milestone table
+    Then the user should see the element    jQuery = td:contains("12,523") ~ td:contains("- 100")
+    And the user should see the element     jQuery = td:contains("12,121") ~ td:contains("+ 100")
+
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
@@ -322,6 +335,19 @@ the user completes the project details
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${appl_name}
     Set suite variable    ${ProjectID}
+
+Requesting SBRI Project ID of this Project
+    ${SBRI_ProjectID} =  get project id by name    ${appl_name2}
+    Set suite variable    ${SBRI_ProjectID}
+
+the user makes changes to the payment milestones table
+    clear element text                  jQuery = input:contains("12263")
+    input text                          id = milestones[7].payment  12163
+    clear element text                  jQuery = input:contains("12021")
+    input text                          id = milestones[8].payment  12121
+    the user clicks the button/link     jQuery = button:contains("Save and return to payment milestone check")
+    the user navigates to the page      ${server}/project-setup-management/project/57/finance-check/organisation/116/eligibility/changes
+
 
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
