@@ -7,6 +7,7 @@ import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -28,7 +29,7 @@ public class CompetitionWebTestData {
     }
 
     private static List<CompetitionLineBuilder> getCompetitionLineBuilders() {
-        return combineLists(
+        List<CompetitionLineBuilder> builders = combineLists(
                 getNonIfsLineBuilders(),
                 getReadyToOpenCompetitionLineBuilders(),
                 getOpenCompetitionLineBuilders(),
@@ -38,6 +39,9 @@ public class CompetitionWebTestData {
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
         );
+        // We set the line number because it allows us to do create unique off sets. For example with milestones.
+        IntStream.range(0, builders.size()).forEach(index -> builders.get(index).withLineNumber(index));
+        return builders;
     }
 
     private static List<CompetitionLineBuilder> getProjectSetupCompetitionLineBuilders() {

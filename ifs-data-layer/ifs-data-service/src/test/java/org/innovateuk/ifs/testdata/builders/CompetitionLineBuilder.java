@@ -44,6 +44,7 @@ public final class CompetitionLineBuilder {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
+    private int lineNumber;
 
     private CompetitionLineBuilder() {
     }
@@ -227,6 +228,11 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
+    public CompetitionLineBuilder withLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
+        return this;
+    }
+
     public CompetitionLine build() {
         CompetitionLine competitionLine = new CompetitionLine();
         competitionLine.setId(id);
@@ -264,6 +270,7 @@ public final class CompetitionLineBuilder {
         competitionLine.setIncludeYourOrganisation(includeYourOrganisation);
         competitionLine.setFundingRules(fundingRules);
         competitionLine.setAlwaysOpen(alwaysOpen);
+        competitionLine.setLineNumber(lineNumber);
         return competitionLine;
     }
 }

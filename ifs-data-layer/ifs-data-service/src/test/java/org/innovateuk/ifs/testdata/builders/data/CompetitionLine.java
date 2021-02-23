@@ -43,80 +43,9 @@ public class CompetitionLine {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
+    private int lineNumber;
 
     public CompetitionLine() {
-    }
-
-    public CompetitionLine(Long id,
-                           String name,
-                           CompetitionTypeEnum competitionType,
-                           Set<Long> innovationAreas,
-                           String innovationSector,
-                           Set<Long> researchCategory,
-                           CollaborationLevel collaborationLevel,
-                           Set<OrganisationTypeEnum> leadApplicantTypes,
-                           Integer researchRatio,
-                           Boolean resubmission,
-                           Boolean multiStream,
-                           CompetitionStatus competitionStatus,
-                           Long leadTechnologist,
-                           Long compExecutive,
-                           boolean setupComplete,
-                           String budgetCode,
-                           String code,
-                           String pafCode,
-                           String activityCode,
-                           Integer assessorCount,
-                           Boolean hasAssessmentPanel,
-                           Boolean hasInterviewStage,
-                           AssessorFinanceView assessorFinanceView,
-                           boolean published,
-                           FundingType fundingType,
-                           boolean inviteOnly,
-                           boolean nonIfs,
-                           String nonIfsUrl,
-                           CompetitionCompletionStage competitionCompletionStage,
-                           Boolean includeJesForm,
-                           ApplicationFinanceType applicationFinanceType,
-                           Boolean includeProjectGrowth,
-                           Boolean includeYourOrganisation,
-                           FundingRules fundingRules,
-                           Boolean alwaysOpen) {
-        this.id = id;
-        this.name = name;
-        this.competitionType = competitionType;
-        this.innovationAreas = innovationAreas;
-        this.innovationSector = innovationSector;
-        this.researchCategory = researchCategory;
-        this.collaborationLevel = collaborationLevel;
-        this.leadApplicantTypes = leadApplicantTypes;
-        this.researchRatio = researchRatio;
-        this.resubmission = resubmission;
-        this.multiStream = multiStream;
-        this.competitionStatus = competitionStatus;
-        this.leadTechnologist = leadTechnologist;
-        this.compExecutive = compExecutive;
-        this.setupComplete = setupComplete;
-        this.budgetCode = budgetCode;
-        this.code = code;
-        this.pafCode = pafCode;
-        this.activityCode = activityCode;
-        this.assessorCount = assessorCount;
-        this.hasAssessmentPanel = hasAssessmentPanel;
-        this.hasInterviewStage = hasInterviewStage;
-        this.assessorFinanceView = assessorFinanceView;
-        this.published = published;
-        this.fundingType = fundingType;
-        this.inviteOnly = inviteOnly;
-        this.nonIfs = nonIfs;
-        this.nonIfsUrl = nonIfsUrl;
-        this.competitionCompletionStage = competitionCompletionStage;
-        this.includeJesForm = includeJesForm;
-        this.applicationFinanceType = applicationFinanceType;
-        this.includeProjectGrowth = includeProjectGrowth;
-        this.includeYourOrganisation = includeYourOrganisation;
-        this.fundingRules = fundingRules;
-        this.alwaysOpen = alwaysOpen;
     }
 
     public Long getId() {
@@ -397,5 +326,13 @@ public class CompetitionLine {
 
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 }
