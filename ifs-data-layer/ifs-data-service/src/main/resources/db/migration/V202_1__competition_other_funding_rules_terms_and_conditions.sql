@@ -1,0 +1,2 @@
+-- IFS-9124 addition t and c on competition for other funding rules
+ALTER TABLE `competition` ADD COLUMN `other_funding_rules_terms_and_conditions_id` bigint(20) NULL DEFAULT NULL AFTER `terms_and_conditions_id`;
