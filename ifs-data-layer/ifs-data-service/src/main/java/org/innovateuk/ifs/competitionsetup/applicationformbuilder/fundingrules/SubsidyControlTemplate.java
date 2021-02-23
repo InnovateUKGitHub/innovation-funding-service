@@ -64,7 +64,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private static QuestionBuilder northernIrelandDeclaration() {
         return aQuestion()
                 .withShortName("Subsidy basis")
-                .withName("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")
+                .withName("Is your company based in Northern Ireland and/or are you planning to undertake any work for which you are seeking Innovate UK funding in Northern Ireland?")
                 .withDescription("For example, if the project or related activities are undertaken in Northern Ireland that would be a 'Yes' etc")
                 .withAssignEnabled(true)
                 .withMarkAsCompletedEnabled(true)
