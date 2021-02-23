@@ -20,6 +20,7 @@ public interface ApplicationOrganisationQuestionnaireResponseRepository extends 
     )
     boolean userCanEditQuestionnaireResponse(UUID questionnaireResponseId, long userId);
 
+    Optional<ApplicationOrganisationQuestionnaireResponse> findByQuestionnaireResponseId(UUID questionnaireResponseId);
 
     Optional<ApplicationOrganisationQuestionnaireResponse> findByApplicationIdAndOrganisationIdAndQuestionnaireResponseQuestionnaireId(long applicationId, long organisationId, long questionnaireId);
 }

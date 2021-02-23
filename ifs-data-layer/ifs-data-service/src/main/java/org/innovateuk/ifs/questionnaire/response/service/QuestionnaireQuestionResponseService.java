@@ -20,11 +20,11 @@ public interface QuestionnaireQuestionResponseService extends IfsCrudService<Que
     ServiceResult<List<QuestionnaireQuestionResponseResource>> get(List<Long> longs);
 
     @Override
-    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResponseResource', 'UPDATE_CREATE_OR_DELETE')")
+    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResponseResource', 'UPDATE_OR_DELETE')")
     ServiceResult<QuestionnaireQuestionResponseResource> update(Long id, QuestionnaireQuestionResponseResource questionnaireQuestionResponseResource);
 
     @Override
-    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResponseResource', 'UPDATE_CREATE_OR_DELETE')")
+    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResponseResource', 'UPDATE_OR_DELETE')")
     ServiceResult<Void> delete(Long id);
 
     @Override
