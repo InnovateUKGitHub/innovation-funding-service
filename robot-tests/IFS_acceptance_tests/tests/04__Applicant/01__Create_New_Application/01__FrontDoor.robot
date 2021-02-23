@@ -158,8 +158,7 @@ Guest user can apply to a competition
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
-    When the user clicks the button/link         link = Start new application
+    And the user select the competition and starts application   ${createApplicationOpenCompetition}
     Then the user should see the element         jQuery = p:contains("Sign in to your Innovation Funding Service account.")~ a:contains("Sign in")
     And the user should see the element          jQuery = .govuk-button:contains("Continue and create an account")
 

@@ -29,7 +29,7 @@ public class CompetitionWebTestData {
     }
 
     private static List<CompetitionLineBuilder> getCompetitionLineBuilders() {
-        List<CompetitionLineBuilder> builders = combineLists(
+        return combineLists(
                 getNonIfsLineBuilders(),
                 getReadyToOpenCompetitionLineBuilders(),
                 getOpenCompetitionLineBuilders(),
@@ -39,9 +39,7 @@ public class CompetitionWebTestData {
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
         );
-        // We set the line number because it allows us to do create unique off sets. For example with milestones.
-        IntStream.range(0, builders.size()).forEach(index -> builders.get(index).withLineNumber(index));
-        return builders;
+
     }
 
     private static List<CompetitionLineBuilder> getProjectSetupCompetitionLineBuilders() {
@@ -202,6 +200,7 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Photonics for health")
                         .withLeadTechnologist(PETER_FREEMAN_ID)
+                        .withResearchRatio(50)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.READY_TO_OPEN))
