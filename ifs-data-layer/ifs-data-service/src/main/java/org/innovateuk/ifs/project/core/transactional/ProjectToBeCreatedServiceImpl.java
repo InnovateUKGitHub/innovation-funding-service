@@ -72,6 +72,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
+    @Transactional
     public void createAllPendingProjects() {
         Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, Integer.MAX_VALUE, Direction.ASC, "application.id"));
         page.getContent().forEach(this::createProject);
