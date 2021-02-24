@@ -1,14 +1,21 @@
 package org.innovateuk.ifs.application.common.populator;
 
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisPartnerRowViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 
 @Component
 public class ApplicationSubsidyBasisModelPopulator {
@@ -18,22 +25,57 @@ public class ApplicationSubsidyBasisModelPopulator {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
-    public ApplicationSubsidyBasisViewModel populate(long applicationId, long questionId) {
-        List<Long> organisationIds = processRoleRestService.findProcessRole(applicationId).getSuccess()
-                .stream().map(processRoleResource -> processRoleResource.getOrganisationId())
-                .distinct()
-                .collect(toList());
-        return new ApplicationSubsidyBasisViewModel(isSubsidyBasisCompletedByAllOrganisations(applicationId, organisationIds, questionId));
+    @Autowired
+    private OrganisationService organisationService;
+
+    public ApplicationSubsidyBasisViewModel populate(long questionId, long applicationId) {
+        List<Long> organisationsThatHaveCompletedQuestion = organisationsThatHaveCompletedQuestion(questionId, applicationId);
+        long leadOrganisation = leadOrganisationId(applicationId);
+        List<ApplicationSubsidyBasisPartnerRowViewModel> partnerRows = organisationsForApplication(applicationId)
+                .stream()
+                .map(organisation ->
+                   new ApplicationSubsidyBasisPartnerRowViewModel(
+                           organisation.getName(),
+                           leadOrganisation == organisation.getId(),
+                           northernIslandDeclaration(organisation.getId()),
+                           questionaireResponseId(organisation.getId(), applicationId),
+                           organisationHasCompletedQuestion(organisation.getId(), organisationsThatHaveCompletedQuestion))
+                ).collect(toList());
+        return new ApplicationSubsidyBasisViewModel(partnerRows);
     }
 
-    private boolean isSubsidyBasisCompletedByAllOrganisations(long applicationId, List<Long> organisationIds, long questionId) {
-        List<Long> organisationIdsThatHaveCompletedQuestion =
-                questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)
+    private long leadOrganisationId(long applicationId){
+        return processRoleRestService.findProcessRole(applicationId).getSuccess()
+                .stream()
+                .filter(processRole -> LEADAPPLICANT.equals(processRole.getRole()))
+                .findFirst()
+                .map(ProcessRoleResource::getOrganisationId)
+                .get();
+    }
+
+    private SortedSet<OrganisationResource> organisationsForApplication(long applicationId){
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
+        return organisationService.getApplicationOrganisations(userApplicationRoles);
+    }
+
+    private List<Long> organisationsThatHaveCompletedQuestion(long questionId, long applicationId){
+        return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)
                 .getSuccess()
                 .stream()
                 .filter(questionStatus -> questionStatus.getMarkedAsComplete())
                 .map(questionStatusResource -> questionStatusResource.getMarkedAsCompleteByOrganisationId())
                 .collect(toList());
-        return organisationIdsThatHaveCompletedQuestion.containsAll(organisationIds);
+    }
+
+    private String questionaireResponseId(long organisationId, long applicationId){
+        return "";
+    }
+
+    private boolean northernIslandDeclaration(long organisationId){
+        return false;
+    }
+
+    private boolean organisationHasCompletedQuestion(long organisationId, List<Long> organisationsThatHaveCompletedQuestion){
+        return organisationsThatHaveCompletedQuestion.contains(organisationId);
     }
 }

@@ -1,15 +1,17 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
 
+import java.util.List;
+
 public class ApplicationSubsidyBasisViewModel {
 
-    private final boolean subsidyBasisCompletedByAllOrganisations;
+    private final List<ApplicationSubsidyBasisPartnerRowViewModel> partners;
 
-    public ApplicationSubsidyBasisViewModel(boolean subsidyBasisCompletedByAllOrganisations) {
-        this.subsidyBasisCompletedByAllOrganisations = subsidyBasisCompletedByAllOrganisations;
+    public ApplicationSubsidyBasisViewModel(List<ApplicationSubsidyBasisPartnerRowViewModel> partners) {
+        this.partners = partners;
     }
 
-    public boolean isSubsidyBasisCompletedByAllOrganisations() {
-        return subsidyBasisCompletedByAllOrganisations;
+    public boolean isSubsidyBasisCompletedByAllOrganisations(){
+        return partners.stream().allMatch(partner -> partner.isQuestionnareMarkedAsComplete());
     }
 }

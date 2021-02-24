@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationSubsidyBasisModelPopulator;
-import org.innovateuk.ifs.application.common.populator.ApplicationSubsidyBasisPartnerModelPopulator;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel;
@@ -19,9 +18,6 @@ import static java.util.Collections.singleton;
 public class SubsidyBasisReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<SubsidyBasisReadOnlyViewModel> {
 
     @Autowired
-    ApplicationSubsidyBasisPartnerModelPopulator applicationSubsidyBasisParnterPopulator;
-
-    @Autowired
     ApplicationSubsidyBasisModelPopulator applicationSubsidyBasisPopulator;
 
     @Override
@@ -29,8 +25,7 @@ public class SubsidyBasisReadOnlyViewModelPopulator implements QuestionReadOnlyV
         return new SubsidyBasisReadOnlyViewModel(
                 data,
                 question,
-                applicationSubsidyBasisParnterPopulator.populate(),
-                applicationSubsidyBasisPopulator.populate(data.getApplication().getId(), question.getId()));
+                applicationSubsidyBasisPopulator.populate(question.getId(), data.getApplication().getId()));
     }
 
     @Override
