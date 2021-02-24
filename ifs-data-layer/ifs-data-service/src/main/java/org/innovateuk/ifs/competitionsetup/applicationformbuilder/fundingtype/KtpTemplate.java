@@ -58,7 +58,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                     if (fecFinanceModel) {
                         financeSection.getChildSections().stream().filter(childSection ->
                                 childSection.getName().equals("Your project finances")).findAny().ifPresent(yourProjectFinancesSection ->
-                                yourProjectFinancesSection.getChildSections().add(0, fecCostsSection()));
+                                yourProjectFinancesSection.withChildSections(fecChildSections()));
                     }
                 });
 
@@ -70,12 +70,39 @@ public class KtpTemplate implements FundingTypeTemplate {
         return overrideApplicationQuestionFormInputs(competitionTypeSections);
    }
 
-    public static SectionBuilder fecCostsSection() {
-        return aSubSection()
-                .withName("Your fEC model")
-                .withType(SectionType.FEC_COSTS_FINANCES)
-                .withQuestions(newArrayList(
-                        aQuestionWithMultipleStatuses()));
+    public List<SectionBuilder> fecChildSections() {
+        return
+        newArrayList(
+                aSubSection()
+                        .withName("Your fEC model")
+                        .withType(SectionType.FEC_COSTS_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses())),
+                aSubSection()
+                        .withName("Your funding")
+                        .withType(SectionType.FUNDING_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )),
+                aSubSection()
+                        .withName("Your project costs")
+                        .withType(SectionType.PROJECT_COST_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )),
+                aSubSection()
+                        .withName("Your project location")
+                        .withType(SectionType.PROJECT_LOCATION)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )),
+                aSubSection()
+                        .withName("Your organisation")
+                        .withType(SectionType.ORGANISATION_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )))
+                ;
 
     }
 
