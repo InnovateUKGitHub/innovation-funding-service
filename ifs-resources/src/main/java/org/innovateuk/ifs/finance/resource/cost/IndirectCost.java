@@ -56,7 +56,7 @@ public class IndirectCost extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return "Indirect costs";
+        return this.getCostType().getType();
     }
 
     @Override

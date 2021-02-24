@@ -3953,6 +3953,9 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These costs are calculated automatically and paid at 100%. The calculation is 46% of the sum of 2 grant amounts:'Associate employment costs' and the 'Academic and secretarial support costs'.</p>
+                </th:block>
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total indirect costs
                     <span class="govuk-heading-s"

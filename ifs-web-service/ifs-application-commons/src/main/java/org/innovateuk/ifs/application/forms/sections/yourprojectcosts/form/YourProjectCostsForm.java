@@ -51,6 +51,8 @@ public class YourProjectCostsForm {
 
     private Boolean eligibleAgreement;
 
+    private Map<String, AcademicAndSecretarialSupportCostRowForm> academicAndSecretarialSupportCostRows = new LinkedHashMap<>();
+
     public VatForm getVatForm() {
         return vatForm;
     }
@@ -203,6 +205,14 @@ public class YourProjectCostsForm {
         this.justificationForm = justificationForm;
     }
 
+    public Map<String, AcademicAndSecretarialSupportCostRowForm> getAcademicAndSecretarialSupportCostRows() {
+        return academicAndSecretarialSupportCostRows;
+    }
+
+    public void setAcademicAndSecretarialSupportCostRows(Map<String, AcademicAndSecretarialSupportCostRowForm> academicAndSecretarialSupportCostRows) {
+        this.academicAndSecretarialSupportCostRows = academicAndSecretarialSupportCostRows;
+    }
+
     /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
@@ -288,8 +298,11 @@ public class YourProjectCostsForm {
         return BigDecimal.ZERO;
     }
 
-    public BigDecimal getTotalIndirectCosts() {
-        return BigDecimal.ZERO;
+    public BigDecimal getTotalIndirectCosts()
+    {
+        BigDecimal percentage = new BigDecimal(46);
+        return this.getTotalAssociateSalaryCosts().add(this.getTotalAcademicAndSecretarialSupportCosts())
+                .multiply(percentage).divide(new BigDecimal(100));
     }
 
     public BigDecimal getOrganisationFinanceTotal() {
