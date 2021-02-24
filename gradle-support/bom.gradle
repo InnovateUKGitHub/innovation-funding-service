@@ -1,6 +1,6 @@
 
 ext {
-    bomSpringBootVersion = '2.4.3'
+    bomSpringBootVersion = '2.4.1'
     bomSpringCloudVersion = '2020.0.1'
 }
 
