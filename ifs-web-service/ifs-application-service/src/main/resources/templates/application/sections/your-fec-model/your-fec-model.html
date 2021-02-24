@@ -42,7 +42,7 @@
               novalidate="novalidate"
               method="POST">
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fecModelEnabled')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('*{fecModelEnabled}')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}"></span>
                 </th:block>
