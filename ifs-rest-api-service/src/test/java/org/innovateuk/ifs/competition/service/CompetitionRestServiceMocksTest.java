@@ -92,6 +92,16 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
+    public void updateOtherFundingRulesTermsAndConditionsForCompetition() {
+        setupPutWithRestResultExpectations(format("%s/%d/%s/%d", COMPETITIONS_REST_URL, 123, "update-other-funding-rules-terms-and-conditions", 234), HttpStatus.OK);
+
+        RestResult<Void> response = service.updateOtherFundingRulesTermsAndConditionsForCompetition(123, 234);
+
+        assertTrue(response.isSuccess());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     public void downloadTerms() {
         long competitionId = 7;
         ByteArrayResource expectedResource = new ByteArrayResource("content".getBytes());

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -71,6 +72,9 @@ public class ProcurementTemplate implements FundingTypeTemplate {
 
     @Override
     public Competition overrideTermsAndConditions(Competition competition) {
+        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+            return competition;
+        }
         return commonBuilders.overrideTermsAndConditions(competition);
     }
 }
