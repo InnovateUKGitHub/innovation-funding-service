@@ -39,6 +39,14 @@
                 Before you can supply your funding details:
             </p>
             <ul class="govuk-list govuk-list--bullet">
+                <li th:if="${model.subsidyBasisQuestionRequired}">
+                    mark the
+                    <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.applicationId}, questionId=${model.subsidyBasisQuestionId})}"
+                       class="govuk-link">
+                        subsidy basis
+                    </a>
+                    page as complete
+                </li>-
                 <li th:if="${model.researchCategoryRequired and model.leadApplicant}">
                     mark the
                     <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.applicationId}, questionId=${model.researchCategoryQuestionId})}"

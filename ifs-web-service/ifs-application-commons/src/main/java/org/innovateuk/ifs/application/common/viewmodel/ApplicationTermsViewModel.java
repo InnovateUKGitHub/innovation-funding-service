@@ -21,6 +21,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final boolean termsAcceptedByAllOrganisations;
     private final boolean showHeaderAndFooter;
     private final boolean additionalTerms;
+    private final boolean subsidyBasisRequiredButIncomplete;
+    private final String subsidyBasisQuestionUrl;
 
     public ApplicationTermsViewModel(long applicationId,
                                      String competitionName,
@@ -32,7 +34,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String termsAcceptedByName,
                                      ZonedDateTime termsAcceptedOn,
                                      boolean termsAcceptedByAllOrganisations,
-                                     boolean additionalTerms) {
+                                     boolean additionalTerms,
+                                     boolean subsidyBasisRequiredButIncomplete,
+                                     String subsidyBasisQuestionUrl) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.competitionId = competitionId;
@@ -45,6 +49,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
         this.additionalTerms = additionalTerms;
         this.showHeaderAndFooter = true;
+        this.subsidyBasisRequiredButIncomplete = subsidyBasisRequiredButIncomplete;
+        this.subsidyBasisQuestionUrl = subsidyBasisQuestionUrl;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -67,6 +73,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.termsAcceptedOn = null;
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisation;
         this.showHeaderAndFooter = false;
+        this.subsidyBasisRequiredButIncomplete = false;
+        this.subsidyBasisQuestionUrl = null;
     }
 
     @Override
@@ -121,5 +129,13 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isAdditionalTerms() {
         return additionalTerms;
+    }
+
+    public boolean isSubsidyBasisRequiredButIncomplete() {
+        return subsidyBasisRequiredButIncomplete;
+    }
+
+    public String getSubsidyBasisQuestionUrl() {
+        return subsidyBasisQuestionUrl;
     }
 }

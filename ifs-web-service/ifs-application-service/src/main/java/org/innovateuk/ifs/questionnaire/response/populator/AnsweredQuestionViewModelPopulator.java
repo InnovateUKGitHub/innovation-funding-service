@@ -6,6 +6,7 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRest
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.AnswerTableViewModel;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.AnsweredQuestionViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,19 +32,19 @@ public class AnsweredQuestionViewModelPopulator {
     @Autowired
     private QuestionnaireResponseRestService questionnaireResponseRestService;
 
-    public List<AnsweredQuestionViewModel> allAnswers(String questionnaireResponseId) {
+    public AnswerTableViewModel allAnswers(String questionnaireResponseId, boolean readonly, String redirectUrl) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         final QuestionnaireOptionResource[] selectedOption = {null};
         List<AnsweredQuestionViewModel> answers = getAnswers(response, (q) -> true, o -> selectedOption[0] = o);
         if (selectedOption[0] != null && selectedOption[0].getDecisionType() == DecisionType.QUESTION) {
             QuestionnaireQuestionResource unansweredQuestion = questionnaireQuestionRestService.get(selectedOption[0].getDecision()).getSuccess();
-            answers.add(new AnsweredQuestionViewModel(response.getId(), unansweredQuestion.getId(), unansweredQuestion.getQuestion(), null));
+            answers.add(new AnsweredQuestionViewModel(unansweredQuestion.getId(), unansweredQuestion.getQuestion(), null));
         }
-        return answers;
+        return new AnswerTableViewModel(questionnaireResponseId, "Provided answers", answers, readonly, redirectUrl);
     }
 
-    public List<AnsweredQuestionViewModel> answersBeforeQuestion(QuestionnaireResponseResource response, QuestionnaireQuestionResource question) {
-        return getAnswers(response, q -> q.getDepth() < question.getDepth(), o -> {});
+    public AnswerTableViewModel answersBeforeQuestion(QuestionnaireResponseResource response, QuestionnaireQuestionResource question) {
+        return new AnswerTableViewModel(response.getId(), "Previous answers", getAnswers(response, q -> q.getDepth() < question.getDepth(), o -> {}), false, null);
     }
 
     private List<AnsweredQuestionViewModel> getAnswers(QuestionnaireResponseResource response, Predicate<QuestionnaireQuestionResource> filter, Consumer<QuestionnaireOptionResource> finalOptionConsumer) {
@@ -57,7 +58,7 @@ public class AnsweredQuestionViewModelPopulator {
             if (filter.test(q)) {
                 QuestionnaireQuestionResponseResource questionResponse = responses.stream().filter(r -> r.getQuestion().equals(q.getId())).findAny().orElseThrow(ObjectNotFoundException::new);
                 selectedOption = respondedOptions.stream().filter(r -> r.getId().equals(questionResponse.getOption())).findAny().orElseThrow(ObjectNotFoundException::new);
-                answeredQuestions.add(new AnsweredQuestionViewModel(response.getId(), q.getId(), q.getQuestion(), selectedOption.getText()));
+                answeredQuestions.add(new AnsweredQuestionViewModel(q.getId(), q.getQuestion(), selectedOption.getText()));
             }
         }
         finalOptionConsumer.accept(selectedOption);

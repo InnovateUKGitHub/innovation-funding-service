@@ -49,7 +49,7 @@
             <button class="govuk-button" type="submit">Submit</button>
         </form>
 
-        <th:block th:insert="questionnaire/fragments :: answer-table('Previous answers', ${model.previousQuestions}, ${false})" />
+        <th:block th:insert="questionnaire/fragments :: answer-table(${model.previousQuestions})" />
 
     </main>
 </div>

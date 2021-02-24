@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.AnswerTableViewModel;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.AnsweredQuestionViewModel;
 
-import java.util.List;
 import java.util.Objects;
 
 public class ApplicationQuestionQuestionnaireViewModel {
@@ -17,9 +17,9 @@ public class ApplicationQuestionQuestionnaireViewModel {
     private final boolean complete;
     private final Boolean northernIrelandDeclaration;
     private final String questionnaireResponseId;
-    private final List<AnsweredQuestionViewModel> answers;
+    private final AnswerTableViewModel answers;
 
-    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, Boolean northernIrelandDeclaration, String questionnaireResponseId, List<AnsweredQuestionViewModel> answers) {
+    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, Boolean northernIrelandDeclaration, String questionnaireResponseId, AnswerTableViewModel answers) {
         this.applicationId = application.getId();
         this.applicationName = application.getName();
         this.questionId = question.getId();
@@ -68,7 +68,7 @@ public class ApplicationQuestionQuestionnaireViewModel {
         return questionnaireResponseId;
     }
 
-    public List<AnsweredQuestionViewModel> getAnswers() {
+    public AnswerTableViewModel getAnswers() {
         return answers;
     }
 
@@ -77,12 +77,12 @@ public class ApplicationQuestionQuestionnaireViewModel {
     }
 
     public boolean navigateStraightToQuestionnaireWelcome() {
-        return !isReadOnly() && getAnswers().isEmpty();
+        return !isReadOnly() && getAnswers().getQuestions().isEmpty();
     }
 
     public boolean allQuestionsAnswered() {
-        return !getAnswers().isEmpty()
-                && getAnswers().stream()
+        return !getAnswers().getQuestions().isEmpty()
+                && getAnswers().getQuestions().stream()
                 .map(AnsweredQuestionViewModel::getAnswer)
                 .noneMatch(Objects::isNull);
     }
