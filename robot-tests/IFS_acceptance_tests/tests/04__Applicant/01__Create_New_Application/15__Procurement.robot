@@ -46,6 +46,7 @@ ${ods_file}                   file_example_ODS.ods
 ${excel_file}                 testing.xlsx
 ${pdf_file}                   testing.pdf
 ${multiple_choice_answer}     option2
+${org_ID}                     116
 
 
 *** Test Cases ***
@@ -199,14 +200,29 @@ Internal user generate the contract
     Then Lead applicant upload the contract
     And the internal user approve the contract               ${ProjectID}
 
-Project finance makes changes to the project milestones
+Internal user makes changes to the finance payment milestones
     [Documentation]   IFS-8944
     Given Requesting SBRI Project ID of this Project
-    And log in as a different user                           &{becky_mason_credentials}
-    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_ProjectID}/finance-check/organisation/116/procurement-milestones
-    And the user makes changes to the payment milestone table
-    Then the user should see the element    jQuery = td:contains("12,523") ~ td:contains("- 100")
-    And the user should see the element     jQuery = td:contains("12,121") ~ td:contains("+ 100")
+    And log in as a different user                           &{ifs_admin_user_credentials}
+    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/procurement-milestones
+    And the user makes changes to the payment milestones table
+    Then the user should see the element                     jQuery = td:contains("12,523") ~ td:contains("- 100")
+    And the user should see the element                      jQuery = td:contains("12,121") ~ td:contains("+ 100")
+
+Internal user makes changes to project finances
+    [Documentation]   IFS-8944
+    Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility?financeType=SUBCONTRACTING_COSTS
+    When the user makes changes to the project finances
+    And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/116/eligibility/changes
+    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10000)
+    And the user should see the element                     jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10000)
+
+Applicant can view changes made to project finances
+    [Documentation]  IFS-8944
+    Given Log in as a different user                        &{becky_mason_credentials}
+    When the user navigates to the page                     ${server}/project-setup/project/${SBRI_projectID}/finance-check
+    And the user clicks the button/link                     link = view any changes to finances
+    Then the user should see all project finance changes
 
 *** Keywords ***
 Custom Suite Setup
@@ -321,7 +337,7 @@ the user checks the VAT calculations
     the user clicks the button/link                link = Your project finances
 
 the user completes the project details
-    log in as a different user                   &{RTO_lead_applicant_credentials}
+    log in as a different user                    &{RTO_lead_applicant_credentials}
     the user navigates to the page                ${server}/project-setup/project/${ProjectID}
     the user clicks the button/link               link = view application feedback
     the user clicks the button/link               jQuery = button:contains("Technical approach")
@@ -343,13 +359,32 @@ Requesting SBRI Project ID of this Project
     Set suite variable    ${SBRI_ProjectID}
 
 the user makes changes to the payment milestones table
-    clear element text                  jQuery = input:contains("12263")
-    input text                          id = milestones[7].payment  12163
-    clear element text                  jQuery = input:contains("12021")
+    the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/procurement-milestones?editMilestones=true
+    clear element text                  id = milestones[7].payment
+    input text                          id = milestones[7].payment  12523
+    clear element text                  id = milestones[8].payment
     input text                          id = milestones[8].payment  12121
     the user clicks the button/link     jQuery = button:contains("Save and return to payment milestone check")
-    the user navigates to the page      ${server}/project-setup-management/project/57/finance-check/organisation/116/eligibility/changes
+    the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility/changes
 
+the user makes changes to the project finances
+    the user clicks the button/link     id = accordion-finances-heading-5
+    clear element text                  id = subcontractingRows[9455].cost
+    input text                          id = subcontractingRows[9455].cost  80000
+    the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/button
+    the user clicks the button/link     id = accordion-finances-heading-7
+    the user clicks the button/link     xpath = //*[@id="accordion-finances-content-7"]/div[2]/a
+    clear element text                  id = otherRows[9457].estimate
+    clear element text                  id = otherRows[9457].description
+    input text                          id = otherRows[9457].estimate       11100
+    input text                          id = otherRows[9457].description    Some other costs
+    the user clicks the button/link     xpath = //*[@id="accordion-finances-content-7"]/div[2]/button
+
+the user should see all project finance changes
+    the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10000)
+    the user should see the element                    jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10000)
+    the user should see the element                    jQuery = td:contains("12,523") ~ td:contains("- 100")
+    the user should see the element                    jQuery = td:contains("12,121") ~ td:contains("+ 100")
 
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
