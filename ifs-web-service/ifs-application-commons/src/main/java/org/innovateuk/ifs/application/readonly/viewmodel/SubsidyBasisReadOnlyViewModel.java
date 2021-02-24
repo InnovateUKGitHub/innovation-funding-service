@@ -14,5 +14,11 @@ public class SubsidyBasisReadOnlyViewModel extends AbstractQuestionReadOnlyViewM
         return "subsidy-basis";
     }
 
+    @Override
+    public boolean shouldDisplayActions() {
+        return false;
+    }
+
+
 }
 
