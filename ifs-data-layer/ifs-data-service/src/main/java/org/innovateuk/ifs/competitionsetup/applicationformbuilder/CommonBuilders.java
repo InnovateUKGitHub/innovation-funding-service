@@ -82,12 +82,6 @@ public class CommonBuilders {
                                 .withType(SectionType.FINANCE)
                                 .withChildSections(newArrayList(
                                         aSubSection()
-                                                .withName("Your funding")
-                                                .withType(SectionType.FUNDING_FINANCES)
-                                                .withQuestions(newArrayList(
-                                                        aQuestionWithMultipleStatuses()
-                                                )),
-                                        aSubSection()
                                                 .withName("Your project costs")
                                                 .withType(SectionType.PROJECT_COST_FINANCES)
                                                 .withQuestions(newArrayList(
@@ -102,6 +96,12 @@ public class CommonBuilders {
                                         aSubSection()
                                                 .withName("Your organisation")
                                                 .withType(SectionType.ORGANISATION_FINANCES)
+                                                .withQuestions(newArrayList(
+                                                        aQuestionWithMultipleStatuses()
+                                                )),
+                                        aSubSection()
+                                                .withName("Your funding")
+                                                .withType(SectionType.FUNDING_FINANCES)
                                                 .withQuestions(newArrayList(
                                                         aQuestionWithMultipleStatuses()
                                                 ))

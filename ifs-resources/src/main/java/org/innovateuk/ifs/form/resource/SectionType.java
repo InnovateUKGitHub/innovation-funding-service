@@ -41,8 +41,14 @@ public enum SectionType {
     public boolean isSectionTypeNotRequiredForOrganisationAndCompetition(ApplicationConfiguration competition, OrganisationTypeEnum organisationType, boolean lead) {
         if (competition.isKtp()) {
             if (lead) {
+                if (this == FEC_COSTS_FINANCES) {
+                    return false;
+                }
                 return this == ORGANISATION_FINANCES;
             } else {
+                if (this == FEC_COSTS_FINANCES) {
+                    return true;
+                }
                 return this == PROJECT_COST_FINANCES;
             }
         }
