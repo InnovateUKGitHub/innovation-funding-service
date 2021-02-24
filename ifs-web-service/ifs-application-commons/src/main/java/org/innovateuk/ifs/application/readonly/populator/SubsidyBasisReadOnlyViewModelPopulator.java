@@ -25,7 +25,7 @@ public class SubsidyBasisReadOnlyViewModelPopulator implements QuestionReadOnlyV
         return new SubsidyBasisReadOnlyViewModel(
                 data,
                 question,
-                applicationSubsidyBasisPopulator.populate(question.getId(), data.getApplication().getId()));
+                applicationSubsidyBasisPopulator.populate(question, data.getApplication().getId()));
     }
 
     @Override

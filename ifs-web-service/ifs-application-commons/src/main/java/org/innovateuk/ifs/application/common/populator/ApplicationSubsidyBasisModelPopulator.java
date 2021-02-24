@@ -3,8 +3,11 @@ package org.innovateuk.ifs.application.common.populator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisPartnerRowViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -28,9 +31,11 @@ public class ApplicationSubsidyBasisModelPopulator {
     private OrganisationService organisationService;
     @Autowired
     private FinanceService financeService;
+    @Autowired
+    private QuestionnaireResponseLinkRestService questionnaireResponseLinkRestService;
 
-    public ApplicationSubsidyBasisViewModel populate(long questionId, long applicationId) {
-        List<Long> organisationsThatHaveCompletedQuestion = organisationsThatHaveCompletedQuestion(questionId, applicationId);
+    public ApplicationSubsidyBasisViewModel populate(QuestionResource question, long applicationId) {
+        List<Long> organisationsThatHaveCompletedQuestion = organisationsThatHaveCompletedQuestion(question.getId(), applicationId);
         long leadOrganisation = leadOrganisationId(applicationId);
         List<ApplicationSubsidyBasisPartnerRowViewModel> partnerRows = organisationsForApplication(applicationId)
                 .stream()
@@ -39,7 +44,7 @@ public class ApplicationSubsidyBasisModelPopulator {
                            organisation.getName(),
                            leadOrganisation == organisation.getId(),
                            northernIslandDeclaration(organisation.getId(), applicationId),
-                           questionaireResponseId(organisation.getId(), applicationId),
+                           questionnaireResponseId(question.getQuestionnaireId(), organisation.getId(), applicationId),
                            organisationHasCompletedQuestion(organisation.getId(), organisationsThatHaveCompletedQuestion))
                 ).collect(toList());
         return new ApplicationSubsidyBasisViewModel(partnerRows);
@@ -68,8 +73,11 @@ public class ApplicationSubsidyBasisModelPopulator {
                 .collect(toList());
     }
 
-    private String questionaireResponseId(long organisationId, long applicationId){
-        return "TODO";
+    private String questionnaireResponseId(long questionnaireId, long organisationId, long applicationId){
+        return questionnaireResponseLinkRestService.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(questionnaireId, applicationId, organisationId)
+                .getSuccess()
+                .getContent();
+
     }
 
     private Boolean northernIslandDeclaration(long organisationId, long applicationId){
