@@ -12,6 +12,6 @@ public class ApplicationSubsidyBasisViewModel {
     }
 
     public boolean isSubsidyBasisCompletedByAllOrganisations(){
-        return partners.stream().allMatch(partner -> partner.isQuestionnareMarkedAsComplete());
+        return partners.stream().allMatch(partner -> partner.isQuestionnaireMarkedAsComplete());
     }
 }

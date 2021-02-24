@@ -72,7 +72,7 @@ public class ApplicationSubsidyBasisModelPopulator {
         return "TODO";
     }
 
-    private boolean northernIslandDeclaration(long organisationId, long applicationId){
+    private Boolean northernIslandDeclaration(long organisationId, long applicationId){
         return financeService.getApplicationFinanceByApplicationIdAndOrganisationId(applicationId, organisationId).getNorthernIrelandDeclaration();
     }
 
