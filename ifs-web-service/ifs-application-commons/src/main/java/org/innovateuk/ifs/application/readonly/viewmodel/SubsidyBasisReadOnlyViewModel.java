@@ -5,8 +5,6 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 
 public class SubsidyBasisReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
-
-     // TODO additional data
     public SubsidyBasisReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         super(data, question);
     }
