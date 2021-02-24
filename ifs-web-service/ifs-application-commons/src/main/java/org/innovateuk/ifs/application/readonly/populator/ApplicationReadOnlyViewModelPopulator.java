@@ -109,6 +109,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         Future<List<SupporterAssignmentResource>> supporterResponseFuture = async(() -> getSupporterFeedbackResponses(application, settings));
 
+
         List<ProcessRoleResource> processRoles = resolve(processRolesFuture);
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, processRoles,
