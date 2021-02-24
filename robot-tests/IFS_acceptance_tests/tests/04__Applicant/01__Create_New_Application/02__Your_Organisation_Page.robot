@@ -17,6 +17,9 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
+*** Variables ***
+&{WebTestUserCredentials}          email=Test@hampshire.co.uk    password=${short_password}
+
 *** Test Cases ***
 # TODO  should be implemented with IFS-7724
 #Not in Companies House: Enter details manually link
@@ -95,10 +98,10 @@ Companies House: No content message should be displayed when the search results 
 
 Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
     [Documentation]    IFS-9156
-    Given the user clicks the button/link       link = Sign in
-    and logging in and error checking           Test@hampshire.co.uk   Passw0rd1357
-    and the user navigates to the page          ${server}/organisation/select
-    When the user clicks the button/link        jQuery = button:contains("Save and continue")
+    Given the user clicks the button/link                link = Sign in
+    and logging in and error checking                    &{WebTestUserCredentials}
+    and the user navigates to the page                   ${server}/organisation/select
+    When the user clicks the button/link                 jQuery = button:contains("Save and continue")
     Then the user can see organisation details in db
 
 
@@ -134,5 +137,5 @@ the user can see organisation details in db
     Connect to Database    @{database}
     ${result} =  get details of existing organisation
     log   ${result}
-    Should Be Empty                        ${result}
+    Should not Be Empty     ${result}
 
