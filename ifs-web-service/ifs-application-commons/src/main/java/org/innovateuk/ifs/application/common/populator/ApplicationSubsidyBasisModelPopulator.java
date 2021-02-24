@@ -19,15 +19,16 @@ public class ApplicationSubsidyBasisModelPopulator {
     private QuestionStatusRestService questionStatusRestService;
 
     public ApplicationSubsidyBasisViewModel populate(long applicationId, long questionId) {
-        List<Long> organsationIds = processRoleRestService.findProcessRole(applicationId).getSuccess()
+        List<Long> organisationIds = processRoleRestService.findProcessRole(applicationId).getSuccess()
                 .stream().map(processRoleResource -> processRoleResource.getOrganisationId())
                 .distinct()
                 .collect(toList());
-        return new ApplicationSubsidyBasisViewModel(isSubsidyBasisCompletedByAllOrganisations(applicationId, organsationIds, questionId));
+        return new ApplicationSubsidyBasisViewModel(isSubsidyBasisCompletedByAllOrganisations(applicationId, organisationIds, questionId));
     }
 
     private boolean isSubsidyBasisCompletedByAllOrganisations(long applicationId, List<Long> organisationIds, long questionId) {
-        List<Long> organisationIdsThatHaveCompletedQuestion = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)
+        List<Long> organisationIdsThatHaveCompletedQuestion =
+                questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId)
                 .getSuccess()
                 .stream()
                 .filter(questionStatus -> questionStatus.getMarkedAsComplete())
