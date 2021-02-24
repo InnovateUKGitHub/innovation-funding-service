@@ -58,7 +58,7 @@
                 </div>
             </th:block>
 
-            <th:block th:insert="questionnaire/fragments :: answer-table('Provided answers', ${model.answers}, ${model.readOnly})" />
+            <th:block th:insert="questionnaire/fragments :: answer-table(${model.answers})" />
 
             <!--/* Read only template */-->
             <th:block th:if="${model.readOnly}">

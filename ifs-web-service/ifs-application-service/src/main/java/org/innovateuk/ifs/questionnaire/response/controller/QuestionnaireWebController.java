@@ -91,7 +91,12 @@ public class QuestionnaireWebController {
                            HttpServletRequest request,
                            UserResource user,
                            @PathVariable String questionnaireResponseId,
-                           @PathVariable long questionId) {
+                           @PathVariable long questionId,
+                            @RequestParam(required = false) String redirectUrl,
+                           HttpServletResponse httpServletResponse) {
+        if (redirectUrl != null) {
+            encryptedCookieService.saveToCookie(httpServletResponse, REDIRECT_URL_COOKIE_KEY, redirectUrl);
+        }
         QuestionnaireQuestionForm form = new QuestionnaireQuestionForm();
         questionnaireQuestionResponseRestService.findByQuestionnaireQuestionIdAndQuestionnaireResponseId(questionId, questionnaireResponseId)
                 .toOptionalIfNotFound()

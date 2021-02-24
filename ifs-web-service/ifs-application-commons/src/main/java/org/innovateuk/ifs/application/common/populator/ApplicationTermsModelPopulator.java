@@ -4,15 +4,19 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -24,26 +28,20 @@ import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 @Component
 public class ApplicationTermsModelPopulator {
 
+    @Autowired
     private ApplicationRestService applicationRestService;
+    @Autowired
     private CompetitionRestService competitionRestService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private ProcessRoleRestService processRoleRestService;
+    @Autowired
     private OrganisationService organisationService;
+    @Autowired
     private QuestionStatusRestService questionStatusRestService;
-
-    public ApplicationTermsModelPopulator(ApplicationRestService applicationRestService,
-                                          CompetitionRestService competitionRestService,
-                                          SectionService sectionService,
-                                          ProcessRoleRestService processRoleRestService,
-                                          OrganisationService organisationService,
-                                          QuestionStatusRestService questionStatusRestService) {
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.sectionService = sectionService;
-        this.processRoleRestService = processRoleRestService;
-        this.organisationService = organisationService;
-        this.questionStatusRestService = questionStatusRestService;
-    }
+    @Autowired
+    private QuestionRestService questionRestService;
 
     public ApplicationTermsViewModel populate(UserResource currentUser,
                                               long applicationId,
@@ -73,6 +71,8 @@ public class ApplicationTermsModelPopulator {
                         .map(QuestionStatusResource::getMarkedAsCompleteOn)
                         .orElse(null);
 
+                Optional<String> subsidyBasisUrl = subsidyBasisUrl(application, competition, organisation.get());
+
                 return new ApplicationTermsViewModel(
                         applicationId,
                         competition.getName(),
@@ -84,7 +84,9 @@ public class ApplicationTermsModelPopulator {
                         termsAcceptedByName,
                         termsAcceptedOn,
                         isAllOrganisationsTermsAccepted(applicationId, competition.getId()),
-                        additionalTerms);
+                        additionalTerms,
+                        subsidyBasisUrl.isPresent(),
+                        subsidyBasisUrl.orElse(null));
             }
         }
 
@@ -96,6 +98,31 @@ public class ApplicationTermsModelPopulator {
                 competition.getTermsAndConditions().getTemplate(),
                 application.isCollaborativeProject(),
                 isAllOrganisationsTermsAccepted(applicationId, competition.getId()), additionalTerms);
+    }
+
+    private Optional<String> subsidyBasisUrl(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {
+        if (competition.isFinanceType()) {
+            Optional<QuestionResource> subsidyBasisQuestion = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.SUBSIDY_BASIS)
+                    .toOptionalIfNotFound()
+                    .getSuccess();
+            if (subsidyBasisQuestion.isPresent()) {
+                Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
+                        questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                                subsidyBasisQuestion.get().getId(), application.getId(), organisation.getId()).getSuccess();
+
+                boolean subsidyComplete = optionalMarkedAsCompleteQuestionStatus
+                        .map(QuestionStatusResource::getMarkedAsComplete)
+                        .orElse(false);
+
+                boolean subsidyBasisRequiredButIncomplete = !subsidyComplete;
+
+                if (subsidyBasisRequiredButIncomplete) {
+                    return Optional.of(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.get().getId()));
+                }
+
+            }
+        }
+        return Optional.empty();
     }
 
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
