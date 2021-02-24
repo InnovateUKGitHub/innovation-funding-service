@@ -20,13 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
@@ -203,6 +203,9 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
+        organisationForm.setSicCodes(organisationForm.getSicCodes()
+                .stream().filter(sicCode -> sicCode.getSicCode() != null)
+                .collect(Collectors.toList()));
 
         organisationForm.getAddressForm().validateAction(bindingResult);
         if (validationHandler.hasErrors()) {
