@@ -40,7 +40,8 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 
 /**
  * The Controller for the "Your FEC Costs" page in the Application Form process.
@@ -117,27 +118,17 @@ public class YourFECCostsController {
             ValidationHandler validationHandler,
             Model model) {
 
-        Supplier<String> failureHandler = () -> {
-            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, loggedInUser);
-            model.addAttribute("model", viewModel);
-            model.addAttribute("form", form);
-            return VIEW_PAGE;
-        };
-
-        Supplier<String> successHandler = () -> {
-
+        Supplier<String> successView = () -> redirectToYourFinances(applicationId);
+        Supplier<String> failureView = () ->  viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
             updateFECModelEnabled(applicationId, organisationId, form);
-
-            ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-            ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
-            validationHandler.addAnyErrors(validationMessages);
-
-            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToYourFinances(applicationId));
-        };
-
-        return validationHandler.
-                addAnyErrors(validateFECModelEnabled(bindingResult, organisationId, form)).
-                failNowOrSucceedWith(failureHandler, successHandler);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                validationHandler.addAnyErrors(
+                        sectionService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, loggedInUser.getId()).getId()),
+                        mappingErrorKeyToField("validation.application.fec.upload.required", "fecCertificateFile"), defaultConverters());
+                return validationHandler.failNowOrSucceedWith(failureView, successView);
+            });
+        });
     }
 
     @PostMapping(params = "mark-as-incomplete")
@@ -176,7 +167,7 @@ public class YourFECCostsController {
                                 BindingResult bindingResult) throws IOException {
         ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
         MultipartFile fecCertificateFile = form.getFecCertificateFile();
-        RestResult<FileEntryResource> result = applicationFinanceRestService.addFinanceDocument(finance.getId(), fecCertificateFile.getContentType(),
+        RestResult<FileEntryResource> result = applicationFinanceRestService.addFECCertificateFile(finance.getId(), fecCertificateFile.getContentType(),
                 fecCertificateFile.getSize(), fecCertificateFile.getOriginalFilename(), fecCertificateFile.getBytes());
         if(result.isFailure()) {
             result.getErrors().forEach(error ->
@@ -190,9 +181,17 @@ public class YourFECCostsController {
         return VIEW_PAGE;
     }
 
-    // Note: intentionally added since we need to do file upload in the same page and may need some validations there.
-    private List<Error> validateFECModelEnabled(Errors errors, Long organisationId, YourFECModelForm form) {
-        return Collections.emptyList();
+    @PostMapping(params = "remove_fecCertificateFile")
+    @AsyncMethod
+    public String removeFECCertificateFile(Model model,
+                                UserResource user,
+                                @PathVariable long applicationId,
+                                @PathVariable long organisationId,
+                                @PathVariable long sectionId,
+                                @ModelAttribute("form") YourFECModelForm form) {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        applicationFinanceRestService.removeFECCertificateFile(finance.getId());
+        return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
     private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
@@ -209,5 +208,9 @@ public class YourFECCostsController {
 
     private String redirectToYourFinances(long applicationId) {
         return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
+    }
+
+    private ProcessRoleResource getProcessRole(long applicationId, long userId) {
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
     }
 }

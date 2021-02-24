@@ -103,4 +103,21 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
         return getWithRestResult(url, FileEntryResource.class);
     }
+
+    @Override
+    public RestResult<FileEntryResource> addFECCertificateFile(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file) {
+        String url = applicationFinanceRestURL + "/fec-certificate-file" +
+                "?applicationFinanceId=" + applicationFinanceId +
+                "&filename=" + originalFilename;
+
+        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
+        return postWithRestResult(url, file, headers, FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Void> removeFECCertificateFile(Long applicationFinanceId) {
+        String url = applicationFinanceRestURL + "/fec-certificate-file" +
+                "?applicationFinanceId=" + applicationFinanceId;
+        return deleteWithRestResult(url);
+    }
 }

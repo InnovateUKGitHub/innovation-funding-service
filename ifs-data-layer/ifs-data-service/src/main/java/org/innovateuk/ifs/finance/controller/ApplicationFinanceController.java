@@ -138,4 +138,25 @@ public class ApplicationFinanceController {
                 andOnSuccessReturn(FileAndContents::getFileEntry).
                 toGetResponse();
     }
+
+    @PostMapping(value = "/fec-certificate-file", produces = "application/json")
+    public RestResult<FileEntryResource> addFECCertificateFile(
+            @RequestHeader(value = "Content-Type", required = false) String contentType,
+            @RequestHeader(value = "Content-Length", required = false) String contentLength,
+            @RequestParam(value = "applicationFinanceId") long applicationFinanceId,
+            @RequestParam(value = "filename", required = false) String originalFilename,
+            HttpServletRequest request) {
+
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
+                financeFileEntryService.createFECFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+    }
+
+    @DeleteMapping(value = "/fec-certificate-file", produces = "application/json")
+    public RestResult<Void> deleteFECCertificateFileEntry(
+            @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
+
+        ServiceResult<Void> deleteResult = financeFileEntryService.deleteFECCertificateFileEntry(applicationFinanceId);
+        return deleteResult.toDeleteResponse();
+    }
+
 }

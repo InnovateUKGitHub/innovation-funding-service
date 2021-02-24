@@ -197,4 +197,28 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
         return applicationFinance.map(af -> af.getFinanceFileEntry() == null).orElse(true);
     }
+
+    @Override
+    public ValidationMessages validateFECCertificateUpload(Application application, Long markedAsCompleteById) {
+        return getProcessRole(markedAsCompleteById).andOnSuccessReturn(role -> {
+            OrganisationResource organisation = organisationService.findById(role.getOrganisationId()).getSuccess();
+              if (isFECCertificateNotUploaded(application, organisation)) {
+                    return new ValidationMessages(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
+                }
+            return noErrors();
+        }).getSuccess();
+    }
+
+    private boolean isFECCertificateNotUploaded(Application application, OrganisationResource organisation) {
+        List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
+       if (applicationFinances == null) {
+            return false;
+        }
+        Optional<ApplicationFinance> applicationFinance =
+                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.getId()));
+         if (applicationFinance.get().getFecModelEnabled()) {
+             return applicationFinance.map(af -> af.getFecFileEntry() == null).orElse(true);
+         }
+         return false;
+    }
 }

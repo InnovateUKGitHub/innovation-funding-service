@@ -23,6 +23,12 @@
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:attr="data-autosave='autosaveFormPost'"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST">
 
         <th:block
             th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
@@ -32,24 +38,18 @@
 
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
             Will you be using the full economic costing (fEC) funding model?
+            <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">Yes</h3>
         </legend>
 
         <th:block
-            th:insert="question-type/form-elements :: form-hint (hint='This is very important for calculating your project costs.')"/>
-
-        <form th:object="${form}"
-              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave='autosaveFormPost'"
-              enctype="multipart/form-data"
-              novalidate="novalidate"
-              method="POST">
-
-            <div class="govuk-form-group">
+            th:unless="${model.readOnly}" ? th:insert="question-type/form-elements :: form-hint (hint='This is very important for calculating your project costs.')"/>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fecModelEnabled')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('*{fecModelEnabled}')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}"></span>
                 </th:block>
-                <div class="govuk-radios">
-                    <div class="govuk-radios__item" data-target="upload-fec"
+            </div>
+            <div class="govuk-radios">
+                    <div th:unless="${model.readOnly}" class="govuk-radios__item" data-target="upload-fec"
                          data-target-clear-validation="true" data-target-clear-form="true">
                         <input class="govuk-radios__input"
                                th:field="*{fecModelEnabled}"
@@ -61,16 +61,17 @@
                             Yes
                         </label>
                     </div>
-                    <div id="upload-fec" class="upload-section ">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                            Upload your fEC certificate
-                        </legend>
-                        <p class="govuk-body  govuk-!-margin-top-1">You must upload your fEC certificate before you can mark this page as complete.
+                    <th:block>
+                        <div id="upload-fec" class="upload-section ">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"  th:unless="${model.readOnly}">
+                                     Upload your fEC certificate
+                            </legend>
+                            <p class="govuk-body  govuk-!-margin-top-1"  th:unless="${model.readOnly}">You must upload your fEC certificate before you can mark this page as complete.
                                                                     We need this to verify your fEC funding model. </p>
-                        <details class="govuk-details govuk-!-margin-bottom-1" role="group">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">What can I upload?</span>
-                            </summary>
+                            <details class="govuk-details govuk-!-margin-bottom-1" role="group"  th:unless="${model.readOnly}">
+                                <summary class="govuk-details__summary">
+                                    <span class="govuk-details__summary-text">What can I upload?</span>
+                                </summary>
                             <div class="govuk-details__text">
                                 <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your fEC certificate must be:</p>
                                 <ul class="govuk-list govuk-list--bullet">
@@ -79,6 +80,7 @@
                                 </ul>
                             </div>
                         </details>
+                        <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
                         <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
                                     ${model.financesUrl},
                                     ${form.fecCertificateFileName},
@@ -87,9 +89,10 @@
                                     true,
                                     remove_fecCertificateFile,
                                     upload_fecCertificateFile)"/>
-                    </div>
-                </div>
-                    <div class="govuk-radios__item">
+                        </div>
+                    </th:block>
+
+                    <div th:unless="${model.readOnly}" class="govuk-radios__item">
                         <input class="govuk-radios__input"
                                th:field="*{fecModelEnabled}"
                                id="fecModelEnabled-no"
@@ -104,7 +107,7 @@
                 </div>
             <div class="form-footer" th:if="${model.open}">
                 <div class="form-footer__actions">
-                    <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
+                    <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
                     <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete"
