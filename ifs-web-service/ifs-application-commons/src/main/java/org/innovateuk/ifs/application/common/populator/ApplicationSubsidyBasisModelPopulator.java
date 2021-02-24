@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisPartnerRowViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,10 @@ public class ApplicationSubsidyBasisModelPopulator {
     private ProcessRoleRestService processRoleRestService;
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
-
     @Autowired
     private OrganisationService organisationService;
+    @Autowired
+    private FinanceService financeService;
 
     public ApplicationSubsidyBasisViewModel populate(long questionId, long applicationId) {
         List<Long> organisationsThatHaveCompletedQuestion = organisationsThatHaveCompletedQuestion(questionId, applicationId);
@@ -37,7 +38,7 @@ public class ApplicationSubsidyBasisModelPopulator {
                    new ApplicationSubsidyBasisPartnerRowViewModel(
                            organisation.getName(),
                            leadOrganisation == organisation.getId(),
-                           northernIslandDeclaration(organisation.getId()),
+                           northernIslandDeclaration(organisation.getId(), applicationId),
                            questionaireResponseId(organisation.getId(), applicationId),
                            organisationHasCompletedQuestion(organisation.getId(), organisationsThatHaveCompletedQuestion))
                 ).collect(toList());
@@ -68,11 +69,11 @@ public class ApplicationSubsidyBasisModelPopulator {
     }
 
     private String questionaireResponseId(long organisationId, long applicationId){
-        return "";
+        return "TODO";
     }
 
-    private boolean northernIslandDeclaration(long organisationId){
-        return false;
+    private boolean northernIslandDeclaration(long organisationId, long applicationId){
+        return financeService.getApplicationFinanceByApplicationIdAndOrganisationId(applicationId, organisationId).getNorthernIrelandDeclaration();
     }
 
     private boolean organisationHasCompletedQuestion(long organisationId, List<Long> organisationsThatHaveCompletedQuestion){
