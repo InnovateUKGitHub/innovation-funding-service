@@ -105,6 +105,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         long applicationId = 1L;
         String emailMessage = "message";
         Application application = newApplication()
+                .withId(applicationId)
                 .withCompetition(newCompetition().withFundingType(FundingType.KTP).build())
                 .build();
         ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(application, emailMessage);
