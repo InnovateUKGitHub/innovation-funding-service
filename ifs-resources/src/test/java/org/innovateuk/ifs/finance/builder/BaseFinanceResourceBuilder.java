@@ -233,6 +233,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         );
     }
 
+    public S withEmptyIndirectCosts() {
+        return withFinanceOrganisationDetails(asMap(
+                FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory()
+                        .build())
+        );
+    }
+
     public S withAcademicCosts() {
         return withFinanceOrganisationDetails(asMap(
                 FinanceRowType.YOUR_FINANCE, newDefaultCostCategory().withCosts(
