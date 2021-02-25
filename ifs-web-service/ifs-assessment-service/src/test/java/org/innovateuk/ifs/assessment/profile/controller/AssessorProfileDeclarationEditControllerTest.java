@@ -956,7 +956,7 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("familyFinancialInterests"));
-        assertEquals("Please enter your family''s financial interests.", bindingResult.getFieldError("familyFinancialInterests").getDefaultMessage());
+        assertEquals("Please enter your family's financial interests.", bindingResult.getFieldError("familyFinancialInterests").getDefaultMessage());
 
         verifyZeroInteractions(userService);
     }
