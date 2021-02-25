@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -34,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<YourFECModelController> {
 
     @Mock
-    private CommonYourFinancesViewModelPopulator commonYourFinancesViewModelPopulatorMock;
+    private YourFECViewModelPopulator YourFECViewModelPopulatorMock;
 
     @Mock
     private YourFECModelFormPopulator formPopulatorMock;
@@ -82,7 +83,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
-        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(yourFECViewModel);
+        when(YourFECViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(yourFECViewModel);
 
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/your-fec-model/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId))
