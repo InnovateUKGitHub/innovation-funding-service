@@ -325,14 +325,26 @@ New lead applicant completes the KTP application
     And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
-New lead applicant marks Your fEC model section as complete if No is selected
+New lead applicant is shown a validation error when marking a non-selected option as complete for the organisation's fEC model type
      [Documentation]  IFS-9239
-     Given the user clicks the button/link                                   link = Your project finances
-     And the user clicks the button/link                                     link = Your fEC costs
-#     And the user clicks the button/link                                     link = Your fEC model
-     And the user should see the element                                     jQuery = h1:contains("Your fEC Model")
-     When the user checks fEC model validation
-     Then the user marks fEc model section as complete if no is selected
+     Given the user clicks the button/link                     link = Your project finances
+     When the user clicks the button/link                      link = Your fEC model
+     And the user should see the element                       jQuery = h1:contains("Your fEC model")
+     Then the user sees fEC model validation error message
+
+New lead applicant can make a 'No' selection for the organisation's fEC model and save the selection
+     [Documentation]  IFS-9239
+     Given the user selects the radio button          fecModelEnabled  fecModelEnabled-no
+     And the user clicks the button/link              link = Back to your project finances
+     And the user sees the selection is not saved
+     When the user selects the radio button           fecModelEnabled  fecModelEnabled-no
+     And the user clicks the button/link              jQuery = button:contains("Save and return to project finances")
+     Then the user sees the selection is saved
+
+New lead applicant can mark Your fEC model section as complete if 'No' is selected
+     [Documentation]  IFS-9239
+     When the user clicks the button/link     jQuery = button:contains("Mark as complete")
+     Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
@@ -1021,13 +1033,9 @@ the lead applicant marks the KTP project costs & project location as complete
     the user enters the project location
     the user clicks the button/link          link = Back to application overview
 
-the user checks fEC model validation
+the user sees fEC model validation error message
      the user clicks the button/link                   jQuery = button:contains("Mark as complete")
      the user should see a field and summary error     You must select an option.
-
-the user marks fEc model section as complete if no is selected
-     the user selects the radio button     fecModelEnabled  fecModelEnabled-no
-     the user clicks the button/link       jQuery = button:contains("Mark as complete")
 
 the partner applicant marks the KTP project location & organisation information as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
@@ -1284,10 +1292,9 @@ the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
 the user should see KTP finance sections are complete
-    the user should see the element     css = li:nth-of-type(1) .task-status-complete
-    the user should see the element     css = li:nth-of-type(2) .task-status-complete
-    the user should see the element     css = li:nth-of-type(3) .task-status-complete
-    the user should see the element     css = li:nth-of-type(4) .task-status-complete
+    the user should see the element     jQuery = li:contains("Other funding") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Your project location") span:contains("Complete")
+    the user should see the element     jQuery = li:contains("Your organisation") span:contains("Complete")
 
 partner login to see your organisation details
     Logging in and Error Checking         &{ktpLeadApplicantCredentials}
@@ -1430,3 +1437,11 @@ the user removes uploaded file
     [Arguments]   ${selector}  ${message}
     the user clicks the button/link                 name = ${selector}
     Wait Until Page Contains Without Screenshots    ${message}
+
+the user sees the selection is not saved
+     the user clicks the button/link                         link = Your fEC model
+     the user sees that the radio button is not selected     fecModelEnabled  fecModelEnabled-no
+
+the user sees the selection is saved
+     the user clicks the button/link                     link = Your fEC model
+     the user sees that the radio button is selected     fecModelEnabled  fecModelEnabled-no

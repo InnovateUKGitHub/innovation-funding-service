@@ -650,8 +650,7 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
-    the user should not see the element                    jQuery = a:contains("Your fEC costs")
-    #the user should not see the element                    jQuery = a:contains("Your fEC model")
+    the user should not see the element                    jQuery = a:contains("Your fEC model")
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
