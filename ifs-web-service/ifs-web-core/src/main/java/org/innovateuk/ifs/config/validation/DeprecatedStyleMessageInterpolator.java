@@ -9,10 +9,10 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Some time ago the hibernate validator switched to using {min} style syntax
- * Unfortunately the front end uses the old style in thymeleaf and js.
+ * Some time ago the hibernate validator switched to using {min} style syntax as opposed to {0} indexed based
+ * following a CVE.
  *
- * Updating it would be an enormous amount of work so this is a sketchy workaround.
+ * The ui uses the old style in thymeleaf and js in abundance so this is a workaround.
  */
 public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInterpolator {
 
