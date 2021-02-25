@@ -295,7 +295,7 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
-        return BigDecimal.ZERO;
+        return calculateTotal(academicAndSecretarialSupportCostRows);
     }
 
     public BigDecimal getTotalIndirectCosts()

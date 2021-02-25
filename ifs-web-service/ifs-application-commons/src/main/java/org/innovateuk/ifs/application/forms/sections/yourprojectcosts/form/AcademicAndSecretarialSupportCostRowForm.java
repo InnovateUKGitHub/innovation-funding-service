@@ -11,6 +11,11 @@ public class AcademicAndSecretarialSupportCostRowForm extends AbstractCostRowFor
 
     public AcademicAndSecretarialSupportCostRowForm() {}
 
+    public AcademicAndSecretarialSupportCostRowForm(AcademicAndSecretarialSupport cost) {
+        super(cost);
+        this.cost = cost.getCost();
+    }
+
     public BigInteger getCost() {
         return cost;
     }
