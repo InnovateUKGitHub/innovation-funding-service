@@ -3,7 +3,7 @@
 <head>
     <th:block
         th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your fEC Model - ${applicationName}|"/>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your fEC model - ${applicationName}|"/>
     </th:block>
 </head>
 <body class="govuk-template__body your-fec-model app-form">
@@ -25,7 +25,7 @@
         <th:block
             th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle='Your fEC Model',subTitle=${applicationName},size='govuk-heading-xl'"/>
+                      th:with="pageTitle='Your fEC model',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -37,7 +37,6 @@
 
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave='autosaveFormPost'"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">

@@ -161,8 +161,7 @@ public class YourFECModelController {
             UserResource loggedInUser) {
 
         ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-        sectionService.markAsInComplete(sectionId, applicationId, processifs-web-service/ifs-application-service/src/main/java/org/innovateuk/ifs/application/forms/sections/yourfeccosts/controller/YourFECModelController.java
-                Role.getId());
+        sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
