@@ -5,6 +5,8 @@ import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.util.List;
+
 public class FinanceChecksFundingRulesViewModel {
 
     private String projectName;
@@ -15,10 +17,15 @@ public class FinanceChecksFundingRulesViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private FundingRules fundingRules;
+    private List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers;
     private boolean readOnly;
+    private boolean fundingRulesReadyToConfirm;
+    private boolean editMode;
 
     public FinanceChecksFundingRulesViewModel(ProjectResource project, CompetitionResource competition, OrganisationResource organisation,
-                                              boolean leadPartnerOrganisation, FundingRules fundingRules, boolean readOnly) {
+                                              boolean leadPartnerOrganisation, FundingRules fundingRules,
+                                              List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers, boolean readOnly,
+                                              boolean fundingRulesReadyToConfirm, boolean editMode) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
@@ -27,7 +34,10 @@ public class FinanceChecksFundingRulesViewModel {
         this.organisationId = organisation.getId();
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.fundingRules = fundingRules;
+        this.questionsAndAnswers = questionsAndAnswers;
         this.readOnly = readOnly;
+        this.fundingRulesReadyToConfirm = fundingRulesReadyToConfirm;
+        this.editMode = editMode;
     }
 
     public String getProjectName() {
@@ -62,7 +72,29 @@ public class FinanceChecksFundingRulesViewModel {
         return fundingRules;
     }
 
+    public FundingRules getOtherFundingRules() {
+        switch (fundingRules) {
+            case STATE_AID:
+                return FundingRules.SUBSIDY_CONTROL;
+            case SUBSIDY_CONTROL:
+                return FundingRules.STATE_AID;
+            default: return null;
+        }
+    }
+
+    public List<QuestionnaireQuestionAnswerViewModel> getQuestionsAndAnswers() {
+        return questionsAndAnswers;
+    }
+
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public boolean isFundingRulesReadyToConfirm() {
+        return fundingRulesReadyToConfirm;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
     }
 }

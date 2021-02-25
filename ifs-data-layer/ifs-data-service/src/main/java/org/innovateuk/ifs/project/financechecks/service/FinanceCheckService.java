@@ -2,9 +2,11 @@ package org.innovateuk.ifs.project.financechecks.service;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
@@ -94,4 +96,7 @@ public interface FinanceCheckService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
     ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "fundingRulesActivityType")
+    ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules);
 }

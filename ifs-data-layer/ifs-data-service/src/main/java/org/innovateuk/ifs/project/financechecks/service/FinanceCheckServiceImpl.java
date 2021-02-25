@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -448,6 +449,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
+    public ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+
+        // TODO
+
+        return serviceSuccess();
+    }
+
+    @Override
     @Transactional
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -666,6 +677,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
         projectFinance.setViabilityStatus(viabilityRagStatus);
+        projectFinanceRepository.save(projectFinance);
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> saveFundingRules(ProjectFinance projectFinance, FundingRules fundingRules) {
+
+        Boolean niDeclaration = FundingRules.SUBSIDY_CONTROL == fundingRules;
+        projectFinance.setNorthernIrelandDeclaration(niDeclaration);
         projectFinanceRepository.save(projectFinance);
 
         return serviceSuccess();

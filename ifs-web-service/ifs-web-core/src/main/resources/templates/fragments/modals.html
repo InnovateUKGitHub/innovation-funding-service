@@ -462,6 +462,19 @@
     </div>
 </th:block>
 
+<!-- Confirmation of funding rules-->
+<th:block th:fragment="modal-confirm-funding-rules (model)">
+    <div class="modal-confirm-funding-rules" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Confirm funding rules</h2>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" name="confirm-funding-rules">Confirm funding rules</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 
 <!-- Confirmation of removing document in project setup-->
 <th:block th:fragment="modal-confirm-document-remove">

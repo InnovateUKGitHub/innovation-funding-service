@@ -4,19 +4,18 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 public class FinanceChecksFundingRulesForm extends BaseBindingResultTarget {
 
-    private boolean changeToStateAid;
+    private boolean overrideFundingRules;
     private boolean confirmFundingRules;
 
-    // for Spring MVC
-    FinanceChecksFundingRulesForm() {
+    public FinanceChecksFundingRulesForm() {
     }
 
-    public FinanceChecksFundingRulesForm(boolean changeToStateAid) {
-        this.changeToStateAid = changeToStateAid;
+    public void setOverrideFundingRules(boolean overrideFundingRules) {
+        this.overrideFundingRules = overrideFundingRules;
     }
 
-    public boolean isChangeToStateAid() {
-        return changeToStateAid;
+    public boolean isOverrideFundingRules() {
+        return overrideFundingRules;
     }
 
     public void setConfirmFundingRules(boolean confirmFundingRules) {
