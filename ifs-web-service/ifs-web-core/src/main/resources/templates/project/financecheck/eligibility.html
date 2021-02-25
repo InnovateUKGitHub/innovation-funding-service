@@ -20,7 +20,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <div th:if="${summaryModel.canReset && #fields.hasErrors('${resetForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <div th:if="${summaryModel.canReset && resetForm != null && #fields.hasErrors('${resetForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to update eligibility.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(resetForm)" />
         </div>
