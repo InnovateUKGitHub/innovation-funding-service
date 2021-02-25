@@ -14,12 +14,10 @@ import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.JsonUtil;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -262,18 +260,15 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             if (form != null) {
                 DefaultCostCategory defaultCostCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
 
-               IndirectCost indirectCostRowItem = (IndirectCost) defaultCostCategory.getCosts().stream()
+               IndirectCost indirectCost = (IndirectCost) defaultCostCategory.getCosts().stream()
                         .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
                         .findFirst()
-                        .orElseGet(() -> {
-                            IndirectCost indirectCost = new IndirectCost(finance.getId());
-                            return getFinanceRowService().create(indirectCost).getSuccess();
-                        });
+                        .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
 
                 BigInteger calculateIndirectCost = calculateIndirectCost(form);
 
-                indirectCostRowItem.setCost(calculateIndirectCost);
-                messages.addAll(getFinanceRowService().update(indirectCostRowItem).getSuccess());
+                indirectCost.setCost(calculateIndirectCost);
+                messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
             }
 
             return messages;
