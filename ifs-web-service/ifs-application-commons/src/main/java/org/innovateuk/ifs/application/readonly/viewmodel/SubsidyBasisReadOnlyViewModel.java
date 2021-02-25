@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisPartnerRowViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+
+import java.util.List;
 
 public class SubsidyBasisReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
@@ -10,8 +13,7 @@ public class SubsidyBasisReadOnlyViewModel extends AbstractQuestionReadOnlyViewM
 
     public SubsidyBasisReadOnlyViewModel(ApplicationReadOnlyData data,
                                          QuestionResource question,
-                                         ApplicationSubsidyBasisViewModel applicationSubsidyBasisViewModel
-    ) {
+                                         ApplicationSubsidyBasisViewModel applicationSubsidyBasisViewModel) {
         super(data, question);
         this.applicationSubsidyBasisViewModel = applicationSubsidyBasisViewModel;
     }
@@ -29,6 +31,10 @@ public class SubsidyBasisReadOnlyViewModel extends AbstractQuestionReadOnlyViewM
     @Override
     public boolean isComplete() {
         return applicationSubsidyBasisViewModel.isSubsidyBasisCompletedByAllOrganisations();
+    }
+
+    public List<ApplicationSubsidyBasisPartnerRowViewModel> getPartners(){
+        return applicationSubsidyBasisViewModel.getPartners();
     }
 
 

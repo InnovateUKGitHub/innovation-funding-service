@@ -103,8 +103,32 @@
 </th:block>
 
 <th:block th:fragment="subsidy-basis (model)">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Partner</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Funding rules</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">View</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr th:each="row : ${model.partners}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <th:block th:text="${row.name}"></th:block>
+                    <th:block th:if="${row.lead}">(Lead)</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <th:block th:if="${row.questionnaireMarkedAsComplete and row.northernIslandDeclaration}">Subsidy control</th:block>
+                    <th:block th:if="${row.questionnaireMarkedAsComplete and !row.northernIslandDeclaration}">State aid</th:block>
+                    <th:block th:unless="${row.questionnaireMarkedAsComplete}">Not determined</th:block>
+                </td>
+                <td class="govuk-table__cell ifs-table__email"
+                    th:text="${row.questionnaireResponseId}"></td>
+            </tr>
+        </tbody>
+    </table>
 </th:block>
-
 
 <th:block th:fragment="research-category (model)">
     <div class="govuk-grid-row">
