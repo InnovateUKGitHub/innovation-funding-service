@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,14 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
 
         String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> saveFundingRules(Long projectId, Long organisationId, FundingRules fundingRules) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/funding-rules/" + fundingRules.name();
 
         return postWithRestResult(postUrl, Void.class);
     }

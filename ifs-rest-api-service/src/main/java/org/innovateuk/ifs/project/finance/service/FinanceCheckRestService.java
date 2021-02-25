@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
 
 /**
@@ -28,9 +29,12 @@ public interface FinanceCheckRestService {
 
     RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
+    RestResult<Void> saveFundingRules(Long projectId, Long organisationId, FundingRules fundingRules);
+
     RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId);
 
     RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId);
 
     RestResult<PaymentMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId);
+
 }

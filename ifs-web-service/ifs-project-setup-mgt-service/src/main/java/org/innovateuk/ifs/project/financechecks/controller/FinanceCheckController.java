@@ -120,7 +120,8 @@ public class FinanceCheckController {
                 project.isCollaborativeProject(),
                 hasOrganisationSizeChanged(projectId),
                 userResource.hasRole(EXTERNAL_FINANCE),
-                hasSpendProfileStage));
+                hasSpendProfileStage,
+                competitionResource.getFundingRules()));
         return "project/financecheck/summary";
     }
 
