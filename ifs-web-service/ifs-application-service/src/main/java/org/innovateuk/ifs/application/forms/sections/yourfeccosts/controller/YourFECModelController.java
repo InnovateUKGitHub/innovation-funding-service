@@ -71,7 +71,7 @@ public class YourFECModelController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
-    @SecuredBySpring(value = "VIEW_FEC_COSTS", description = "Applicants, stakeholders, internal users and kta can view the Your FEC costs page")
+    @SecuredBySpring(value = "VIEW_FEC_COSTS", description = "Applicants, stakeholders, internal users and kta can view the Your FEC model page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
@@ -161,7 +161,8 @@ public class YourFECModelController {
             UserResource loggedInUser) {
 
         ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-        sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
+        sectionService.markAsInComplete(sectionId, applicationId, processifs-web-service/ifs-application-service/src/main/java/org/innovateuk/ifs/application/forms/sections/yourfeccosts/controller/YourFECModelController.java
+                Role.getId());
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
