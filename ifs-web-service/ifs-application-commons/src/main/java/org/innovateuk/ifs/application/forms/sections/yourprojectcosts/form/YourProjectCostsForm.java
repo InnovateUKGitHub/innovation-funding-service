@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
+import org.innovateuk.ifs.finance.resource.cost.AcademicAndSecretarialSupport;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
@@ -48,6 +49,8 @@ public class YourProjectCostsForm {
     private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
 
     private JustificationForm justificationForm = new JustificationForm();
+
+    private AcademicAndSecretarialSupportForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportForm();
 
     private Boolean eligibleAgreement;
 
@@ -285,7 +288,7 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
-        return BigDecimal.ZERO;
+        return academicAndSecretarialSupportForm.getCost();
     }
 
     public BigDecimal getTotalIndirectCosts() {
@@ -371,5 +374,13 @@ public class YourProjectCostsForm {
                 .values()
                 .stream()
                 .filter(cost -> cost.getType() != null && cost.getType() == KtpTravelCostType.SUPERVISOR));
+    }
+
+    public AcademicAndSecretarialSupportForm getAcademicAndSecretarialSupportForm() {
+        return academicAndSecretarialSupportForm;
+    }
+
+    public void setAcademicAndSecretarialSupportForm(AcademicAndSecretarialSupportForm academicAndSecretarialSupportForm) {
+        this.academicAndSecretarialSupportForm = academicAndSecretarialSupportForm;
     }
 }

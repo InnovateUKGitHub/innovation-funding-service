@@ -13,7 +13,7 @@ public class AcademicAndSecretarialSupport extends AbstractFinanceRowItem {
 
     private BigInteger cost;
 
-    private AcademicAndSecretarialSupport() {
+    public AcademicAndSecretarialSupport() {
         this(null);
     }
 

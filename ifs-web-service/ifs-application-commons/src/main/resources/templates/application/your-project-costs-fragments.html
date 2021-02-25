@@ -3884,10 +3884,25 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
              aria-labelledby="accordion-finances-heading-9">
             <th:block
                 th:if="${model.isReadOnly(financeRowType)}">
-                <th:block th:insert="application/your-project-costs-fragments :: academic_and_secretarial_support_read_only"/>
+                <th:block
+                    th:insert="application/your-project-costs-fragments :: academic_and_secretarial_support_read_only"/>
             </th:block>
-            <th:block
-                th:unless="${model.isReadOnly(financeRowType)}">
+
+            <th:block th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block
+                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=academicAndSecretarialSupportForm.cost)"/>
+                <input type="number"
+                       id="academicAndSecretarialSupportForm.cost"
+                       th:field="${form.academicAndSecretarialSupportForm.cost}"
+                       class="govuk-input"
+                       required="required"
+                       th:errorclass="govuk-input--error"
+                       placeholder="0"
+                       min="1"
+                       max="9999999999999999999"
+                       data-field-errormessage="This field can only accept whole numbers."
+                />
+
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total academic and secretarial support costs
                     <span class="govuk-heading-s"
