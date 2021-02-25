@@ -999,24 +999,24 @@ the comp admin creates competition with all sections details
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS funding eligibility            ${researchCategory}   ${compType}
-    the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
+    the user fills in the CS Project eligibility                                     ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility                                     ${researchCategory}   ${compType}
+    the user selects the organisational eligibility to no                            false
+    the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
-    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
-    the user fills in the CS Assessors                      ${fundingType}
+    ...  ELSE  the user marks the application as done                                ${projectGrowth}  ${compType}  ${competition}
+    the user fills in the CS Assessors                                               ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         link = Innovation leads
-    the user clicks the button/link                         jQuery = td:contains("Peter Freeman") button:contains("Add")
-    the user clicks the button/link                         link = Competition details
-    the user clicks the button/link                         link = Stakeholders
+    the user clicks the button/link                                                  link = Public content
+    the user fills in the Public content and publishes                               ${extraKeyword}
+    the user clicks the button/link                                                  link = Return to setup overview
+    the user clicks the button/link                                                  link = Innovation leads
+    the user clicks the button/link                                                  jQuery = td:contains("Peter Freeman") button:contains("Add")
+    the user clicks the button/link                                                  link = Competition details
+    the user clicks the button/link                                                  link = Stakeholders
     the user select stakeholder and add to competition
-    the user clicks the button/link                         link = Competition setup
-    the user clicks the button/link                         link = Documents
-    the user clicks the button/link                         id = doneButton
+    the user clicks the button/link                                                  link = Competition setup
+    the user clicks the button/link                                                  link = Documents
+    the user clicks the button/link                                                  id = doneButton

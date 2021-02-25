@@ -141,18 +141,19 @@ the user fills in the CS funding eligibility
     ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
     the user clicks the button/link       jQuery = button:contains("Done")
     Run Keyword If  "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
-    ...  ELSE IF    '${researchCategory}' == 'false'       run keywords                         the user fills in maximum funding level percentage
-    ...                                    AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                    AND              the user fills in maximum funding level percentage for state aid
-    ...                                    AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                    AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
-    ...                                    AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
-    ...  ELSE                                               run keywords                        the user fills funding level percentages     ${compType}
-    ...                                    AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                    AND              the user clicks the button/link     jQuery = button:contains("Done")
-    ...                                    AND              the user should see the element     jQuery = button:contains("Edit")
-    the user clicks the button/link        link = Return to setup overview
-    the user should see the element        jQuery = div:contains("Funding eligibility") ~ .task-status-complete
+    ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                         the user fills in maximum funding level percentage
+    ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                     AND              the user fills in maximum funding level percentage for state aid
+    ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                     AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
+    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+    ...  ELSE                                                run keywords                        the user fills funding level percentages     ${compType}
+    ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element    jQuery = button:contains("Done")
+    Run Keyword If  '${status}' == 'PASS'                    the user clicks the button/link     jQuery = button:contains("Done")
+    the user should see the element         jQuery = button:contains("Edit")
+    the user clicks the button/link         link = Return to setup overview
+    the user should see the element         jQuery = div:contains("Funding eligibility") ~ .task-status-complete
 
 the user fills funding level percentages
     [Arguments]   ${compType}
