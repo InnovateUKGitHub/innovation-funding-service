@@ -112,8 +112,7 @@ Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
     [Setup]  get application id by name and set as suite variable     ${appl_name}
     Given The user clicks the button/link                             jQuery = a:contains("Application overview")
-    And the user accept the procurement terms and conditions
-    #Run Keyword If  '${fundingType}' != 'PROCUREMENT'  When the user selects research category                           Feasibility studies
+    When the user accept the procurement terms and conditions
     Then the applicant submits the procurement application
     [Teardown]  update milestone to yesterday                         ${competitionId}  SUBMISSION_DATE
 
