@@ -27,4 +27,8 @@ public interface FinanceFileEntryService {
 
     @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'DELETE_FILE_ENTRY')")
     ServiceResult<Void> deleteFECCertificateFileEntry(@P("applicationFinanceId")long applicationFinanceId);
+
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
+    ServiceResult<FileAndContents> getFECCertificateFileContents(@P("applicationFinanceId")long applicationFinanceId);
+
 }

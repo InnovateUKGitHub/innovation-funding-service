@@ -25,4 +25,5 @@ public interface ApplicationFinanceRestService {
     RestResult<FileEntryResource> getFileDetails(Long applicationFinanceId);
     RestResult<FileEntryResource> addFECCertificateFile(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFECCertificateFile(Long applicationFinanceId);
+    RestResult<ByteArrayResource> getFECCertificateFile(Long applicationFinanceId);
 }

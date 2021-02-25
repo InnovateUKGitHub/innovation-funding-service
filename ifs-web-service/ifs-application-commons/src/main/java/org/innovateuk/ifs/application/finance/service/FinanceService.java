@@ -21,4 +21,5 @@ public interface FinanceService {
     RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceFileEntryId);
     RestResult<FileEntryResource> getFinanceEntryByApplicationFinanceId(Long applicationFinanceId);
     RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId);
+    RestResult<ByteArrayResource> getFECCertifcateFileByApplicationFinance(Long applicationFinanceId);
 }

@@ -159,4 +159,12 @@ public class ApplicationFinanceController {
         return deleteResult.toDeleteResponse();
     }
 
+    @GetMapping("/fec-certificate-file")
+    public @ResponseBody
+    ResponseEntity<Object> getFECCertificateFileContent(
+            @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
+
+        return fileControllerUtils.handleFileDownload(() -> financeFileEntryService.getFECCertificateFileContents(applicationFinanceId));
+    }
+
 }

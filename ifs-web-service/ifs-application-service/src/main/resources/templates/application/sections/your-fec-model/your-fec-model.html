@@ -83,7 +83,7 @@
                         </details>
                         <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
                         <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
-                                    ${model.financesUrl},
+                                    @{/application/{applicationId}/form/{applicationFinanceId}/view-fec-certificate(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
                                     ${form.fecCertificateFileName},
                                     fecCertificateFile,
                                     fecCertificateFile,

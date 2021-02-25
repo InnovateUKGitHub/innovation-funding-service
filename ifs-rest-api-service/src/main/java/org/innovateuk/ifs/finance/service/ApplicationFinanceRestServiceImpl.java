@@ -120,4 +120,13 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
                 "?applicationFinanceId=" + applicationFinanceId;
         return deleteWithRestResult(url);
     }
+
+    @Override
+    public RestResult<ByteArrayResource> getFECCertificateFile(Long applicationFinanceId) {
+        String url = applicationFinanceRestURL + "/fec-certificate-file" +
+                "?applicationFinanceId=" + applicationFinanceId;
+
+        return getWithRestResult(url, ByteArrayResource.class);
+    }
+
 }

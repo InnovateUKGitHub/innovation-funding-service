@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -41,8 +43,9 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.m
 public class YourFECModelController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
+
     @Autowired
-    private CommonYourFinancesViewModelPopulator commonViewModelPopulator;
+    private YourFECViewModelPopulator yourFECViewModelPopulator;
     @Autowired
     private YourFECModelFormPopulator formPopulator;
     @Autowired
@@ -64,10 +67,10 @@ public class YourFECModelController {
             Model model,
             @ModelAttribute("form") YourFECModelForm form) {
         formPopulator.populate(form, applicationId, organisationId);
-        CommonYourProjectFinancesViewModel commonViewModelRequest =
+        YourFECViewModel YourFECViewModel =
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
-        model.addAttribute("model", commonViewModelRequest);
+        model.addAttribute("model", YourFECViewModel);
         return VIEW_PAGE;
     }
 
@@ -186,8 +189,8 @@ public class YourFECModelController {
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
-    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
-        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
+    private YourFECViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
+        return yourFECViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
     }
 
     private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {

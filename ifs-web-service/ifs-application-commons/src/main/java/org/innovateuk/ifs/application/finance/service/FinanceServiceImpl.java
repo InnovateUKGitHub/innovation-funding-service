@@ -94,4 +94,9 @@ public class FinanceServiceImpl implements FinanceService {
     public RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId) {
         return applicationFinanceRestService.getFile(applicationFinanceId);
     }
+
+    @Override
+    public RestResult<ByteArrayResource> getFECCertifcateFileByApplicationFinance(Long applicationFinanceId) {
+        return applicationFinanceRestService.getFECCertificateFile(applicationFinanceId);
+    }
 }

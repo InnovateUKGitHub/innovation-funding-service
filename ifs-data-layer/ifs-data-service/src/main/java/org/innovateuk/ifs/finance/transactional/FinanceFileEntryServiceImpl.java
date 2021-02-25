@@ -144,4 +144,11 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
             return financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
         });
     }
+
+    @Override
+    public ServiceResult<FileAndContents> getFECCertificateFileContents(long applicationFinanceId) {
+        return fileEntryService.getFECCertificateFileEntryByApplicationFinanceId(applicationFinanceId)
+                .andOnSuccess(fileEntry -> fileService.getFileByFileEntryId(fileEntry.getId())
+                        .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream)));
+    }
 }
