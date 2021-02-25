@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,6 @@ public class AtiTemplate implements CompetitionTemplate {
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
-    @Autowired
-    private CommonBuilders commonBuilders;
-
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.AEROSPACE_TECHNOLOGY_INSTITUTE;
@@ -30,7 +27,12 @@ public class AtiTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI)"));
+        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+            competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI) - Subsidy control"));
+            competition.setOtherFundingRulesTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI)"));
+        } else {
+            competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI)"));
+        }
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(36);
