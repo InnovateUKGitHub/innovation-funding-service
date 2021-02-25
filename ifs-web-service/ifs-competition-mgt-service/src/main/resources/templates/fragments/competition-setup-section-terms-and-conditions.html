@@ -45,7 +45,7 @@
     </th:block>
 
     <th:block th:unless="${model.general.editable}">
-        <dl class="standard-definition-list" th:if="${model.includeStateAid}">
+        <dl class="standard-definition-list column-definition-list" th:if="${model.includeStateAid}">
             <dt>Subsidy control terms and conditions</dt>
             <dd><th:block th:if="${model.currentTermsAndConditions != null}" th:text="${model.currentTermsAndConditions.name}"></th:block></dd>
             <dt>State aid terms and conditions</dt>
@@ -87,7 +87,7 @@
                 </fieldset>
             </div>
 
-            <div id="procurement-upload" class="upload-section">
+            <div id="procurement-upload" class="upload-section" th:unless="${model.includeStateAid}">
                 <th:block th:insert="question-type/types :: fileupload-fragment(edit,
                                 @{~/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.general.competition.id})},
                                 ${model.general.competition.competitionTerms?.name},

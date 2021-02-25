@@ -256,10 +256,11 @@ function useContainerRegistry() {
 function useNexusRegistry() {
 
     NEXUS_VERSION=$1
+    NEXUS_REPOSITORY=$2
 
     sed -i.bak "s/imagePullSecretsName/ifs-external-registry/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
-    sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/releases/#g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/${NEXUS_REPOSITORY}/#g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s#service\:.*#service\:${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 

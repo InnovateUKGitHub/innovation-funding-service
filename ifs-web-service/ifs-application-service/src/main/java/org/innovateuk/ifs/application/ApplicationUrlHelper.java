@@ -37,6 +37,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/terms-and-conditions/organisation/%d/question/%d", applicationId, organisationId, questionId));
                 case RESEARCH_CATEGORY:
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
+                default:
+                    // do nothing
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
@@ -49,6 +51,8 @@ public class ApplicationUrlHelper {
         switch (sectionType) {
             case FUNDING_FINANCES:
                 return Optional.of(String.format("/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId));
+            case FEC_COSTS_FINANCES:
+                return Optional.of(String.format("/application/%d/form/fec-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId));
             case PROJECT_COST_FINANCES:
                 CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
                 OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -77,8 +81,9 @@ public class ApplicationUrlHelper {
             case GENERAL:
             case TERMS_AND_CONDITIONS:
                 return Optional.of(String.format("/application/%d", applicationId));
+            default:
+                return Optional.empty();
         }
-        return Optional.empty();
     }
 
 }

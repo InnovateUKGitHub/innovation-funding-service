@@ -10,7 +10,6 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
@@ -834,14 +833,8 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     private User createUserExpectations(Long userId, Profile profile) {
         return createLambdaMatcher(user -> {
             assertEquals(userId, user.getId());
-            assertEquals(profile, user.getProfileId());
+            assertEquals(profile.getId(), user.getProfileId());
         });
     }
 
-    private User createUserExpectations(Long userId, List<Affiliation> affiliations) {
-        return createLambdaMatcher(user -> {
-            assertEquals(userId, user.getId());
-            assertEquals(affiliations, user.getAffiliations());
-        });
-    }
 }

@@ -933,7 +933,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         userPageResourceWithNonAssessors.setContent(newUserResource().withRolesGlobal(singletonList(ASSESSOR), singletonList(APPLICANT)).build(2));
 
         allGlobalRoleUsers.forEach(u -> {
-                    if (u.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE)) {
+                    if (u.hasAuthority(Authority.COMP_ADMIN)) {
                         assertTrue(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
                         assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
                     } else {

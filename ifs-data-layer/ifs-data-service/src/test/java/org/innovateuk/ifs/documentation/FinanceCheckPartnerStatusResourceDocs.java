@@ -13,6 +13,7 @@ public class FinanceCheckPartnerStatusResourceDocs {
             fieldWithPath("viabilityRagStatus").description("Viability rag status of the finance check partner status"),
             fieldWithPath("eligibility").description("Eligibility of the finance check partner status"),
             fieldWithPath("eligibilityRagStatus").description("Eligibility rag status of the finance check partner status"),
+            fieldWithPath("paymentMilestoneState").description("Payment Milestone status of the finance check partner status").optional(),
             fieldWithPath("awaitingResponse").description("Awaiting response of the finance check partner status"),
             fieldWithPath("financeContactProvided").description("Finance contact provided of the finance check partner status"),
             fieldWithPath("lead").description("Lead of the finance check partner status"),

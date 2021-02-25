@@ -25,6 +25,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8940 SBRI Milestones - Edit project duration in application
 ...
+...             IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -43,9 +45,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  SUBSIDY_CONTROL  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  2  false  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
@@ -106,12 +108,11 @@ Applicant can view payment milestones table when reviewing and submitting applic
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
-    [Setup]  get application id by name and set as suite variable  ${appl_name}
-    Given The user clicks the button/link                        jQuery = a:contains("Application overview")
+    [Setup]  get application id by name and set as suite variable     ${appl_name}
+    Given The user clicks the button/link                             jQuery = a:contains("Application overview")
     And the user accept the procurement terms and conditions
-    When the user selects research category                      Feasibility studies
     Then the applicant submits the procurement application
-    [Teardown]  update milestone to yesterday                    ${competitionId}  SUBMISSION_DATE
+    [Teardown]  update milestone to yesterday                         ${competitionId}  SUBMISSION_DATE
 
 Invite a registered assessor
     [Documentation]  IFS-2376
@@ -252,7 +253,7 @@ the user should see all procurement finance subsections complete
 the payment milestone table is visible in application summary
     the user expands the section                Funding breakdown
     the user should see the element             jQuery = h1:contains("Application summary")
-    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£72839") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£72,839") th:contains("100%")
     the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£72,839")
 
 the applicant submits the procurement application
@@ -334,22 +335,25 @@ internal user approve bank details
     the user clicks the button/link          id = submit-approve-bank-details
 
 internal user generate SP
-    the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/finance-check
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
-    the user selects the checkbox            project-viable
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link          css = #confirm-button
-    the user clicks the button/link          css = [name="confirm-viability"]
-    the user clicks the button/link         link = Back to finance checks
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
-    the user selects the checkbox            project-eligible
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link          css = #confirm-button
-    the user clicks the button/link          css = [name="confirm-eligibility"]
-    the user clicks the button/link          link = Return to finance checks
-    the user should see the element          jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
-    the user clicks the button/link          css = .generate-spend-profile-main-button
-    the user clicks the button/link          css = #generate-spend-profile-modal-button
+    the user navigates to the page                        ${server}/project-setup-management/project/${ProjectID}/finance-check
+    the user clicks the button/link                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user selects the checkbox                         project-viable
+    the user selects the option from the drop-down menu   Green  id = rag-rating
+    the user clicks the button/link                       css = #confirm-button
+    the user clicks the button/link                       css = [name="confirm-viability"]
+    the user clicks the button/link                       link = Back to finance checks
+    the user clicks the button/link                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
+    the user selects the checkbox                         project-eligible
+    the user selects the option from the drop-down menu   Green  id = rag-rating
+    the user clicks the button/link                       css = #confirm-button
+    the user clicks the button/link                       css = [name="confirm-eligibility"]
+    the user clicks the button/link                       link = Return to finance checks
+    the user should see the element                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
+    And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    And the internal user approves payment milestone
+    the user clicks the button/link                       link = Return to finance checks
+    the user clicks the button/link                       css = .generate-spend-profile-main-button
+    the user clicks the button/link                       css = #generate-spend-profile-modal-button
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}

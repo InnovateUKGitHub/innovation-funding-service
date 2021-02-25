@@ -13,9 +13,6 @@ public class DocumentForm extends BaseBindingResultTarget {
 
     private String rejectionReason;
 
-    public DocumentForm() {
-    }
-
     public Boolean getApproved() {
         return approved;
     }

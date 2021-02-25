@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -36,10 +37,7 @@ public class DatabaseTestHelperTest extends BaseRepositoryIntegrationTest<Organi
                 // cause the database to change, thus making the assertingNoDatabaseChangesOccur() wrapper fail
                 repository.save(new Organisation(organisationName));
             });
-
-            fail("Should have failed, as database changes occurred");
-        } catch (AssertionError e) {
-
+        } finally {
             // and clean up after ourselves
             repository.deleteAll(repository.findByNameOrderById(organisationName));
         }

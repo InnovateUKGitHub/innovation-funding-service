@@ -136,6 +136,76 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     }
 
     @Test
+    public void syncExternalCrmContactForProject() {
+        long userId = 1L;
+        long projectId = 2L;
+
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
+
+        OrganisationResource organisation = newOrganisationResource()
+                .withCompaniesHouseNumber("Something", "Else")
+                .build();
+
+        when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
+        when(organisationService.getByUserAndProjectId(userId, projectId)).thenReturn(serviceSuccess(organisation));
+        when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.syncCrmContact(userId, projectId);
+
+        assertThat(result.isSuccess(), equalTo(true));
+
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContact(user, organisation)));
+    }
+
+    @Test
+    public void syncExternalCrmContactForProjectWithOrganisationUpdates() {
+        long userId = 1L;
+        long projectId = 2L;
+
+        UserResource user = newUserResource()
+                .withRoleGlobal(APPLICANT)
+                .build();
+
+        OrganisationResource organisation = newOrganisationResource()
+                .withDateOfIncorporation(LocalDate.now())
+                .withSicCodes(newOrganisationSicCodeResource().withSicCode("code-1", "code-2").build(2))
+                .withExecutiveOfficers(newOrganisationExecutiveOfficerResource().withName("director-1", "director-2").build(2))
+                .build();
+
+        AddressType addressType = newAddressType()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Line1")
+                        .withAddressLine2("Line2")
+                        .withAddressLine3("Line3")
+                        .withCounty("County")
+                        .withTown("Town")
+                        .withCountry("Country")
+                        .withPostcode("Postcode").build())
+                .withAddressType(newAddressTypeResource()
+                        .withId(OrganisationAddressType.REGISTERED.getId())
+                        .withName(OrganisationAddressType.REGISTERED.name()).build())
+                .build();
+
+        when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
+        when(organisationService.getByUserAndProjectId(userId, projectId)).thenReturn(serviceSuccess(organisation));
+        when(organisationAddressService.findByOrganisationIdAndAddressType(organisation.getId(), addressType))
+                .thenReturn(serviceSuccess(Collections.singletonList(organisationAddressResource)));
+        when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
+
+        ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
+        ServiceResult<Void> result = service.syncCrmContact(userId, projectId);
+
+        assertThat(result.isSuccess(), equalTo(true));
+
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchExternalSilContactWithOrganisationUpdates(user, organisation)));
+    }
+
+    @Test
     public void syncMonitoringOfficerOnlyCrmContact() {
         long userId = 1L;
         UserResource user = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();

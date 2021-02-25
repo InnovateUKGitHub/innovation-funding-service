@@ -15,14 +15,14 @@ import java.util.Optional;
  */
 public interface ApplicationCountSummaryService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins and project finance can see all Application Summary counts across the whole system", securedType = ApplicationCountSummaryResource.class)
     ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
                                                                                                    int pageIndex,
                                                                                                    int pageSize,
                                                                                                    Optional<String> filter);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins and project finance can see all Application Summary counts accros the whole system", securedType = ApplicationCountSummaryResource.class)
     ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(
                                                                                     long competitionId,
@@ -32,7 +32,7 @@ public interface ApplicationCountSummaryService {
                                                                                     Sort sort,
                                                                                     String filter);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins and project finance can see all Application Summary counts accros the whole system", securedType = ApplicationCountSummaryResource.class)
     ServiceResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId, long assessorId, String filter);
 }
