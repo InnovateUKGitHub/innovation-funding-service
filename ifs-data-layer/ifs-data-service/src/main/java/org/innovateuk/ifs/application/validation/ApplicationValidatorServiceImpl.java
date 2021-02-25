@@ -216,7 +216,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         }
         Optional<ApplicationFinance> applicationFinance =
                 simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisation.getId()));
-         if (applicationFinance.get().getFecModelEnabled()) {
+        if (applicationFinance.isPresent() && applicationFinance.get().getFecModelEnabled()) {
              return applicationFinance.map(af -> af.getFecFileEntry() == null).orElse(true);
          }
          return false;

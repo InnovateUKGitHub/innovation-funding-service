@@ -99,8 +99,6 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
 
         if (applicationFinanceResource != null) {
             applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
-            //TODO Need work to split the API
-            applicationFinanceResource.setFecFileEntry(fileEntry.getId());
             financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
         }
 

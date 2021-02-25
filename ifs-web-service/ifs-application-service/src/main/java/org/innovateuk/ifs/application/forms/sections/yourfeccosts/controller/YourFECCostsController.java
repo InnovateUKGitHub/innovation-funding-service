@@ -158,6 +158,8 @@ public class YourFECCostsController {
     }
 
     @PostMapping(params = "upload_fecCertificateFile")
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "UPLOAD_FEC_CERTIFICATE", description = "Lead applicant can upload their fec certificate")
     public String uploadFECCertificateFile(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,
@@ -183,6 +185,8 @@ public class YourFECCostsController {
 
     @PostMapping(params = "remove_fecCertificateFile")
     @AsyncMethod
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "REMOVE_FEC_CERTIFICATE", description = "Lead applicant can remove their fec certificate")
     public String removeFECCertificateFile(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,
