@@ -213,7 +213,7 @@ Internal user makes changes to project finances
     [Documentation]   IFS-8944
     Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility?financeType=SUBCONTRACTING_COSTS
     When the user makes changes to the project finances
-    And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/116/eligibility/changes
+    And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility/changes
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10000)
     And the user should see the element                     jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10000)
 
