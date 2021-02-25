@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -19,6 +21,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
@@ -34,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
@@ -58,6 +63,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 @Lazy
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilderService.class);
 
     @Autowired
     private GenericApplicationContext applicationContext;
@@ -636,13 +643,19 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     case PREVIOUS_FUNDING:
                         builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
                         break;
+                    case ACADEMIC_AND_SECRETARIAL_SUPPORT:
+                        builder[0] = builder[0].withAcademicAndSecretarialSupport(new BigDecimal("18.00"));
+                        break;
+                    case INDIRECT_COSTS:
+                        builder[0] = builder[0].withIndirectCosts(new BigDecimal("19.00"));
+                        break;
                 }
             };
 
 
             if (competition.isKtp()) {
                 if (OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType) {
-                    competition.getFinanceRowTypes().forEach(costPopulator);
+                    getFinanceRowTypes(competition, true).forEach(costPopulator);
                 }
             } else {
                 competition.getFinanceRowTypes().forEach(costPopulator);
@@ -660,9 +673,15 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
-            return builder[0].withOrganisationSize(SMALL)
-                    .withLocation()
-                    .withFecEnabled(getDefaultFecModel(organisationType));
+            if (organisationType == OrganisationTypeEnum.KNOWLEDGE_BASE) {
+                return builder[0].withOrganisationSize(SMALL)
+                        .withLocation()
+                        .withFecEnabled(true)
+                        .withUploadedFecFile();
+            } else {
+                return builder[0].withOrganisationSize(SMALL)
+                        .withLocation();
+            }
         };
 
         return applicationFinanceDataBuilder.
@@ -673,8 +692,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withIndustrialCosts(costBuilder);
     }
 
-    private Boolean getDefaultFecModel(OrganisationTypeEnum organisationType) {
-        return organisationType == OrganisationTypeEnum.KNOWLEDGE_BASE ? false : null;
+    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, Boolean fecModelEnabled) {
+        return competition.getFinanceRowTypes().stream()
+                .filter(financeRowType -> BooleanUtils.isFalse(fecModelEnabled)
+                        ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                        : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(

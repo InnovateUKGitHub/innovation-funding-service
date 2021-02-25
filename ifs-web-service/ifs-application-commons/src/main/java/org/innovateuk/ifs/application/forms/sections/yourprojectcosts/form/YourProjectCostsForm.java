@@ -284,6 +284,14 @@ public class YourProjectCostsForm {
         return calculateTotal(ktpTravelCostRows);
     }
 
+    public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
+        return BigDecimal.ZERO;
+    }
+
+    public BigDecimal getTotalIndirectCosts() {
+        return BigDecimal.ZERO;
+    }
+
     public BigDecimal getOrganisationFinanceTotal() {
         return getTotalLabourCosts()
                 .add(getTotalOverheadCosts())

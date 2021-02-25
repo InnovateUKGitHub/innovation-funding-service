@@ -8,6 +8,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 
@@ -27,17 +31,24 @@ public class YourProjectCostsViewModelPopulator {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
     @Autowired
     private OrganisationRestService organisationRestService;
+
     @Autowired
     private ApplicationRestService applicationRestService;
+
     @Autowired
     private SectionService sectionService;
+
     @Autowired
     private UserRestService userRestService;
+
     @Autowired
     private ProcessRoleRestService processRoleRestService;
 
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -68,10 +79,21 @@ public class YourProjectCostsViewModelPopulator {
                 getYourFinancesUrl(applicationId, organisationId),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
-                competition.getFinanceRowTypes(),
+                getFinanceRowTypes(competition, applicationId, organisationId),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
                 organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()));
+    }
+
+    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, long applicationId, long organisationId) {
+        List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
+
+        if (competition.isKtp()) {
+            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+            costTypes = competition.getFinanceRowTypesByFinance(Optional.of(applicationFinance));
+        }
+
+        return costTypes;
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId) {
