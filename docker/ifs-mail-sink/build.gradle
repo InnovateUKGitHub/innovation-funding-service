@@ -13,7 +13,13 @@ createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/mail-sink:"
 createContainer.portBindings = ['8765:8080', "9876:8143"]
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
+        google()
+    }
 }
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
