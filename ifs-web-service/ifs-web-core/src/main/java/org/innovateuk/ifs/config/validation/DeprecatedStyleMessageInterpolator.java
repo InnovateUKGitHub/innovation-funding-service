@@ -22,11 +22,14 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
     private final static String GROUPS_KEY = "groups";
     private final static String PAYLOAD_KEY = "payload";
     private final static String MAX_KEY = "max";
+    private final static String TOO_MANY_KEY = "too.many";
     private final static String MIN_KEY = "min";
+    private final static String TOO_FEW_KEY = "too.few";
 
     @Override
     public String interpolate(Context context, Locale locale, String term) {
         String message = (String) context.getConstraintDescriptor().getAttributes().get(MSG_KEY);
+        message = message.toLowerCase();
         Map<String, Object> relevantAttributes = extractRelevantAttributes(context);
         if (relevantAttributes.size() == 1) {
             // if there is only one attribute then its easy
@@ -34,10 +37,10 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
         }
         if (relevantAttributes.size() == 2) {
             // case min and max
-            if (message.contains(MAX_KEY) && relevantAttributes.containsKey(MAX_KEY)) {
+            if ((message.contains(MAX_KEY) || message.contains(TOO_MANY_KEY)) && relevantAttributes.containsKey(MAX_KEY)) {
                 return String.valueOf(relevantAttributes.get(MAX_KEY));
             }
-            if (message.contains(MIN_KEY) && relevantAttributes.containsKey(MIN_KEY)) {
+            if ((message.contains(MIN_KEY) || message.contains(TOO_FEW_KEY)) && relevantAttributes.containsKey(MIN_KEY)) {
                 return String.valueOf(relevantAttributes.get(MIN_KEY));
             }
         }
