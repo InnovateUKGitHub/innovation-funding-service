@@ -16,8 +16,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to application overview',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
-
+              th:with="linkTitle='Back to application overview',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}, dynamicBackLink=${true}"/>
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              role="alert"
@@ -63,23 +62,26 @@
             <!--/* Read only template */-->
             <th:block th:if="${model.readOnly}">
             </th:block>
-            <div th:if="${model.open}" class="form-footer">
-                <button th:unless="${model.complete}" id="application-question-complete" type="submit" name="complete"
-                        class="button-clear">Mark as complete
-                </button>
-                <button th:if="${model.complete}" id="edit-application-details-button" type="submit" name="edit" class="button-clear">
-                    Edit
-                </button>
-            </div>
-            <div class="govuk-!-margin-top-6">
-                <a th:if="${model.readOnly}"
-                   th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-                   class="govuk-button">Return to application overview
-                </a>
-                <button th:unless="${model.readOnly}" id="application-question-save" type="submit"
-                        class="govuk-button">Save and return to application overview
-                </button>
-            </div>
+
+            <th:block th:if="${model.userApplicantForOrganisation}">
+                <div th:if="${model.open}" class="form-footer">
+                    <button th:unless="${model.complete}" id="application-question-complete" type="submit" name="complete"
+                            class="button-clear">Mark as complete
+                    </button>
+                    <button th:if="${model.complete}" id="edit-application-details-button" type="submit" name="edit" class="button-clear">
+                        Edit
+                    </button>
+                </div>
+                <div class="govuk-!-margin-top-6">
+                    <a th:if="${model.readOnly}"
+                       th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+                       class="govuk-button">Return to application overview
+                    </a>
+                    <button th:unless="${model.readOnly}" id="application-question-save" type="submit"
+                            class="govuk-button">Save and return to application overview
+                    </button>
+                </div>
+            </th:block>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

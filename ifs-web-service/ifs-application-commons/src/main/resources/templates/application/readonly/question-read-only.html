@@ -123,8 +123,11 @@
                     <th:block th:if="${row.questionnaireMarkedAsComplete and !row.northernIslandDeclaration}">State aid</th:block>
                     <th:block th:unless="${row.questionnaireMarkedAsComplete}">Not determined</th:block>
                 </td>
-                <td class="govuk-table__cell ifs-table__email"
-                    th:text="${row.questionnaireResponseId}"></td>
+                <td class="govuk-table__cell ifs-table__email">
+                    <a th:if="${row.questionnaireMarkedAsComplete}"
+                       th:href="@{~/application/{applicationId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(applicationId=${row.applicationId}, organisationId=${row.organisationId}, questionId=${row.questionId})}">
+                       View</a>
+                </td>
             </tr>
         </tbody>
     </table>

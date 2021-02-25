@@ -18,8 +18,9 @@ public class ApplicationQuestionQuestionnaireViewModel {
     private final Boolean northernIrelandDeclaration;
     private final String questionnaireResponseId;
     private final AnswerTableViewModel answers;
+    private final boolean userApplicantForOrganisation;
 
-    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, Boolean northernIrelandDeclaration, String questionnaireResponseId, AnswerTableViewModel answers) {
+    public ApplicationQuestionQuestionnaireViewModel(ApplicationResource application, QuestionResource question, long organisationId, boolean open, boolean complete, Boolean northernIrelandDeclaration, String questionnaireResponseId, AnswerTableViewModel answers, boolean userApplicantForOrganisation) {
         this.applicationId = application.getId();
         this.applicationName = application.getName();
         this.questionId = question.getId();
@@ -30,6 +31,7 @@ public class ApplicationQuestionQuestionnaireViewModel {
         this.northernIrelandDeclaration = northernIrelandDeclaration;
         this.questionnaireResponseId = questionnaireResponseId;
         this.answers = answers;
+        this.userApplicantForOrganisation = userApplicantForOrganisation;
     }
 
     public long getApplicationId() {
@@ -78,6 +80,10 @@ public class ApplicationQuestionQuestionnaireViewModel {
 
     public boolean navigateStraightToQuestionnaireWelcome() {
         return !isReadOnly() && getAnswers().getQuestions().isEmpty();
+    }
+
+    public boolean isUserApplicantForOrganisation() {
+        return userApplicantForOrganisation;
     }
 
     public boolean allQuestionsAnswered() {
