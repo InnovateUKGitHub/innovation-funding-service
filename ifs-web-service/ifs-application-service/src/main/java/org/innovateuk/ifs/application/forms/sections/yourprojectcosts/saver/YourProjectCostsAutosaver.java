@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
@@ -299,8 +300,6 @@ public class YourProjectCostsAutosaver {
     }
 
     private BigDecimal calculateIndirectCost(ApplicationFinanceResource organisationFinance) {
-        BigDecimal percentage = BigDecimal.valueOf(46);
-
         BigDecimal totalAssociateSalaryCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS).getCosts().stream()
                 .filter(financeRowItem -> !financeRowItem.isEmpty())
                 .map(FinanceRowItem::getTotal)
@@ -315,7 +314,7 @@ public class YourProjectCostsAutosaver {
 
         return totalAssociateSalaryCost
                 .add(totalAcademicAndSecretarialSupportCost)
-                .multiply(percentage)
+                .multiply(YourProjectCostsForm.INDIRECT_COST_PERCENTAGE)
                 .divide(BigDecimal.valueOf(100));
     }
 

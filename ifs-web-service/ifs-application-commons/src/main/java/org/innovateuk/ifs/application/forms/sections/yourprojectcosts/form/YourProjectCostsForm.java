@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 public class YourProjectCostsForm {
 
     public static final BigDecimal VAT_RATE = BigDecimal.valueOf(20);
+    public final static BigDecimal INDIRECT_COST_PERCENTAGE = BigDecimal.valueOf(46);
 
     private LabourForm labour = new LabourForm();
 
@@ -296,6 +297,10 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
         return calculateTotal(academicAndSecretarialSupportCostRows);
+    }
+
+    public BigDecimal getIndirectCostsPercentage() {
+        return INDIRECT_COST_PERCENTAGE;
     }
 
     public BigDecimal getTotalIndirectCosts()
