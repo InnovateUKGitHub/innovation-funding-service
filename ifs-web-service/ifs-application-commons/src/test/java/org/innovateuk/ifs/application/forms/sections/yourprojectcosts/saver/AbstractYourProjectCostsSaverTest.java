@@ -173,6 +173,8 @@ public class AbstractYourProjectCostsSaverTest {
         assertEquals(expected, indirectCost.getTotal().toBigInteger());
 
         verify(financeRowRestService, times(6)).update(isA(AdditionalCompanyCost.class));
+        verify(financeRowRestService, times(2)).update(isA(AssociateSalaryCost.class));
+        verify(financeRowRestService, times(1)).update(isA(IndirectCost.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
