@@ -238,12 +238,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<ViabilityState, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<EligibilityState, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
+            ServiceResult<FundingRules> fundingRules = getFundingRules(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
-                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project), anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
+                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project), fundingRules.getSuccess(),
+                    anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
         });
     }
 
@@ -279,6 +281,21 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccess();
 
         return Pair.of(eligibilityDetails.getEligibility(), eligibilityDetails.getEligibilityRagStatus());
+    }
+
+    private ServiceResult<FundingRules> getFundingRules(ProjectOrganisationCompositeId compositeId) {
+
+        long projectId = compositeId.getProjectId();
+        long organisationId = compositeId.getOrganisationId();
+
+        return getProjectFinance(projectId, organisationId)
+                        .andOnSuccessReturn(projectFinance -> {
+                            if (Boolean.TRUE == projectFinance.getNorthernIrelandDeclaration()) {
+                                return FundingRules.SUBSIDY_CONTROL;
+                            } else {
+                                return FundingRules.STATE_AID;
+                            }
+                        });
     }
 
     private FinanceCheckResource mapToResource(FinanceCheck fc) {

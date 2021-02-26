@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.finance.resource;
 
+import org.innovateuk.ifs.competition.resource.FundingRules;
+
 /**
  * A resource object to return finance check status for a partner organisation
  */
@@ -13,6 +15,7 @@ public class FinanceCheckPartnerStatusResource {
     private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
     private PaymentMilestoneState paymentMilestoneState;
+    private FundingRules fundingRules;
     private boolean awaitingResponse;
     private boolean financeContactProvided;
 
@@ -23,6 +26,7 @@ public class FinanceCheckPartnerStatusResource {
                                              ViabilityRagStatus viabilityRagStatus, EligibilityState eligibility,
                                              EligibilityRagStatus eligibilityRagStatus,
                                              PaymentMilestoneState paymentMilestoneState,
+                                             FundingRules fundingRules,
                                              boolean awaitingResponse,
                                              boolean financeContactProvided) {
         this.id = id;
@@ -33,6 +37,7 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
         this.eligibilityRagStatus = eligibilityRagStatus;
         this.paymentMilestoneState = paymentMilestoneState;
+        this.fundingRules = fundingRules;
         this.awaitingResponse = awaitingResponse;
         this.financeContactProvided = financeContactProvided;
     }
@@ -107,6 +112,10 @@ public class FinanceCheckPartnerStatusResource {
 
     public void setFinanceContactProvided(boolean financeContactProvided) {
         this.financeContactProvided = financeContactProvided;
+    }
+
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
     public PaymentMilestoneState getPaymentMilestoneState() {

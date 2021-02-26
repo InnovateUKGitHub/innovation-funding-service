@@ -5,7 +5,6 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public class FinanceChecksFundingRulesForm extends BaseBindingResultTarget {
 
     private boolean overrideFundingRules;
-    private boolean confirmFundingRules;
 
     public FinanceChecksFundingRulesForm() {
     }
@@ -18,11 +17,4 @@ public class FinanceChecksFundingRulesForm extends BaseBindingResultTarget {
         return overrideFundingRules;
     }
 
-    public void setConfirmFundingRules(boolean confirmFundingRules) {
-        this.confirmFundingRules = confirmFundingRules;
-    }
-
-    public boolean isConfirmFundingRules() {
-        return confirmFundingRules;
-    }
 }

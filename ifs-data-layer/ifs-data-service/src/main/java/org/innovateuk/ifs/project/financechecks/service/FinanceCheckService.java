@@ -99,4 +99,10 @@ public interface FinanceCheckService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "fundingRulesActivityType")
     ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules);
+
+    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
+    default Optional<ActivityType> fundingRulesActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules) {
+        // TODO return eligibility == EligibilityState.APPROVED ? Optional.of(ActivityType.ELIGIBILITY_APPROVED) : Optional.empty();
+        return Optional.empty();
+    }
 }
