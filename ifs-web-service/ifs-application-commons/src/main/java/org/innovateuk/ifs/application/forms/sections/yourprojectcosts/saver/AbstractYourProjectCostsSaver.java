@@ -8,15 +8,13 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
+import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.JsonUtil;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -159,6 +157,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.INDIRECT_COSTS)) {
+            futures.add(saveIndirectCost(form, finance));
+        }
 
         awaitAll(futures)
                 .thenAccept(messages::addAll);
@@ -251,6 +252,50 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
             return messages;
         });
+    }
+
+    private CompletableFuture<ValidationMessages> saveIndirectCost(YourProjectCostsForm form, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            if (form != null) {
+                DefaultCostCategory defaultCostCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+
+               IndirectCost indirectCost = (IndirectCost) defaultCostCategory.getCosts().stream()
+                        .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                        .findFirst()
+                        .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
+
+                BigInteger calculateIndirectCost = calculateIndirectCost(form);
+
+                indirectCost.setCost(calculateIndirectCost);
+                messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
+            }
+
+            return messages;
+        });
+    }
+
+    private BigInteger calculateIndirectCost(YourProjectCostsForm form) {
+        BigInteger percentage = BigInteger.valueOf(46);
+
+        BigInteger totalAssociateSalaryCost = form.getAssociateSalaryCostRows().entrySet().stream()
+                .map(Map.Entry::getValue)
+                .filter(associateSalaryCostRowForm -> !associateSalaryCostRowForm.isBlank())
+                .map(AssociateSalaryCostRowForm::getCost)
+                .reduce(BigInteger::add)
+                .orElse(BigInteger.ZERO);
+
+        BigInteger totalAcademicAndSecretarialSupportCost = form.getAcademicAndSecretarialSupportCostRows().entrySet().stream()
+                .map(Map.Entry::getValue)
+                .filter(academicAndSecretarialSupportCostRowForm -> !academicAndSecretarialSupportCostRowForm.isBlank())
+                .map(AcademicAndSecretarialSupportCostRowForm::getCost)
+                .reduce(BigInteger::add)
+                .orElse(BigInteger.ZERO);
+
+        return totalAssociateSalaryCost
+                .add(totalAcademicAndSecretarialSupportCost)
+                .multiply(percentage)
+                .divide(BigInteger.valueOf(100));
     }
 
     private <R extends AbstractCostRowForm> CompletableFuture<ValidationMessages> saveRows(Map<String, R> rows, BaseFinanceResource finance) {
