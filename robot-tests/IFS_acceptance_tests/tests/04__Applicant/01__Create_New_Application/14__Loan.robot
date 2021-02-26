@@ -115,11 +115,11 @@ Fund sought changes
     When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
     Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
 
-Project cost changes
-    [Documentation]  IFS-8944
-    When the user amends other project costs in finances
-    Then the internal user should see the funding changes
-    And the external user should see the funding changes
+#Project cost changes
+#    [Documentation]  IFS-8944
+#    When the user amends other project costs in finances
+#    Then the internal user should see the funding changes
+#    And the external user should see the funding changes
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
