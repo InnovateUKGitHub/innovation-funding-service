@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.domain.User;
@@ -58,9 +59,34 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private ApplicationDeletionService applicationDeletionService;
 
+    @Mock
+    private AssessmentService assessmentServiceMock;
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
+    }
+
+    @Test
+    public void testApplicationNoAssessment() throws Exception {
+        long applicationId = 1L;
+
+        when(assessmentServiceMock.existsByTargetId(applicationId)).thenReturn(serviceSuccess(false));
+
+        mockMvc.perform(get("/application/{id}/has-assessment", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(Boolean.FALSE)));
+    }
+
+    @Test
+    public void testApplicationHasAssessment() throws Exception {
+        long applicationId = 1L;
+
+        when(assessmentServiceMock.existsByTargetId(applicationId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/application/{id}/has-assessment", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
     }
 
     @Test

@@ -126,7 +126,7 @@ Lead partner responds to query
     [Documentation]    IFS-2062
     [Tags]
     [Setup]  Log in as a different user        &{lead_applicant_credentials_sp}
-    Given the user navigates to the page       ${server}/project-setup/project/${PS_SP_Project_Id}/finance-checks
+    Given the user navigates to the page       ${server}/project-setup/project/${PS_SP_Project_Id}/finance-check
     And the user clicks the button/link        link = Respond
     When the user enters text to a text field  css = .editor  Responding to finance query
     Then the user clicks the button/link       jQuery = .govuk-button:contains("Post response")

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,16 +26,16 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
 
-    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String description;
 
     private Integer quantity;
     private BigDecimal cost;
 
-    @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
     @OneToMany(mappedBy = "financeRowId", cascade = REMOVE)

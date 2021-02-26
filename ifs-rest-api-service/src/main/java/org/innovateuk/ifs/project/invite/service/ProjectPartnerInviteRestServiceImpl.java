@@ -14,36 +14,36 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.sen
 @Service
 public class ProjectPartnerInviteRestServiceImpl extends BaseRestService implements ProjectPartnerInviteRestService {
 
-    private static final String baseUrl = "/project/%d/project-partner-invite";
-    private static final String inviteIdUrl = baseUrl + "/%s";
+    private static final String BASE_URL = "/project/%d/project-partner-invite";
+    private static final String INVITE_ID_URL = BASE_URL + "/%s";
 
     @Override
     public RestResult<Void> invitePartnerOrganisation(long projectId, SendProjectPartnerInviteResource invite) {
-        return postWithRestResult(format(baseUrl, projectId), invite, Void.class);
+        return postWithRestResult(format(BASE_URL, projectId), invite, Void.class);
     }
 
     @Override
     public RestResult<List<SentProjectPartnerInviteResource>> getPartnerInvites(long projectId) {
-        return getWithRestResult(format(baseUrl, projectId), sentProjectPartnerInviteResourceListType());
+        return getWithRestResult(format(BASE_URL, projectId), sentProjectPartnerInviteResourceListType());
     }
 
     @Override
     public RestResult<Void> resendInvite(long projectId, long inviteId) {
-        return postWithRestResult(format(inviteIdUrl, projectId, inviteId) + "/resend", Void.class);
+        return postWithRestResult(format(INVITE_ID_URL, projectId, inviteId) + "/resend", Void.class);
     }
 
     @Override
     public RestResult<Void> deleteInvite(long projectId, long inviteId) {
-        return deleteWithRestResult(format(inviteIdUrl, projectId, inviteId), Void.class);
+        return deleteWithRestResult(format(INVITE_ID_URL, projectId, inviteId), Void.class);
     }
 
     @Override
     public RestResult<SentProjectPartnerInviteResource> getInviteByHash(long projectId, String hash) {
-        return getWithRestResultAnonymous(format(inviteIdUrl, projectId, hash), SentProjectPartnerInviteResource.class);
+        return getWithRestResultAnonymous(format(INVITE_ID_URL, projectId, hash), SentProjectPartnerInviteResource.class);
     }
 
     @Override
     public RestResult<Void> acceptInvite(long projectId, long inviteId, long organisationId) {
-        return postWithRestResultAnonymous(format(inviteIdUrl + "/organisation/%d/accept", projectId, inviteId, organisationId), Void.class);
+        return postWithRestResultAnonymous(format(INVITE_ID_URL + "/organisation/%d/accept", projectId, inviteId, organisationId), Void.class);
     }
 }

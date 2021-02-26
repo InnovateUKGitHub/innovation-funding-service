@@ -135,4 +135,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return putWithRestResult(format("%s/%d/%s", applicationRestURL, applicationId, "reopen-application"), Void.class);
     }
 
+    @Override
+    public RestResult<Boolean> applicationHasAssessment(long applicationId) {
+        return getWithRestResult(format("%s/%s/has-assessment", applicationRestURL, applicationId), Boolean.class);
+    }
 }

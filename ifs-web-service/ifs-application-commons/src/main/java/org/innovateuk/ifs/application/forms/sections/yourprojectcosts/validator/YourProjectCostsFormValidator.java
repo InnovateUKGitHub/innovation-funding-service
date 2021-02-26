@@ -78,6 +78,7 @@ public class YourProjectCostsFormValidator {
                 break;
             case VAT:
                 validateVat(form.getVatForm(), validationHandler);
+                break;
             case ASSOCIATE_SALARY_COSTS:
                 validateRowsIfNotBlank(form.getAssociateSalaryCostRows(), "associateSalaryCostRows[%s].", validationHandler);
                 break;
@@ -103,6 +104,8 @@ public class YourProjectCostsFormValidator {
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+            default:
+                // do nothing
         }
     }
 

@@ -117,6 +117,8 @@ public class RestIdentityProviderService implements IdentityProviderService, App
                     return Error.fieldError(PASSWORD_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
                 case EMAIL_MUST_BE_VALID:
                     return Error.fieldError(EMAIL_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
+                default:
+                    return new Error(identityProviderError.getKey(), code);
             }
         }
 

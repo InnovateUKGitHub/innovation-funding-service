@@ -14,7 +14,6 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -55,9 +54,6 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;

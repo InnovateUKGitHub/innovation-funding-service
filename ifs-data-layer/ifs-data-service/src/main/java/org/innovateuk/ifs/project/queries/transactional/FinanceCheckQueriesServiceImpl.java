@@ -19,6 +19,7 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
 import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -88,7 +88,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
             Optional<ProjectUser> financeContact = getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation());
             if (financeContact.isPresent()) {
                 ServiceResult<Void> result = service.addPost(post, threadId);
-                if (result.isSuccess() && post.author.hasRole(PROJECT_FINANCE)) {
+                if (result.isSuccess() && post.author.hasAuthority(Authority.PROJECT_FINANCE)) {
                     Project project = projectFinance.getProject();
                     return sendResponseNotification(financeContact.get().getUser(), project)
                             .andOnSuccessReturn(() -> query);

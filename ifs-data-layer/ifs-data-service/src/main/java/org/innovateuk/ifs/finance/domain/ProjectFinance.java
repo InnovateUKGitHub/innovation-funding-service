@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.procurement.milestone.domain.ProjectProcurementMilestone;
@@ -46,13 +47,13 @@ public class ProjectFinance extends Finance {
         this.project = project;
     }
 
-    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration) {
-        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears, northernIrelandDeclaration);
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration, Boolean fecModelEnabled, FileEntry fecFileEntry) {
+        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears, northernIrelandDeclaration, fecModelEnabled, fecFileEntry);
         this.project = project;
     }
 
     public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
-        this(organisation, organisationSize, project, null, null, null, null);
+        this(organisation, organisationSize, project, null, null, null, null, null, null);
     }
 
     public Project getProject() {

@@ -17,13 +17,11 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.controller.UserController.DEFAULT_USER_SORT;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.user.resource.Role.getByName;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.junit.Assert.*;
@@ -184,10 +182,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         String filter = "carolyn";
         Pageable pageable = PageRequest.of(0, 20, DEFAULT_USER_SORT);
-        Set<Role> queryRoles = externalRoles()
-                .stream()
-                .map(r -> getByName(r.getName()))
-                .collect(toSet());
+        Set<Role> queryRoles = externalRoles();
 
         List<User> existing = repository.findDistinctByEmailContainingAndStatusAndRolesIn(filter,
                 ACTIVE, queryRoles, pageable).getContent();
@@ -219,10 +214,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         String filter = "carolyn";
         Pageable pageable = PageRequest.of(0, 20, DEFAULT_USER_SORT);
-        Set<Role> queryRoles = externalRoles()
-                .stream()
-                .map(r -> getByName(r.getName()))
-                .collect(toSet());
+        Set<Role> queryRoles = externalRoles();
 
         List<User> existing = repository.findDistinctByEmailContainingAndStatusAndRolesIn(filter,
                 ACTIVE, queryRoles, pageable).getContent();
