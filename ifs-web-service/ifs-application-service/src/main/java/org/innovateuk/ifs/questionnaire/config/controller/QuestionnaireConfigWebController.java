@@ -15,6 +15,7 @@ import org.innovateuk.ifs.questionnaire.resource.DecisionType;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/questionnaire-configure")
 @PreAuthorize("permitAll")
+@Profile("questionnaire-configure")
 public class QuestionnaireConfigWebController {
 
     @Autowired
