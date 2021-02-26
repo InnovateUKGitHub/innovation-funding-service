@@ -283,6 +283,7 @@ public class YourProjectCostsAutosaver {
     private Optional<Long> autosaveAcademicAndSecretarialSupportCostRows(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
         String id = idFromRowPath(field);
         AcademicAndSecretarialSupport cost = getCost(id, () -> new AcademicAndSecretarialSupport(finance.getId()));
+        cost.setCost(new BigInteger(value));
         financeRowRestService.update(cost);
         autoSaveIndirectCost(finance, applicationId, organisationId);
         return Optional.of(cost.getId());
