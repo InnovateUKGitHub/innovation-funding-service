@@ -35,7 +35,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 @PreAuthorize("permitAll")
 public class QuestionnaireWebController {
 
-    private static final String REDIRECT_URL_COOKIE_KEY = "QUESTIONNAIRE_REDIRECT_URL";
+    protected static final String REDIRECT_URL_COOKIE_KEY = "QUESTIONNAIRE_REDIRECT_URL";
+
     @Autowired
     private QuestionnaireRestService questionnaireRestService;
 
