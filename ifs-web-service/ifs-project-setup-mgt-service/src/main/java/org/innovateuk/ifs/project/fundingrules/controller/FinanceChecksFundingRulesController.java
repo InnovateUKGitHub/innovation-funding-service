@@ -95,7 +95,7 @@ public class FinanceChecksFundingRulesController {
                         fundingRulesToSet = fundingRules;
                     }
 
-                    RestResult<Void> saveFundingRulesResult = financeCheckRestService.saveFundingRules(projectId, organisationId, fundingRules);
+                    RestResult<Void> saveFundingRulesResult = financeCheckRestService.saveFundingRules(projectId, organisationId, fundingRulesToSet);
 
                     return validationHandler.
                     addAnyErrors(saveFundingRulesResult).
