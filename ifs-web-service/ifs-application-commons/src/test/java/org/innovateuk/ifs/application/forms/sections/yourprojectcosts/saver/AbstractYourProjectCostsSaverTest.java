@@ -81,6 +81,17 @@ public class AbstractYourProjectCostsSaverTest {
 
     @Test
     public void save() {
+        BigInteger associateOneCost = BigInteger.valueOf(100);
+        BigInteger associateTwoCost = BigInteger.valueOf(200);
+        BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
+        BigInteger academicAndSecretarialSupportTwoCost = BigInteger.valueOf(400);
+        BigInteger expected = associateOneCost
+                .add(associateTwoCost)
+                .add(academicAndSecretarialSupportOneCost)
+                .add(academicAndSecretarialSupportTwoCost)
+                .multiply(BigInteger.valueOf(46))
+                .divide(BigInteger.valueOf(100));
+
         YourProjectCostsForm form = new YourProjectCostsForm();
 
         LabourForm labourForm = new LabourForm();
@@ -126,6 +137,8 @@ public class AbstractYourProjectCostsSaverTest {
         form.getAdditionalCompanyCostForm().setOtherCosts(new AdditionalCostAndDescription());
         form.getAdditionalCompanyCostForm().setOtherStaff(new AdditionalCostAndDescription());
 
+        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, academicAndSecretarialSupportTwoCost, form);
+
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
@@ -152,27 +165,20 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService).create(isA(TravelCost.class));
         verify(financeRowRestService).create(isA(OtherCost.class));
         verify(financeRowRestService).update(isA(Vat.class));
+
+        verify(financeRowRestService).update(isA(IndirectCost.class));
+        IndirectCost indirectCost = (IndirectCost) APPLICATION_FINANCE_RESOURCE.getFinanceOrganisationDetails().get(FinanceRowType.INDIRECT_COSTS).getCosts().get(0);
+        assertEquals(indirectCost.getCostType(), FinanceRowType.INDIRECT_COSTS);
+        assertEquals(expected, indirectCost.getCost());
+        assertEquals(expected, indirectCost.getTotal().toBigInteger());
+
         verify(financeRowRestService, times(6)).update(isA(AdditionalCompanyCost.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);
     }
 
-    @Ignore("needs fixing")
-    public void saveIndirectCostCreatesFinanceRow() {
-        BigInteger associateOneCost = BigInteger.valueOf(100);
-        BigInteger associateTwoCost = BigInteger.valueOf(200);
-        BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger academicAndSecretarialSupportTwoCost = BigInteger.valueOf(400);
-        BigInteger expected = associateOneCost
-                .add(associateTwoCost)
-                .add(academicAndSecretarialSupportOneCost)
-                .add(academicAndSecretarialSupportTwoCost)
-                .multiply(BigInteger.valueOf(46))
-                .divide(BigInteger.valueOf(100));
-
-        YourProjectCostsForm form = new YourProjectCostsForm();
-
+    private void setupDataForIndirectCost(BigInteger associateOneCost, BigInteger associateTwoCost, BigInteger academicAndSecretarialSupportOneCost, BigInteger academicAndSecretarialSupportTwoCost, YourProjectCostsForm form) {
         AssociateSalaryCost associateOne = newAssociateSalaryCost()
                 .withCost(associateOneCost)
                 .withDuration(1)
@@ -207,9 +213,27 @@ public class AbstractYourProjectCostsSaverTest {
 
         form.setAssociateSalaryCostRows(associateSalaryCostRows);
         form.setAcademicAndSecretarialSupportCostRows(academicAndSecretarialSupportCostRows);
+    }
 
-        IndirectCost mockResponse = mock(IndirectCost.class);
-        when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
+    @Test
+    public void saveIndirectCostCreatesFinanceRow() {
+        BigInteger associateOneCost = BigInteger.valueOf(100);
+        BigInteger associateTwoCost = BigInteger.valueOf(200);
+        BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
+        BigInteger academicAndSecretarialSupportTwoCost = BigInteger.valueOf(400);
+        BigInteger expected = associateOneCost
+                .add(associateTwoCost)
+                .add(academicAndSecretarialSupportOneCost)
+                .add(academicAndSecretarialSupportTwoCost)
+                .multiply(BigInteger.valueOf(46))
+                .divide(BigInteger.valueOf(100));
+
+        YourProjectCostsForm form = new YourProjectCostsForm();
+
+        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, academicAndSecretarialSupportTwoCost, form);
+
+        IndirectCost indirectCost = new IndirectCost(1L);
+        when(financeRowRestService.create(any())).thenReturn(restSuccess(indirectCost));
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
 
         OrganisationResource organisationResource = newOrganisationResource().withId(2L).build();
@@ -221,11 +245,11 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService, times(1)).create(isA(IndirectCost.class));
 
         verify(financeRowRestService, times(1)).update(indirectCostArgumentCaptor.capture());
-        IndirectCost indirectCost = indirectCostArgumentCaptor.getValue();
-        assertNotNull(indirectCost);
-        assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCost.getCostType());
-        assertEquals(expected, indirectCost.getCost());
-        assertEquals(expected, indirectCost.getTotal());
+        IndirectCost indirectCostToSave = indirectCostArgumentCaptor.getValue();
+        assertNotNull(indirectCostToSave);
+        assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCostToSave.getCostType());
+        assertEquals(expected, indirectCostToSave.getCost());
+        assertEquals(expected, indirectCostToSave.getTotal().toBigInteger());
 
         verifyNoMoreInteractions(financeRowRestService);
     }
