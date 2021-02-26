@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
@@ -282,7 +283,7 @@ public class YourProjectCostsAutosaver {
     }
 
     private void autoSaveIndirectCost(ApplicationFinanceResource finance, long applicationId, Long organisationId) {
-        if (!finance.getFecModelEnabled()) {
+        if (BooleanUtils.isFalse(finance.getFecModelEnabled())) {
             ApplicationFinanceResource organisationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
             DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
 
