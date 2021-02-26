@@ -14,7 +14,6 @@ buildscript {
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/"}
         mavenCentral()
-        google()
     }
 
     dependencies {
@@ -29,7 +28,6 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://plugins.gradle.org/m2/"}
     mavenCentral()
-    google()
 }
 
 task pullZipkin(type: Exec) {
