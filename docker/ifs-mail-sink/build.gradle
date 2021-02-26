@@ -14,7 +14,6 @@ createContainer.portBindings = ['8765:8080', "9876:8143"]
 
 buildscript {
     repositories {
-        maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/"}
         mavenCentral()
