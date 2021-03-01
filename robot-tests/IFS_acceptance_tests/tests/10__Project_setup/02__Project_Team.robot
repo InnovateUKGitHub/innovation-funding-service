@@ -547,7 +547,7 @@ the internal partner does not see link for added partner
 the internal patner does see link for existing partner
     the user clicks the button/link       link = Back to finance checks
     the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
-    the user should see the element       link = Review all changes to project finances
+    the user should see the element       link = View changes to finances
 
 the user can join the project
     the user should see the element   css = .message-alert

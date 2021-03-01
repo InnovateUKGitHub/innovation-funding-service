@@ -280,7 +280,7 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
     [Setup]  log in as a different user                               &{ifs_admin_user_credentials}
     Given the user navigates to the page                              ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link                              css = a.eligibility-0
-    And the user clicks the button/link                               link = Review all changes to project finances
+    And the user clicks the button/link                               link = View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section     1  200,903    30    57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
@@ -292,7 +292,7 @@ IFS Admin user can review partner's finances before the revisions made
     [Tags]  HappyPath
     Given the user clicks the button/link                            link = Back to finance checks
     When the user clicks the button/link                             css = a.eligibility-2
-    Then the user clicks the button/link                             link = Review all changes to project finances
+    Then the user clicks the button/link                             link = View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the categories are verified for Project finances section     1   200,903   30     57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
@@ -304,7 +304,7 @@ IFS Admin user can review academic partner's finances before the revisions made
     [Tags]  HappyPath
     Given the user clicks the button/link                            link = Back to finance checks
     When the user clicks the button/link                             css = a.eligibility-1
-    Then the user clicks the button/link                             link = Review all changes to project finances
+    Then the user clicks the button/link                             link = View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the categories are verified for Project finances section     1   990   100     990    0    0
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts

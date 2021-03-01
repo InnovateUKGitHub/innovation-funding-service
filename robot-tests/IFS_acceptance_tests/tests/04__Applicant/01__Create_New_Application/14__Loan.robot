@@ -50,6 +50,8 @@ ${loan_PS_Url}                             ${loan_PS}/details
 ${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 ${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
+
+
 *** Test Cases ***
 Loan application shows correct T&C's
     [Documentation]    IFS-6205
