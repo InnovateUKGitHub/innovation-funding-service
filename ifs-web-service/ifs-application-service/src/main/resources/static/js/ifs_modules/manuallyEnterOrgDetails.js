@@ -89,7 +89,7 @@ IFS.manuallyEnter = (function () {
                                    '<input class="govuk-input govuk-!-width-one-half govuk-!-margin-bottom-2"' +
                                    'id="execOfficer"' +
                                     'type="text" ' +
-                                    'maxlength="255" ' +
+                                    'maxlength="50" ' +
                                     'name = "executiveOfficers[' + idCount + '].name"/>' +
                                     '<span class="float-right">' +
                                        '<button class="button-clear alignright" data-remove-row-man="execOfficer"' +
