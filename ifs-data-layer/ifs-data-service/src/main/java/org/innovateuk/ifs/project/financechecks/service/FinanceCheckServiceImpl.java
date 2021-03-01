@@ -469,9 +469,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetViability(Long projectId, String reason) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
-            long organisationId = projectFinance.getOrganisation().getId();
+    public ServiceResult<Void> resetViability(Long projectId, Long organisationId, String reason) {
+        projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId).ifPresent(projectFinance -> {
             viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), reason);
             projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
             deleteSpendProfileAndResetGol(projectId);
@@ -482,9 +481,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetEligibility(Long projectId, String reason) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
-            long organisationId = projectFinance.getOrganisation().getId();
+    public ServiceResult<Void> resetEligibility(Long projectId, Long organisationId, String reason) {
+        projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId).ifPresent(projectFinance -> {
             eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), reason);
             projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
             deleteSpendProfileAndResetGol(projectId);
@@ -495,8 +493,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> resetFinanceChecks(Long projectId) {
-        resetViability(projectId, "Finance reset");
-        resetEligibility(projectId, "Finance reset");
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            resetViability(projectId, organisationId, "Finance reset");
+            resetEligibility(projectId, organisationId, "Finance reset");
+        });
+
         return serviceSuccess();
     }
 

@@ -300,7 +300,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             return failureView.get();
         }
 
-        RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, resetEligibilityForm.getRetractionReason());
+        RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, organisationId, resetEligibilityForm.getRetractionReason());
         return validationHandler
                 .addAnyErrors(resetEligibilityResult)
                 .failNowOrSucceedWith(failureView, successView);

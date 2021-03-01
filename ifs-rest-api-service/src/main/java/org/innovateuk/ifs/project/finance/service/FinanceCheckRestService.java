@@ -22,7 +22,7 @@ public interface FinanceCheckRestService {
 
     RestResult<ViabilityResource> getViability(Long projectId, Long organisationId);
 
-    RestResult<Void> resetViability(Long projectId, String resetReason);
+    RestResult<Void> resetViability(Long projectId, Long organisationId, String resetReason);
 
     RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus);
 
@@ -30,7 +30,7 @@ public interface FinanceCheckRestService {
 
     RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
-    RestResult<Void> resetEligibility(Long projectId, String resetReason);
+    RestResult<Void> resetEligibility(Long projectId, Long organisationId, String resetReason);
 
     RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId);
 

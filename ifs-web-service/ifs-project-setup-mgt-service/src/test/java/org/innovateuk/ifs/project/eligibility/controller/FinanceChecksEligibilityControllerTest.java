@@ -408,7 +408,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.resetEligibility(projectId, "something")).
+        when(financeCheckRestService.resetEligibility(projectId, organisationId, "something")).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -418,7 +418,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(financeCheckRestService).resetEligibility(projectId, "something");
+        verify(financeCheckRestService).resetEligibility(projectId, organisationId, "something");
     }
 
     @Test

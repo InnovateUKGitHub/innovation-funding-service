@@ -50,11 +50,11 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_VIABILITY')")
     @Activity(projectId = "projectId", type = ActivityType.VIABILITY_RESET)
-    ServiceResult<Void> resetViability(Long projectId, String reason);
+    ServiceResult<Void> resetViability(Long projectId, Long organisationId, String reason);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_ELIGIBILITY')")
     @Activity(projectId = "projectId", type = ActivityType.ELIGIBILITY_RESET)
-    ServiceResult<Void> resetEligibility(Long projectId, String reason);
+    ServiceResult<Void> resetEligibility(Long projectId, Long organisationId, String reason);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_FINANCE_CHECKS')")
     @Activity(projectId = "projectId", type = ActivityType.FINANCE_CHECKS_RESET)

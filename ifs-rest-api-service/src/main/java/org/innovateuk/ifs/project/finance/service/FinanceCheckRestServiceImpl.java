@@ -62,8 +62,9 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
-    public RestResult<Void> resetEligibility(Long projectId, String resetReason) {
-        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/eligibility/reset";
+    public RestResult<Void> resetEligibility(Long projectId, Long organisationId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/reset";
 
         StringResource resource = new StringResource(resetReason);
 
@@ -71,8 +72,9 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
-    public RestResult<Void> resetViability(Long projectId, String resetReason) {
-        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/viability/reset";
+    public RestResult<Void> resetViability(Long projectId, Long organisationId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/viability/reset";
 
         StringResource resource = new StringResource(resetReason);
 

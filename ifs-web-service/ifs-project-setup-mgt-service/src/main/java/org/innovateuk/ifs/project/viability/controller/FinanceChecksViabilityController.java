@@ -110,7 +110,7 @@ public class FinanceChecksViabilityController {
             return failureView.get();
         }
 
-        RestResult<Void> resetViabilityResult = financeCheckRestService.resetViability(projectId, form.getRetractionReason());
+        RestResult<Void> resetViabilityResult = financeCheckRestService.resetViability(projectId, organisationId, form.getRetractionReason());
 
 
         return validationHandler.
