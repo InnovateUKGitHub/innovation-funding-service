@@ -170,9 +170,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                           HttpServletRequest request,
                                                           HttpServletResponse response,
                                                           UserResource user) {
-        organisationForm.setSicCodes(organisationForm.getSicCodes()
-                .stream().filter(sicCode -> sicCode.getSicCode() != null)
-                .collect(Collectors.toList()));
+        removeEmptyJsFormFields(organisationForm);
 
         if (bindingResult.hasFieldErrors()) {
             return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
@@ -207,9 +205,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
-        organisationForm.setSicCodes(organisationForm.getSicCodes()
-                .stream().filter(sicCode -> sicCode.getSicCode() != null)
-                .collect(Collectors.toList()));
+        removeEmptyJsFormFields(organisationForm);
 
         organisationForm.getAddressForm().validateAction(bindingResult);
         if (validationHandler.hasErrors()) {
@@ -228,9 +224,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                          Model model,
                                          HttpServletRequest request, HttpServletResponse response,
                                          @RequestHeader(value = REFERER, required = false) final String referer) {
-        organisationForm.setSicCodes(organisationForm.getSicCodes()
-                .stream().filter(sicCode -> sicCode.getSicCode() != null)
-                .collect(Collectors.toList()));
+        removeEmptyJsFormFields(organisationForm);
 
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
@@ -255,49 +249,13 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         }
     }
 
-    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-sic-code")
-    public String addSicCode(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                             BindingResult bindingResult,
-                             Model model,
-                             HttpServletRequest request, HttpServletResponse response,
-                             @RequestHeader(value = REFERER, required = false) final String referer) {
-        if (organisationForm.getSicCodes().size() > 3) {
-            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-        }
-        populateViewModel(organisationForm, model, request);
-
-        organisationForm.getSicCodes().add(new OrganisationSicCodeResource());
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-    }
-
-    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-sic-code")
-    public String removeSicCode(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                BindingResult bindingResult,
-                                Model model,
-                                HttpServletRequest request, HttpServletResponse response,
-                                @RequestParam("remove-sic-code") int index,
-                                @RequestHeader(value = REFERER, required = false) final String referer) {
-
-        populateViewModel(organisationForm, model, request);
-
-        organisationForm.getSicCodes().remove(index);
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-    }
-
-    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-exec-officer")
-    public String addExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                      BindingResult bindingResult,
-                                      Model model,
-                                      HttpServletRequest request, HttpServletResponse response,
-                                      @RequestHeader(value = REFERER, required = false) final String referer) {
-
-        populateViewModel(organisationForm, model, request);
-
-        organisationForm.getExecutiveOfficers().add(new OrganisationExecutiveOfficerResource());
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    private void removeEmptyJsFormFields(OrganisationCreationForm organisationForm) {
+        organisationForm.setExecutiveOfficers(organisationForm.getExecutiveOfficers()
+                .stream().filter(execOfficer -> execOfficer.getName() != null)
+                .collect(Collectors.toList()));
+        organisationForm.setSicCodes(organisationForm.getSicCodes()
+                .stream().filter(sicCode -> sicCode.getSicCode() != null)
+                .collect(Collectors.toList()));
     }
 
     @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-exec-officer")
