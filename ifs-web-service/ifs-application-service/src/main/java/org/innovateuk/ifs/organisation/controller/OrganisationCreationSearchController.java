@@ -170,6 +170,10 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                                           HttpServletRequest request,
                                                           HttpServletResponse response,
                                                           UserResource user) {
+        organisationForm.setSicCodes(organisationForm.getSicCodes()
+                .stream().filter(sicCode -> sicCode.getSicCode() != null)
+                .collect(Collectors.toList()));
+
         if (bindingResult.hasFieldErrors()) {
             return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
         }
