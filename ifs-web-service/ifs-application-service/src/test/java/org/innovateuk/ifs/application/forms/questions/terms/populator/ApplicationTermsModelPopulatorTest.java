@@ -154,7 +154,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.getTermsAcceptedOn().isPresent());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
-        assertEquals(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.getId(), actual.getSubsidyBasisQuestionUrl());
+        assertEquals(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.getId()), actual.getSubsidyBasisQuestionUrl());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
                 organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
