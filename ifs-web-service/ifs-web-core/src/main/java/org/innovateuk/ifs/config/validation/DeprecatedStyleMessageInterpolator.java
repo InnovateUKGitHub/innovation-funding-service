@@ -12,7 +12,10 @@ import java.util.Map;
  * Some time ago the hibernate validator switched to using {min} style syntax as opposed to {0} indexed based
  * following a CVE.
  *
- * The ui uses the old style in thymeleaf and js in abundance so this is a workaround.
+ * The ui uses the old style in thymeleaf and js in abundance, so this is very much a workaround.
+ *
+ * Also workaround the ' escape issues
+ *
  */
 public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInterpolator {
 
@@ -25,6 +28,18 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
     private final static String TOO_MANY_KEY = "too.many";
     private final static String MIN_KEY = "min";
     private final static String TOO_FEW_KEY = "too.few";
+
+    @Override
+    public String interpolate(String message, Context context) {
+        String interpolatedMessage = super.interpolate(message, context);
+        return interpolatedMessage.replaceAll("''", "'");
+    }
+
+    @Override
+    public String interpolate(String message, Context context, Locale locale) {
+        String interpolatedMessage = super.interpolate(message, context, locale);
+        return interpolatedMessage.replaceAll("''", "'");
+    }
 
     @Override
     public String interpolate(Context context, Locale locale, String term) {
