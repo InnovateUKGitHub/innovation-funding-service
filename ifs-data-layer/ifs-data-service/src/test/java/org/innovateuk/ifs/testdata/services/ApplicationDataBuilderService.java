@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -29,6 +30,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +47,7 @@ import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApp
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.ProcurementMilestoneDataBuilder.newProcurementMilestoneDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.SubsidyBasisDataBuilder.newSubsidyBasisDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -67,6 +70,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
     private ProcurementMilestoneDataBuilder procurementMilestoneDataBuilder;
     private QuestionResponseDataBuilder questionResponseDataBuilder;
+    private SubsidyBasisDataBuilder subsidyBasisDataBuilder;
 
     @PostConstruct
     public void readCsvs() {
@@ -78,6 +82,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
         procurementMilestoneDataBuilder = newProcurementMilestoneDataBuilder(serviceLocator);
+        subsidyBasisDataBuilder = newSubsidyBasisDataBuilder(serviceLocator);
     }
 
     public List<ApplicationQuestionResponseData> createApplicationQuestionResponses(
@@ -242,6 +247,15 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         });
 
         return simpleMap(builders, BaseBuilder::build);
+    }
+
+    public List<SubsidyBasisData> createSubsidyBasis(ApplicationData applicationData,
+                                                     ApplicationLine applicationLine,
+                                                     List<ExternalUserLine> externalUsers) {
+        if (applicationData.getCompetition().getFundingRules().equals(FundingRules.SUBSIDY_CONTROL) && applicationLine.markQuestionsComplete) {
+
+        }
+        return new ArrayList<SubsidyBasisData>();
     }
 
     public List<ProcurementMilestoneData> createProcurementMilestones(
