@@ -72,7 +72,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ZonedDateTime termsAcceptedOn = now();
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "compName", compeitionId, questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah");
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, false)).thenReturn(viewModel);
 
@@ -102,7 +102,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ZonedDateTime termsAcceptedOn = now();
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(applicationId, "compeName", compeitionId, questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), termsAcceptedOn, true, additionalTerms, true, "/blah");
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, applicationId, questionId, true)).thenReturn(viewModel);
 
@@ -181,7 +181,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .thenReturn(restFailure(fieldError("agreed", "false", "")));
 
         ApplicationTermsViewModel viewModel = new ApplicationTermsViewModel(application.getId(), "compName",competition.getId(), questionId,
-                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms);
+                competitionTermsTemplate, collaborativeApplication, termsAccepted, loggedInUser.getName(), null, true, additionalTerms, true, "/blah");
 
         when(applicationTermsModelPopulatorMock.populate(loggedInUser, application.getId(), questionId, false)).thenReturn(viewModel);
 
