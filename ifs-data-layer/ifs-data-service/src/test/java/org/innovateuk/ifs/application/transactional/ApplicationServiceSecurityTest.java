@@ -116,7 +116,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         EnumSet<Role> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
         nonApplicantRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+            setLoggedInUser(newUserResource().withRoleGlobal(role).build());
 
             try {
                 classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L,

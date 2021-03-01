@@ -9,11 +9,10 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 
 /**
@@ -33,7 +32,7 @@ public class ProjectFinanceRowPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "CRUD", description = "The consortium can update the cost for their application and organisation")
     public boolean projectFinanceCanCrudProjectFinanceRows(final ProjectFinanceRow cost, final UserResource user) {
-        return user.hasRole(PROJECT_FINANCE);
+        return user.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
     @PermissionRule(value = "CRUD", description = "The comp finance user can edit finances")
@@ -48,7 +47,7 @@ public class ProjectFinanceRowPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ADD_ROW", description = "The consortium can update the cost for their application and organisation")
     public boolean projectFinanceCanCrudProjectFinanceRows(final ProjectFinanceResource financeResource, final UserResource user) {
-        return user.hasRole(PROJECT_FINANCE);
+        return user.hasAuthority(Authority.PROJECT_FINANCE);
     }
 
     private boolean isProjectTeamMember(final ProjectFinance projectFinance, final UserResource user) {

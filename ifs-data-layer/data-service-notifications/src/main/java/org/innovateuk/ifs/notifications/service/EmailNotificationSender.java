@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.notifications.service;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_FAILED_WHITELIST_BLACKLIST_CHECK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -35,6 +38,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @SuppressWarnings("unused")
 class EmailNotificationSender implements NotificationSender {
 
+    private static final Log LOG = LogFactory.getLog(EmailNotificationSender.class);
+
     @Autowired
     private EmailService emailService;
 
@@ -44,6 +49,9 @@ class EmailNotificationSender implements NotificationSender {
     @Autowired
     private TransactionalHelper transactionalHelper;
 
+    @Autowired
+    private WhiteBlackDomainFilter whiteBlackDomainFilter;
+
     @Override
     public NotificationMedium getNotificationMedium() {
         return EMAIL;
@@ -51,6 +59,15 @@ class EmailNotificationSender implements NotificationSender {
 
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification) {
+
+        for (NotificationMessage notificationMessage : notification.getTo()) {
+            if (!whiteBlackDomainFilter.passesFilterCheck(notificationMessage.getTo().getEmailAddress())) {
+                LOG.error("Discarded email notification due to whitelist/blacklist rules for one or more email recipients: "
+                        + notificationMessage.getTo().getEmailAddress());
+                // I'm treating this as an error, not as code but a build/release process error that we need to propagate and signal
+                return serviceFailure(EMAILS_FAILED_WHITELIST_BLACKLIST_CHECK);
+            }
+        }
 
         return renderTemplates(notification).andOnSuccess(templates -> {
 

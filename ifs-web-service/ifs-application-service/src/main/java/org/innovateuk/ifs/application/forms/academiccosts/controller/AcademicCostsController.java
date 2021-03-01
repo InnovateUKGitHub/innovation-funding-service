@@ -62,7 +62,7 @@ public class AcademicCostsController {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'assessor')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'assessor')")
     @SecuredBySpring(value = "VIEW_ACADEMIC_COSTS", description = "Applicants and internal users can view the academic project costs page")
     public String viewAcademicCosts(Model model,
                                     UserResource user,

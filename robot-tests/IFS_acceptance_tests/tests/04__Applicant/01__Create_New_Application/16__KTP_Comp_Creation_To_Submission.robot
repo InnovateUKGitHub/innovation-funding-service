@@ -87,6 +87,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7723 Improvement to company search results
 ...
+...            IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -178,10 +180,15 @@ The knowledge transfer partnership t&c's are correct
     [Teardown]   the user goes back to the previous page
 
 T&c's can be confirmed
-    [Documentation]  IFS-7213
-    Given the user clicks the button/link    jQuery = button:contains("Done")
-    When the user clicks the button/link     link = Back to competition details
-    Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
+    [Documentation]  IFS-7213  IFS-9124
+    Given the user clicks the button/link                    jQuery = button:contains("Done")
+    When the user sees that the radio button is selected     termsAndConditionsId  34
+    And the user should see the element                      link = Innovate UK (opens in a new window)
+    And the user clicks the button/link                      jQuery = button:contains("Done")
+    And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
+    And the user should see the element                      jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
+    Then the user clicks the button/link                     link = Back to competition details
+    And the user should see the element                      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Admin user completes the KTP competition setup
     [Documentation]  IFS-7213
@@ -680,9 +687,9 @@ The lead should be able to access the finance overview page before approval
     [Documentation]  IFS-8328  IFS-7723
     When the user clicks the button/link                                             link = view the project finance overview
     Then the user should see the changes in the finance table in Overview screen
-    And The user should see the element                                              jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
-    And The user should not see the element                                          link = Change funding level percentages
-    [Teardown]  the user clicks the button/link                                      link = Back to finance checks
+    And The user should see the element                                               jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
+    And The user should not see the element                                           link = Change funding level percentages
+    [Teardown]  the user clicks the button/link                                       link = Back to finance checks
 
 The partner views the Project team section as Complete at all times
     [Documentation]  IFS-8116
@@ -1345,7 +1352,7 @@ MO should see read only view of project details
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT") ~ td:contains("Complete")
     the user should see the element             jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
     the user should see the element             jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
-    the user should not see the element         jQuery = button:contains("Edit")
+    the user should not see the element         jQThe applicants should not see knowledge baseduery = button:contains("Edit")
 
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")

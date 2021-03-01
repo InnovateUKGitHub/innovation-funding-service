@@ -59,7 +59,7 @@ Internal user checks the Finance overview page
 The lead checks the Finance overview page
     [Documentation]  IFS-8328
     Given Log in as a different user                                                                  &{ktpLead}
-    And The user navigates to the page                                                                ${server}/project-setup/project/${ktpProjectID}/finance-checks
+    And The user navigates to the page                                                                ${server}/project-setup/project/${ktpProjectID}/finance-check
     When The user clicks the button/link                                                              link = your project finance overview
     Then the user verifies the values in the finance summary table after editing the project costs
     And the user checks the values in the projects costs summary table
@@ -73,7 +73,7 @@ The lead checks the Eligibility check page
 The partner checks the Finance overview page
     [Documentation]  IFS-8328
     Given Log in as a different user                                                                  &{collaborator1_credentials}
-    And The user navigates to the page                                                                ${server}/project-setup/project/${ktpProjectID}/finance-checks
+    And The user navigates to the page                                                                ${server}/project-setup/project/${ktpProjectID}/finance-check
     When The user clicks the button/link                                                              link = project finance overview
     Then the user verifies the values in the finance summary table after editing the project costs
     And the user checks the values in the projects costs summary table

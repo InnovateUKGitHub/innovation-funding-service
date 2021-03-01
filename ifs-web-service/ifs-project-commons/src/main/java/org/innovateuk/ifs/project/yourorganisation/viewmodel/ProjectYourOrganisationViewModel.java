@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisationViewModel {
@@ -54,6 +54,6 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
     }
 
     public boolean isAllowedToEditOrganisationSize() {
-        return getLoggedInUser().hasRole(Role.PROJECT_FINANCE) && isAllEligibilityAndViabilityInReview;
+        return getLoggedInUser().hasAuthority(Authority.PROJECT_FINANCE) && isAllEligibilityAndViabilityInReview;
     }
 }

@@ -212,9 +212,9 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
                     "org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN," +
                     "org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED)";
     
-    String totalApplications = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
-    String assigned = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
-    String submitted = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)";
+    String TOTAL_APPLICATIONS = "SUM(CASE WHEN application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
+    String ASSIGNED = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
+    String SUBMITTED = "SUM(CASE WHEN application.id IS NOT NULL AND application.competition.id = :competitionId AND assessment.activityState IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)";
     String AVAILABLE_ASSESSOR_QUERY = "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN User user ON user.id = assessmentParticipant.user.id " +
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
@@ -242,9 +242,9 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "user.firstName, " +
             "user.lastName, " +
             "profile.skillsAreas, " +
-            totalApplications + ", " +
-            assigned + ", " +
-            submitted + ") " +
+            TOTAL_APPLICATIONS + ", " +
+            ASSIGNED + ", " +
+            SUBMITTED + ") " +
             AVAILABLE_ASSESSOR_QUERY
     )
     Page<ApplicationAvailableAssessorResource> findAvailableAssessorsForApplication(long competitionId,
