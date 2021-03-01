@@ -44,7 +44,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
     private final boolean ktp;
-    private final boolean spendProfileGenerated;
+    private final boolean golApproved;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -63,13 +63,13 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean externalView,
                                              boolean isUsingJesFinances,
                                              boolean canEditAcademicFinances,
-                                             List<ProjectFinanceResource> projectFinances) {
+                                             List<ProjectFinanceResource> projectFinances,
+                                             boolean golApproved) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
-        this.spendProfileGenerated = project.isSpendProfileGenerated();
         this.h2020 = competition.isH2020();
         this.procurement = competition.isProcurement();
         this.loanCompetition = competition.isLoan();
@@ -90,6 +90,7 @@ public class FinanceChecksEligibilityViewModel {
         this.canEditAcademicFinances = canEditAcademicFinances;
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.ktp = competition.isKtp();
+        this.golApproved = golApproved;
     }
 
     public boolean isApproved() {
@@ -260,7 +261,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isCanReset() {
-        return isApproved() && projectIsActive && !spendProfileGenerated;
+        return isApproved() && projectIsActive && !golApproved;
     }
 
     public LocalDate getResetDate() {

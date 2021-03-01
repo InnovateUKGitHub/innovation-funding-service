@@ -9,6 +9,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
@@ -16,6 +17,8 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
@@ -65,6 +68,9 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -202,6 +208,9 @@ public class FinanceChecksViabilityController {
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
 
+        GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
+        boolean golApproved = golState.getState() == GrantOfferLetterState.APPROVED;
+
         return new FinanceChecksViabilityViewModel(project,
                 competition,
                 organisationName,
@@ -228,7 +237,8 @@ public class FinanceChecksViabilityController {
                 resetDate,
                 organisationId,
                 organisationSizeDescription,
-                projectFinances);
+                projectFinances,
+                golApproved);
     }
 
     private String name(String firstName, String lastName) {

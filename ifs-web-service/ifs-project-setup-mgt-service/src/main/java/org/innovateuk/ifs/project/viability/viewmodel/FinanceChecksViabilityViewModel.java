@@ -45,8 +45,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean viabilityReadyToConfirm;
     private final boolean hasGrantClaimPercentage;
     private final boolean ktpCompetition;
-    private final boolean spendProfileGenerated;
-
+    private final boolean golApproved;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -69,7 +68,8 @@ public class FinanceChecksViabilityViewModel {
                                            LocalDate resetDate,
                                            Long organisationId,
                                            String organisationSizeDescription,
-                                           List<ProjectFinanceResource> projectFinances) {
+                                           List<ProjectFinanceResource> projectFinances,
+                                           boolean golApproved) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -94,12 +94,12 @@ public class FinanceChecksViabilityViewModel {
         this.projectName = project.getName();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
-        this.spendProfileGenerated = project.isSpendProfileGenerated();
         this.loanCompetition = competition.isLoan();
         this.procurementCompetition  = competition.isProcurement();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.ktpCompetition = competition.isKtp();
+        this.golApproved = golApproved;
     }
 
     public String getOrganisationName() {
@@ -175,7 +175,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isCanReset() {
-        return approved && projectIsActive && !spendProfileGenerated;
+        return approved && projectIsActive && !golApproved;
     }
 
     public LocalDate getApprovalDate() {

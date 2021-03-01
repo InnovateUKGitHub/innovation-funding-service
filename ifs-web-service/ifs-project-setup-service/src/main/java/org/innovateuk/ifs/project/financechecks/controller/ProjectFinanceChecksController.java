@@ -496,7 +496,7 @@ public class ProjectFinanceChecksController {
                 true,
                 isUsingJesFinances,
                 false,
-                projectFinances));
+                projectFinances, false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

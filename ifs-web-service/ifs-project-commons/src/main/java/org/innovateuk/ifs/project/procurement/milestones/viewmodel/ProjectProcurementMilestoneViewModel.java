@@ -18,9 +18,12 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final PaymentMilestoneResource paymentMilestoneResource;
     private final boolean eligibilityAndViabilityApproved;
     private final boolean externalUser;
-    private final boolean spendProfileGenerated;
+    private final boolean golApproved;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl,
+                                                boolean readOnly, PaymentMilestoneResource paymentMilestoneResource,
+                                                boolean eligibilityAndViabilityApproved, boolean externalUser,
+                                                boolean golApproved) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
         this.organisationId = finance.getOrganisation();
@@ -32,7 +35,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         this.eligibilityAndViabilityApproved = eligibilityAndViabilityApproved;
         this.paymentMilestoneResource = paymentMilestoneResource;
         this.externalUser = externalUser;
-        this.spendProfileGenerated = project.isSpendProfileGenerated();
+        this.golApproved = golApproved;
     }
 
     public long getApplicationId() {
@@ -82,7 +85,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     }
 
     public boolean isCanReset() {
-        return this.paymentMilestoneResource.isMilestonePaymentApproved() && !spendProfileGenerated;
+        return this.paymentMilestoneResource.isMilestonePaymentApproved() && !golApproved;
     }
 
     public boolean isApproved() {

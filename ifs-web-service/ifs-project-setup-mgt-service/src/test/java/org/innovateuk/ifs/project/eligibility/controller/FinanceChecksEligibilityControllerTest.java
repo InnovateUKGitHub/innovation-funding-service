@@ -19,6 +19,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
@@ -32,6 +33,8 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -104,6 +107,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     @Mock
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
 
+    @Mock
+    private GrantOfferLetterService grantOfferLetterService;
+
     private OrganisationResource industrialOrganisation;
 
     private OrganisationResource academicOrganisation;
@@ -143,6 +149,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH.getId())
                 .build();
 
+        GrantOfferLetterStateResource grantOfferLetterStateResource = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.PENDING, null);
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
@@ -153,6 +160,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(Collections.emptyList()));
+        when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
     }
 
     @Test

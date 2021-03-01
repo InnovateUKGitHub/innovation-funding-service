@@ -20,6 +20,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.form.ResetEligibilityForm;
@@ -35,6 +36,8 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -104,6 +107,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Autowired
     private ProjectAcademicCostsSaver projectAcademicCostsSaver;
 
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     @AsyncMethod
@@ -147,6 +153,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
+            GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
+            boolean golApproved = golState.getState() == GrantOfferLetterState.APPROVED;
+
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
                     organisation.get().getName(),
                     isLeadPartnerOrganisation,
@@ -162,7 +171,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     false,
                     isUsingJesFinances,
                     editAcademicFinances,
-                    projectFinances
+                    projectFinances,
+                    golApproved
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
