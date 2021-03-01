@@ -394,7 +394,6 @@ New lead applicant opens the KTP Project costs Guidance links in the new window
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814  IFS-9239
-#    Given the user clicks the button/link                            link = Return to finances
     Given the user clicks the button/link                              link = Back to application overview
     When the lead invites a partner and accepted the invitation
     Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
