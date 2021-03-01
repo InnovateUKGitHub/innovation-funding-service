@@ -74,6 +74,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setAcademicAndSecretarialSupportCostRows(toRows(finance, FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
                 AcademicAndSecretarialSupportCostRowForm.class, AcademicAndSecretarialSupport.class));
 
+        form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportCostRowForm(finance));
+
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         if (ApplicationFinanceResource.class.equals(finance.getClass()) && organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
@@ -81,6 +83,14 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         }
 
         return form;
+    }
+
+    private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportCostRowForm(BaseFinanceResource finance) {
+        FinanceRowCostCategory financeRowCostCategory = finance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT);
+        if (financeRowCostCategory != null) {
+            return new AcademicAndSecretarialSupportCostRowForm();
+        }
+        return null;
     }
 
     private JustificationForm justificationForm(BaseFinanceResource finance) {

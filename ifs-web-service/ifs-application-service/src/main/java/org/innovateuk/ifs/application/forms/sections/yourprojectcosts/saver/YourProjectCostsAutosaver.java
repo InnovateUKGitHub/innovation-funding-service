@@ -85,7 +85,7 @@ public class YourProjectCostsAutosaver {
                 return autosaveVAT(value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("justificationForm.justification")) {
                 return autosaveJustification(value, finance, applicationId, organisation.getId());
-            } else if (field.startsWith("academicAndSecretarialSupportCostRows")) {
+            } else if (field.startsWith("academicAndSecretarialSupportForm.cost")) {
                 return autosaveAcademicAndSecretarialSupportCostRows(field, value, finance, applicationId, organisation.getId());
             } else {
                 throw new IFSRuntimeException(format("Auto save field not handled %s", field), emptyList());
@@ -281,12 +281,20 @@ public class YourProjectCostsAutosaver {
     }
 
     private Optional<Long> autosaveAcademicAndSecretarialSupportCostRows(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
-        String id = idFromRowPath(field);
-        AcademicAndSecretarialSupport cost = getCost(id, () -> new AcademicAndSecretarialSupport(finance.getId()));
-        cost.setCost(new BigInteger(value));
-        financeRowRestService.update(cost);
-        autoSaveIndirectCost(finance, applicationId, organisationId);
-        return Optional.of(cost.getId());
+        if (!finance.getFecModelEnabled()) {
+            ApplicationFinanceResource organisationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+            DefaultCostCategory financeOrganisationDetails = (DefaultCostCategory) organisationFinance.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT);
+            AcademicAndSecretarialSupport financeRowItem = (AcademicAndSecretarialSupport) financeOrganisationDetails.getCosts().stream()
+                    .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT)
+                    .findFirst()
+                    .orElseGet(() -> financeRowRestService.create(new AcademicAndSecretarialSupport(finance.getId())).getSuccess());
+
+            financeRowItem.setCost(new BigInteger(value));
+            financeRowRestService.update(financeRowItem);
+            autoSaveIndirectCost(finance, applicationId, organisationId);
+            return Optional.of(financeRowItem.getId());
+        }
+        return Optional.empty();
     }
 
     private void autoSaveIndirectCost(ApplicationFinanceResource finance, long applicationId, Long organisationId) {

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.innovateuk.ifs.finance.resource.cost.AcademicAndSecretarialSupport;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
@@ -50,7 +50,7 @@ public class YourProjectCostsForm {
 
     private JustificationForm justificationForm = new JustificationForm();
 
-    private AcademicAndSecretarialSupportForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportForm();
+    private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm();
 
     private Boolean eligibleAgreement;
 
@@ -298,7 +298,8 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
-        return calculateTotal(academicAndSecretarialSupportCostRows);
+        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm.getCost())
+                .orElse(BigInteger.valueOf(0)));
     }
 
     public BigDecimal getTotalIndirectCosts()
@@ -389,11 +390,11 @@ public class YourProjectCostsForm {
                 .filter(cost -> cost.getType() != null && cost.getType() == KtpTravelCostType.SUPERVISOR));
     }
 
-    public AcademicAndSecretarialSupportForm getAcademicAndSecretarialSupportForm() {
+    public AcademicAndSecretarialSupportCostRowForm getAcademicAndSecretarialSupportForm() {
         return academicAndSecretarialSupportForm;
     }
 
-    public void setAcademicAndSecretarialSupportForm(AcademicAndSecretarialSupportForm academicAndSecretarialSupportForm) {
+    public void setAcademicAndSecretarialSupportForm(AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm) {
         this.academicAndSecretarialSupportForm = academicAndSecretarialSupportForm;
     }
 }

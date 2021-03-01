@@ -3890,13 +3890,12 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 
             <th:block th:unless="${model.isReadOnly(financeRowType)}">
 
-                <th:block th:each="entry : ${form.academicAndSecretarialSupportCostRows}">
                     <th:block
                         th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=academicAndSecretarialSupportCostRows)"/>
                     <input type="number"
                            id="academicAndSecretarialSupportCostRows"
-                           th:field="${form.academicAndSecretarialSupportCostRows[__${entry.key}__].cost}"
-                           class="govuk-input"
+                           th:field="${form.academicAndSecretarialSupportForm.cost}"
+                           class="govuk-input academic-and-secretarial-support-totals"
                            required="required"
                            th:errorclass="govuk-input--error"
                            placeholder="0"
@@ -3904,7 +3903,6 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                            max="9999999999999999999"
                            data-field-errormessage="This field can only accept whole numbers."
                     />
-                </th:block>
 
 
                 <h4 class="govuk-heading-s alignright section-total-summary">
