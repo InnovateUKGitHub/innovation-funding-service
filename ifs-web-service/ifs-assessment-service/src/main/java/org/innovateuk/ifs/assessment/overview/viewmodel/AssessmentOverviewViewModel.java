@@ -2,8 +2,10 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Holder of model attributes for the Assessment Overview view.
@@ -20,6 +22,7 @@ public class AssessmentOverviewViewModel {
     private final List<AssessmentOverviewSectionViewModel> sections;
     private final List<AssessmentOverviewAppendixViewModel> appendices;
     private final String termsAndConditionsTerminology;
+    private final ApplicationSubsidyBasisViewModel applicationSubsidyBasisViewModel;
 
     public AssessmentOverviewViewModel(long assessmentId,
                                        long applicationId,
@@ -30,7 +33,8 @@ public class AssessmentOverviewViewModel {
                                        long daysLeft,
                                        List<AssessmentOverviewSectionViewModel> sections,
                                        List<AssessmentOverviewAppendixViewModel> appendices,
-                                       String termsAndConditionsTerminology) {
+                                       String termsAndConditionsTerminology,
+                                       ApplicationSubsidyBasisViewModel applicationSubsidyBasisViewModel) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -41,6 +45,7 @@ public class AssessmentOverviewViewModel {
         this.sections = sections;
         this.appendices = appendices;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
+        this.applicationSubsidyBasisViewModel = applicationSubsidyBasisViewModel;
     }
 
     public long getAssessmentId() {
@@ -83,43 +88,7 @@ public class AssessmentOverviewViewModel {
         return termsAndConditionsTerminology;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        AssessmentOverviewViewModel that = (AssessmentOverviewViewModel) o;
-
-        return new EqualsBuilder()
-                .append(assessmentId, that.assessmentId)
-                .append(applicationId, that.applicationId)
-                .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
-                .append(daysLeftPercentage, that.daysLeftPercentage)
-                .append(daysLeft, that.daysLeft)
-                .append(applicationName, that.applicationName)
-                .append(sections, that.sections)
-                .append(appendices, that.appendices)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(assessmentId)
-                .append(applicationId)
-                .append(applicationName)
-                .append(competitionId)
-                .append(competitionName)
-                .append(daysLeftPercentage)
-                .append(daysLeft)
-                .append(sections)
-                .append(appendices)
-                .toHashCode();
+    public ApplicationSubsidyBasisViewModel getApplicationSubsidyBasisViewModel() {
+        return applicationSubsidyBasisViewModel;
     }
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 /**
  * Holder of model attributes for questions displayed within the Assessment Overview view.
@@ -17,6 +18,7 @@ public class AssessmentOverviewQuestionViewModel {
     private Boolean scopeResponse;
     private String scoreResponse;
     private boolean scoreRequired;
+    private QuestionSetupType questionSetupType;
 
     public AssessmentOverviewQuestionViewModel(long questionId,
                                                String questionName,
@@ -26,7 +28,8 @@ public class AssessmentOverviewQuestionViewModel {
                                                boolean assessed,
                                                Boolean scopeResponse,
                                                String scoreResponse,
-                                               boolean scoreRequired) {
+                                               boolean scoreRequired,
+                                               QuestionSetupType questionSetupType) {
         this.questionId = questionId;
         this.questionName = questionName;
         this.questionNumber = questionNumber;
@@ -36,6 +39,7 @@ public class AssessmentOverviewQuestionViewModel {
         this.scopeResponse = scopeResponse;
         this.scoreResponse = scoreResponse;
         this.scoreRequired = scoreRequired;
+        this.questionSetupType = questionSetupType;
     }
 
     public long getQuestionId() {
@@ -110,6 +114,10 @@ public class AssessmentOverviewQuestionViewModel {
         this.scoreRequired = scoreRequired;
     }
 
+    public QuestionSetupType getQuestionSetupType() {
+        return questionSetupType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -131,6 +139,7 @@ public class AssessmentOverviewQuestionViewModel {
                 .append(maximumScore, that.maximumScore)
                 .append(scopeResponse, that.scopeResponse)
                 .append(scoreResponse, that.scoreResponse)
+                .append(questionSetupType, that.questionSetupType)
                 .isEquals();
     }
 
@@ -145,6 +154,7 @@ public class AssessmentOverviewQuestionViewModel {
                 .append(assessed)
                 .append(scopeResponse)
                 .append(scoreResponse)
+                .append(questionSetupType)
                 .toHashCode();
     }
 }

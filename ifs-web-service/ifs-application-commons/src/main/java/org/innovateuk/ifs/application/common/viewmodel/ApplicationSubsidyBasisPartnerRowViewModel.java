@@ -34,7 +34,7 @@ public class ApplicationSubsidyBasisPartnerRowViewModel {
         return lead;
     }
 
-    public boolean isNorthernIslandDeclaration() {
+    public Boolean isNorthernIslandDeclaration() {
         return northernIslandDeclaration;
     }
 

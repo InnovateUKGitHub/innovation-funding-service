@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
+import org.innovateuk.ifs.application.common.populator.ApplicationSubsidyBasisModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -21,6 +23,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +58,10 @@ public class AssessmentOverviewModelPopulator {
 
     public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
+
+    @Autowired
+    private ApplicationSubsidyBasisModelPopulator applicationSubsidyBasisModelPopulator;
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
@@ -80,6 +87,7 @@ public class AssessmentOverviewModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
+
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
@@ -94,7 +102,8 @@ public class AssessmentOverviewModelPopulator {
                 competition.getAssessmentDaysLeft(),
                 getSections(assessment, assessorViewQuestions),
                 getAppendices(assessment.getApplication(), assessorViewQuestions),
-                termsAndConditionsTerminology
+                termsAndConditionsTerminology,
+                getApplicationSubsidyBasisViewModel(questions, assessment.getApplication())
         );
     }
 
@@ -140,7 +149,8 @@ public class AssessmentOverviewModelPopulator {
                     isAssessed(questionFormInputs, responses),
                     scopeResponse,
                     scoreResponse,
-                    scoreInput.isPresent()
+                    scoreInput.isPresent(),
+                    question.getQuestionSetupType()
             );
         });
     }
@@ -213,6 +223,14 @@ public class AssessmentOverviewModelPopulator {
                 fileEntry.getName(),
                 size
         );
+    }
+
+    private ApplicationSubsidyBasisViewModel getApplicationSubsidyBasisViewModel(List<QuestionResource> questions, long applicationId){
+        return questions.stream()
+                .filter(question -> QuestionSetupType.SUBSIDY_BASIS.equals(question.getQuestionSetupType()))
+                .findFirst()
+                .map(question -> applicationSubsidyBasisModelPopulator.populate(question, applicationId))
+                .orElseGet(null);
     }
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {

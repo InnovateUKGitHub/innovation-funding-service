@@ -193,7 +193,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:WTO comp}")
+    @Value("${ifs.generate.test.data.competition.filter.name:WTO comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }

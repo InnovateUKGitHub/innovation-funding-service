@@ -119,9 +119,10 @@
                     <th:block th:if="${row.lead}">(Lead)</th:block>
                 </td>
                 <td class="govuk-table__cell">
-                    <th:block th:if="${row.questionnaireMarkedAsComplete and row.northernIslandDeclaration}">Subsidy control</th:block>
-                    <th:block th:if="${row.questionnaireMarkedAsComplete and !row.northernIslandDeclaration}">State aid</th:block>
-                    <th:block th:unless="${row.questionnaireMarkedAsComplete}">Not determined</th:block>
+                    <th:block th:if="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">
+                        <th:block th:text="${row.northernIslandDeclaration ? 'Subsidy control' : 'State aid'}"></th:block>s
+                    </th:block>
+                    <th:block th:unless="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">Not determined</th:block>
                 </td>
                 <td class="govuk-table__cell ifs-table__email">
                     <a th:if="${row.questionnaireMarkedAsComplete}"

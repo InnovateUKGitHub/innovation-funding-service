@@ -40,18 +40,28 @@
                     <ul class="task-list" th:classappend="${section.hasAnyScoredQuestions()} ? 'govuk-!-margin-bottom-6': ''">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'"
                             th:unless="${section.finance || section.termsAndConditions}">
-                            <div class="task">
-                                <h3 class="govuk-heading-s">
-                                    <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
-                                       th:text="${questionNumber} + ${question.questionName}"
-                                       th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"
-                                       class="govuk-link" />
+                            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SUBSIDY_BASIS}">
+                                <h3 class="govuk-heading-s" th:text="${questionNumber} + ${question.questionName}"
+                                    th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''">
                                 </h3>
-                            </div>
-                            <span th:if="${question.scoreResponse}" class="notification" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></span>
-                            <span th:if="${question.scopeResponse}" class="notification">In scope</span>
-                            <div th:if="${question.assessed}" class="task-status-complete"><span>Complete</span></div>
-                            <div th:unless="${question.responseRequired}" class="task-status"><span>No score required</span></div>
+                                <th:block th:insert="application/readonly/question-read-only :: subsidy-basis(${model.applicationSubsidyBasisViewModel})">
+                                </th:block>
+                            </th:block>
+                            <th:block
+                                th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SUBSIDY_BASIS}">
+                                <div class="task">
+                                    <h3 class="govuk-heading-s">
+                                        <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
+                                           th:text="${questionNumber} + ${question.questionName}"
+                                           th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"
+                                           class="govuk-link" />
+                                    </h3>
+                                </div>
+                                <span th:if="${question.scoreResponse}" class="notification" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></span>
+                                <span th:if="${question.scopeResponse}" class="notification">In scope</span>
+                                <div th:if="${question.assessed}" class="task-status-complete"><span>Complete</span></div>
+                                <div th:unless="${question.responseRequired}" class="task-status"><span>No score required</span></div>
+                            </th:block>
                         </li>
                         <li class="read-only" th:if="${section.finance}">
                             <div class="task">
