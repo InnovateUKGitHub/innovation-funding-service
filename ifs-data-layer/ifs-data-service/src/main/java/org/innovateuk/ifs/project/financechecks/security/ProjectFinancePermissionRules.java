@@ -85,6 +85,20 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "SAVE_FUNDING_RULES",
+            description = "Project Finance Users can save Funding Rules")
+    public boolean projectFinanceUserCanSaveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "SAVE_FUNDING_RULES",
+            description = "Competition Finance Users can save Funding Rules")
+    public boolean competitionFinanceUserCanSaveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return userIsExternalFinanceOnCompetitionForProject(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
             value = "SAVE_MILESTONE_CHECK",
             description = "Project Finance Users can save Milestone Check")
     public boolean projectFinanceUserCanSaveMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {

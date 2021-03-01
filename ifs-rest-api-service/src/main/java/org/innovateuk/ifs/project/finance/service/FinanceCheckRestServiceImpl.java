@@ -85,6 +85,14 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
+    public RestResult<Void> approveFundingRules(Long projectId, Long organisationId) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/funding-rules/approve";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
     public RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId) {
         String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/milestones/approve";

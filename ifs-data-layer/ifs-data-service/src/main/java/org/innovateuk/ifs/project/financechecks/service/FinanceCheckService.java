@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.service;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -97,12 +96,11 @@ public interface FinanceCheckService {
     ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
-    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "fundingRulesActivityType")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.FUNDING_RULES_UPDATED)
     ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules);
 
-    @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default Optional<ActivityType> fundingRulesActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules) {
-        // TODO return eligibility == EligibilityState.APPROVED ? Optional.of(ActivityType.ELIGIBILITY_APPROVED) : Optional.empty();
-        return Optional.empty();
-    }
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.FUNDING_RULES_APPROVED)
+    ServiceResult<Void> approveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
 }

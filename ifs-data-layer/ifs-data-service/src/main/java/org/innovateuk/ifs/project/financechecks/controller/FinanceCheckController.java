@@ -100,6 +100,13 @@ public class FinanceCheckController {
         return financeCheckService.saveFundingRules(projectOrganisationCompositeId, fundingRules).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/funding-rules/approve")
+    public RestResult<Void> approveFundingRules(@PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.approveFundingRules(projectOrganisationCompositeId).toPostResponse();
+    }
+
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}")
     public RestResult<Void> saveCreditReport(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId, @PathVariable("reportPresent") Boolean reportPresent) {
         return financeCheckService.saveCreditReport(projectId, organisationId, reportPresent).toPostResponse();

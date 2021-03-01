@@ -31,6 +31,8 @@ public interface FinanceCheckRestService {
 
     RestResult<Void> saveFundingRules(Long projectId, Long organisationId, FundingRules fundingRules);
 
+    RestResult<Void> approveFundingRules(Long projectId, Long organisationId);
+
     RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId);
 
     RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId);

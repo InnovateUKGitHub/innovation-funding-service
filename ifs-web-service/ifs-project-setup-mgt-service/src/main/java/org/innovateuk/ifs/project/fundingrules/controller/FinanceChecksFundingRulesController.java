@@ -56,7 +56,7 @@ public class FinanceChecksFundingRulesController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/funding-rules";
 
-        return doApproveFundingRules(projectId, organisationId, form, null, validationHandler, model, successView);
+        return doApproveFundingRules(projectId, organisationId, null, validationHandler, model, successView);
     }
 
     @GetMapping("/edit")
@@ -102,15 +102,24 @@ public class FinanceChecksFundingRulesController {
                     RestResult<Void> saveFundingRulesResult = financeCheckRestService.saveFundingRules(projectId, organisationId, fundingRulesToSet);
 
                     return validationHandler.
-                    addAnyErrors(saveFundingRulesResult).
+                            addAnyErrors(saveFundingRulesResult).
                             failNowOrSucceedWith(failureView, successView);
                 });
     }
 
-    private String doApproveFundingRules(Long projectId, Long organisationId, FinanceChecksConfirmFundingRulesForm confirmForm, FinanceChecksFundingRulesForm form,
-                                      ValidationHandler validationHandler, Model model, Supplier<String> successView) {
-        // TODO
-        return null;
+    private String doApproveFundingRules(Long projectId, Long organisationId, FinanceChecksFundingRulesForm form,
+                                         ValidationHandler validationHandler, Model model, Supplier<String> successView) {
+        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, form, false);
+
+        return validationHandler.
+                failNowOrSucceedWith(failureView, () -> {
+
+                    RestResult<Void> saveFundingRulesResult = financeCheckRestService.approveFundingRules(projectId, organisationId);
+
+                    return validationHandler.
+                            addAnyErrors(saveFundingRulesResult).
+                            failNowOrSucceedWith(failureView, successView);
+                });
     }
 
     private String doViewFundingRules(Long projectId, Long organisationId, Model model, BaseBindingResultTarget form, boolean editMode) {

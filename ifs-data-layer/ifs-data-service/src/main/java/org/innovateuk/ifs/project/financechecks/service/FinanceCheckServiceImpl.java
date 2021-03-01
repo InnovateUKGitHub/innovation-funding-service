@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
@@ -37,6 +38,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +85,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Autowired
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
 
     @Autowired
     private FinanceCheckQueriesService financeCheckQueriesService;
@@ -434,6 +439,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return null;
     }
 
+    private ServiceResult<Void> triggerFundingRulesApprovalWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
+        if (fundingRulesWorkflowHandler.fundingRulesApproved(partnerOrganisation, currentUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(FUNDING_RULES_CANNOT_BE_APPROVED);
+        }
+    }
+
     @Override
     public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(long projectId) {
         return projectFinanceService.financeChecksTotals(projectId);
@@ -470,9 +483,24 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
 
-        // TODO
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(partnerOrganisation -> getFundingRulesProcess(partnerOrganisation)
+                                .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                                .andOnSuccess(projectFinance -> triggerFundingRulesWorkflowEvent(currentUser, partnerOrganisation, FundingRulesState.REVIEW)
+                                        .andOnSuccess(() -> saveFundingRules(projectFinance, fundingRules))
+                                )
+                        ));
+    }
 
-        return serviceSuccess();
+    @Override
+    public ServiceResult<Void> approveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(partnerOrganisation -> triggerFundingRulesApprovalWorkflowHandlerEvent(currentUser, partnerOrganisation))
+        );
     }
 
     @Override
@@ -586,6 +614,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisation));
     }
 
+    private ServiceResult<FundingRulesProcess> getFundingRulesProcess(PartnerOrganisation partnerOrganisation) {
+        return serviceSuccess(fundingRulesWorkflowHandler.getProcess(partnerOrganisation));
+    }
+
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
 
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
@@ -686,6 +718,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         if (ViabilityState.APPROVED == viability) {
             viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> triggerFundingRulesWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, FundingRulesState fundingRulesState) {
+        if (FundingRulesState.APPROVED == fundingRulesState) {
+            fundingRulesWorkflowHandler.fundingRulesApproved(partnerOrganisation, currentUser);
+        } else {
+            fundingRulesWorkflowHandler.fundingRulesUpdated(partnerOrganisation, currentUser);
         }
 
         return serviceSuccess();

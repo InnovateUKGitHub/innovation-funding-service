@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -25,6 +26,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -106,6 +108,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
+
+    @Autowired
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -344,19 +349,32 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> eligibilityProcesses = createEligibilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> milestonePaymentProcesses = createMilestonePaymentProcesses(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> fundingRulesProcesses = createFundingRulesProcesses(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> spendProfileProcess = createSpendProfileProcess(newProject, originalLeadApplicantProjectUser);
 
         projectRepository.refresh(newProject);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, golProcess, projectProcess, spendProfileProcess);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, fundingRulesProcesses, golProcess, projectProcess, spendProfileProcess);
     }
 
     private ServiceResult<Void> createMilestonePaymentProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
         if (project.getApplication().getCompetition().isProcurementMilestones()) {
             List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
                     paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                            serviceSuccess() :
+                            serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+            return aggregate(results).andOnSuccessReturnVoid();
+        }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> createFundingRulesProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
+        if (FundingRules.SUBSIDY_CONTROL == project.getApplication().getCompetition().getFundingRules()) {
+            List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
+                    fundingRulesWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
                             serviceSuccess() :
                             serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
 
