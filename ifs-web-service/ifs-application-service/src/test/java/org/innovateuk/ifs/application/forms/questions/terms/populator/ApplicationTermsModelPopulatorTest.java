@@ -7,13 +7,16 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
@@ -40,6 +43,7 @@ import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuild
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -64,7 +68,8 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
     private SectionService sectionServiceMock;
-
+    @Mock
+    private QuestionRestService questionRestService;
     @InjectMocks
     private ApplicationTermsModelPopulator populator;
 
@@ -99,7 +104,32 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         OrganisationResource organisation = newOrganisationResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
+        QuestionResource subsidyBasisQuestion = newQuestionResource().build();
 
+        /*
+             if (competition.isFinanceType()) {
+            Optional<QuestionResource> subsidyBasisQuestion = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.SUBSIDY_BASIS)
+                    .toOptionalIfNotFound()
+                    .getSuccess();
+            if (subsidyBasisQuestion.isPresent()) {
+                Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
+                        questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                                subsidyBasisQuestion.get().getId(), application.getId(), organisation.getId()).getSuccess();
+
+                boolean subsidyComplete = optionalMarkedAsCompleteQuestionStatus
+                        .map(QuestionStatusResource::getMarkedAsComplete)
+                        .orElse(false);
+
+                boolean subsidyBasisRequiredButIncomplete = !subsidyComplete;
+
+                if (subsidyBasisRequiredButIncomplete) {
+                    return Optional.of(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.get().getId()));
+                }
+
+            }
+        }
+        return Optional.empty();
+         */
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
@@ -108,6 +138,10 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.SUBSIDY_BASIS)).thenReturn(restSuccess(subsidyBasisQuestion));
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                        subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
+                .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -120,6 +154,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.getTermsAcceptedOn().isPresent());
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
+        assertEquals(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.getId()), actual.getSubsidyBasisQuestionUrl());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
                 organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
@@ -145,6 +180,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
                 .withCompetitionStatus(OPEN)
+                .withNonFinanceType(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -211,6 +247,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
                 .withCompetitionStatus(OPEN)
+                .withNonFinanceType(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -282,6 +319,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
                 .withCompetitionStatus(OPEN)
+                .withNonFinanceType(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -355,6 +393,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
                 .withCompetitionStatus(OPEN)
+                .withNonFinanceType(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -426,6 +465,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(grantTermsAndConditions)
                 .withCompetitionStatus(OPEN)
+                .withNonFinanceType(true)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())

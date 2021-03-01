@@ -1,10 +1,19 @@
 package org.innovateuk.ifs.questionnaire.resource;
 
-public class QuestionnaireTextOutcomeResource extends QuestionnaireDecisionResource {
+public class QuestionnaireTextOutcomeResource {
 
+    private Long id;
     private String text;
 
     private QuestionnaireDecisionImplementation implementation;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getText() {
         return text;

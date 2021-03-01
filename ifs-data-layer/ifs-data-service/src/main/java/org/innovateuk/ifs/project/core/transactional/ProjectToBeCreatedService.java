@@ -16,6 +16,10 @@ public interface ProjectToBeCreatedService {
     @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<ScheduleResponse> createProject(long applicationId);
 
+    @SecuredBySpring(value = "CREATE_PROJECT_SCHEDULE", description = "A System Maintinance User can create projects on schedule.")
+    @PreAuthorize("hasAuthority('system_maintainer')")
+    void createAllPendingProjects();
+
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "MARK_APPLICATION_AS_READY_PS", description = "Comp admin can mark projects to create")
     ServiceResult<Void> markApplicationReadyToBeCreated(long applicationId, String emailBody);
