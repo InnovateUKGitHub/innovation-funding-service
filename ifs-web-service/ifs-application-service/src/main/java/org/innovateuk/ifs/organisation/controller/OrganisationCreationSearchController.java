@@ -224,6 +224,10 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                          Model model,
                                          HttpServletRequest request, HttpServletResponse response,
                                          @RequestHeader(value = REFERER, required = false) final String referer) {
+        organisationForm.setSicCodes(organisationForm.getSicCodes()
+                .stream().filter(sicCode -> sicCode.getSicCode() != null)
+                .collect(Collectors.toList()));
+
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
