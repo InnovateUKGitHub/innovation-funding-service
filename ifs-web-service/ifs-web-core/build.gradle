@@ -6,15 +6,6 @@ apply plugin: 'idea'
 bootJar.enabled=false
 jar.enabled=true
 
-buildscript {
-
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/"}
-        mavenCentral()
-    }
-}
-
 group 'innovateuk'
 version project.version
 

@@ -8,14 +8,6 @@ version project.version
 
 processResources.dependsOn applyProfiles
 
-buildscript {
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/"}
-        mavenCentral()
-    }
-}
-
 apply from: "documentation.gradle"
 
 endpointDocumentation.dependsOn "ifs-application-service:test"

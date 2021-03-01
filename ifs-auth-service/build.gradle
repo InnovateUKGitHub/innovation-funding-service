@@ -2,12 +2,3 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
-
-buildscript {
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://plugins.gradle.org/m2/"}
-        mavenCentral()
-    }
-}
-
