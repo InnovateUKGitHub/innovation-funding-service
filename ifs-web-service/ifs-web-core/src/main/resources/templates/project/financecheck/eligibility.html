@@ -65,13 +65,11 @@
         </th:block>
 
         <th:block th:if="${summaryModel.isShowResetMessage()}">
-            <th:block th:unless="${summaryModel.externalView}">
-                <div class="message-alert">
-                    <p class="govuk-body">The <th:block th:if="${summaryModel.loanCompetition}">organisation's</th:block><th:block th:unless="${summaryModel.loanCompetition}">partner's</th:block> finance eligibility has been reset by <span
-                        th:text="${summaryModel.getResetName()}"/>, <span
-                        th:text="${#temporals.format(summaryModel.getResetDate(), 'd MMMM yyyy')}"/></p>
-                </div>
-            </th:block>
+            <div class="message-alert">
+                <p class="govuk-body">The <th:block th:if="${summaryModel.loanCompetition}">organisation's</th:block><th:block th:unless="${summaryModel.loanCompetition}">partner's</th:block> finance eligibility has been reset by <span
+                    th:text="${summaryModel.getResetName()}"/>, <span
+                    th:text="${#temporals.format(summaryModel.getResetDate(), 'd MMMM yyyy')}"/></p>
+            </div>
         </th:block>
 
         <th:block th:unless="${summaryModel.isShowApprovalMessage()}">
