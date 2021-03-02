@@ -19,13 +19,12 @@ public class FinanceChecksFundingRulesViewModel {
     private FundingRules fundingRules;
     private List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers;
     private boolean readOnly;
-    private boolean fundingRulesReadyToConfirm;
     private boolean editMode;
 
     public FinanceChecksFundingRulesViewModel(ProjectResource project, CompetitionResource competition, OrganisationResource organisation,
                                               boolean leadPartnerOrganisation, FundingRules fundingRules,
                                               List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers, boolean readOnly,
-                                              boolean fundingRulesReadyToConfirm, boolean editMode) {
+                                              boolean editMode) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
@@ -36,7 +35,6 @@ public class FinanceChecksFundingRulesViewModel {
         this.fundingRules = fundingRules;
         this.questionsAndAnswers = questionsAndAnswers;
         this.readOnly = readOnly;
-        this.fundingRulesReadyToConfirm = fundingRulesReadyToConfirm;
         this.editMode = editMode;
     }
 
@@ -88,10 +86,6 @@ public class FinanceChecksFundingRulesViewModel {
 
     public boolean isReadOnly() {
         return readOnly;
-    }
-
-    public boolean isFundingRulesReadyToConfirm() {
-        return fundingRulesReadyToConfirm;
     }
 
     public boolean isEditMode() {

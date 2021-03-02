@@ -89,11 +89,7 @@
                 </div>
             </div>
 
-            <button th:if="${!model.fundingRulesReadyToConfirm}"
-                    disabled="disabled"
-                    class="govuk-button">Approve funding rules</button>
-            <button th:unless="${!model.fundingRulesReadyToConfirm}"
-                    type="button"
+            <button type="button"
                     data-js-modal="modal-confirm-funding-rules"
                     class="govuk-button"
                     id="confirm-button">Approve funding rules</button>

@@ -81,7 +81,6 @@ public class FinanceChecksFundingRulesViewModelPopulator {
                 leadPartnerOrganisation,
                 fundingRules,
                 questionsAndAnswers,
-                false,
                 false, editMode);
     }
 

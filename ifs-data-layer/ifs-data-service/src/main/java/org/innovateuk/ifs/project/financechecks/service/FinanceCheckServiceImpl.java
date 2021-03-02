@@ -479,6 +479,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
@@ -494,6 +495,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> approveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
