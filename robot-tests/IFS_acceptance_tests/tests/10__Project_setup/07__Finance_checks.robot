@@ -285,7 +285,7 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
     Then the categories are verified for Project finances section     1  200,903    30    57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for section changes               1  £200,903   3,081     0      100,200    552      90,000       5,970        1,100
-    And the user clicks the button/link                               jQuery = a:contains("Return to Eligibility")
+    And the user clicks the button/link                               jQuery = a:contains("Return to eligibility")
 
 IFS Admin user can review partner's finances before the revisions made
     [Documentation]    INFUND-4837, IFS-603  IFS-8944
@@ -297,7 +297,7 @@ IFS Admin user can review partner's finances before the revisions made
     And the categories are verified for Project finances section     1   200,903   30     57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
     And the categories are verified for section changes              1   £200,903   3,081     0      100,200    552      90,000       5,970        1,100
-    And the user clicks the button/link                              jQuery = a:contains("Return to Eligibility")
+    And the user clicks the button/link                              jQuery = a:contains("Return to eligibility")
 
 IFS Admin user can review academic partner's finances before the revisions made
     [Documentation]    INFUND-4837, IFS-603  IFS-8944

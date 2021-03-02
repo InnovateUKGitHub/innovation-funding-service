@@ -211,7 +211,7 @@ Internal user makes changes to the finance payment milestones
 
 Internal user makes changes to project finances
     [Documentation]   IFS-8944
-    Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility?financeType=SUBCONTRACTING_COSTS
+    Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility
     When the user makes changes to the project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${org_ID}/eligibility/changes
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10000)
@@ -369,6 +369,7 @@ the user makes changes to the payment milestones table
 
 the user makes changes to the project finances
     the user clicks the button/link     id = accordion-finances-heading-5
+    the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/a
     clear element text                  id = subcontractingRows[9455].cost
     input text                          id = subcontractingRows[9455].cost  80000
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/button
