@@ -441,10 +441,10 @@ project lead submits project address
     the user clicks the button/link               jQuery = button:contains("Save address")
 
 project lead submits project details and team
-    [Arguments]  ${project_id}
+    [Arguments]  ${project_id}  ${projectManager}
     project lead submits project address    ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/team/project-manager
-    the user selects the radio button  projectManager  projectManager2
+    the user selects the radio button  projectManager  ${projectManager}
     the user clicks the button/link    jQuery = .govuk-button:contains("Save")
     the user navigates to the page     ${server}/project-setup/project/${project_id}/team
 

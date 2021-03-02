@@ -23,6 +23,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-9133 Query a Partners NI declaration questions and determined funding rules in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -218,10 +220,18 @@ New partner orgination checks for funding level guidance
     And The new partner can complete Your organisation
     Then the user checks for funding level guidance at PS level
 
-Applicant completes Project Details
-    [Documentation]  IFS-2332
-    When log in as a different user              &{lead_applicant_credentials}
-    Then project lead submits project address    ${ProjectID}
+Lead Applicant completes Project Details
+    [Documentation]  IFS-2332  IFS-9133
+    When log in as a different user                                                    &{lead_applicant_credentials}
+    Then project lead submits project address                                          ${ProjectID}
+    AND project lead submits project details and team                                  ${ProjectID}  projectManager1
+    AND navigate to external finance contact page, choose finance contact and save     ${EMPIRE_LTD_ID}   financeContact1  ${ProjectID}
+
+Project finance user can submit funding rule query
+    [Documentation]  IFS-9133
+    Given log in as a different user              &{internal_finance_credentials}
+    When the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/finance-check
+    Then the user posts a funding rule query
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
@@ -388,3 +398,12 @@ the assessor checks the appendices
     the user clicks the button/link     link = ATI application
     the user clicks the button/link     jQuery = button:contains("5. Technical approach")
     open pdf link                       jQuery = a:contains("testing.pdf (opens in a new window)")
+
+the user posts a funding rule query
+    the user clicks the button/link                         css = table.table-progress tr:nth-child(1) td:nth-child(6)
+    the user clicks the button/link                         id = post-new-query
+    the user enters text to a text field                    id = queryTitle  a funding rule query title
+    the user selects the option from the drop-down menu     Funding rules    id = section
+    the user enters text to a text field                    css = .editor    Funding rule query
+    the user clicks the button/link                         id = post-query
+    the user should not see an error in the page
