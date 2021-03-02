@@ -15,7 +15,6 @@ buildscript {
 
 dependencies {
     implementation enforcedPlatform("org.flywaydb:flyway-core:5.2.4")
-//    implementation enforcedPlatform("org.mariadb.jdbc:mariadb-java-client:2.3.0")
     implementation enforcedPlatform("com.h2database:h2:1.4.199")
 
     compile "org.flywaydb:flyway-core" //7.1.1!!!
