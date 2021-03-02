@@ -3,14 +3,15 @@ package org.innovateuk.ifs.questionnaire.response.controller;
 
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeRestService;
+import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.form.QuestionnaireQuestionForm;
 import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestionViewModelPopulator;
-import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,6 +34,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 @Controller
 @RequestMapping("/questionnaire")
 @PreAuthorize("permitAll")
+@SecuredBySpring(value = "Controller", description = "Anyone can access the questionnaire pages. The detailed security checks are done by the data service.", securedType = QuestionnaireWebController.class)
 public class QuestionnaireWebController {
 
     protected static final String REDIRECT_URL_COOKIE_KEY = "QUESTIONNAIRE_REDIRECT_URL";
