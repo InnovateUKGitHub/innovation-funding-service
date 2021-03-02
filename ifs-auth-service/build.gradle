@@ -2,8 +2,3 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
-
-buildscript {
-    repositories { jcenter() }
-}
-
