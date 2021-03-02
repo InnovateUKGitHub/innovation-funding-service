@@ -46,8 +46,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private AcademicRepository academicRepository;
+
     @Autowired
     private OrganisationMapper organisationMapper;
+
     @Autowired
     private AddressMapper addressMapper;
 
@@ -132,6 +134,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
     public ServiceResult<OrganisationResource> updateCompaniesHouseDetails(OrganisationResource organisationResource) {
         return serviceSuccess(organisationMapper.mapToResource(updateOrganisation(organisationResource)));
     }
