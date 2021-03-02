@@ -59,7 +59,7 @@ public class DeprecatedStyleMessageInterpolator extends ResourceBundleMessageInt
                 return String.valueOf(relevantAttributes.get(MIN_KEY));
             }
         }
-        LOG.error("ERROR: Unable to interpolate message: " + message + " " + relevantAttributes);
+        LOG.error("ERROR: Unable to interpolate message: {} {}", message, relevantAttributes);
         return "ERROR: Unable to interpolate message: " + message + " " + relevantAttributes;
     }
 
