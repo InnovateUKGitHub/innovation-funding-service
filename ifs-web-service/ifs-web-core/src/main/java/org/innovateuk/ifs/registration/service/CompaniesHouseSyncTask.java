@@ -20,38 +20,35 @@ import java.util.List;
 
 public class CompaniesHouseSyncTask implements Runnable {
 
-    private long organistionId;
+    private long organisationId;
 
     private static final String DATE_OF_CREATION = "date_of_creation";
 
     private final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-
     private OrganisationRestService organisationRestService;
-
 
     private CompaniesHouseRestService companiesHouseRestService;
 
     private static final Log LOG = LogFactory.getLog(CompaniesHouseSyncTask.class);
 
-
-
-    CompaniesHouseSyncTask(long organisationId,OrganisationRestService organisationRestService,CompaniesHouseRestService companiesHouseRestService ){
-        this.organistionId = organisationId;
+    CompaniesHouseSyncTask(long organisationId, OrganisationRestService organisationRestService,CompaniesHouseRestService companiesHouseRestService ){
+        this.organisationId = organisationId;
         this.organisationRestService = organisationRestService;
         this.companiesHouseRestService = companiesHouseRestService;
     }
 
     @Override
     public void run() {
-            RestResult<OrganisationResource> org = organisationRestService.getOrganisationById(this.organistionId);
-            org.getOptionalSuccessObject().ifPresent(theOrg -> getOrganisationfromCompaniesHouse(theOrg));
+            RestResult<OrganisationResource> org = organisationRestService.getOrganisationById(this.organisationId);
+            org.getOptionalSuccessObject().ifPresent(theOrg -> getOrganisationFromCompaniesHouse(theOrg));
     }
 
-    private void getOrganisationfromCompaniesHouse(final OrganisationResource theOrg) {
+    private void getOrganisationFromCompaniesHouse(final OrganisationResource theOrg) {
         RestResult<OrganisationSearchResult> organisationWithNewCompaniesHouseData = companiesHouseRestService.getOrganisationById(theOrg.getCompaniesHouseNumber());
         organisationWithNewCompaniesHouseData.getOptionalSuccessObject().ifPresent(theOrgWithCHData -> updateOrganisationWithCompaniesHouseData(theOrgWithCHData,theOrg));
     }
+
     private void updateOrganisationWithCompaniesHouseData(OrganisationSearchResult org, OrganisationResource orgResource) {
         orgResource.setSicCodes(org.getOrganisationSicCodes());
         orgResource.setExecutiveOfficers(org.getOrganisationExecutiveOfficers());
@@ -67,7 +64,7 @@ public class CompaniesHouseSyncTask implements Runnable {
             orgResource.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
         }
         RequestContextHolder.setRequestAttributes(new CustomRequestScopeAttr());
-        RestResult<OrganisationResource> result = organisationRestService.updateCompaniesHouseDetails(orgResource);
+        RestResult<OrganisationResource> result = organisationRestService.syncCompaniesHouseDetails(orgResource);
         RequestContextHolder.resetRequestAttributes();
         if (result.isFailure()) {
             LOG.error("Failed to update organisation with companies house data : " + result.getFailure());

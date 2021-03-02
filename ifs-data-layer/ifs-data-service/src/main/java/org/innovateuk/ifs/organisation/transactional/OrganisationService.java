@@ -42,8 +42,8 @@ public interface OrganisationService {
     @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
     ServiceResult<OrganisationResource> update(@P("organisation") OrganisationResource organisationResource);
 
-    @PreAuthorize("hasPermission(#organisation, 'UPDATE_COMPANIES_HOUSE_DETAILS')")
-    ServiceResult<OrganisationResource> updateCompaniesHouseDetails(@P("organisation") OrganisationResource organisationResource);
+    @PreAuthorize("hasPermission(#organisation, 'SYNC_COMPANIES_HOUSE_DETAILS')")
+    ServiceResult<OrganisationResource> syncCompaniesHouseDetails(@P("organisation") OrganisationResource organisationResource);
 
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
     ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber);

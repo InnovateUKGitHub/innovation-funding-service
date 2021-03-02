@@ -68,9 +68,9 @@ public class OrganisationController {
         return organisationService.update(organisationResource).toPutWithBodyResponse();
     }
 
-    @PutMapping("/update-companies-house-details")
+    @PutMapping("/sync-companies-house-details")
     public RestResult<OrganisationResource> updateCompaniesHouseDetails(@RequestBody OrganisationResource organisationResource) {
-        return organisationService.updateCompaniesHouseDetails(organisationResource).toPutWithBodyResponse();
+        return organisationService.syncCompaniesHouseDetails(organisationResource).toPutWithBodyResponse();
     }
 
     @PostMapping("/update-name-and-registration/{organisationId}")
