@@ -45,7 +45,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean viabilityReadyToConfirm;
     private final boolean hasGrantClaimPercentage;
     private final boolean ktpCompetition;
-    private final boolean golApproved;
+    private final boolean resetableGolState;
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
                                            CompetitionResource competition,
@@ -69,7 +69,7 @@ public class FinanceChecksViabilityViewModel {
                                            Long organisationId,
                                            String organisationSizeDescription,
                                            List<ProjectFinanceResource> projectFinances,
-                                           boolean golApproved) {
+                                           boolean resetableGolState) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -99,7 +99,7 @@ public class FinanceChecksViabilityViewModel {
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.ktpCompetition = competition.isKtp();
-        this.golApproved = golApproved;
+        this.resetableGolState = resetableGolState;
     }
 
     public String getOrganisationName() {
@@ -175,7 +175,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isCanReset() {
-        return approved && projectIsActive && !golApproved;
+        return approved && projectIsActive && resetableGolState;
     }
 
     public LocalDate getApprovalDate() {

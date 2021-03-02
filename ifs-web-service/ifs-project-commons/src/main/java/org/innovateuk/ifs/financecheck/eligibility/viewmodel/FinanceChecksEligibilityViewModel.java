@@ -44,7 +44,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
     private final boolean ktp;
-    private final boolean golApproved;
+    private final boolean resetableGolState;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -64,7 +64,7 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean isUsingJesFinances,
                                              boolean canEditAcademicFinances,
                                              List<ProjectFinanceResource> projectFinances,
-                                             boolean golApproved) {
+                                             boolean resetableGolState) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -90,7 +90,7 @@ public class FinanceChecksEligibilityViewModel {
         this.canEditAcademicFinances = canEditAcademicFinances;
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.ktp = competition.isKtp();
-        this.golApproved = golApproved;
+        this.resetableGolState = resetableGolState;
     }
 
     public boolean isApproved() {
@@ -261,7 +261,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isCanReset() {
-        return isApproved() && projectIsActive && !golApproved;
+        return isApproved() && projectIsActive && resetableGolState;
     }
 
     public LocalDate getResetDate() {

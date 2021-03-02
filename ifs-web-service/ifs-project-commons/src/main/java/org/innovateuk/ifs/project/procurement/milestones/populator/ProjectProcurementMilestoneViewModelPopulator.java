@@ -39,8 +39,12 @@ public class ProjectProcurementMilestoneViewModelPopulator {
 
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
 
-        GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
-        boolean golApproved = golState.getState() == GrantOfferLetterState.APPROVED;
+        boolean resettableGolState = false;
+
+        if (userResource.isInternalUser()) {
+            GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
+            resettableGolState = golState.getState() != GrantOfferLetterState.APPROVED;
+        }
 
         return new ProjectProcurementMilestoneViewModel(project,
                 finance,
@@ -49,7 +53,7 @@ public class ProjectProcurementMilestoneViewModelPopulator {
                 paymentMilestoneResource,
                 userResource.isInternalUser() ? isAllEligibilityAndViabilityApproved(projectId) : false,
                 userResource.isExternalUser(),
-                golApproved);
+                resettableGolState);
     }
 
     private boolean isAllEligibilityAndViabilityApproved(long projectId) {

@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,9 +75,9 @@ public class FinanceChecksViabilityController {
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
-                                @PathVariable("organisationId") Long organisationId, Model model) {
+                                @PathVariable("organisationId") Long organisationId, Model model, UserResource user) {
 
-        return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId));
+        return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId), user);
     }
 
     @PostMapping(params = "save-and-continue")
@@ -85,11 +86,12 @@ public class FinanceChecksViabilityController {
                                   @ModelAttribute("form") FinanceChecksViabilityForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
-                                  Model model) {
+                                  Model model,
+                                  UserResource user) {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveViability(projectId, organisationId, ViabilityState.REVIEW, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, ViabilityState.REVIEW, form, validationHandler, model, user, successView);
     }
 
     @PostMapping(params = "reset-viability")
@@ -98,12 +100,13 @@ public class FinanceChecksViabilityController {
                                  @ModelAttribute("form") FinanceChecksViabilityForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                  ValidationHandler validationHandler,
-                                 Model model) {
+                                 Model model,
+                                 UserResource user) {
 
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form, user);
 
         if (StringUtils.isEmpty(form.getRetractionReason())) {
             bindingResult.addError(new FieldError("form", "retractionReason", "Enter a reason for the reset."));
@@ -124,18 +127,19 @@ public class FinanceChecksViabilityController {
                                    @ModelAttribute("form") FinanceChecksViabilityForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
-                                   Model model) {
+                                   Model model,
+                                   UserResource user) {
 
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        return doSaveViability(projectId, organisationId, ViabilityState.APPROVED, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, ViabilityState.APPROVED, form, validationHandler, model, user, successView);
     }
 
     private String doSaveViability(Long projectId, Long organisationId, ViabilityState viability, FinanceChecksViabilityForm form,
-                                   ValidationHandler validationHandler, Model model, Supplier<String> successView) {
+                                   ValidationHandler validationHandler, Model model, UserResource user, Supplier<String> successView) {
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form, user);
 
         RestResult<Void> saveCreditReportResult = projectFinanceRestService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
 
@@ -164,14 +168,14 @@ public class FinanceChecksViabilityController {
         return statusToSend;
     }
 
-    private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
-        model.addAttribute("model", getViewModel(projectId, organisationId));
+    private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form, UserResource user) {
+        model.addAttribute("model", getViewModel(projectId, organisationId, user));
         model.addAttribute("form", form);
 
         return "project/financecheck/viability";
     }
 
-    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
+    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, UserResource user) {
 
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
@@ -208,8 +212,11 @@ public class FinanceChecksViabilityController {
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
 
-        GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
-        boolean golApproved = golState.getState() == GrantOfferLetterState.APPROVED;
+        boolean resetableGolState = false;
+        if (user.isInternalUser()) {
+            GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
+            resetableGolState = golState.getState() != GrantOfferLetterState.APPROVED;
+        }
 
         return new FinanceChecksViabilityViewModel(project,
                 competition,
@@ -238,7 +245,7 @@ public class FinanceChecksViabilityController {
                 organisationId,
                 organisationSizeDescription,
                 projectFinances,
-                golApproved);
+                resetableGolState);
     }
 
     private String name(String firstName, String lastName) {
