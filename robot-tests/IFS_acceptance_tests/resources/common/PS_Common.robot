@@ -430,7 +430,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}
-    project lead submits project details and team  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    project lead submits project details and team  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}   projectManager2
 
 project lead submits project address
     [Arguments]  ${project_id}
