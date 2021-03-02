@@ -1,7 +1,8 @@
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+
+def targetBuild = hasProperty('profile') ? profile : 'docker';
 
 group 'innovateuk'
 version project.version
@@ -11,10 +12,6 @@ apply plugin: 'idea'
 description = """"""
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-}
-
-repositories {
-    maven { url "http://repo.maven.apache.org/maven2" }
 }
 
 dependencies {
@@ -27,7 +24,6 @@ dependencies {
     testCompile("org.springframework.ldap:spring-ldap-test")
 }
 
-apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 
 buildDocker.dependsOn prepareDockerInput
