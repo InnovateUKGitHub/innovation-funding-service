@@ -224,14 +224,28 @@ Lead Applicant completes Project Details
     [Documentation]  IFS-2332  IFS-9133
     When log in as a different user                                                    &{lead_applicant_credentials}
     Then project lead submits project address                                          ${ProjectID}
-    AND project lead submits project details and team                                  ${ProjectID}  projectManager1
-    AND navigate to external finance contact page, choose finance contact and save     ${EMPIRE_LTD_ID}   financeContact1  ${ProjectID}
+    And project lead submits project details and team                                  ${ProjectID}  projectManager1
+    And navigate to external finance contact page, choose finance contact and save     ${EMPIRE_LTD_ID}   financeContact1  ${ProjectID}
 
 Project finance user can submit funding rule query
     [Documentation]  IFS-9133
-    Given log in as a different user              &{internal_finance_credentials}
-    When the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/finance-check
-    Then the user posts a funding rule query
+    Given log in as a different user                      &{internal_finance_credentials}
+    When the user navigates to the page                   ${server}/project-setup-management/project/${ProjectID}/finance-check
+    And the user posts a funding rule query
+    Then the user should not see an error in the page
+
+Applicant - finance contact can respond to the query
+    [Documentation]   IFS-9133
+    Given log in as a different user                    &{lead_applicant_credentials}
+    When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}/finance-check
+    Then the user responds to the funding rule query
+
+
+IFS admin can see applicant response for funding rule query and mark discussion as resolved
+    [Documentation]  IFS-9133
+    Given log in as a different user             &{ifs_admin_user_credentials}
+    When the user navigates to the page          ${server}/project-setup-management/project/${ProjectID}/finance-check
+    Then the user marks the query as resolved
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
@@ -402,8 +416,21 @@ the assessor checks the appendices
 the user posts a funding rule query
     the user clicks the button/link                         css = table.table-progress tr:nth-child(1) td:nth-child(6)
     the user clicks the button/link                         id = post-new-query
-    the user enters text to a text field                    id = queryTitle  a funding rule query title
+    the user enters text to a text field                    id = queryTitle  A funding rule query title
     the user selects the option from the drop-down menu     Funding rules    id = section
     the user enters text to a text field                    css = .editor    Funding rule query
     the user clicks the button/link                         id = post-query
-    the user should not see an error in the page
+
+the user responds to the funding rule query
+    the user clicks the button/link          jQuery = .govuk-button:contains("Respond")
+    the user enters text to a text field     css = .editor    Response to funding query
+    the user clicks the button/link          jQuery = .govuk-button:contains("Post response")
+    the user should see the element          jQuery = .govuk-body:contains("Your response has been sent and will be reviewed by Innovate UK.")
+
+the user marks the query as resolved
+    the user clicks the button/link     css = table.table-progress tr:nth-child(1) td:nth-child(6)
+    the user expands the section        A funding rule query title
+    the user should see the element     jQuery = .govuk-body:contains("Response to funding query")
+    the user clicks the button/link     link = Mark as resolved
+    the user clicks the button/link     jQuery = .govuk-button:contains("Submit")
+    the user should see the element     jQuery = #accordion-queries-heading-1 .yes  # Resolved green check
