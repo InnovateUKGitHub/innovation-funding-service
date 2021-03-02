@@ -33,6 +33,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -175,18 +176,23 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     @Before
     public void logInUserBeforeTests() {
 
-        mockMvc = setupMockMvc(controller, this::getLoggedInUser, env, messageSource);
+        mockMvc = setupMockMvc(controller, this::getLoggedInUser, env, messageSource, additionalFormattingChanges());
 
         setLoggedInUser(loggedInUser);
     }
 
-    public static <ControllerType> MockMvc setupMockMvc(ControllerType controller, Supplier<UserResource> loggedInUserSupplier, Environment environment, MessageSource messageSource) {
+    protected Consumer<FormattingConversionService> additionalFormattingChanges() {
+        return (a) -> {};
+    }
+
+    public static <ControllerType> MockMvc setupMockMvc(ControllerType controller, Supplier<UserResource> loggedInUserSupplier, Environment environment, MessageSource messageSource, Consumer<FormattingConversionService> additionalFormattingChanges) {
 
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
 
         FormattingConversionService formattingConversionService = new DefaultFormattingConversionService();
         formattingConversionService.addFormatter(new RejectionReasonFormatter());
+        additionalFormattingChanges.accept(formattingConversionService);
 
         MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)

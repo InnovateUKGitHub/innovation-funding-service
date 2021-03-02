@@ -329,8 +329,8 @@ the user checks for funding level guidance at PS level
     the user clicks the button/link     link = Your funding
     the user selects the radio button   requestingFunding   true
     the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
-    the user clicks the button/link     link = competition's rules (opens in a new window)
-    the user closes the last opened tab
+#    the user clicks the button/link     link = competition's rules (opens in a new window)
+#    the user closes the last opened tab
     the user clicks the button/link     link = Back to join project
 
 the user selects research area
@@ -650,10 +650,11 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
+    the user should not see the element                    jQuery = a:contains("Your fEC model")
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                           Return to application overview
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
 
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
