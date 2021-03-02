@@ -132,6 +132,25 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    public ServiceResult<OrganisationResource> updateCompaniesHouseDetails(OrganisationResource organisationResource) {
+        return serviceSuccess(organisationMapper.mapToResource(updateOrganisation(organisationResource)));
+    }
+
+    private Organisation updateOrganisation(OrganisationResource organisationResource) {
+        Organisation organisation = organisationMapper.mapToDomain(organisationResource);
+        setOrganisationIdForRelatedEntities(organisation);
+        Organisation savedOrganisation = organisationRepository.save(organisation);
+
+        return savedOrganisation;
+    }
+
+    private void setOrganisationIdForRelatedEntities(Organisation mappedOrganisation) {
+        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getSicCodes().forEach(sicCode -> sicCode.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getExecutiveOfficers().forEach(director -> director.setOrganisation(mappedOrganisation));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber) {
         return find(organisation(organisationId)).andOnSuccess(organisation -> {

@@ -67,7 +67,7 @@ public class CompaniesHouseSyncTask implements Runnable {
             orgResource.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
         }
         RequestContextHolder.setRequestAttributes(new CustomRequestScopeAttr());
-        RestResult<OrganisationResource> result = organisationRestService.createOrMatch(orgResource);
+        RestResult<OrganisationResource> result = organisationRestService.updateCompaniesHouseDetails(orgResource);
         RequestContextHolder.resetRequestAttributes();
         if (result.isFailure()) {
             LOG.error("Failed to update organisation with companies house data : " + result.getFailure());

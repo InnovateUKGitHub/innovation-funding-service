@@ -123,6 +123,11 @@ public class OrganisationPermissionRules {
         return isSystemRegistrationUser(user) && !organisationLinkedToAnApplication(organisation);
     }
 
+    @PermissionRule(value = "UPDATE_COMPANIES_HOUSE_DETAILS", description = "The System Registration User can update Organisations details based on companies house update")
+    public boolean systemRegistrationUserCanUpdateOrganisationDetailsForCompaniesHouseUpdate(OrganisationResource organisation, UserResource user) {
+        return isSystemRegistrationUser(user);
+    }
+
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
     public boolean memberOfOrganisationCanUpdateOwnOrganisation(OrganisationResource organisation, UserResource user) {
         return isMemberOfOrganisation(organisation, user);
