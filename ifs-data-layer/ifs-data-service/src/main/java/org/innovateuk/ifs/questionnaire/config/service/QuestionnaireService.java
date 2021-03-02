@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.questionnaire.config.service;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crud.IfsCrudService;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireResource;
@@ -18,13 +19,16 @@ public interface QuestionnaireService extends IfsCrudService<QuestionnaireResour
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value = "CREATE_UPDATE_DELETE_QUESTIONNAIRE", securedType = QuestionnaireResource.class, description = "Only comp admins can perform update create delete actions on questionnaires" )
     ServiceResult<QuestionnaireResource> update(Long aLong, QuestionnaireResource questionnaireResource);
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value = "CREATE_UPDATE_DELETE_QUESTIONNAIRE", securedType = QuestionnaireResource.class, description = "Only comp admins can perform update create delete actions on questionnaires" )
     ServiceResult<Void> delete(Long aLong);
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value = "CREATE_UPDATE_DELETE_QUESTIONNAIRE", securedType = QuestionnaireResource.class, description = "Only comp admins can perform update create delete actions on questionnaires" )
     ServiceResult<QuestionnaireResource> create(QuestionnaireResource questionnaireResource);
 }
