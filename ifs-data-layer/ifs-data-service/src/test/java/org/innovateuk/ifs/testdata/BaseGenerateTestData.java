@@ -423,13 +423,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         applicationFinances.join(); //wait for finances to be created.
 
+        CompletableFuture<List<SubsidyBasisData>> subsidyBasis = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createSubsidyBasis(applicationData, applicationLine, externalUserLines),
+                taskExecutor);
+
         CompletableFuture<List<ProcurementMilestoneData>> procurementMilestones = CompletableFuture.supplyAsync(() ->
                         applicationDataBuilderService.createProcurementMilestones(applicationData, applicationLine, externalUserLines),
                 taskExecutor);
 
-        CompletableFuture<List<SubsidyBasisData>> subsidyBasis = CompletableFuture.supplyAsync(() ->
-                        applicationDataBuilderService.createSubsidyBasis(applicationData, applicationLine, externalUserLines),
-                taskExecutor);
+
 
         CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, procurementMilestones);
 

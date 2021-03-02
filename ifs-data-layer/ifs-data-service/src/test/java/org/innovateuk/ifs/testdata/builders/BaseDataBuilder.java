@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.tuple.Pair;
+import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;
@@ -84,6 +85,13 @@ import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
+import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionService;
+import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionService;
+import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireService;
+import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeService;
+import org.innovateuk.ifs.questionnaire.link.repository.ApplicationOrganisationQuestionnaireResponseRepository;
+import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseService;
+import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseService;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
@@ -232,6 +240,13 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionApplicationConfigService competitionApplicationConfigService;
     protected MilestoneRepository milestoneRepository;
     protected AssessmentPeriodRepository assessmentPeriodRepository;
+    protected QuestionnaireService questionnaireService;
+    protected QuestionnaireQuestionService questionnaireQuestionService;
+    protected QuestionnaireResponseService questionnaireResponseService;
+    protected QuestionnaireQuestionResponseService questionnaireQuestionResponseService;
+    protected QuestionnaireOptionService questionnaireOptionService;
+    protected QuestionnaireTextOutcomeService questionnaireTextOutcomeService;
+    protected ApplicationOrganisationQuestionnaireResponseRepository applicationOrganisationQuestionnaireResponseRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -360,6 +375,15 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionApplicationConfigService = serviceLocator.getBean(CompetitionApplicationConfigService.class);
         milestoneRepository = serviceLocator.getBean(MilestoneRepository.class);
         assessmentPeriodRepository = serviceLocator.getBean(AssessmentPeriodRepository.class);
+        questionnaireService = serviceLocator.getBean(QuestionnaireService.class);
+        questionnaireQuestionService = serviceLocator.getBean(QuestionnaireQuestionService.class);
+        questionnaireResponseService = serviceLocator.getBean(QuestionnaireResponseService.class);
+        questionnaireQuestionResponseService = serviceLocator.getBean(QuestionnaireQuestionResponseService.class);
+        questionnaireOptionService = serviceLocator.getBean(QuestionnaireOptionService.class);
+        questionnaireTextOutcomeService = serviceLocator.getBean(QuestionnaireTextOutcomeService.class);
+        applicationOrganisationQuestionnaireResponseRepository = serviceLocator.getBean(ApplicationOrganisationQuestionnaireResponseRepository.class);
+
+
     }
 
     protected UserResource compAdmin() {

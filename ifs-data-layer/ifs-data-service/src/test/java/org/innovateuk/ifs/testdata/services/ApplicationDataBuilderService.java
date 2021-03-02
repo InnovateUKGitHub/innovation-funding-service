@@ -30,7 +30,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -249,13 +249,46 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return simpleMap(builders, BaseBuilder::build);
     }
 
+    // TODO maybe generate from a csv?
     public List<SubsidyBasisData> createSubsidyBasis(ApplicationData applicationData,
                                                      ApplicationLine applicationLine,
                                                      List<ExternalUserLine> externalUsers) {
         if (applicationData.getCompetition().getFundingRules().equals(FundingRules.SUBSIDY_CONTROL) && applicationLine.markQuestionsComplete) {
+            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = uniqueOrganisations(applicationLine, externalUsers);
 
+            List<SubsidyBasisDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
+                String user = orgDetails.getLeft();
+                String organisationName = orgDetails.getMiddle();
+
+                return subsidyBasisDataBuilder
+                        .withApplication(applicationData.getApplication())
+                        .withCompetition(applicationData.getCompetition())
+                        .withOrganisation(organisationName)
+                        .withUser(user)
+                        .withSelectedOptions(Arrays.asList(new String[]{"No", "Yes"}))
+                        .withSubsidyBasis();
+            });
+            return simpleMap(builders, BaseBuilder::build);
         }
-        return new ArrayList<SubsidyBasisData>();
+        return emptyList();
+    }
+
+    private List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations(ApplicationLine applicationLine, List<ExternalUserLine> externalUsers){
+        Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
+
+        List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
+
+        List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+
+            UserResource user = retrieveUserByEmail(email);
+            OrganisationResource organisation = organisationByName(usersOrganisations.get(email));
+
+            return Triple.of(user.getEmail(), organisation.getName(),
+                    OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+        });
+
+        return simpleFilter(organisations, triple ->
+                isUniqueOrFirstDuplicateOrganisation(triple, organisations));
     }
 
     public List<ProcurementMilestoneData> createProcurementMilestones(
@@ -264,21 +297,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             List<ExternalUserLine> externalUsers) {
 
         if (applicationData.getCompetition().isProcurement() && applicationLine.createFinanceResponses) {
-            Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
 
-            List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
-
-            List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
-
-                UserResource user = retrieveUserByEmail(email);
-                OrganisationResource organisation = organisationByName(usersOrganisations.get(email));
-
-                return Triple.of(user.getEmail(), organisation.getName(),
-                        OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
-            });
-
-            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = simpleFilter(organisations, triple ->
-                    isUniqueOrFirstDuplicateOrganisation(triple, organisations));
+            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = uniqueOrganisations(applicationLine, externalUsers);
 
             List<ProcurementMilestoneDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
                 String user = orgDetails.getLeft();

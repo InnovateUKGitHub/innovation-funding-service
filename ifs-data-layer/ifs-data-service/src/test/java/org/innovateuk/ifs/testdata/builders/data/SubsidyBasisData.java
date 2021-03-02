@@ -5,11 +5,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.List;
+
 public class SubsidyBasisData {
     private ApplicationResource application;
     private OrganisationResource organisation;
     private UserResource user;
     private CompetitionResource competition;
+    private List<String> selectedOptions;
 
     public void setApplication(ApplicationResource application) {
         this.application = application;
@@ -41,5 +44,13 @@ public class SubsidyBasisData {
 
     public CompetitionResource getCompetition() {
         return competition;
+    }
+
+    public List<String> getSelectedOptions() {
+        return selectedOptions;
+    }
+
+    public void setSelectedOptions(List<String> selectedOptions) {
+        this.selectedOptions = selectedOptions;
     }
 }
