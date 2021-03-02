@@ -282,6 +282,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         .withApplication(line.getApplication())
                         .withOrganisationName(line.getOrganisationName())
                         .withUser(line.getUser())
+                        .withOutcome(line.getOutcome())
                         .withSubsidyBasis())
                 .map(SubsidyBasisDataBuilder::build).collect(toList());
     }

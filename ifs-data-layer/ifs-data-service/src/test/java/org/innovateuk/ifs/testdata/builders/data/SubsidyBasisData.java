@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders.data;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.questionnaire.resource.QuestionnaireDecisionImplementation;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 
@@ -11,6 +12,7 @@ public class SubsidyBasisData {
     private String organisationName;
     private UserResource user;
     private String questionnaireResponseUuid;
+    private QuestionnaireDecisionImplementation outcome;
 
     public void setUser(UserResource user) {
         this.user = user;
@@ -50,5 +52,13 @@ public class SubsidyBasisData {
 
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
+    }
+
+    public QuestionnaireDecisionImplementation getOutcome() {
+        return outcome;
+    }
+
+    public void setOutcome(QuestionnaireDecisionImplementation outcome) {
+        this.outcome = outcome;
     }
 }

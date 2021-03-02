@@ -94,7 +94,7 @@ public class QuestionnaireResponseDataBuilder extends BaseDataBuilder<Questionna
                     QuestionnaireQuestionResponseResource questionResponse = new QuestionnaireQuestionResponseResource();
                     questionResponse.setQuestionnaireResponse(questionnaireResponseId);
                     questionResponse.setQuestion(currentQuestion.getId());
-                    questionResponse.setOption(currentQuestion.getId());
+                    questionResponse.setOption(option.getId());
                     questionnaireQuestionResponseService.create(questionResponse);
                     // Go to the next question or return the result.
                     if (selectedOptions.size() == 1){
