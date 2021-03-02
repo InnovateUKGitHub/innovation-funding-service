@@ -27,7 +27,7 @@ public abstract class AbstractDataServiceSecurityAnnotationsTest extends Abstrac
 
     @Override
     protected final List<Class<? extends Annotation>> classLevelSecurityAnnotations() {
-        return newArrayList(PreAuthorize.class);
+        return newArrayList();
     }
 
     @Override
