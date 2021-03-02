@@ -90,6 +90,7 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionServ
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeService;
 import org.innovateuk.ifs.questionnaire.link.repository.ApplicationOrganisationQuestionnaireResponseRepository;
+import org.innovateuk.ifs.questionnaire.response.repository.QuestionnaireResponseRepository;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseService;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
@@ -247,6 +248,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected QuestionnaireOptionService questionnaireOptionService;
     protected QuestionnaireTextOutcomeService questionnaireTextOutcomeService;
     protected ApplicationOrganisationQuestionnaireResponseRepository applicationOrganisationQuestionnaireResponseRepository;
+    protected QuestionnaireResponseRepository questionnaireResponseRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -382,8 +384,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionnaireOptionService = serviceLocator.getBean(QuestionnaireOptionService.class);
         questionnaireTextOutcomeService = serviceLocator.getBean(QuestionnaireTextOutcomeService.class);
         applicationOrganisationQuestionnaireResponseRepository = serviceLocator.getBean(ApplicationOrganisationQuestionnaireResponseRepository.class);
-
-
+        questionnaireResponseRepository = serviceLocator.getBean(QuestionnaireResponseRepository.class);
     }
 
     protected UserResource compAdmin() {

@@ -17,6 +17,8 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,7 +32,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,14 +42,16 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.ProcurementMilestoneDataBuilder.newProcurementMilestoneDataBuilder;
-import static org.innovateuk.ifs.testdata.builders.SubsidyBasisDataBuilder.newSubsidyBasisDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.QuestionnaireResponseDataBuilder.newQuestionnaireResponseDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
+import static org.innovateuk.ifs.testdata.builders.SubsidyBasisDataBuilder.newSubsidyBasisDataBuilder;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -70,6 +73,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
     private ProcurementMilestoneDataBuilder procurementMilestoneDataBuilder;
     private QuestionResponseDataBuilder questionResponseDataBuilder;
+    private QuestionnaireResponseDataBuilder questionnaireResponseDataBuilder;
     private SubsidyBasisDataBuilder subsidyBasisDataBuilder;
 
     @PostConstruct
@@ -82,6 +86,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
         procurementMilestoneDataBuilder = newProcurementMilestoneDataBuilder(serviceLocator);
+        questionnaireResponseDataBuilder = newQuestionnaireResponseDataBuilder(serviceLocator);
         subsidyBasisDataBuilder = newSubsidyBasisDataBuilder(serviceLocator);
     }
 
@@ -249,28 +254,36 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return simpleMap(builders, BaseBuilder::build);
     }
 
-    // TODO maybe generate from a csv?
-    public List<SubsidyBasisData> createSubsidyBasis(ApplicationData applicationData,
-                                                     ApplicationLine applicationLine,
-                                                     List<ExternalUserLine> externalUsers) {
-        if (applicationData.getCompetition().getFundingRules().equals(FundingRules.SUBSIDY_CONTROL) && applicationLine.markQuestionsComplete) {
-            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = uniqueOrganisations(applicationLine, externalUsers);
-
-            List<SubsidyBasisDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
-                String user = orgDetails.getLeft();
-                String organisationName = orgDetails.getMiddle();
-
-                return subsidyBasisDataBuilder
-                        .withApplication(applicationData.getApplication())
+    public List<QuestionnaireResponseData> createQuestionnaireResponse(ApplicationData applicationData,
+                                                                       ApplicationLine applicationLine,
+                                                                       List<QuestionnaireResponseLine> questionnaireResponseLines) {
+        return questionnaireResponseLines.stream()
+                .filter(line -> line.competitionName.equals(applicationLine.competitionName) && line.applicationName.equals(applicationLine.title))
+                .map(line -> questionnaireResponseDataBuilder
                         .withCompetition(applicationData.getCompetition())
-                        .withOrganisation(organisationName)
-                        .withUser(user)
-                        .withSelectedOptions(Arrays.asList(new String[]{"No", "Yes"}))
-                        .withSubsidyBasis();
-            });
-            return simpleMap(builders, BaseBuilder::build);
-        }
-        return emptyList();
+                        .withQuestionSetup(line.questionSetupType)
+                        .withApplication(applicationData.getApplication())
+                        .withOrganisationName(line.organisationName)
+                        .withUser(line.user)
+                        .withSelectedOptions(line.options)
+                        .withQuestionnaireResponse())
+                .map(QuestionnaireResponseDataBuilder::build).collect(toList());
+    }
+
+    public List<SubsidyBasisData> createSubsidyBasis(ApplicationLine applicationLine,
+                                                     List<QuestionnaireResponseData> questionnaireResponseData) {
+        return  questionnaireResponseData.stream()
+                .filter(line -> line.getQuestionSetupType().equals(QuestionSetupType.SUBSIDY_BASIS) &&
+                        line.getCompetition().getName().equals(applicationLine.competitionName) &&
+                        line.getApplication().getName().equals(applicationLine.title))
+                .map(line -> subsidyBasisDataBuilder
+                        .withCompetition(line.getCompetition())
+                        .withQuestionnaireResponseUuid(line.getQuestionnaireResponseUuid())
+                        .withApplication(line.getApplication())
+                        .withOrganisationName(line.getOrganisationName())
+                        .withUser(line.getUser())
+                        .withSubsidyBasis())
+                .map(SubsidyBasisDataBuilder::build).collect(toList());
     }
 
     private List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations(ApplicationLine applicationLine, List<ExternalUserLine> externalUsers){

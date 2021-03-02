@@ -36,7 +36,9 @@ public class QuestionnaireResponseServiceImpl extends AbstractIfsCrudServiceImpl
         if (domain.getQuestionnaire() == null) {
             domain.setQuestionnaire(questionnaireRepository.findById(resource.getQuestionnaire()).orElseThrow(ObjectNotFoundException::new));
         }
-        domain.setId(UUID.fromString(resource.getId()));
+        if (resource.getId() != null) {
+            domain.setId(UUID.fromString(resource.getId()));
+        }
         return domain;
     }
 
