@@ -29,6 +29,8 @@ public interface FinanceCheckRestService {
 
     RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
+    RestResult<FundingRulesResource> getFundingRules(Long projectId, Long organisationId);
+
     RestResult<Void> saveFundingRules(Long projectId, Long organisationId, FundingRules fundingRules);
 
     RestResult<Void> approveFundingRules(Long projectId, Long organisationId);

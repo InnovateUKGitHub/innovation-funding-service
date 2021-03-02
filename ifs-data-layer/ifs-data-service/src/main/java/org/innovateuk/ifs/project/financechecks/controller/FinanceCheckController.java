@@ -59,6 +59,14 @@ public class FinanceCheckController {
         return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
     }
 
+    @GetMapping("/{projectId}/partner-organisation/{organisationId}/funding-rules")
+    public RestResult<FundingRulesResource> getFundingRules(@PathVariable("projectId") final Long projectId,
+                                                      @PathVariable("organisationId") final Long organisationId) {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.getFundingRules(projectOrganisationCompositeId).toGetResponse();
+    }
+
 
     @PostMapping("/{projectId}/viability/reset")
     public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId) {

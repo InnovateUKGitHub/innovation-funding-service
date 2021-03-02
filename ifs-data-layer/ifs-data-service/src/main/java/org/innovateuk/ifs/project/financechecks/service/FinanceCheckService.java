@@ -95,6 +95,9 @@ public interface FinanceCheckService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
     ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_FUNDING_RULES')")
+    ServiceResult<FundingRulesResource> getFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.FUNDING_RULES_UPDATED)
     ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules);

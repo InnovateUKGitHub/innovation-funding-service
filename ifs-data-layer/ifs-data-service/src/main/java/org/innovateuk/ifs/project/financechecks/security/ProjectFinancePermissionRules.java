@@ -127,6 +127,20 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Project Finance Users can view Funding Rules status")
+    public boolean projectFinanceUserCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Users can see their own Funding Rules status")
+    public boolean userCanViewTheirOwnFundingRulesStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "RESET_ELIGIBILITY",
             description = "Project finance user can reset Eligibility")
     public boolean projectFinanceUserCanResetEligibility(ProjectCompositeId projectCompositeId, UserResource user) {

@@ -243,13 +243,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<ViabilityState, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<EligibilityState, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
-            ServiceResult<FundingRules> fundingRules = getFundingRules(compositeId);
+            ServiceResult<FundingRulesResource> fundingRules = getFundingRules(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
-                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project), fundingRules.getSuccess(),
+                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project), fundingRules.getSuccess().getFundingRules(),
                     anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
         });
     }
@@ -286,21 +286,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccess();
 
         return Pair.of(eligibilityDetails.getEligibility(), eligibilityDetails.getEligibilityRagStatus());
-    }
-
-    private ServiceResult<FundingRules> getFundingRules(ProjectOrganisationCompositeId compositeId) {
-
-        long projectId = compositeId.getProjectId();
-        long organisationId = compositeId.getOrganisationId();
-
-        return getProjectFinance(projectId, organisationId)
-                        .andOnSuccessReturn(projectFinance -> {
-                            if (Boolean.TRUE == projectFinance.getNorthernIrelandDeclaration()) {
-                                return FundingRules.SUBSIDY_CONTROL;
-                            } else {
-                                return FundingRules.STATE_AID;
-                            }
-                        });
     }
 
     private FinanceCheckResource mapToResource(FinanceCheck fc) {
@@ -479,6 +464,19 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
+    public ServiceResult<FundingRulesResource> getFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(this::getFundingRulesProcess)
+                .andOnSuccess(fundingRulesProcess -> getProjectFinance(projectId, organisationId)
+                        .andOnSuccess(projectFinance -> buildFundingRulesResource(fundingRulesProcess, projectFinance))
+                );
+    }
+
+    @Override
     @Transactional
     public ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -616,10 +614,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisation));
     }
 
-    private ServiceResult<FundingRulesProcess> getFundingRulesProcess(PartnerOrganisation partnerOrganisation) {
-        return serviceSuccess(fundingRulesWorkflowHandler.getProcess(partnerOrganisation));
-    }
-
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
 
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
@@ -631,6 +625,28 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
 
         return serviceSuccess(viabilityResource);
+    }
+
+    private ServiceResult<FundingRulesResource> buildFundingRulesResource(FundingRulesProcess fundingRulesProcess, ProjectFinance projectFinance) {
+        FundingRulesResource fundingRulesResource = new FundingRulesResource();
+
+        FundingRules fundingRules;
+        if (Boolean.TRUE == projectFinance.getNorthernIrelandDeclaration()) {
+            fundingRules = FundingRules.SUBSIDY_CONTROL;
+        } else {
+            fundingRules = FundingRules.STATE_AID;
+        }
+
+        fundingRulesResource.setFundingRules(fundingRules);
+        fundingRulesResource.setFundingRulesState(fundingRulesProcess.getProcessState());
+
+        if (fundingRulesProcess.getLastModified() != null) {
+            fundingRulesResource.setFundingRulesLastModifiedDate(fundingRulesProcess.getLastModified().toLocalDate());
+        }
+
+        setFundingRulesLastModifiedUser(fundingRulesResource, fundingRulesProcess.getInternalParticipant());
+
+        return serviceSuccess(fundingRulesResource);
     }
 
     private ViabilityState convertViabilityState(ViabilityState viabilityState) {
@@ -663,8 +679,20 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
     }
 
+    private void setFundingRulesLastModifiedUser(FundingRulesResource fundingRulesResource, User fundingRulesLastModifiedUser) {
+
+        if (fundingRulesLastModifiedUser != null) {
+            fundingRulesResource.setFundingRulesInternalUserFirstName(fundingRulesLastModifiedUser.getFirstName());
+            fundingRulesResource.setFundingRulesInternalUserLastName(fundingRulesLastModifiedUser.getLastName());
+        }
+    }
+
     private ServiceResult<EligibilityProcess> getEligibilityProcess(PartnerOrganisation partnerOrganisation) {
         return serviceSuccess(eligibilityWorkflowHandler.getProcess(partnerOrganisation));
+    }
+
+    private ServiceResult<FundingRulesProcess> getFundingRulesProcess(PartnerOrganisation partnerOrganisation) {
+        return serviceSuccess(fundingRulesWorkflowHandler.getProcess(partnerOrganisation));
     }
 
     private ServiceResult<EligibilityResource> buildEligibilityResource(EligibilityProcess eligibilityProcess, ProjectFinance projectFinance) {

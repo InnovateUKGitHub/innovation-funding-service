@@ -35,9 +35,6 @@ public class FinanceChecksFundingRulesController {
     @Autowired
     private FinanceChecksFundingRulesViewModelPopulator financeChecksFundingRulesViewModelPopulator;
 
-    @Autowired
-    private ProjectFinanceRestService projectFinanceRestService;
-
     @GetMapping
     public String viewFundingRules(@PathVariable("projectId") Long projectId,
                                    @PathVariable("organisationId") Long organisationId, Model model) {
@@ -86,8 +83,8 @@ public class FinanceChecksFundingRulesController {
 
         Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, form, true);
 
-        boolean northernIreland = Boolean.TRUE.equals(projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess().getNorthernIrelandDeclaration());
-        FundingRules fundingRules = northernIreland ? FundingRules.SUBSIDY_CONTROL : FundingRules.STATE_AID;
+        FundingRules fundingRules = financeCheckRestService.getFundingRules(projectId, organisationId).getSuccess().getFundingRules();
+
 
         return validationHandler.
                 failNowOrSucceedWith(failureView, () -> {

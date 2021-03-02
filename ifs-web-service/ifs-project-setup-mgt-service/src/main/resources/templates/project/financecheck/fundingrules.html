@@ -70,7 +70,7 @@
         </table>
 
 
-        <form th:unless="${model.editMode}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
+        <form th:if="${!model.editMode AND !model.readOnly}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
 
             <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve funding rules check</h2>
             <div class="govuk-form-group">

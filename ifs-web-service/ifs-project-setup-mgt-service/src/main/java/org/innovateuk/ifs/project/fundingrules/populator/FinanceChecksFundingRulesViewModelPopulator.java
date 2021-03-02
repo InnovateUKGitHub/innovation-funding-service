@@ -8,6 +8,9 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesResource;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.fundingrules.viewmodel.FinanceChecksFundingRulesViewModel;
 import org.innovateuk.ifs.project.fundingrules.viewmodel.QuestionnaireQuestionAnswerViewModel;
@@ -43,6 +46,9 @@ public class FinanceChecksFundingRulesViewModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
+    private FinanceCheckRestService financeCheckRestService;
+
+    @Autowired
     private QuestionRestService questionRestService;
     @Autowired
     private QuestionnaireResponseLinkRestService questionnaireResponseLinkRestService;
@@ -64,10 +70,10 @@ public class FinanceChecksFundingRulesViewModelPopulator {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        FundingRulesResource fundingRulesResource = financeCheckRestService.getFundingRules(projectId, organisationId).getSuccess();
 
-        boolean northernIreland = Boolean.TRUE.equals(projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess().getNorthernIrelandDeclaration());
-
-        FundingRules fundingRules = northernIreland ? FundingRules.SUBSIDY_CONTROL : FundingRules.STATE_AID;
+        FundingRules fundingRules = fundingRulesResource.getFundingRules();
+        boolean readOnly = fundingRulesResource.getFundingRulesState() == FundingRulesState.APPROVED;
 
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
@@ -81,7 +87,7 @@ public class FinanceChecksFundingRulesViewModelPopulator {
                 leadPartnerOrganisation,
                 fundingRules,
                 questionsAndAnswers,
-                false, editMode);
+                readOnly, editMode);
     }
 
     private List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers(ProjectResource project, Long organisationId) {

@@ -77,6 +77,11 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
+    public RestResult<FundingRulesResource> getFundingRules(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/funding-rules", FundingRulesResource.class);
+    }
+
+    @Override
     public RestResult<Void> saveFundingRules(Long projectId, Long organisationId, FundingRules fundingRules) {
         String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/funding-rules/" + fundingRules.name();
