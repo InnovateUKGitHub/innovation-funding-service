@@ -22,9 +22,9 @@ Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${invitedCollaborator}        stuart@empire.com
-${supportCompName}            Home and industrial efficiency programme
+${supportCompName}            Predicting market trends programme
 ${supportCompID}              ${competition_ids["${supportCompName}"]}
-${supportApplicationName}     Optimising engine output
+${supportApplicationName}     Quantifying global soil carbon losses in response to warming
 ${supportApplicationID}       ${application_ids["${supportApplicationName}"]}
 
 *** Test Cases ***
@@ -86,8 +86,8 @@ Support user is able to search pending external users
 
 Support user can see the finances as complete
     [Documentation]  IFS-9223
-    Given logging in and error checking             david.wellington@load.example.com   ${short_password}
-    And the user clicks the button/link             link = Optimising engine output
+    Given logging in and error checking             jessica.doe@ludlow.co.uk   ${short_password}
+    And the user clicks the button/link             link = ${supportApplicationName}
     And the user clicks the button/link             link = Your project finances
     And the user marks the finances as complete     ${supportApplicationName}   labour costs   54,000   no
     When log in as a different user                 &{support_user_credentials}
