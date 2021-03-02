@@ -3,19 +3,23 @@ package org.innovateuk.ifs.questionnaire.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionnaireQuestionResource extends QuestionnaireDecisionResource {
-
+public class QuestionnaireQuestionResource {
+    private Long id;
     private int depth;
-
     private String title;
     private String question;
     private String guidance;
-
     private Long questionnaire;
-
     private List<Long> options = new ArrayList<>();
-
     private List<Long> previousQuestions = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public int getDepth() {
         return depth;

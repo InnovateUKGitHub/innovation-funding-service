@@ -13,6 +13,7 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -21,6 +22,7 @@ import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.After;
@@ -179,6 +181,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private SupporterDataService supporterDataService;
 
+    @Autowired
+    private ProjectToBeCreatedService projectToBeCreatedService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -315,6 +320,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                                 supporterFutures,
                                 competitionAssessmentPeriodsFutures
         ).join();
+
+        UserResource user = userService.findByEmail("ifs_system_maintenance_user@innovateuk.org").getSuccess();
+        setLoggedInUser(user);
+
+        projectToBeCreatedService.createAllPendingProjects();
 
         long after = System.currentTimeMillis();
 

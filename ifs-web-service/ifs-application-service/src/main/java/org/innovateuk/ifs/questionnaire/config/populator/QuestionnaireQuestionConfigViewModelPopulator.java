@@ -5,7 +5,6 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRest
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireRestService;
 import org.innovateuk.ifs.questionnaire.config.viewmodel.QuestionnaireQuestionConfigViewModel;
 import org.innovateuk.ifs.questionnaire.config.viewmodel.QuestionnaireQuestionListItem;
-import org.innovateuk.ifs.questionnaire.resource.QuestionnaireDecisionResource;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireQuestionResource;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class QuestionnaireQuestionConfigViewModelPopulator {
         if (linked || first) {
             Map<Long, QuestionnaireQuestionResource> indexedQuestions = allQuestions
                     .stream()
-                    .collect(toMap(QuestionnaireDecisionResource::getId, Function.identity()));
+                    .collect(toMap(QuestionnaireQuestionResource::getId, Function.identity()));
             List<QuestionnaireQuestionResource> questionsInThisTree = new ArrayList<>();
             addRecusively(questionInList, questionsInThisTree, indexedQuestions);
             availableQuestions = allQuestions.stream()
