@@ -157,6 +157,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT)) {
+            futures.add(saveAcademicAndSecretarialSupport(form, finance));
+        }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.INDIRECT_COSTS)) {
             futures.add(saveIndirectCost(form, finance));
         }
@@ -169,6 +172,27 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         } else {
             return serviceFailure(messages.getErrors());
         }
+    }
+
+    private CompletableFuture<ValidationMessages> saveAcademicAndSecretarialSupport(YourProjectCostsForm form, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            if (form != null) {
+                DefaultCostCategory defaultCostCategory = (DefaultCostCategory)
+                        finance.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT);
+
+                AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) defaultCostCategory.getCosts().stream()
+                        .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT)
+                        .findFirst()
+                        .orElseGet(() -> getFinanceRowService().create(new AcademicAndSecretarialSupport(finance.getId())).getSuccess());
+
+
+                academicAndSecretarialSupport.setCost(form.getAcademicAndSecretarialSupportForm().getCost());
+                messages.addAll(getFinanceRowService().update(academicAndSecretarialSupport).getSuccess());
+            }
+
+            return messages;
+        });
     }
 
     private CompletableFuture<ValidationMessages> saveLabourCosts(LabourForm labourForm, BaseFinanceResource finance) {
