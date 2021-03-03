@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.function.Supplier;
 
 /**
@@ -45,7 +46,7 @@ public class FinanceChecksFundingRulesController {
     @PostMapping
     public String approveFundingRules(@PathVariable("projectId") Long projectId,
                                       @PathVariable("organisationId") Long organisationId,
-                                      @ModelAttribute("form") FinanceChecksConfirmFundingRulesForm form,
+                                      @Valid @ModelAttribute("form") FinanceChecksConfirmFundingRulesForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       ValidationHandler validationHandler,
                                       Model model) {
@@ -53,7 +54,7 @@ public class FinanceChecksFundingRulesController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/funding-rules";
 
-        return doApproveFundingRules(projectId, organisationId, null, validationHandler, model, successView);
+        return doApproveFundingRules(projectId, organisationId, null, form, validationHandler, model, successView);
     }
 
     @GetMapping("/edit")
@@ -66,28 +67,25 @@ public class FinanceChecksFundingRulesController {
     @PostMapping(value = "/edit")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
-                                  @ModelAttribute("form") FinanceChecksFundingRulesForm form,
+                                  @Valid @ModelAttribute("form") FinanceChecksFundingRulesForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
                                   Model model) {
 
-        Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
+        Supplier<String> successView = () ->  "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/funding-rules";
 
         return doSaveFundingRules(projectId, organisationId, null, form, validationHandler, model, successView);
     }
-
-
 
     private String doSaveFundingRules(Long projectId, Long organisationId, FinanceChecksConfirmFundingRulesForm confirmForm, FinanceChecksFundingRulesForm form,
                                       ValidationHandler validationHandler, Model model, Supplier<String> successView) {
 
         Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, form, true);
 
-        FundingRules fundingRules = financeCheckRestService.getFundingRules(projectId, organisationId).getSuccess().getFundingRules();
-
-
         return validationHandler.
                 failNowOrSucceedWith(failureView, () -> {
+
+                    FundingRules fundingRules = financeCheckRestService.getFundingRules(projectId, organisationId).getSuccess().getFundingRules();
 
                     FundingRules fundingRulesToSet;
                     if (form.isOverrideFundingRules()) {
@@ -105,8 +103,8 @@ public class FinanceChecksFundingRulesController {
     }
 
     private String doApproveFundingRules(Long projectId, Long organisationId, FinanceChecksFundingRulesForm form,
-                                         ValidationHandler validationHandler, Model model, Supplier<String> successView) {
-        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, form, false);
+                                         FinanceChecksConfirmFundingRulesForm confirmForm, ValidationHandler validationHandler, Model model, Supplier<String> successView) {
+        Supplier<String> failureView = () -> doViewFundingRules(projectId, organisationId, model, confirmForm, false);
 
         return validationHandler.
                 failNowOrSucceedWith(failureView, () -> {

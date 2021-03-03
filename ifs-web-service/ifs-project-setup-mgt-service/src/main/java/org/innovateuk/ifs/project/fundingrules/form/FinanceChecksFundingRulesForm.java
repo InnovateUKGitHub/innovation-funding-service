@@ -2,8 +2,10 @@ package org.innovateuk.ifs.project.fundingrules.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-public class FinanceChecksFundingRulesForm extends BaseBindingResultTarget {
+import javax.validation.constraints.AssertTrue;
 
+public class FinanceChecksFundingRulesForm extends BaseBindingResultTarget {
+    @AssertTrue(message = "{validation.fundingrules.override.required}")
     private boolean overrideFundingRules;
 
     public FinanceChecksFundingRulesForm() {

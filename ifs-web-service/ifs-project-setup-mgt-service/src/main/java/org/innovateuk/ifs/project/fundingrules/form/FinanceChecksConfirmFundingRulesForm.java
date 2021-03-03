@@ -6,7 +6,7 @@ import javax.validation.constraints.AssertTrue;
 
 public class FinanceChecksConfirmFundingRulesForm extends BaseBindingResultTarget {
 
-    @AssertTrue
+    @AssertTrue(message = "{validation.fundingrules.confirm.required}")
     private boolean confirmFundingRules;
 
     public FinanceChecksConfirmFundingRulesForm() {
