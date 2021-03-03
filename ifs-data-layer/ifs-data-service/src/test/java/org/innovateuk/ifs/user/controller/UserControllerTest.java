@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
@@ -144,7 +145,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updatePassword() throws Exception {
-        final String password = "Passw0rd";
+        final String password = "Passw0rd1357";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceSuccess(null));
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password)
@@ -201,7 +202,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updatePasswordTokenNotFound() throws Exception {
-        final String password = "Passw0rd";
+        final String password = "Passw0rd1357";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         final Error error = notFoundError(Token.class, hash);
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceFailure(error));
@@ -276,7 +277,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
-                .withPassword("Passw0rd123")
+                .withPassword("Passw0rd1357123")
                 .build();
 
         when(registrationServiceMock.createUser(refEq(anUserCreationResource()
@@ -339,13 +340,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userServiceMock.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
-        verify(userServiceMock).findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory);
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
     }
 
     @Test

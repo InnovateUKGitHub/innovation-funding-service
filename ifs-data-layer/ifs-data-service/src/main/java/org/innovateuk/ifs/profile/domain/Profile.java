@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -45,6 +46,10 @@ public class Profile extends AuditableEntity {
     @ManyToOne(targetEntity = Agreement.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "agreement_id", referencedColumnName = "id")
     private Agreement agreement;
+
+    @ManyToOne(targetEntity = SimpleOrganisation.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "simple_organisation_id", referencedColumnName = "id")
+    private SimpleOrganisation simpleOrganisation;
 
     private ZonedDateTime agreementSignedDate;
 
@@ -128,6 +133,14 @@ public class Profile extends AuditableEntity {
         this.agreementSignedDate = agreementSignedDate;
     }
 
+    public SimpleOrganisation getSimpleOrganisation() {
+        return simpleOrganisation;
+    }
+
+    public void setSimpleOrganisation(SimpleOrganisation simpleOrganisation) {
+        this.simpleOrganisation = simpleOrganisation;
+    }
+
     // TODO the profile belongs to a User so should the User be a member?
     public boolean isCompliant(User user) {
         boolean skillsComplete = skillsAreas != null;
@@ -182,6 +195,7 @@ public class Profile extends AuditableEntity {
                 .append(businessType, profile.businessType)
                 .append(agreement, profile.agreement)
                 .append(agreementSignedDate, profile.agreementSignedDate)
+                .append(simpleOrganisation, profile.simpleOrganisation)
                 .isEquals();
     }
 
@@ -195,6 +209,7 @@ public class Profile extends AuditableEntity {
                 .append(businessType)
                 .append(agreement)
                 .append(agreementSignedDate)
+                .append(simpleOrganisation)
                 .toHashCode();
     }
 }

@@ -38,7 +38,7 @@ public class UserRegistrationResourceDocs {
             .withFirstName("First")
             .withLastName("Last")
             .withPhoneNumber("012434 567890")
-            .withPassword("Passw0rd123")
+            .withPassword("Passw0rd1357123")
             .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
             .withEmail("tom@poly.io")
             .withRoles(Collections.singletonList(ASSESSOR));

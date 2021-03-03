@@ -15,17 +15,25 @@ public class LandingViewModel extends CompetitionSetupViewModel {
     private Map<CompetitionSetupSubsection, Boolean> subsectionStatuses;
     private Map<Long, Boolean> questionStatuses;
     private Boolean allComplete;
+    private List<QuestionResource> ktpAssessorQuestions;
+
 
     public LandingViewModel(GeneralSetupViewModel generalSetupViewModel, List<QuestionResource> questions, List<QuestionResource> projectDetails,
                             Map<CompetitionSetupSubsection, Boolean> subsectionStatuses,
                             Map<Long, Boolean> questionStatuses,
-                            Boolean allComplete) {
+                            Boolean allComplete,
+                            List<QuestionResource> ktpAssessorQuestions) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.questions = questions;
         this.projectDetails = projectDetails;
         this.subsectionStatuses = subsectionStatuses;
         this.questionStatuses = questionStatuses;
         this.allComplete = allComplete;
+        this.ktpAssessorQuestions = ktpAssessorQuestions;
+    }
+
+    public List<QuestionResource> getKtpAssessorQuestions() {
+        return ktpAssessorQuestions;
     }
 
     public List<QuestionResource> getQuestions() {

@@ -1,25 +1,17 @@
 package org.innovateuk.ifs.application.populator.section;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 
 import java.util.*;
-import java.util.concurrent.Future;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
-import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 
 public abstract class AbstractApplicationModelPopulator {
 

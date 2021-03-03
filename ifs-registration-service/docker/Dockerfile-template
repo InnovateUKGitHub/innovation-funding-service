@@ -1,4 +1,4 @@
-FROM innovateuk/openjdk
+FROM docker-ifs.devops.innovateuk.org/releases/openjdk
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080

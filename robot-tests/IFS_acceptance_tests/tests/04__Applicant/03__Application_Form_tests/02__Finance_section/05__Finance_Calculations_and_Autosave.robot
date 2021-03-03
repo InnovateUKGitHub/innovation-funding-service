@@ -26,7 +26,7 @@ Labour
     When the Applicant fills in the Labour costs for two rows
     And the user expands the section                            Labour
     Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £104,348  jQuery = [data-mirror^="#section-total-labour"]  £104,348
-    And the user clicks the button/link                         name = remove_cost
+    And the user clicks the button/link                         name = remove_row
     And The row should be removed                               css = .labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads page with autosave
     Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £52,174   jQuery = [data-mirror^="#section-total-labour"]  £52,174

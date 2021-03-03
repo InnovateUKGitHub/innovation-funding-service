@@ -16,10 +16,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -42,15 +39,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.docusign.resource.DocusignRequest.DocusignRequestBuilder.aDocusignRequest;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -116,6 +113,14 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         });
     }
 
+    @Override
+    public ServiceResult<FileAndContents> getSignedAdditionalContractFileAndContents(long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            FileEntry fileEntry = project.getSignedAdditionalContractFile();
+            return getFileAndContentsResult(fileEntry);
+        });
+    }
+
     private FailingOrSucceedingResult<FileAndContents, ServiceFailure> getFileAndContentsResult(FileEntry fileEntry) {
         if (fileEntry == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -159,6 +164,21 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getAdditionalContractFile();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getSignedAdditionalContractFileEntryDetails(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getSignedAdditionalContractFile();
 
             if (fileEntry == null) {
                 return serviceFailure(notFoundError(FileEntry.class));
@@ -255,6 +275,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 andOnSuccessReturnVoid()));
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeSignedAdditionalContractFileEntry(long projectId) {
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectIsActive).
+                andOnSuccess(project -> getCurrentlyLoggedInUser().
+                        andOnSuccess(user -> removeSignedAdditionalContractIfAllowed(project, user).
+                                andOnSuccessReturnVoid()));
+    }
+
     private ServiceResult<FileEntry> removeSignedGrantOfferLetterIfAllowed(Project project, User user) {
 
         if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
@@ -265,12 +295,46 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId()));
     }
 
+    private ServiceResult<FileEntry> removeSignedAdditionalContractIfAllowed(Project project, User user) {
+        if (!golWorkflowHandler.removeSignedAdditionalContract(project, user)) {
+            return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
+        }
+
+        return removeSignedAdditionalContractFromProject(project).
+                andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId()));
+    }
+
     private ServiceResult<FileEntry> removeSignedGrantOfferLetterFileFromProject(Project project) {
         return validateProjectIsActive(project).andOnSuccessReturn(() -> {
             FileEntry fileEntry = project.getSignedGrantOfferLetter();
             project.setSignedGrantOfferLetter(null);
             return fileEntry;
         });
+    }
+
+    private ServiceResult<FileEntry> removeSignedAdditionalContractFromProject(Project project) {
+        return validateProjectIsActive(project).andOnSuccessReturn(() -> {
+            FileEntry fileEntry = project.getSignedAdditionalContractFile();
+            project.setSignedAdditionalContractFile(null);
+            return fileEntry;
+        });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetGrantOfferLetter(Long projectId) {
+        Project project = getProject(projectId).getSuccess();
+
+        if (project.getGrantOfferLetter() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getGrantOfferLetter().getId());
+            project.setGrantOfferLetter(null);
+        }
+        if (project.getAdditionalContractFile() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getAdditionalContractFile().getId());
+            project.setAdditionalContractFile(null);
+        }
+        golWorkflowHandler.grantOfferLetterReset(project, getCurrentlyLoggedInUser().getSuccess());
+        return serviceSuccess();
     }
 
     @Override
@@ -287,6 +351,21 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         project.setAdditionalContractFile(fileEntry);
         return fileEntryMapper.mapToResource(fileEntry);
     }
+
+    @Override
+    @Transactional
+    public ServiceResult<FileEntryResource> createSignedAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkSignedAdditionalContractFileToProject(project, fileDetails)));
+    }
+
+    private FileEntryResource linkSignedAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        project.setSignedAdditionalContractFile(fileEntry);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
 
     @Override
     @Transactional
@@ -353,7 +432,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
                 return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
                     Notification notification = new Notification(systemNotificationSource,
-                            singletonList(pmTarget),
+                            pmTarget,
                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
                             notificationArguments);
 
@@ -482,7 +561,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private List<NotificationTarget> getLiveProjectNotificationTargets(Project project) {
+    private List<NotificationMessage> getLiveProjectNotificationTargets(Project project) {
         List<NotificationTarget> notificationTargets = new ArrayList<>();
 
         User projectManager = getExistingProjectManager(project).get().getUser();
@@ -497,7 +576,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationTargets.add(projectManagerTarget);
         notificationTargets.addAll(uniqueFinanceContactTargets);
 
-        return notificationTargets;
+        return notificationTargets.stream().map(NotificationMessage::new).collect(Collectors.toList());
     }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
@@ -514,7 +593,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findById(projectId).get();
-        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTargets(project);
+        List<NotificationMessage> notificationTargets = getLiveProjectNotificationTargets(project);
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -18,6 +19,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
@@ -57,10 +59,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withSetupComplete(boolean... setupComplete) {
         return withArraySetFieldByReflection("setupComplete", setupComplete);
-    }
-
-    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
-        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
     }
 
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
@@ -170,9 +168,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfig);
     }
 
-    public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
-        return withArraySetFieldByReflection("assessorCount", assessorCounts);
-    }
     public CompetitionBuilder withInnovationSector(InnovationSector... innovationSectors) {
         return withArray((innovationSector, competition) -> competition.setInnovationSector(innovationSector), innovationSectors);
     }
@@ -183,10 +178,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
-    }
-
-    public CompetitionBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
-        return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
     @SafeVarargs
@@ -205,8 +196,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
     }
 
-    public CompetitionBuilder withStateAid(Boolean... stateAid) {
-        return withArraySetFieldByReflection("stateAid", stateAid);
+    public CompetitionBuilder withFundingRules(FundingRules... fundingRules) {
+        return withArraySetFieldByReflection("fundingRules", fundingRules);
     }
 
     public CompetitionBuilder withCompetitionDocuments(List<CompetitionDocument>... projectDocuments) {
@@ -352,10 +343,16 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
     }
 
+    public CompetitionBuilder withResearchCategories(Set<ResearchCategory>... researchCategories) {
+        return withArray((researchCategory, competition) -> competition.setResearchCategories(researchCategory), researchCategories);
+    }
+
     @SafeVarargs
     public final CompetitionBuilder withProjectStages(List<ProjectStages>... projectStages) {
         return withArray((projectStage, competition) -> competition.setProjectStages(projectStage), projectStages);
     }
 
-
+    public CompetitionBuilder withAlwaysOpen(boolean... alwaysOpen) {
+        return withArraySetFieldByReflection("alwaysOpen", alwaysOpen);
+    }
 }

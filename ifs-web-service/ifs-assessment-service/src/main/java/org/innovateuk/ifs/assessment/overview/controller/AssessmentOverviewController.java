@@ -16,7 +16,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +60,7 @@ public class AssessmentOverviewController {
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
@@ -100,7 +100,7 @@ public class AssessmentOverviewController {
             @PathVariable("formInputId") Long formInputId,
             @PathVariable("fileEntryId") Long fileEntryId,
             UserResource loggedInUser) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> loggedInUser.getId().equals(role.getUser()))
                 .findAny()
                 .orElseThrow(ObjectNotFoundException::new);

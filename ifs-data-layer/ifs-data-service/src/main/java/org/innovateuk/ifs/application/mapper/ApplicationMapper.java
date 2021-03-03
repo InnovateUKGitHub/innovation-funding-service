@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.competition.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
@@ -23,7 +24,8 @@ import org.mapstruct.Mappings;
                 FileEntryMapper.class,
                 ResearchCategoryMapper.class,
                 InnovationAreaMapper.class,
-                IneligibleOutcomeMapper.class
+                IneligibleOutcomeMapper.class,
+                AssessmentPeriodMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.innovateuk.ifs.sil.grant.resource.json.LocalDateDeserializer;
-import org.innovateuk.ifs.sil.grant.resource.json.LocalDateSerializer;
+import org.innovateuk.ifs.sil.common.json.LocalDateDeserializer;
+import org.innovateuk.ifs.sil.common.json.LocalDateSerializer;
 import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
 

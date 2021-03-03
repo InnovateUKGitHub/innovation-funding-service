@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -121,4 +122,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
         return average;
     };
+
+    public boolean isKtpAssessmentQuestion() {
+        return questionResource != null && questionResource.getQuestionSetupType() == QuestionSetupType.KTP_ASSESSMENT;
+    }
 }

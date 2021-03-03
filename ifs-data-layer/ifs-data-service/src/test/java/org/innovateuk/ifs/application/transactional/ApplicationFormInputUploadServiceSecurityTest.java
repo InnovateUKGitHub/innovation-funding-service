@@ -115,41 +115,6 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     }
 
     @Test
-    public void testGetFormInputResponseFileUpload() {
-
-        FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
-
-        when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
-        when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser()))
-                .thenReturn(true);
-
-        classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
-
-        verify(fileUploadRules).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
-    }
-
-    @Test
-    public void testGetFormInputResponseFileUploadDenied() {
-
-        FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
-
-        when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
-        when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser()))
-                .thenReturn(false);
-
-        try {
-            classUnderTest.getFormInputResponseFileUpload(file.getCompoundId());
-            fail("Should not have been able to read the file upload, as access was denied");
-        } catch (AccessDeniedException e) {
-            // expected behaviour
-        }
-
-        verify(fileUploadRules).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
-    }
-
-    @Test
     public void testGetFormInputResponseFileUploadButLookupFails() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
@@ -164,7 +129,6 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
             // expected behaviour
         }
 
-        verify(fileUploadRules, never()).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
 
     @Override

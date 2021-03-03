@@ -12,6 +12,7 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,16 +40,10 @@ public class FlywayPatchNumberHook implements RepositoryMergeCheck {
         final String fromLastCommitId = fromRef.getLatestCommit();
         final Repository fromRepo = fromRef.getRepository();
 
-        final PageRequest pageRequest = new PageRequestImpl(0, PageRequest.MAX_PAGE_LIMIT);
-        final FlywayToFromVersionCallBack flywayToFromVersionCallBack = new FlywayToFromVersionCallBack();
-
-        final ContentTreeCallback toCallBack = new FlywayVersionContentTreeCallback(flywayToFromVersionCallBack::onTo);
-        final ContentTreeCallback fromCallBack = new FlywayVersionContentTreeCallback(flywayToFromVersionCallBack::onFrom);
-
-        cs.streamDirectory(toRepo, toLastCommitId, "ifs-data-layer/ifs-data-service/src/main/resources/db", true, toCallBack, pageRequest);
-        cs.streamDirectory(fromRepo, fromLastCommitId, "ifs-data-layer/ifs-data-service/src/main/resources/db", true, fromCallBack, pageRequest);
-
-        List<String> errors = flywayToFromVersionCallBack.getErrors();
+        List<String> errors = new ArrayList<>();
+        errors.addAll(errors("/migration", toRepo, fromRepo, toLastCommitId, fromLastCommitId));
+        errors.addAll(errors("/reference", toRepo, fromRepo, toLastCommitId, fromLastCommitId));
+        errors.addAll(errors("/setup", toRepo, fromRepo, toLastCommitId, fromLastCommitId));
 
         if (errors.isEmpty()) {
             return RepositoryHookResult.accepted();
@@ -56,5 +51,18 @@ public class FlywayPatchNumberHook implements RepositoryMergeCheck {
             String message = String.join("/n", errors);
             return RepositoryHookResult.rejected(message, message);
         }
+    }
+
+    private List<String> errors(String directory, Repository toRepo, Repository fromRepo, String toLastCommitId, String fromLastCommitId) {
+        final FlywayToFromVersionCallBack flywayToFromVersionCallBack = new FlywayToFromVersionCallBack();
+
+        final ContentTreeCallback toCallBack = new FlywayVersionContentTreeCallback(flywayToFromVersionCallBack::onTo);
+        final ContentTreeCallback fromCallBack = new FlywayVersionContentTreeCallback(flywayToFromVersionCallBack::onFrom);
+        final PageRequest pageRequest = new PageRequestImpl(0, PageRequest.MAX_PAGE_LIMIT);
+
+        cs.streamDirectory(toRepo, toLastCommitId, "ifs-data-layer/ifs-data-service/src/main/resources/db" + directory, true, toCallBack, pageRequest);
+        cs.streamDirectory(fromRepo, fromLastCommitId, "ifs-data-layer/ifs-data-service/src/main/resources/db" + directory, true, fromCallBack, pageRequest);
+
+        return flywayToFromVersionCallBack.getErrors();
     }
 }

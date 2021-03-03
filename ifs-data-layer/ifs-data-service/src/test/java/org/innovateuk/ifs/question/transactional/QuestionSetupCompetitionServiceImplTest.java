@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.question.transactional;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,7 +19,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -28,7 +29,6 @@ import java.util.Optional;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
@@ -45,7 +45,6 @@ import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionBuilder.newMul
 import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionResourceBuilder.newMultipleChoiceOptionResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.*;
@@ -95,7 +94,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private GuidanceRowRepository guidanceRowRepository;
 
     @Mock
-    private QuestionSetupTemplateService questionSetupTemplateService;
+    private QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
 
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
@@ -112,7 +111,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withAllowedFileTypes(asSet(PDF, SPREADSHEET))
+                                .withAllowedFileTypes(ImmutableSet.of(PDF, SPREADSHEET))
                                 .withGuidanceAnswer(fileUploadGuidance)
                                 .withActive(true)
                                 .build(),
@@ -203,7 +202,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), QuestionSetupType.SCOPE);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
-        assertEquals(resource.getAllowedAppendixResponseFileTypes(), asSet(PDF, SPREADSHEET));
+        assertEquals(resource.getAllowedAppendixResponseFileTypes(), ImmutableSet.of(PDF, SPREADSHEET));
         assertEquals(resource.getTemplateDocument(), true);
         assertEquals(resource.getMultipleChoice(), true);
         assertEquals(resource.getChoices().size(), 2);
@@ -314,7 +313,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setNumberOfUploads(0);
-        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(ImmutableSet.of(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         boolean appendixEnabled = true;
@@ -325,7 +324,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withActive(appendixEnabled)
                 .withWordCount(1)
                 .withGuidanceAnswer(guidanceAnswer)
-                .withAllowedFileTypes(asSet(allowedFileTypes))
+                .withAllowedFileTypes(ImmutableSet.of(allowedFileTypes))
                 .build();
         //Override repository response set in prerequisites test prep function
         when(formInputRepository.findByQuestionIdAndScopeAndType(
@@ -338,7 +337,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(true, result.isSuccess());
         assertNotEquals(appendixEnabled, appendixFormInput.getActive());
-        assertNotEquals(allowedFileTypes, appendixFormInput.getAllowedFileTypes());
+        assertNull(appendixFormInput.getAllowedFileTypes());
         assertNotEquals(guidanceAnswer, appendixFormInput.getGuidanceAnswer());
     }
 
@@ -351,14 +350,14 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setNumberOfUploads(0);
-        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(ImmutableSet.of(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(true)
                 .withWordCount(1)
                 .withGuidanceAnswer("Only excel files with spaghetti VB macros allowed")
-                .withAllowedFileTypes(asSet(allowedFileTypes))
+                .withAllowedFileTypes(ImmutableSet.of(allowedFileTypes))
                 .build();
 
         //Override repository response set in prerequisites test prep function
@@ -383,7 +382,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setNumberOfUploads(1);
-        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(ImmutableSet.of(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -399,7 +398,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
         assertTrue(appendixFormInput.getActive());
         assertEquals(resource.getNumberOfUploads(), appendixFormInput.getWordCount());
-        assertEquals(asSet(PDF), appendixFormInput.getAllowedFileTypes());
+        assertEquals(ImmutableSet.of(PDF), appendixFormInput.getAllowedFileTypes());
         assertEquals(fileUploadGuidance, appendixFormInput.getGuidanceAnswer());
     }
 
@@ -412,7 +411,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setNumberOfUploads(1);
-        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
+        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(ImmutableSet.of(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -434,7 +433,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setNumberOfUploads(3);
-        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
+        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(ImmutableSet.of(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -541,7 +540,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void delete() {
         long questionId = 1L;
 
-        when(questionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupAddAndRemoveService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
         assertTrue(service.delete(questionId).isSuccess());
     }
 
@@ -550,7 +549,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().build();
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
+        when(questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
         when(questionRepository.findById(newlyCreatedQuestion.getId())).thenReturn(Optional.of(newlyCreatedQuestion));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
@@ -574,7 +573,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void createByCompetitionId_whenDefaultCreationFails() {
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
+        when(questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isFailure());
@@ -629,13 +628,11 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         return createLambdaMatcher(question -> {
             assertNull(question.getId());
             assertFalse(question.getAssignEnabled());
-            assertEquals("Description not used", question.getDescription());
             assertTrue(question.getMarkAsCompletedEnabled());
             assertEquals("Research category", question.getName());
             assertEquals("Research category", question.getShortName());
             assertEquals(competition, question.getCompetition());
             assertEquals(section, question.getSection());
-            assertEquals(LEAD_ONLY, question.getType());
             assertEquals(RESEARCH_CATEGORY, question.getQuestionSetupType());
         });
     }

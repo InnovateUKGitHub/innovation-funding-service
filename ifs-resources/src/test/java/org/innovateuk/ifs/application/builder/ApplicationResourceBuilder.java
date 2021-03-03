@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
@@ -126,6 +127,10 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
     public ApplicationResourceBuilder withLastStateChangeDate(ZonedDateTime... lastStateChangeDates) {
         return withArray((lastStateChangeDate, application) -> application.setLastStateChangeDate(lastStateChangeDate), lastStateChangeDates);
+    }
+
+    public ApplicationResourceBuilder withAssessmentPeriod(Long... assessmentPeriods) {
+        return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriodId", assessmentPeriod, object), assessmentPeriods);
     }
 
 }

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -13,6 +12,7 @@ import java.util.List;
  */
 public interface CompetitionTypeRepository extends CrudRepository<CompetitionType, Long> {
 
-    List<CompetitionType> findByName(@Param("name") String name);
+    CompetitionType findByName(String name);
 
+    List<CompetitionType> findAllByOrderByNameAsc();
 }

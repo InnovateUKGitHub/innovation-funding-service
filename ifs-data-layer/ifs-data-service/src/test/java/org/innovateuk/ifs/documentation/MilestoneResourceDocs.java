@@ -14,12 +14,14 @@ public class MilestoneResourceDocs {
         fieldWithPath("id").description("Id of the milestoneResource"),
         fieldWithPath("type").description("Type of the milestone"),
         fieldWithPath("date").description("Date of the particular milestone"),
-        fieldWithPath("competitionId").description("Id of the competitionResource")
+        fieldWithPath("competitionId").description("Id of the competitionResource"),
+        fieldWithPath("assessmentPeriodId").description("Id of the assessmentPeriodResource")
     };
 
     public static final MilestoneResourceBuilder milestoneResourceBuilder = newMilestoneResource()
             .withId(1L)
             .withDate(ZonedDateTime.now())
             .withName(MilestoneType.OPEN_DATE)
-            .withCompetitionId(1L);
+            .withCompetitionId(1L)
+            .withAssessmentPeriod(null);
 }

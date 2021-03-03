@@ -57,6 +57,18 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
+    public void testGetSignedAdditionalContractFileDetails() {
+
+        FileEntryResource returnedFile = newFileEntryResource().build();
+
+        Optional<FileEntryResource> response = Optional.of(returnedFile);
+        when(grantOfferLetterRestService.getSignedAdditionalContractFileDetails(123L)).thenReturn(restSuccess(response));
+
+        Optional<FileEntryResource> result = grantOfferLetterService.getSignedAdditionalContractFileDetails(123L);
+        assertEquals(response, result);
+    }
+
+    @Test
     public void testAddSignedGrantOfferLetter() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
@@ -120,6 +132,17 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
+    public void testRemoveSignedAdditionalContractFile() {
+        long projectId = 123L;
+
+        when(grantOfferLetterRestService.removeSignedAdditionalContractFile(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = grantOfferLetterService.removeSignedAdditionalContract(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testSubmitGrantOfferLetter() {
         long projectId = 123L;
 
@@ -155,6 +178,33 @@ public class GrantOfferLetterServiceImplTest {
         assertEquals(createdFile, result.getSuccess());
 
         verify(grantOfferLetterRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+    }
+
+    @Test
+    public void testAddSignedAdditionalContractFile() {
+
+        FileEntryResource createdFile = newFileEntryResource().build();
+
+        when(grantOfferLetterRestService.addSignedAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
+
+        ServiceResult<FileEntryResource> result =
+                grantOfferLetterService.addSignedAdditionalContract(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccess());
+
+        verify(grantOfferLetterRestService).addSignedAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+    }
+
+    @Test
+    public void testGetSignedAdditionalContractFile() {
+
+        Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+        when(grantOfferLetterRestService.getSignedAdditionalContractFile(123L)).thenReturn(restSuccess(content));
+
+        Optional<ByteArrayResource> result = grantOfferLetterService.getSignedAdditionalContractFile(123L);
+        assertEquals(content, result);
     }
 
     @Test

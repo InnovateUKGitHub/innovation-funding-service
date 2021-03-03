@@ -10,7 +10,15 @@ public class InviteUserResource {
 
     private UserResource invitedUser;
 
+    private String organisation;
+
     private Role role;
+
+    public InviteUserResource(UserResource invitedUser, String organisation, Role role) {
+        this.invitedUser = invitedUser;
+        this.organisation = organisation;
+        this.role = role;
+    }
 
     public InviteUserResource(UserResource invitedUser, Role role) {
         this.invitedUser = invitedUser;
@@ -39,5 +47,13 @@ public class InviteUserResource {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
     }
 }

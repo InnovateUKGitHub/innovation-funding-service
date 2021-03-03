@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -26,10 +28,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -93,7 +98,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 String competitionTypeName,
                                                 List<String> innovationAreaNames,
                                                 String innovationSectorName,
-                                                Boolean stateAidAllowed,
+                                                FundingRules fundingRules,
                                                 List<String> researchCategoryNames,
                                                 String leadTechnologist,
                                                 String compExecutive,
@@ -112,14 +117,15 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 Boolean includeJesForm,
                                                 ApplicationFinanceType applicationFinanceType,
                                                 Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation) {
+                                                Boolean includeYourOrganisation,
+                                                Boolean alwaysOpen) {
 
         return asCompAdmin(data -> {
 
             doCompetitionDetailsUpdate(data, competition -> {
 
                 if (competitionTypeName != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName);
                     competition.setCompetitionType(competitionType.getId());
                 }
 
@@ -143,7 +149,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategories.isEmpty() ? emptySet() : newHashSet(researchCategories));
-                competition.setStateAid(stateAidAllowed);
+                competition.setFundingRules(fundingRules);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
@@ -165,6 +171,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setIncludeYourOrganisationSection(includeYourOrganisation);
                 competition.setFundingType(fundingType);
                 competition.setCompletionStage(completionStage);
+                competition.setAlwaysOpen(alwaysOpen);
             });
         });
     }
@@ -204,6 +211,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
+            setGrantClaimMaximums(competition);
+
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
                 List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
@@ -238,6 +247,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
                 questionSetupCompetitionService.update(manyAnswers);
             }
+        });
+    }
+
+    private void setGrantClaimMaximums(CompetitionResource competition) {
+        grantClaimMaximumService.revertToDefault(competition.getId()).getSuccess();
+
+        List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).toOptionalIfNotFound().getSuccess()
+                .map(list ->
+                list.stream()
+                .filter(max -> max.getMaximum() == null)
+                .collect(Collectors.toList()))
+                .orElse(emptyList());
+        IntStream.range(0, maximumsNeedingALevel.size()).forEach(i -> {
+            GrantClaimMaximumResource maximum = maximumsNeedingALevel.get(i);
+            maximum.setMaximum(10 * i);
+            grantClaimMaximumService.save(maximum).getSuccess();
         });
     }
 
@@ -283,6 +308,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
         competitionSections.stream().filter(section -> section.getName().equals("Project details"))
+                .findFirst()
+                .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
+        // only for ktp competitions
+        competitionSections.stream().filter(section -> section.getName().equals("Score Guidance"))
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
     }
@@ -365,9 +394,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage) {
+    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
         return asCompAdmin(data ->
-            Stream.of(MilestoneType.presetValues())
+            Stream.of(BooleanUtils.isTrue(alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
                     .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                     .forEach(type ->
@@ -417,7 +446,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
-        return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+        if (date.isBefore(now())) {
+            return asCompAdmin(data ->  competitionService.closeAssessment(data.getCompetition().getId()).getSuccess());
+        } else {
+            return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+        }
     }
 
     public CompetitionDataBuilder withLineDrawDate(ZonedDateTime date) {

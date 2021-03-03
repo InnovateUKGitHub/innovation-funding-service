@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.resource.NotificationMessage;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -16,7 +17,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,9 +48,7 @@ import static org.innovateuk.ifs.service.ServiceFailureTestHelper.assertThatServ
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -95,7 +94,7 @@ public class ApplicationInviteNotificationServiceTest {
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -115,7 +114,7 @@ public class ApplicationInviteNotificationServiceTest {
         ProcessRole processRole1 = newProcessRole().with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -148,7 +147,7 @@ public class ApplicationInviteNotificationServiceTest {
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -193,7 +192,7 @@ public class ApplicationInviteNotificationServiceTest {
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -226,7 +225,7 @@ public class ApplicationInviteNotificationServiceTest {
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -271,7 +270,7 @@ public class ApplicationInviteNotificationServiceTest {
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -326,7 +325,7 @@ public class ApplicationInviteNotificationServiceTest {
         );
 
         return createLambdaMatcher(notification -> {
-            assertEquals(singletonList(new UserNotificationTarget(invite.getName(), invite.getEmail())), notification.getTo());
+            assertEquals(singletonList(new NotificationMessage(new UserNotificationTarget(invite.getName(), invite.getEmail()))), notification.getTo());
             assertEquals(INVITE_COLLABORATOR, notification.getMessageKey());
             assertThat(notification.getGlobalArguments()).containsKey("inviteUrl");
             assertThat(notification.getGlobalArguments()).contains(expectedNotificationArguments.entrySet().toArray(new Map.Entry[0]));

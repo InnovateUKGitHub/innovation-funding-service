@@ -14,6 +14,9 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-8355: Project finance team - overheads
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -31,11 +34,11 @@ Finance sub-sections
     Then the user should see all the Your-Finances Sections
 
 Organisation name visible in the Finance section
-    [Documentation]    INFUND-1815
+    [Documentation]    INFUND-1815  IFS-7723
     [Tags]
     When the user clicks the button/link    link = Your project costs
-    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'org2'")
-    And the user should see the element     jQuery = label:contains("'org2' Total project costs")
+    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'ITV PLC'")
+    And the user should see the element     jQuery = label:contains("'ITV PLC' Total project costs")
 
 Guidance in the your project costs
     [Documentation]    INFUND-192
@@ -121,18 +124,18 @@ File upload mandatory for Academic partner to mark section as complete
 Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788  INFUND-8191  INFUND-7405  INFUND-8355
     [Tags]  HappyPath
-    [Setup]  log in as a different user                     &{lead_applicant_credentials}
+    [Setup]  log in as a different user                        &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
-    When the user navigates to Your-finances page           ${applicationName}
-    Then the user fills in the project costs                Calculate  185,997
+    Given the user navigates to Your-finances page             ${applicationName}
+    And the user fills in the project costs                    Calculate  185,997
     And wait until element is not visible without screenshots  css = .task-list li:nth-of-type(1) .task-status-incomplete
-    When the user clicks the button/link                    link = Your project costs
-    And the user expands the section                        Overhead costs
-    Then the user should see the element                    link = ${excel_file}
-    And the user clicks the button/link                     jQuery = button:contains("Edit your project costs")
-    And the user clicks the button/link                     css = button[name="removeOverheadFile"]
-    When the user selects the checkbox                      stateAidAgreed
-    And the user clicks the button/link                     jQuery = button:contains("Mark as complete")
+    When the user clicks the button/link                       link = Your project costs
+    And the user expands the section                           Overhead costs
+    And the user should see the element                        link = ${excel_file}
+    And the user clicks the button/link                        jQuery = button:contains("Edit your project costs")
+    And the user clicks the button/link                        css = button[name="removeOverheadFile"]
+    And the user selects the checkbox                          stateAidAgreed
+    Then the user clicks the button/link                       jQuery = button:contains("Mark as complete")
 
 *** Keywords ***
 Custom Suite Setup

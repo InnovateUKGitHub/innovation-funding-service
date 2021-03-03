@@ -14,6 +14,9 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -202,7 +205,7 @@ Log in and create a new application for the Aerospace competition
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery = .govuk-button:contains("Continue")
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain   org2
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain   ITV PLC
             Run Keyword If    '${status}' == 'PASS'    the user selects the radio button     selectedOrganisationId  21
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 

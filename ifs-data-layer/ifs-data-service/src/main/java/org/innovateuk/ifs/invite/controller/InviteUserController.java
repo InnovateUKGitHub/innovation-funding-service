@@ -33,7 +33,7 @@ public class InviteUserController {
 
     @PostMapping("/save-invite")
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
-        return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole()).toPostResponse();
+        return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation()).toPostResponse();
     }
 
     @GetMapping("/get-invite/{inviteHash}")

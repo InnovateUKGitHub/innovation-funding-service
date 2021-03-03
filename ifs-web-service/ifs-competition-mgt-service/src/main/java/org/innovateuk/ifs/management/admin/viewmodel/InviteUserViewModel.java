@@ -29,7 +29,15 @@ public class InviteUserViewModel {
     }
 
     public String getTypeName() {
-        return type.getName();
+        if (type == InviteUserView.INTERNAL_USER) {
+            return type.getName() + " user";
+        } else {
+            return getOnlyRole().getDisplayName().toLowerCase();
+        }
+    }
+
+    public Role getOnlyRole() {
+        return roles.iterator().next();
     }
 
     public Set<Role> getRoles() {
@@ -46,6 +54,15 @@ public class InviteUserViewModel {
 
     public boolean isExternal() {
         return type.equals(InviteUserView.EXTERNAL_USER);
+    }
+
+    public boolean isAddingKtaRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.KNOWLEDGE_TRANSFER_ADVISER;    }
+
+    public boolean isAddingSupporterRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.SUPPORTER;
     }
 
     @Override

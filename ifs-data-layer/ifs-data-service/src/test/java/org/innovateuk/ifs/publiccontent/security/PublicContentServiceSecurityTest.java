@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -17,8 +16,8 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<PublicContentService> {
 
-    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
-    private static final EnumSet<Role> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
+    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
+    private static final EnumSet<Role> ALL_INTERNAL_USERS = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, SYSTEM_MAINTAINER);
 
 
     @Override
@@ -54,9 +53,7 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(
-                                Role.getByName(roleType.getName())
-                        ))
+                        .withRoleGlobal(roleType)
                         .build());
         serviceCall.run();
     }

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.FINANCE_REVIEWER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.FINANCE_REVIEWER;
 
 /**
  * A project finance user assigned to a project as a finance reviewer.

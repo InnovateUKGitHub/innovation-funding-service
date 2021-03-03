@@ -48,6 +48,18 @@ public interface FinanceCheckService {
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "viabilityActivityType")
     ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus);
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_VIABILITY')")
+    @Activity(projectId = "projectId", type = ActivityType.VIABILITY_RESET)
+    ServiceResult<Void> resetViability(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_ELIGIBILITY')")
+    @Activity(projectId = "projectId", type = ActivityType.ELIGIBILITY_RESET)
+    ServiceResult<Void> resetEligibility(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_FINANCE_CHECKS')")
+    @Activity(projectId = "projectId", type = ActivityType.FINANCE_CHECKS_RESET)
+    ServiceResult<Void> resetFinanceChecks(Long projectId);
+
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default Optional<ActivityType> viabilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
         return viability == ViabilityState.APPROVED ? Optional.of(ActivityType.VIABILITY_APPROVED) : Optional.empty();
@@ -70,4 +82,16 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(long projectId, long organisationId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_MILESTONE_CHECK')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.PAYMENT_MILESTONES_APPROVED)
+    ServiceResult<Void> approvePaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'RESET_MILESTONE_CHECK')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.PAYMENT_MILESTONES_RESET)
+    ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
+    ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
 }

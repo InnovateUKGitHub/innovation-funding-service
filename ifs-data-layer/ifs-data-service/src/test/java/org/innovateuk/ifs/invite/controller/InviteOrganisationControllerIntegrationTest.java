@@ -16,7 +16,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -167,7 +167,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     private User getLeadApplicantForApplication(Application application) {
-        List<ProcessRole> processRoles = processRoleRepository.findByApplicationIdAndRole(application.getId(), Role.LEADAPPLICANT);
+        List<ProcessRole> processRoles = processRoleRepository.findByApplicationIdAndRole(application.getId(), ProcessRoleType.LEADAPPLICANT);
         assertEquals(1, processRoles.size());
         return processRoles.get(0).getUser();
     }
@@ -188,7 +188,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
                 .withUser(user)
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .withOrganisationId(organisation.getId())
                 .withApplication(application)
                 .build();

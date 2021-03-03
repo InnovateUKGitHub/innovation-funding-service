@@ -20,6 +20,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -95,7 +96,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition, organisationId));
     }
 
-    private void generateProcessRolesForApplication(User user, Role role, Application application, long organisationId) {
+    private void generateProcessRolesForApplication(User user, ProcessRoleType role, Application application, long organisationId) {
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisationId);
         processRoleRepository.save(processRole);
         List<ProcessRole> processRoles = new ArrayList<>();
@@ -115,7 +116,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         setInnovationArea(application, competition);
 
         application = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, application, organisationId);
+        generateProcessRolesForApplication(user, ProcessRoleType.LEADAPPLICANT, application, organisationId);
 
         linkAddressesToOrganisation(organisationId, application.getId());
 
@@ -235,7 +236,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,
                                                        final Long userId,
-                                                       Role role) {
+                                                       ProcessRoleType role) {
         boolean contains = false;
         int i = 0;
         while (!contains && i < roles.size()) {
@@ -310,7 +311,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                             final Long userId,
-                                                                                            final Role role) {
+                                                                                            final ProcessRoleType role) {
         List<Application> allApps = applicationRepository.findAll();
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));

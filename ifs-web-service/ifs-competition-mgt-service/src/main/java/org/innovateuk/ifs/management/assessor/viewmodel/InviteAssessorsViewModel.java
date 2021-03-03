@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.management.navigation.Pagination;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     private String innovationArea;
     private List<ViewModelRowType> assessors;
     private Pagination pagination;
+    private FundingType fundingType;
 
     protected InviteAssessorsViewModel() {
     }
@@ -28,6 +30,10 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
     }
 
     public String getCompetitionName() {
@@ -92,5 +98,9 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
 
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
+    }
+
+    public boolean isKtp() {
+        return fundingType == FundingType.KTP;
     }
 }

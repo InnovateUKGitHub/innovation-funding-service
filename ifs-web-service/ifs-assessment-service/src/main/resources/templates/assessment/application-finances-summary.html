@@ -17,7 +17,7 @@
         <th:block
             th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle='Funding',subTitle=${applicationName},size='govuk-heading-xl'"/>
+                      th:with="pageTitle=${model.ktpCompetition ? 'Finances overview' : 'Funding'},subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
         <th:block
@@ -26,7 +26,7 @@
             <th:block th:insert="finance/finance-summary :: application-finances-summary(${model.applicationFinanceSummaryViewModel})" />
         </th:block>
 
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Project cost breakdown</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6" th:text="${model.ktpCompetition ? 'Project cost summary' : 'Project cost breakdown'}">Project cost breakdown</h2>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})"/>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

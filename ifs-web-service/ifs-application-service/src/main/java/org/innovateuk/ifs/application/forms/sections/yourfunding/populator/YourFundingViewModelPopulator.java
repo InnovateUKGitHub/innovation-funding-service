@@ -23,6 +23,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,11 +65,17 @@ public class YourFundingViewModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
+
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE) || user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)) {
-            return populateManagement(applicationId, sectionId, organisationId, user);
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && processRoleRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+                .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
+                .orElse(false);
+        if (userCanEdit) {
+            return populateApplicant(applicationId, sectionId, organisationId, user);
         }
-        return populateApplicant(applicationId, sectionId, organisationId, user);
+        return populateManagement(applicationId, sectionId, organisationId, user);
     }
 
     private YourFundingViewModel populateApplicant(long applicationId, long sectionId, long organisationId, UserResource user) {
@@ -180,6 +187,6 @@ public class YourFundingViewModelPopulator {
     }
 
     private boolean isMaximumFundingLevelOverridden(ApplicantSectionResource section) {
-        return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId()).getSuccess();
+        return grantClaimMaximumRestService.isMaximumFundingLevelConstant(section.getCompetition().getId()).getSuccess();
     }
 }

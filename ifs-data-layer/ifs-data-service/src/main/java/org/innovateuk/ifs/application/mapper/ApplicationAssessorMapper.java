@@ -21,7 +21,6 @@ import java.util.Set;
 import static java.util.Collections.emptySet;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;

@@ -24,6 +24,7 @@ import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.transactional.CompetitionApplicationConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -36,6 +37,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
@@ -51,15 +53,14 @@ import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
-import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
+import org.innovateuk.ifs.invite.transactional.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationTypeService;
+import org.innovateuk.ifs.procurement.milestone.transactional.ApplicationProcurementMilestoneService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -82,10 +83,11 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
+import org.innovateuk.ifs.supporter.transactional.SupporterAssignmentService;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -95,6 +97,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.*;
@@ -134,9 +137,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InnovationSectorRepository innovationSectorRepository;
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
+    protected GrantClaimMaximumService grantClaimMaximumService;
     protected QuestionSetupService questionSetupService;
     protected QuestionSetupCompetitionService questionSetupCompetitionService;
-    protected QuestionSetupTemplateService questionSetupTemplateService;
+    protected QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
     protected PublicContentService publicContentService;
     protected CompetitionSetupFinanceService competitionSetupFinanceService;
     protected PublicContentRepository publicContentRepository;
@@ -154,6 +158,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenService tokenService;
     protected ApplicationInviteService applicationInviteService;
     protected AcceptApplicationInviteService acceptApplicationInviteService;
+    protected ApplicationKtaInviteService ktaInviteService;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected ApplicationNotificationService applicationNotificationService;
@@ -221,6 +226,12 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected RoleProfileStatusRepository roleProfileStatusRepository;
     protected CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
     protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
+    protected InviteUserService inviteUserService;
+    protected SupporterAssignmentService supporterAssignmentService;
+    protected ApplicationProcurementMilestoneService applicationProcurementMilestoneService;
+    protected CompetitionApplicationConfigService competitionApplicationConfigService;
+    protected MilestoneRepository milestoneRepository;
+    protected AssessmentPeriodRepository assessmentPeriodRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -248,6 +259,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionTypeRepository = serviceLocator.getBean(CompetitionTypeRepository.class);
         categoryRepository = serviceLocator.getBean(CategoryRepository.class);
         competitionSetupService = serviceLocator.getBean(CompetitionSetupService.class);
+        grantClaimMaximumService = serviceLocator.getBean(GrantClaimMaximumService.class);
         organisationService = serviceLocator.getBean(OrganisationService.class);
         organisationInitialCreationService = serviceLocator.getBean(OrganisationInitialCreationService.class);
         organisationTypeService = serviceLocator.getBean(OrganisationTypeService.class);
@@ -258,6 +270,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         tokenService = serviceLocator.getBean(TokenService.class);
         applicationInviteService = serviceLocator.getBean(ApplicationInviteService.class);
         acceptApplicationInviteService = serviceLocator.getBean(AcceptApplicationInviteService.class);
+        ktaInviteService = serviceLocator.getBean(ApplicationKtaInviteService.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         applicationNotificationService = serviceLocator.getBean(ApplicationNotificationService.class);
@@ -300,7 +313,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
         questionSetupCompetitionService = serviceLocator.getBean(QuestionSetupCompetitionService.class);
-        questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
+        questionSetupAddAndRemoveService = serviceLocator.getBean(QuestionSetupAddAndRemoveService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         documentsService = serviceLocator.getBean(DocumentsService.class);
@@ -341,6 +354,12 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionOrganisationConfigRepository = serviceLocator.getBean((CompetitionOrganisationConfigRepository.class));
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
         projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
+        inviteUserService = serviceLocator.getBean(InviteUserService.class);
+        supporterAssignmentService = serviceLocator.getBean(SupporterAssignmentService.class);
+        applicationProcurementMilestoneService = serviceLocator.getBean(ApplicationProcurementMilestoneService.class);
+        competitionApplicationConfigService = serviceLocator.getBean(CompetitionApplicationConfigService.class);
+        milestoneRepository = serviceLocator.getBean(MilestoneRepository.class);
+        assessmentPeriodRepository = serviceLocator.getBean(AssessmentPeriodRepository.class);
     }
 
     protected UserResource compAdmin() {
@@ -382,7 +401,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccess(), pr -> pr.getRole() == LEADAPPLICANT).get()));
+                        getSuccess(), pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -423,7 +442,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             return processRoleRepository.findByUserAndApplicationId(userRepository.findById(user.getId()).get(),
                     application.getId())
                     .stream()
-                    .filter(x -> x.getRole() == ASSESSOR)
+                    .filter(x -> x.getRole() == ProcessRoleType.ASSESSOR)
                     .findFirst()
                     .get();
         });

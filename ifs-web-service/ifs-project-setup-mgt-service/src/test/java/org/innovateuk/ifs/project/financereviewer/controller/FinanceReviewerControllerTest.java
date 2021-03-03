@@ -74,8 +74,7 @@ public class FinanceReviewerControllerTest extends BaseControllerMockMVCTest<Fin
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/finance-reviewer", competitionId, projectId)
                 .param("userId", String.valueOf(userId)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details", competitionId, projectId)))
-                .andExpect(flash().attribute("displayFinanceReviewerSuccess", true))
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/details?displayFinanceReviewerSuccess=true", competitionId, projectId)))
                 .andReturn();
 
     }

@@ -62,7 +62,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void saveUserInvite() throws Exception {
 
-        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole())).thenReturn(serviceSuccess());
+        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite-user/save-invite")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -74,7 +74,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                         .andWithPrefix("invitedUser.", UserDocs.userResourceFields)
                 ));
 
-        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole());
+        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation());
     }
 
     @Test
@@ -84,9 +84,10 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 serviceSuccess(
                         newRoleInviteResource()
                                 .withName("Arden Pimenta")
-                                .withRoleId(1L)
-                                .withEmail("example@test.com").withHash("SomeHashString")
-                                .withRoleName("Project Finance").build()));
+                                .withEmail("example@test.com")
+                                .withHash("SomeHashString")
+                                .withRole(Role.IFS_ADMINISTRATOR)
+                                .build()));
 
         mockMvc.perform(get("/invite-user/get-invite/{inviteHash}", "SomeHashString")
                 .header("IFS_AUTH_TOKEN", "123abc"))

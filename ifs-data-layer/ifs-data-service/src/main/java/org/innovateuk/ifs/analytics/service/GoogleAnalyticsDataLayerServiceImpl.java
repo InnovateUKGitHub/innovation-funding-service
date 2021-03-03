@@ -1,16 +1,18 @@
 package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +63,7 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     }
 
     @Override
-    public ServiceResult<List<Role>> getRolesByApplicationIdForCurrentUser(long applicationId) {
-
+    public ServiceResult<List<ProcessRoleType>> getRolesByApplicationIdForCurrentUser(long applicationId) {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(
                 user -> simpleMap(
                         processRoleRepository.findByUserAndApplicationId(user, applicationId),
@@ -71,14 +72,12 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     }
 
     @Override
-    public ServiceResult<List<Role>> getRolesByProjectIdForCurrentUser(long projectId) {
-
+    public ServiceResult<List<ProjectParticipantRole>> getRolesByProjectIdForCurrentUser(long projectId) {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(
                 user -> simpleMap(
                         projectUserRepository.findByProjectIdAndUserId(projectId, user.getId()),
-                        projectUser -> Role.getById(projectUser.getRole().getId())
+                        ProjectUser::getRole
                 ));
-
     }
 
     @Override

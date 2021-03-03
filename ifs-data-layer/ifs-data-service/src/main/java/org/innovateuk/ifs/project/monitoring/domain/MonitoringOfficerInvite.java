@@ -31,6 +31,7 @@ public class MonitoringOfficerInvite extends Invite<Void, MonitoringOfficerInvit
 
     @Override
     public void setTarget(Void target) {
+        // do nothing
     }
 
     @Override

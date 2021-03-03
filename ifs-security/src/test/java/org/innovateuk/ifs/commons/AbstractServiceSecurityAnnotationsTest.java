@@ -19,7 +19,6 @@ import java.util.List;
 
 import static java.lang.String.join;
 import static java.lang.reflect.Modifier.isPublic;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.PermissionRulesClassResult.fromClassAndPermissionMethods;
 import static org.innovateuk.ifs.commons.security.ProxyUtils.*;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
@@ -213,7 +212,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
      * @return
      */
     private boolean methodNeedsSecuring(Method method) {
-        return isPublic(method.getModifiers()) && !isAMethodOnObject(method);
+        return isPublic(method.getModifiers()) && !isAMethodOnObject(method) && !method.isAnnotationPresent(Autowired.class);
     }
 
     /**

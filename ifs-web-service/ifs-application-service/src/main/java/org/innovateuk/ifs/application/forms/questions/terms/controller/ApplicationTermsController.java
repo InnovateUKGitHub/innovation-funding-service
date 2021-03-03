@@ -14,7 +14,8 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,25 +32,29 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance', 'supporter')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
         securedType = ApplicationTermsController.class)
 public class ApplicationTermsController {
 
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private ApplicationTermsModelPopulator applicationTermsModelPopulator;
     private QuestionStatusRestService questionStatusRestService;
     private ApplicationRestService applicationRestService;
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
 
+    public ApplicationTermsController() {
 
-    public ApplicationTermsController(UserRestService userRestService,
+    }
+
+    @Autowired
+    public ApplicationTermsController(ProcessRoleRestService processRoleRestService,
                                       QuestionStatusRestService questionStatusRestService,
                                       ApplicationRestService applicationRestService,
                                       ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator,
                                       ApplicationTermsModelPopulator applicationTermsModelPopulator) {
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.questionStatusRestService = questionStatusRestService;
         this.applicationRestService = applicationRestService;
         this.applicationTermsModelPopulator = applicationTermsModelPopulator;
@@ -82,7 +87,7 @@ public class ApplicationTermsController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+            ProcessRoleResource processRole = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             RestResult<List<ValidationMessages>> result = questionStatusRestService.markAsComplete(questionId, applicationId, processRole.getId());
 
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())

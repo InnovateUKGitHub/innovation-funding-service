@@ -9,7 +9,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -84,7 +84,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     public void acceptWithKtpCompetitionWithKtaProcessRole() {
         // given
         Application application = ApplicationBuilder.newApplication()
-                .withProcessRole(newProcessRole().withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build())
+                .withProcessRole(newProcessRole().withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).build())
                 .withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * Resource representation of GrantTermsAndConditions
  */
-public class GrantTermsAndConditionsResource extends TermsAndConditionsResource {
+public class GrantTermsAndConditionsResource extends VersionedTemplateResource {
 
     public GrantTermsAndConditionsResource() {
     }

@@ -79,6 +79,18 @@ public class PageHistoryServiceTest {
     }
 
     @Test
+    public void recordPageHistory_ExcludeFromPageHistory() {
+        when(request.getRequestURI()).thenReturn("/url/pageOne");
+        when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
+        when(handler.hasMethodAnnotation(ExcludeFromPageHistory.class)).thenReturn(true);
+
+        pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
+
+        assertEquals(2, history.size());
+        verify(encodedCookieService, never()).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+    }
+
+    @Test
     public void recordPageHistory_alreadyVisitedPage() {
         Map<String, Object> model = new HashMap<>();
         when(modelAndView.getModel()).thenReturn(model);
@@ -107,6 +119,31 @@ public class PageHistoryServiceTest {
         assertEquals("/url/pageSecond", model.get("cookieBackLinkUrl"));
         assertEquals("pageSecond", model.get("cookieBackLinkText"));
         verify(encodedCookieService, never()).saveToCookie(any(), any(), any());
+    }
+
+    @Test
+    public void recordPageHistoryWithQueryParams() {
+        Map<String, Object> model = new HashMap<>();
+
+        when(modelAndView.getModel()).thenReturn(model);
+        when(request.getRequestURI()).thenReturn("/url/pageSecond");
+        when(request.getQueryString()).thenReturn("ktp=true");
+        when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
+
+        pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
+
+
+        when(modelAndView.getModel()).thenReturn(model);
+        when(request.getRequestURI()).thenReturn("/url/pageThird");
+        when(request.getQueryString()).thenReturn("ktp=true");
+        when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
+
+        pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
+
+        assertEquals(3, history.size());
+        PageHistory pageHistory = pageHistoryService.getPreviousPage(request).get();
+        assertEquals("ktp=true", pageHistory.getQuery());
+        verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
 
 }

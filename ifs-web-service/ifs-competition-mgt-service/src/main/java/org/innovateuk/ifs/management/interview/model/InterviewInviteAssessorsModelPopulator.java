@@ -29,6 +29,7 @@ abstract class InterviewInviteAssessorsModelPopulator<ViewModelType extends Invi
     private ViewModelType populateCompetitionDetails(ViewModelType model, CompetitionResource competition) {
         model.setCompetitionId(competition.getId());
         model.setCompetitionName(competition.getName());
+        model.setFundingType(competition.getFundingType());
         return model;
     }
 

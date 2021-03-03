@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.service.Futures.adapt;
 
 /**
@@ -19,15 +18,15 @@ import static org.innovateuk.ifs.application.service.Futures.adapt;
 public class ProcessRoleServiceImpl implements ProcessRoleService {
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
-    public Future<List<ProcessRoleResource>> findAssignableProcessRoles(Long applicationId) {
-        return adapt(userRestService.findAssignableProcessRoles(applicationId), re -> asList(re.getSuccess()));
+    public List<ProcessRoleResource> findAssignableProcessRoles(Long applicationId) {
+        return processRoleRestService.findAssignableProcessRoles(applicationId).getSuccess();
     }
 
     @Override
     public Future<ProcessRoleResource> getById(Long id) {
-        return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccess);
+        return adapt(processRoleRestService.findProcessRoleById(id), RestResult::getSuccess);
     }
 }

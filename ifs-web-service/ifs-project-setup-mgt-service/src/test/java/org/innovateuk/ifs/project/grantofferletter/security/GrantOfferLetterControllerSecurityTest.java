@@ -86,6 +86,11 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
         assertSecured(() -> classUnderTest.downloadSignedGrantOfferLetterFile(projectCompositeId.id()));
     }
 
+    @Test
+    public void testDownloadSignedAdditionalContractFile() {
+        assertSecured(() -> classUnderTest.downloadSignedAdditionalContractFile(projectCompositeId.id()));
+    }
+
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
         return permissionRules -> permissionRules.internalCanAccessGrantOfferLetterSendSection(eq(projectCompositeId), isA(UserResource.class));

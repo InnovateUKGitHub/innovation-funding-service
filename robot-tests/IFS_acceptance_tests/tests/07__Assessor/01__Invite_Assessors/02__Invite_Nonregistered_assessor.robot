@@ -140,7 +140,7 @@ the user should see the validation error in the create assessor form
     the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
     the user should see a field and summary error      Your last name should have at least 2 characters.
     the user should see a field and summary error      Your first name should have at least 2 characters.
-    the user should see a field and summary error      Password must be at least 8 characters.
+    the user should see a field and summary error      Password must be at least 12 characters.
 
 the user enters the postcode and password to create account
     The user enters text to a text field                  id = addressForm.postcodeInput    BS14NT
@@ -158,11 +158,11 @@ the user should not see the error messages after entering valid values
     the user should not see the validation error in the create assessor form   ${enter_a_phone_number_between_8_and_20_digits}
     the user enters text to a text field                                       id = password    ${correct_password}
     the user should not see the validation error in the create assessor form   Please enter your password.
-    the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
+    the user should not see the validation error in the create assessor form   Password must be at least 12 characters.
 
 the user checks for validations on reject invitation page
     the user navigates to the page                    ${Invitation_nonregistered_assessor2}
-    the user should see the element                   jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user should see the element                   jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
     the user selects the radio button                 acceptInvitation  false
     the user clicks the button/link                   jQuery = button:contains("Confirm")
     the user should see a field and summary error     The reason cannot be blank.
@@ -177,4 +177,4 @@ the comp admin logs in and navigate to invite tab
 the internal user send invite
     the user cannot see a validation error in the page
     the user clicks the button/link            jQuery = a:contains("Review and send invites")
-    the user clicks the button/link            jQuery = button:contains("Send invite")
+    the user clicks the button/link            jQuery = button:contains("Send invitation")

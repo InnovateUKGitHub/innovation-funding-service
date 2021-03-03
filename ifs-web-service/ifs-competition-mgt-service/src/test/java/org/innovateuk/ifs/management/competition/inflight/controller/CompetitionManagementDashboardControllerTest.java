@@ -28,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -90,7 +89,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashboard() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -111,7 +110,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void stakeholderLiveDashboard() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.STAKEHOLDER)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.STAKEHOLDER).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -138,7 +137,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void projectSetupDashboardWithNonProjectFinanceUser() throws Exception {
         int page = 1;
         Long countBankDetails = 0L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
         List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
                 .withCompetitionStatus(OPEN)
@@ -169,7 +168,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void projectSetupDashboardWithProjectFinanceUser() throws Exception {
         int page = 1;
         Long countBankDetails = 8L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build());
 
         List<UpcomingCompetitionSearchResultItem> competitions = newUpcomingCompetitionSearchResultItem()
                 .withCompetitionStatus(PROJECT_SETUP)
@@ -414,7 +413,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashBoardSupportView() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.SUPPORT).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -439,7 +438,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashBoardSupportViewInnovationLead() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build());
 
         when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 

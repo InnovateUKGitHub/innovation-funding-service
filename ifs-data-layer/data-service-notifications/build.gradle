@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 
 group 'innovateuk'
 version project.version
@@ -20,7 +20,7 @@ artifacts {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-freemarker:2.0.5.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-freemarker"
 
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-sil-resources")

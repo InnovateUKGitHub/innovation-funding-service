@@ -42,6 +42,10 @@ public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, Mil
         return withArray((type, milestone) -> BaseBuilderAmendFunctions.setField("type", type, milestone), types);
     }
 
+    public MilestoneResourceBuilder withAssessmentPeriod(Long... assessmentPeriods) {
+        return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriod", assessmentPeriod, object), assessmentPeriods);
+    }
+
     @Override
     protected MilestoneResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, MilestoneResource>> actions) {
         return new MilestoneResourceBuilder(actions);

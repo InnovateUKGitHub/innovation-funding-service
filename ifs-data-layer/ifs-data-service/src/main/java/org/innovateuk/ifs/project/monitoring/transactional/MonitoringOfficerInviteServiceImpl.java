@@ -31,7 +31,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.MONITORING_OFFICERS_CANNOT_BE_INTERNAL_USERS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.MONITORING_OFFICER_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -177,7 +176,7 @@ public class MonitoringOfficerInviteServiceImpl extends InviteService<Monitoring
     private ServiceResult<Void> sendNotification(Map<String, Object> args, Notifications notificationType, NotificationTarget target) {
 
         Notification notification = new Notification(systemNotificationSource,
-                                                     singletonList(target),
+                                                     target,
                                                      notificationType,
                                                      args);
 

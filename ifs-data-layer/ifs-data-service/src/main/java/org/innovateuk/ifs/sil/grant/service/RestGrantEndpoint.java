@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.util.Either;
-import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

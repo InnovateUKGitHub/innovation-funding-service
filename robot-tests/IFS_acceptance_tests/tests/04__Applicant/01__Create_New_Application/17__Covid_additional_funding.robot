@@ -321,6 +321,7 @@ the user can send successful funding notification
     the user clicks the button/link    id = write-and-send-email
     the user clicks the button/link    jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    the user refreshes until element appears on page         jQuery = td:contains("${COVIDapplicationTitle1}") ~ td:contains("Sent")
 
 Complete all PS steps before finance
     Log in as a different user                            &{lead_applicant_credentials}
@@ -335,7 +336,7 @@ Complete all PS steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Return to set up your project
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}

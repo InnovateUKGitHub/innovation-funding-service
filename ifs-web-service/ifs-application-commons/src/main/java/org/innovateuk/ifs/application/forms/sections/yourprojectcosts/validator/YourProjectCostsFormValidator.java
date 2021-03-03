@@ -11,8 +11,10 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -44,6 +46,9 @@ public class YourProjectCostsFormValidator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
 
     public void validateType(YourProjectCostsForm form, FinanceRowType type, ValidationHandler validationHandler) {
         switch (type) {
@@ -73,6 +78,7 @@ public class YourProjectCostsFormValidator {
                 break;
             case VAT:
                 validateVat(form.getVatForm(), validationHandler);
+                break;
             case ASSOCIATE_SALARY_COSTS:
                 validateRowsIfNotBlank(form.getAssociateSalaryCostRows(), "associateSalaryCostRows[%s].", validationHandler);
                 break;
@@ -98,6 +104,15 @@ public class YourProjectCostsFormValidator {
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+            default:
+                // do nothing
+        }
+    }
+
+    private void validateJustification(JustificationForm justificationForm, ValidationHandler validationHandler) {
+        validateForm(justificationForm, validationHandler, "justificationForm.");
+        if (justificationForm.getExceedAllowedLimit() != null && justificationForm.getExceedAllowedLimit() == Boolean.TRUE && StringUtils.isEmpty(justificationForm.getJustification())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.justification", null, "validation.ktp.project.costs.justification.required")));
         }
     }
 
@@ -147,6 +162,9 @@ public class YourProjectCostsFormValidator {
     public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
         CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
         competition.getFinanceRowTypes().forEach(type -> validateType(form, type, validationHandler));
+        if (competition.isKtp()) {
+            validateJustification(form.getJustificationForm(), validationHandler);
+        }
     }
 
     private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {

@@ -405,8 +405,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                     table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
                     checkTotalForMonthsAndAddToTable(table);
 
-                    boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
-                    if (isResearch) {
+                    boolean isJes = project.getApplication().getCompetition().applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+                    if (isJes) {
                         table.setCostCategoryGroupMap(groupCategories(table));
                     }
 
@@ -504,6 +504,20 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccess();
         return saveSpendProfileData(projectOrganisationCompositeId, table, false);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteSpendProfile(Long projectId) {
+        List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
+
+        Project project = getProject(projectId).getSuccess();
+        project.getSpendProfiles().removeAll(spendProfiles);
+        project.setSpendProfileSubmittedDate(null);
+
+        spendProfileRepository.deleteAll(spendProfiles);
+        spendProfileWorkflowHandler.spendProfileDeleted(getProject(projectId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+        return serviceSuccess();
     }
 
     @Override

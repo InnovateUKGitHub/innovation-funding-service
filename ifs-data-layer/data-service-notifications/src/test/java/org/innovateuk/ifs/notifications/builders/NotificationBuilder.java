@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.notifications.builders;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationSource;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +33,7 @@ public class NotificationBuilder extends BaseBuilder<Notification, NotificationB
         return withArraySetFieldByReflection("from", source);
     }
 
-    public NotificationBuilder withTargets(List<NotificationTarget> ...targets) {
+    public NotificationBuilder withTargets(List<NotificationMessage> ...targets) {
         return withArraySetFieldByReflection("to", targets);
     }
 

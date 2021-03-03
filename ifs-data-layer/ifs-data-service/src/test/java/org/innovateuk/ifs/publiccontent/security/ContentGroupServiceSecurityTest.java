@@ -13,20 +13,18 @@ import org.junit.Test;
 import java.util.EnumSet;
 import java.util.function.Supplier;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<ContentGroupService> {
 
-    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
+    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
     private ContentGroupPermissionRules rules;
     private ContentGroupLookupStrategy contentGroupLookupStrategies;
 
@@ -77,6 +75,11 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     }
 
     private void runAsAllowedRoles(EnumSet<Role> allowedRoles, Runnable serviceCall) {
+        if (allowedRoles.contains(Role.ASSESSOR)) {
+            allowedRoles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        } else if (allowedRoles.contains(Role.PROJECT_FINANCE) || allowedRoles.contains(Role.IFS_ADMINISTRATOR)) {
+            allowedRoles.add(Role.SYSTEM_MAINTAINER);
+        }
         allowedRoles.forEach(roleType -> runAsRole(roleType, serviceCall));
         complementOf(allowedRoles).forEach(roleType -> assertAccessDeniedAsRole(roleType, serviceCall, () -> {}));
     }
@@ -84,8 +87,7 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(Role.getByName(roleType.getName()))
-                        )
+                        .withRoleGlobal(roleType)
                         .build());
         serviceCall.run();
     }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.junit.Before;
@@ -10,7 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertFalse;
@@ -19,7 +19,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing {@link ApplicationOverviewSectionViewModel}
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ApplicationCompletedViewModelTest {
@@ -28,9 +27,9 @@ public class ApplicationCompletedViewModelTest {
 
     @Before
     public void setup() throws Exception {
-        Set<Long> sectionsMarkedAsComplete = asSet(1L, 2L);
+        Set<Long> sectionsMarkedAsComplete = ImmutableSet.of(1L, 2L);
         Future<Set<Long>> markedAsComplete = mock(Future.class);
-        Set<Long> completedSectionsByUserOrganisation = asSet(1L, 2L);
+        Set<Long> completedSectionsByUserOrganisation = ImmutableSet.of(1L, 2L);
 
         when(markedAsComplete.get()).thenReturn(sectionsMarkedAsComplete);
 

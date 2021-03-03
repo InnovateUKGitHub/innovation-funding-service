@@ -28,7 +28,6 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.finance.builder.NoteResourceBuilder.newNoteResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -54,8 +53,8 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     @Before
     public void setUp() throws Exception {
         projectFinanceUserOne = projectFinanceUser();
-        projectFinanceUserTwo = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
-        intruder = getUserWithRole(FINANCE_CONTACT);
+        projectFinanceUserTwo = newUserResource().withId(1993L).withRoleGlobal(Role.PROJECT_FINANCE).build();
+        intruder = getUserWithRole(Role.ASSESSOR);
         noteResource = sampleNote();
 
         competition = newCompetition().build();

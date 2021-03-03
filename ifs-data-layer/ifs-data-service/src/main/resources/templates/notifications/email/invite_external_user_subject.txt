@@ -1,1 +1,1 @@
-Invitation to Innovation Funding Service
+You have been invited to become a ${role}

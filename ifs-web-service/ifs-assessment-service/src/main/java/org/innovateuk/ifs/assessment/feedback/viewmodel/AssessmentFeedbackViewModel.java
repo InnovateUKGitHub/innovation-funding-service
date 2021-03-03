@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -38,6 +39,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final FileDetailsViewModel templateDocumentDetails;
     private final String templateDocumentTitle;
     private final List<ResearchCategoryResource> researchCategories;
+    private final FundingType fundingType;
 
     private AssessmentFeedbackViewModel(long assessmentId,
                                         long daysLeft,
@@ -56,7 +58,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         List<FileDetailsViewModel> appendixDetails,
                                         FileDetailsViewModel templateDocumentDetails,
                                         String templateDocumentTitle,
-                                        List<ResearchCategoryResource> researchCategories) {
+                                        List<ResearchCategoryResource> researchCategories,
+                                        FundingType fundingType) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
@@ -75,6 +78,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.templateDocumentDetails = templateDocumentDetails;
         this.templateDocumentTitle = templateDocumentTitle;
         this.researchCategories = researchCategories;
+        this.fundingType = fundingType;
     }
 
     public AssessmentFeedbackViewModel(AssessmentResource assessment, CompetitionResource competition, QuestionResource question, String applicantResponse,
@@ -102,7 +106,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 appendixDetails,
                 templateDocumentDetails,
                 templateDocumentTitle,
-                researchCategories);
+                researchCategories,
+                competition.getFundingType());
     }
 
     public long getAssessmentId() {
@@ -190,6 +195,10 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return templateDocumentDetails != null;
     }
 
+    public boolean isKtp() {
+        return fundingType == FundingType.KTP;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -217,6 +226,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(templateDocumentDetails, that.templateDocumentDetails)
                 .append(templateDocumentTitle, that.templateDocumentTitle)
                 .append(researchCategories, that.researchCategories)
+                .append(fundingType, that.fundingType)
                 .isEquals();
     }
 
@@ -241,6 +251,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(templateDocumentDetails)
                 .append(templateDocumentTitle)
                 .append(researchCategories)
+                .append(fundingType)
                 .toHashCode();
     }
 
@@ -265,6 +276,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append("templateDocumentDetails", templateDocumentDetails)
                 .append("templateDocumentTitle", templateDocumentTitle)
                 .append("researchCategories", researchCategories)
+                .append("fundingType", fundingType)
                 .toString();
     }
 }

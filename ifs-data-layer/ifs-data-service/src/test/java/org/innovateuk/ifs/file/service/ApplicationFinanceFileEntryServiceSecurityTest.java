@@ -37,8 +37,7 @@ public class ApplicationFinanceFileEntryServiceSecurityTest extends BaseServiceS
         assertAccessDenied(
                 () -> classUnderTest.getFileEntryByApplicationFinanceId(applicationFinanceId),
                 () -> {
-                    verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules).internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).canViewApplication(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 

@@ -56,4 +56,8 @@ public enum ViabilityState implements ProcessState, IdentifiableEnum {
     public boolean isInReviewOrNotApplicable() {
         return EnumSet.of(REVIEW, NOT_APPLICABLE).contains(this);
     }
+
+    public boolean isApprovedOrNotApplicable() {
+        return EnumSet.of(APPROVED, NOT_APPLICABLE).contains(this);
+    }
 }

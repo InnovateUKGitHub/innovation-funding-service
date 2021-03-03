@@ -16,6 +16,7 @@ public class AssessmentOverviewQuestionViewModel {
     private boolean assessed;
     private Boolean scopeResponse;
     private String scoreResponse;
+    private boolean scoreRequired;
 
     public AssessmentOverviewQuestionViewModel(long questionId,
                                                String questionName,
@@ -24,7 +25,8 @@ public class AssessmentOverviewQuestionViewModel {
                                                boolean responseRequired,
                                                boolean assessed,
                                                Boolean scopeResponse,
-                                               String scoreResponse) {
+                                               String scoreResponse,
+                                               boolean scoreRequired) {
         this.questionId = questionId;
         this.questionName = questionName;
         this.questionNumber = questionNumber;
@@ -33,6 +35,7 @@ public class AssessmentOverviewQuestionViewModel {
         this.assessed = assessed;
         this.scopeResponse = scopeResponse;
         this.scoreResponse = scoreResponse;
+        this.scoreRequired = scoreRequired;
     }
 
     public long getQuestionId() {
@@ -97,6 +100,14 @@ public class AssessmentOverviewQuestionViewModel {
 
     public void setScoreResponse(String scoreResponse) {
         this.scoreResponse = scoreResponse;
+    }
+
+    public boolean isScoreRequired() {
+        return scoreRequired;
+    }
+
+    public void setScoreRequired(boolean scoreRequired) {
+        this.scoreRequired = scoreRequired;
     }
 
     @Override

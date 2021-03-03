@@ -35,7 +35,8 @@
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
                     <li th:if="${model.showApplicationSummaryLink}"><a th:href="${'/application/' + model.applicationId + '/summary'}"
-                           class="govuk-link">
+                           class="govuk-link"
+                    th:text="${model.applicationFeedbackAvailable ? 'view application feedback' : 'view application overview'}">
                         view application feedback</a></li>
                     <li>
                         <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
@@ -52,7 +53,7 @@
             </div>
         </div>
 
-        <th:block th:if="${model.projectState.live}">
+        <th:block th:if="${model.liveProjectMessageVisible}">
             <div class="success-alert govuk-!-margin-bottom-6">
                 <p th:if="${model.projectManager || model.projectFinanceContact}" class="govuk-body">The project is now live and you can <a th:href="${model.ifsPostAward} ? ${model.liveProjectsLandingPageUrl} : 'https://grants.innovateuk.org'" class="govuk-link">review its progress</a>.</p>
                 <p th:if="${!model.projectManager && !model.projectFinanceContact}" class="govuk-body">The project is now live.</p>
@@ -60,7 +61,7 @@
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
-        <th:block th:if="${model.projectState.active && !model.loanCompetition}">
+        <th:block th:if="${model.bannerVisible}">
             <div class="message-alert">
                 <th:block th:unless="${model.monitoringOfficer}">
                     <th:block th:if="${model.isCollaborativeProject()}">

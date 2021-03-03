@@ -58,7 +58,7 @@ public class InternalUserRegistrationControllerTest  extends BaseControllerMockM
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.setFirstName("Arden");
         registrationForm.setLastName("Pimenta");
-        registrationForm.setPassword("Passw0rd");
+        registrationForm.setPassword("Passw0rd1357");
         registrationForm.setEmail("arden.piment@innovateuk.test");
 
         when(internalUserServiceMock.createInternalUser(eq("hash"), refEq(registrationForm))).thenReturn(serviceSuccess());

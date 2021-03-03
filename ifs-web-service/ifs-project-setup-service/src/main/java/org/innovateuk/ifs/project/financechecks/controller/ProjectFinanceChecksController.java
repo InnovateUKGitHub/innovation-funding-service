@@ -15,19 +15,18 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
@@ -36,6 +35,8 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
@@ -86,7 +87,7 @@ public class ProjectFinanceChecksController {
 
     private static final Log LOG = LogFactory.getLog(ProjectFinanceChecksController.class);
 
-    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks";
+    static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-check";
 
     private static final String ATTACHMENT_COOKIE = "query_new_response_attachments";
     private static final String FORM_ATTR = "form";
@@ -101,16 +102,22 @@ public class ProjectFinanceChecksController {
     private ApplicationService applicationService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Autowired
     private FinanceCheckService financeCheckService;
+
+    @Autowired
+    private FinanceCheckRestService financeCheckRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
     private EncryptedCookieService cookieUtil;
@@ -358,6 +365,7 @@ public class ProjectFinanceChecksController {
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        List<ProjectUserResource> projectUserResources = projectService.getProjectUsersForProject(projectId);
 
         Map<Long, String> attachmentLinks =
                 simpleToMap(attachments, identity(), id -> financeCheckService.getAttachmentInfo(id).getName());
@@ -369,6 +377,11 @@ public class ProjectFinanceChecksController {
         List<ThreadViewModel> closedQueryThreads = groupedQueries.get(ThreadState.CLOSED) == null ? emptyList() : groupedQueries.get(ThreadState.CLOSED);
         List<ThreadViewModel> lastPostByExternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_EXTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_EXTERNAL_USER);
         List<ThreadViewModel> lastPostByInternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER);
+
+        boolean leadOrganisation = projectUserResources.stream().anyMatch(projectUser ->
+            projectUser.getRole() == ProjectParticipantRole.PROJECT_MANAGER
+                    && projectUser.getOrganisation().equals(organisationId)
+        );
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
@@ -382,7 +395,10 @@ public class ProjectFinanceChecksController {
                 queryId,
                 PROJECT_FINANCE_CHECKS_BASE_URL, competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum()),
                 competition.isLoan(),
-                competition.isProcurement());
+                competition.isProcurement(),
+                competition.isKtp(),
+                leadOrganisation,
+                competition.isProcurementMilestones());
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
@@ -392,7 +408,7 @@ public class ProjectFinanceChecksController {
 
     private Map<ThreadState, List<ThreadViewModel>> getGroupedQueries(Long projectId, Long organisationId) {
 
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+        ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
 
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
@@ -411,7 +427,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String redirectToQueries(Long projectId) {
-        return "redirect:/project/" + projectId + "/finance-checks";
+        return "redirect:/project/" + projectId + "/finance-check";
     }
 
     private String getCookieName(Long projectId, Long organisationId, Long queryId) {
@@ -445,7 +461,7 @@ public class ProjectFinanceChecksController {
 
     private String doViewEligibility(ApplicationResource application, ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model) {
 
-        EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
+        EligibilityResource eligibility = financeCheckRestService.getEligibility(project.getId(), organisation.getId()).getSuccess();
 
         FinanceChecksEligibilityForm eligibilityForm = getEligibilityForm(eligibility);
 
@@ -455,7 +471,7 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(project.getId());
+        List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(project.getId()).getSuccess();
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {

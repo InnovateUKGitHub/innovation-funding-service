@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,11 +44,29 @@ public class Organisation {
     private List<OrganisationAddress> addresses = new ArrayList<>();
 
     //Only used by queries.
-    @OneToMany(mappedBy="organisationId")
+    @OneToMany(mappedBy = "organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
+
+    @Column(name = "date_of_incorporation")
+    private LocalDate dateOfIncorporation;
+
+    @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<SicCode> sicCodes = new ArrayList<>();
+
+    @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ExecutiveOfficer> executiveOfficers = new ArrayList<>();
+
+    @Column
+    private String businessType;
+
+    @Column
+    //Could be Tax UTR, Charity number etc
+    private String organisationNumber;
 
     public Organisation() {
     }
@@ -63,6 +82,10 @@ public class Organisation {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -128,5 +151,65 @@ public class Organisation {
 
     public void setKnowledgeBaseRegistrationNumber(String knowledgeBaseRegistrationNumber) {
         this.knowledgeBaseRegistrationNumber = knowledgeBaseRegistrationNumber;
+    }
+
+    public LocalDate getDateOfIncorporation() {
+        return dateOfIncorporation;
+    }
+
+    public void setDateOfIncorporation(LocalDate dateOfIncorporation) {
+        this.dateOfIncorporation = dateOfIncorporation;
+    }
+
+    public List<ExecutiveOfficer> getExecutiveOfficers() {
+        return executiveOfficers;
+    }
+
+    public void setExecutiveOfficers(List<ExecutiveOfficer> executiveOfficers) {
+        this.executiveOfficers = executiveOfficers;
+    }
+
+    public void addExecutiveOfficer(ExecutiveOfficer officer) {
+        executiveOfficers.add(officer);
+        officer.setOrganisation(this);
+    }
+
+    public void removeExecutiveOfficier(ExecutiveOfficer officer) {
+        executiveOfficers.remove(officer);
+        officer.setOrganisation(null);
+    }
+
+    public void addSicCode(SicCode sicCode) {
+        sicCodes.add(sicCode);
+        sicCode.setOrganisation(this);
+    }
+
+    public void removeSicCode(SicCode sicCode) {
+        sicCodes.remove(sicCode);
+        sicCode.setOrganisation(null);
+    }
+
+    public List<SicCode> getSicCodes() {
+        return sicCodes;
+    }
+
+    public void setSicCodes(List<SicCode> sicCodes) {
+        this.sicCodes = sicCodes;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public void setOrganisationNumber(String organisationNumber) {
+        this.organisationNumber = organisationNumber;
     }
 }

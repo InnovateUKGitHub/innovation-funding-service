@@ -1,6 +1,6 @@
 -- Useful query to regenerate the data in assessor_data.csv after a change in the database.
 
-SELECT concat_ws(',', u.email, 'Passw0rd', c.id, p.id, application_details_question.id, project_summary_question.id,
+SELECT concat_ws(',', u.email, 'Passw0rd1357', c.id, p.id, application_details_question.id, project_summary_question.id,
                  public_description_question.id, scope.id, business_opportunity.id, potential_market.id,
                  project_exploitation.id, economic_benefit.id, technical_approach.id, innovation.id, risks.id,
                  project_team.id, funding.id, adding_value.id

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -33,6 +34,10 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
 
     public MilestoneBuilder withType(MilestoneType... types) {
         return withArraySetFieldByReflection("type", types);
+    }
+
+    public MilestoneBuilder withAssessmentPeriod(AssessmentPeriod... assessmentPeriods) {
+        return withArraySetFieldByReflection("assessmentPeriod", assessmentPeriods);
     }
 
     @Override

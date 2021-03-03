@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -25,7 +25,7 @@ public class AddressResource {
     private String county;
     private String country;
     @NotBlank(message = "{validation.standard.postcode.required}")
-    @Length(max = 9, message = "{validation.standard.postcode.length}")
+    @Size(max = 9, message = "{validation.standard.postcode.length}")
     private String postcode;
 
     public AddressResource() {

@@ -216,8 +216,8 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenProjectDurationsExceedMaximumAllowed() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         DetailsForm detailsForm = new DetailsForm();
-        detailsForm.setMinProjectDuration(new BigDecimal(61));
-        detailsForm.setMaxProjectDuration(new BigDecimal(61));
+        detailsForm.setMinProjectDuration(new BigDecimal(85));
+        detailsForm.setMaxProjectDuration(new BigDecimal(85));
         detailsForm.setUseResubmissionQuestion(false);
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, detailsForm);

@@ -43,7 +43,7 @@ public class InternalProjectSetupCell {
     public String getText() {
         switch (state) {
             case NOT_REQUIRED:
-                return "Not required for this partner";
+                return "Not required";
             case ACTION_REQUIRED:
                 return stage == MONITORING_OFFICER ? "Assign" : "Review";
             case PENDING:

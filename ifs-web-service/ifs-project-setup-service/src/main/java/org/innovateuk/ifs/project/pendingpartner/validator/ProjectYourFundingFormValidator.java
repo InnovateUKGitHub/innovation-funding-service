@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.pendingpartner.validator;
 
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.AbstractYourFundingFormValidator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;

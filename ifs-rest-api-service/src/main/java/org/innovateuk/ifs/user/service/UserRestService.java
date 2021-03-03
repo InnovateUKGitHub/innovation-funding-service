@@ -34,21 +34,9 @@ public interface UserRestService {
 
     RestResult<ManageUserPageResource> getInactiveExternalUsers(String filter, int pageNumber, int pageSize);
 
-    RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId);
-
-    RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId);
-
-    RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(long userId);
-
     RestResult<List<UserResource>> findAssignableUsers(long applicationId);
 
     RestResult<UserResource> findUserByEmail(String email);
-
-    Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId);
-
-    RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId);
-
-    Future<RestResult<ProcessRoleResource>> findProcessRoleById(long processRoleId);
 
     RestResult<Void> verifyEmail(String hash);
 

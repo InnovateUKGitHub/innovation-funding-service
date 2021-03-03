@@ -184,7 +184,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 () -> {
                     verify(applicationLookupStrategy).getApplicationResource(applicationId);
                     verify(applicationPermissionRules)
-                            .usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
+                            .canViewApplication(isA(ApplicationResource.class), isA(UserResource.class));
                 }
         );
     }

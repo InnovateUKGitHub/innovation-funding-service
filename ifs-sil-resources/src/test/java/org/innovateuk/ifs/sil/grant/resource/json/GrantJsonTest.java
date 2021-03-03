@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.innovateuk.ifs.sil.grant.resource.json.GrantConstants.GMT;
+import static org.innovateuk.ifs.sil.common.json.Constants.GMT;
 
 public class GrantJsonTest {
     private static final ZonedDateTime OFFER_DATE = ZonedDateTime

@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
@@ -11,12 +14,14 @@ public class ProjectDashboardRowViewModel {
     private final String competitionTitle;
     private final long projectId;
     private final String projectTitle;
+    private final ProjectState projectState;
 
-    public ProjectDashboardRowViewModel(long applicationNumber, String competitionTitle, long projectId, String projectTitle) {
-        this.applicationNumber = applicationNumber;
-        this.competitionTitle = competitionTitle;
-        this.projectId = projectId;
-        this.projectTitle = projectTitle;
+    public ProjectDashboardRowViewModel(ProjectResource project) {
+        this.applicationNumber = project.getApplication();
+        this.competitionTitle = project.getCompetitionName();
+        this.projectId = project.getId();
+        this.projectTitle = project.getName();
+        this.projectState = project.getProjectState();
     }
 
     public long getProjectId() {
@@ -41,5 +46,22 @@ public class ProjectDashboardRowViewModel {
 
     public String getCompetitionTitle() {
         return competitionTitle;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+
+    public boolean isWithdrawn() {
+        return projectState.isWithdrawn();
+    }
+
+    public boolean isLiveOrCompletedOffline() {
+        return projectState.isLive() || projectState.isCompletedOffline();
+    }
+
+    public boolean isUnsuccessful() {
+        return projectState.isUnsuccessful();
     }
 }

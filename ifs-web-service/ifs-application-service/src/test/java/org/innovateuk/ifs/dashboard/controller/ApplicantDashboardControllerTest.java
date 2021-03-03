@@ -2,6 +2,8 @@ package org.innovateuk.ifs.dashboard.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,7 +32,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
 
     @Before
     public void setUpData() {
-        this.setupCompetition();
+        this.setupCompetition(FundingType.GRANT, AssessorFinanceView.OVERVIEW);
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
     }

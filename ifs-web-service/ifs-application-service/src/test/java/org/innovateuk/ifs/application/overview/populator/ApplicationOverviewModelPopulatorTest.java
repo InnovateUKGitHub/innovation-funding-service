@@ -13,10 +13,10 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +61,7 @@ public class ApplicationOverviewModelPopulatorTest {
     @Mock
     private QuestionRestService questionRestService;
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private MessageSource messageSource;
     @Mock
@@ -96,7 +96,7 @@ public class ApplicationOverviewModelPopulatorTest {
         UserResource user = newUserResource().build();
         List<ProcessRoleResource> processRoles = newProcessRoleResource()
                 .withUser(user, newUserResource().build())
-                .withRole(Role.LEADAPPLICANT, Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT)
                 .build(2);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
@@ -124,7 +124,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(sectionRestService.getByCompetition(application.getCompetition())).thenReturn(restSuccess(sections));
         when(questionRestService.findByCompetition(application.getCompetition())).thenReturn(restSuccess(questions));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
         when(questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionStatusRestService.getCompletedSectionIds(application.getId(), organisation.getId())).thenReturn(restSuccess(asList(sections.get(1).getId(), childSection.getId())));
         when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);

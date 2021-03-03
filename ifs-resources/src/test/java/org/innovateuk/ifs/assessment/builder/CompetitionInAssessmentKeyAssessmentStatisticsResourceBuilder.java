@@ -57,5 +57,9 @@ public class CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder exten
                                                                                                           assessmentsSubmitteds) {
         return withArraySetFieldByReflection("assessmentsSubmitted", assessmentsSubmitteds);
     }
+    public CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder withSupportersInvited(Integer...
+                                                                                                          supportersInvited) {
+        return withArraySetFieldByReflection("supportersInvited", supportersInvited);
+    }
 
 }

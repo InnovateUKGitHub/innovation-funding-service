@@ -12,6 +12,7 @@ public class FinanceCheckPartnerStatusResource {
     private ViabilityRagStatus viabilityRagStatus;
     private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
+    private PaymentMilestoneState paymentMilestoneState;
     private boolean awaitingResponse;
     private boolean financeContactProvided;
 
@@ -20,7 +21,9 @@ public class FinanceCheckPartnerStatusResource {
 
     public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, ViabilityState viability,
                                              ViabilityRagStatus viabilityRagStatus, EligibilityState eligibility,
-                                             EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse,
+                                             EligibilityRagStatus eligibilityRagStatus,
+                                             PaymentMilestoneState paymentMilestoneState,
+                                             boolean awaitingResponse,
                                              boolean financeContactProvided) {
         this.id = id;
         this.name = name;
@@ -29,6 +32,7 @@ public class FinanceCheckPartnerStatusResource {
         this.viabilityRagStatus = viabilityRagStatus;
         this.eligibility = eligibility;
         this.eligibilityRagStatus = eligibilityRagStatus;
+        this.paymentMilestoneState = paymentMilestoneState;
         this.awaitingResponse = awaitingResponse;
         this.financeContactProvided = financeContactProvided;
     }
@@ -65,7 +69,9 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
     }
 
-    public EligibilityRagStatus getEligibilityRagStatus() { return eligibilityRagStatus; }
+    public EligibilityRagStatus getEligibilityRagStatus() {
+        return eligibilityRagStatus;
+    }
 
     public void setEligibilityRagStatus(EligibilityRagStatus eligibilityRagStatus) {
         this.eligibilityRagStatus = eligibilityRagStatus;
@@ -101,5 +107,20 @@ public class FinanceCheckPartnerStatusResource {
 
     public void setFinanceContactProvided(boolean financeContactProvided) {
         this.financeContactProvided = financeContactProvided;
+    }
+
+    public PaymentMilestoneState getPaymentMilestoneState() {
+        return paymentMilestoneState;
+    }
+
+    public void setPaymentMilestoneState(PaymentMilestoneState paymentMilestoneState) {
+        this.paymentMilestoneState = paymentMilestoneState;
+    }
+
+    public boolean isPaymentMilestoneApproved() {
+        if (this.getPaymentMilestoneState() != null) {
+            return this.getPaymentMilestoneState().isApproved();
+        }
+        return false;
     }
 }

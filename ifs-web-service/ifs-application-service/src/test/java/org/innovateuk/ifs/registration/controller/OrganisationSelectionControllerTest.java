@@ -8,16 +8,19 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.controller.OrganisationSelectionController;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -52,6 +55,11 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
     private OrganisationJourneyEnd organisationJourneyEnd;
     @Mock
     private InviteRestService inviteRestService;
+
+    @Before
+    public void setUpForms() {
+        ReflectionTestUtils.setField(controller, "newOrganisationSearchEnabled", true);
+    }
 
     @Test
     public void viewPreviousOrganisations() throws Exception {
@@ -101,7 +109,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void viewPreviousOrganisations_redirectIfNotApplicant() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.ASSESSOR).build());
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())
@@ -131,7 +139,13 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
         long organisationId = 2L;
         String view = "some-view";
 
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(1L)
+                .withCompaniesHouseNumber("12345")
+                .build();
+
         when(registrationCookieService.isLeadJourney(any())).thenReturn(false);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
         when(organisationJourneyEnd.completeProcess(any(), any(), eq(loggedInUser), eq(organisationId))).thenReturn(view);
         mockMvc.perform(post("/organisation/select")
                 .param("selectedOrganisationId", String.valueOf(organisationId)))
@@ -167,6 +181,29 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .param("selectedOrganisationId", String.valueOf(organisationId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/organisation/create/organisation-type/not-eligible"));
+    }
+
+    @Test
+    public void selectOrganisation_organisationDetailsEnteredManually() throws Exception {
+        long competitionId = 1L;
+        long organisationId = 2L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withLeadApplicantType(asList(1L))
+                .withFundingType(FundingType.GRANT)
+                .build();
+
+        when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
+        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionId));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(newOrganisationResource().withOrganisationType(1L).build()));
+
+        mockMvc.perform(post("/organisation/select")
+                .param("selectedOrganisationId", String.valueOf(organisationId)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/organisation/create/existing-organisation/2"));
     }
 
     @Override

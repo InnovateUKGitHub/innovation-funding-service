@@ -2,12 +2,10 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -27,6 +25,7 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isKta;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
@@ -79,17 +78,8 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_PARTNER_PROJECT_LOCATION_PAGE", description = "A partner can access the partner project location " +
             "page when their Companies House data is complete or not required, and the Monitoring Officer has not yet been assigned")
     public boolean partnerCanAccessProjectLocationPage(ProjectCompositeId projectCompositeId, UserResource user) {
-        boolean partnerProjectLocationRequired = isPartnerProjectLocationRequired(projectCompositeId);
         return doSectionCheck(projectCompositeId.id(), user,
-                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, partnerProjectLocationRequired));
-    }
-
-    private boolean isPartnerProjectLocationRequired(ProjectCompositeId projectCompositeId) {
-        ProjectResource project = projectService.getById(projectCompositeId.id());
-        ApplicationResource applicationResource = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-
-        return competition.isLocationPerPartner();
+                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation));
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
@@ -114,9 +104,8 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        boolean partnerProjectLocationRequired = isPartnerProjectLocationRequired(projectCompositeId);
         return doSectionCheck(projectCompositeId.id(), user,
-                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, partnerProjectLocationRequired));
+                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation));
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A partner can access the Bank Details " +
@@ -208,7 +197,7 @@ public class SetupSectionsPermissionRules {
                 return false;
             }
 
-            boolean isMonitoringOfficer = isMonitoringOfficer(user);
+            boolean isMonitoringOfficer = isMonitoringOfficer(user) || isKta(user);
 
             long organisationId = isMonitoringOfficer ?
                     projectService.getLeadOrganisation(projectId).getId() : projectService.getOrganisationIdFromUser(projectId, user);

@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableCircuitBreaker
 @PropertySource(value = { "classpath:/application.properties", "classpath:/projectsetup.properties" })
-@SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
+@SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 @EnableAsync
 public class Application extends SpringBootServletInitializer {

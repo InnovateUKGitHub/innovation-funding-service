@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.competition.setup.completionstage.form.Comp
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -211,8 +212,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
         CompetitionSetupForm compSetupForm = mock(CompetitionSetupForm.class);
-        when(competitionSetupService.getSectionFormData(competition, CompetitionSetupSection.INITIAL_DETAILS))
-                .thenReturn(compSetupForm);
+        CompetitionSetupFormPopulator compSetupFormPopulator = mock(CompetitionSetupFormPopulator.class);
+        when(competitionSetupService.getSectionFormPopulator(CompetitionSetupSection.INITIAL_DETAILS))
+                .thenReturn(compSetupFormPopulator);
+        when(compSetupFormPopulator.populateForm(competition)).thenReturn(compSetupForm);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().isOk())
@@ -278,7 +281,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds",
                         "competitionTypeId",
-                        "stateAid"))
+                        "fundingRule"))
+
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
 
@@ -327,10 +331,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Enter a valid funding type.",
                 bindingResult.getFieldError("fundingType").getDefaultMessage()
         );
-        assertTrue(bindingResult.hasFieldErrors("stateAid"));
+
         assertEquals(
-                "Please select a state aid option.",
-                bindingResult.getFieldError("stateAid").getDefaultMessage()
+                "Please select a competition funding rule.",
+                bindingResult.getFieldError("fundingRule").getDefaultMessage()
         );
 
         verify(competitionSetupRestService, never()).update(competition);
@@ -352,8 +356,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "innovationLeadUserId",
                         "openingDate",
                         "innovationSectorCategoryId",
-                        "innovationAreaCategoryIds",
-                        "stateAid"
+                        "innovationAreaCategoryIds"
                 ))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
@@ -365,7 +368,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(7, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals(
                 "Please select a Portfolio Manager.",
@@ -396,11 +399,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Please select an innovation area.",
                 bindingResult.getFieldError("innovationAreaCategoryIds").getDefaultMessage()
         );
-        assertTrue(bindingResult.hasFieldErrors("stateAid"));
-        assertEquals(
-                "Please select a state aid option.",
-                bindingResult.getFieldError("stateAid").getDefaultMessage()
-        );
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -427,7 +425,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
-                .param("stateAid", "true"))
+                .param("fundingRule", FundingRules.STATE_AID.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
@@ -473,7 +471,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
-                .param("stateAid", "true"))
+                .param("fundingRule", FundingRules.STATE_AID.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY, "openingDate"))
@@ -1118,136 +1116,4 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         assertEquals("COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED", bindingResult.getGlobalErrors().get(0).getCode());
     }
 
-    @Test
-    public void uploadTermsAndConditions() throws Exception {
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .build();
-
-        String fileName = "termsAndConditionsDoc";
-        String originalFileName = "original filename";
-        String contentType = "application/json";
-        String content = "content";
-
-        MockMultipartFile file = new MockMultipartFile(fileName, originalFileName, contentType, content.getBytes());
-        FileEntryResource fileEntryResource = newFileEntryResource().build();
-
-        TermsAndConditionsForm form = new TermsAndConditionsForm();
-        form.setTermsAndConditionsDoc(file);
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupRestService.uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(),
-                file.getOriginalFilename(), getMultipartFileBytes(file))).thenReturn(restSuccess(fileEntryResource));
-
-        mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
-                .file(file)
-                .param("uploadTermsAndConditionsDoc", "true"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID)));
-
-        InOrder inOrder = inOrder(competitionRestService, competitionSetupRestService, competitionSetupService);
-        inOrder.verify(competitionRestService).getCompetitionById(COMPETITION_ID);
-        inOrder.verify(competitionSetupRestService)
-                .uploadCompetitionTerms(COMPETITION_ID, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-        inOrder.verify(competitionSetupService)
-                .saveCompetitionSetupSection(form, competitionResource, CompetitionSetupSection.TERMS_AND_CONDITIONS);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitTermsAndConditionsSectionDetails() throws Exception {
-        GrantTermsAndConditionsResource nonProcurementTerms = newGrantTermsAndConditionsResource()
-                .withName("Non procurement terms")
-                .build();
-        CompetitionResource competition = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .withCompetitionTerms(newFileEntryResource().build())
-                .build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(termsAndConditionsRestService.getById(nonProcurementTerms.getId())).thenReturn(restSuccess(nonProcurementTerms));
-        when(competitionSetupService.saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competition),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
-                .param("termsAndConditionsId", String.valueOf(nonProcurementTerms.getId())))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
-
-        InOrder inOrder = inOrder(competitionSetupService, competitionSetupRestService, competitionRestService, termsAndConditionsRestService);
-        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(termsAndConditionsRestService).getById(nonProcurementTerms.getId());
-        inOrder.verify(competitionSetupRestService).deleteCompetitionTerms(competition.getId());
-        inOrder.verify(competitionSetupService).saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competition),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void submitTermsAndConditionsSectionDetails_procurement() throws Exception {
-        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
-        CompetitionResource competitionWithTermsDoc = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .withCompetitionTerms(newFileEntryResource().build())
-                .build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
-        when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
-        when(competitionSetupService.saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competitionWithTermsDoc),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
-                .param("termsAndConditionsId", String.valueOf(procurementTerms.getId())))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions"));
-
-        verify(competitionSetupService).saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competitionWithTermsDoc),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS));
-    }
-
-    @Test
-    public void submitTermsAndConditionsSectionDetails_procurementNoFileUploaded() throws Exception {
-        GrantTermsAndConditionsResource procurementTerms = newGrantTermsAndConditionsResource().withName("Procurement").build();
-        CompetitionResource competitionWithoutTermsDoc = newCompetitionResource().withId(COMPETITION_ID).build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithoutTermsDoc));
-        when(termsAndConditionsRestService.getById(procurementTerms.getId())).thenReturn(restSuccess(procurementTerms));
-        when(competitionSetupService.saveCompetitionSetupSection(
-                any(TermsAndConditionsForm.class),
-                eq(competitionWithoutTermsDoc),
-                eq(CompetitionSetupSection.TERMS_AND_CONDITIONS))).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/terms-and-conditions")
-                .param("termsAndConditionsId", String.valueOf(procurementTerms.getId())))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup"))
-                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "termsAndConditionsDoc"));
-    }
-
-    @Test
-    public void deleteTermsAndConditions() throws Exception {
-        CompetitionResource competitionWithTermsDoc = newCompetitionResource()
-                .withId(COMPETITION_ID)
-                .withCompetitionTerms(newFileEntryResource().build())
-                .build();
-
-        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionWithTermsDoc));
-        when(competitionSetupRestService.deleteCompetitionTerms(COMPETITION_ID)).thenReturn(restSuccess());
-
-        mockMvc.perform(multipart(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID))
-                .param("deleteTermsAndConditionsDoc", "true"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("%s/%d/section/terms-and-conditions", URL_PREFIX, COMPETITION_ID)));
-
-        verify(competitionRestService).getCompetitionById(COMPETITION_ID);
-        verify(competitionSetupRestService).deleteCompetitionTerms(COMPETITION_ID);
-    }
 }

@@ -13,7 +13,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -45,7 +45,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     private SectionService sectionService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
 
     @Override
@@ -70,7 +70,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
 
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
@@ -114,7 +114,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         UserResource user = newUserResource().build();
 
 
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
@@ -145,7 +145,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
 
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));

@@ -18,11 +18,12 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,9 +54,7 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilde
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -96,6 +95,9 @@ public class ApplicationInviteServiceImplTest {
 
     @Mock
     private ApplicationInviteNotificationService applicationInviteNotificationService;
+
+    @Mock
+    private ApplicationProcurementMilestoneRepository applicationProcurementMilestoneRepository;
 
     @InjectMocks
     private ApplicationInviteServiceImpl inviteService;
@@ -364,7 +366,7 @@ public class ApplicationInviteServiceImplTest {
 
         ProcessRole leadApplicantProcessRole = newProcessRole()
                 .withUser(user)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(organisation.getId())
                 .build();
         Application application = newApplication()
@@ -418,7 +420,7 @@ public class ApplicationInviteServiceImplTest {
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .build(1);
 
         Application application = newApplication()
@@ -467,7 +469,7 @@ public class ApplicationInviteServiceImplTest {
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .build(1);
 
         Application application = newApplication()
@@ -514,7 +516,7 @@ public class ApplicationInviteServiceImplTest {
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .build(1);
 
         Application application = newApplication()
@@ -556,7 +558,8 @@ public class ApplicationInviteServiceImplTest {
         InOrder inOrder = inOrder(
                 questionReassignmentService,
                 processRoleRepository,
-                applicationFinanceRepository
+                applicationFinanceRepository,
+                applicationProcurementMilestoneRepository
         );
         inOrder.verify(questionReassignmentService).reassignCollaboratorResponsesAndQuestionStatuses(
                 applicationInviteToDelete.getTarget().getId(),
@@ -568,6 +571,7 @@ public class ApplicationInviteServiceImplTest {
                 application.getId(),
                 organisation.getId()
         );
+        inOrder.verify(applicationProcurementMilestoneRepository).deleteByApplicationFinanceId(applicationFinance.getId());
         inOrder.verify(applicationFinanceRepository).delete(applicationFinance);
         inOrder.verifyNoMoreInteractions();
 

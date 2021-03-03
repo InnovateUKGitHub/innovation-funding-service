@@ -1,18 +1,20 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.projectteam.viewmodel.*;
@@ -26,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -52,11 +53,17 @@ public class ProjectTeamViewModelPopulator {
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         List<ProjectUserResource> projectUsers = projectService.getDisplayProjectUsersForProject(project.getId());
@@ -64,7 +71,7 @@ public class ProjectTeamViewModelPopulator {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
         OrganisationResource loggedInUserOrg;
-        if(isMonitoringOfficer) {
+        if (isMonitoringOfficer) {
             loggedInUserOrg = null;
         } else {
             loggedInUserOrg = projectRestService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()).getSuccess();
@@ -102,12 +109,13 @@ public class ProjectTeamViewModelPopulator {
                 false,
                 isReadOnly,
                 false,
-                false);
+                false,
+                competition.isKtp());
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
+        return simpleFindFirst(projectUsers, pu -> ProjectParticipantRole.PROJECT_MANAGER == pu.getRole());
     }
 
     private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(long projectId, List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, UserResource loggedInUser, boolean isLead, boolean loggedInUsersOrganisation) {

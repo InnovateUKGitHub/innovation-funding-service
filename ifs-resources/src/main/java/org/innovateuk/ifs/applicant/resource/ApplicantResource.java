@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 /**
  * Rich resource for an applicant in an application.
@@ -47,7 +46,7 @@ public class ApplicantResource {
 
     @JsonIgnore
     public boolean isLead() {
-        return LEADAPPLICANT.equals(getProcessRole().getRole());
+        return ProcessRoleType.LEADAPPLICANT.equals(getProcessRole().getRole());
     }
 
     @JsonIgnore

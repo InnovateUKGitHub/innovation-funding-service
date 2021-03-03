@@ -24,7 +24,8 @@
     "gulp-sass-lint": "^1.4.0",
     "gulp-standard": "^11.0.0",
     "gulp-uglify": "^3.0.0",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "lodash": "^4.17.20"
   },
   "engines": {
     "node": "^8.11.1"

@@ -10,7 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface AssessorCompetitionSummaryService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(
             value = "READ",
             description = "Comp Admins can see all competition assessors and summaries of their assessments",

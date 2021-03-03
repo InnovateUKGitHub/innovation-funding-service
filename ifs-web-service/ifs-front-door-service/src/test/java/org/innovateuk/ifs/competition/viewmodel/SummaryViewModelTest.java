@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.viewmodel;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupResource;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicContentGroupViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.SummaryViewModel;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -29,7 +27,6 @@ public class SummaryViewModelTest {
     @InjectMocks
     private SummaryViewModel viewModel;
 
-    private Map<Long, FileEntryResource> fileEntries;
     public List<ContentGroupResource> contentGroups;
 
     @Before

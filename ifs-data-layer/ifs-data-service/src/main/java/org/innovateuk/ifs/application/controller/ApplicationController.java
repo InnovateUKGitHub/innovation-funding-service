@@ -7,11 +7,12 @@ import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +52,14 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationDeletionService applicationDeletionService;
+
+    @Autowired
+    private AssessmentService assessmentService;
+
+    @GetMapping("/{id}/has-assessment")
+    public RestResult<Boolean> applicationHasAssessment(@PathVariable long id){
+        return assessmentService.existsByTargetId(id).toGetResponse();
+    }
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
@@ -118,7 +127,7 @@ public class ApplicationController {
     @GetMapping("/get-applications-by-competition-id-and-user-id/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                                          @PathVariable("userId") final Long userId,
-                                                                                         @PathVariable("role") final Role role) {
+                                                                                         @PathVariable("role") final ProcessRoleType role) {
 
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }

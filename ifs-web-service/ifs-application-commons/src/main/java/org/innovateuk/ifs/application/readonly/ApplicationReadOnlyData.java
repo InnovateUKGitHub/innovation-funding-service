@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -41,14 +42,16 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
     /* only included if ApplicationReadOnlySettings.includeAssessment is set. */
     private final Map<Long, ApplicationAssessmentResource> assessmentToApplicationAssessment;
-
+    /* only included if ApplicationReadOnlySettings.includeAllSupporterFeedback is set. */
+    private final Map<Long, SupporterAssignmentResource> feedbackToApplicationSupport;
 
     public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
                                    UserResource user, List<ProcessRoleResource> processRoles,
                                    List<QuestionResource> questions, List<FormInputResource> formInputs,
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
-                                   List<ApplicationAssessmentResource> assessments) {
+                                   List<ApplicationAssessmentResource> assessments,
+                                   List<SupporterAssignmentResource> assignments) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -69,6 +72,8 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
         this.assessmentToApplicationAssessment = assessments.stream()
                 .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
+        this.feedbackToApplicationSupport = assignments.stream()
+                .collect(toMap(SupporterAssignmentResource::getAssignmentId, Function.identity()));
     }
 
     public BigDecimal getApplicationScore() {
@@ -134,6 +139,10 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return assessmentToApplicationAssessment;
     }
 
+    public Map<Long, SupporterAssignmentResource> getFeedbackToApplicationSupport() {
+        return feedbackToApplicationSupport;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -152,6 +161,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(formInputIdToFormInputResponses, that.formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus, that.questionToQuestionStatus)
                 .append(assessmentToApplicationAssessment, that.assessmentToApplicationAssessment)
+                .append(feedbackToApplicationSupport, that.feedbackToApplicationSupport)
                 .isEquals();
     }
 
@@ -167,6 +177,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus)
                 .append(assessmentToApplicationAssessment)
+                .append(feedbackToApplicationSupport)
                 .toHashCode();
     }
 }

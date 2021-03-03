@@ -71,10 +71,10 @@ public class ProjectYourOrganisationRestServiceMocksTest extends BaseRestService
     }
 
     @Test
-    public void isShowStateAidAgreement() {
-        Boolean isShowStateAidAgreed = true;
+    public void isShowAidAgreement() {
+        Boolean isShowAidAgreed = true;
 
         assertTrue(setupGetWithRestResultExpectations(baseUrl + "/show-state-aid", Boolean.class,
-            isShowStateAidAgreed).getBody());
+            isShowAidAgreed).getBody());
     }
 }

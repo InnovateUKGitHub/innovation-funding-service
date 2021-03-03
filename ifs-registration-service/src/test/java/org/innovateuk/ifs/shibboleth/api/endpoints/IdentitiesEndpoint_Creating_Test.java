@@ -22,7 +22,7 @@ public class IdentitiesEndpoint_Creating_Test extends MockedIdentitiesEndpoint {
 
         final String uuid = "31a05805-c748-492d-a862-c047102516be";
         final String email = "email@email.com";
-        final String password = "P@55word";
+        final String password = "P@55word1357";
 
         setupSuccessfullyCreatedIdentity(uuid, password, email);
 

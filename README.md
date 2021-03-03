@@ -32,11 +32,25 @@ Once generated these certificates can be found in the appropriate services under
 
     ./gradlew generateCertificates -x test
 
+
+All the services relies on base images, so you need to pull or build base images locally.
+
+Either you can pull released images 
+
+    ./gradlew pullBaseImageNexus -Pnexus_username="XXXXX" -Pnexus_password="XXXXXX"
+
+or build those images locally 
+
+Clone this repo `https://github.com/InnovateUKGitHub/ifs-app-base-image.git`
+and run 
+
+    ./gradlew buildBaseImages
+
 Build and deploy
 
     ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test
 
-Access https://ifs.local-dev with one of the following users (with password "Passw0rd")
+Access https://ifs.local-dev with one of the following users (with password "Passw0rd1357")
 
 * steve.smith@empire.com - lead applicant
 * john.doe@innovateuk.test - competition admin
@@ -107,7 +121,7 @@ Create asciidoc
     
 Publish openshift configuration files to nexus (not to be used to publish from local machine), this task will publish all files under "os-files" folder.
 
-     ./gradlew publish -Pifs.version=<version> -Pnexus_username=<your_nexus_userName> -Pnexus_password=<your_nexus_password> 
+     ./gradlew publish -Pifs.version=<version> -PnexusUsername=<your_nexus_userName> -PnexusPassword=<your_nexus_password> 
 
 ## Auto sign in issue in chrome
 If you notice the behaviour in chrome browsers, where if you click Sign out link, and it keeps logging you in and taking you to dashboard but not showing login screen then below flags needs to be disabled in chrome settings.
@@ -148,7 +162,7 @@ There are two steps to pull service docker images from nexus.
 You need to add above properties in your local gradle.properties
 Also you need to use your own credentials to pull images from nexus, pass your nexus credentials to gradle command
 
-    ./gradlew clean build deploy wait syncShib -Pinitialise=true -Pnexus_username=<your_nexus_userName> -Pnexus_password=<your_nexus_password> -x test
+    ./gradlew clean build deploy wait syncShib -Pinitialise=true -PnexusUsername=<your_nexus_userName> -PnexusPassword=<your_nexus_password> -x test
 
 **IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build. 
 e.g. if version is 1.1.112-SNAPSHOT, you need to pull the last release 1.1.111 as 1.1.112 is upcoming release, so update version=1.1.111**

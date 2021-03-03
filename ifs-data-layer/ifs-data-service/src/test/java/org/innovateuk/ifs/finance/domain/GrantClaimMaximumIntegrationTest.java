@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -198,7 +199,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     private CompetitionData createApcCompetition(List<String> researchCategory) {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build());
 
         CompetitionData competitionCreation = competitionDataBuilder.
                 createCompetition().
@@ -209,15 +210,15 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         CompetitionData competition = competitionDataBuilder.
                 withExistingCompetition(competitionCreation).
                 withBasicData("APC Competition", "Advanced Propulsion Centre",
-                        singletonList("Digital manufacturing"), "Materials and manufacturing", true,
+                        singletonList("Digital manufacturing"), "Materials and manufacturing", FundingRules.STATE_AID,
                         researchCategory, "ian.cooper@innovateuk.test",
                         "john.doe@innovateuk.test", "DET1536/1537", "875",
                         "CCCC", "16014", false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
-                        true, STANDARD, true, true).
+                        true, STANDARD, true, true, false).
                 withApplicationFormFromTemplate().
-                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP).
+                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP, false).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
                 withBriefingDate(addDays(1)).
                 withSubmissionDate(addDays(2)).

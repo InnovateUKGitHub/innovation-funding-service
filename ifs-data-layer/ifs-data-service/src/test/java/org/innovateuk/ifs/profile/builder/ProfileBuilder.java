@@ -3,6 +3,7 @@ package org.innovateuk.ifs.profile.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
@@ -85,6 +86,10 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
 
     public ProfileBuilder withModifiedOn(ZonedDateTime... modifiedOns) {
         return withArray((modifiedOn, profile) -> setField("modifiedOn", modifiedOn, profile), modifiedOns);
+    }
+
+    public ProfileBuilder withSimpleOrganisation(SimpleOrganisation... simpleOrganisations) {
+        return withArray((simpleOrganisation, profile) -> profile.setSimpleOrganisation(simpleOrganisation), simpleOrganisations);
     }
 
     @Override

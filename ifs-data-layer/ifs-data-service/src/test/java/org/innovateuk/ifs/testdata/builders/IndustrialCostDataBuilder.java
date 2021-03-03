@@ -2,6 +2,8 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
@@ -11,11 +13,13 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +27,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -41,6 +46,10 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     public IndustrialCostDataBuilder withCompetition(CompetitionResource competitionResource) {
         return with(data -> data.setCompetition(competitionResource));
+    }
+
+    public IndustrialCostDataBuilder withOrganisation(OrganisationResource organisation) {
+        return with(data -> data.setOrganisation(organisation));
     }
 
     public IndustrialCostDataBuilder withWorkingDaysPerYear(Integer workingDays) {
@@ -71,7 +80,11 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return updateCostItem(GrantClaimPercentage.class, FinanceRowType.FINANCE, existingCost -> {
             existingCost.setPercentage(grantClaim);
             financeRowCostsService.update(existingCost.getId(), existingCost);
-        });
+        }, costNotApplicableForKtpPartner());
+    }
+
+    private Predicate<IndustrialCostData> costNotApplicableForKtpPartner() {
+        return data -> !data.getCompetition().isKtp() || data.getOrganisation().getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE;
     }
 
     public IndustrialCostDataBuilder withLabourEntry(String role, Integer annualSalary, Integer daysToBeSpent) {
@@ -116,7 +129,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     public IndustrialCostDataBuilder withOtherCosts(String description, BigDecimal estimatedCost) {
         return addCostItem("Other costs", (finance) ->
-                new OtherCost(null, description, estimatedCost, finance.getId()));
+                new OtherCost(null, description, estimatedCost, finance.getId()),
+                costNotApplicableForKtpPartner());
     }
 
     public IndustrialCostDataBuilder withOrganisationSize(OrganisationSize organsationSize) {
@@ -182,6 +196,17 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
+    public IndustrialCostDataBuilder withNorthernIrelandDeclaration(boolean northernIrelandDeclaration) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setNorthernIrelandDeclaration(northernIrelandDeclaration);
+
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
 
     public IndustrialCostDataBuilder withLocation() {
         return with(data -> {
@@ -232,6 +257,51 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
+    public IndustrialCostDataBuilder withAssociateSalaryCosts(String role, Integer duration, BigInteger cost) {
+        return addCostItem("Associate Salary Costs", (finance) ->
+                new AssociateSalaryCost(finance.getId(), null, role, duration, cost));
+    }
+
+    public IndustrialCostDataBuilder withAssociateDevelopmentCosts(String role, Integer duration, BigInteger cost) {
+        return addCostItem("Associate Development Costs", (finance) ->
+                new AssociateDevelopmentCost(finance.getId(), null, role, duration, cost));
+    }
+
+    public IndustrialCostDataBuilder withConsumables(String item, BigInteger cost, Integer quantity) {
+        return addCostItem("Consumables", (finance) ->
+                new Consumable(null, item, cost, quantity, finance.getId()));
+    }
+
+    public IndustrialCostDataBuilder withAssociateSupport(String description, BigInteger cost) {
+        return addCostItem("Associate Support Costs", (finance) ->
+                new AssociateSupportCost(finance.getId(), null, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withKnowledgeBase(String description, BigInteger cost) {
+        return addCostItem("Associate Support Costs", (finance) ->
+                new KnowledgeBaseCost(finance.getId(), null, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withEstateCosts(String description, BigInteger cost) {
+        return addCostItem("Estate Costs", (finance) ->
+                new EstateCost(finance.getId(), null, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withKtpTravel(KtpTravelCost.KtpTravelCostType type, String description, BigDecimal cost, Integer quantity) {
+        return addCostItem("KTP Travel", (finance) ->
+                new KtpTravelCost(null, type, description, cost, quantity, finance.getId()));
+    }
+
+    public IndustrialCostDataBuilder withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType type, String description, BigInteger cost) {
+        return addCostItem("Additional Company Costs", (finance) ->
+                new AdditionalCompanyCost(finance.getId(), null, type, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withPreviousFunding(String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
+        return addCostItem("Previous Funding", (finance) ->
+                new PreviousFunding(null, otherPublicFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
+    }
+
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
@@ -239,11 +309,16 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
-    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn) {
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn, Predicate<IndustrialCostData> predicate) {
         return with(data -> {
-            List<FinanceRowItem> rows = data.getApplicationFinance().getFinanceOrganisationDetails().get(financeRowType).getCosts();
-            rows.forEach(item -> updateFn.accept((T) item));
+            if (predicate.test(data)) {
+                List<FinanceRowItem> rows = data.getApplicationFinance().getFinanceOrganisationDetails().get(financeRowType).getCosts();
+                rows.forEach(item -> updateFn.accept((T) item));
+            }
         });
+    }
+    private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn) {
+        return updateCostItem(clazz, financeRowType, updateFn, (x) -> true);
     }
 
     private <C extends FinanceRowCostCategory> IndustrialCostDataBuilder updateCostCategory(Class<C> clazz, FinanceRowType financeRowType, Consumer<C> updateFn) {
@@ -254,12 +329,39 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     }
 
     private IndustrialCostDataBuilder addCostItem(String financeRowName, Function<ApplicationFinanceResource, FinanceRowItem> cost) {
+        return addCostItem(financeRowName, cost, data -> true);
+    }
+
+
+    private IndustrialCostDataBuilder addCostItem(String financeRowName, Function<ApplicationFinanceResource, FinanceRowItem> cost, Predicate<IndustrialCostData> predicate) {
         return with(data -> {
+            if (predicate.test(data)) {
 
-            FinanceRowItem newCostItem = cost.apply(data.getApplicationFinance());
+                FinanceRowItem newCostItem = cost.apply(data.getApplicationFinance());
 
-            financeRowCostsService.create(newCostItem.getTargetId(), newCostItem).
-                    getSuccess();
+                financeRowCostsService.create(newCostItem.getTargetId(), newCostItem).
+                        getSuccess();
+            }
+        });
+    }
+
+    public IndustrialCostDataBuilder withFecEnabled(Boolean enabled) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+            applicationFinance.setFecModelEnabled(enabled);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+    public IndustrialCostDataBuilder withUploadedFecFile() {
+        return with(data -> {
+            FileEntry fileEntry = fileEntryRepository.save(
+                    new FileEntry(null, "fec-file" + data.getApplicationFinance().getId() + ".pdf", "application/pdf", 7945));
+            ApplicationFinance finance = applicationFinanceRepository.findById(data.getApplicationFinance().getId()).get();
+            finance.setFecFileEntry(fileEntry);
+            applicationFinanceRepository.save(finance);
         });
     }
 
@@ -281,10 +383,6 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     @Override
     protected IndustrialCostData createInitial() {
         return new IndustrialCostData();
-    }
-
-    private BigDecimal bd(String value) {
-        return new BigDecimal(value);
     }
 
     private BigDecimal bd(Integer value) {

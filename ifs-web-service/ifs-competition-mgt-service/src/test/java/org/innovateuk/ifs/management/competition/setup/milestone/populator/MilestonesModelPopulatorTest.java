@@ -40,6 +40,6 @@ public class MilestonesModelPopulatorTest {
 	}
 
 	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-		return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.MILESTONES, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
+		return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.MILESTONES, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
 	}
 }

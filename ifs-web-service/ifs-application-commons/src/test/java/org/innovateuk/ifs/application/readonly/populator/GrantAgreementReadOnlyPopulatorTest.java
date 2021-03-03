@@ -47,7 +47,8 @@ public class GrantAgreementReadOnlyPopulatorTest {
         FileEntryResource file = newFileEntryResource().withName("file.name").build();
         when(euGrantTransferRestService.findGrantAgreement(application.getId())).thenReturn(restSuccess(file));
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         GrantAgreementReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 

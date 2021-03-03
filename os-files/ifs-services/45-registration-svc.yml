@@ -29,7 +29,7 @@ items:
               secret:
                 secretName: registration-keys-secrets
           containers:
-            - image: innovateuk/registration-service:${registrationServiceVersion}
+            - image: innovateuk/registration-service:${nexusVersion}
               name: registration-svc
               volumeMounts:
                 - name: registration-keys-volume

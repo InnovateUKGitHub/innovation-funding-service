@@ -3,7 +3,6 @@ package org.innovateuk.ifs.grant.repository;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

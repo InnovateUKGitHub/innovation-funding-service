@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterModelPopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -41,7 +42,6 @@ import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLet
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.*;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForPartnersView;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -292,7 +292,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         ProjectResource project = newProjectResource().withId(123L).build();
 
         List<ProjectUserResource> pmUser = newProjectUserResource().
-                withRole(PROJECT_MANAGER).
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
                 withUser(loggedInUser.getId()).
                 build(1);
 
@@ -319,7 +319,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
 
-        ProjectUserResource pmUser = newProjectUserResource().withRole(PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
+        ProjectUserResource pmUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
         List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
 
         when(projectService.getById(123L)).thenReturn(project);
@@ -355,7 +355,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
 
         List<ProjectUserResource> pmUser = newProjectUserResource().
-                withRole(PROJECT_MANAGER).
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
                 withUser(loggedInUser.getId()).
                 build(1);
 
@@ -380,6 +380,34 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals(1, form.getObjectErrors().size());
         assertEquals(form.getObjectErrors(), form.getBindingResult().getFieldErrors("signedGrantOfferLetter"));
         assertTrue(form.getObjectErrors().get(0) instanceof FieldError);
+    }
+
+    @Test
+    public void testUploadSignedAdditionalContract() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("signedAdditionalContract", "filename.txt", "text/plain", "My content!".getBytes());
+
+        ProjectResource project = newProjectResource().withId(123L).build();
+
+        List<ProjectUserResource> pmUser = newProjectUserResource().
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
+                withUser(loggedInUser.getId()).
+                build(1);
+
+        when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(pmUser);
+        when(grantOfferLetterService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(grantOfferLetterService.addSignedAdditionalContract(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceSuccess(createdFileDetails));
+
+        mockMvc.perform(
+                fileUpload("/project/123/offer").
+                        file(uploadedFile).
+                        param("uploadSignedAdditionalContractFileClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/offer"));
     }
 
     @Test
@@ -414,6 +442,19 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         mockMvc.perform(
                 post("/project/123/offer").
                         param("removeSignedGrantOfferLetterClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/offer"));
+    }
+
+    @Test
+    public void testRemoveSignedAdditionalContract() throws Exception {
+
+        when(grantOfferLetterService.removeSignedAdditionalContract(123L)).
+                thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/project/123/offer").
+                        param("removeSignedAdditionalContractFileClicked", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/123/offer"));
     }

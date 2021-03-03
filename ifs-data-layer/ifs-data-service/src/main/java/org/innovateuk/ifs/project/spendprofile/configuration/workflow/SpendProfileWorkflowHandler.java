@@ -66,6 +66,10 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         return fireEvent(internalUserEvent(project, internalUser, SPEND_PROFILE_APPROVED), project);
     }
 
+    public boolean spendProfileDeleted(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, SPEND_PROFILE_DELETED), project);
+    }
+
     public boolean submit(Project project) {
         return getIfProjectAndUserValid(project, this::spendProfileSubmitted);
     }
@@ -94,10 +98,10 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
 
     private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
         SpendProfileProcess process = getCurrentProcess(project);
-        if(process == null)
+        if (process == null)
             return false;
         ProjectUser projectUser = process.getParticipant();
-        if(projectUser == null)
+        if (projectUser == null)
             return false;
         return fn.apply(project, projectUser);
     }

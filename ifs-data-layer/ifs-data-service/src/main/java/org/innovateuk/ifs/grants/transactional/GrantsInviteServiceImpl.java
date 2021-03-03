@@ -21,7 +21,7 @@ import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -189,7 +188,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-        return new Notification(from, singletonList(to), Notifications.INVITE_GRANTS_USER, notificationArguments);
+        return new Notification(from, to, Notifications.INVITE_GRANTS_USER, notificationArguments);
     }
 
 

@@ -142,13 +142,10 @@ public class ThreadsafeModelTest {
                     model -> model.containsAttribute("read2"),
                     ReadWriteLockTestHelper::isReadLocked,
                     ReadWriteLockTestHelper::isReadLocked);
-
-            fail("2 read operations should not block each other and therefore there must be a problem with the test mechanism");
-
         } catch (AssertionError e) {
-
-            // expected behaviour
+            return;
         }
+        fail("2 read operations should not block each other and therefore there must be a problem with the test mechanism");
     }
 
     /**

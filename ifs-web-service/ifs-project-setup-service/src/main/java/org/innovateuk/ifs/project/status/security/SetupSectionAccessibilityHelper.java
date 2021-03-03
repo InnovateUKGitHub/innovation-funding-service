@@ -72,12 +72,8 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+    public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation) {
         if (setupProgressChecker.isOfflineOrWithdrawn()) {
-            return NOT_ACCESSIBLE;
-        }
-
-        if (!partnerProjectLocationRequired) {
             return NOT_ACCESSIBLE;
         }
 
@@ -140,7 +136,7 @@ public class SetupSectionAccessibilityHelper {
         return setupProgressChecker.isGrantOfferLetterAvailable();
     }
 
-    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
         if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }

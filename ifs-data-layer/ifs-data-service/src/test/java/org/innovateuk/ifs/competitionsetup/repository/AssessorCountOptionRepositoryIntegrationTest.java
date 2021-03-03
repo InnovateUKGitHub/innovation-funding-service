@@ -24,8 +24,8 @@ public class AssessorCountOptionRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void testProgrammeAssessorOptions() {
-        List<CompetitionType> competitionTypes = competitionTypeRepository.findByName("Programme");
-        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionTypes.get(0).getId());
+        CompetitionType competitionType = competitionTypeRepository.findByName("Programme");
+        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionType.getId());
         assertEquals(3, assessorOptionList.size());
         // Test three options.
         assertEquals(Integer.valueOf(1), assessorOptionList.get(0).getOptionValue());
@@ -35,8 +35,8 @@ public class AssessorCountOptionRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void testAdditiveManufacturingAssessorOptions() {
-        List<CompetitionType> competitionTypes = competitionTypeRepository.findByName("Additive Manufacturing");
-        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionTypes.get(0).getId());
+        CompetitionType competitionType = competitionTypeRepository.findByName("Additive Manufacturing");
+        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionType.getId());
         assertEquals(3, assessorOptionList.size());
         // Test three options.
         assertEquals(Integer.valueOf(1), assessorOptionList.get(0).getOptionValue());
@@ -46,8 +46,8 @@ public class AssessorCountOptionRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void testSBRIAssessorOptions() {
-        List<CompetitionType> competitionTypes = competitionTypeRepository.findByName("SBRI");
-        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionTypes.get(0).getId());
+        CompetitionType competitionType = competitionTypeRepository.findByName("SBRI");
+        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionType.getId());
         assertEquals(3, assessorOptionList.size());
         // Test three options.
         assertEquals(Integer.valueOf(1), assessorOptionList.get(0).getOptionValue());
@@ -57,8 +57,8 @@ public class AssessorCountOptionRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void testSpecialAssessorOptions() {
-        List<CompetitionType> competitionTypes = competitionTypeRepository.findByName("Special");
-        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionTypes.get(0).getId());
+        CompetitionType competitionType = competitionTypeRepository.findByName("Special");
+        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionType.getId());
         assertEquals(3, assessorOptionList.size());
         // Test three options.
         assertEquals(Integer.valueOf(1), assessorOptionList.get(0).getOptionValue());
@@ -68,8 +68,8 @@ public class AssessorCountOptionRepositoryIntegrationTest extends BaseRepository
 
     @Test
     public void testSectorAssessorOptions() {
-        List<CompetitionType> competitionTypes = competitionTypeRepository.findByName("Sector");
-        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionTypes.get(0).getId());
+        CompetitionType competitionType = competitionTypeRepository.findByName("Sector");
+        List<AssessorCountOption> assessorOptionList = repository.findByCompetitionTypeId(competitionType.getId());
         assertEquals(3, assessorOptionList.size());
         // Test three options.
         assertEquals(Integer.valueOf(1), assessorOptionList.get(0).getOptionValue());

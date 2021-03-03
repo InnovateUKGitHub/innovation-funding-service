@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.sections.YourProjectFinancesController;
 
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.controller.YourProjectCostsController;
 import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.controller.YourProjectFinancesController;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.innovateuk.ifs.user.resource.Role;
@@ -23,6 +22,9 @@ public class YourProjectFinancesControllerSecurityTest extends BaseControllerSec
         roles.add(Role.STAKEHOLDER);
         roles.add(Role.EXTERNAL_FINANCE);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        roles.add(Role.SUPPORTER);
+        roles.add(Role.ASSESSOR);
+        roles.add(Role.SYSTEM_MAINTAINER);
 
         assertRolesCanPerform(() -> classUnderTest.viewFinancesOverview(0L, 0L, 0L, null, null), roles);
     }

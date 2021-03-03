@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourO
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
-import org.innovateuk.ifs.finance.service.YourOrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.project.notes;
 
-import java.net.URLEncoder;
-import java.time.ZonedDateTime;
-import java.util.*;
-import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
@@ -11,11 +7,12 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesController;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
@@ -45,6 +42,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import javax.servlet.http.Cookie;
+import java.net.URLEncoder;
+import java.time.ZonedDateTime;
+import java.util.*;
+
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -54,7 +56,6 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -83,7 +84,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
-    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
+    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).build();
 
     Role financeTeamRole = Role.PROJECT_FINANCE;
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRoleGlobal(financeTeamRole).build();
@@ -110,7 +111,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
@@ -154,7 +155,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testGetReadOnlyView() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note"))
@@ -288,7 +289,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         formCookie = createFormCookie(form);
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
@@ -326,7 +327,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(singletonList(leadOrganisationResource));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/"+ noteId +"/new-comment")
@@ -410,7 +411,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testSaveNewCommentNoFieldsSet() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         Cookie originCookie = createOriginCookie();
@@ -441,7 +442,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         String tooLong = StringUtils.leftPad("a", 4001, 'a');
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         Cookie originCookie = createOriginCookie();
@@ -473,7 +474,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         String tooManyWords = StringUtils.leftPad("a ", 802, "a ");
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         Cookie originCookie = createOriginCookie();
@@ -508,7 +509,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         Cookie originCookie = createOriginCookie();
@@ -631,7 +632,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
@@ -676,7 +677,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testRemoveAttachment() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
@@ -717,7 +718,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     public void testRemoveAttachmentDoesNotRemoveAttachmentNotInCookie() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.loadNotes(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(notes));
 
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L, null);

@@ -23,6 +23,8 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
+import org.innovateuk.ifs.organisation.repository.SimpleOrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -82,6 +84,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private SimpleOrganisationRepository simpleOrganisationRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -103,7 +108,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role, String organisation) {
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
@@ -111,21 +116,21 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         if (externalRolesToInvite().contains(role)) {
             return validateExternalUserEmailDomain(invitedUser.getEmail(), role)
-                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role))
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
                     .andOnSuccess(this::inviteExternalUser);
         } else if (internalRoles().contains(role)) {
             return validateInternalUserEmailDomain(invitedUser.getEmail())
-                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role))
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
                     .andOnSuccess(this::inviteInternalUser);
         } else {
             return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
         }
     }
 
-    private ServiceResult<RoleInvite> validateAndSaveInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<RoleInvite> validateAndSaveInvite(UserResource invitedUser, Role role, String organisation) {
                 return validateUserEmailAvailable(invitedUser)
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> saveInvite(invitedUser, role));
+                .andOnSuccess(() -> saveInvite(invitedUser, role, organisation));
 
     }
 
@@ -171,12 +176,17 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role, String organisation) {
+        SimpleOrganisation simpleOrganisation = null;
+        if (organisation != null) {
+            simpleOrganisation = simpleOrganisationRepository.save(new SimpleOrganisation(organisation));
+        }
         RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
                 invitedUser.getEmail(),
                 generateInviteHash(),
                 role,
-                CREATED);
+                CREATED,
+                simpleOrganisation);
 
         RoleInvite invite = roleInviteRepository.save(roleInvite);
 
@@ -188,7 +198,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
 
             Notification notification = new Notification(systemNotificationSource,
-                    singletonList(createUserNotificationTarget(roleInvite)),
+                    createUserNotificationTarget(roleInvite),
                     Notifications.INVITE_INTERNAL_USER, globalArgs);
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -199,7 +209,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             );
             return inviteContactEmailSendResult;
         } catch (IllegalArgumentException e) {
-            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()), e);
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().name()), e);
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }
@@ -209,7 +219,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             Map<String, Object> globalArgs = createGlobalArgsForExternalUserInvite(roleInvite);
 
             Notification notification = new Notification(systemNotificationSource,
-                    singletonList(createUserNotificationTarget(roleInvite)),
+                    createUserNotificationTarget(roleInvite),
                     Notifications.INVITE_EXTERNAL_USER, globalArgs);
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -220,7 +230,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             );
             return inviteContactEmailSendResult;
         } catch (IllegalArgumentException e) {
-            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()), e);
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().name()), e);
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }
@@ -267,7 +277,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<Boolean> handleInviteError(RoleInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
+        LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().name(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
     }

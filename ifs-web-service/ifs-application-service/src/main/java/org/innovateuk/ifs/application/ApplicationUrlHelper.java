@@ -22,7 +22,6 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    //TODO IFS-5889 missing types RESEARCH_CATEGORY.
     public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId) {
         if (questionType != null) {
             switch (questionType) {
@@ -38,6 +37,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId));
                 case RESEARCH_CATEGORY:
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
+                default:
+                    // do nothing
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
@@ -50,6 +51,8 @@ public class ApplicationUrlHelper {
         switch (sectionType) {
             case FUNDING_FINANCES:
                 return Optional.of(String.format("/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId));
+            case FEC_COSTS_FINANCES:
+                return Optional.of(String.format("/application/%d/form/your-fec-model/organisation/%d/section/%d", applicationId, organisationId, sectionId));
             case PROJECT_COST_FINANCES:
                 CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
                 OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -66,6 +69,9 @@ public class ApplicationUrlHelper {
             case ORGANISATION_FINANCES:
                 return Optional.of(String.format("/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId, competitionId, organisationId, sectionId));
+            case PAYMENT_MILESTONES:
+                return Optional.of(String.format("/application/%d/form/procurement-milestones/organisation/%d/section/%d",
+                        applicationId, organisationId, sectionId));
             case OVERVIEW_FINANCES:
                 return Optional.of(String.format("/application/%d/form/finances-overview/section/%d",
                         applicationId, sectionId));
@@ -75,8 +81,9 @@ public class ApplicationUrlHelper {
             case GENERAL:
             case TERMS_AND_CONDITIONS:
                 return Optional.of(String.format("/application/%d", applicationId));
+            default:
+                return Optional.empty();
         }
-        return Optional.empty();
     }
 
 }

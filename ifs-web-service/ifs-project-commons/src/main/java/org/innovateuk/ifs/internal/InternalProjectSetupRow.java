@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.internal;
 
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.util.Set;

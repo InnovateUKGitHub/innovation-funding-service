@@ -1,14 +1,12 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.sectionupdater;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -25,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -45,6 +43,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class InitialDetailsSectionSaverTest {
+
+    private static final int FUTURE_YEAR = Year.now().getValue() + 1;
 
     private static final Long COMPETITION_ID = 24L;
 
@@ -82,7 +82,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -93,7 +93,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setInnovationLeadUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
-        competitionSetupForm.setStateAid(Boolean.TRUE);
+        competitionSetupForm.setFundingRule(FundingRules.STATE_AID);
         competitionSetupForm.setFundingType(FundingType.GRANT);
 
         InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();
@@ -129,13 +129,13 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
         // We don't care about the order of the innovation area ids, so compare as a set
-        Set<Long> expectedInnovationAreaIds = asSet(innovationAreaId);
+        Set<Long> expectedInnovationAreaIds = ImmutableSet.of(innovationAreaId);
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
-        assertEquals(Boolean.TRUE, competition.getStateAid());
+        assertEquals(FundingRules.STATE_AID, competition.getFundingRules());
         assertEquals(FundingType.GRANT, competition.getFundingType());
 
         verify(competitionSetupRestService).updateCompetitionInitialDetails(competition);
@@ -190,7 +190,7 @@ public class InitialDetailsSectionSaverTest {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(10L);
         milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setDate(ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
         milestone.setCompetitionId(1L);
         return asList(milestone);
     }
@@ -209,7 +209,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -251,7 +251,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -295,7 +295,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -337,7 +337,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getExecutive(), executiveUserId);
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
-        Set<Long> expectedInnovationAreaIds = asSet(innovationAreaId);
+        Set<Long> expectedInnovationAreaIds = ImmutableSet.of(innovationAreaId);
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);

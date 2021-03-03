@@ -14,8 +14,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.registration.service.RegistrationCookieService.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class RegistrationCookieServiceTest extends BaseServiceUnitTest<RegistrationCookieService>{
@@ -239,4 +238,40 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
         verify(cookieUtil, times(1)).removeCookie(response, COMPETITION_ID);
         verify(cookieUtil, times(1)).removeCookie(response, INVITE_HASH);
     }
+
+    @Test
+    public void isSelectedExistingOrganisationJourneyReturnsTrue() throws Exception {
+        OrganisationCreationForm organisationForm = new OrganisationCreationForm();
+        organisationForm.setSelectedExistingOrganisationId(1L);
+
+        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+
+        assertTrue(service.isSelectedExistingOrganisationJourney(request));
+
+        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+    }
+
+    @Test
+    public void isSelectedExistingOrganisationJourneyReturnsFalse() throws Exception {
+        OrganisationCreationForm organisationForm = new OrganisationCreationForm();
+
+        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+
+        assertFalse(service.isSelectedExistingOrganisationJourney(request));
+
+        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+    }
+
+    @Test
+    public void isSelectedExistingOrganisationJourneyReturnsFalseForNull() throws Exception {
+        OrganisationCreationForm organisationForm = new OrganisationCreationForm();
+        organisationForm.setSelectedExistingOrganisationId(null);
+
+        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+
+        assertFalse(service.isSelectedExistingOrganisationJourney(request));
+
+        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+    }
+
 }

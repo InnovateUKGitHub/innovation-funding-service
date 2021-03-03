@@ -95,7 +95,7 @@ public class ProjectYourFundingViewModel {
      *
      * */
     public boolean hideAreYouRequestingFunding() {
-        return isKtpFundingType() && !leadOrganisation;
+        return isKtpFundingType() && organisationType != OrganisationTypeEnum.KNOWLEDGE_BASE;
     }
 
     public boolean isLeadOrganisation() {

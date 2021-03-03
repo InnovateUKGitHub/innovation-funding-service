@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectteam;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 
 public interface PendingPartnerProgressRestService {

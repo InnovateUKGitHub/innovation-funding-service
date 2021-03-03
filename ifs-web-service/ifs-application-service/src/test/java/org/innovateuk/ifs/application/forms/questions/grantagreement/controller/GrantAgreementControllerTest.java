@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -35,11 +35,11 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
     private QuestionStatusRestService questionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     protected GrantAgreementController supplyControllerUnderTest() {
-        return new GrantAgreementController(grantAgreementViewModelPopulator, euGrantTransferRestService, questionStatusRestService, userRestService);
+        return new GrantAgreementController(grantAgreementViewModelPopulator, euGrantTransferRestService, questionStatusRestService, processRoleRestService);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
 
         ProcessRoleResource role = newProcessRoleResource().build();
         when(euGrantTransferRestService.findGrantAgreement(applicationId)).thenReturn(restSuccess(newFileEntryResource().build()));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(Collections.emptyList()));
 
         mockMvc.perform(
@@ -117,7 +117,7 @@ public class GrantAgreementControllerTest extends BaseControllerMockMVCTest<Gran
         ProcessRoleResource role = newProcessRoleResource().build();
         GrantAgreementViewModel viewModel = mock(GrantAgreementViewModel.class);
         when(grantAgreementViewModelPopulator.populate(applicationId, questionId, loggedInUser.getId())).thenReturn(viewModel);
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(

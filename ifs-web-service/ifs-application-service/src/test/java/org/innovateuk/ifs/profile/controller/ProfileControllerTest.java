@@ -92,7 +92,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 "Mrs", "0987654321", false))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
-                .param("title", Mrs.toString())
+                .param("title", Mrs.getDisplayName())
                 .param("firstName", "newfirstname")
                 .param("lastName", "newlastname")
                 .param("phoneNumber", "0987654321")

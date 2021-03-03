@@ -83,7 +83,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Before
     public void setUp(){
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
         setLoggedInUser(userResource);
     }
 
@@ -434,5 +434,40 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
                 competition.getTermsAndConditions().getId())));
+    }
+
+    @Test
+    public void updateOtherFundingRulesTermsAndConditionsForCompetition() {
+        GrantTermsAndConditions termsAndConditions = newGrantTermsAndConditions().build();
+
+        Competition competition = newCompetition().build();
+
+        when(grantTermsAndConditionsRepositoryMock.findById(termsAndConditions.getId()))
+                .thenReturn(Optional.of(termsAndConditions));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+
+        ServiceResult<Void> result = service.updateOtherFundingRulesTermsAndConditionsForCompetition(competition.getId(), termsAndConditions.getId());
+
+        assertTrue(result.isSuccess());
+        assertEquals(competition.getOtherFundingRulesTermsAndConditions().getId(), termsAndConditions.getId());
+
+        //Verify that the entity is saved
+        verify(competitionRepositoryMock).findById(competition.getId());
+        verify(competitionRepositoryMock).save(competition);
+        verify(grantTermsAndConditionsRepositoryMock).findById(termsAndConditions.getId());
+    }
+
+    @Test
+    public void updateInvalidOtherFundingRulesTermsAndConditionsForCompetition() {
+        Competition competition = newCompetition().build();
+        long termsAndConditionsId = 999L;
+
+        when(grantTermsAndConditionsRepositoryMock.findById(termsAndConditionsId)).thenReturn(Optional.empty());
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+
+        ServiceResult<Void> result = service.updateOtherFundingRulesTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(GrantTermsAndConditions.class,
+                termsAndConditionsId)));
     }
 }

@@ -76,7 +76,8 @@
                             </div>
                         </div>
 
-                        <details class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
+                        <details th:unless="${model.ktp}"
+                            class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
                             <summary class="govuk-details__summary">
                                 <span class="govuk-details__summary-text">Add a non-registered assessor to your list</span>
                             </summary>

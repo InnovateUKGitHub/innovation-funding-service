@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import javax.persistence.*;
 
@@ -22,28 +22,28 @@ public class ProcessRole {
     private long applicationId;
 
     @Column(name = "role_id")
-    private Role role;
+    private ProcessRoleType role;
 
     private Long organisationId;
 
     public ProcessRole(){
     }
 
-    public ProcessRole(User user, long applicationId, Role role, long organisationId) {
+    public ProcessRole(User user, long applicationId, ProcessRoleType role, long organisationId) {
         this.user = user;
         this.applicationId = applicationId;
         this.role = role;
         this.organisationId = organisationId;
     }
 
-    public ProcessRole(User user, long applicationId, Role role) {
+    public ProcessRole(User user, long applicationId, ProcessRoleType role) {
         this.user = user;
         this.applicationId = applicationId;
         this.role = role;
         this.organisationId = null;
     }
 
-    public Role getRole() {
+    public ProcessRoleType getRole() {
         return role;
     }
 
@@ -63,7 +63,7 @@ public class ProcessRole {
         return id;
     }
 
-    public void setRole(Role role) {
+    public void setRole(ProcessRoleType role) {
         this.role = role;
     }
 
@@ -89,6 +89,10 @@ public class ProcessRole {
 
     public boolean isLeadApplicantOrCollaborator() {
         return isLeadApplicant() || isCollaborator();
+    }
+
+    public boolean isKta() {
+        return role.isKta();
     }
 
     @Override

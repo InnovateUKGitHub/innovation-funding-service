@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationMessage;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.user.domain.User;
@@ -38,6 +39,9 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     @Mock
     private EmailService emailServiceMock;
 
+    @Mock
+    private WhiteBlackDomainFilter whiteBlackDomainFilter;
+
     @Test
     public void testGetNotificationMedium() {
         assertEquals(EMAIL, notificationSender.getNotificationMedium());
@@ -62,7 +66,7 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     private Notification notification = newNotification().
             withMessageKey(MessageKeys.DUMMY_MESSAGE_KEY).
             withSource(sender).
-            withTargets(asList(recipient1, recipient2)).
+            withTargets(asList(new NotificationMessage(recipient1), new NotificationMessage(recipient2))).
             build();
 
     @Test
@@ -78,6 +82,8 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
 
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceSuccess(singletonList(recipient1Email)));
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceSuccess(singletonList(recipient2Email)));
+
+        when(whiteBlackDomainFilter.passesFilterCheck(any())).thenReturn(true);
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isSuccess());
@@ -99,6 +105,8 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
 
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
+
+        when(whiteBlackDomainFilter.passesFilterCheck(any())).thenReturn(true);
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isFailure());
@@ -122,6 +130,8 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, INTERNAL_SERVER_ERROR)));
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceSuccess(singletonList(recipient2Email)));
 
+        when(whiteBlackDomainFilter.passesFilterCheck(any())).thenReturn(true);
+
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isFailure());
         assertTrue(results.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
@@ -136,6 +146,8 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient1, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getGlobalArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, "subject")));
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_subject.txt", notification.getGlobalArguments())).thenReturn(serviceSuccess("My subject 2"));
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getGlobalArguments())).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE, "text")));
+
+        when(whiteBlackDomainFilter.passesFilterCheck(any())).thenReturn(true);
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isFailure());

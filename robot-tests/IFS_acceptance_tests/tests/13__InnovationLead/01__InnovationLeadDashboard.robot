@@ -6,6 +6,9 @@ Documentation   IFS-984 Innovation Leads user journey navigation
 ...             IFS-1308 Innovation Leads: Project Setup
 ...
 ...             IFS-7429 Innovation lead has access to Project Details after Finance reviewer is assigned
+...
+...             IFS-8431 Permission errors for users on application section of project
+...
 Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
 Suite Teardown  the user closes the browser
 Force Tags      InnovationLead  HappyPath
@@ -50,6 +53,13 @@ Innovation lead cannot search for unassigned applications
     When the user clicks the button/link          id = searchsubmit
     Then the user should see the element          jQuery = p:contains("0") strong:contains("${INFORM_COMPETITION_NAME_1_NUMBER}")
     [Teardown]  The user clicks the button/link   link = Dashboard
+
+Innovation lead can see the application of a project
+    [Documentation]   IFS-8431
+    Given log in as a different user        &{innovation_lead_one}
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
+    And the user clicks the button/link     link = ${PS_PD_Application_Id}
+    Then the user should see the element    id = accordion-questions-heading-1-1
 
 *** Keywords ***
 the total calculation in dashboard should be correct

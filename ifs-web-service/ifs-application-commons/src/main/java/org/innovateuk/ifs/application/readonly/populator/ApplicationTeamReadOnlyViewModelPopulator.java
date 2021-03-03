@@ -20,6 +20,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
@@ -40,6 +42,9 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -53,7 +58,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public ApplicationTeamReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
-        List<ProcessRoleResource> applicationProcessRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess();
+        List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(data.getApplication().getId()).getSuccess();
         List<ProcessRoleResource> processRoles = applicationProcessRoles.stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
                 .collect(toList());
@@ -67,7 +72,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
         if (competition.isKtp()) {
             ktaProcessRole = applicationProcessRoles.stream()
-                    .filter(role -> KNOWLEDGE_TRANSFER_ADVISER == role.getRole())
+                    .filter(role -> role.getRole().isKta())
                     .findAny();
 
             if(internalUser && ktaProcessRole.isPresent()) {

@@ -35,27 +35,31 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
     public void configure(StateMachineStateConfigurer<ViabilityState, ViabilityEvent> states) throws Exception {
         states.withStates()
                 .initial(REVIEW)
-                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED))
-                .end(APPROVED);
+                .states(EnumSet.of(REVIEW, NOT_APPLICABLE, APPROVED));
     }
 
     @Override
     public void configure(StateMachineTransitionConfigurer<ViabilityState, ViabilityEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                    .source(REVIEW)
-                    .event(PROJECT_CREATED)
-                    .target(REVIEW)
-                    .and()
+                .source(REVIEW)
+                .event(PROJECT_CREATED)
+                .target(REVIEW)
+                .and()
                 .withExternal()
-                    .source(REVIEW)
-                    .event(VIABILITY_NOT_APPLICABLE)
-                    .target(NOT_APPLICABLE)
-                    .and()
+                .source(REVIEW)
+                .event(VIABILITY_NOT_APPLICABLE)
+                .target(NOT_APPLICABLE)
+                .and()
                 .withExternal()
-                    .source(REVIEW)
-                    .event(VIABILITY_APPROVED)
-                    .guard(viabilityApprovedGuard)
-                    .target(APPROVED);
+                .source(REVIEW)
+                .event(VIABILITY_APPROVED)
+                .guard(viabilityApprovedGuard)
+                .target(APPROVED)
+                .and()
+                .withExternal()
+                .source(APPROVED)
+                .event(VIABILITY_RESET)
+                .target(REVIEW);
     }
 }

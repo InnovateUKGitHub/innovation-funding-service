@@ -30,7 +30,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.*;
 import org.mockito.Mock;
 
@@ -95,6 +95,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected UserService userService;
     @Mock
     protected UserRestService userRestService;
+    @Mock
+    protected ProcessRoleRestService processRoleRestService;
     @Mock
     protected CompetitionRestService competitionRestService;
     @Mock
@@ -173,7 +175,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
     }
 
-    public void setupCompetition() {
+    public void setupCompetition(FundingType fundingType, AssessorFinanceView assessorFinanceView) {
         competitionResource = newCompetitionResource()
                 .with(id(competitionId))
                 .with(name("Competition x"))
@@ -183,7 +185,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
-                .withFundingType(FundingType.GRANT)
+                .withFundingType(fundingType)
                 .build();
 
         competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
@@ -192,7 +194,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withAssessorPay(BigDecimal.valueOf(100))
                 .withHasAssessmentPanel(false)
                 .withHasInterviewStage(false)
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withAssessorFinanceView(assessorFinanceView)
                 .build();
 
         competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
@@ -398,9 +400,9 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                         (newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
 
-        Role role1 = Role.LEADAPPLICANT;
-        Role role2 = Role.COLLABORATOR;
-        Role assessorRole = Role.ASSESSOR;
+        ProcessRoleType role1 = ProcessRoleType.LEADAPPLICANT;
+        ProcessRoleType role2 = ProcessRoleType.LEADAPPLICANT;
+        ProcessRoleType assessorRole = ProcessRoleType.ASSESSOR;
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType
                 (businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();
@@ -467,36 +469,36 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole1));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(1).getId())).thenReturn
                 (restSuccess(processRole2));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(2).getId())).thenReturn
                 (restSuccess(processRole3));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(3).getId())).thenReturn
                 (restSuccess(processRole4));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole5));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(1).getId())).thenReturn
                 (restSuccess(processRole6));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(2).getId())).thenReturn
                 (restSuccess(processRole7));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(0).getId())).thenReturn
                 (restSuccess(processRole8));
-        when(userRestService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(assessor.getId(), applications.get(3).getId())).thenReturn
                 (restSuccess(processRole9));
-        when(userRestService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applicant.getId(), applications.get(4).getId())).thenReturn
                 (restSuccess(processRole11));
 
-        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(0).getId())).thenReturn
                 (restSuccess(application1ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(1).getId())).thenReturn
                 (restSuccess(application2ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(2).getId())).thenReturn
                 (restSuccess(application3ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(3).getId())).thenReturn
                 (restSuccess(application4ProcessRoles));
-        when(userRestService.findProcessRole(applications.get(4).getId())).thenReturn
+        when(processRoleRestService.findProcessRole(applications.get(4).getId())).thenReturn
                 (restSuccess(application5ProcessRoles));
 
         Map<Long, Set<Long>> completedMap = new HashMap<>();
@@ -565,7 +567,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
-                .getId(), SMALL, "ABC 123", null);
+                .getId(), SMALL, "ABC 123", null, "");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new ExcludedCostCategory();
         costCategory.addCost(new GrantClaimPercentage(1L, BigDecimal.valueOf(50), applicationFinanceResource.getId()));

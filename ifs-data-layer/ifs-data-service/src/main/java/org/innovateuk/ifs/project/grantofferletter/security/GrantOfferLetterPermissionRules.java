@@ -112,6 +112,20 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "UPLOAD_SIGNED_ADDITIONAL_CONTRACT",
+            description = "Lead partner can upload signed additional contract")
+    public boolean leadPartnerCanUploadSignedAdditionalContract(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId()) && isProjectActive(project.getId());
+    }
+
+    @PermissionRule(
+            value = "UPLOAD_SIGNED_ADDITIONAL_CONTRACT",
+            description = "Finance contact can upload signed additional contract")
+    public boolean financeContactCanUploadSignedAdditionalContract(ProjectResource project, UserResource user) {
+        return isFinanceContact(project.getId(), user.getId()) && isProjectActive(project.getId());
+    }
+
+    @PermissionRule(
             value = "DELETE_SIGNED_GRANT_OFFER",
             description = "Lead partner can delete signed grant offer letter")
     public boolean leadPartnerCanDeleteSignedGrantOfferLetter(ProjectResource project, UserResource user) {

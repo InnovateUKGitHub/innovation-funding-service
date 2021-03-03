@@ -11,6 +11,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
  * Question defines database relations and a model to use client side and server side.
  */
 public class QuestionResource implements Comparable<QuestionResource>, CacheableWhenCompetitionOpen {
+
     private Long id;
     private String name;
     private String shortName;

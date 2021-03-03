@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.AssessmentPeriodDataBuilder.newCompetitionAssessmentPeriods;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -49,11 +51,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
+    private AssessmentPeriodDataBuilder assessmentPeriodDataBuilder;
 
     private List<CsvUtils.CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
     private static List<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLines;
-
+    private static List<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriodLines;
 
     @PostConstruct
     public void readCsvs() {
@@ -63,11 +66,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
+        assessmentPeriodDataBuilder = newCompetitionAssessmentPeriods(serviceLocator);
 
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
         competitionOrganisationConfigLines = readCompetitionOrganisationConfig();
-
+        competitionAssessmentPeriodLines = readCompetitionAssessmentPeriods();
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
@@ -122,6 +126,18 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }
     }
 
+    public void createCompetitionAssessmentPeriods(CompetitionData competition) {
+
+        List<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriods = simpleFilter(competitionAssessmentPeriodLines, l ->
+                competition.getCompetition().getName().equals(l.competition));
+
+        competitionAssessmentPeriods.forEach(assessmentPeriodLine ->
+                assessmentPeriodDataBuilder.
+                        withCompetitionAssessmentPeriods(assessmentPeriodLine.competition, assessmentPeriodLine.index,
+                                assessmentPeriodLine.assessorBriefing, assessmentPeriodLine.assessorAccepts, assessmentPeriodLine.assessorDeadline).build()
+        );
+    }
+
     public CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
         return competitionBuilderWithBasicInformation(competitionLine).build();
     }
@@ -147,7 +163,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                         line.innovationSector, null, null, null, null,
                         null, null, null, null, null,
                         null, emptyList(), null, null, line.nonIfsUrl, line.fundingType, line.competitionCompletionStage,
-                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
+                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation, line.alwaysOpen)
                 .withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
                 .withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView);
 
@@ -164,14 +180,14 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
-                        line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.innovationSector, line.fundingRules, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.multiStream, line.collaborationLevel,
                         line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.fundingType, line.competitionCompletionStage,
-                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
+                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation, line.alwaysOpen).
                 withApplicationFormFromTemplate().
                 withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
                 withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView).
-                withNewMilestones(line.competitionCompletionStage);
+                withNewMilestones(line.competitionCompletionStage, line.alwaysOpen);
 
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
         return competitionWithMilestones.
@@ -188,7 +204,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
             case OPEN:
                 return line.nonIfs ?
                         withOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
-                        withOpenStatus(competitionBeforeMilestones, line.lineNumber, line.competitionCompletionStage);
+                        withOpenStatus(competitionBeforeMilestones, line.lineNumber, line.competitionCompletionStage, line.alwaysOpen);
 
             case ASSESSOR_FEEDBACK:
                 return withAssessorFeedbackStatus(competitionBeforeMilestones, line.lineNumber, line.competitionCompletionStage);
@@ -263,8 +279,8 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withOpenStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber, CompetitionCompletionStage competitionCompletionStage) {
-        return withCalculatedMilestones(competitionBeforeMilestones, SUBMISSION_DATE, lineNumber, competitionCompletionStage).
+    private CompetitionDataBuilder withOpenStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber, CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
+        return withCalculatedMilestones(competitionBeforeMilestones, SUBMISSION_DATE, lineNumber, competitionCompletionStage, BooleanUtils.toBoolean(alwaysOpen)).
                 withSetupComplete();
     }
 
@@ -278,13 +294,23 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     }
 
     private CompetitionDataBuilder withCalculatedMilestones(CompetitionDataBuilder competitionBeforeMilestones,
-                                                            MilestoneType milestoneWhereDatesStartInTheFuture, int lineNumber,
+                                                            MilestoneType milestoneWhereDatesStartInTheFuture,
+                                                            int lineNumber,
                                                             CompetitionCompletionStage competitionCompletionStage) {
+        return withCalculatedMilestones(competitionBeforeMilestones, milestoneWhereDatesStartInTheFuture,
+                lineNumber, competitionCompletionStage, false);
+    }
+
+    private CompetitionDataBuilder withCalculatedMilestones(CompetitionDataBuilder competitionBeforeMilestones,
+                                                            MilestoneType milestoneWhereDatesStartInTheFuture,
+                                                            int lineNumber,
+                                                            CompetitionCompletionStage competitionCompletionStage,
+                                                            boolean isAlwaysOpen) {
 
         ZonedDateTime earliestDate = startOfDay().minusYears(2).plusDays(lineNumber);
         ZonedDateTime firstFutureDate = startOfDay().plusYears(2).plusDays(lineNumber);
 
-        List<MilestoneType> presetMilestoneTypes = Arrays.stream(MilestoneType.values())
+        List<MilestoneType> presetMilestoneTypes = Arrays.stream(isAlwaysOpen ? MilestoneType.alwaysOpenValues() : MilestoneType.values())
                 .filter(type -> type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE))
                 .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                 .collect(Collectors.toList());

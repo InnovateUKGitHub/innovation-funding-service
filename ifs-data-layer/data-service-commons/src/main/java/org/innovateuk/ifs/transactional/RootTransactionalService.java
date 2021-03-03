@@ -5,7 +5,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +39,7 @@ public abstract class RootTransactionalService {
         return find(processRoleRepository.findById(processRoleId), notFoundError(ProcessRole.class, processRoleId));
     }
 
-    protected ServiceResult<List<ProcessRole>> getProcessRoles(Long applicationId, Role roleType) {
+    protected ServiceResult<List<ProcessRole>> getProcessRoles(Long applicationId, ProcessRoleType roleType) {
         return find(processRoleRepository.findByApplicationIdAndRole(applicationId, roleType), notFoundError(ProcessRole.class, applicationId));
     }
 

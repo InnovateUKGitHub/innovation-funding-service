@@ -11,6 +11,7 @@ import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,6 @@ import static org.innovateuk.ifs.competition.resource.CollaborationLevel.*;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
@@ -57,15 +57,15 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
-        support = newUserResource().withRolesGlobal(Collections.singletonList(SUPPORT)).build();
+        support = newUserResource().withRoleGlobal(SUPPORT).build();
         otherApplicant = newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), ProcessRoleType.LEADAPPLICANT))
                 .thenReturn(true);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), COLLABORATOR))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), ProcessRoleType.COLLABORATOR))
                 .thenReturn(true);
-        when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(),
-                COLLABORATOR, applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+        when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(),
+                ProcessRoleType.COLLABORATOR, applicationResource.getId(), organisationResource.getId())).thenReturn(true);
     }
 
     @Test
@@ -180,9 +180,9 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
                 .withInviteResources(inviteResource)
                 .build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), ProcessRoleType.LEADAPPLICANT))
                 .thenReturn(false);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), COLLABORATOR))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), ProcessRoleType.COLLABORATOR))
                 .thenReturn(false);
 
         Application application = ApplicationBuilder.newApplication()
@@ -202,9 +202,9 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
                 .withInviteResources(inviteResource)
                 .build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), ProcessRoleType.LEADAPPLICANT))
                 .thenReturn(false);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), COLLABORATOR))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), ProcessRoleType.COLLABORATOR))
                 .thenReturn(false);
 
         Competition competition = newCompetition().withCollaborationLevel(SINGLE_OR_COLLABORATIVE).build();

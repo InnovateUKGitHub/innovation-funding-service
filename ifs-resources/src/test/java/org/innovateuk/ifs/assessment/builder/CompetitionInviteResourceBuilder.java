@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 
@@ -32,6 +33,10 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
 
     public CompetitionInviteResourceBuilder withCompetitionName(String... competitionNames) {
         return withArraySetFieldByReflection("competitionName", competitionNames);
+    }
+
+    public CompetitionInviteResourceBuilder withCompetitionFundingType(FundingType... competitionFundingType) {
+        return withArraySetFieldByReflection("competitionFundingType", competitionFundingType);
     }
 
     public CompetitionInviteResourceBuilder withAcceptsDate(ZonedDateTime... acceptsDates) {

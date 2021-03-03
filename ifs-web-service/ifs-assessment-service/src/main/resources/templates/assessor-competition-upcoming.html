@@ -13,30 +13,45 @@
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessments',linkUrl=@{/assessor/dashboard})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Upcoming competition '${model.competitionName}'|,size='govuk-heading-xl'" />
-                <p class="govuk-body" th:text="|You have agreed to be an assessor for the upcoming competition '${model.competitionName}'|">You have agreed to be an assessor for the upcoming competition 'My Competition'</p>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|You are an assessor for the upcoming competition: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
-                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
-                    <p class="govuk-body">Assessment period for reading, scoring, providing written comments and submitting to our online
-                        service. Each assessor could receive up to 10 applications to assess. This depends on the
-                        application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
+                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMM yyyy' : 'd MMM'">
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Assessment period: ${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,'d MMM yyyy')}|">
+                        Assessment period: 21 Mar to 28 Mar 2017
+                    </h2>
 
-                    <p class="govuk-body" th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
+                    <p class="govuk-body" th:classappend="${model.ktpCompetition} ? 'govuk-!-margin-top-2' : ''">
+                        <th:block th:unless="${model.assessorPay == null}">
+                            Assessment period for reading, scoring, providing written comments and submitting to our online
+                            service. Each assessor could receive up to 10 applications to assess. This depends on the
+                            application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.
+                        </th:block>
+                        <th:block th:if="${model.assessorPay == null}">
+                            The assessment period is for reading, scoring, writing comments and submitting your assessment.
+                        </th:block>
+                    </p>
+
+                    <p class="govuk-body" th:if="${model.assessorPay != null && model.assessorBriefingDate != null}">The assessor briefing is mandatory. It will consist of a one
                         hour webinar on <th:block th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}">21 March 2017</th:block>.</p>
+
+                    <p class="govuk-body" th:if="${model.assessorPay == null}">You may receive up to 10 applications to assess, depending on the number of applications we receive for this competition.</p>
                 </section>
 
                 <section>
-                    <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: My Competition</h2>
+                    <h2 class="govuk-heading-m">
+                        <th:block th:text="|Competition details|"/>
+                        <br/>
+                        <th:block th:text="|${model.competitionId}: ${model.competitionName}|"/>
+                    </h2>
 
                     <p class="govuk-body">
                         <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
                            class="govuk-link"
                            target="_blank"
-                           rel="external noopener noreferrer">View competition brief (opens in a new window)</a>.
+                           rel="external noopener noreferrer">See the competition brief (opens in a new window)</a>
                     </p>
 
-                    <p class="govuk-body">If you have any queries, please contact Innovate UK <a href="mailto:competitions@innovateuk.ukri.org" class="govuk-link">competitions@innovateuk.ukri.org</a>.</p>
+                    <p class="govuk-body">If you have any questions, please contact us at <a href="mailto:competitions@innovate.ukri.org" class="govuk-link">competitions@innovate.ukri.org</a>.</p>
                 </section>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

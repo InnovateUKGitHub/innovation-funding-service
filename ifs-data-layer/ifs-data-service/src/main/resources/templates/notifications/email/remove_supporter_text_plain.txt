@@ -1,0 +1,13 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name}
+
+You have been removed as a supporter on this application:
+
+${applicationId} : ${applicationName}
+
+You will no longer be able to review the application and it will be removed from your dashboard.
+
+Yours sincerely
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

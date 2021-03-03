@@ -7,8 +7,9 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,31 +17,30 @@ import java.util.Map;
 import java.util.SortedSet;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 @Component
 public class ApplicationTermsPartnerModelPopulator {
 
     private final SectionService sectionService;
-    private final UserRestService userRestService;
+    private final ProcessRoleRestService processRoleRestService;
     private final OrganisationService organisationService;
 
     public ApplicationTermsPartnerModelPopulator(SectionService sectionService,
-                                                 UserRestService userRestService,
+                                                 ProcessRoleRestService processRoleRestService,
                                                  OrganisationService organisationService) {
         this.sectionService = sectionService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.organisationService = organisationService;
     }
 
     public ApplicationTermsPartnerViewModel populate(ApplicationResource application, long questionId) {
         long termsAndConditionsSectionId = sectionService.getTermsAndConditionsSection(application.getCompetition()).getId();
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         SortedSet<OrganisationResource> organisations = organisationService.getApplicationOrganisations(userApplicationRoles);
 
         long leadOrganisationId = userApplicationRoles
                 .stream()
-                .filter(pr -> pr.getRole() == LEADAPPLICANT)
+                .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
                 .findFirst()
                 .map(ProcessRoleResource::getOrganisationId)
                 .orElseThrow(() -> new IFSRuntimeException("Lead organisation not found for application " + application.getId()));

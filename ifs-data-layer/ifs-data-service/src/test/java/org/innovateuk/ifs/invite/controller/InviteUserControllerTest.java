@@ -51,14 +51,14 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     @Test
     public void saveUserInvite() throws Exception {
-        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole())).thenReturn(serviceSuccess());
+        when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/invite-user/save-invite")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteUserResource)))
                 .andExpect(status().isOk());
 
-        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole());
+        verify(inviteUserServiceMock).saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation());
     }
 
     @Test

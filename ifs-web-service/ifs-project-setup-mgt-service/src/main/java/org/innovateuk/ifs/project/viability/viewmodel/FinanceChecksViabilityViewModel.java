@@ -41,6 +41,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean procurementCompetition;
     private final boolean viabilityReadyToConfirm;
     private final boolean hasGrantClaimPercentage;
+    private final boolean ktpCompetition;
 
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
@@ -89,6 +90,7 @@ public class FinanceChecksViabilityViewModel {
         this.procurementCompetition  = competition.isProcurement();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
+        this.ktpCompetition = competition.isKtp();
     }
 
     public String getOrganisationName() {
@@ -198,6 +200,10 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     public boolean isProcurementCompetition() {

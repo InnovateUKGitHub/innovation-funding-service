@@ -82,7 +82,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     /* View logic */
 
     public boolean isRejected() {
-        return REJECTED.equals(applicationState);
+        return !hasProject() && REJECTED.equals(applicationState);
     }
 
     public boolean isApproved() {

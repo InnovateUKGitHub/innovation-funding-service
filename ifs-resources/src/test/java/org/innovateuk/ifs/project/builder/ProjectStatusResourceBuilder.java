@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -89,5 +90,9 @@ public class ProjectStatusResourceBuilder extends BaseBuilder<ProjectStatusResou
 
     public ProjectStatusResourceBuilder withProjectState(ProjectState... projectState) {
         return withArraySetFieldByReflection("projectState", projectState);
+    }
+
+    public ProjectStatusResourceBuilder withApplicationState(ApplicationState... applicationState) {
+        return withArraySetFieldByReflection("applicationState", applicationState);
     }
 }

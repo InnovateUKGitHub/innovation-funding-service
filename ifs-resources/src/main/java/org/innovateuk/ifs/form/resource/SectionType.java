@@ -14,9 +14,12 @@ public enum SectionType {
     PROJECT_LOCATION(FINANCE),
 	ORGANISATION_FINANCES(FINANCE),
 	FUNDING_FINANCES(FINANCE),
+    PAYMENT_MILESTONES(FINANCE),
     OVERVIEW_FINANCES,
 	GENERAL,
-    TERMS_AND_CONDITIONS;
+    TERMS_AND_CONDITIONS,
+    KTP_ASSESSMENT,
+    FEC_COSTS_FINANCES(FINANCE);
 
     private final SectionType parent;
 
@@ -38,8 +41,14 @@ public enum SectionType {
     public boolean isSectionTypeNotRequiredForOrganisationAndCompetition(ApplicationConfiguration competition, OrganisationTypeEnum organisationType, boolean lead) {
         if (competition.isKtp()) {
             if (lead) {
+                if (this == FEC_COSTS_FINANCES) {
+                    return false;
+                }
                 return this == ORGANISATION_FINANCES;
             } else {
+                if (this == FEC_COSTS_FINANCES) {
+                    return true;
+                }
                 return this == PROJECT_COST_FINANCES;
             }
         }

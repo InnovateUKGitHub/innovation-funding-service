@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,13 +32,13 @@ public class AssessorFormInputResponseFileUploadRules {
 
     private boolean userIsAssessorOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         ProcessRole assessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
-                                                                                                    Role.ASSESSOR,
+                                                                                                    ProcessRoleType.ASSESSOR,
                                                                                                     fileEntry.getCompoundId().getApplicationId());
         ProcessRole panelAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
-                                                                                                         Role.PANEL_ASSESSOR,
+                                                                                                         ProcessRoleType.PANEL_ASSESSOR,
                                                                                                          fileEntry.getCompoundId().getApplicationId());
         ProcessRole interviewAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
-                                                                                                             Role.INTERVIEW_ASSESSOR,
+                                                                                                             ProcessRoleType.INTERVIEW_ASSESSOR,
                                                                                                              fileEntry.getCompoundId().getApplicationId());
         return (assessorProcessRole != null && assessmentIsAccepted(assessorProcessRole))
                 || panelAssessorProcessRole != null

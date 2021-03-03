@@ -13,7 +13,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -50,7 +50,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private SectionService sectionServiceMock;
 
     @Mock
-    private UserRestService userRestServiceMock;
+    private ProcessRoleRestService processRoleRestServiceMock;
 
     @Mock
     private OrganisationRestService organisationRestServiceMock;
@@ -278,7 +278,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 restSuccess(applicationFinance));
 
         ProcessRoleResource processRole = newProcessRoleResource().build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
+        when(processRoleRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
         when(sectionServiceMock.markAsComplete(sectionId, applicationId, processRole.getId())).thenReturn(noErrors());
 
@@ -295,7 +295,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
         verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
-        verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
+        verify(processRoleRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsComplete(sectionId, applicationId, processRole.getId());
 
         verifyNoMoreInteractionsWithMocks();
@@ -347,7 +347,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     public void markAsIncomplete() throws Exception {
 
         ProcessRoleResource processRole = newProcessRoleResource().build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
+        when(processRoleRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
         String viewUrl = String.format("redirect:/application/%d/form/your-project-location/" +
                 "organisation/%d/section/%d", applicationId, organisationId, sectionId);
@@ -359,7 +359,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 .andExpect(view().name(viewUrl))
                 .andReturn();
 
-        verify(userRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
+        verify(processRoleRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsInComplete(sectionId, applicationId, processRole.getId());
 
         verifyNoMoreInteractionsWithMocks();
@@ -367,7 +367,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     private void verifyNoMoreInteractionsWithMocks() {
         verifyNoMoreInteractions(formPopulatorMock, applicationFinanceRestServiceMock,
-                sectionServiceMock, userRestServiceMock);
+                sectionServiceMock, processRoleRestServiceMock);
     }
 
     private Predicate<Object> futureMatcher(Object object) {
@@ -396,7 +396,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 formPopulatorMock,
                 applicationFinanceRestServiceMock,
                 sectionServiceMock,
-                userRestServiceMock,
+                processRoleRestServiceMock,
                 organisationRestServiceMock);
     }
 }

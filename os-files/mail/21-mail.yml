@@ -21,7 +21,7 @@ items:
         imagePullSecrets:
           - name: imagePullSecretsName
         containers:
-        - image: innovateuk/mail-sink:${mailSinkVersion}
+        - image: innovateuk/mail-sink:${nexusVersion}
           name: mail
           imagePullPolicy: IfNotPresent
           env:

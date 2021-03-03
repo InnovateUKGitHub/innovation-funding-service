@@ -15,9 +15,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
+import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -35,10 +38,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -53,6 +58,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.grant.builder.GrantProcessConfigurationBuilder.newGrantProcessConfiguration;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -99,6 +105,10 @@ public class CompetitionSetupServiceImplTest {
     private SetupStatusService setupStatusService;
     @Mock
     private SetupStatusRepository setupStatusRepository;
+    @Mock
+    private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
+    @Mock
+    private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
 
     @Before
     public void setup() {
@@ -542,18 +552,21 @@ public class CompetitionSetupServiceImplTest {
                                         .build(1))
                                 .build(1))
                         .build(1))
+                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
                 .build();
 
         PublicContent publicContent = newPublicContent().build();
+        GrantProcessConfiguration grantProcessConfiguration = newGrantProcessConfiguration().withCompetition(competition).withSendByDefault(true).build();
 
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(publicContentRepository.findByCompetitionId(competition.getId())).thenReturn(publicContent);
+        when(grantProcessConfigurationRepository.findByCompetitionId(competition.getId())).thenReturn(Optional.of(grantProcessConfiguration));
 
         ServiceResult<Void> result = service.deleteCompetition(competition.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
-                setupStatusRepository, milestoneRepository);
+                setupStatusRepository, milestoneRepository, competitionFinanceRowsTypesRepository, grantProcessConfigurationRepository );
         inOrder.verify(competitionRepository).findById(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
@@ -562,8 +575,9 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
         inOrder.verify(stakeholderRepository).deleteAllStakeholders(competition.getId());
-        inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
-                competition.getId());
+        inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
+        inOrder.verify(competitionFinanceRowsTypesRepository).deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);;
+        inOrder.verify(grantProcessConfigurationRepository).deleteByCompetitionId(competition.getId());;
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
     }

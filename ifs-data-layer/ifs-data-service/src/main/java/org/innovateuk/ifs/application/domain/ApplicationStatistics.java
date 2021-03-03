@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.util.*;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 
 /**
  * ApplicationStatistics defines a view on the application table for statistical information

@@ -82,7 +82,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.getApplicationAggregateScores(applicationId),
-                () -> verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(applicationPermissionRules).canViewApplication(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
@@ -93,7 +93,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.getAssessmentAggregateFeedback(applicationId, questionId),
-                () -> verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(applicationPermissionRules).canViewApplication(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 }

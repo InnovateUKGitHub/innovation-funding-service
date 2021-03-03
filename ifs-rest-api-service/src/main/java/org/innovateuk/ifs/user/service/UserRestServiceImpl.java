@@ -29,8 +29,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     private static final String USER_REST_URL = "/user";
 
-    private static final String PROCESS_ROLE_REST_URL = "/processrole";
-
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
         if(isEmpty(uid))
@@ -137,38 +135,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
-    }
-
-    @Override
-    public Future<RestResult<ProcessRoleResource>> findProcessRoleById(long processRoleId) {
-        return getWithRestResultAsync(PROCESS_ROLE_REST_URL + "/" + processRoleId, ProcessRoleResource.class);
-    }
-
-    @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-application-id/" + applicationId, processRoleResourceListType());
-    }
-
-    @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(long userId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-user-id/" + userId, processRoleResourceListType());
-    }
-
-    @Override
     public RestResult<List<UserResource>> findAssignableUsers(long applicationId){
         return getWithRestResult(USER_REST_URL + "/find-assignable-users/" + applicationId, userListType());
-    }
-
-    @Override
-    public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId){
-        return getWithRestResultAsync(PROCESS_ROLE_REST_URL + "/find-assignable/" + applicationId, ProcessRoleResource[].class);
-    }
-
-    @Override
-    public RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/user-has-application-for-competition/" + userId + "/" + competitionId, Boolean.class);
     }
 
     @Override

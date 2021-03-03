@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.security;
 
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 
@@ -81,5 +82,9 @@ class SetupProgressChecker {
 
     public boolean isOffline() {
         return projectStatus.getProjectState().isOffline();
+    }
+
+    public boolean isApplicationSuccessful() {
+        return projectStatus.getApplicationState() == ApplicationState.APPROVED;
     }
 }

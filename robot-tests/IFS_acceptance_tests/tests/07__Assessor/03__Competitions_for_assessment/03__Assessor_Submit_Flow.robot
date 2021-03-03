@@ -110,7 +110,7 @@ Summary:Assessor should be able to re-edit before submit
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
     When The user clicks the button/link                  jQuery = .govuk-button:contains("Save assessment")
-    And the user should see a field and summary error     Please indicate your decision.
+    And the user should see a field and summary error     You must select an option.
     And The user enters text to a text field              id = feedback    ${EMPTY}
     And The user enters text to a text field              id = comment    ${EMPTY}
     Then the user selects the radio button                fundingConfirmation    false

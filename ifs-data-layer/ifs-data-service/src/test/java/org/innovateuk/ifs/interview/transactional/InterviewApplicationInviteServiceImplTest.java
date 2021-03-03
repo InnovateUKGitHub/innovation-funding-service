@@ -16,7 +16,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -81,7 +81,7 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
         List<InterviewAssignment> interviewAssignments = newInterviewAssignment()
                 .withParticipant(
                         newProcessRole()
-                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
+                                .withRole(ProcessRoleType.INTERVIEW_LEAD_APPLICANT)
                                 .withOrganisationId(LEAD_ORGANISATION.getId())
                                 .withUser(newUser()
                                         .withFirstName("Someone").withLastName("SomeName").withEmailAddress("someone@example.com").build())
@@ -152,7 +152,7 @@ public class InterviewApplicationInviteServiceImplTest extends BaseServiceUnitTe
         InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .withParticipant(
                         newProcessRole()
-                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
+                                .withRole(ProcessRoleType.INTERVIEW_LEAD_APPLICANT)
                                 .withOrganisationId(LEAD_ORGANISATION.getId())
                                 .withUser(newUser()
                                         .withFirstName("Someone").withLastName("SomeName").withEmailAddress("someone@example.com").build())

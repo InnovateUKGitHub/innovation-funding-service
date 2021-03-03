@@ -1,15 +1,11 @@
 package org.innovateuk.ifs.fundingdecision.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.controller.ApplicationFundingDecisionController;
+import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingNotificationBulkService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,10 +13,8 @@ import org.springframework.http.MediaType;
 
 import java.util.Map;
 
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.documentation.FundingNotificationResourceDocs.fundingNotificationResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -34,13 +28,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     private ApplicationFundingService applicationFundingService;
 
     @Mock
-    private ApplicationService applicationService;
-
-    @Mock
-    private CompetitionService competitionService;
-
-    @Mock
-    private ProjectService projectService;
+    private ApplicationFundingNotificationBulkService applicationFundingNotificationBulkService;
 
     @Override
     protected ApplicationFundingDecisionController supplyControllerUnderTest() {
@@ -65,15 +53,8 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     public void sendNotifications() throws Exception {
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED, 3L, ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
-        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
-        CompetitionResource competition = newCompetitionResource()
-                .withCompetitionTypeName("Programme")
-                .build();
 
-        when(applicationService.getApplicationById(1L)).thenReturn(serviceSuccess(application));
-        when(competitionService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competition));
-        when(projectService.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
-        when(applicationFundingService.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
+        when(applicationFundingNotificationBulkService.sendBulkFundingNotifications(notification)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/send-notifications")
                 .header("IFS_AUTH_TOKEN", "123abc")

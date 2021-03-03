@@ -85,7 +85,7 @@
                             <legend class="govuk-visually-hidden">Select applications</legend>
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input th:disabled="${model.selectAllDisabled || model.selectionLimitWarning}"
+                                    <input th:disabled="${model.selectAllDisabled || model.selectionLimitWarning || !model.anythingChangeable}"
                                            th:checked="${model.selectionForm.isAllSelected()}"
                                            class="govuk-checkboxes__input select-all"
                                            id="select-all-1"

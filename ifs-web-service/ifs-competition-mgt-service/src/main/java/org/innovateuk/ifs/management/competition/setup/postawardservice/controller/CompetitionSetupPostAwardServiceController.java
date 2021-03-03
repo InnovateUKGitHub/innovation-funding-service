@@ -3,7 +3,6 @@ package org.innovateuk.ifs.management.competition.setup.postawardservice.control
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
@@ -21,7 +20,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "Controller for choosing post award service", securedType = CompetitionSetupPostAwardServiceController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'ifs_administrator')")
 public class CompetitionSetupPostAwardServiceController {
 
     private static final String COMPETITION_ID_KEY = "competitionId";

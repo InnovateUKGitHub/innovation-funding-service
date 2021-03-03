@@ -23,7 +23,11 @@ def String javaKeystorePassword = project.properties['java.keystore.password'] ?
 apply from: rootProject.file("gradle-support/new-relic.gradle")
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
+    }
 }
 
 task prepareDockerFile {
@@ -83,11 +87,11 @@ task prepareDockerFile {
 
 buildDocker.dependsOn prepareDockerFile
 
-project.version = idpVersion
-tagDocker.tag = idpVersion
-tagDockerLocal.tag = idpVersion
-osStageRemote.tag = idpVersion
-osStageLocal.tag = idpVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.containerName = "idp"
 createContainer.containerId = "idp"

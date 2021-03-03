@@ -13,7 +13,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -37,8 +37,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
@@ -49,7 +48,7 @@ public class ApplicationTermsPartnerModelPopulatorTest {
     @Mock
     private ApplicationRestService applicationRestServiceMock;
     @Mock
-    private UserRestService userRestServiceMock;
+    private ProcessRoleRestService processRoleRestServiceMock;
     @Mock
     private OrganisationService organisationServiceMock;
     @Mock
@@ -94,7 +93,7 @@ public class ApplicationTermsPartnerModelPopulatorTest {
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
 
         when(sectionServiceMock.getTermsAndConditionsSection(application.getCompetition())).thenReturn(termsAndConditionsSection);
-        when(userRestServiceMock.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
+        when(processRoleRestServiceMock.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
         when(organisationServiceMock.getApplicationOrganisations(processRoles)).thenReturn(organisations);
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(
                 Stream.of(
@@ -117,9 +116,9 @@ public class ApplicationTermsPartnerModelPopulatorTest {
         assertEquals(expectedRow1, actual.getPartners().get(0));
         assertEquals(expectedRow2, actual.getPartners().get(1));
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, userRestServiceMock, organisationServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, processRoleRestServiceMock, organisationServiceMock, sectionServiceMock);
         inOrder.verify(sectionServiceMock).getTermsAndConditionsSection(application.getCompetition());
-        inOrder.verify(userRestServiceMock).findProcessRole(application.getId());
+        inOrder.verify(processRoleRestServiceMock).findProcessRole(application.getId());
         inOrder.verify(organisationServiceMock).getApplicationOrganisations(processRoles);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();

@@ -20,11 +20,15 @@ import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -36,14 +40,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
+import static java.math.BigDecimal.*;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -53,6 +58,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -70,6 +76,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
@@ -91,6 +100,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private SpendProfileService spendProfileService;
+
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
+
+    @Autowired
+    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -138,10 +156,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
-        BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
+        BigDecimal competitionMaximumResearchPercentage = valueOf(competition.getMaxResearchRatio());
 
         return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                totalProjectCost, totalFundingSought, fundingAppliedFor,totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
+                totalProjectCost, totalFundingSought, fundingAppliedFor, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     @Override
@@ -150,16 +168,57 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
 
         return projectFinanceService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
-                        new FinanceCheckEligibilityResource(project.getId(),
-                                organisationId,
-                                application.getDurationInMonths(),
-                                projectFinance.getTotal(),
-                                projectFinance.getGrantClaimPercentage(),
-                                projectFinance.getTotalFundingSought(),
-                                projectFinance.getTotalOtherFunding(),
-                                projectFinance.getTotalContribution(),
-                                hasAnyApplicationFinances(application, projectFinance))
+                new FinanceCheckEligibilityResource(project.getId(),
+                        organisationId,
+                        project.getDurationInMonths(),
+                        projectFinance.getTotal(),
+                        projectFinance.getGrantClaimPercentage(),
+                        projectFinance.getTotalFundingSought(),
+                        projectFinance.getTotalOtherFunding(),
+                        getTotalContribution(project, projectFinance),
+                        hasAnyApplicationFinances(application, projectFinance),
+                        calculateContributionPercentage(project, projectFinance))
         );
+    }
+
+    private BigDecimal getTotalContribution(Project project, ProjectFinanceResource finance) {
+        Competition competition = project.getApplication().getCompetition();
+        if (competition.isKtp()) {
+            Optional<PartnerOrganisation> leadOrganisation = project.getLeadOrganisation();
+            if (!leadOrganisation.isPresent()) {
+                return finance.getTotalContribution();
+            }
+            if (finance.getOrganisation().equals(leadOrganisation.get().getOrganisation().getId())) {
+                return ZERO; // Lead in KTP doesn't contribute
+            }
+            ProjectFinanceResource leadOrgFinance = projectFinanceService.financeChecksDetails(project.getId(), leadOrganisation.get().getOrganisation().getId()).getSuccess();
+            return leadOrgFinance.getTotalContribution();
+        }
+        return finance.getTotalContribution();
+    }
+
+    private BigDecimal calculateContributionPercentage(Project project, ProjectFinanceResource finance) {
+        Competition competition = project.getApplication().getCompetition();
+        if (competition.isKtp()) {
+            Optional<PartnerOrganisation> leadOrganisation = project.getLeadOrganisation();
+
+            if (!leadOrganisation.isPresent()) {
+                return ZERO;
+            }
+            if (finance.getOrganisation().equals(leadOrganisation.get().getOrganisation().getId())) {
+                return ZERO; // Lead in KTP doesn't contribute
+            }
+
+            ProjectFinanceResource leadOrgFinance = projectFinanceService.financeChecksDetails(project.getId(), leadOrganisation.get().getOrganisation().getId()).getSuccess();
+            if (leadOrgFinance.getTotal().signum() == 0 || leadOrgFinance.getTotalContribution().signum() == 0) {
+                return ZERO;
+            }
+            return leadOrgFinance.getTotalContribution()
+                    .multiply(new BigDecimal(100))
+                    .divide(leadOrgFinance.getTotal(), 1, RoundingMode.HALF_UP);
+        } else {
+            return getTotalContribution(project, finance);
+        }
     }
 
     private boolean hasAnyApplicationFinances(Application application, ProjectFinanceResource projectFinance) {
@@ -183,7 +242,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
-                    eligibility.getRight(), anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
+                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project), anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
         });
     }
 
@@ -192,17 +251,17 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         boolean actionRequired = false;
 
         ServiceResult<ProjectFinanceResource> resource = projectFinanceService.financeChecksDetails(projectId, organisationId);
-        if(resource.isSuccess()) {
-                ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
-                if(queries.isSuccess()) {
-                    actionRequired = queries.getSuccess().stream().anyMatch(q -> q.awaitingResponse);
-                }
+        if (resource.isSuccess()) {
+            ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
+            if (queries.isSuccess()) {
+                actionRequired = queries.getSuccess().stream().anyMatch(q -> q.awaitingResponse);
+            }
         }
 
         return serviceSuccess(actionRequired);
     }
 
-    private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org)  {
+    private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org) {
         return new ProjectOrganisationCompositeId(org.getProject().getId(), org.getOrganisation().getId());
     }
 
@@ -278,13 +337,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             return ZERO;
         }
 
-        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, MAX_DECIMAL_PLACES, HALF_EVEN);
+        return totalFundingSought.multiply(valueOf(100)).divide(projectTotal, MAX_DECIMAL_PLACES, HALF_EVEN);
     }
 
     private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
-        BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
+        BigDecimal researchParticipationPercentageValue = ZERO;
         if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccess() != null) {
-            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccess());
+            researchParticipationPercentageValue = valueOf(researchParticipationPercentage.getSuccess());
         }
         return researchParticipationPercentageValue;
     }
@@ -292,6 +351,69 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<Boolean> getCreditReport(long projectId, long organisationId) {
         return getProjectFinance(projectId, organisationId).andOnSuccessReturn(ProjectFinance::getCreditReportConfirmed);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> approvePaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(partnerOrganisation -> triggerPaymentMilestoneApprovalWorkflowHandlerEvent(currentUser, partnerOrganisation))
+        );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(this::getPaymentMilestoneProcess)
+                        .andOnSuccess(process -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process))
+        );
+    }
+
+    @Override
+    public ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(this::getPaymentMilestoneProcess)
+                .andOnSuccess(paymentMilestoneProcess -> buildProjectProcurementMilestoneResource(paymentMilestoneProcess));
+    }
+
+    private ServiceResult<Void> triggerPaymentMilestoneApprovalWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
+        if (paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisation, currentUser)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PAYMENT_MILESTONE_CANNOT_BE_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> triggerPaymentMilestoneResetWorkflowHandlerEvent(User currentUser, PaymentMilestoneProcess paymentMilestoneProcess) {
+        if (paymentMilestoneProcess.getProcessState().isApproved()) {
+            if (paymentMilestoneWorkflowHandler.paymentMilestoneReset(paymentMilestoneProcess.getTarget(), currentUser)) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(PAYMENT_MILESTONE_CANNOT_BE_RESET);
+            }
+        }
+        return serviceSuccess();
+    }
+
+    private PaymentMilestoneState getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId, Project project) {
+        if (project.getApplication().getCompetition().isProcurementMilestones()) {
+            long organisationId = projectOrganisationCompositeId.getOrganisationId();
+            long projectId = projectOrganisationCompositeId.getProjectId();
+            PaymentMilestoneProcess process = getPartnerOrganisation(projectId, organisationId)
+                    .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation)).getSuccess();
+            return process.getProcessState();
+        }
+        return null;
     }
 
     @Override
@@ -344,6 +466,46 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
+    public ServiceResult<Void> resetViability(Long projectId) {
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+            projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
+        });
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetEligibility(Long projectId) {
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+            projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
+
+        });
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetFinanceChecks(Long projectId) {
+        resetViability(projectId);
+        resetEligibility(projectId);
+
+        if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
+            spendProfileService.deleteSpendProfile(projectId);
+        }
+
+        if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
+            grantOfferLetterService.resetGrantOfferLetter(projectId);
+        }
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         long projectId = projectOrganisationCompositeId.getProjectId();
@@ -390,6 +552,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<ViabilityProcess> getViabilityProcess(PartnerOrganisation partnerOrganisation) {
         return serviceSuccess(viabilityWorkflowHandler.getProcess(partnerOrganisation));
+    }
+
+    private ServiceResult<PaymentMilestoneProcess> getPaymentMilestoneProcess(PartnerOrganisation partnerOrganisation) {
+        return serviceSuccess(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisation));
     }
 
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
@@ -449,6 +615,22 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
 
         return serviceSuccess(eligibilityResource);
+    }
+
+    private ServiceResult<PaymentMilestoneResource> buildProjectProcurementMilestoneResource(PaymentMilestoneProcess paymentMilestoneProcess) {
+
+        if (paymentMilestoneProcess.getInternalParticipant() == null) {
+            return serviceSuccess(new PaymentMilestoneResource(
+                    paymentMilestoneProcess.getProcessState(),
+                    paymentMilestoneProcess.getLastModified().toLocalDate()
+            ));
+        }
+
+        return serviceSuccess(new PaymentMilestoneResource(paymentMilestoneProcess.getProcessState(),
+                paymentMilestoneProcess.getInternalParticipant().getFirstName(),
+                paymentMilestoneProcess.getInternalParticipant().getLastName(),
+                paymentMilestoneProcess.getLastModified().toLocalDate()
+        ));
     }
 
     private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {

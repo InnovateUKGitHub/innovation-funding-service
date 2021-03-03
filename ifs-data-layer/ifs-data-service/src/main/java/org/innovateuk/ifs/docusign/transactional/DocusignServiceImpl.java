@@ -6,6 +6,7 @@ import com.docusign.esign.client.ApiException;
 import com.docusign.esign.model.*;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
+import com.newrelic.api.agent.Trace;
 import com.sun.jersey.core.util.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -200,21 +203,33 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
 
     @Override
     @Transactional
-    public void downloadFileIfSigned() throws ApiException, IOException {
-        LOG.info("Starting import of docusign documents.");
-        EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
-        ListStatusChangesOptions options = envelopesApi.new ListStatusChangesOptions();
-        LocalDate date = LocalDate.now().minusDays(1);
-        options.setFromDate(DATE_FORMATTER.format(date));
-        options.setFromToStatus("completed");
-        EnvelopesInformation envelopesInformation = envelopesApi.listStatusChanges(accountId, options);
+    @Trace(dispatcher = true)
+    public ServiceResult<ScheduleResponse> downloadFileIfSigned() {
+        try {
+            LOG.info("Starting import of docusign documents.");
+            EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
+            ListStatusChangesOptions options = envelopesApi.new ListStatusChangesOptions();
+            LocalDate date = LocalDate.now().minusDays(1);
+            options.setFromDate(DATE_FORMATTER.format(date));
+            options.setFromToStatus("completed");
+            EnvelopesInformation envelopesInformation = envelopesApi.listStatusChanges(accountId, options);
 
-        for (Envelope envelope : envelopesInformation.getEnvelopes()) {
-            Optional<DocusignDocument> document = docusignDocumentRepository.findByEnvelopeId(envelope.getEnvelopeId());
-            document = document.filter(d -> d.getSignedDocumentImported() == null);
-            if (document.isPresent()) {
-                importDocument(document.get());
+            List<Long> projects = new ArrayList<>();
+            for (Envelope envelope : envelopesInformation.getEnvelopes()) {
+                Optional<DocusignDocument> document = docusignDocumentRepository.findByEnvelopeId(envelope.getEnvelopeId());
+                document = document.filter(d -> d.getSignedDocumentImported() == null);
+                if (document.isPresent()) {
+                    importDocument(document.get());
+                    projects.add(document.get().getProject().getApplication().getId());
+                }
             }
+            if (projects.isEmpty()) {
+                return serviceSuccess(ScheduleResponse.noWorkNeeded());
+            } else {
+                return serviceSuccess(new ScheduleResponse("Project documents imported " + projects.stream().map(String::valueOf).collect(Collectors.joining(", "))));
+            }
+        } catch (IOException | ApiException e) {
+            throw new IFSRuntimeException(e);
         }
     }
 

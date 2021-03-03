@@ -6,10 +6,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficerForm;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
@@ -60,21 +60,22 @@ public class LegacyMonitoringOfficerController {
         ProjectResource project =  projectService.getById(projectId);
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         if (!existingMonitoringOfficer.isPresent()) {
-            return "redirect:/monitoring-officer/view-all";
+            boolean isKtp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
+            return "redirect:/monitoring-officer/view-all" + "?ktp=" + isKtp;
         }
         LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, project, form, loggedInUser);
     }
 
     private String viewMonitoringOfficer(Model model, ProjectResource project, LegacyMonitoringOfficerForm form, UserResource user) {
-        LegacyMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(project, user);
+        MonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(project, user);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/monitoring-officer";
     }
 
-    private LegacyMonitoringOfficerViewModel populateMonitoringOfficerViewModel(ProjectResource project, UserResource user) {
+    private MonitoringOfficerViewModel populateMonitoringOfficerViewModel(ProjectResource project, UserResource user) {
         boolean editable = isInternalAdmin(user) && project.getProjectState().isActive();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
@@ -86,13 +87,20 @@ public class LegacyMonitoringOfficerController {
 
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
-        return new LegacyMonitoringOfficerViewModel(project, innovationAreas, projectManagerName,
-                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, editable);
+        return new MonitoringOfficerViewModel(
+                project,
+                innovationAreas,
+                projectManagerName,
+                partnerOrganisationNames,
+                leadOrganisation.getName(),
+                competitionSummary,
+                editable,
+                competition.isKtp());
     }
 
     private String getProjectManagerName(ProjectResource project) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
+        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> ProjectParticipantRole.PROJECT_MANAGER == pu.getRole());
         return projectManager.map(ProjectUserResource::getUserName).orElse("");
     }
 }

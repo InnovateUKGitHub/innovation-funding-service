@@ -9,7 +9,6 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -61,7 +60,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
         }
 
         if (application.getCompetition().isKtp() &&
-            application.getProcessRoles().stream().noneMatch(pr -> Role.KNOWLEDGE_TRANSFER_ADVISER == pr.getRole())) {
+            application.getProcessRoles().stream().noneMatch(pr -> pr.getRole().isKta())) {
 
             ApplicationKtaInviteResource ktaInvite = applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
             if (ktaInvite == null) {

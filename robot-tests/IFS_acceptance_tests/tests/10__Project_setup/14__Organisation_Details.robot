@@ -154,14 +154,14 @@ The user should see further organisation details
 
 The user should see Organisation size details
     [Arguments]  ${OrgSize}  ${Turnover}  ${Employees}
-    the user should see the element    jQuery = dt:contains("Size") + dd:contains("${OrgSize}")
+    the user should see the element    jQuery = dt:contains("Organisation size") + dd:contains("${OrgSize}")
     the user should see the element    jQuery = dt:contains("Turnover") + dd:contains("${Turnover}")
     the user should see the element    jQuery = dt:contains(Full time employees) + dd:contains(${Employees})
 
 The user should see Organisation size details with a growth table
     [Arguments]  ${OrgSize}  ${Month}  ${Year}  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
     the user should see the element    jQuery = h2:contains("Organisation size")
-    the user should see the element    jQuery = dt:contains(Size) + dd:contains("${OrgSize}")
+    the user should see the element    jQuery = dt:contains(Organisation size) + dd:contains("${OrgSize}")
     the user should see the element    jQuery = strong:contains("${Month}")
     the user should see the element    jQuery = strong:contains("${Year}")
     the user should see the element    jQuery = td:contains("${AnnualTurnover}")
