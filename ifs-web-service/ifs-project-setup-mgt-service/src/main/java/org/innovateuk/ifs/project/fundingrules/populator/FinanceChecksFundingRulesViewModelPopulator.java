@@ -72,9 +72,6 @@ public class FinanceChecksFundingRulesViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         FundingRulesResource fundingRulesResource = financeCheckRestService.getFundingRules(projectId, organisationId).getSuccess();
 
-        FundingRules fundingRules = fundingRulesResource.getFundingRules();
-        boolean readOnly = fundingRulesResource.getFundingRulesState() == FundingRulesState.APPROVED;
-
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
@@ -85,9 +82,9 @@ public class FinanceChecksFundingRulesViewModelPopulator {
                 competition,
                 organisation,
                 leadPartnerOrganisation,
-                fundingRules,
+                fundingRulesResource,
                 questionsAndAnswers,
-                readOnly, editMode);
+                editMode);
     }
 
     private List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers(ProjectResource project, Long organisationId) {

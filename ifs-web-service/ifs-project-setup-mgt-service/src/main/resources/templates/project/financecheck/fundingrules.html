@@ -53,6 +53,10 @@
             </form>
         </th:block>
 
+        <div class="message-alert" th:if="${model.showUpdatedMessage}">
+            <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
+        </div>
+
         <table class="govuk-table govuk-!-margin-top-3" th:unless="${model.questionsAndAnswers == null or model.questionsAndAnswers.isEmpty()}">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">

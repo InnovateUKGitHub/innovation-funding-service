@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.fundingrules.viewmodel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesResource;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.List;
@@ -20,10 +22,11 @@ public class FinanceChecksFundingRulesViewModel {
     private List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers;
     private boolean readOnly;
     private boolean editMode;
+    private String updatedBy;
 
     public FinanceChecksFundingRulesViewModel(ProjectResource project, CompetitionResource competition, OrganisationResource organisation,
-                                              boolean leadPartnerOrganisation, FundingRules fundingRules,
-                                              List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers, boolean readOnly,
+                                              boolean leadPartnerOrganisation, FundingRulesResource fundingRulesResource,
+                                              List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers,
                                               boolean editMode) {
         this.projectName = project.getName();
         this.projectId = project.getId();
@@ -32,10 +35,13 @@ public class FinanceChecksFundingRulesViewModel {
         this.organisationName = organisation.getName();
         this.organisationId = organisation.getId();
         this.leadPartnerOrganisation = leadPartnerOrganisation;
-        this.fundingRules = fundingRules;
+        this.fundingRules = fundingRulesResource.getFundingRules();
+        this.readOnly = fundingRulesResource.getFundingRulesState() == FundingRulesState.APPROVED;
         this.questionsAndAnswers = questionsAndAnswers;
-        this.readOnly = readOnly;
         this.editMode = editMode;
+        if (fundingRulesResource.getFundingRulesInternalUserLastName() != null) {
+            this.updatedBy = String.format("%s %s", fundingRulesResource.getFundingRulesInternalUserFirstName(), fundingRulesResource.getFundingRulesInternalUserLastName());
+        }
     }
 
     public String getProjectName() {
@@ -91,4 +97,13 @@ public class FinanceChecksFundingRulesViewModel {
     public boolean isEditMode() {
         return editMode;
     }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public boolean isShowUpdatedMessage() {
+        return !isReadOnly() && updatedBy != null;
+    }
+
 }
