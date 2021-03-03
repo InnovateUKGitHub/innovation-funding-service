@@ -157,7 +157,7 @@ Internal user is able to approve Finance checks and generate spend profile
 User is able to submit the spend profile
     [Documentation]  IFS-5700
     [Setup]  log in as a different user      &{collaborator1_credentials}
-    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review  
+    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review
     When the user submits the spend profile
     Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
