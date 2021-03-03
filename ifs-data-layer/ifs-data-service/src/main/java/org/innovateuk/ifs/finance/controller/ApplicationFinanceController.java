@@ -167,4 +167,11 @@ public class ApplicationFinanceController {
         return fileControllerUtils.handleFileDownload(() -> financeFileEntryService.getFECCertificateFileContents(applicationFinanceId));
     }
 
+    @GetMapping("/fec-certificate-file/fileentry")
+    public RestResult<FileEntryResource> getFECFileDetails(@RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
+        return financeFileEntryService.getFECCertificateFileContents(applicationFinanceId).
+                andOnSuccessReturn(FileAndContents::getFileEntry).
+                toGetResponse();
+    }
+
 }

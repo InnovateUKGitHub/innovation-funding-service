@@ -98,7 +98,7 @@ public class ApplicationDownloadController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
 
         final ByteArrayResource resource = financeService.getFECCertifcateFileByApplicationFinance(applicationFinanceId).getSuccess();
-        final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
+        final FileEntryResource fileDetails = financeService.getFECEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
         return getFileResponseEntity(resource, fileDetails);
     }
 }

@@ -24,7 +24,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<ApplicationFinanceResource> getApplicationFinance(Long applicationId, Long organisationId) {
-        if(applicationId == null || organisationId == null){
+        if (applicationId == null || organisationId == null) {
             return null;
         }
         return getWithRestResult(applicationFinanceRestURL + "/find-by-application-organisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
@@ -32,7 +32,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<List<ApplicationFinanceResource>> getApplicationFinances(Long applicationId) {
-        if(applicationId == null) {
+        if (applicationId == null) {
             return null;
         }
 
@@ -40,23 +40,23 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<ApplicationFinanceResource> update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance){
-        return postWithRestResult(applicationFinanceRestURL + "/update/"+ applicationFinanceId, applicationFinance, ApplicationFinanceResource.class);
+    public RestResult<ApplicationFinanceResource> update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
+        return postWithRestResult(applicationFinanceRestURL + "/update/" + applicationFinanceId, applicationFinance, ApplicationFinanceResource.class);
     }
 
     @Override
-    public RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId){
+    public RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId) {
         return getWithRestResult(applicationFinanceRestURL + "/get-by-id/" + applicationFinanceId, ApplicationFinanceResource.class);
     }
 
     @Override
-    public RestResult<Double> getResearchParticipationPercentage(Long applicationId){
+    public RestResult<Double> getResearchParticipationPercentage(Long applicationId) {
         return getWithRestResult(applicationFinanceRestURL + "/get-research-participation-percentage/" + applicationId, Double.class);
     }
 
     @Override
     public RestResult<ApplicationFinanceResource> getFinanceDetails(Long applicationId, Long organisationId) {
-        return getWithRestResult(applicationFinanceRestURL + "/finance-details/" + applicationId + "/"+organisationId, ApplicationFinanceResource.class);
+        return getWithRestResult(applicationFinanceRestURL + "/finance-details/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
                 "?applicationFinanceId=" + applicationFinanceId +
                 "&filename=" + originalFilename;
 
-        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
+        final HttpHeaders headers = createFileUploadHeader(contentType, contentLength);
 
         return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
@@ -110,7 +110,7 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
                 "?applicationFinanceId=" + applicationFinanceId +
                 "&filename=" + originalFilename;
 
-        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
+        final HttpHeaders headers = createFileUploadHeader(contentType, contentLength);
         return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
 
@@ -127,6 +127,14 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
                 "?applicationFinanceId=" + applicationFinanceId;
 
         return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> getFECFileDetails(Long applicationFinanceId) {
+        String url = applicationFinanceRestURL + "/fec-certificate-file/fileentry" +
+                "?applicationFinanceId=" + applicationFinanceId;
+
+        return getWithRestResult(url, FileEntryResource.class);
     }
 
 }
