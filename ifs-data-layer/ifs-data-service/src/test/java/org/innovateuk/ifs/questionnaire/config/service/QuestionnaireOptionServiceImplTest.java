@@ -48,17 +48,12 @@ public class QuestionnaireOptionServiceImplTest {
                 .withQuestion(questionId)
                 .build();
         QuestionnaireOption optionDomain = new QuestionnaireOption();
-        QuestionnaireQuestion previousQuestion1 = new QuestionnaireQuestion();
-        QuestionnaireOption previousOption1 = new QuestionnaireOption();
-        previousOption1.setQuestion(previousQuestion1);
-        previousQuestion1.setDepth(3);
-        QuestionnaireQuestion previousQuestion2 = new QuestionnaireQuestion();
-        QuestionnaireOption previousOption2 = new QuestionnaireOption();
-        previousOption2.setQuestion(previousQuestion2);
-        previousQuestion2.setDepth(5);
         QuestionnaireQuestion question = new QuestionnaireQuestion();
-        question.setOptionsLinkedToThisDecision(newArrayList(previousOption1, previousOption2));
+        question.setDepth(5);
         QuestionnaireQuestion decisionQuestion = new QuestionnaireQuestion();
+        QuestionnaireOption previousOption = new QuestionnaireOption();
+        previousOption.setQuestion(question);
+        decisionQuestion.setOptionsLinkedToThisDecision(newArrayList(previousOption));
         when(questionnaireQuestionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(questionnaireQuestionRepository.findById(questionDecisionId)).thenReturn(Optional.of(decisionQuestion));
 
@@ -67,5 +62,7 @@ public class QuestionnaireOptionServiceImplTest {
         assertThat(question, is(optionDomain.getQuestion()));
         assertThat(decisionQuestion, is(optionDomain.getDecision()));
         assertThat(optionResource.getText(), is(equalTo(optionDomain.getText())));
+        assertThat(optionResource.getText(), is(equalTo(optionDomain.getText())));
+        assertThat(decisionQuestion.getDepth(), is(equalTo(6)));
     }
 }
