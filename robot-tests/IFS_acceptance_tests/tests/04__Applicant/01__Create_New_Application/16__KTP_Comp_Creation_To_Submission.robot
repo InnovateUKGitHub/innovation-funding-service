@@ -331,11 +331,11 @@ New lead applicant completes the KTP application
 New lead applicant cannot enter project costs until fEC declaration and your funding section is complete
     [Documentation]  IFS-9241
     Given the user clicks the button/link     link = Your project finances
-    and the user should see the element       jQuery = li:contains("Your fEC model") > div:contains("Incomplete")
-    and the user should see the element       jQuery = li:contains("Your funding") > div:contains("Incomplete")
+    And the user should see the element       jQuery = li:contains("Your fEC model") > div:contains("Incomplete")
+    And the user should see the element       jQuery = li:contains("Your funding") > div:contains("Incomplete")
     When the user clicks the button/link      link = Your project costs
     Then the user should see the element      link = your fEC model
-    and the user should see the element       link = your funding
+    And the user should see the element       link = your funding
 
 New lead applicant is shown a validation error when marking a non-selected option as complete for the organisation's fEC model type
      [Documentation]  IFS-9239
@@ -1213,7 +1213,6 @@ Custom suite teardown
     Disconnect from database
 
 the user fills in ktp project costs
-#    the user clicks the button/link             link = Your project costs
     the user fills in Associate employment
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
