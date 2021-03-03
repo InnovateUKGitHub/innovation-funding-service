@@ -99,11 +99,10 @@ Companies House: No content message should be displayed when the search results 
 Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
     [Documentation]    IFS-9156
     Given the user clicks the button/link                link = Sign in
-    and logging in and error checking                    &{WebTestUserCredentials}
-    and the user navigates to the page                   ${server}/organisation/select
+    And logging in and error checking                    &{WebTestUserCredentials}
+    And the user navigates to the page                   ${server}/organisation/select
     When the user clicks the button/link                 jQuery = button:contains("Save and continue")
     Then the user can see organisation details in db
-
 
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
