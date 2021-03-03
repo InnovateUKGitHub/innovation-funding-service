@@ -48,6 +48,7 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
@@ -125,6 +126,9 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Mock
     private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
     public void validateFormInputResponse() {
@@ -476,7 +480,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         long applicationId = 1L;
 
         Organisation organisation = newOrganisation().withId(organisationId).build();
-        Application application = newApplication().withCompetition(newCompetition().build())
+        Application application = newApplication().withId(applicationId).withCompetition(newCompetition().build())
                 .withApplicationFinancesList(asList(
                         newApplicationFinance()
                                 .withOrganisation(organisation)
@@ -499,6 +503,8 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         when(organisationService.findById(organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationResult));
         when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId()))
+                .thenReturn(Optional.of(application.getApplicationFinances().get(0)));
 
         ValidationMessages actual = service.validateFECCertificateUpload(application, markedAsCompleteById);
 
