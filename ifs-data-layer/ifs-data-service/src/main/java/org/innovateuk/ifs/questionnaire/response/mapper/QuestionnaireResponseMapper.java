@@ -6,8 +6,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.questionnaire.config.mapper.QuestionnaireMapper;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireResponseResource;
 import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
-import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.mapstruct.Mapper;
 
 import java.util.UUID;

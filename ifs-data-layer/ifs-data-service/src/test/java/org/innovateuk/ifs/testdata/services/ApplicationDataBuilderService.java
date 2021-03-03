@@ -18,7 +18,6 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;

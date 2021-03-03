@@ -3,7 +3,6 @@ package org.innovateuk.ifs.testdata.builders;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.tuple.Pair;
-import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.application.domain.Application;

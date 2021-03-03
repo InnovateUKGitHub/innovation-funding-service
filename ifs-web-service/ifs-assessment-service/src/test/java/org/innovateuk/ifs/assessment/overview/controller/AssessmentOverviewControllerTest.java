@@ -88,7 +88,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
@@ -192,19 +192,19 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         questionScope = newQuestionResource()
                 .withShortName("Scope")
-                .withQuestionSetupType(QuestionSetupType.SCOPE)
+                .withQuestionSetupType(SCOPE)
                 .build();
 
         questionBusinessOpportunity = newQuestionResource()
                 .withShortName("Business opportunity")
                 .withAssessorMaximumScore(10)
-                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withQuestionSetupType(ASSESSED_QUESTION)
                 .build();
 
         questionPotentialMarket = newQuestionResource()
                 .withShortName("Potential market")
                 .withAssessorMaximumScore(15)
-                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withQuestionSetupType(ASSESSED_QUESTION)
                 .build();
 
         List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
