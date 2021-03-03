@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.competition.setup.completionstage.form.Comp
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -211,8 +212,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
         CompetitionSetupForm compSetupForm = mock(CompetitionSetupForm.class);
-        when(competitionSetupService.getSectionFormData(competition, CompetitionSetupSection.INITIAL_DETAILS))
-                .thenReturn(compSetupForm);
+        CompetitionSetupFormPopulator compSetupFormPopulator = mock(CompetitionSetupFormPopulator.class);
+        when(competitionSetupService.getSectionFormPopulator(CompetitionSetupSection.INITIAL_DETAILS))
+                .thenReturn(compSetupFormPopulator);
+        when(compSetupFormPopulator.populateForm(competition)).thenReturn(compSetupForm);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
                 .andExpect(status().isOk())
