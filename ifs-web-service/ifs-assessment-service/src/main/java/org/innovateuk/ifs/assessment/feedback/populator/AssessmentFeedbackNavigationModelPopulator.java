@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +46,7 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
         Optional<QuestionResource> optionalQuestion = questionService.getNextQuestion(questionId);
         if (optionalQuestion.isPresent()) {
             QuestionResource question = optionalQuestion.get();
-            if(isAssessmentQuestion(question)) {
+            if(isAssessmentQuestion(question) && !isOnlyOnOverviewQuestion(question)) {
                 return Optional.of(question);
             }
             return getNextAllowedQuestion(question.getId());
@@ -57,7 +58,7 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
         Optional<QuestionResource> optionalQuestion = questionService.getPreviousQuestion(questionId);
         if (optionalQuestion.isPresent()) {
             QuestionResource question = optionalQuestion.get();
-            if(isAssessmentQuestion(question)) {
+            if(isAssessmentQuestion(question) && !isOnlyOnOverviewQuestion(question)) {
                 return Optional.of(question);
             }
             return getPreviousQuestion(question.getId());
@@ -70,5 +71,9 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
         return newArrayList(GENERAL, KTP_ASSESSMENT).contains(section.getType())
                 && (question.getQuestionSetupType() != APPLICATION_TEAM)
                 && (question.getQuestionSetupType() != RESEARCH_CATEGORY);
+    }
+
+    private boolean isOnlyOnOverviewQuestion(QuestionResource question) {
+        return QuestionSetupType.SUBSIDY_BASIS.equals(question.getQuestionSetupType());
     }
 }
