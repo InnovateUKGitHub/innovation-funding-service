@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -309,11 +310,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 .reduce(BigInteger::add)
                 .orElse(BigInteger.ZERO);
 
-        BigInteger totalAcademicAndSecretarialSupportCost = form.getAcademicAndSecretarialSupportCostRows().entrySet().stream()
-                .map(Map.Entry::getValue)
-                .filter(academicAndSecretarialSupportCostRowForm -> !academicAndSecretarialSupportCostRowForm.isBlank())
-                .map(AcademicAndSecretarialSupportCostRowForm::getCost)
-                .reduce(BigInteger::add)
+        BigInteger totalAcademicAndSecretarialSupportCost = Optional.of(form.getTotalAcademicAndSecretarialSupportCosts().toBigInteger())
                 .orElse(BigInteger.ZERO);
 
         return totalAssociateSalaryCost

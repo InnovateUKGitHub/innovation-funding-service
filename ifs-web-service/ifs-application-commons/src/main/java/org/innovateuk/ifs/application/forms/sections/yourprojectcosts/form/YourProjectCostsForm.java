@@ -54,8 +54,6 @@ public class YourProjectCostsForm {
 
     private Boolean eligibleAgreement;
 
-    private Map<String, AcademicAndSecretarialSupportCostRowForm> academicAndSecretarialSupportCostRows = new LinkedHashMap<>();
-
     public VatForm getVatForm() {
         return vatForm;
     }
@@ -206,14 +204,6 @@ public class YourProjectCostsForm {
 
     public void setJustificationForm(JustificationForm justificationForm) {
         this.justificationForm = justificationForm;
-    }
-
-    public Map<String, AcademicAndSecretarialSupportCostRowForm> getAcademicAndSecretarialSupportCostRows() {
-        return academicAndSecretarialSupportCostRows;
-    }
-
-    public void setAcademicAndSecretarialSupportCostRows(Map<String, AcademicAndSecretarialSupportCostRowForm> academicAndSecretarialSupportCostRows) {
-        this.academicAndSecretarialSupportCostRows = academicAndSecretarialSupportCostRows;
     }
 
     /* View methods. */

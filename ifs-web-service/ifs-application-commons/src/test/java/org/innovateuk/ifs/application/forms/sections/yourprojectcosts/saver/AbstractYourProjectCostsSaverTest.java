@@ -84,11 +84,9 @@ public class AbstractYourProjectCostsSaverTest {
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger academicAndSecretarialSupportTwoCost = BigInteger.valueOf(400);
         BigInteger expected = associateOneCost
                 .add(associateTwoCost)
                 .add(academicAndSecretarialSupportOneCost)
-                .add(academicAndSecretarialSupportTwoCost)
                 .multiply(BigInteger.valueOf(46))
                 .divide(BigInteger.valueOf(100));
 
@@ -137,7 +135,7 @@ public class AbstractYourProjectCostsSaverTest {
         form.getAdditionalCompanyCostForm().setOtherCosts(new AdditionalCostAndDescription());
         form.getAdditionalCompanyCostForm().setOtherStaff(new AdditionalCostAndDescription());
 
-        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, academicAndSecretarialSupportTwoCost, form);
+        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, form);
 
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
@@ -180,7 +178,7 @@ public class AbstractYourProjectCostsSaverTest {
         verifyNoMoreInteractions(financeRowRestService);
     }
 
-    private void setupDataForIndirectCost(BigInteger associateOneCost, BigInteger associateTwoCost, BigInteger academicAndSecretarialSupportOneCost, BigInteger academicAndSecretarialSupportTwoCost, YourProjectCostsForm form) {
+    private void setupDataForIndirectCost(BigInteger associateOneCost, BigInteger associateTwoCost, BigInteger academicAndSecretarialSupportOneCost, YourProjectCostsForm form) {
         AssociateSalaryCost associateOne = newAssociateSalaryCost()
                 .withCost(associateOneCost)
                 .withDuration(1)
@@ -198,41 +196,27 @@ public class AbstractYourProjectCostsSaverTest {
         Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows = asMap("associate_salary_costs-1", associateOneForm,
                 "associate_salary_costs-2", associateTwoForm);
 
-        AcademicAndSecretarialSupport academicAndSecretarialSupportOne = newAcademicAndSecretarialSupport()
-                .withCost(academicAndSecretarialSupportOneCost)
-                .build();
-        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportOneForm = new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupportOne);
-        academicAndSecretarialSupportOneForm.setTotal(BigDecimal.valueOf(academicAndSecretarialSupportOneCost.intValue()));
-
-        AcademicAndSecretarialSupport academicAndSecretarialSupportTwo = newAcademicAndSecretarialSupport()
-                .withCost(academicAndSecretarialSupportTwoCost)
-                .build();
-        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportTwoForm = new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupportTwo);
-        academicAndSecretarialSupportTwoForm.setTotal(BigDecimal.valueOf(academicAndSecretarialSupportTwoCost.intValue()));
-
-        Map<String, AcademicAndSecretarialSupportCostRowForm> academicAndSecretarialSupportCostRows = asMap("academic_and_secretarial_support-1", academicAndSecretarialSupportOneForm,
-                "academic_and_secretarial_support-2", academicAndSecretarialSupportTwoForm);
-
         form.setAssociateSalaryCostRows(associateSalaryCostRows);
-        form.setAcademicAndSecretarialSupportCostRows(academicAndSecretarialSupportCostRows);
+        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm();
+        academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
+        form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
     }
+
 
     @Test
     public void saveIndirectCostCreatesFinanceRow() {
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger academicAndSecretarialSupportTwoCost = BigInteger.valueOf(400);
         BigInteger expected = associateOneCost
                 .add(associateTwoCost)
                 .add(academicAndSecretarialSupportOneCost)
-                .add(academicAndSecretarialSupportTwoCost)
                 .multiply(BigInteger.valueOf(46))
                 .divide(BigInteger.valueOf(100));
 
         YourProjectCostsForm form = new YourProjectCostsForm();
 
-        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, academicAndSecretarialSupportTwoCost, form);
+        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, form);
 
         IndirectCost indirectCost = new IndirectCost(1L);
         when(financeRowRestService.create(any())).thenReturn(restSuccess(indirectCost));

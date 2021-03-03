@@ -6,11 +6,9 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.innovateuk.ifs.finance.builder.AssociateSalaryCostBuilder.newAssociateSalaryCost;
-import static org.innovateuk.ifs.finance.builder.AcademicAndSecretarialSupportBuilder.newAcademicAndSecretarialSupport;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +20,6 @@ public class YourProjectCostsFormTest {
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger academicAndSecretarialSupportTwoCost = BigInteger.valueOf(400);
 
         YourProjectCostsForm form = new YourProjectCostsForm();
 
@@ -43,28 +40,14 @@ public class YourProjectCostsFormTest {
         Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows = asMap("associate_salary_costs-1", associateOneForm,
                 "associate_salary_costs-2", associateTwoForm);
 
-        AcademicAndSecretarialSupport academicAndSecretarialSupportOne = newAcademicAndSecretarialSupport()
-                .withCost(academicAndSecretarialSupportOneCost)
-                .build();
-        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportOneForm = new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupportOne);
-        academicAndSecretarialSupportOneForm.setTotal(BigDecimal.valueOf(academicAndSecretarialSupportOneCost.intValue()));
-
-        AcademicAndSecretarialSupport academicAndSecretarialSupportTwo = newAcademicAndSecretarialSupport()
-                .withCost(academicAndSecretarialSupportTwoCost)
-                .build();
-        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportTwoForm = new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupportTwo);
-        academicAndSecretarialSupportTwoForm.setTotal(BigDecimal.valueOf(academicAndSecretarialSupportTwoCost.intValue()));
-
-        Map<String, AcademicAndSecretarialSupportCostRowForm> academicAndSecretarialSupportCostRows = asMap("academic_and_secretarial_support-1", academicAndSecretarialSupportOneForm,
-                "academic_and_secretarial_support-2", academicAndSecretarialSupportTwoForm);
-
         form.setAssociateSalaryCostRows(associateSalaryCostRows);
-        form.setAcademicAndSecretarialSupportCostRows(academicAndSecretarialSupportCostRows);
+        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm(new AcademicAndSecretarialSupport());
+        academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
+        form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
 
         BigInteger expected = associateOneCost
                 .add(associateTwoCost)
                 .add(academicAndSecretarialSupportOneCost)
-                .add(academicAndSecretarialSupportTwoCost)
                 .multiply(BigInteger.valueOf(46))
                 .divide(BigInteger.valueOf(100));
 

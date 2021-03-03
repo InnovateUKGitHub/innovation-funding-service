@@ -71,9 +71,6 @@ public abstract class AbstractYourProjectCostsFormPopulator {
 
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
 
-        form.setAcademicAndSecretarialSupportCostRows(toRows(finance, FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
-                AcademicAndSecretarialSupportCostRowForm.class, AcademicAndSecretarialSupport.class));
-
         form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportCostRowForm(finance));
 
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -86,12 +83,17 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     }
 
     private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportCostRowForm(BaseFinanceResource finance) {
-        FinanceRowCostCategory financeRowCostCategory = finance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT);
-        if (financeRowCostCategory != null || financeRowCostCategory.getCosts().isEmpty()) {
-            AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) financeRowCostCategory.getCosts().get(0);
-            return new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupport);
-        }
-        return null;
+        Optional<FinanceRowCostCategory> financeRowCostCategory = Optional.ofNullable(
+                finance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT));
+        return financeRowCostCategory.map(costCategory -> {
+                    if (costCategory.getCosts() == null || costCategory.getCosts().isEmpty()) {
+                        AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) costCategory.getCosts().get(0);
+                        return new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupport);
+                    }
+                    return null;
+                }
+        ).orElse(null);
+
     }
 
     private JustificationForm justificationForm(BaseFinanceResource finance) {
