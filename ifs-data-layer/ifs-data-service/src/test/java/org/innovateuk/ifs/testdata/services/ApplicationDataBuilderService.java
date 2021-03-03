@@ -708,6 +708,16 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
+            if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL) {
+                if (organisationName.equals("Northern Irish Ltd.")) {
+                    builder[0] = builder[0]
+                            .withNorthernIrelandDeclaration(true);
+                } else {
+                    builder[0] = builder[0]
+                            .withNorthernIrelandDeclaration(false);
+                }
+
+            }
             return builder[0].withOrganisationSize(SMALL)
                     .withLocation()
                     .withFecEnabled(getDefaultFecModel(organisationType));

@@ -12,10 +12,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.join;
 import static java.lang.reflect.Modifier.isPublic;
@@ -103,7 +100,13 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         List<Pair<Class, Method>> notSecured = new ArrayList<>();
         for (Method method : service.getClass().getMethods()) {
             if (methodNeedsSecuring(method)) {
-                if (!hasOneOf(method, methodLevelSecurityAnnotations())) {
+                boolean hasSecureInterfaceMethod = Arrays.stream(service.getClass().getInterfaces()).flatMap(i -> Arrays.stream(i.getMethods()))
+                        .filter(
+                                m -> m.getName().equals(method.getName()) && Arrays.equals(m.getParameterTypes(), method.getParameterTypes())
+                        )
+                        .anyMatch(m -> hasOneOf(m, methodLevelSecurityAnnotations()));
+                boolean hasSecureClassMethod = hasOneOf(method, methodLevelSecurityAnnotations());
+                if (!hasSecureClassMethod && !hasSecureInterfaceMethod) {
                     notSecured.add(Pair.of(service.getClass(), method));
                 }
             }
