@@ -393,6 +393,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         assertFalse(rules.usersCanViewOrganisationsTheyAreInvitedTo(organisation, notInvitedUser));
     }
 
+    @Test
+    public void systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(new OrganisationResource(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(new OrganisationResource(), user));
+            }
+        });
+    }
+
     @Override
     protected OrganisationPermissionRules supplyPermissionRulesUnderTest() {
         return new OrganisationPermissionRules();
