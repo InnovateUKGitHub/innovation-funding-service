@@ -38,7 +38,7 @@
                   th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.showApprovalMessage}">
-            <div class="success-alert">
+            <div class="success-alert govuk-!-margin-bottom-8">
                 <p class="govuk-body">Your payment milestones have been approved by <span
                     th:text="${model.paymentMilestoneResource.name}"/>, <span
                     th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
@@ -47,7 +47,7 @@
         </th:block>
 
         <th:block th:if="${model.showResetMessage}">
-            <div class="message-alert">
+            <div class="message-alert govuk-!-margin-bottom-8">
                 <p class="govuk-body">Your payment milestones have been reset by <span
                     th:text="${model.paymentMilestoneResource.name}"/>, <span
                     th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>

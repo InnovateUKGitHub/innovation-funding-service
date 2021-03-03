@@ -31,12 +31,12 @@
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
             <th:block th:if="${summaryModel.externalView}">
                 <th:block th:if="${summaryModel.loanCompetition}">
-                    <div class="message-alert">
+                    <div class="message-alert govuk-!-margin-bottom-8">
                         <p class="govuk-body">We have finished checking your finances.</p>
                     </div>
                 </th:block>
                 <th:block th:unless="${summaryModel.loanCompetition}">
-                    <div class="success-alert">
+                    <div class="success-alert govuk-!-margin-bottom-8">
                         <p class="govuk-body">The partner's finance eligibility has been approved by <span
                             th:text="${summaryModel.getApproverName()}"/>, <span
                             th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
@@ -48,14 +48,14 @@
         <th:block th:if="${summaryModel.isShowApprovalMessage()}">
             <th:block th:unless="${summaryModel.externalView}">
                 <th:block th:if="${summaryModel.loanCompetition}">
-                    <div class="success-alert">
+                    <div class="success-alert govuk-!-margin-bottom-8">
                         <p class="govuk-body">The organisation’s finance eligibility has been approved by <span
                             th:text="${summaryModel.getApproverName()}"/>, <span
                             th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
                     </div>
                 </th:block>
                 <th:block th:unless="${summaryModel.loanCompetition}">
-                    <div class="success-alert">
+                    <div class="success-alert govuk-!-margin-bottom-8">
                         <p class="govuk-body">The partner's finance eligibility has been approved by <span
                             th:text="${summaryModel.getApproverName()}"/>, <span
                             th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
@@ -65,7 +65,7 @@
         </th:block>
 
         <th:block th:if="${summaryModel.isShowResetMessage()}">
-            <div class="message-alert">
+            <div class="message-alert govuk-!-margin-bottom-8">
                 <p class="govuk-body">The <th:block th:if="${summaryModel.loanCompetition}">organisation's</th:block><th:block th:unless="${summaryModel.loanCompetition}">partner's</th:block> finance eligibility has been reset by <span
                     th:text="${summaryModel.getResetName()}"/>, <span
                     th:text="${#temporals.format(summaryModel.getResetDate(), 'd MMMM yyyy')}"/></p>

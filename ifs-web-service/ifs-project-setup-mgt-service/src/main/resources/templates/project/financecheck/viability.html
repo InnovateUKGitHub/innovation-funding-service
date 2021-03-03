@@ -23,12 +23,12 @@
         <hr th:unless="${model.procurementCompetition}" class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.isShowApprovalMessage()}">
-            <div class="success-alert">
+            <div class="success-alert govuk-!-margin-bottom-8">
                 <p class="govuk-body">The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
             </div>
         </th:block>
         <th:block th:if="${model.isShowResetMessage()}">
-            <div class="message-alert">
+            <div class="message-alert govuk-!-margin-bottom-8">
                 <p class="govuk-body">The partner's finance viability has been reset by <span th:text="${model.getResetName()}"></span>, <span th:text="${#temporals.format(model.getResetDate(), 'd MMMM yyyy')}"></span></p>
             </div>
         </th:block>
