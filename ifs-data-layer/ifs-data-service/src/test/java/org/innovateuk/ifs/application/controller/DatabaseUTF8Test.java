@@ -10,8 +10,6 @@ import static org.junit.Assert.fail;
 
 public class DatabaseUTF8Test {
 
-    private static final String SCHEMA_SCRIPT_DIRECTORY_NAME = "migration";
-
     @Test
     public void test() throws Exception {
         File db = new File(currentThread().getContextClassLoader().getResource("db").toURI());
@@ -19,7 +17,7 @@ public class DatabaseUTF8Test {
             for (File sqlFile : dataDirectory.listFiles(f -> f.isFile() && f.getName().toLowerCase().endsWith(".sql"))) {
                 for (String line : readAllLines(sqlFile.toPath())) {
                     if (line.toLowerCase().contains("latin1")) {
-                        fail("Use only utf8 for database sripts. Script: " + sqlFile.getName());
+                        fail("Use only utf8 for database scripts. Script: " + sqlFile.getName());
                     }
                 }
             }
