@@ -17,7 +17,7 @@ The competition admin creates competition
     ...  ELSE  the user selects the Terms and Conditions    ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS funding eligibility            ${researchCategory}  ${compType}
+    the user fills in the CS funding eligibility            ${researchCategory}  ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
@@ -135,7 +135,7 @@ the user fills in the CS Project eligibility
     the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 the user fills in the CS funding eligibility
-    [Arguments]   ${researchCategory}  ${compType}
+    [Arguments]   ${researchCategory}  ${compType}   ${fundingRule}
     the user clicks the button/link       link = Funding eligibility
     the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
     Run Keyword If   '${researchCategory}' == 'true' and "${compType}" == "Expression of interest"    the user selects the checkbox     research-categories-33  #Feasibility
@@ -144,6 +144,9 @@ the user fills in the CS funding eligibility
     ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
     the user clicks the button/link       jQuery = button:contains("Done")
     Run Keyword If  "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
+    ...  ELSE IF   "${fundingRule}" == "STATE_AID"           run keywords                         the user fills in maximum funding level percentage
+    ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                         the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user fills in maximum funding level percentage for state aid
