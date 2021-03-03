@@ -69,6 +69,10 @@ public class ActivityLogUrlHelper {
                 return format("/project-setup-management/project/%d/finance-check", project.getId());
             case PAYMENT_MILESTONES_RESET:
                 return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case FUNDING_RULES_UPDATED:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
+            case FUNDING_RULES_APPROVED:
+                return format("/project-setup-management/project/%d/finance-check", project.getId());
             default:
                 return null;
         }
