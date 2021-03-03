@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,14 +60,20 @@ public class FinanceCheckController {
     }
 
 
-    @PostMapping("/{projectId}/viability/reset")
-    public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId) {
-        return financeCheckService.resetViability(projectId).toPostResponse();
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/viability/reset")
+    public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId,
+                                           @PathVariable("organisationId") final Long organisationId,
+                                           @RequestBody(required = false) final StringResource reason) {
+        String changeReason = reason == null ? null : reason.getContent();
+        return financeCheckService.resetViability(projectId, organisationId, changeReason).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/eligibility/reset")
-    public RestResult<Void> resetEligibility(@PathVariable("projectId") final Long projectId) {
-        return financeCheckService.resetEligibility(projectId).toPostResponse();
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/eligibility/reset")
+    public RestResult<Void> resetEligibility(@PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @RequestBody(required = false) final StringResource reason) {
+        String changeReason = reason == null ? null : reason.getContent();
+        return financeCheckService.resetEligibility(projectId, organisationId, changeReason).toPostResponse();
     }
 
     @PostMapping("/{projectId}/finance-checks/reset")
@@ -110,9 +117,11 @@ public class FinanceCheckController {
 
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/milestones/reset")
     public RestResult<Void> resetPaymentMilestoneState(@PathVariable("projectId") final Long projectId,
-                                                       @PathVariable("organisationId") final Long organisationId) {
+                                                       @PathVariable("organisationId") final Long organisationId,
+                                                       @RequestBody(required = false) final StringResource reason) {
+        String changeReason = reason == null ? null : reason.getContent();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId).toPostResponse();
+        return financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId, changeReason).toPostResponse();
     }
 
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/milestones/state")
