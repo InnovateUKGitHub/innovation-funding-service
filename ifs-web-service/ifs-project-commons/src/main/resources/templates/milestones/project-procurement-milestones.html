@@ -21,7 +21,7 @@
               th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        
+
         <th:block th:unless="${model.externalUser}">
             <div th:if="${#fields.hasErrors('${form.*}') or #fields.hasErrors('${projectProcurementMilestoneApprovalForm.*}')}" class="govuk-error-summary"
                  aria-labelledby="error-summary-title"
@@ -37,9 +37,18 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
-        <th:block th:if="${model.showBanner}">
-            <div class="success-alert">
-                <p class="govuk-body">Your payment milestones has been approved by <span
+        <th:block th:if="${model.showApprovalMessage}">
+            <div class="success-alert govuk-!-margin-bottom-8">
+                <p class="govuk-body">Your payment milestones have been approved by <span
+                    th:text="${model.paymentMilestoneResource.name}"/>, <span
+                    th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
+                </p>
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.showResetMessage}">
+            <div class="message-alert govuk-!-margin-bottom-8">
+                <p class="govuk-body">Your payment milestones have been reset by <span
                     th:text="${model.paymentMilestoneResource.name}"/>, <span
                     th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
                 </p>
@@ -103,35 +112,66 @@
                 </div>
             </div>
 
-            <form th:if="${model.canApprove}" class="govuk-!-margin-top-6"
+            <form class="govuk-!-margin-top-6"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
                   th:object="${projectProcurementMilestoneApprovalForm}">
 
-                <h2 class="govuk-heading-m">Approve Payment milestones</h2>
-                <div class="govuk-form-group">
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input id="approve-milestones"
-                                   class="govuk-checkboxes__input"
-                                   type="checkbox"
-                                   th:field="*{confirmMilestoneChecked}"
-                                   data-switches-button-status="#confirm-button"/>
-                            <label for="approve-milestones"
-                                   class="govuk-label govuk-checkboxes__label"
-                                   th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
-                            </label>
+                <th:block th:if="${model.canApprove}">
+                    <h2 class="govuk-heading-m">Approve Payment milestones</h2>
+                    <div class="govuk-form-group">
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input id="approve-milestones"
+                                       class="govuk-checkboxes__input"
+                                       type="checkbox"
+                                       th:field="*{confirmMilestoneChecked}"
+                                       data-switches-button-status="#confirm-button"/>
+                                <label for="approve-milestones"
+                                       class="govuk-label govuk-checkboxes__label"
+                                       th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <button
-                    type="button"
-                    name="approve"
-                    data-js-modal="modal-confirm-payment-milestone"
-                    class="govuk-button"
-                    id="confirm-button">Approve payment milestones
-                </button>
-                <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
+                    <button
+                        type="button"
+                        name="approve"
+                        data-js-modal="modal-confirm-payment-milestone"
+                        class="govuk-button"
+                        id="confirm-button">Approve payment milestones
+                    </button>
+                    <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
+                </th:block>
+                <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                          Reset payment milestone check
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">Reset payment milestone check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                        <div class="govuk-form-group govuk-!-margin-top-6">
+                            <label class="govuk-label govuk-!-font-weight-bold"
+                                   for="retractionReason">Reason for retracting approval</label>
+                            <div class="textarea-wrapped">
+                                <div class="govuk-form-group"
+                                     th:classappend="${#fields.hasErrors('retractionReason')} ? 'govuk-form-group--error'">
+                                    <th:block th:if="${#fields.hasErrors('retractionReason')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('retractionReason')}" th:text="${err}"></span>
+                                    </th:block>
+                          <textarea id="retractionReason"
+                                    rows="8"
+                                    class="govuk-textarea"
+                                    th:field="*{retractionReason}"
+                                    th:errorclass="govuk-textarea--error">
+                          </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="govuk-button" name="reset-milestones">Reset payment milestone check</button>
+                    </div>
+                </details>
             </form>
             <th:block th:if="${model.readOnly}">
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
