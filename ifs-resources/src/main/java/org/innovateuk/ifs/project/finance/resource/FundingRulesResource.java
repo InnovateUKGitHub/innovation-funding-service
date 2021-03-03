@@ -13,6 +13,15 @@ public class FundingRulesResource {
     private String fundingRulesInternalUserLastName;
     private LocalDate fundingRulesLastModifiedDate;
 
+    public FundingRulesResource() {
+        // no-arg constructor
+    }
+
+    public FundingRulesResource(FundingRulesState fundingRulesState, FundingRules fundingRules) {
+        this.fundingRulesState = fundingRulesState;
+        this.fundingRules = fundingRules;
+    }
+
     public FundingRulesState getFundingRulesState() {
         return fundingRulesState;
     }

@@ -28,6 +28,7 @@ import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
@@ -132,6 +133,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Mock
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
+
+    @Mock
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Mock
@@ -194,7 +198,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(financeCheck.getCostGroup().getCosts().get(0).getCostCategory().getId(), result.getSuccess().getCostGroup().getCosts().get(0).getCostCategory().getId());
     }
 
-
     @Test
     public void getFinanceCheckSummary(){
         Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
@@ -251,6 +254,10 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
         when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
         when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+
+        when(fundingRulesWorkflowHandler.getProcess(partnerOrganisations.get(0))).thenReturn(new FundingRulesProcess(projectFinanceUser, partnerOrganisations.get(0), FundingRulesState.REVIEW));
+        when(fundingRulesWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new FundingRulesProcess(projectFinanceUser, partnerOrganisations.get(1), FundingRulesState.REVIEW));
+        when(fundingRulesWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new FundingRulesProcess(projectFinanceUser, partnerOrganisations.get(2), FundingRulesState.REVIEW));
 
         ProjectFinance projectFinanceInDB1 = new ProjectFinance();
         projectFinanceInDB1.setViabilityStatus(ViabilityRagStatus.AMBER);
