@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.controller.OrganisationSelectionController;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -184,7 +186,35 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void selectOrganisation_organisationDetailsEnteredManually() throws Exception {
+    public void selectOrganisation_organisationDetailsEnteredManuallyNew() throws Exception {
+        long competitionId = 1L;
+        long organisationId = 2L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withLeadApplicantType(asList(1L))
+                .withFundingType(FundingType.GRANT)
+                .build();
+
+        when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
+        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionId));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(1L)
+                .withAddresses(Collections.singletonList(new OrganisationAddressResource()))
+                .build();
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+
+        mockMvc.perform(post("/organisation/select")
+                .param("selectedOrganisationId", String.valueOf(organisationId)))
+                .andExpect(status().isOk());
+
+        verify(organisationJourneyEnd).completeProcess(any(), any(), eq(loggedInUser), eq(organisationId));
+    }
+
+    @Test
+    public void selectOrganisation_organisationDetailsEnteredDeprecatedManually() throws Exception {
         long competitionId = 1L;
         long organisationId = 2L;
 
