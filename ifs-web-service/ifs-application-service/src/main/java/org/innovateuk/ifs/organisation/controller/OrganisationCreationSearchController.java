@@ -258,21 +258,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                 .collect(Collectors.toList()));
     }
 
-    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-exec-officer")
-    public String removeExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                         BindingResult bindingResult,
-                                         Model model,
-                                         HttpServletRequest request, HttpServletResponse response,
-                                         @RequestParam("remove-exec-officer") int index,
-                                         @RequestHeader(value = REFERER, required = false) final String referer) {
-
-        populateViewModel(organisationForm, model, request);
-
-        organisationForm.getExecutiveOfficers().remove(index);
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
-    }
-
     private void populateViewModelForSearch(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, int pageNumber) {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
@@ -346,5 +331,65 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     private boolean checkOrganisationIsLead(HttpServletRequest request) {
         return registrationCookieService.isLeadJourney(request);
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-sic-code")
+    public String addSicCode(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                             BindingResult bindingResult,
+                             Model model,
+                             HttpServletRequest request, HttpServletResponse response,
+                             @RequestHeader(value = REFERER, required = false) final String referer) {
+        if (organisationForm.getSicCodes().size() > 3) {
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getSicCodes().add(new OrganisationSicCodeResource());
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-sic-code")
+    public String removeSicCode(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                BindingResult bindingResult,
+                                Model model,
+                                HttpServletRequest request, HttpServletResponse response,
+                                @RequestParam("remove-sic-code") int index,
+                                @RequestHeader(value = REFERER, required = false) final String referer) {
+
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getSicCodes().remove(index);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-exec-officer")
+    public String addExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      HttpServletRequest request, HttpServletResponse response,
+                                      @RequestHeader(value = REFERER, required = false) final String referer) {
+
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getExecutiveOfficers().add(new OrganisationExecutiveOfficerResource());
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-exec-officer")
+    public String removeExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                         BindingResult bindingResult,
+                                         Model model,
+                                         HttpServletRequest request, HttpServletResponse response,
+                                         @RequestParam("remove-exec-officer") int index,
+                                         @RequestHeader(value = REFERER, required = false) final String referer) {
+
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getExecutiveOfficers().remove(index);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 }
