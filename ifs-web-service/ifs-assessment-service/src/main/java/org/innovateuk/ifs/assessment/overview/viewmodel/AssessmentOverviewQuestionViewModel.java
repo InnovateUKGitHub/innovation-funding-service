@@ -157,4 +157,20 @@ public class AssessmentOverviewQuestionViewModel {
                 .append(questionSetupType)
                 .toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "AssessmentOverviewQuestionViewModel{" +
+                "questionId=" + questionId +
+                ", questionName='" + questionName + '\'' +
+                ", questionNumber='" + questionNumber + '\'' +
+                ", maximumScore=" + maximumScore +
+                ", responseRequired=" + responseRequired +
+                ", assessed=" + assessed +
+                ", scopeResponse=" + scopeResponse +
+                ", scoreResponse='" + scoreResponse + '\'' +
+                ", scoreRequired=" + scoreRequired +
+                ", questionSetupType=" + questionSetupType +
+                '}';
+    }
 }

@@ -230,7 +230,7 @@ public class AssessmentOverviewModelPopulator {
                 .filter(question -> QuestionSetupType.SUBSIDY_BASIS.equals(question.getQuestionSetupType()))
                 .findFirst()
                 .map(question -> applicationSubsidyBasisModelPopulator.populate(question, applicationId))
-                .orElseGet(null);
+                .orElse(null);
     }
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {

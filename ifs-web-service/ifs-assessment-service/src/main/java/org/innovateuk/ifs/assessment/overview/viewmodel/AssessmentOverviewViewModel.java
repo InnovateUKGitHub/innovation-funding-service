@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Holder of model attributes for the Assessment Overview view.
@@ -90,5 +89,62 @@ public class AssessmentOverviewViewModel {
 
     public ApplicationSubsidyBasisViewModel getApplicationSubsidyBasisViewModel() {
         return applicationSubsidyBasisViewModel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessmentOverviewViewModel that = (AssessmentOverviewViewModel) o;
+
+        return new EqualsBuilder()
+                .append(assessmentId, that.assessmentId)
+                .append(applicationId, that.applicationId)
+                .append(competitionId, that.competitionId)
+                .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(daysLeft, that.daysLeft)
+                .append(applicationName, that.applicationName)
+                .append(competitionName, that.competitionName)
+                .append(sections, that.sections)
+                .append(appendices, that.appendices)
+                .append(termsAndConditionsTerminology, that.termsAndConditionsTerminology)
+                .append(applicationSubsidyBasisViewModel, that.applicationSubsidyBasisViewModel)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessmentId)
+                .append(applicationId)
+                .append(applicationName)
+                .append(competitionId)
+                .append(competitionName)
+                .append(daysLeftPercentage)
+                .append(daysLeft)
+                .append(sections)
+                .append(appendices)
+                .append(termsAndConditionsTerminology)
+                .append(applicationSubsidyBasisViewModel)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "AssessmentOverviewViewModel{" +
+                "assessmentId=" + assessmentId +
+                ", applicationId=" + applicationId +
+                ", applicationName='" + applicationName + '\'' +
+                ", competitionId=" + competitionId +
+                ", competitionName='" + competitionName + '\'' +
+                ", daysLeftPercentage=" + daysLeftPercentage +
+                ", daysLeft=" + daysLeft +
+                ", sections=" + sections +
+                ", appendices=" + appendices +
+                ", termsAndConditionsTerminology='" + termsAndConditionsTerminology + '\'' +
+                ", applicationSubsidyBasisViewModel=" + applicationSubsidyBasisViewModel +
+                '}';
     }
 }

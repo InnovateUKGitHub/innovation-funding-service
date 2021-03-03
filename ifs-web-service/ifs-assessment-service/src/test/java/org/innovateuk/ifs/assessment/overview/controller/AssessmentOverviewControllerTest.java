@@ -6,6 +6,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.common.populator.ApplicationSubsidyBasisModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
@@ -37,6 +38,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -86,6 +88,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
@@ -123,6 +126,9 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Mock
     private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private ApplicationSubsidyBasisModelPopulator applicationSubsidyBasisModelPopulator;
 
     @Spy
     @InjectMocks
@@ -181,20 +187,24 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         questionApplicationDetails = newQuestionResource()
                 .withShortName("Application Details")
+                .withQuestionSetupType(APPLICATION_DETAILS)
                 .build();
 
         questionScope = newQuestionResource()
                 .withShortName("Scope")
+                .withQuestionSetupType(QuestionSetupType.SCOPE)
                 .build();
 
         questionBusinessOpportunity = newQuestionResource()
                 .withShortName("Business opportunity")
                 .withAssessorMaximumScore(10)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .build();
 
         questionPotentialMarket = newQuestionResource()
                 .withShortName("Potential market")
                 .withAssessorMaximumScore(15)
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .build();
 
         List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
@@ -278,7 +288,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getOverview() throws Exception {
-        AssessmentOverviewSectionViewModel expectedProjectDetailsSectionViewModel =new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
+        AssessmentOverviewSectionViewModel expectedProjectDetailsSectionViewModel = new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
                 "Project details",
                 "These do not need scoring.",
                 asList(
@@ -291,7 +301,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                                 false,
                                 null,
                                 null,
-                                false),
+                                false,
+                                questionApplicationDetails.getQuestionSetupType()),
                         new AssessmentOverviewQuestionViewModel(
                                 questionScope.getId(),
                                 questionScope.getShortName(),
@@ -301,7 +312,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                                 false,
                                 TRUE,
                                 null,
-                                false)
+                                false,
+                                questionScope.getQuestionSetupType())
                 ),
                 false,
                 false
@@ -319,7 +331,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                                 true,
                                 null,
                                 "7",
-                                true),
+                                true,
+                                questionBusinessOpportunity.getQuestionSetupType()),
                         new AssessmentOverviewQuestionViewModel(
                                 questionPotentialMarket.getId(),
                                 questionPotentialMarket.getShortName(),
@@ -329,7 +342,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                                 false,
                                 null,
                                 null,
-                                true)
+                                true,
+                                questionPotentialMarket.getQuestionSetupType())
                 ),
                 false,
                 false
@@ -368,6 +382,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 3L,
                 expectedSections,
                 expectedAppendices,
+                "Award terms and conditions",
                 null
         );
 
