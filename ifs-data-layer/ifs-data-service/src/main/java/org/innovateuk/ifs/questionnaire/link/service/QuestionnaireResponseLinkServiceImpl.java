@@ -51,10 +51,7 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
                 });
     }
 
-    protected Supplier<ServiceResult<Questionnaire>> questionnaire(long id) {
+    private Supplier<ServiceResult<Questionnaire>> questionnaire(long id) {
         return () ->  find(questionnaireRepository.findById(id), notFoundError(Questionnaire.class, id));
     }
-
-
-
 }
