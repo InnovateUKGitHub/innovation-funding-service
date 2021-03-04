@@ -314,13 +314,9 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
                     String officerRole = directorItem.get("officer_role").asText();
                     if (!officerRole.isEmpty() && officerRole.equalsIgnoreCase(DIRECTOR)) {
                         setDirectorsValue(executiveOfficersResource, directorItem.get("name").asText());
-                    } else {
-                        setDirectorsValue(executiveOfficersResource, EMPTY_NAME_STRING);
                     }
                 }
             });
-        } else {
-            setDirectorsValue(executiveOfficersResource, EMPTY_NAME_STRING);
         }
         return executiveOfficersResource;
     }
