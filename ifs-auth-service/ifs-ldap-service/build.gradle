@@ -22,7 +22,11 @@ apply plugin: 'idea'
 String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
+    }
 }
 
 task prepareDockerFile {

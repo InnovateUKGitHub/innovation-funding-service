@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -24,8 +25,7 @@ public interface CompetitionSetupService {
                                                                                      CompetitionSetupSection section, CompetitionSetupSubsection subsection,
                                                                                      Optional<Long> objectId);
 
-    CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
-                                            CompetitionSetupSection section);
+    CompetitionSetupFormPopulator getSectionFormPopulator(CompetitionSetupSection section);
 
     CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
                                                CompetitionSetupSection section,

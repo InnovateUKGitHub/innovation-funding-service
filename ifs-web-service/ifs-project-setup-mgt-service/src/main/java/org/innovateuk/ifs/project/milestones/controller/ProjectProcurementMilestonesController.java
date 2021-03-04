@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -98,6 +100,31 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(params = "reset-milestones")
+    public String resetPaymentMilestones(@PathVariable long projectId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("projectProcurementMilestoneApprovalForm") ProjectProcurementMilestoneApprovalForm approvalsForm,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           Model model,
+                                           UserResource user) {
+        ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
+
+        Supplier<String> view = () -> viewProjectMilestones(projectId, organisationId, false, user, model, form, approvalsForm);
+
+        if (StringUtils.isEmpty(approvalsForm.getRetractionReason())) {
+            bindingResult.addError(new FieldError("projectProcurementMilestoneApprovalForm", "retractionReason", "Enter a reason for the reset."));
+            return view.get();
+        }
+
+        RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, approvalsForm.getRetractionReason());
+        return validationHandler
+                .addAnyErrors(resetPaymentMilestoneState)
+                .failNowOrSucceedWith(view, view);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save")
     public String saveMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
@@ -114,7 +141,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
             validationHandler.addAnyErrors(saver.save(form, projectId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId));
+                        financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, null));
                         return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });

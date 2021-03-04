@@ -9,6 +9,8 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The process of approving Viability for Organisations
@@ -26,6 +28,11 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
 
     @Column(name="activity_state_id")
     private ViabilityState activityState;
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name="process_id")
+    @OrderBy("id ASC")
+    private List<ViabilityResetOutcome> viabilityResetOutcomes = new ArrayList<>();
 
     ViabilityProcess() {
     }
@@ -72,6 +79,10 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
         this.activityState = status;
     }
 
+    public List<ViabilityResetOutcome> getViabilityResetOutcomes() {
+        return viabilityResetOutcomes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +96,7 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
+                .append(viabilityResetOutcomes, that.viabilityResetOutcomes)
                 .isEquals();
     }
 
@@ -95,6 +107,7 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
                 .append(participant)
                 .append(target)
                 .append(activityState)
+                .append(viabilityResetOutcomes)
                 .toHashCode();
     }
 }
