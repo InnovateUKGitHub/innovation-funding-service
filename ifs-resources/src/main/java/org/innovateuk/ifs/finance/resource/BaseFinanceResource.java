@@ -125,14 +125,6 @@ public abstract class BaseFinanceResource {
         this.financialYearAccounts = financialYearAccounts;
     }
 
-    public Boolean getNorthernIrelandDeclaration() {
-        return northernIrelandDeclaration;
-    }
-
-    public void setNorthernIrelandDeclaration(Boolean northernIrelandDeclaration) {
-        this.northernIrelandDeclaration = northernIrelandDeclaration;
-    }
-
     public FinanceRowCostCategory getFinanceOrganisationDetails(FinanceRowType costType) {
         if (financeOrganisationDetails != null) {
             return financeOrganisationDetails.get(costType);
