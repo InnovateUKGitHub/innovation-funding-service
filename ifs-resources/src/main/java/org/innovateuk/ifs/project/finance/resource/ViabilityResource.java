@@ -14,6 +14,10 @@ public class ViabilityResource {
     private String viabilityApprovalUserLastName;
     private LocalDate viabilityApprovalDate;
 
+    private String viabilityResetUserFirstName;
+    private String viabilityResetUserLastName;
+    private LocalDate viabilityResetDate;
+
     // for JSON marshalling
     ViabilityResource() {
     }
@@ -60,5 +64,29 @@ public class ViabilityResource {
 
     public void setViabilityApprovalDate(LocalDate viabilityApprovalDate) {
         this.viabilityApprovalDate = viabilityApprovalDate;
+    }
+
+    public LocalDate getViabilityResetDate() {
+        return viabilityResetDate;
+    }
+
+    public void setViabilityResetDate(LocalDate viabilityResetDate) {
+        this.viabilityResetDate = viabilityResetDate;
+    }
+
+    public String getViabilityResetUserFirstName() {
+        return viabilityResetUserFirstName;
+    }
+
+    public void setViabilityResetUserFirstName(String viabilityResetUserFirstName) {
+        this.viabilityResetUserFirstName = viabilityResetUserFirstName;
+    }
+
+    public String getViabilityResetUserLastName() {
+        return viabilityResetUserLastName;
+    }
+
+    public void setViabilityResetUserLastName(String viabilityResetUserLastName) {
+        this.viabilityResetUserLastName = viabilityResetUserLastName;
     }
 }
