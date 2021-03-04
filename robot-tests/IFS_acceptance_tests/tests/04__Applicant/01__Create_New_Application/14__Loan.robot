@@ -83,10 +83,6 @@ Loan application submission
     [Documentation]  IFS-6237  IFS-6238
     Given the user submits the loan application
     And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
-    #When the user clicks the button/link           link = startup high growth index survey
-    #TODO
-    #the user should be on the right page.  Update once we have this link
-    #And the user closes the last opened tab
     When the user clicks the button/link            link = View part A
     Then the user should see the element            jQuery = h1:contains("Application overview")
     And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
@@ -116,12 +112,6 @@ Fund sought changes
     Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
     When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
     Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
-
-#Project cost changes
-#    [Documentation]  IFS-8944
-#    When the user amends other project costs in finances
-#    Then the internal user should see the funding changes
-#    And the external user should see the funding changes
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
@@ -233,71 +223,64 @@ internal user generate SP
     the user should see the element          jQuery = th:contains("Total % loan")
 
 the user should not see the financial year table on SP
-    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       link = Edit spend profile
-    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       jQuery = button:contains("Save and return to spend profile overview")
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Empire Ltd
-    the user should not see the element   jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       link = Spend profile overview
-    the user clicks the button/link       jQuery = a:contains("Review and submit project spend profile")
-    the user should see the element       jQuery = h2:contains("Project - Spend profile")
-    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       jQuery = a:contains("Submit project spend profile")
-    the user clicks the button/link       id = submit-send-all-spend-profiles
+    the user should not see the element     jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         link = Edit spend profile
+    the user should not see the element     jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         jQuery = button:contains("Save and return to spend profile overview")
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+    the user clicks the button/link         link = Empire Ltd
+    the user should not see the element     jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         link = Spend profile overview
+    the user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
+    the user should see the element         jQuery = h2:contains("Project - Spend profile")
+    the user should not see the element     jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         jQuery = a:contains("Submit project spend profile")
+    the user clicks the button/link         id = submit-send-all-spend-profiles
 
 the user selects to change funding sought
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${loan_finance_checks}
-    the user clicks the button/link  link = View finances
-    the user clicks the button/link  link = Change funding sought
+    log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${loan_finance_checks}
+    the user clicks the button/link       link = View finances
+    the user clicks the button/link       link = Change funding sought
 
 the internal user should see the funding changes
-    #Check the link title is correct!!!
-    the user clicks the button/link    link = View changes to finances
-    #the user clicks the button/link    link = Review all changes to project finances
-    the user should see the element    jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
-    the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
-    the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
-    the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
-    #the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
-    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
-    the user should see the element    jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
-    the user should see the element    jQuery = th:contains("Labour") ~ td:contains("3,081")
-    the user should see the element    jQuery = th:contains("Overheads") ~ td:contains("0")
-    the user should see the element    jQuery = th:contains("Materials") ~ td:contains("100,200")
-    the user should see the element    jQuery = th:contains("Capital usage") ~ td:contains("552")
-    the user should see the element    jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
-    the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
-    #Double check these numbers??
-    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
-    #the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
+    the user clicks the button/link     link = View changes to finances
+    the user should see the element     jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
+    the user should see the element     jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
+    the user should see the element     jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
+    the user should see the element     jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    the user should see the element     jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
+    the user should see the element     jQuery = th:contains("Labour") ~ td:contains("3,081")
+    the user should see the element     jQuery = th:contains("Overheads") ~ td:contains("0")
+    the user should see the element     jQuery = th:contains("Materials") ~ td:contains("100,200")
+    the user should see the element     jQuery = th:contains("Capital usage") ~ td:contains("552")
+    the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
+    the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
 the external user should see the funding changes
-    log in as a different user        &{lead_applicant_credentials}
-    the user navigates to the page    ${loan_PS}/finance-check/eligibility
-    the user should see the element   jQuery = p:contains("All members of your organisation can access and edit your project")
-    the user clicks the button/link   link = View changes to finances
-    the user should see the element   jQuery = p:contains("Funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
-    the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
-    the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
-    the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
-    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
-    #the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
-    the user should see the element    jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
-    the user should see the element    jQuery = th:contains("Labour") ~ td:contains("3,081")
-    the user should see the element    jQuery = th:contains("Overheads") ~ td:contains("0")
-    the user should see the element    jQuery = th:contains("Materials") ~ td:contains("100,200")
-    the user should see the element    jQuery = th:contains("Capital usage") ~ td:contains("552")
-    the user should see the element    jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
-    the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
-    #the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
-    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page      ${loan_PS}/finance-check/eligibility
+    the user should see the element     jQuery = p:contains("All members of your organisation can access and edit your project")
+    the user clicks the button/link     link = View changes to finances
+    the user should see the element     jQuery = p:contains("Funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+    the user should see the element     jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
+    the user should see the element     jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
+    the user should see the element     jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    the user should see the element     jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
+    the user should see the element     jQuery = th:contains("Labour") ~ td:contains("3,081")
+    the user should see the element     jQuery = th:contains("Overheads") ~ td:contains("0")
+    the user should see the element     jQuery = th:contains("Materials") ~ td:contains("100,200")
+    the user should see the element     jQuery = th:contains("Capital usage") ~ td:contains("552")
+    the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
+    the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
 the user marks loan as complete
     [Arguments]  ${status}  ${appl_name}

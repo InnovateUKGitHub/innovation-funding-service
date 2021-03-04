@@ -254,8 +254,7 @@ External user finance overview link is not shown
 External user finances details are correct
     [Documentation]    IFS-8127   IFS-8126
     When the user clicks the button/link                             link = ${yourProjFinanceLink}
-    #Then the user should not see the element                         link = ${viewFinanceChangesLink}
-    And the user should not see the element                          css = table-overview
+    Then the user should not see the element                          css = table-overview
     And the external user should see the correct VAT information
 
 External user should not see the spend profile section
