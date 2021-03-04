@@ -14,6 +14,10 @@ public class EligibilityResource {
     private String eligibilityApprovalUserLastName;
     private LocalDate eligibilityApprovalDate;
 
+    private String eligibilityResetUserFirstName;
+    private String eligibilityResetUserLastName;
+    private LocalDate eligibilityResetDate;
+
     // for JSON marshalling
     EligibilityResource() {
     }
@@ -61,6 +65,30 @@ public class EligibilityResource {
 
     public void setEligibilityApprovalDate(LocalDate eligibilityApprovalDate) {
         this.eligibilityApprovalDate = eligibilityApprovalDate;
+    }
+
+    public LocalDate getEligibilityResetDate() {
+        return eligibilityResetDate;
+    }
+
+    public void setEligibilityResetDate(LocalDate eligibilityResetDate) {
+        this.eligibilityResetDate = eligibilityResetDate;
+    }
+
+    public String getEligibilityResetUserFirstName() {
+        return eligibilityResetUserFirstName;
+    }
+
+    public void setEligibilityResetUserFirstName(String eligibilityResetUserFirstName) {
+        this.eligibilityResetUserFirstName = eligibilityResetUserFirstName;
+    }
+
+    public String getEligibilityResetUserLastName() {
+        return eligibilityResetUserLastName;
+    }
+
+    public void setEligibilityResetUserLastName(String eligibilityResetUserLastName) {
+        this.eligibilityResetUserLastName = eligibilityResetUserLastName;
     }
 }
 

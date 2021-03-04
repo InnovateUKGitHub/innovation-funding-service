@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.LeadInternationalOrganisationForm;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,7 +70,7 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
     @Test
     public void organisationalEligibilityPageDetails() throws Exception {
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)).thenReturn(true);
-
+        when(competitionSetupService.getSectionFormPopulator(ORGANISATIONAL_ELIGIBILITY)).thenReturn(mock(CompetitionSetupFormPopulator.class));
         mockMvc.perform(get(URL, competitionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"));
