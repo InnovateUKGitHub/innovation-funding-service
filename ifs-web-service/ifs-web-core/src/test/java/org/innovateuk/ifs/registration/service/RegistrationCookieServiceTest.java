@@ -3,11 +3,13 @@ package org.innovateuk.ifs.registration.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -21,6 +23,9 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
 
     @Mock
     private EncryptedCookieService cookieUtil;
+
+    @Mock
+    private CompressedCookieService compressedCookieService;
 
     private MockHttpServletResponse response;
     private MockHttpServletRequest request;
@@ -54,7 +59,7 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
 
         service.saveToOrganisationCreationCookie(organisationForm, response);
 
-        verify(cookieUtil, times(1)).saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
+        verify(compressedCookieService, times(1)).saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
     }
 
     @Test
@@ -110,22 +115,22 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
     public void getOrganisationCreationCookieValue() throws Exception {
         OrganisationCreationForm organisationForm = new OrganisationCreationForm();
 
-        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+        when(compressedCookieService.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
 
         Optional<OrganisationCreationForm> result = service.getOrganisationCreationCookieValue(request);
 
         assertEquals(result.get(),organisationForm);
-        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).getCookieValue(request, ORGANISATION_FORM);
     }
 
     @Test
     public void getOrganisationCreationCookieValue_shouldReturnEmptyOptionalOnEmptyCookie() {
-        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn("");
+        when(compressedCookieService.getCookieValue(request, ORGANISATION_FORM)).thenReturn("");
 
         Optional<OrganisationCreationForm> result = service.getOrganisationCreationCookieValue(request);
 
         assertFalse(result.isPresent());
-        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).getCookieValue(request, ORGANISATION_FORM);
     }
 
     @Test
@@ -204,7 +209,7 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
     public void deleteOrganisationCreationCookie() throws Exception {
         service.deleteOrganisationCreationCookie(response);
 
-        verify(cookieUtil, times(1)).removeCookie(response, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).removeCookie(response, ORGANISATION_FORM);
     }
 
     @Test
@@ -233,7 +238,7 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
         service.deleteAllRegistrationJourneyCookies(response);
 
         verify(cookieUtil, times(1)).removeCookie(response, ORGANISATION_TYPE);
-        verify(cookieUtil, times(1)).removeCookie(response, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).removeCookie(response, ORGANISATION_FORM);
         verify(cookieUtil, times(1)).removeCookie(response, ORGANISATION_ID);
         verify(cookieUtil, times(1)).removeCookie(response, COMPETITION_ID);
         verify(cookieUtil, times(1)).removeCookie(response, INVITE_HASH);
@@ -244,22 +249,22 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
         OrganisationCreationForm organisationForm = new OrganisationCreationForm();
         organisationForm.setSelectedExistingOrganisationId(1L);
 
-        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+        when(compressedCookieService.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
 
         assertTrue(service.isSelectedExistingOrganisationJourney(request));
 
-        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).getCookieValue(request, ORGANISATION_FORM);
     }
 
     @Test
     public void isSelectedExistingOrganisationJourneyReturnsFalse() throws Exception {
         OrganisationCreationForm organisationForm = new OrganisationCreationForm();
 
-        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+        when(compressedCookieService.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
 
         assertFalse(service.isSelectedExistingOrganisationJourney(request));
 
-        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).getCookieValue(request, ORGANISATION_FORM);
     }
 
     @Test
@@ -267,11 +272,11 @@ public class RegistrationCookieServiceTest extends BaseServiceUnitTest<Registrat
         OrganisationCreationForm organisationForm = new OrganisationCreationForm();
         organisationForm.setSelectedExistingOrganisationId(null);
 
-        when(cookieUtil.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
+        when(compressedCookieService.getCookieValue(request, ORGANISATION_FORM)).thenReturn(JsonUtil.getSerializedObject(organisationForm));
 
         assertFalse(service.isSelectedExistingOrganisationJourney(request));
 
-        verify(cookieUtil, times(1)).getCookieValue(request, ORGANISATION_FORM);
+        verify(compressedCookieService, times(1)).getCookieValue(request, ORGANISATION_FORM);
     }
 
 }
