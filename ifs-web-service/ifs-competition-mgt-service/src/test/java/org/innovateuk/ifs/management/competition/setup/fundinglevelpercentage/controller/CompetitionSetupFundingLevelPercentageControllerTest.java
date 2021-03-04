@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
@@ -55,7 +56,7 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
     @Override
     protected CompetitionSetupFundingLevelPercentageController supplyControllerUnderTest() {
         CompetitionSetupFundingLevelPercentageController controller =  new CompetitionSetupFundingLevelPercentageController();
-        setField(controller, "northernIrelandSubsidyControlToggle", true);
+        setField(controller, "subsidyControlNorthernIrelandMode", SubsidyControlNorthernIrelandMode.FULL);
         return controller;
     }
 
