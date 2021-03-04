@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -17,7 +16,6 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -43,13 +41,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.ProcurementMilestoneDataBuilder.newProcurementMilestoneDataBuilder;
-import static org.innovateuk.ifs.testdata.builders.QuestionnaireResponseDataBuilder.newQuestionnaireResponseDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
+import static org.innovateuk.ifs.testdata.builders.QuestionnaireResponseDataBuilder.newQuestionnaireResponseDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.SubsidyBasisDataBuilder.newSubsidyBasisDataBuilder;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -253,11 +253,46 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return simpleMap(builders, BaseBuilder::build);
     }
 
+    private List<QuestionnaireResponseLine> defaultApplicationQuestionnaireResponseLines(ApplicationData applicationData,
+                                                                                                  ApplicationLine applicationLine,
+                                                                                                  List<ExternalUserLine> externalUsers){
+        if (applicationLine.markQuestionsComplete && applicationData.getCompetition().getFundingRules().equals(SUBSIDY_CONTROL)){
+            // Generate the default for the application.
+            return uniqueOrganisations(applicationLine, externalUsers).stream()
+                    .map(organisation -> new QuestionnaireResponseLine(
+                            organisation.getLeft(),
+                            applicationData.getCompetition().getName(),
+                            applicationData.getApplication().getName(),
+                            organisation.getMiddle(),
+                            SUBSIDY_BASIS,
+                            asList("No", "No")))
+                    .collect(toList());
+        }
+        return emptyList();
+    }
+
+    private List<QuestionnaireResponseLine> specifiedQuestionnaireResponseLines(ApplicationLine applicationLine,
+                                                                                  List<QuestionnaireResponseLine> questionnaireResponseLines){
+        return questionnaireResponseLines.stream()
+                .filter(line -> line.competitionName.equals(applicationLine.competitionName))
+                .filter(line -> line.applicationName.equals(applicationLine.title))
+                .collect(toList());
+    }
+
     public List<QuestionnaireResponseData> createQuestionnaireResponse(ApplicationData applicationData,
                                                                        ApplicationLine applicationLine,
-                                                                       List<QuestionnaireResponseLine> questionnaireResponseLines) {
-        return questionnaireResponseLines.stream()
-                .filter(line -> line.competitionName.equals(applicationLine.competitionName) && line.applicationName.equals(applicationLine.title))
+                                                                       List<QuestionnaireResponseLine> questionnaireResponseLines,
+                                                                       List<ExternalUserLine> externalUsers) {
+        List<QuestionnaireResponseLine> specifiedLines = specifiedQuestionnaireResponseLines(applicationLine, questionnaireResponseLines);
+        List<QuestionnaireResponseLine> defaultLines = defaultApplicationQuestionnaireResponseLines(applicationData, applicationLine, externalUsers);
+        // Override defaults.
+        List<QuestionnaireResponseLine> lines = defaultLines.stream()
+                .map(defaultLine -> specifiedLines.stream()
+                        .filter(specifiedLine -> defaultLine.organisationName.equals(specifiedLine.organisationName))
+                        .findFirst()
+                        .orElse(defaultLine))
+                .collect(toList());
+        return lines.stream()
                 .map(line -> questionnaireResponseDataBuilder
                         .withCompetition(applicationData.getCompetition())
                         .withQuestionSetup(line.questionSetupType)
@@ -272,7 +307,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     public List<SubsidyBasisData> createSubsidyBasis(ApplicationLine applicationLine,
                                                      List<QuestionnaireResponseData> questionnaireResponseData) {
         return  questionnaireResponseData.stream()
-                .filter(line -> line.getQuestionSetupType().equals(QuestionSetupType.SUBSIDY_BASIS) &&
+                .filter(line -> line.getQuestionSetupType().equals(SUBSIDY_BASIS) &&
                         line.getCompetition().getName().equals(applicationLine.competitionName) &&
                         line.getApplication().getName().equals(applicationLine.title))
                 .map(line -> subsidyBasisDataBuilder
@@ -707,7 +742,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
-            if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL) {
+            if (competition.getFundingRules() == SUBSIDY_CONTROL) {
                 if (organisationName.equals("Northern Irish Ltd.")) {
                     builder[0] = builder[0]
                             .withNorthernIrelandDeclaration(true);

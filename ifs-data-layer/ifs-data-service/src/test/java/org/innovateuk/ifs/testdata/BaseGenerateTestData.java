@@ -424,10 +424,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
-        applicationFinances.join(); //wait for finances to be created.
+        applicationFinances.join(); // wait for finances to be created.
 
         CompletableFuture<List<QuestionnaireResponseData>> questionnaireResponses = CompletableFuture.supplyAsync(() ->
-                        applicationDataBuilderService.createQuestionnaireResponse(applicationData, applicationLine, questionnaireResponseLines),
+                        applicationDataBuilderService.createQuestionnaireResponse(applicationData, applicationLine, questionnaireResponseLines, externalUserLines),
                 taskExecutor);
 
         List<QuestionnaireResponseData> questionnaireResponseData = questionnaireResponses.join();
@@ -442,7 +442,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
 
 
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, procurementMilestones);
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, questionnaireResponses, subsidyBasis, procurementMilestones);
 
         return allQuestionsAnswered.thenApplyAsync(done -> {
 

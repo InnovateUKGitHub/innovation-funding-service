@@ -576,6 +576,15 @@ public class CsvUtils {
             options= asList(line.get(i++).split(","));
 
         }
+
+        public QuestionnaireResponseLine(String user, String competitionName, String applicationName, String organisationName, QuestionSetupType questionSetupType, List<String> options) {
+            this.user = user;
+            this.competitionName = competitionName;
+            this.applicationName = applicationName;
+            this.organisationName = organisationName;
+            this.questionSetupType = questionSetupType;
+            this.options = options;
+        }
     }
 
     public static class CompetitionOrganisationConfigLine {
