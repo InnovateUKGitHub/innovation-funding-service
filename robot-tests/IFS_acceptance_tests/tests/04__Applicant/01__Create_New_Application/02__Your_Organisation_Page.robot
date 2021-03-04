@@ -20,17 +20,7 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-<<<<<<< HEAD
 &{WebTestUserCredentials}          email=Test@hampshire.co.uk    password=${short_password}
-
-*** Test Cases ***
-# TODO  should be implemented with IFS-7724
-#Not in Companies House: Enter details manually link
-#    [Documentation]    INFUND-888
-#    [Tags]
-#    When the user clicks the button/link    jQuery = summary:contains("Enter details manually")
-#    Then the user should see the element    jQuery = .govuk-label:contains("Organisation name")
-=======
 ${business_type}            Partnership
 ${organisation_name}        Best Test Company
 ${organisation_number}      1234567890
@@ -45,7 +35,6 @@ ${address_postcode}         NW11 8AJ
 ${applicant_first_name}     Sherlock
 ${applicant_last_name}      Holmes
 ${applicant_email}          sherlock@holmes.com
->>>>>>> development
 
 *** Test Cases ***
 Companies House: Valid company name
@@ -111,7 +100,6 @@ Companies House: No content message should be displayed when the search results 
     When the user clicks the button/link         jQuery = a:contains("Next")
     Then the user should not see the element     jQuery = p:contains("This is the last page of search results and we have shown you the closest 400 matches.")
 
-<<<<<<< HEAD
 Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
     [Documentation]    IFS-9156
     Given the user clicks the button/link                link = Sign in
@@ -120,40 +108,6 @@ Companies House: Get Date of incorporation, SIC codes, address and directors det
     When the user clicks the button/link                 jQuery = button:contains("Save and continue")
     Then the user can see organisation details in db
 
-# TODO should be implemented on ifs-7724
-#Manually add the details and pass to the confirmation page
-#    [Documentation]    INFUND-888
-#    [Tags]  HappyPath
-#    [Setup]  the user expands enter details manually
-#    Given the user enters text to a text field    name = organisationName    Top of the Popps
-#    When the user clicks the button/link          jQuery = button:contains("Continue")
-#    Then the user should see the element          jQuery = dt:contains("Organisation type")~ dd:contains("Business")
-#    And the user should see the element           jQuery = dt:contains("Organisation name")~ dd:contains("Top of the Popps")
-
-*** Keywords ***
-Applicant goes to the organisation search page
-    Given the guest user opens the browser
-    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
-    When the user clicks the button/link    link = Start new application
-    And the user clicks the button/link     link = Continue and create an account
-    And the user clicks the button/link     jQuery = span:contains("Business")
-    And the user clicks the button/link     jQuery = button:contains("Save and continue")
-
-the backslash doesnt give errors
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = addressForm.selectedPostcodeIndex
-    Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
-
-the user expands enter details manually
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]
-
-the user can see organisation details in db
-    Connect to Database    @{database}
-    ${result} =  get details of existing organisation
-    log   ${result}
-    Should not Be Empty     ${result}
-=======
 Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888  IFS-7724
     Given the user searches for organisation                    Not exist
@@ -185,6 +139,29 @@ Not in Companies House: Manually add the details as a new user and pass to the c
 
 *** Keywords ***
 Applicant goes to the organisation search page
+    Given the guest user opens the browser
+    the user navigates to the page    ${frontDoor}
+    Given the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
+    When the user clicks the button/link    link = Start new application
+    And the user clicks the button/link     link = Continue and create an account
+    And the user clicks the button/link     jQuery = span:contains("Business")
+    And the user clicks the button/link     jQuery = button:contains("Save and continue")
+
+the backslash doesnt give errors
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = addressForm.selectedPostcodeIndex
+    Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
+
+the user expands enter details manually
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]
+
+the user can see organisation details in db
+    Connect to Database    @{database}
+    ${result} =  get details of existing organisation
+    log   ${result}
+    Should not Be Empty     ${result}
+
+Applicant goes to the organisation search page
     the guest user opens the browser
     the user navigates to the page                            ${frontDoor}
     the user clicks the button/link in the paginated list     link = ${createApplicationOpenInternationalCompetition}
@@ -201,5 +178,4 @@ user selects where is organisation based
 user checks back link and click save and continue
     the user clicks the button/link     link = Back to confirm your organisation
     the user clicks the button/link     jQuery = button:contains("Save and continue")
->>>>>>> development
 
