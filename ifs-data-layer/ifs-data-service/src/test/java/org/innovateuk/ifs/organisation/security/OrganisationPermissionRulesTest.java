@@ -395,11 +395,13 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate() {
+        OrganisationResource organisation = newOrganisationResource().build();
         allGlobalRoleUsers.forEach(user -> {
+            when(processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId())).thenReturn(false);
             if (user.equals(systemRegistrationUser())) {
-                assertTrue(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(new OrganisationResource(), user));
+                assertTrue(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(organisation, user));
             } else {
-                assertFalse(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(new OrganisationResource(), user));
+                assertFalse(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(organisation, user));
             }
         });
     }
