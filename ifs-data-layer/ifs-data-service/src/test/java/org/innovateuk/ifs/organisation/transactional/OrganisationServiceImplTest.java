@@ -9,7 +9,6 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.ExecutiveOfficer;
-import org.innovateuk.ifs.organisation.domain.ExecutiveOfficer;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.SicCode;
@@ -76,13 +75,20 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     public void syncCompaniesHouseDetailsAddsDetails() {
         LocalDate date = LocalDate.now();
         OrganisationResource organisationResource = newOrganisationResource().build();
+        Organisation organisationData = newOrganisation()
+                .withDateOfIncorporation(date)
+                .build();
         Organisation organisation = newOrganisation().build();
         List<SicCode> sicCodes = newOrganisationSicCode()
                 .withSicCode("12345", "67890")
+                .withOrganisation(organisation)
                 .build(2);
+        organisation.setSicCodes(sicCodes);
         List<ExecutiveOfficer> executiveOfficers = newOrganisationExecutiveOfficer()
                 .withName("Name-1", "Name-2")
+                .withOrganisation(organisation)
                 .build(2);
+        organisation.setExecutiveOfficers(executiveOfficers);
         Address address = newAddress()
                 .withAddressLine1("address line 1")
                 .withAddressLine2("address line 2")
@@ -99,20 +105,23 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         OrganisationAddress organisationAddress = newOrganisationAddress()
                 .withAddress(address)
                 .withAddressType(addressType)
+                .withOrganisation(organisation)
                 .build();
-        Organisation organisationData = newOrganisation()
-                .withDateOfIncorporation(date)
-                .withSicCodes(sicCodes)
-                .withExecutiveOfficers(executiveOfficers)
-                .withAddresses(Collections.singletonList(organisationAddress))
-                .build();
+        organisation.setAddresses(Collections.singletonList(organisationAddress));
 
+        OrganisationResource organisationDataResource = newOrganisationResource()
+                .withDateOfIncorporation(date)
+                .build();
         List<OrganisationSicCodeResource> sicCodeResources = newOrganisationSicCodeResource()
                 .withSicCode("12345", "67890")
+                .withOrganisation(organisationDataResource.getId())
                 .build(2);
+        organisationDataResource.setSicCodes(sicCodeResources);
         List<OrganisationExecutiveOfficerResource> executiveOfficerResources = newOrganisationExecutiveOfficerResource()
                 .withName("Name-1", "Name-2")
+                .withOrganisation(organisationDataResource.getId())
                 .build(2);
+        organisationDataResource.setExecutiveOfficers(executiveOfficerResources);
         AddressResource addressResource = newAddressResource()
                 .withAddressLine1("address line 1")
                 .withAddressLine2("address line 2")
@@ -128,13 +137,9 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
                 .withAddress(addressResource)
                 .withAddressType(addressTypeResource)
+                .withOrganisation(organisationDataResource.getId())
                 .build();
-        OrganisationResource organisationDataResource = newOrganisationResource()
-                .withSicCodes(sicCodeResources)
-                .withExecutiveOfficers(executiveOfficerResources)
-                .withDateOfIncorporation(date)
-                .withAddresses(Collections.singletonList(organisationAddressResource))
-                .build();
+        organisationDataResource.setAddresses(Collections.singletonList(organisationAddressResource));
 
         when(organisationRepository.findById(anyLong())).thenReturn(Optional.of(organisation));
         when(organisationMapper.mapToDomain(any(OrganisationResource.class))).thenReturn(organisationData);
@@ -166,12 +171,19 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     public void syncCompaniesHouseDetailsRemovesDetails() {
         LocalDate date = LocalDate.now();
         OrganisationResource organisationResource = newOrganisationResource().build();
+        Organisation organisation = newOrganisation()
+                .withDateOfIncorporation(date)
+                .build();
         List<SicCode> sicCodes = newOrganisationSicCode()
                 .withSicCode("12345", "67890")
+                .withOrganisation(organisation)
                 .build(2);
+        organisation.setSicCodes(sicCodes);
         List<ExecutiveOfficer> executiveOfficers = newOrganisationExecutiveOfficer()
                 .withName("Name-1", "Name-2")
+                .withOrganisation(organisation)
                 .build(2);
+        organisation.setExecutiveOfficers(executiveOfficers);
         Address address = newAddress()
                 .withAddressLine1("address line 1")
                 .withAddressLine2("address line 2")
@@ -188,13 +200,9 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         OrganisationAddress organisationAddress = newOrganisationAddress()
                 .withAddress(address)
                 .withAddressType(addressType)
+                .withOrganisation(organisation)
                 .build();
-        Organisation organisation = newOrganisation()
-                .withDateOfIncorporation(date)
-                .withSicCodes(sicCodes)
-                .withExecutiveOfficers(executiveOfficers)
-                .withAddresses(Collections.singletonList(organisationAddress))
-                .build();
+        organisation.setAddresses(Collections.singletonList(organisationAddress));
 
         Organisation organisationData = newOrganisation().build();
         OrganisationResource organisationDataResource = newOrganisationResource().build();
@@ -223,5 +231,133 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         verify(executiveOfficerRepository, times(1)).deleteAll(executiveOfficers);
         verify(addressRepository, times(1)).delete(any(Address.class));
         verify(organisationAddressRepository, times(1)).delete(any(OrganisationAddress.class));
+    }
+
+    @Test
+    public void syncCompaniesHouseDetailsUpdatesDetails() {
+        LocalDate date = LocalDate.now();
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        Organisation organisation = newOrganisation()
+                .withDateOfIncorporation(date)
+                .build();
+        List<SicCode> existingSicCodes = newOrganisationSicCode()
+                .withSicCode("12345", "67890")
+                .withOrganisation(organisation)
+                .build(2);
+        organisation.setSicCodes(existingSicCodes);
+        List<ExecutiveOfficer>  existingExecutiveOfficers = newOrganisationExecutiveOfficer()
+                .withName("Name-1", "Name-2")
+                .withOrganisation(organisation)
+                .build(2);
+        organisation.setExecutiveOfficers(existingExecutiveOfficers);
+        Address existingAddress = newAddress()
+                .withAddressLine1("address line 1")
+                .withAddressLine2("address line 2")
+                .withAddressLine3("address line 3")
+                .withTown("town")
+                .withCounty("county")
+                .withCountry("country")
+                .withPostcode("postcode")
+                .build();
+        AddressType existingAddressType = newAddressType()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+        OrganisationAddress existingOrganisationAddress = newOrganisationAddress()
+                .withAddress(existingAddress)
+                .withAddressType(existingAddressType)
+                .withOrganisation(organisation)
+                .build();
+        organisation.setAddresses(Collections.singletonList(existingOrganisationAddress));
+
+        Organisation organisationData = newOrganisation()
+                .withDateOfIncorporation(date)
+                .build();
+        List<SicCode> updatedSicCodes = newOrganisationSicCode()
+                .withSicCode("12345", "67890")
+                .withOrganisation(organisation)
+                .build(2);
+        organisationData.setSicCodes(updatedSicCodes);
+        List<ExecutiveOfficer> updatedExecutiveOfficers = newOrganisationExecutiveOfficer()
+                .withName("Name-1", "Name-2")
+                .withOrganisation(organisation)
+                .build(2);
+        organisationData.setExecutiveOfficers(updatedExecutiveOfficers);
+        Address updatedAddress = newAddress()
+                .withAddressLine1("address line 1")
+                .withAddressLine2("address line 2")
+                .withAddressLine3("address line 3")
+                .withTown("town")
+                .withCounty("county")
+                .withCountry("country")
+                .withPostcode("postcode")
+                .build();
+        AddressType updatedAddressType = newAddressType()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+        OrganisationAddress updatedOrganisationAddress = newOrganisationAddress()
+                .withAddress(updatedAddress)
+                .withAddressType(updatedAddressType)
+                .withOrganisation(organisation)
+                .build();
+        organisationData.setAddresses(Collections.singletonList(updatedOrganisationAddress));
+
+        OrganisationResource organisationDataResource = newOrganisationResource()
+                .withDateOfIncorporation(date)
+                .build();
+        List<OrganisationSicCodeResource> sicCodeResources = newOrganisationSicCodeResource()
+                .withSicCode("12345", "67890")
+                .withOrganisation(organisationDataResource.getId())
+                .build(2);
+        organisationDataResource.setSicCodes(sicCodeResources);
+        List<OrganisationExecutiveOfficerResource> executiveOfficerResources = newOrganisationExecutiveOfficerResource()
+                .withName("Name-1", "Name-2")
+                .withOrganisation(organisationDataResource.getId())
+                .build(2);
+        organisationDataResource.setExecutiveOfficers(executiveOfficerResources);
+        AddressResource addressResource = newAddressResource()
+                .withAddressLine1("address line 1")
+                .withAddressLine2("address line 2")
+                .withAddressLine3("address line 3")
+                .withTown("town")
+                .withCounty("county")
+                .withCountry("country")
+                .build();
+        AddressTypeResource addressTypeResource = newAddressTypeResource()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
+                .withAddress(addressResource)
+                .withAddressType(addressTypeResource)
+                .withOrganisation(organisationDataResource.getId())
+                .build();
+        organisationDataResource.setAddresses(Collections.singletonList(organisationAddressResource));
+
+        when(organisationRepository.findById(anyLong())).thenReturn(Optional.of(organisation));
+        when(organisationMapper.mapToDomain(any(OrganisationResource.class))).thenReturn(organisationData);
+        when(sicCodeRepository.findByOrganisationId(anyLong())).thenReturn(existingSicCodes);
+        when(executiveOfficerRepository.findByOrganisationId(anyLong())).thenReturn(existingExecutiveOfficers);
+        when(organisationAddressRepository.findByOrganisationIdAndAddressType(anyLong(), any(AddressType.class)))
+                .thenReturn(Collections.singletonList(existingOrganisationAddress));
+        when(organisationRepository.save(any(Organisation.class))).thenReturn(organisationData);
+        when(organisationMapper.mapToResource(any(Organisation.class))).thenReturn(organisationDataResource);
+
+        ServiceResult<OrganisationResource> result = service.syncCompaniesHouseDetails(organisationResource);
+
+        assertTrue(result.isSuccess());
+
+        OrganisationResource resultOrganisation = result.getSuccess();
+
+        assertEquals(organisationDataResource.getDateOfIncorporation(), resultOrganisation.getDateOfIncorporation());
+        assertEquals(organisationDataResource.getSicCodes(), resultOrganisation.getSicCodes());
+        assertEquals(organisationDataResource.getExecutiveOfficers(), resultOrganisation.getExecutiveOfficers());
+        assertEquals(organisationDataResource.getAddresses(), resultOrganisation.getAddresses());
+
+        verify(sicCodeRepository, times(0)).deleteAll();
+        verify(executiveOfficerRepository, times(0)).deleteAll();
+        verify(addressRepository, times(0)).delete(any(Address.class));
+        verify(organisationAddressRepository, times(0)).delete(any(OrganisationAddress.class));
     }
 }
