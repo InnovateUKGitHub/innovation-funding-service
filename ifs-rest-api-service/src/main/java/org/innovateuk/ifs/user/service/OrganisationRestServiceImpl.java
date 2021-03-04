@@ -77,6 +77,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     @Override
     public RestResult<OrganisationResource> syncCompaniesHouseDetails(OrganisationResource organisation) {
-        return putWithRestResultAnonymous(ORGANISATION_BASE_URL + "/sync-companies-house-details", organisation, OrganisationResource.class);
+        return putWithRestResult(ORGANISATION_BASE_URL + "/sync-companies-house-details", organisation, OrganisationResource.class);
     }
 }
