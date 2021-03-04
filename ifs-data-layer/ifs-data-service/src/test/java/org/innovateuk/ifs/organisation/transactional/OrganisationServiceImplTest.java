@@ -355,9 +355,9 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         assertEquals(organisationDataResource.getExecutiveOfficers(), resultOrganisation.getExecutiveOfficers());
         assertEquals(organisationDataResource.getAddresses(), resultOrganisation.getAddresses());
 
-        verify(sicCodeRepository, times(0)).deleteAll();
-        verify(executiveOfficerRepository, times(0)).deleteAll();
-        verify(addressRepository, times(0)).delete(any(Address.class));
-        verify(organisationAddressRepository, times(0)).delete(any(OrganisationAddress.class));
+        verify(sicCodeRepository, times(1)).deleteAll(existingSicCodes);
+        verify(executiveOfficerRepository, times(1)).deleteAll(existingExecutiveOfficers);
+        verify(addressRepository, times(1)).delete(any(Address.class));
+        verify(organisationAddressRepository, times(1)).delete(any(OrganisationAddress.class));
     }
 }
