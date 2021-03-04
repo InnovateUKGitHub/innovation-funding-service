@@ -112,6 +112,17 @@ public class FinanceFileEntryServiceSecurityTest extends BaseServiceSecurityTest
                 });
     }
 
+    @Test
+    public void testGetFECCertificateFileContents() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getFECCertificateFileContents(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).canViewApplication(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
     @Override
     protected Class<? extends FinanceFileEntryService> getClassUnderTest() {
         return FinanceFileEntryServiceImpl.class;
