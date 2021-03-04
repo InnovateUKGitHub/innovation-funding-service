@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
+import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsModelPopulator;
@@ -98,7 +99,7 @@ public class CompetitionSetupTermsAndConditionsControllerTest extends BaseContro
 
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
 
-        ReflectionTestUtils.setField(controller, "subsidyControlNorthernIrelandEnabled", true);
+        ReflectionTestUtils.setField(controller, "subsidyControlNorthernIrelandMode", SubsidyControlNorthernIrelandMode.FULL);
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
+import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -40,7 +41,7 @@ public class TermsAndConditionsModelPopulatorTest {
 
     @Before
     public void setUp() {
-        ReflectionTestUtils.setField(populator, "subsidyControlNorthernIrelandEnabled", true);
+        ReflectionTestUtils.setField(populator, "subsidyControlNorthernIrelandMode", SubsidyControlNorthernIrelandMode.FULL);
     }
 
     @Test
