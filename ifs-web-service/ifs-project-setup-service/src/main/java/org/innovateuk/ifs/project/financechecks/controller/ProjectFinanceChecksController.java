@@ -355,7 +355,7 @@ public class ProjectFinanceChecksController {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
+        return doViewEligibilityChanges(project, organisation, model);
     }
 
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
@@ -516,7 +516,7 @@ public class ProjectFinanceChecksController {
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
     }
 
-    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Model model) {
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
 
