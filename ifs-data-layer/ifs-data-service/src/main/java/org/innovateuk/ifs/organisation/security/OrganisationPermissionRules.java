@@ -125,7 +125,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "SYNC_COMPANIES_HOUSE_DETAILS", description = "The System Registration User can sync Organisations details on companies house update")
     public boolean systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(OrganisationResource organisation, UserResource user) {
-        return isSystemRegistrationUser(user);
+        return isSystemRegistrationUser(user) || isMemberOfOrganisation(organisation, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")

@@ -404,6 +404,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         });
     }
 
+    @Test
+    public void memberOfOrganisationCanSyncOrganisationDetailsForCompaniesHouseUpdate() {
+
+        UserResource user = newUserResource().build();
+
+        OrganisationResource organisation = newOrganisationResource().build();
+        when(processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId())).thenReturn(true);
+
+        assertTrue(rules.systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(organisation, user));
+    }
+
     @Override
     protected OrganisationPermissionRules supplyPermissionRulesUnderTest() {
         return new OrganisationPermissionRules();
