@@ -6,6 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.resource.FundingRulesResource;
 import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.AnswerTableViewModel;
 
 import java.util.List;
 
@@ -19,14 +20,14 @@ public class FinanceChecksFundingRulesViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private FundingRules fundingRules;
-    private List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers;
+    private AnswerTableViewModel questionsAndAnswers;
     private boolean readOnly;
     private boolean editMode;
     private String updatedBy;
 
     public FinanceChecksFundingRulesViewModel(ProjectResource project, CompetitionResource competition, OrganisationResource organisation,
                                               boolean leadPartnerOrganisation, FundingRulesResource fundingRulesResource,
-                                              List<QuestionnaireQuestionAnswerViewModel> questionsAndAnswers,
+                                              AnswerTableViewModel questionsAndAnswers,
                                               boolean editMode) {
         this.projectName = project.getName();
         this.projectId = project.getId();
@@ -86,7 +87,7 @@ public class FinanceChecksFundingRulesViewModel {
         }
     }
 
-    public List<QuestionnaireQuestionAnswerViewModel> getQuestionsAndAnswers() {
+    public AnswerTableViewModel getQuestionsAndAnswers() {
         return questionsAndAnswers;
     }
 

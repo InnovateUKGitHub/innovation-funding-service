@@ -57,22 +57,7 @@
             <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
         </div>
 
-        <table class="govuk-table govuk-!-margin-top-3" th:unless="${model.questionsAndAnswers == null or model.questionsAndAnswers.isEmpty()}">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Question</th>
-                <th scope="col" class="govuk-table__header">Answer</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr th:each="questionAndAnswer : ${model.questionsAndAnswers}"
-                class="govuk-table__row">
-                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${questionAndAnswer.question}">Where is your business based?</td>
-                <td class="govuk-table__cell" th:text="${questionAndAnswer.answer}"></td>
-            </tr>
-            </tbody>
-        </table>
-
+        <th:block th:insert="questionnaire/fragments :: answer-table(${model.questionsAndAnswers})" />
 
         <form th:if="${!model.editMode AND !model.readOnly}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
 
