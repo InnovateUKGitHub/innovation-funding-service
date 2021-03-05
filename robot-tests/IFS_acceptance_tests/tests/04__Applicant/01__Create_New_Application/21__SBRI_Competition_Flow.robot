@@ -156,7 +156,7 @@ Applicant adds another payment milestone
     [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                             jQuery = button:contains("Open all")
-    When applicant fills in payment milestone                       accordion-finances-content-unsaved  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
+    When applicant fills in payment milestone                       accordion-finances-content  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
     And the user clicks the button/link                             id = mark-all-as-complete
     Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
     And applicant views readonly payment milestones subsections     Task Or Activity 2   Deliverable 2   Success Criteria 2

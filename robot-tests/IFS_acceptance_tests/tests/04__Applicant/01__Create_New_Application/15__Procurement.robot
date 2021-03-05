@@ -230,7 +230,9 @@ Internal user adds payment milestones
     [Documentation]   IFS-8944
     Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
     And the user clicks the button/link                      link = Edit payment milestones
-    When the user adds a payment milestone
+    And the user clicks the button/link                      jQuery = button:contains("Add another project milestone")
+    And the user clicks the button/link                      jQuery = button:contains("Open all")
+    When applicant fills in payment milestone                accordion-finances-content  21  Milestone 21  99913   Task Or Activity 2   Deliverable 2   Success Criteria 2
     Then the user should see the element                     jQuery = h3:contains("Total payment requested") ~ h3:contains("100%") ~ h3:contains("£265,084")
 
 Applicant can view changes made to project finances
