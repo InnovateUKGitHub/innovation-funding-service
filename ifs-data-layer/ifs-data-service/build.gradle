@@ -73,9 +73,11 @@ deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-database:deployNexusLocal"
 
 createContainer.portBindings = ['8086:8080', '9006:8000']
 createContainer.networkAliases = ["ifs-data-service"]
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 pullImageAndCreateContainer.portBindings = ['8086:8080', '9006:8000']
 pullImageAndCreateContainer.networkAliases = ["ifs-data-service"]
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 

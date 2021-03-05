@@ -60,7 +60,7 @@
                      th:with="organisationErrorKey=${'${form.organisation.' + organisation.inviteId + '*}'}"
                      th:classappend="${#fields.hasErrors(organisationErrorKey)} ? 'govuk-form-group--error'">
 
-                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0 word-wrap">
                         <th:block th:text="${organisation.name}"></th:block>
                         <th:block th:if="${organisation.lead}">(Lead)</th:block>
                     </h2>
@@ -241,7 +241,7 @@
                         <p class="govuk-body">
                             <button name="add-team-member"
                                     th:value="${organisation.id}"
-                                    class="button-clear"
+                                    class="button-clear word-wrap"
                                     th:attr="data-show-form=${'invite-user-' + organisation.id},
                                          aria-hidden=${organisation.openAddTeamMemberForm} ? 'true' : 'false'"
                                     th:text="${'Add person to ' + organisation.name}">
