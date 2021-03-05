@@ -32,7 +32,7 @@ public class AnsweredQuestionViewModelPopulator {
     @Autowired
     private QuestionnaireResponseRestService questionnaireResponseRestService;
 
-    public AnswerTableViewModel allAnswers(String questionnaireResponseId, boolean readonly, String redirectUrl) {
+    public AnswerTableViewModel allAnswers(String questionnaireResponseId, boolean readonly) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         final QuestionnaireOptionResource[] selectedOption = {null};
         List<AnsweredQuestionViewModel> answers = getAnswers(response, (q) -> true, o -> selectedOption[0] = o);
@@ -40,11 +40,11 @@ public class AnsweredQuestionViewModelPopulator {
             QuestionnaireQuestionResource unansweredQuestion = questionnaireQuestionRestService.get(selectedOption[0].getDecision()).getSuccess();
             answers.add(new AnsweredQuestionViewModel(unansweredQuestion.getId(), unansweredQuestion.getQuestion(), null));
         }
-        return new AnswerTableViewModel(questionnaireResponseId, "Provided answers", answers, readonly, redirectUrl);
+        return new AnswerTableViewModel(questionnaireResponseId, "Provided answers", answers, readonly);
     }
 
     public AnswerTableViewModel answersBeforeQuestion(QuestionnaireResponseResource response, QuestionnaireQuestionResource question) {
-        return new AnswerTableViewModel(response.getId(), "Previous answers", getAnswers(response, q -> q.getDepth() < question.getDepth(), o -> {}), false, null);
+        return new AnswerTableViewModel(response.getId(), "Previous answers", getAnswers(response, q -> q.getDepth() < question.getDepth(), o -> {}), false);
     }
 
     private List<AnsweredQuestionViewModel> getAnswers(QuestionnaireResponseResource response, Predicate<QuestionnaireQuestionResource> filter, Consumer<QuestionnaireOptionResource> finalOptionConsumer) {
