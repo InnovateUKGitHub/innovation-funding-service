@@ -96,7 +96,11 @@ public class ApplicationTermsModelPopulator {
         }
         return competition.getTermsAndConditions().getTemplate();
     }
-    
+
+    private boolean isNothernIrelandDeclaration(ApplicationFinanceResource applicationFinanceResource) {
+        return applicationFinanceResource.getNorthernIrelandDeclaration() != null && applicationFinanceResource.getNorthernIrelandDeclaration();
+    }
+
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
         long termsAndConditionsSectionId =
                 sectionService.getSectionsForCompetitionByType(competitionId, TERMS_AND_CONDITIONS).get(0).getId();

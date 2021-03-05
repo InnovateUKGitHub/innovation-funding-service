@@ -51,7 +51,7 @@
 
             <th:block th:unless="${model.termsAccepted.isPresent() ? model.termsAccepted.get() : false}">
                 <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
-                      th:action="@{/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}">
+                      th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                     <div class="govuk-form-group">
 
                         <div class="govuk-checkboxes__item">

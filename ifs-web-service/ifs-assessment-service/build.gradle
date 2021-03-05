@@ -34,11 +34,13 @@ createContainer.hostName = "assessment-svc"
 createContainer.containerName = "assessment-svc"
 createContainer.containerId = "assessment-svc"
 createContainer.portBindings = ['9002:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 pullImageAndCreateContainer.hostName = "assessment-svc"
 pullImageAndCreateContainer.containerName = "assessment-svc"
 pullImageAndCreateContainer.containerId = "assessment-svc"
 pullImageAndCreateContainer.portBindings = ['9002:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 def enabled = project.hasProperty('ifs.assessment-service.enabled') ? project.property('ifs.assessment-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.assessment-service.pull.nexus.image') ? project.property('ifs.assessment-service.pull.nexus.image').toBoolean() : false

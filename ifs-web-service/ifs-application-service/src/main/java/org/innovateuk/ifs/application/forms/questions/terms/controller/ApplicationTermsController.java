@@ -78,7 +78,7 @@ public class ApplicationTermsController {
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(
                             failureView,
-                            () -> format("redirect:%s%d/form/question/%d/terms-and-conditions#terms-accepted", APPLICATION_BASE_URL, applicationId, questionId));
+                            () -> format("redirect:/application/%d/form/terms-and-conditions/organisation/%d/question/%d#terms-accepted", applicationId, organisationId, questionId));
         });
     }
 }
