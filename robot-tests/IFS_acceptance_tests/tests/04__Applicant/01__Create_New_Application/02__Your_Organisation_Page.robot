@@ -139,21 +139,14 @@ Companies House: Get Date of incorporation, SIC codes, address and directors det
 
 *** Keywords ***
 Applicant goes to the organisation search page
-    Given the guest user opens the browser
-    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list     link = ${createApplicationOpenCompetition}
-    When the user clicks the button/link    link = Start new application
-    And the user clicks the button/link     link = Continue and create an account
-    And the user clicks the button/link     jQuery = span:contains("Business")
-    And the user clicks the button/link     jQuery = button:contains("Save and continue")
-
-the backslash doesnt give errors
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = addressForm.selectedPostcodeIndex
-    Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains Without Screenshots    No results were found
-
-the user expands enter details manually
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   css = .govuk-details__summary[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link                                       css = .govuk-details__summary[aria-expanded="false"]
+    the guest user opens the browser
+    the user navigates to the page                            ${frontDoor}
+    the user clicks the button/link in the paginated list     link = ${createApplicationOpenInternationalCompetition}
+    the user clicks the button/link                           link = Start new application
+    the user clicks the button/link                           link = Continue and create an account
+    user selects where is organisation based
+    the user clicks the button/link                           jQuery = span:contains("Business")
+    the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
 the user can see organisation details in db
     Connect to Database    @{database}
