@@ -37,18 +37,14 @@
                 <li th:if="${model.yourFecCostRequired}">
                     mark the
                     <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.applicationId}, sectionId=${model.yourFecCostSectionId})}"
-                       class="govuk-link">
-                        your fEC model
-                    </a>
-                    page as complete
+                       class="govuk-link" th:text="${'your fEC model'}"></a>
+                    <span class="govuk-body">page as complete</span>
                 </li>
                 <li th:if="${model.yourFundingRequired}">
                     mark the
                     <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.applicationId}, sectionId=${model.yourFundingSectionId})}"
-                       class="govuk-link">
-                        your funding
-                    </a>
-                    page as complete
+                       class="govuk-link" th:text="${'your funding'}"></a>
+                    <span class="govuk-body">page as complete</span>
                 </li>
             </ul>
         </th:block>
