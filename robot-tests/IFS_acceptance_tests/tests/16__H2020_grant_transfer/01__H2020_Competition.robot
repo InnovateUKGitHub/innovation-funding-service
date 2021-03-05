@@ -57,7 +57,7 @@ User can populate Funding information and Project eligibility
     When the user completes funding information
     Then the user clicks the button/link                                        link = Return to setup overview
     And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
-    And the user fills in the CS funding eligibility                            false   ${compType_H2020}
+    And the user fills in the CS funding eligibility                            false   ${compType_H2020}   SUBSIDY_CONTROL
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -157,7 +157,7 @@ Internal user is able to approve Finance checks and generate spend profile
 User is able to submit the spend profile
     [Documentation]  IFS-5700
     [Setup]  log in as a different user      &{collaborator1_credentials}
-    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review  
+    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review
     When the user submits the spend profile
     Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 

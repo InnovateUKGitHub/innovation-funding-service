@@ -19,6 +19,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
@@ -32,6 +33,8 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -104,6 +107,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     @Mock
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
 
+    @Mock
+    private GrantOfferLetterService grantOfferLetterService;
+
     private OrganisationResource industrialOrganisation;
 
     private OrganisationResource academicOrganisation;
@@ -143,6 +149,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH.getId())
                 .build();
 
+        GrantOfferLetterStateResource grantOfferLetterStateResource = GrantOfferLetterStateResource.stateInformationForPartnersView(GrantOfferLetterState.PENDING, null);
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
@@ -153,6 +160,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(Collections.emptyList()));
+        when(grantOfferLetterService.getGrantOfferLetterState(project.getId())).thenReturn(serviceSuccess(grantOfferLetterStateResource));
     }
 
     @Test
@@ -295,7 +303,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         assertTrue(viewModel.getOrganisationName().equals(organisationName));
         assertTrue(viewModel.getProjectName().equals(project.getName()));
 
-        assertTrue(viewModel.isEligibilityApproved());
+        assertTrue(viewModel.isApproved());
         assertEquals(eligibility.getEligibilityRagStatus(), viewModel.getEligibilityRagStatus());
         assertEquals(eligibility.getEligibilityApprovalDate(), viewModel.getApprovalDate());
         assertEquals(eligibility.getEligibilityApprovalUserFirstName(), viewModel.getApproverFirstName());
@@ -393,6 +401,46 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
         verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
+    }
+
+    @Test
+    public void testResetEligibilitySuccess() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        when(financeCheckRestService.resetEligibility(projectId, organisationId, "something")).
+                thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
+                        param("reset-eligibility", "").
+                        param("retractionReason", "something")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
+
+        verify(financeCheckRestService).resetEligibility(projectId, organisationId, "something");
+    }
+
+    @Test
+    public void testResetEligibilityWithoutRetractionReason() throws Exception {
+
+        long projectId = project.getId();
+        long organisationId = industrialOrganisation.getId();
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        setUpViewEligibilityMocking(eligibility);
+
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
+                        param("reset-eligibility", "").
+                        param("retractionReason", "")).
+                andExpect(status().isOk()).
+                andExpect(model().attributeHasFieldErrors("resetForm", "retractionReason")).
+                andExpect(view().name("project/financecheck/eligibility"));
     }
 
     @Test
