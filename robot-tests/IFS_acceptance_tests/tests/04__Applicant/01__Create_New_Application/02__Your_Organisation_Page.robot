@@ -35,6 +35,7 @@ ${address_postcode}         NW11 8AJ
 ${applicant_first_name}     Sherlock
 ${applicant_last_name}      Holmes
 ${applicant_email}          sherlock@holmes.com
+${comp_title}               Improved organisation search performance competition
 
 *** Test Cases ***
 Companies House: Valid company name
@@ -131,11 +132,12 @@ Not in Companies House: Manually add the details as a new user and pass to the c
 
 Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
     [Documentation]    IFS-9156
-    Given the user clicks the button/link                link = Sign in
-    And logging in and error checking                    &{WebTestUserCredentials}
-    And the user navigates to the page                   ${server}/organisation/select
-    When the user clicks the button/link                 jQuery = button:contains("Save and continue")
-    Then the user can see organisation details in db
+    Given log in as a different user                               &{WebTestUserCredentials}
+    And the user select the competition and starts application     ${comp_title}
+    When the user selects the radio button                         createNewApplication  true
+    And the user clicks the button/link                            jQuery = .govuk-button:contains("Continue")
+    Then the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    And the user can see organisation details in db
 
 *** Keywords ***
 Applicant goes to the organisation search page
