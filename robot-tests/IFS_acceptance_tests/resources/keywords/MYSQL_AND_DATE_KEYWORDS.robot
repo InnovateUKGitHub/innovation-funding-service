@@ -207,12 +207,20 @@ get project id by name
 
 get organisation id by name
     [Arguments]  ${name}
-    ${id} =   get table id by name  organisation  ${name}
+    ${id} =   get table id by name descending  organisation  ${name}
     [Return]  ${id}
 
 get table id by name
     [Arguments]  ${table}  ${name}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}";
+    # the result of this query looks like ((13,),) so you need get the value array[0][0]
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
+
+get table id by name descending
+    [Arguments]  ${table}  ${name}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`="${name}" order by id DESC;
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
