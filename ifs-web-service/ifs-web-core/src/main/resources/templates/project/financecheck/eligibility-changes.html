@@ -35,12 +35,12 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:if="${entry.projectCostDifferent}">
-                                <th:block th:text="${#numbers.formatDecimal(entry.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                                <th:block th:text="${#numbers.formatDecimal(entry.projectCost, 1,'DEFAULT',0,'DEFAULT')}"/>
                             </th:block>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:if="${entry.projectCostDifferent}">
-                                <th:block th:text="${entry.varianceDirection}"/> <th:block th:text="${entry.variance}"/>
+                                <th:block th:text="${entry.varianceDirection}"/> <th:block th:text="${#numbers.formatDecimal(entry.variance, 1,'DEFAULT',0,'DEFAULT')}"/>
                             </th:block>
                         </td>
                     </tr>
@@ -71,7 +71,7 @@
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <th:block th:if="${entry.projectCostDifferent}">
-                        <th:block th:text="${entry.varianceDirection}"/> <th:block th:text="${entry.variance}"/>
+                        <th:block th:text="${entry.varianceDirection}"/> <th:block th:text="${#numbers.formatDecimal(entry.variance,1,'DEFAULT',0,'DEFAULT')}"/>
                     </th:block>
                 </td>
             </tr>
@@ -88,7 +88,7 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <th:block th:if="${totalProjectCosts.projectCostDifferent}">
-                            <th:block th:text="${totalProjectCosts.varianceDirection}"/> <th:block th:text="${totalProjectCosts.variance}"/>
+                            <th:block th:text="${totalProjectCosts.varianceDirection}"/> <th:block th:text="${#numbers.formatDecimal(totalProjectCosts.variance,1,'DEFAULT',0,'DEFAULT')}"/>
                         </th:block>
                     </td>
                 </tr>
@@ -116,7 +116,7 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <th:block th:if="${vat.projectCostDifferent}">
-                            <th:block th:text="${vat.varianceDirection}"/> <th:block th:text="${vat.variance}"/>
+                            <th:block th:text="${vat.varianceDirection}"/> <th:block th:text="${#numbers.formatDecimal(vat.variance,1,'DEFAULT',0,'DEFAULT')}"/>
                         </th:block>
                     </td>
                 </tr>
@@ -130,7 +130,7 @@
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <th:block th:if="${totalPlusVat.projectCostDifferent}">
-                            <th:block th:text="${totalPlusVat.varianceDirection}"/> &pound;<th:block th:text="${totalPlusVat.variance}"/>
+                            <th:block th:text="${totalPlusVat.varianceDirection}"/> &pound;<th:block th:text="${#numbers.formatDecimal(totalPlusVat.variance,1,'DEFAULT',0,'DEFAULT')}"/>
                         </th:block>
                     </td>
                 </tr>
@@ -147,7 +147,7 @@
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <th:block th:if="${totalProjectCosts.projectCostDifferent}">
-                        <th:block th:text="${totalProjectCosts.varianceDirection}"/> &pound;<th:block th:text="${totalProjectCosts.variance}"/>
+                        <th:block th:text="${totalProjectCosts.varianceDirection}"/> &pound;<th:block th:text="${#numbers.formatDecimal(totalProjectCosts.variance,1,'DEFAULT',0,'DEFAULT')}"/>
                     </th:block>
                 </td>
             </tr>
