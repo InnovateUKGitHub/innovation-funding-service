@@ -100,14 +100,6 @@ Companies House: No content message should be displayed when the search results 
     When the user clicks the button/link         jQuery = a:contains("Next")
     Then the user should not see the element     jQuery = p:contains("This is the last page of search results and we have shown you the closest 400 matches.")
 
-Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
-    [Documentation]    IFS-9156
-    Given the user clicks the button/link                link = Sign in
-    And logging in and error checking                    &{WebTestUserCredentials}
-    And the user navigates to the page                   ${server}/organisation/select
-    When the user clicks the button/link                 jQuery = button:contains("Save and continue")
-    Then the user can see organisation details in db
-
 Not in Companies House: Enter details manually link
     [Documentation]    INFUND-888  IFS-7724
     Given the user searches for organisation                    Not exist
@@ -137,6 +129,14 @@ Not in Companies House: Manually add the details as a new user and pass to the c
     And user checks back link and click save and continue
     And the user verifies his email and checks his organisation name     ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}
 
+Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
+    [Documentation]    IFS-9156
+    Given the user clicks the button/link                link = Sign in
+    And logging in and error checking                    &{WebTestUserCredentials}
+    And the user navigates to the page                   ${server}/organisation/select
+    When the user clicks the button/link                 jQuery = button:contains("Save and continue")
+    Then the user can see organisation details in db
+
 *** Keywords ***
 Applicant goes to the organisation search page
     Given the guest user opens the browser
@@ -160,16 +160,6 @@ the user can see organisation details in db
     ${result} =  get details of existing organisation
     log   ${result}
     Should not Be Empty     ${result}
-
-Applicant goes to the organisation search page
-    the guest user opens the browser
-    the user navigates to the page                            ${frontDoor}
-    the user clicks the button/link in the paginated list     link = ${createApplicationOpenInternationalCompetition}
-    the user clicks the button/link                           link = Start new application
-    the user clicks the button/link                           link = Continue and create an account
-    user selects where is organisation based
-    the user clicks the button/link                           jQuery = span:contains("Business")
-    the user clicks the button/link                           jQuery = button:contains("Save and continue")
 
 user selects where is organisation based
     the user selects the radio button     international  isNotInternational
