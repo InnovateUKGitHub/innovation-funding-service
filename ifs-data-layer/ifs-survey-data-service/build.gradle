@@ -47,6 +47,7 @@ createContainer.networkAliases = ["ifs-survey-data-service"]
 
 pullImageAndCreateContainer.portBindings = ['9013:8000', '8087:8080']
 pullImageAndCreateContainer.networkAliases = ["ifs-survey-data-service"]
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 if (enabled) {
     deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
