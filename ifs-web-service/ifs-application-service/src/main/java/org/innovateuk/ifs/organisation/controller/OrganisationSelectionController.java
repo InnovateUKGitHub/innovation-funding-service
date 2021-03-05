@@ -109,7 +109,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                 }
             }
 
-            if (newOrganisationSearchEnabled && verifyOrganisationDetailsEnteredManually(form)) {
+            if (newOrganisationSearchEnabled && isDeprecatedManualEntry(form)) {
                 return "redirect:" + BASE_URL + "/" + EXISTING_ORGANISATION + "/" + form.getSelectedOrganisationId();
             }
 
@@ -117,10 +117,13 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         };
     }
 
-    private boolean verifyOrganisationDetailsEnteredManually(OrganisationSelectionForm form) {
+    private boolean isDeprecatedManualEntry(OrganisationSelectionForm form) {
         OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
 
         return selectedOrganisation.getCompaniesHouseNumber() == null
+                && selectedOrganisation.getOrganisationNumber() == null
+                // Main way to distinguish old manual entry is lack of address.
+                && selectedOrganisation.getAddresses().isEmpty()
                 && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.RESEARCH
                 && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.KNOWLEDGE_BASE
                 && !selectedOrganisation.isInternational();

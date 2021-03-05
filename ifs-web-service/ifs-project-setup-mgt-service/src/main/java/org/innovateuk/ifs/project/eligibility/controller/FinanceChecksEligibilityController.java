@@ -20,8 +20,10 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.eligibility.form.ResetEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
@@ -34,6 +36,8 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -43,7 +47,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -101,6 +107,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Autowired
     private ProjectAcademicCostsSaver projectAcademicCostsSaver;
 
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     @AsyncMethod
@@ -110,10 +119,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                   @RequestParam(value = "editAcademicFinances", required = false) boolean editAcademicFinances,
                                   Model model,
                                   UserResource user) {
-        return doViewEligibility(projectId, organisationId, model, null, null, null, rowType, editAcademicFinances);
+        return doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, null, rowType, editAcademicFinances, user);
     }
 
-    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, FinanceRowType rowType, boolean editAcademicFinances) {
+    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ResetEligibilityForm resetEligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, FinanceRowType rowType, boolean editAcademicFinances, UserResource user) {
         ProjectResource project = projectService.getById(projectId);
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
@@ -126,11 +135,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             if (eligibilityForm == null) {
                 eligibilityForm = getEligibilityForm(eligibility.get());
             }
-            boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
+            EligibilityState eligibilityState = eligibility.get().getEligibility();
 
             boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), !eligibilityApproved && project.getProjectState().isActive(), rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
+                boolean open = EligibilityState.APPROVED != eligibilityState && project.getProjectState().isActive();
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
@@ -143,22 +153,33 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
+            boolean resetableGolState = false;
+            if (user.isInternalUser()) {
+                GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
+                resetableGolState = golState.getState() != GrantOfferLetterState.APPROVED;
+            }
+
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
                     organisation.get().getName(),
                     isLeadPartnerOrganisation,
                     organisation.get().getId(),
-                    eligibilityApproved,
+                    eligibilityState,
                     eligibility.get().getEligibilityRagStatus(),
                     eligibility.get().getEligibilityApprovalUserFirstName(),
                     eligibility.get().getEligibilityApprovalUserLastName(),
                     eligibility.get().getEligibilityApprovalDate(),
+                    eligibility.get().getEligibilityResetUserFirstName(),
+                    eligibility.get().getEligibilityResetUserLastName(),
+                    eligibility.get().getEligibilityResetDate(),
                     false,
                     isUsingJesFinances,
                     editAcademicFinances,
-                    projectFinances
+                    projectFinances,
+                    resetableGolState
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
+            model.addAttribute("resetForm", resetEligibilityForm);
             future.get();
 
             return "project/financecheck/eligibility";
@@ -187,7 +208,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                     UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, form, null, true);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, form, null, true, user);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(projectAcademicCostsSaver.save(form, projectId, organisationId));
@@ -208,7 +229,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                            UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, type, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), form, null, type, false, user);
         yourProjectCostsFormValidator.validateType(form, type, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId));
@@ -259,7 +280,33 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form, validationHandler, successView, model);
+        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form, validationHandler, successView, model, user);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(params = "reset-eligibility")
+    @AsyncMethod
+    public String resetEligibility(@PathVariable long projectId,
+                                     @PathVariable long organisationId,
+                                     @ModelAttribute("resetForm") ResetEligibilityForm resetEligibilityForm,
+                                     @SuppressWarnings("unused") BindingResult bindingResult,
+                                     ValidationHandler validationHandler,
+                                     Model model,
+                                     UserResource user) {
+        Supplier<String> successView = () ->
+                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
+
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, resetEligibilityForm, null, null, null, false, user);
+
+        if (StringUtils.isEmpty(resetEligibilityForm.getRetractionReason())) {
+            bindingResult.addError(new FieldError("resetForm", "retractionReason", "Enter a reason for the reset."));
+            return failureView.get();
+        }
+
+        RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, organisationId, resetEligibilityForm.getRetractionReason());
+        return validationHandler
+                .addAnyErrors(resetEligibilityResult)
+                .failNowOrSucceedWith(failureView, successView);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -276,7 +323,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, eligibilityForm, form, validationHandler, successView, model);
+        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, eligibilityForm, form, validationHandler, successView, model, user);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -287,9 +334,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
-    private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model) {
+    private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model, UserResource user) {
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, form, null, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, new ResetEligibilityForm(), form, null, null, false, user);
 
         EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 

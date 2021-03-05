@@ -26,6 +26,9 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
     @Autowired
     private ViabilityApprovedGuard viabilityApprovedGuard;
 
+    @Autowired
+    private MarkViabilityAsResetAction markViabilityAsResetAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<ViabilityState, ViabilityEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -60,6 +63,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                 .withExternal()
                 .source(APPROVED)
                 .event(VIABILITY_RESET)
+                .action(markViabilityAsResetAction)
                 .target(REVIEW);
     }
 }

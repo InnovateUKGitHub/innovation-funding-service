@@ -329,8 +329,8 @@ the user checks for funding level guidance at PS level
     the user clicks the button/link     link = Your funding
     the user selects the radio button   requestingFunding   true
     the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
-    the user clicks the button/link     link = competition's rules (opens in a new window)
-    the user closes the last opened tab
+#    the user clicks the button/link     link = competition's rules (opens in a new window)
+#    the user closes the last opened tab
     the user clicks the button/link     link = Back to join project
 
 the user selects research area
@@ -432,12 +432,97 @@ the user select the competition and starts application
     the user clicks the button/link in the paginated list     link = ${competition}
     the user clicks the button/link                           link = Start new application
 
+the user searches for organisation
+    [Arguments]  ${searchTerm}
+    the user enters text to a text field     id = organisationSearchName     ${searchTerm}
+    the user clicks the button/link          id = org-search
+
 the user search for organisation name on Companies house
     [Arguments]  ${org}  ${orgName}
-    the user enters text to a text field       id = organisationSearchName    ${org}
-    the user clicks the button/link            id = org-search
-    the user clicks the button/link            link = ${orgName}
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
+    the user searches for organisation     ${org}
+    the user clicks the button/link        link = ${orgName}
+    the user clicks the button/link        jQuery = button:contains("Save and continue")
+
+the user clicks link to find out what to do
+    the user clicks the button/link     link = Find out what to do
+    the user should see the element     jQuery = h1:contains("Organisations not registered on Companies House")
+
+the user clicks link to enter its details manually
+    the user clicks the button/link     link = enter its details manually
+    the user should see the element     jQuery = h1:contains("Manually enter your organisation's details")
+
+the user manually adds company details
+    [Arguments]  ${org_name}  ${org_number}  ${business_type}  ${sic_code}  ${executive_officer}
+    the user enters text to a text field       name = organisationName              ${org_name}
+    the user enters text to a text field       name = organisationNumber            ${org_number}
+    the user enters text to a text field       name = businessType                  ${business_type}
+    the user enters text to a text field       name = sicCodes[0].sicCode           ${sic_code}
+    the user adds SIC code
+    the user removes SIC code
+    the user enters text to a text field       name = executiveOfficers[0].name     ${executive_officer}
+    the user adds Executive officer
+    the user removes Executive officer
+
+the user adds SIC code
+    the user clicks the button/link          jQuery = button:contains("+ Add SIC code")
+    the user enters text to a text field     name = sicCodes[1].sicCode                     44444
+
+the user removes SIC code
+    the user clicks the button/link          jQuery = #sic-code-row-1 button:contains("Remove")
+    the user should not see the element      id = sic-code-row-1
+
+the user adds Executive officer
+    the user clicks the button/link          jQuery = button:contains("+ Add executive officer")
+    the user enters text to a text field     name = executiveOfficers[1].name                        Barrington Levy
+
+the user removes Executive officer
+    the user clicks the button/link          jQuery = #exec-officer-row-1 button:contains("Remove")
+    the user should not see the element      id = exec-officer-row-1
+
+the user enters address manually
+    [Arguments]  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
+    the user clicks the button/link          jQuery = button:contains("Enter address manually")
+    the user enters text to a text field     id = addressForm.manualAddress.addressLine1            ${address_line_1}
+    the user enters text to a text field     id = addressForm.manualAddress.addressLine2            ${address_line_2}
+    the user enters text to a text field     id = addressForm.manualAddress.addressLine3            ${address_line_3}
+    the user enters text to a text field     id = addressForm.manualAddress.town                    ${address_town}
+    the user enters text to a text field     id = addressForm.manualAddress.county                  ${address_county}
+    the user enters text to a text field     id = addressForm.manualAddress.postcode                ${address_postcode}
+
+the user confirms and saves company details
+    [Arguments]  ${org_type}  ${business_type}  ${org_name}  ${org_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  ${is_international}
+    the user should see the element     jQuery = h1:contains("Confirm your organisation")
+    the user should see the element     jQuery = dt:contains("Organisation type")
+    the user should see the element     jQuery = dd:contains("${org_type}")
+    the user should see the element     jQuery = dt:contains("Business type")
+    the user should see the element     jQuery = dd:contains("${business_type}")
+    Run Keyword If  '${is_international}' == 'true'  Run keywords  the user should see the element         jQuery = dt:contains("Is your organisation based in the UK?")
+    ...                                              AND           the user should see the element         jQuery = dd:contains("Yes")
+    ...     ELSE                                     Run keyword   the user should not see the element     jQuery = dt:contains("Is your organisation based in the UK?")
+    the user should see the element     jQuery = dt:contains("Organisation name")
+    the user should see the element     jQuery = dd:contains("${org_name}")
+    the user should see the element     jQuery = dt:contains("Organisation number")
+    the user should see the element     jQuery = dd:contains("${org_number}")
+    the user should see the element     jQuery = dt:contains("SIC code")
+    the user should see the element     jQuery = dd div:contains("${sic_code}")
+    the user should see the element     jQuery = dt:contains("Executive officers")
+    the user should see the element     jQuery = dd div:contains("${executive_officer}")
+    the user should see the element     jQuery = dt:contains("Registered address")
+    the user should see the element     jQuery = dd div:contains("${address_line_1}")
+    the user should see the element     jQuery = dd div:contains("${address_line_2}")
+    the user should see the element     jQuery = dd div:contains("${address_line_3}")
+    the user should see the element     jQuery = dd div:contains("${address_town}")
+    the user should see the element     jQuery = dd div:contains("${address_county}")
+    the user should see the element     jQuery = dd div:contains("${address_postcode}")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+
+the user verifies his email and checks his organisation name
+    [Arguments]  ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}
+    the user creates an account and verifies email     ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}  ${short_password}
+    logging in and Error Checking                      ${applicant_email}  ${short_password}
+    the user clicks the button/link                    link = Untitled application (start here)
+    the user clicks the button/link                    link = Application team
+    the user should see the element                    jQuery = h2:contains("${organisation_name}")
 
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
@@ -479,12 +564,7 @@ the user applies to competition and enters organisation type link
     The user clicks the button/link                     link = Continue and create an account
     the user selects the radio button                   organisationTypeId  ${organisationType}
     the user clicks the button/link                     jQuery = button:contains("Save and continue")
-#  TODO should uncommnet on ifs-7224
-#    the user clicks the Not on companies house link     ${organisationName}
-#    the user clicks the button/link                     jQuery = button:contains("Save and continue")
-#  TODO should remove on ifs-7224
     the user search for organisation name on Companies house   ITV  ${organisationName}
-
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -650,10 +730,11 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
+    the user should not see the element                    jQuery = a:contains("Your fEC model")
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                           Return to application overview
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
 
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
