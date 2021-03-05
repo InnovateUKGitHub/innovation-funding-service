@@ -10,6 +10,9 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-3072 Search by either application number or competition name across each Competition management tab
 ...
 ...               IFS-7429 Support user has access to Project Details after Finance reviewer is assigned
+...
+...               IFS-9223 Support view showing finances as incomplete
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Support  CompAdmin  HappyPath
@@ -18,7 +21,11 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${invitedCollaborator}  stuart@empire.com
+${invitedCollaborator}        stuart@empire.com
+${supportCompName}            Predicting market trends programme
+${supportCompID}              ${competition_ids["${supportCompName}"]}
+${supportApplicationName}     Quantifying global soil carbon losses in response to warming
+${supportApplicationID}       ${application_ids["${supportApplicationName}"]}
 
 *** Test Cases ***
 Support dashboard
@@ -77,6 +84,16 @@ Support user is able to search pending external users
     When the invitee verifies his account
     Then the support user should be able to see him as    Verified  Active accounts
 
+Support user can see the finances as complete
+    [Documentation]  IFS-9223
+    Given logging in and error checking             jessica.doe@ludlow.co.uk   ${short_password}
+    And the user clicks the button/link             link = ${supportApplicationName}
+    And the user clicks the button/link             link = Your project finances
+    And the user marks the finances as complete     ${supportApplicationName}   labour costs   54,000   no
+    When log in as a different user                 &{support_user_credentials}
+    And the user navigates to the page              ${server}/management/competition/${supportCompID}/application/${supportApplicationID}
+    Then the user should see the element            jQuery = h2:contains("Finances summary") .section-status:contains("Complete")
+
 *** Keywords ***
 the user is searching for external users
     [Arguments]  ${string}  ${category}
@@ -132,4 +149,3 @@ Custom suite teardown
 Custom suite setup
     Connect to database  @{database}
     The user logs-in in new browser  &{support_user_credentials}
-

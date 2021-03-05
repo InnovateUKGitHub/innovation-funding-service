@@ -57,7 +57,7 @@ Comp Admin starts a new Competition
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS funding eligibility            true   ${compType_Programme}
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
@@ -139,7 +139,7 @@ Once the project growth table is selected
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS funding eligibility            true   ${compType_Programme}
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
