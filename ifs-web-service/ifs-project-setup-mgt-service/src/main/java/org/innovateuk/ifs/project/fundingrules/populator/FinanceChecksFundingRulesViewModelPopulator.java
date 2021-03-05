@@ -73,7 +73,7 @@ public class FinanceChecksFundingRulesViewModelPopulator {
         if (questionnaireResponseId == null) {
             return null;
         }
-        return answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId, true, null);
+        return answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId, true);
     }
 
     private String questionnaireResponseId(ProjectResource project, Long organisationId) {
