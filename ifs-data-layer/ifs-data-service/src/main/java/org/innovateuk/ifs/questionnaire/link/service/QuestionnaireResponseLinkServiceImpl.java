@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -66,8 +67,11 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
             ApplicationOrganisationLinkResource link = new ApplicationOrganisationLinkResource();
             link.setApplicationId(maybeApplicationLink.get().getApplication().getId());
             link.setApplicationName(maybeApplicationLink.get().getApplication().getName());
+            if (isNullOrEmpty(link.getApplicationName())) {
+                link.setApplicationName("Untitled application");
+            }
             link.setOrganisationId(maybeApplicationLink.get().getOrganisation().getId());
-            link.setQuestionId(questionRepository.findByQuestionnaireId(maybeApplicationLink.get().getQuestionnaireResponse().getQuestionnaire().getId()));
+            link.setQuestionId(questionRepository.findByQuestionnaireId(maybeApplicationLink.get().getQuestionnaireResponse().getQuestionnaire().getId()).getId());
             return serviceSuccess(link);
         }
         //other links go here;

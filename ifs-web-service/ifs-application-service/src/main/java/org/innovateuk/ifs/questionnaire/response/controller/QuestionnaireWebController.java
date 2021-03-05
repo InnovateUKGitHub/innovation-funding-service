@@ -98,14 +98,6 @@ public class QuestionnaireWebController {
                            UserResource user,
                            @PathVariable String questionnaireResponseId,
                            @PathVariable long questionId) {
-        QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
-        QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
-        if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
-            QuestionnaireLinkResource link = linkRestService.getQuestionnaireLink(questionnaireResponseId).getSuccess();
-            if (link instanceof ApplicationOrganisationLinkResource) {
-                model.addAttribute("subtitle", ((ApplicationOrganisationLinkResource) link).getApplicationName());
-            }
-        }
         QuestionnaireQuestionForm form = new QuestionnaireQuestionForm();
         questionnaireQuestionResponseRestService.findByQuestionnaireQuestionIdAndQuestionnaireResponseId(questionId, questionnaireResponseId)
                 .toOptionalIfNotFound()
@@ -138,19 +130,22 @@ public class QuestionnaireWebController {
         };
         Supplier<String> failureView = () -> viewQuestion(model, questionnaireResponseId, questionId);
 
-        RestResult<Void> saveResult;
-        if (form.getQuestionResponseId() != null) {
-            QuestionnaireQuestionResponseResource response = questionnaireQuestionResponseRestService.get(form.getQuestionResponseId()).getSuccess();
-            response.setOption(form.getOption());
-            saveResult = questionnaireQuestionResponseRestService.update(response.getId(), response);
-        } else {
-            QuestionnaireQuestionResponseResource response = new QuestionnaireQuestionResponseResource();
-            response.setQuestionnaireResponse(questionnaireResponseId);
-            response.setOption(form.getOption());
-            saveResult = questionnaireQuestionResponseRestService.create(response).andOnSuccess(() -> restSuccess());
-        }
-        validationHandler.addAnyErrors(saveResult);
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<Void> saveResult;
+            if (form.getQuestionResponseId() != null) {
+                QuestionnaireQuestionResponseResource response = questionnaireQuestionResponseRestService.get(form.getQuestionResponseId()).getSuccess();
+                response.setOption(form.getOption());
+                saveResult = questionnaireQuestionResponseRestService.update(response.getId(), response);
+            } else {
+                QuestionnaireQuestionResponseResource response = new QuestionnaireQuestionResponseResource();
+                response.setQuestionnaireResponse(questionnaireResponseId);
+                response.setOption(form.getOption());
+                saveResult = questionnaireQuestionResponseRestService.create(response).andOnSuccess(() -> restSuccess());
+            }
+            validationHandler.addAnyErrors(saveResult);
+            return validationHandler.failNowOrSucceedWith(failureView, successView);
+        });
     }
 
     @GetMapping("/{questionnaireResponseId}/outcome/{outcomeId}")

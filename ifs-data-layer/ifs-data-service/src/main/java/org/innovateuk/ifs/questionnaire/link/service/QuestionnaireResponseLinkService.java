@@ -11,6 +11,6 @@ public interface QuestionnaireResponseLinkService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<UUID> getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(long applicationId, long organisationId, long questionnaireId);
 
-    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.questionnaire.resource.QuestionnaireResponseResource', 'UPDATE_OR_DELETE')")
+    @PreAuthorize("hasPermission(#questionnaireResponseId, 'org.innovateuk.ifs.questionnaire.resource.QuestionnaireResponseResource', 'READ')")
     ServiceResult<QuestionnaireLinkResource> get(UUID questionnaireResponseId);
 }

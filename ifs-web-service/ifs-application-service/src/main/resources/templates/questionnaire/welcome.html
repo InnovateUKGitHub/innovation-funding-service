@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='${backLinkText}',linkUrl=@{${backLinkUrl}}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${questionnaire.title}, subTitle=${subTitle},size='govuk-heading-xl'" />
@@ -20,7 +20,7 @@
             <button class="govuk-button">Next</button>
         </form>
 
-        <button th:if="${backButtonText}" th:text="${backButtonText}" class="govuk-button govuk-button--secondary"></button>
+        <a th:href="@{${backLinkUrl}}" th:if="${backButtonText}" th:text="${backButtonText}" class="govuk-button govuk-button--secondary"></a>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
