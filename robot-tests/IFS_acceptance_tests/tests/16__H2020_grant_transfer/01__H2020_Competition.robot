@@ -9,6 +9,8 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-6775 Initial details type ahead
 ...
+...            IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -40,10 +42,14 @@ User can populate the Completion Stage, Milestones and Public content
      [Teardown]  the user clicks the button/link                                    link = Return to setup overview
 
 User can populate Terms and Conditions
-    [Documentation]  IFS-5158
-    Given the user clicks the button/link                   link = Terms and conditions
-    Then the user clicks the button/link                    jQuery = button:contains("Done")
-    [Teardown]  the user clicks the button/link             link = Return to setup overview
+    [Documentation]  IFS-5158  IFS-9124
+    Given the user clicks the button/link           link = Terms and conditions
+    When the user clicks the button/link            jQuery = button:contains("Done")
+    And the user selects the radio button           termsAndConditionsId  24
+    Then the user clicks the button/link            jQuery = button:contains("Done")
+    And the user should see the element             jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Horizon 2020")
+    And the user should see the element             jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Horizon 2020")
+    [Teardown]  the user clicks the button/link     link = Return to setup overview
 
 User can populate Funding information and Project eligibility
     [Documentation]  IFS-5158
@@ -51,7 +57,7 @@ User can populate Funding information and Project eligibility
     When the user completes funding information
     Then the user clicks the button/link                                        link = Return to setup overview
     And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
-    And the user fills in the CS funding eligibility                            false   ${compType_H2020}
+    And the user fills in the CS funding eligibility                            false   ${compType_H2020}   SUBSIDY_CONTROL
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -151,7 +157,7 @@ Internal user is able to approve Finance checks and generate spend profile
 User is able to submit the spend profile
     [Documentation]  IFS-5700
     [Setup]  log in as a different user      &{collaborator1_credentials}
-    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review  
+    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review
     When the user submits the spend profile
     Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 

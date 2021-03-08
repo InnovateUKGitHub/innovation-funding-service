@@ -85,8 +85,12 @@
                         Eligibility only
                     </option>
                     <option th:if="${model.procurementMilestonesCompetition}" data-elements-to-hide=".queries-filter-list .query"
-                            data-elements-to-show=".queries-filter-list .payment_milestones-section" value="payment-milestones">
+                            data-elements-to-show=".queries-filter-list .payment_milestones-section" value="payment_milestones">
                         Payment milestones
+                    </option>
+                    <option th:if="${model.subsidyControlCompetition}" data-elements-to-hide=".queries-filter-list .query"
+                            data-elements-to-show=".queries-filter-list .funding_rules-section" value="funding_rules">
+                        Funding rules
                     </option>
                 </select>
             </fieldset>

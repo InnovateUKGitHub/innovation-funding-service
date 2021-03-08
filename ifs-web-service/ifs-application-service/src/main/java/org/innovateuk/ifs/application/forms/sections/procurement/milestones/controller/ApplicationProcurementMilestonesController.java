@@ -205,7 +205,7 @@ public class ApplicationProcurementMilestonesController extends AbstractProcurem
     }
 
     @Override
-    public ApplicationProcurementMilestoneFormSaver getSaver() {
+    protected ApplicationProcurementMilestoneFormSaver getSaver() {
         return saver;
     }
 }

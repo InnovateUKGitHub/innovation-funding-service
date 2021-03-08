@@ -52,7 +52,7 @@ buildscript {
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
-
+        mavenCentral()
     }
 
     dependencies {
@@ -107,6 +107,7 @@ def osFileMap = [
         [name:'shibboleth-config', type: 'config-maps'],
         [name:'survey-db-config', type: 'config-maps'],
         [name:'web-config', type: 'config-maps'],
+        [name:'spring-config', type: 'config-maps'],
 
         [name:'67-db-anonymised-data', type: 'db-anonymised-data'],
 
