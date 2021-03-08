@@ -44,6 +44,8 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     public static final String COMPETITION_ID = "competitionId";
 
     protected static final String NOT_ELIGIBLE = "not-eligible";
+    protected static final String NOT_REGISTERED_ON_COMPANIES_HOUSE = "not-registered-on-companies-house";
+    protected static final String MANUALLY_ENTER_ORGANISATION_DETAILS = "manually-enter-organisation-details";
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -61,7 +63,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
                                          HttpServletResponse response) {
         CompetitionResource competition = competitionRestService.getPublishedCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
         if (registrationCookieService.isLeadJourney(request)
-         && competition.getFundingType() == FundingType.KTP) {
+                && competition.getFundingType() == FundingType.KTP) {
             return handleKtpLeadOrganisationType(request, response);
         }
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
@@ -91,7 +93,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
                                                 HttpServletResponse response) {
 
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
-        if ( !bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID) && !isValidLeadOrganisationType(organisationTypeId)) {
+        if (!bindingResult.hasFieldErrors(ORGANISATION_TYPE_ID) && !isValidLeadOrganisationType(organisationTypeId)) {
             bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 
@@ -135,7 +137,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
             CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
-            if(!competitionOrganisationConfigResource.cantInternationalApplicantsLead()
+            if (!competitionOrganisationConfigResource.cantInternationalApplicantsLead()
                     && registrationCookieService.isInternationalJourney(request)) {
                 return false;
             }
@@ -157,5 +159,26 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
         OrganisationCreationForm newOrganisationCreationForm = new OrganisationCreationForm();
         newOrganisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
         registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
+    }
+
+    @GetMapping(NOT_REGISTERED_ON_COMPANIES_HOUSE)
+    public String showNotRegisteredOnCompaniesHouse(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
+        organisationForm = getFormDataForManualEntryFromCookie(request);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + NOT_REGISTERED_ON_COMPANIES_HOUSE;
+    }
+
+    @GetMapping(MANUALLY_ENTER_ORGANISATION_DETAILS)
+    public String showManuallyEnterRegistrationDetails(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+                                                       Model model, HttpServletRequest request) {
+        boolean isManuallyEnterRequestURI = true;
+        isManuallyEnterRequestURI = request.getHeader("referer") != null && request.getHeader("referer").contains((NOT_REGISTERED_ON_COMPANIES_HOUSE));
+        if (isManuallyEnterRequestURI) {
+            organisationForm = getFormDataForManualEntryFromCookie(request);
+        } else {
+            organisationForm = getFormDataOfSavedManualEntryFromCookie(organisationForm, request);
+        }
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 }

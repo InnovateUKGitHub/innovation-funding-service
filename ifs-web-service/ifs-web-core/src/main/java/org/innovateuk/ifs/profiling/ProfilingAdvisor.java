@@ -15,7 +15,6 @@ import java.lang.reflect.Method;
 
 @Component
 public class ProfilingAdvisor extends AbstractPointcutAdvisor {
-
     public static final int PROFILING_ORDER = RestCacheInvalidationAdvisor.REST_CACHE_INVALIDATE - 1;
 
     public ProfilingAdvisor() {

@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.form.resource.SectionType.ORGANISATION_FINANCES;
-import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
+import static org.innovateuk.ifs.form.resource.SectionType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -144,6 +143,16 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public SectionResource getOrganisationFinanceSection(long competitionId) {
         return getSingleSectionByType(competitionId, ORGANISATION_FINANCES);
+    }
+
+    @Override
+    public SectionResource getFundingFinanceSection(long competitionId) {
+        return getSingleSectionByType(competitionId, FUNDING_FINANCES);
+    }
+
+    @Override
+    public SectionResource getFecCostFinanceSection(long competitionId) {
+        return getSingleSectionByType(competitionId, FEC_COSTS_FINANCES);
     }
 
     private SectionResource getSingleSectionByType(long competitionId, SectionType type) {

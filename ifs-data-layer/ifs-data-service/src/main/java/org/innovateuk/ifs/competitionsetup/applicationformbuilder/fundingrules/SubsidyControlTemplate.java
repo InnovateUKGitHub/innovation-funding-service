@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -38,10 +39,19 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
     @Override
     public List<SectionBuilder> sections(Competition competition, List<SectionBuilder> sectionBuilders) {
+
+        if (competitionTypeExcluded(competition.getCompetitionTypeEnum())) {
+            return sectionBuilders;
+        }
+
         if (tacticalNorthernIrelandSubsidyControlModeEnabled() || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandDeclaration(sectionBuilders);
         }
         return sectionBuilders;
+    }
+
+    private boolean competitionTypeExcluded(CompetitionTypeEnum competitionType) {
+        return CompetitionTypeEnum.THE_PRINCES_TRUST == competitionType || CompetitionTypeEnum.EXPRESSION_OF_INTEREST == competitionType;
     }
 
     private boolean generatingWebtestDataForComp(Competition competition) {
