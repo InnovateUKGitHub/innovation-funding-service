@@ -147,7 +147,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().hasNoErrors())
-                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/question/{questionId}/terms-and-conditions#terms-accepted", application.getId(), questionId));
+                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}#terms-accepted", application.getId(), orgId, questionId));
 
         InOrder inOrder = inOrder(processRoleRestServiceMock, questionStatusRestServiceMock);
         inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
@@ -207,7 +207,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     @Test
     public void getPartnerStatus() throws Exception {
         long questionId = 7L;
-        long orgId = 1l;
         CompetitionResource competition = newCompetitionResource()
                 .build();
 
@@ -223,7 +222,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(applicationTermsPartnerModelPopulatorMock.populate(application, questionId)).thenReturn(viewModel);
 
-        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/partner-status", application.getId(), orgId, questionId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions-partner-status"));
@@ -237,7 +236,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     @Test
     public void getPartnerStatus_nonCollaborative() throws Exception {
         long questionId = 7L;
-        long orgId = 1l;
         CompetitionResource competition = newCompetitionResource()
                 .build();
 
@@ -251,7 +249,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
-        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/partner-status", application.getId(), questionId, orgId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
                 .andExpect(status().isForbidden());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
@@ -262,7 +260,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     @Test
     public void getPartnerStatus_nonOpen() throws Exception {
         long questionId = 7L;
-        long orgId = 1l;
         CompetitionResource competition = newCompetitionResource()
                 .build();
 
@@ -276,7 +273,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
-        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}/partner-status", application.getId(), questionId, orgId))
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
                 .andExpect(status().isForbidden());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
