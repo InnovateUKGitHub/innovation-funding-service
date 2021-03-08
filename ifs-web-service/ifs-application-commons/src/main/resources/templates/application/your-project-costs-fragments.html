@@ -3905,9 +3905,9 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                         <tbody class="govuk-table__body">
                         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
                         <th:block
-                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=academicAndSecretarialSupportCostRows)"/>
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=academicAndSecretarialSupportForm)"/>
                         <input type="number"
-                               id="academicAndSecretarialSupportCostRows"
+                               id="academicAndSecretarialSupportForm"
                                th:field="${form.academicAndSecretarialSupportForm.cost}"
                                class="govuk-input academic-and-secretarial-support-totals width-15-percent"
                                required="required"
