@@ -131,11 +131,3 @@ the user is redirected to overview page if he has been there already
     the user clicks the button/link      link = Application team
     logout as user
 
-the user completes funding level in application
-    the user clicks the button/link          link = Your project finances
-    the user clicks the button/link          link = Your funding
-    the user selects the radio button        requestingFunding   true
-    the user enters text to a text field     css = [name^="grantClaimPercentage"]  100
-    the user selects the radio button        otherFunding   false
-    the user clicks the button/link          jQuery = button:contains("Mark as complete")
-    the user clicks the button/link          link = Your funding
