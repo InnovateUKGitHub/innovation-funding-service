@@ -37,7 +37,6 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
                 project,
                 organisationId,
                 progress,
-                !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()),
-                true); // TODO qqRP need to check if the question exists on the competition.
+                !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()));
     }
 }
