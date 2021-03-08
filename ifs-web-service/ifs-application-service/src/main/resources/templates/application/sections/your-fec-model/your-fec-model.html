@@ -117,12 +117,15 @@
         <th:block th:if="${model.readOnly}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
                 Will you be using the full economic costing (fEC) funding model?
+               <p class="govuk-body" th:unless="${form.fecModelEnabled}">
+                    Question not Answered</p>
+
                 <p class="govuk-list readonly-data  govuk-!-margin-top-0"
-                   th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5'
-                                                  : 'govuk-!-margin-bottom-7'"
-                   th:text="${form.fecModelEnabled} ? 'Yes' : 'No'"></p>
+                   th:if="${form.fecModelEnabled}"
+                   th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5' : 'govuk-!-margin-bottom-7'"
+                   th:text="${form.fecModelEnabled}? 'Yes' : 'No'"></p>
             </legend>
-            <th:block th:if="${ form.fecModelEnabled}">
+            <th:block th:if="${form.fecModelEnabled}">
                 <div class="upload-section ">
                     <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
                     <div class="govuk-form-group">
