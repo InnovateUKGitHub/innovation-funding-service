@@ -80,7 +80,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                             .withPartnerId(organisation.getId())
                             .withPartnerName(organisation.getName())
                             .withLead(application.getLeadOrganisationId().equals(organisation.getId()))
-                            .withAccepted(finalAcceptedOrgs.contains(organisation.getId()))
+                            .withAccepted(!application.isOpen() || finalAcceptedOrgs.contains(organisation.getId()))
                             .withTermsName(partnerUseCompetitionTermsAndConditions ? competition.getTermsAndConditions().getName() : competition.getOtherFundingRulesTermsAndConditions().getName())
                             .withFundingRules(partnerUseCompetitionTermsAndConditions ? competition.getFundingRules() : FundingRules.STATE_AID)
                             .build();
