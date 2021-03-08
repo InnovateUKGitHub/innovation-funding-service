@@ -4,6 +4,9 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
@@ -59,6 +62,12 @@ public class TermsAndConditionsReadOnlyViewModel extends AbstractQuestionReadOnl
 
     public List<TermsAndConditionsRowReadOnlyViewModel> getPartners() {
         return partners;
+    }
+
+    public List<TermsAndConditionsRowReadOnlyViewModel> getNonAcceptedPartners() {
+        return partners.stream()
+                .filter(negate(TermsAndConditionsRowReadOnlyViewModel::isAccepted))
+                .collect(Collectors.toList());
     }
 
     public String getAccordionSectionId() {

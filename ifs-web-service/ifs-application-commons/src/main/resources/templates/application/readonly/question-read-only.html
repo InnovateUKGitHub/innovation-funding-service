@@ -309,6 +309,17 @@
 
 <th:block th:fragment="terms-and-conditions (model)">
     <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
+    <th:block th:unless="${model.complete}">
+        <div class="warning-alert">
+            <p class="govuk-body">The following organisations have not yet accepted:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <th:block th:each="nonAcceptedPartner : ${model.nonAcceptedPartners}">
+                    <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
+                </th:block>
+            </ul>
+            <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
+        </div>
+    </th:block>
     <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
 </th:block>
 </html>

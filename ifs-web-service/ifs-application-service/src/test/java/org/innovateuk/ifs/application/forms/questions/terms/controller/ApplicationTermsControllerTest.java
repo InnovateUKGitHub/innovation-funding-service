@@ -2,9 +2,12 @@ package org.innovateuk.ifs.application.forms.questions.terms.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsPartnerViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -20,6 +23,8 @@ import java.time.ZonedDateTime;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -40,6 +45,10 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
     private ApplicationTermsModelPopulator applicationTermsModelPopulatorMock;
+    @Mock
+    private ApplicationRestService applicationRestServiceMock;
+    @Mock
+    private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulatorMock;
 
     @Override
     protected ApplicationTermsController supplyControllerUnderTest() {
