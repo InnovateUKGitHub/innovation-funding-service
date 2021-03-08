@@ -26,5 +26,7 @@ public interface SectionService {
     SectionResource getFinanceSection(long competitionId);
     SectionResource getTermsAndConditionsSection(long competitionId);
     SectionResource getOrganisationFinanceSection(long competitionId);
+    SectionResource getFundingFinanceSection(long competitionId);
+    SectionResource getFecCostFinanceSection(long competitionId);
     List<SectionResource> findResourceByIdInList(List<Long> ids, List<SectionResource> list);
 }

@@ -137,7 +137,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().hasNoErrors())
-                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/question/{questionId}/terms-and-conditions#terms-accepted", application.getId(), questionId));
+                .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}#terms-accepted", application.getId(), orgId, questionId));
 
         InOrder inOrder = inOrder(processRoleRestServiceMock, questionStatusRestServiceMock);
         inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
@@ -191,6 +191,83 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
         inOrder.verify(processRoleRestServiceMock).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestServiceMock).markAsComplete(questionId, application.getId(), processRole.getId());
         inOrder.verify(applicationTermsModelPopulatorMock).populate(loggedInUser, application.getId(), questionId, organisationId, false);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getPartnerStatus() throws Exception {
+        long questionId = 7L;
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(3L)
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(true)
+                .withApplicationState(OPENED)
+                .build();
+
+
+        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(applicationTermsPartnerModelPopulatorMock.populate(application, questionId)).thenReturn(viewModel);
+
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions-partner-status"));
+
+        InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
+        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
+        inOrder.verify(applicationTermsPartnerModelPopulatorMock).populate(application, questionId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getPartnerStatus_nonCollaborative() throws Exception {
+        long questionId = 7L;
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(3L)
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(false)
+                .withApplicationState(OPENED)
+                .build();
+
+        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
+                .andExpect(status().isForbidden());
+
+        InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
+        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getPartnerStatus_nonOpen() throws Exception {
+        long questionId = 7L;
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(3L)
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(true)
+                .withApplicationState(SUBMITTED)
+                .build();
+
+        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+
+        mockMvc.perform(get("/application/{applicationId}/form/terms-and-conditions/question/{questionId}/partner-status", application.getId(), questionId))
+                .andExpect(status().isForbidden());
+
+        InOrder inOrder = inOrder(applicationRestServiceMock, applicationTermsPartnerModelPopulatorMock);
+        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verifyNoMoreInteractions();
     }
 }
