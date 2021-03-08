@@ -119,7 +119,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
         final Map<Long, ApplicationFinanceResource>[] financeResourceMap = new Map[]{null};
         return () -> {
             if (financeResourceMap[0] == null) {
-                financeResourceMap[0] = applicationFinanceRestService.getFinanceDetails(applicationId).getSuccess()
+                financeResourceMap[0] = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
                         .stream()
                         .collect(toMap(
                                 ApplicationFinanceResource::getOrganisation,
