@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/terms-and-conditions")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance', 'supporter')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
@@ -60,7 +60,7 @@ public class ApplicationTermsController {
         this.applicationTermsPartnerModelPopulator = applicationTermsPartnerModelPopulator;
     }
 
-    @GetMapping
+    @GetMapping("/organisation/{organisationId}/question/{questionId}")
     public String getTerms(@PathVariable long applicationId,
                            @PathVariable long questionId,
                            @PathVariable long organisationId,
@@ -75,7 +75,7 @@ public class ApplicationTermsController {
         return "application/sections/terms-and-conditions/terms-and-conditions";
     }
 
-    @PostMapping
+    @PostMapping("/organisation/{organisationId}/question/{questionId}")
     public String acceptTerms(@PathVariable long applicationId,
                               @PathVariable long questionId,
                               @PathVariable long organisationId,
@@ -98,10 +98,9 @@ public class ApplicationTermsController {
         });
     }
 
-    @GetMapping("/partner-status")
+    @GetMapping("/question/{questionId}/partner-status")
     public String getPartnerStatus(@PathVariable long applicationId,
                                    @PathVariable long questionId,
-                                   @PathVariable long organisationId,
                                    Model model) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         if (!application.isOpen()) {
