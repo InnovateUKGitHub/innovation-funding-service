@@ -146,10 +146,6 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     public void findOrganisationMatch_companiesHouseOrganisationShouldMatchWhenCompaniesHouseNumberAndTypeMatchAndCallsPatternMatchers() {
         when(organisationRepositoryMock.findByCompaniesHouseNumberOrderById(eq(companiesHouseNumber))).thenReturn(singletonList(matchingBusinessOrganisation));
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
-        when(organisationPatternMatcher.matchLocalDate(any(), any())).thenReturn(true);
-        when(organisationPatternMatcher.executiveOfficersMatch(any(), any())).thenReturn(true);
-        when(organisationPatternMatcher.sicCodesMatch(any(), any())).thenReturn(true);
-        when(organisationPatternMatcher.addressesMatch(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
 

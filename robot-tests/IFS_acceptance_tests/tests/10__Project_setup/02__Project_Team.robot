@@ -238,7 +238,7 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  AMADEUS  AMADEUS IT SERVICES UK LIMITED
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  ROYAL  ROYAL MAIL PLC
 
 IFS admin checks for staus update after new org added
     [Documentation]  IFS-6783
@@ -250,7 +250,7 @@ Two organisations with the same name are not able to join
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
-    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  AMADEUS  AMADEUS IT SERVICES UK LIMITED
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  ROYAL  ROYAL MAIL PLC
     [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
