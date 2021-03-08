@@ -48,17 +48,21 @@ public class ProjectYourFundingViewModelPopulator {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
-        boolean locked = organisationSectionRequired && !progress.isYourOrganisationComplete();
+        boolean subsidyBasisRequiredAndNotCompleted =  progress.isSubsidyBasisRequired() && !progress.isSubsidyBasisComplete();
+        boolean organisationRequiredAndNotCompleted = organisationSectionRequired && !progress.isYourOrganisationComplete();
         boolean fundingLevelConstant = grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess();
         PartnerOrganisationResource partnerOrganisationResource = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
 
-        return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),
+        return new ProjectYourFundingViewModel(project,
+                organisationId,
+                progress.isYourFundingComplete(),
                 projectFinance.getMaximumFundingLevel(),
-                locked,
                 competition.getId(),
                 fundingLevelConstant,
                 competition.getFundingType(),
                 organisation.getOrganisationTypeEnum(),
-                partnerOrganisationResource.isLeadOrganisation());
+                partnerOrganisationResource.isLeadOrganisation(),
+                subsidyBasisRequiredAndNotCompleted,
+                organisationRequiredAndNotCompleted);
     }
 }

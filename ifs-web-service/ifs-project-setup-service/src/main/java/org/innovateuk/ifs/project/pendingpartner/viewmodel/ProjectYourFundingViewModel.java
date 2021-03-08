@@ -12,33 +12,36 @@ public class ProjectYourFundingViewModel {
     private final boolean readOnly;
     private final OrganisationTypeEnum organisationType;
     private final int maximumFundingLevel;
-    private final boolean fundingSectionLocked;
     private final long competitionId;
     private final boolean overridingFundingRules;
     private final FundingType fundingType;
     private final boolean leadOrganisation;
+    private final boolean organisationRequiredAndNotCompleted;
+    private final boolean subsidyBasisRequiredAndNotCompleted;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
                                        boolean readOnly,
                                        int maximumFundingLevel,
-                                       boolean fundingSectionLocked,
                                        long competitionId,
                                        boolean overridingFundingRules,
                                        FundingType fundingType,
                                        OrganisationTypeEnum organisationType,
-                                       boolean leadOrganisation) {
+                                       boolean leadOrganisation,
+                                       boolean subsidyBasisRequiredAndNotCompleted,
+                                       boolean organisationRequiredAndNotCompleted) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.readOnly = readOnly;
         this.organisationType = organisationType;
         this.maximumFundingLevel = maximumFundingLevel;
-        this.fundingSectionLocked = fundingSectionLocked;
         this.competitionId = competitionId;
         this.overridingFundingRules = overridingFundingRules;
         this.fundingType = fundingType;
         this.leadOrganisation = leadOrganisation;
+        this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
+        this.organisationRequiredAndNotCompleted = organisationRequiredAndNotCompleted;
     }
 
     public String getProjectName() {
@@ -62,7 +65,7 @@ public class ProjectYourFundingViewModel {
     }
 
     public boolean isFundingSectionLocked() {
-        return fundingSectionLocked;
+        return subsidyBasisRequiredAndNotCompleted || organisationRequiredAndNotCompleted;
     }
 
     public long getCompetitionId() {
@@ -100,5 +103,13 @@ public class ProjectYourFundingViewModel {
 
     public boolean isLeadOrganisation() {
         return leadOrganisation;
+    }
+
+    public boolean isOrganisationRequiredAndNotCompleted() {
+        return organisationRequiredAndNotCompleted;
+    }
+
+    public boolean isSubsidyBasisRequiredAndNotCompleted() {
+        return subsidyBasisRequiredAndNotCompleted;
     }
 }

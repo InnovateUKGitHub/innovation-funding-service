@@ -28,11 +28,16 @@
                 Before you can supply your funding details:
             </p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>
+                <li th:if="${model.organisationRequiredAndNotCompleted}">
                     you must mark the
                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId},organisationId=${model.organisationId})}"
                        class="govuk-link">your organisation</a>
                      page as complete
+                </li>
+                <li th:if="${model.subsidyBasisRequiredAndNotCompleted}">
+                    you must mark the
+                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/subsidy-basis(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">subsidy basis</a>
+                    page as complete
                 </li>
             </ul>
         </th:block>
