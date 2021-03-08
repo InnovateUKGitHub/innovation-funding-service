@@ -119,12 +119,6 @@ Create new application with the same user
     the user clicks the button/link            link=Apply with a different organisation
     the user selects the radio button          organisationTypeId  ${orgType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
-#  TODO should implement enter details manually in ifs-7724
-#    the user clicks the button/link            jQuery=summary:contains("Enter details manually")
-#    The user enters text to a text field       name=organisationName    org2
-#    the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
-#    the user clicks the button/link            jQuery=.govuk-button:contains("Save and continue")
-# TODO should remove on completing ifs-7724
     the user search for organisation name on Companies house   ITV  ITV PLC
     the user clicks the button/link            link=Application details
     the user enters text to a text field       css=[id="name"]  ${Application_title}

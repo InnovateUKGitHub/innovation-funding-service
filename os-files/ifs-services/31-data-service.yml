@@ -242,6 +242,16 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_EMAIL_BLACKLIST
+                - name: IFS_SYSTEM_EMAIL_ADDRESS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_EMAIL_ADDRESS
+                - name: IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_SERVICE_FILE_STORAGE_VIRUS_SCANNING_ENABLED
                 - name: IFS_DOCUSIGN_API_ACCOUNT
                   valueFrom:
                     configMapKeyRef:
@@ -277,11 +287,11 @@ items:
                     configMapKeyRef:
                       name: feature-toggle-config
                       key: IFS_PROCUREMENT_MILESTONES_ENABLED
-                - name: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_MODE
+                - name: SPRING_PROFILES_ACTIVE
                   valueFrom:
-                   configMapKeyRef:
-                     name: feature-toggle-config
-                     key: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_MODE
+                    configMapKeyRef:
+                      name: spring-config
+                      key: SPRING_PROFILES_ACTIVE
                 - name: JAVA_OPTS
                   value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
