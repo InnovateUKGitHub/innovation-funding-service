@@ -129,7 +129,7 @@ public class YourProjectCostsViewModelPopulator {
                 getYourFinancesUrl(application.getId(), organisation.getId()),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
-                getFinanceRowTypes(competition, applicationId, organisationId),
+                getFinanceRowTypes(competition, application.getId(), organisation.getId()),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
                 organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()),

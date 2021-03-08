@@ -176,6 +176,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
@@ -212,6 +213,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withId(yourFecCostSectionId)
                 .withCompetition(competition.getId())
                 .build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
+                .withFecEnabled(true)
+                .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -223,6 +227,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -243,6 +248,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
@@ -279,6 +285,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withId(yourFecCostSectionId)
                 .withCompetition(competition.getId())
                 .build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
+                .withFecEnabled(true)
+                .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -290,6 +299,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -304,7 +314,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Test
     public void populate_ktp_for_collaborator_with_default_fec_values() {
-
         CompetitionResource competition = newCompetitionResource()
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
@@ -360,6 +369,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Test
     public void populate_ktp_withFecModel() {
+        Long yourFundingSectionId = 4L;
+        Long yourFecCostSectionId = 5L;
+
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -368,18 +380,42 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withCompetition(competition.getId())
                 .withName("Name")
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
-        UserResource user = newUserResource().build();
-
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicantResource applicantResource = newApplicantResource()
+                .withOrganisation(organisation)
+                .build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(competition.getId())
+                .build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource()
+                .withSection(section)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicantResource)
+                .withCurrentUser(user)
+                .build();
+        SectionResource fundingFinanceSection = newSectionResource()
+                .withId(yourFundingSectionId)
+                .withCompetition(competition.getId())
+                .build();
+        SectionResource fecCostFinanceSection = newSectionResource()
+                .withId(yourFecCostSectionId)
+                .withCompetition(competition.getId())
+                .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(true)
                 .build();
@@ -387,13 +423,16 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
-        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
-        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
-        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Arrays.asList(SECTION_ID, yourFundingSectionId, yourFecCostSectionId));
+        when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
+        when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
+        when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
-        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
+        YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
         assertTrue(viewModel.isKtpCompetition());
         assertEquals("ktp_state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
@@ -404,6 +443,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
     @Test
     public void populate_ktp_withNonFecModel() {
+        Long yourFundingSectionId = 4L;
+        Long yourFecCostSectionId = 5L;
+
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -412,18 +454,42 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
                 .withFundingType(FundingType.KTP)
                 .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withName("orgname")
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withCompetition(competition.getId())
                 .withName("Name")
+                .withApplicationState(ApplicationState.OPENED)
                 .build();
-        UserResource user = newUserResource().build();
-
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicantResource applicantResource = newApplicantResource()
+                .withOrganisation(organisation)
+                .build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(competition.getId())
+                .build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource()
+                .withSection(section)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicantResource)
+                .withCurrentUser(user)
+                .build();
+        SectionResource fundingFinanceSection = newSectionResource()
+                .withId(yourFundingSectionId)
+                .withCompetition(competition.getId())
+                .build();
+        SectionResource fecCostFinanceSection = newSectionResource()
+                .withId(yourFecCostSectionId)
+                .withCompetition(competition.getId())
+                .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(false)
                 .build();
@@ -431,13 +497,16 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
                 .build()));
-        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
-        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
-        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Arrays.asList(SECTION_ID, yourFundingSectionId, yourFecCostSectionId));
+        when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
+        when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
+        when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
-        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
+        YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
         assertTrue(viewModel.isKtpCompetition());
         assertEquals("ktp_state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
