@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.domain.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,5 +64,21 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
 
     public OrganisationBuilder withOrganisationType(OrganisationTypeEnum... type) {
         return withOrganisationType(newOrganisationType().withOrganisationType(type).buildArray(type.length, OrganisationType.class));
+    }
+
+    public OrganisationBuilder withDateOfIncorporation(LocalDate... dateOfIncorporations) {
+        return withArraySetFieldByReflection("dateOfIncorporation", dateOfIncorporations);
+    }
+
+    public OrganisationBuilder withSicCodes(List<SicCode>... sicCodes) {
+        return withArraySetFieldByReflection("sicCodes", sicCodes);
+    }
+
+    public OrganisationBuilder withExecutiveOfficers(List<ExecutiveOfficer>... executiveOfficers) {
+        return withArraySetFieldByReflection("executiveOfficers", executiveOfficers);
+    }
+
+    public OrganisationBuilder withAddresses(List<OrganisationAddress>... organisationAddresses) {
+        return withArraySetFieldByReflection("addresses", organisationAddresses);
     }
 }

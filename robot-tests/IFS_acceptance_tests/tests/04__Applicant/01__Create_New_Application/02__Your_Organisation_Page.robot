@@ -11,6 +11,8 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               IFS-9103 Companies House API: Return more relevant results
 ...
+...               IFS-9156 update existing orgs at point of application
+...
 Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -18,6 +20,7 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
+&{WebTestUserCredentials}          email=Test@hampshire.co.uk    password=${short_password}
 ${business_type}            Partnership
 ${organisation_name}        Best Test Company
 ${organisation_number}      1234567890
@@ -32,6 +35,7 @@ ${address_postcode}         NW11 8AJ
 ${applicant_first_name}     Sherlock
 ${applicant_last_name}      Holmes
 ${applicant_email}          sherlock@holmes.com
+${comp_title}               Improved organisation search performance competition
 
 *** Test Cases ***
 Companies House: Valid company name
@@ -126,6 +130,15 @@ Not in Companies House: Manually add the details as a new user and pass to the c
     And user checks back link and click save and continue
     And the user verifies his email and checks his organisation name     ${applicant_first_name}  ${applicant_last_name}  ${applicant_email}
 
+Companies House: Get Date of incorporation, SIC codes, address and directors details for existing companies that do not have these details
+    [Documentation]    IFS-9156
+    Given log in as a different user                               &{WebTestUserCredentials}
+    And the user select the competition and starts application     ${comp_title}
+    When the user selects the radio button                         createNewApplication  true
+    And the user clicks the button/link                            jQuery = .govuk-button:contains("Continue")
+    Then the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    And the user can see organisation details in db
+
 *** Keywords ***
 Applicant goes to the organisation search page
     the guest user opens the browser
@@ -136,6 +149,12 @@ Applicant goes to the organisation search page
     user selects where is organisation based
     the user clicks the button/link                           jQuery = span:contains("Business")
     the user clicks the button/link                           jQuery = button:contains("Save and continue")
+
+the user can see organisation details in db
+    Connect to Database    @{database}
+    ${result} =  get details of existing organisation
+    log   ${result}
+    Should not Be Empty     ${result}
 
 user selects where is organisation based
     the user selects the radio button     international  isNotInternational
