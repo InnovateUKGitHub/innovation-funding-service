@@ -50,12 +50,12 @@ public class ProjectQuestionQuestionnaireController {
     public String view(@ModelAttribute(name = "form", binding = false) ApplicationQuestionQuestionnaireForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        Model model,
-                       @PathVariable long applicationId,
+                       @PathVariable long projectId,
                        @PathVariable long organisationId,
                        @PathVariable long questionId,
                        UserResource user,
                        HttpServletRequest request) {
-        ProjectQuestionQuestionnaireViewModel viewModel = populator.populate(user, applicationId, questionId, organisationId);
+        ProjectQuestionQuestionnaireViewModel viewModel = populator.populate(user, projectId, questionId, organisationId);
 
         if (viewModel.navigateStraightToQuestionnaireWelcome()) {
             return navigationUtils.getRedirectToSameDomainUrl(request, String.format("/questionnaire/%s", viewModel.getQuestionnaireResponseId()));

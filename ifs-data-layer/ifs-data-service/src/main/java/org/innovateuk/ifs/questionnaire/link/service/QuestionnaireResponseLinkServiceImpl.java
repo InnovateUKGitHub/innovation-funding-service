@@ -5,7 +5,9 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
 import org.innovateuk.ifs.questionnaire.link.domain.ApplicationOrganisationQuestionnaireResponse;
+import org.innovateuk.ifs.questionnaire.link.domain.ProjectOrganisationQuestionnaireResponse;
 import org.innovateuk.ifs.questionnaire.link.repository.ApplicationOrganisationQuestionnaireResponseRepository;
+import org.innovateuk.ifs.questionnaire.link.repository.ProjectOrganisationQuestionnaireResponseRepository;
 import org.innovateuk.ifs.questionnaire.resource.ApplicationOrganisationLinkResource;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireLinkResource;
 import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
@@ -29,6 +31,9 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
 
     @Autowired
     private ApplicationOrganisationQuestionnaireResponseRepository applicationOrganisationQuestionnaireResponseRepository;
+
+    @Autowired
+    private ProjectOrganisationQuestionnaireResponseRepository projectOrganisationQuestionnaireResponseRepository;
 
     @Autowired
     private QuestionnaireRepository questionnaireRepository;
@@ -76,6 +81,27 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
         }
         //other links go here;
         return serviceFailure(notFoundError(QuestionnaireResponse.class, questionnaireResponseId));
+    }
+
+    @Override
+    public ServiceResult<UUID> getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(long projectId, long organisationId, long questionnaireId) {
+        if (projectOrganisationQuestionnaireResponseRepository.existsByProjectIdAndOrganisationIdAndQuestionnaireResponseQuestionnaireId(projectId, organisationId, questionnaireId)) {
+            return find(projectOrganisationQuestionnaireResponseRepository.findByProjectIdAndOrganisationIdAndQuestionnaireResponseQuestionnaireId(projectId, organisationId, questionnaireId),
+                    notFoundError(ApplicationOrganisationQuestionnaireResponse.class, projectId, organisationId, questionnaireId))
+                    .andOnSuccessReturn(ProjectOrganisationQuestionnaireResponse::getQuestionnaireResponse)
+                    .andOnSuccessReturn(QuestionnaireResponse::getId);
+        }
+        return find(project(projectId), organisation(organisationId), questionnaire(questionnaireId))
+                .andOnSuccess((project, organisation, questionnaire) -> {
+                    QuestionnaireResponse response = new QuestionnaireResponse();
+                    response.setQuestionnaire(questionnaire);
+                    ProjectOrganisationQuestionnaireResponse projectOrganisationQuestionnaireResponse = new ProjectOrganisationQuestionnaireResponse();
+                    projectOrganisationQuestionnaireResponse.setProject(project);
+                    projectOrganisationQuestionnaireResponse.setOrganisation(organisation);
+                    projectOrganisationQuestionnaireResponse.setQuestionnaireResponse(questionnaireResponseRepository.save(response));
+                    projectOrganisationQuestionnaireResponseRepository.save(projectOrganisationQuestionnaireResponse);
+                    return serviceSuccess(response.getId());
+                });
     }
 
     private Supplier<ServiceResult<Questionnaire>> questionnaire(long id) {

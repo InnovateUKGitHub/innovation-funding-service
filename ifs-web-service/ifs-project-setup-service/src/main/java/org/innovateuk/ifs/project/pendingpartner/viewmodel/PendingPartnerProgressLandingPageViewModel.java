@@ -17,8 +17,9 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean isReadyToJoinProject;
     private final boolean showSubsidyBasis;
     private final boolean subsidyBasisComplete;
+    private final long subsidyBasisQuestionId;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, long subsidyBasisQuestionId) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -31,6 +32,7 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.isReadyToJoinProject = progress.isReadyToJoinProject();
         this.showSubsidyBasis = progress.isSubsidyBasisRequired();
         this.subsidyBasisComplete = progress.isSubsidyBasisComplete();
+        this.subsidyBasisQuestionId = subsidyBasisQuestionId;
     }
 
     public long getProjectId() {
@@ -79,5 +81,9 @@ public class PendingPartnerProgressLandingPageViewModel {
 
     public boolean isSubsidyBasisComplete() {
         return subsidyBasisComplete;
+    }
+
+    public long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId;
     }
 }

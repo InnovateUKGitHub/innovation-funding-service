@@ -30,7 +30,7 @@
                 <div class="task">
                     <h3 class="govuk-heading-s">
                         <span th:if="${model.completed}">Subsidy Basis</span>
-                        <a th:if="${!model.completed}" th:href="@{/project/{projectId}/organisation/{organisationId}/subsidy-basis(projectId=${model.projectId}, organisationId=${model.organisationId})}" class="govuk-link">Subsidy Basis</a>
+                        <a th:if="${!model.completed}" th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">Subsidy Basis</a>
                     </h3>
                 </div>
                 <div th:if="${model.subsidyBasisComplete}"
