@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class QuestionnaireQuestionForm {
 
-    @NotNull
+    @NotNull(message = "{validation.questionnaire.answer.required}")
     private Long option;
     private Long questionResponseId;
 

@@ -56,6 +56,10 @@ public final class QuestionBuilder {
         return name;
     }
 
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
     public QuestionBuilder withShortName(String shortName) {
         this.shortName = shortName;
         return this;

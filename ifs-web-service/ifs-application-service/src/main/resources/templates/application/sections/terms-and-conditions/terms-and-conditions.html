@@ -17,17 +17,23 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <th:block th:if="${model.subsidyBasisRequiredButIncomplete}">
-            <p class="govuk-body">Before you progress you must</p>
+            <th:block
+                th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                <th:block th:insert="fragments/layout :: page-title"
+                          th:with="pageTitle=${model.questionName},subTitle=${applicationName},size='govuk-heading-xl'"/>
+            </th:block>
+            <p class="govuk-body">Before you progress with your application you must:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>
                     mark the
                     <a th:href="${model.subsidyBasisQuestionUrl}"
                        class="govuk-link">
-                        subsidy basis
+                        Subsidy basis
                     </a>
                     page as complete
                 </li>
             </ul>
+            <th:block th:insert="fragments/layout :: main-content-end"/>
         </th:block>
         <th:block th:unless="${model.subsidyBasisRequiredButIncomplete}">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"

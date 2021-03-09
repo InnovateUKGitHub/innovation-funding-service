@@ -12,13 +12,15 @@ public class QuestionnaireQuestionViewModel {
     private String questionnaireResponseId;
     private long questionnaireQuestionId;
     private String title;
+    private String subtitle;
     private String question;
     private String guidance;
     private List<Pair<Long, String>> options;
     private AnswerTableViewModel previousQuestions;
 
-    public QuestionnaireQuestionViewModel(String questionnaireResponseId, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, AnswerTableViewModel previousQuestions) {
+    public QuestionnaireQuestionViewModel(String questionnaireResponseId, String subtitle, QuestionnaireQuestionResource question, List<QuestionnaireOptionResource> options, AnswerTableViewModel previousQuestions) {
         this.questionnaireResponseId = questionnaireResponseId;
+        this.subtitle = subtitle;
         this.questionnaireQuestionId = question.getId();
         this.title = question.getTitle();
         this.question = question.getQuestion();
@@ -31,6 +33,10 @@ public class QuestionnaireQuestionViewModel {
 
     public String getQuestionnaireResponseId() {
         return questionnaireResponseId;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
     }
 
     public long getQuestionnaireQuestionId() {

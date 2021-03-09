@@ -5,8 +5,8 @@ import javax.validation.constraints.NotNull;
 
 public class ApplicationQuestionQuestionnaireForm {
 
-    @NotNull(message = "{validation.application.terms.accept.required}")
-    @AssertTrue(message = "{validation.application.terms.accept.required}")
+    @NotNull(message = "{validation.subsidy.basis.agreement.required}")
+    @AssertTrue(message = "{validation.subsidy.basis.agreement.required}")
     private Boolean agreement;
 
     public Boolean getAgreement() {
