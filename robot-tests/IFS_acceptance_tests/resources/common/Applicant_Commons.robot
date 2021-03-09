@@ -664,6 +664,14 @@ the applicant marks EDI question as complete
     the user can mark the question as complete
     the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
 
+the applicant fills in the Subsidy Basis question
+    the user clicks the button/link     link = Subsidy basis
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+    the user clicks the button/link     jQuery = label:contains("Yes")
+    the user can mark the question as complete
+    the user should see the element     jQuery = li:contains("Subsidy basis") > .task-status-complete
+
 the user uploads an appendix
     [Arguments]  ${question_link}  ${appendix_file}
     the user clicks the button/link                link = ${question_link}
