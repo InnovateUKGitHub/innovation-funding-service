@@ -2,7 +2,6 @@
 Documentation     
 ...               IFS-9309 Tactical - Partner NI Protocol Question (Application)
 ...
-...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
