@@ -63,27 +63,23 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                     });
                 }
                 organisation.setAddresses(addresses);
+
                 OrganisationResource created = organisationInitialCreationService.createOrMatch(organisation).getSuccess();
 
-
                 List<OrganisationSicCodeResource> organisationSicCodeResources = new ArrayList<>();
-
                 sicCodes.forEach(sicCode -> {
                     organisationSicCodeResources.add(new OrganisationSicCodeResource(created.getId(), sicCode.getSicCode()));
                 });
-
+                created.setSicCodes(organisationSicCodeResources);
 
                 List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficerResources = new ArrayList<>();
-
                 officers.forEach(officer -> {
                     organisationExecutiveOfficerResources.add(new OrganisationExecutiveOfficerResource(created.getId(), officer.getName()));
                 });
-
-
-                created.setSicCodes(organisationSicCodeResources);
                 created.setExecutiveOfficers(organisationExecutiveOfficerResources);
+
                 if (!sicCodes.isEmpty() || !officers.isEmpty()) {
-                     OrganisationResource updated = organisationService.update(created).getSuccess();
+                    OrganisationResource updated = organisationService.update(created).getSuccess();
                     data.setOrganisation(updated);
                 } else {
                     data.setOrganisation(created);
