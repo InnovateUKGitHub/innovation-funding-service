@@ -2,8 +2,10 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import com.newrelic.api.agent.Trace;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.MigrationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationMigrationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
@@ -39,6 +41,9 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private KtpProjectNotificationService ktpProjectNotificationService;
+
+    @Autowired
+    private ApplicationMigrationService applicationMigrationService;
 
     @Override
     public Optional<Long> findProjectToCreate(int index) {
@@ -79,12 +84,19 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     }
 
     private ServiceResult<ScheduleResponse> createProject(ProjectToBeCreated projectToBeCreated) {
+        Application application = migrateApplicationIfRequired(projectToBeCreated.getApplication());
         projectToBeCreated.setPending(false);
-        return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
+        return createProject(application, projectToBeCreated.getEmailBody())
                 .andOnSuccessReturn(() -> {
                     projectToBeCreated.setMessage("Success");
-                    return new ScheduleResponse("Project created: " + projectToBeCreated.getApplication().getId());
+                    return new ScheduleResponse("Project created: " + application.getId());
                 });
+    }
+
+    private Application migrateApplicationIfRequired(Application application) {
+        return applicationMigrationService.findApplicationByIdAndStatus(application.getId(), MigrationStatus.CREATED).getSuccess()
+                .map(applicationMigration -> applicationMigrationService.migrateApplication(application.getId()).getSuccess())
+                .orElse(application);
     }
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {
