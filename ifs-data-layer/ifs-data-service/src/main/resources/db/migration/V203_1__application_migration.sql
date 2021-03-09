@@ -9,5 +9,5 @@ CREATE TABLE application_migration (
   application_id bigint(20) NOT NULL,
   status enum('CREATED', 'MIGRATED') NOT NULL,
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_on TIMESTAMP NULL,
+  updated_on TIMESTAMP NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
