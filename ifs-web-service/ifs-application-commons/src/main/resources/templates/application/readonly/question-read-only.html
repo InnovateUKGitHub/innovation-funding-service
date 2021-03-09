@@ -288,7 +288,11 @@
         <tbody class="govuk-table__body">
         <tr th:each="partner : ${partners}" class="govuk-table__row">
             <!--/*@thymesVar id="partner" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel"*/-->
-            <td class="govuk-table__cell" th:text="${partner.partnerName}"> <span class="hint" th:if="${partner.lead}">(Lead)</span></td>
+            <td class="govuk-table__cell">
+                <th:block  th:text="${partner.partnerName}"></th:block>
+                <span class="hint" th:if="${partner.lead}">(Lead)</span>
+                <span th:if="${displayCompleteStatus and !partner.accepted}" class="error-icon-after"></span>
+            </td>
             <td class="govuk-table__cell" th:text="${partner.fundingRules.displayName}"
                 th:if="${includeFundingRules}"></td>
             <td class="govuk-table__cell">
@@ -298,8 +302,8 @@
             </td>
             <td class="govuk-table__cell"
                 th:if="${displayCompleteStatus}">
-                <th:block th:if="${partner.accepted}">Accepted</th:block>
-                <th:block th:unless="${partner.accepted}">Not yet accepted</th:block>
+                <span th:if="${partner.accepted}" class="accepted">Accepted</span>
+                <span th:unless="${partner.accepted}" class="unaccepted">Not yet accepted</span>
             </td>
         </tr>
         </tbody>
