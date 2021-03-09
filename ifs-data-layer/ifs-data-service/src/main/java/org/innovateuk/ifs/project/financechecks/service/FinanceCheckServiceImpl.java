@@ -650,13 +650,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
 
         fundingRulesResource.setFundingRules(fundingRules);
-        fundingRulesResource.setFundingRulesState(fundingRulesProcess.getProcessState());
 
-        if (fundingRulesProcess.getLastModified() != null) {
-            fundingRulesResource.setFundingRulesLastModifiedDate(fundingRulesProcess.getLastModified().toLocalDate());
+        if (fundingRulesProcess != null) {
+            fundingRulesResource.setFundingRulesState(fundingRulesProcess.getProcessState());
+            if (fundingRulesProcess.getLastModified() != null) {
+                fundingRulesResource.setFundingRulesLastModifiedDate(fundingRulesProcess.getLastModified().toLocalDate());
+            }
+            setFundingRulesLastModifiedUser(fundingRulesResource, fundingRulesProcess.getInternalParticipant());
         }
-
-        setFundingRulesLastModifiedUser(fundingRulesResource, fundingRulesProcess.getInternalParticipant());
 
         return serviceSuccess(fundingRulesResource);
     }
