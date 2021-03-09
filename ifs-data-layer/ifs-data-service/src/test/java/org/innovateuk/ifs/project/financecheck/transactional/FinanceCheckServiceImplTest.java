@@ -339,8 +339,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, PENDING);
 
         when(projectFinanceRepository.findByProjectId(project.getId())).thenReturn(singletonList(projectFinance));
-        when(viabilityWorkflowHandler.viabilityReset(partnerOrganisation, internalUser)).thenReturn(true);
-        when(eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, internalUser)).thenReturn(true);
+        when(viabilityWorkflowHandler.viabilityReset(partnerOrganisation, internalUser, null)).thenReturn(true);
+        when(eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, internalUser, null)).thenReturn(true);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(grantOfferLetterProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
@@ -980,7 +980,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
 
         verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
-
     }
 
     @Test
@@ -1363,6 +1362,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                         .withOrganisationType(BUSINESS)
                         .build())
                 .build();
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, PENDING);
 
         User user = newUser().withId(1l).build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -1372,9 +1372,11 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
         when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisationInDB, user)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisationInDB, user, "reason")).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(grantOfferLetterProcessRepository.findOneByTargetId(projectId)).thenReturn(currentGOLProcess);
 
-        ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId);
+        ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId, "reason");
 
         assertTrue(result.isSuccess());
     }

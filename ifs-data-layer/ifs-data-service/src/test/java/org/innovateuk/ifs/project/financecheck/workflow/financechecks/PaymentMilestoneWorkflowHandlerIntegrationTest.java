@@ -118,7 +118,7 @@ public class PaymentMilestoneWorkflowHandlerIntegrationTest extends
     public void paymentMilestoneReset() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisation,
-                internalUser)),
+                internalUser, null)),
 
                 // current State, destination State and expected Event to be fired
                 PaymentMilestoneState.APPROVED, PaymentMilestoneState.REVIEW, PaymentMilestoneEvent.PAYMENT_MILESTONE_RESET, true);

@@ -228,12 +228,12 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long organisationId = 2L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+        when(financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId, null)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/milestones/reset", projectId, organisationId))
                 .andExpect(status().isOk());
 
-        verify(financeCheckService).resetPaymentMilestoneState(projectOrganisationCompositeId);
+        verify(financeCheckService).resetPaymentMilestoneState(projectOrganisationCompositeId, null);
     }
 
     @Test

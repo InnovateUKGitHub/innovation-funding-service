@@ -374,13 +374,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+    public ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId, String reason) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
                         .andOnSuccess(this::getPaymentMilestoneProcess)
-                        .andOnSuccess(process -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process))
+                        .andOnSuccess(process -> {
+                            deleteSpendProfileAndResetGol(projectId);
+                            return triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process, reason);
+                        })
         );
     }
 
@@ -402,9 +405,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
     }
 
-    private ServiceResult<Void> triggerPaymentMilestoneResetWorkflowHandlerEvent(User currentUser, PaymentMilestoneProcess paymentMilestoneProcess) {
+    private ServiceResult<Void> triggerPaymentMilestoneResetWorkflowHandlerEvent(User currentUser, PaymentMilestoneProcess paymentMilestoneProcess, String reason) {
         if (paymentMilestoneProcess.getProcessState().isApproved()) {
-            if (paymentMilestoneWorkflowHandler.paymentMilestoneReset(paymentMilestoneProcess.getTarget(), currentUser)) {
+            if (paymentMilestoneWorkflowHandler.paymentMilestoneReset(paymentMilestoneProcess.getTarget(), currentUser, reason)) {
                 return serviceSuccess();
             } else {
                 return serviceFailure(PAYMENT_MILESTONE_CANNOT_BE_RESET);
@@ -512,9 +515,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
                         .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
-                                .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getProcessState(), viability, viabilityRagStatus))
+                                .andOnSuccess(viabilityProcess -> validateViability(projectId, viabilityProcess.getProcessState(), viability, viabilityRagStatus))
                                 .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                                .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
+                                .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability, null)
                                         .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
                                 )
                         ));
@@ -522,11 +525,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetViability(Long projectId) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
-            long organisationId = projectFinance.getOrganisation().getId();
-            viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+    public ServiceResult<Void> resetViability(Long projectId, Long organisationId, String reason) {
+        projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId).ifPresent(projectFinance -> {
+            viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), reason);
             projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
+            deleteSpendProfileAndResetGol(projectId);
         });
 
         return serviceSuccess();
@@ -534,12 +537,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetEligibility(Long projectId) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
-            long organisationId = projectFinance.getOrganisation().getId();
-            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+    public ServiceResult<Void> resetEligibility(Long projectId, Long organisationId, String reason) {
+        projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId).ifPresent(projectFinance -> {
+            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), reason);
             projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
-
+            deleteSpendProfileAndResetGol(projectId);
         });
         return serviceSuccess();
     }
@@ -547,16 +549,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> resetFinanceChecks(Long projectId) {
-        resetViability(projectId);
-        resetEligibility(projectId);
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            resetViability(projectId, organisationId, "Finance reset");
+            resetEligibility(projectId, organisationId, "Finance reset");
+        });
 
-        if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
-            spendProfileService.deleteSpendProfile(projectId);
-        }
-
-        if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
-            grantOfferLetterService.resetGrantOfferLetter(projectId);
-        }
         return serviceSuccess();
     }
 
@@ -569,9 +567,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
-                        .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getProcessState(), eligibility, eligibilityRagStatus))
+                        .andOnSuccess(eligibilityProcess -> validateEligibility(projectId, eligibilityProcess.getProcessState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
+                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility, null)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus)))));
     }
 
@@ -588,6 +586,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                     projectFinanceRepository.save(projectFinance);
 
                 });
+    }
+
+    private void deleteSpendProfileAndResetGol(Long projectId) {
+        if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
+            spendProfileService.deleteSpendProfile(projectId);
+        }
+
+        if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
+            grantOfferLetterService.resetGrantOfferLetter(projectId);
+        }
     }
 
     private ServiceResult<ProjectFinance> getProjectFinance(Long projectId, Long organisationId) {
@@ -619,10 +627,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
-            viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
+            if (ViabilityState.APPROVED == viabilityProcess.getProcessState()) {
+                viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
+                setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
+            } else if (ViabilityState.REVIEW == viabilityProcess.getProcessState()) {
+                viabilityResource.setViabilityResetDate(viabilityProcess.getLastModified().toLocalDate());
+                setViabilityResetUser(viabilityResource, viabilityProcess.getInternalParticipant());
+            }
         }
-
-        setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
 
         return serviceSuccess(viabilityResource);
     }
@@ -672,7 +684,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
-
         if (viabilityApprovalUser != null) {
             viabilityResource.setViabilityApprovalUserFirstName(viabilityApprovalUser.getFirstName());
             viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
@@ -684,6 +695,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         if (fundingRulesLastModifiedUser != null) {
             fundingRulesResource.setFundingRulesInternalUserFirstName(fundingRulesLastModifiedUser.getFirstName());
             fundingRulesResource.setFundingRulesInternalUserLastName(fundingRulesLastModifiedUser.getLastName());
+        }
+    }
+
+    private void setViabilityResetUser(ViabilityResource viabilityResource, User viabilityResetUser) {
+        if (viabilityResetUser != null) {
+            viabilityResource.setViabilityResetUserFirstName(viabilityResetUser.getFirstName());
+            viabilityResource.setViabilityResetUserLastName(viabilityResetUser.getLastName());
         }
     }
 
@@ -699,10 +717,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         EligibilityResource eligibilityResource = new EligibilityResource(eligibilityProcess.getProcessState(), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
-            eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());
+            if (EligibilityState.APPROVED == eligibilityProcess.getProcessState()) {
+                eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());
+                setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
+            } else if (EligibilityState.REVIEW == eligibilityProcess.getProcessState()) {
+                eligibilityResource.setEligibilityResetDate(eligibilityProcess.getLastModified().toLocalDate());
+                setEligibilityResetUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
+            }
         }
-
-        setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
 
         return serviceSuccess(eligibilityResource);
     }
@@ -724,17 +746,27 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {
-
         if (eligibilityApprovalUser != null) {
             eligibilityResource.setEligibilityApprovalUserFirstName(eligibilityApprovalUser.getFirstName());
             eligibilityResource.setEligibilityApprovalUserLastName(eligibilityApprovalUser.getLastName());
         }
     }
 
-    private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
+    private void setEligibilityResetUser(EligibilityResource eligibilityResource, User eligibilityResetUser) {
+        if (eligibilityResetUser != null) {
+            eligibilityResource.setEligibilityResetUserFirstName(eligibilityResetUser.getFirstName());
+            eligibilityResource.setEligibilityResetUserLastName(eligibilityResetUser.getLastName());
+        }
+    }
+
+    private ServiceResult<Void> validateViability(long projectId, ViabilityState currentViabilityState, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
 
         if (ViabilityState.APPROVED == currentViabilityState) {
-            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+            Optional<Project> project = projectRepository.findById(projectId);
+
+            if (!(ViabilityState.REVIEW == viability && project.isPresent() && !project.get().isSpendProfileGenerated())) {
+                return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+            }
         }
 
         if (ViabilityState.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
@@ -744,10 +776,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, ViabilityState viability) {
+    private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, ViabilityState viability, String reason) {
 
         if (ViabilityState.APPROVED == viability) {
             viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
+        }
+
+        if (ViabilityState.REVIEW == viability) {
+            viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser, reason);
         }
 
         return serviceSuccess();
@@ -780,10 +816,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    private ServiceResult<Void> validateEligibility(long projectId, EligibilityState currentEligibilityState, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         if (EligibilityState.APPROVED == currentEligibilityState) {
-            return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+            Optional<Project> project = projectRepository.findById(projectId);
+
+            if (!(EligibilityState.REVIEW == eligibility && project.isPresent() && !project.get().isSpendProfileGenerated())) {
+                return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+            }
         }
 
         if (EligibilityState.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {
@@ -793,10 +833,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility) {
+    private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, EligibilityState eligibility, String reason) {
 
         if (EligibilityState.APPROVED == eligibility) {
             eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
+        }
+        if (EligibilityState.REVIEW == eligibility) {
+            eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, currentUser, reason);
         }
         return serviceSuccess();
     }

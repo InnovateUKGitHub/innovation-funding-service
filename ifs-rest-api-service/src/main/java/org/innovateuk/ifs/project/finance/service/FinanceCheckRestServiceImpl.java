@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -55,11 +56,30 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
 
     @Override
     public RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
-
         String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetEligibility(Long projectId, Long organisationId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/reset";
+
+        StringResource resource = new StringResource(resetReason);
+
+        return postWithRestResult(postUrl, resource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetViability(Long projectId, Long organisationId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/viability/reset";
+
+        StringResource resource = new StringResource(resetReason);
+
+        return postWithRestResult(postUrl, resource, Void.class);
     }
 
     @Override
@@ -69,7 +89,6 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
 
     @Override
     public RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
-
         String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
 
@@ -106,11 +125,12 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
-    public RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId) {
+    public RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId, String retractionReason) {
         String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/milestones/reset";
+        StringResource content = new StringResource(retractionReason);
 
-        return postWithRestResult(postUrl, Void.class);
+        return postWithRestResult(postUrl, content, Void.class);
     }
 
     @Override
