@@ -19,7 +19,7 @@ ${atiSubsidyControl}             Aerospace Technology Institute (ATI) - Subsidy 
 ${atiStateAid}                   Aerospace Technology Institute (ATI) (opens in a new window)
 ${innovateUKSubsidyControl}      Innovate UK - Subsidy control (opens in a new window)
 ${innovateUKStateAid}            Innovate UK (opens in a new window)
-${subsidyControlFundingComp}     Subsidy control competition
+${subsidyControlFundingComp}     Subsidy control t and c competition
 ${subsidyControlFundingApp}      Subsidy control application
 
 *** Test Cases ***
