@@ -10,7 +10,10 @@ import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -207,6 +210,35 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetDependentQuestions(QuestionSetupType subsidyBasis, long application, long organisation) {
+        switch (subsidyBasis) {
+            case SUBSIDY_BASIS:
+                return resetSubsidyBasisDependent(application, organisation);
+            default:
+                return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<Void> resetSubsidyBasisDependent(long applicationId, long organisationId) {
+        return find(application(applicationId)).andOnSuccess(application ->
+                find(processRoleRepository.findByUserAndApplicationId(getCurrentlyLoggedInUser().getSuccess(), applicationId), notFoundError(ProcessRole.class, getCurrentlyLoggedInUser().getSuccess().getId(), applicationId))
+                        .andOnSuccess(processRole ->
+                                find(questionRepository.findFirstByCompetitionIdAndQuestionSetupType(application.getCompetition().getId(), QuestionSetupType.TERMS_AND_CONDITIONS), notFoundError(Question.class, QuestionSetupType.TERMS_AND_CONDITIONS.toString()))
+                                        .andOnSuccess(termsQuestion ->
+                                                find(sectionRepository.findByTypeAndCompetitionId(SectionType.FUNDING_FINANCES, application.getCompetition().getId()), notFoundError(Section.class, application.getCompetition().getId()))
+                                                        .andOnSuccess((fundingSection) ->
+
+                                                                markAsInComplete(new QuestionApplicationCompositeId(termsQuestion.getId(), applicationId), processRole.get(0).getId())
+                                                                        .andOnSuccessReturnVoid()
+                                                                        .andOnSuccess(() ->
+                                                                                markAsInComplete(new QuestionApplicationCompositeId(fundingSection.getQuestions().get(0).getId(), applicationId), processRole.get(0).getId())
+                                                                                        .andOnSuccessReturnVoid()
+                                                                        )
+                                                        ))));
+    }
+
     private Boolean isMarkedAsCompleteForOrganisation(long questionId, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(questionId, applicationId, true, organisationId);
         return !questionStatuses.isEmpty();
@@ -282,10 +314,10 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     private ServiceResult<Void> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy,
-                                                                      Application application,
-                                                                      Question question,
-                                                                      boolean markAsComplete,
-                                                                      boolean updateApplicationCompleteStatus) {
+                                                            Application application,
+                                                            Question question,
+                                                            boolean markAsComplete,
+                                                            boolean updateApplicationCompleteStatus) {
         QuestionStatus questionStatus = getQuestionStatus(question, application, markedAsCompleteBy).orElse(new QuestionStatus(question, application));
 
         if (markAsComplete) {
