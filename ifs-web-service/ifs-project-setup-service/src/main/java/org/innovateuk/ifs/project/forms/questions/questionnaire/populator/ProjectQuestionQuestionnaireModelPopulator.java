@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.forms.questions.questionnaire.viewmodel.ProjectQuestionQuestionnaireViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -34,7 +35,7 @@ public class ProjectQuestionQuestionnaireModelPopulator {
     private QuestionRestService questionRestService;
 
     @Autowired
-    private ApplicationFinanceRestService applicationFinanceRestService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     public ProjectQuestionQuestionnaireViewModel populate(UserResource user,
                                                           long projectId,
@@ -60,7 +61,7 @@ public class ProjectQuestionQuestionnaireModelPopulator {
 
         Boolean northernIrelandDeclaration = null;
         if (question.getQuestionSetupType() == QuestionSetupType.SUBSIDY_BASIS) {
-            northernIrelandDeclaration = applicationFinanceRestService.getApplicationFinance(projectId, organisationId).getSuccess().getNorthernIrelandDeclaration();
+            northernIrelandDeclaration = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess().getNorthernIrelandDeclaration();
         }
 
         return new ProjectQuestionQuestionnaireViewModel(
