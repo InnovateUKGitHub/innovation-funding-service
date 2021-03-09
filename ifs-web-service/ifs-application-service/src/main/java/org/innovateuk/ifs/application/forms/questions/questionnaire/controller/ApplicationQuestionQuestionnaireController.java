@@ -61,7 +61,7 @@ public class ApplicationQuestionQuestionnaireController {
         ApplicationQuestionQuestionnaireViewModel viewModel = populator.populate(user, applicationId, questionId, organisationId);
 
         if (viewModel.navigateStraightToQuestionnaireWelcome()) {
-            return String.format("redirect:/questionnaire/%s?redirectUrl=%s", viewModel.getQuestionnaireResponseId(), viewRedirectUrl(applicationId, organisationId, questionId) + "/questionnaire-complete");
+            return String.format("redirect:/questionnaire/%s", viewModel.getQuestionnaireResponseId());
         }
         model.addAttribute("model", viewModel);
         return "application/questions/questionnaire";

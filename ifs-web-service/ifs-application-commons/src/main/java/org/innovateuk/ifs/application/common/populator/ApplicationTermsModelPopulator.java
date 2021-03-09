@@ -50,6 +50,7 @@ public class ApplicationTermsModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
+        QuestionResource question = questionRestService.findById(termsQuestionId).getSuccess();
         boolean additionalTerms = competition.getCompetitionTerms() != null;
 
         if (!readOnly && !competition.isExpressionOfInterest())  {
@@ -75,9 +76,11 @@ public class ApplicationTermsModelPopulator {
 
                 return new ApplicationTermsViewModel(
                         applicationId,
+                        application.getName(),
                         competition.getName(),
                         competition.getId(),
                         termsQuestionId,
+                        question.getName(),
                         competition.getTermsAndConditions().getTemplate(),
                         application.isCollaborativeProject(),
                         termsAccepted,

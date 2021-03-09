@@ -62,7 +62,12 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         QuestionnaireResource questionnaire = new QuestionnaireResource();
         questionnaire.setSecurityType(QuestionnaireSecurityType.LINK);
         questionnaire.setTitle("Subsidy basis");
-        questionnaire.setDescription("<p>Use this section to:</p><ul class=\"list-bullet\"><li>Do something</li></ul>");
+        questionnaire.setDescription("<p>Use this section to:</p>" +
+                "<ul class=\"list-bullet\">" +
+                "<li>determine the subsidy basis for your organisation on this application</li>" +
+                "<li>set the maximum funding level you can apply for</li>" +
+                "<li>confirm your organisations terms and conditions</li>" +
+                "</ul>");
         questionnaire = questionnaireService.create(questionnaire).getSuccess();
 
         QuestionnaireQuestionResource activitiesQuestion = new QuestionnaireQuestionResource();

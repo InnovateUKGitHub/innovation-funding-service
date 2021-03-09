@@ -36,7 +36,7 @@
               enctype="multipart/form-data"
               novalidate="novalidate">
 
-            <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">Based on your answers, your subsidy basis has  been determined as falling under <th:block th:if="${model.getNorthernIrelandDeclaration()}">state aid</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">subsidy control</th:block></p>
+            <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">Based on your answers, your subsidy basis has  been determined as falling under <th:block th:if="${model.getNorthernIrelandDeclaration()}">the Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></p>
 
             <th:block th:unless="${model.readOnly}">
                 <h2 class="govuk-heading-m">Declaration</h2>
@@ -46,7 +46,8 @@
                             <input id="agreement"
                                    class="govuk-checkboxes__input"
                                    type="checkbox"
-                                   th:field="*{agreement}"/>
+                                   th:field="*{agreement}"
+                                   th:attr="data-required-errormessage=#{validation.questionnaire.answer.required}"/>
                             <label for="agreement"
                                    class="govuk-label govuk-checkboxes__label">
                                 Based on the answers I have provided; I agree to the subsidy basis that has been determined for my organisation's application.

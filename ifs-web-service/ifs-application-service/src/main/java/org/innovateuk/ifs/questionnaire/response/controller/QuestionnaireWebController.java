@@ -9,13 +9,13 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionRestSe
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireQuestionRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireRestService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeRestService;
+import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRestService;
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.innovateuk.ifs.questionnaire.response.form.QuestionnaireQuestionForm;
 import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestionViewModelPopulator;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,9 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -61,20 +59,25 @@ public class QuestionnaireWebController {
     private QuestionnaireQuestionViewModelPopulator questionnaireQuestionViewModelPopulator;
 
     @Autowired
-    private EncryptedCookieService encryptedCookieService;
+    private QuestionnaireResponseLinkRestService linkRestService;
 
     @GetMapping("/{questionnaireResponseId}")
     public String welcomeScreen(Model model,
                                 HttpServletRequest request,
                                 UserResource user,
-                                @PathVariable String questionnaireResponseId,
-                                @RequestParam(required = false) String redirectUrl,
-                                HttpServletResponse httpServletResponse) {
-        if (redirectUrl != null) {
-            encryptedCookieService.saveToCookie(httpServletResponse, REDIRECT_URL_COOKIE_KEY, redirectUrl);
-        }
+                                @PathVariable String questionnaireResponseId) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
+        if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
+            //TODO view model
+            QuestionnaireLinkResource link = linkRestService.getQuestionnaireLink(questionnaireResponseId).getSuccess();
+            if (link instanceof ApplicationOrganisationLinkResource) {
+                model.addAttribute("subtitle", ((ApplicationOrganisationLinkResource) link).getApplicationName());
+                model.addAttribute("backLinkText", "Back to application overview");
+                model.addAttribute("backButtonText", "Return to application overview");
+                model.addAttribute("backLinkUrl", String.format("~/application/%d", ((ApplicationOrganisationLinkResource) link).getApplicationId()));
+            }
+        }
         model.addAttribute("questionnaire", questionnaire);
         return "questionnaire/welcome";
     }
@@ -94,12 +97,7 @@ public class QuestionnaireWebController {
                            HttpServletRequest request,
                            UserResource user,
                            @PathVariable String questionnaireResponseId,
-                           @PathVariable long questionId,
-                            @RequestParam(required = false) String redirectUrl,
-                           HttpServletResponse httpServletResponse) {
-        if (redirectUrl != null) {
-            encryptedCookieService.saveToCookie(httpServletResponse, REDIRECT_URL_COOKIE_KEY, redirectUrl);
-        }
+                           @PathVariable long questionId) {
         QuestionnaireQuestionForm form = new QuestionnaireQuestionForm();
         questionnaireQuestionResponseRestService.findByQuestionnaireQuestionIdAndQuestionnaireResponseId(questionId, questionnaireResponseId)
                 .toOptionalIfNotFound()
@@ -132,19 +130,22 @@ public class QuestionnaireWebController {
         };
         Supplier<String> failureView = () -> viewQuestion(model, questionnaireResponseId, questionId);
 
-        RestResult<Void> saveResult;
-        if (form.getQuestionResponseId() != null) {
-            QuestionnaireQuestionResponseResource response = questionnaireQuestionResponseRestService.get(form.getQuestionResponseId()).getSuccess();
-            response.setOption(form.getOption());
-            saveResult = questionnaireQuestionResponseRestService.update(response.getId(), response);
-        } else {
-            QuestionnaireQuestionResponseResource response = new QuestionnaireQuestionResponseResource();
-            response.setQuestionnaireResponse(questionnaireResponseId);
-            response.setOption(form.getOption());
-            saveResult = questionnaireQuestionResponseRestService.create(response).andOnSuccess(() -> restSuccess());
-        }
-        validationHandler.addAnyErrors(saveResult);
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<Void> saveResult;
+            if (form.getQuestionResponseId() != null) {
+                QuestionnaireQuestionResponseResource response = questionnaireQuestionResponseRestService.get(form.getQuestionResponseId()).getSuccess();
+                response.setOption(form.getOption());
+                saveResult = questionnaireQuestionResponseRestService.update(response.getId(), response);
+            } else {
+                QuestionnaireQuestionResponseResource response = new QuestionnaireQuestionResponseResource();
+                response.setQuestionnaireResponse(questionnaireResponseId);
+                response.setOption(form.getOption());
+                saveResult = questionnaireQuestionResponseRestService.create(response).andOnSuccess(() -> restSuccess());
+            }
+            validationHandler.addAnyErrors(saveResult);
+            return validationHandler.failNowOrSucceedWith(failureView, successView);
+        });
     }
 
     @GetMapping("/{questionnaireResponseId}/outcome/{outcomeId}")
@@ -153,20 +154,29 @@ public class QuestionnaireWebController {
                            UserResource user,
                            @PathVariable String questionnaireResponseId,
                            @PathVariable long outcomeId) {
+        QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
+        QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
         QuestionnaireTextOutcomeResource outcome = questionnaireTextOutcomeRestService.get(outcomeId).getSuccess();
-        if (outcome.getText() == null) {
-            String redirectUrl =  "redirect:" + Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
-                    .orElse("/");
-            if (outcome.getImplementation() != null) {
-                redirectUrl += "?outcome=" + outcome.getImplementation().name();
-            }
-            return redirectUrl;
+        String endUrl = getEndUrl(questionnaire, questionnaireResponseId);
+        if (outcome.getImplementation() != null) {
+            endUrl += "?outcome=" + outcome.getImplementation().name();
         }
-
+        if (outcome.getText() == null) {
+            return "redirect:" + endUrl;
+        }
         model.addAttribute("model", outcome);
-        model.addAttribute("redirectUrl", Optional.ofNullable(encryptedCookieService.getCookieValue(request, REDIRECT_URL_COOKIE_KEY))
-                .orElse("/"));
+        model.addAttribute("endUrl", endUrl);
         return "questionnaire/outcome";
+    }
+
+    private String getEndUrl(QuestionnaireResource questionnaire, String questionnaireResponseId) {
+        if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
+            QuestionnaireLinkResource link = linkRestService.getQuestionnaireLink(questionnaireResponseId).getSuccess();
+            if (link instanceof ApplicationOrganisationLinkResource) {
+                return String.format("/application/%d/form/organisation/%d/question/%d/questionnaire", ((ApplicationOrganisationLinkResource) link).getApplicationId(), ((ApplicationOrganisationLinkResource) link).getOrganisationId(), ((ApplicationOrganisationLinkResource) link).getQuestionId());
+            }
+        }
+        return "/";
     }
 
     private String viewQuestion(Model model, String questionnaireResponseId, long questionId) {

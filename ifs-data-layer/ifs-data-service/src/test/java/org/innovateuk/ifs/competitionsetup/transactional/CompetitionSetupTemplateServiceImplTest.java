@@ -148,6 +148,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFundingType(FundingType.GRANT)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .build();
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
@@ -166,6 +167,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+        verify(subsidyControlTemplate).sections(any());
     }
 
     @Test

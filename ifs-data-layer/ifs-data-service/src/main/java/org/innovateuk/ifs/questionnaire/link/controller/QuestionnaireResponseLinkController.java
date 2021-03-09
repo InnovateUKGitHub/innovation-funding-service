@@ -2,6 +2,7 @@ package org.innovateuk.ifs.questionnaire.link.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkService;
+import org.innovateuk.ifs.questionnaire.resource.QuestionnaireLinkResource;
 import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,11 @@ public class QuestionnaireResponseLinkController {
     @Autowired
     private QuestionnaireResponseLinkService service;
 
+    @GetMapping("/{questionnaireResponseId}")
+    public RestResult<QuestionnaireLinkResource> get(@PathVariable String questionnaireResponseId) {
+        return service.get(UUID.fromString(questionnaireResponseId))
+                .toGetResponse();
+    }
     @GetMapping("/{questionnaireId}/application/{applicationId}/organisation/{organisationId}")
     public RestResult<StringResource> get(@PathVariable long questionnaireId,
                                           @PathVariable long applicationId,

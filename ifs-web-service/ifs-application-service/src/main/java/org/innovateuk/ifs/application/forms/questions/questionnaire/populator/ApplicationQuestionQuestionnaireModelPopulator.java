@@ -82,8 +82,7 @@ public class ApplicationQuestionQuestionnaireModelPopulator {
                 complete,
                 northernIrelandDeclaration,
                 questionnaireResponseId,
-                answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId, complete || !open,
-                        String.format("/application/%d/form/organisation/%d/question/%d/questionnaire/questionnaire-complete", applicationId, organisationId, questionId)));
+                answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId, complete || !open));
 
     }
 }
