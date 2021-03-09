@@ -8,15 +8,15 @@ Suite Teardown    Custom suite teardown
 
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
-Resource          ../../../resources/common/PS_Common.robot
-Resource          ../../../resources/common/Competition_Commons.robot
-Resource          ../../../resources/common/Assessor_Commons.robot
+#Resource          ../../../resources/common/PS_Common.robot
+#Resource          ../../../resources/common/Competition_Commons.robot
+#Resource          ../../../resources/common/Assessor_Commons.robot
 Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
-Resource          ../../../resources/keywords/05__Email_Keywords.robot
+#Resource          ../../../resources/keywords/05__Email_Keywords.robot
 
 *** Variables ***
-${competitionName}                 WTO comp Subsidy control tactical
-${applicationName}                 WTO comp Subsidy control tactical application
+${competitionName}     WTO comp Subsidy control tactical
+${applicationName}     WTO comp Subsidy control tactical application
 
 #Note: This suite will grow as the NI protocol functionality is added!
 
