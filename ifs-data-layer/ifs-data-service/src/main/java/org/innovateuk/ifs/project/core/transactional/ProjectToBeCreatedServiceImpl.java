@@ -94,7 +94,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     }
 
     private Application migrateApplicationIfRequired(Application application) {
-        return applicationMigrationService.findApplicationByIdAndStatus(application.getId(), MigrationStatus.CREATED).getSuccess()
+        return applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED).getSuccess()
                 .map(applicationMigration -> applicationMigrationService.migrateApplication(application.getId()).getSuccess())
                 .orElse(application);
     }

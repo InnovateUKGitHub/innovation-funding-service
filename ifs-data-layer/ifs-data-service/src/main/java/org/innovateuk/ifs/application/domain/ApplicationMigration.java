@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 /**
@@ -18,11 +15,15 @@ public class ApplicationMigration {
 
     private Long applicationId;
 
+    @Enumerated(EnumType.STRING)
     private MigrationStatus status;
 
     private ZonedDateTime createdOn;
 
     private ZonedDateTime updatedOn;
+
+    public ApplicationMigration() {
+    }
 
     public ApplicationMigration(Long applicationId, MigrationStatus status) {
         this.applicationId = applicationId;
