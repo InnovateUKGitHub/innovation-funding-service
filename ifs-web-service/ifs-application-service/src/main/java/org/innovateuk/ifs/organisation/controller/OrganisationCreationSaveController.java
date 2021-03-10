@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -54,18 +56,18 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     }
 
     @PostMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String saveOrganisation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                    Model model,
                                    UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
-
+        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
 
         //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
-        if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
+        if (bindingResult.hasErrors() &&  !bindingResult.hasFieldErrors("organisationSearchName") && !bindingResult.hasFieldErrors("addressForm.postcodeInput")) {
             return "redirect:/";
         }
         OrganisationResource organisationResource = getOrganisationResourceToPersist(organisationForm);
@@ -81,6 +83,14 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         if (isNewOrganisationSearchEnabled)  {
             organisationResource.setDateOfIncorporation(organisationForm.getDateOfIncorporation());
             AddressResource addressResource = organisationForm.getOrganisationAddress();
+
+            AddressForm addressForm = organisationForm.getAddressForm();
+            // Address form populated on address entry
+            if(addressForm != null ) {
+                addressResource = getAddressResourceFromForm(addressForm);
+                organisationResource.setBusinessType(organisationForm.getBusinessType());
+                organisationResource.setOrganisationNumber(organisationForm.getOrganisationNumber());
+            }
             OrganisationAddressResource orgAddressResource = new OrganisationAddressResource(organisationResource, addressResource, new AddressTypeResource(REGISTERED.getId(), REGISTERED.name()));
             organisationResource.setAddresses(asList(orgAddressResource));
             organisationResource.setSicCodes(organisationForm.getSicCodes());
@@ -98,5 +108,4 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
         return organisationResource;
     }
-
 }

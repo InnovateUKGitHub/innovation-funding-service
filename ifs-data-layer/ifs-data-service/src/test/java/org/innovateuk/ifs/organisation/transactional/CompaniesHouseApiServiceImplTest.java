@@ -338,10 +338,8 @@ public class CompaniesHouseApiServiceImplTest {
 		ServiceResult<OrganisationSearchResult> result = service.getOrganisationById("123");
 		assertTrue(result.isSuccess());
 
-		assertEquals(1, result.getSuccess().getOrganisationExecutiveOfficers().size());
-		assertEquals(" ", result.getSuccess().getOrganisationExecutiveOfficers().get(0).getName());
+		assertEquals(0, result.getSuccess().getOrganisationExecutiveOfficers().size());
 	}
-
 
 	private Map<String, Object> companyResultMap() {
 		return asMap("company_number", "1234",
