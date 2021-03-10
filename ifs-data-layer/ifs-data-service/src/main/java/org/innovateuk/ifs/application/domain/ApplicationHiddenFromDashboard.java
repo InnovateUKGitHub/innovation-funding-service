@@ -51,6 +51,10 @@ public class ApplicationHiddenFromDashboard {
         return application;
     }
 
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     public User getUser() {
         return user;
     }

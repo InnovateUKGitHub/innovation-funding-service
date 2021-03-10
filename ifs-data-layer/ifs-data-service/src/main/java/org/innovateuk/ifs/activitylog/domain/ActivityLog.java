@@ -104,6 +104,10 @@ public class ActivityLog {
         return application;
     }
 
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     public Optional<Organisation> getOrganisation() {
         return ofNullable(organisation);
     }

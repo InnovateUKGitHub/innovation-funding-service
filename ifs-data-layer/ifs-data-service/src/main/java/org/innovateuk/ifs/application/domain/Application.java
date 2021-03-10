@@ -138,25 +138,22 @@ public class Application implements ProcessActivity {
         this.durationInMonths = application.getDurationInMonths();
         this.completion = application.getCompletion();
         setNoInnovationAreaApplicable(application.getNoInnovationAreaApplicable());
-        //this.noInnovationAreaApplicable = application.getNoInnovationAreaApplicable();
         this.inAssessmentReviewPanel = application.isInAssessmentReviewPanel();
-        this.processRoles = application.getProcessRoles();
-        this.applicationFinances = application.getApplicationFinances();
         this.competition = application.getCompetition();
-        this.invites = application.getInvites();
         this.fundingDecision = application.getFundingDecision();
-        this.formInputResponses = application.getFormInputResponses();
         setResearchCategory(application.getResearchCategory());
         setInnovationArea(application.getInnovationArea());
-        //this.researchCategory = new ApplicationResearchCategoryLink(this, application.getResearchCategory());
-        //this.innovationArea = new ApplicationInnovationAreaLink(this, application.getInnovationArea());
-        this.applicationProcess = application.getApplicationProcess();
         this.assessmentPeriod = application.getAssessmentPeriod();
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        this.project = application.getProject();
-        this.projectToBeCreated = application.getProjectToBeCreated();
+        //this.processRoles = application.getProcessRoles();
+        //this.applicationFinances = application.getApplicationFinances();
+        //this.invites = application.getInvites();
+        //this.formInputResponses = application.getFormInputResponses();
+        //this.applicationProcess = application.getApplicationProcess();
+        //this.project = application.getProject();
+        //this.projectToBeCreated = application.getProjectToBeCreated();
     }
 
     protected boolean canEqual(Object other) {
