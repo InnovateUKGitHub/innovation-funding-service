@@ -97,7 +97,7 @@ Innovateuk subsidy control T&C's section should be completed
 
 Applicant can accept subsidy control terms and conditions based on NI declaration
     [Documentation]  IFS-9223
-    Given log in as a different user                               &{lead_applicant_credentials}
+    Given log in as a different user                               janet.howard@example.com     ${short_password}
     And the user select the competition and starts application     ${subsidyControlFundingComp}
     And the user clicks the button/link                            jQuery = button:contains("Save and continue")
     When the user clicks the button/link                           link = Award terms and conditions
@@ -113,7 +113,6 @@ Applicant can accept state aid terms and conditions based on NI declaration
     And the user clicks the button/link               link = Award terms and conditions
     Then the user should see the element              jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user accepts terms and conditions
-
 
 *** Keywords ***
 Custom suite setup
