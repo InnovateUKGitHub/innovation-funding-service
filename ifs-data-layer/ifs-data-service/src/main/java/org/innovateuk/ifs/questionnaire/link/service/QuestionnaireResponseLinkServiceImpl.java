@@ -9,6 +9,7 @@ import org.innovateuk.ifs.questionnaire.link.domain.ProjectOrganisationQuestionn
 import org.innovateuk.ifs.questionnaire.link.repository.ApplicationOrganisationQuestionnaireResponseRepository;
 import org.innovateuk.ifs.questionnaire.link.repository.ProjectOrganisationQuestionnaireResponseRepository;
 import org.innovateuk.ifs.questionnaire.resource.ApplicationOrganisationLinkResource;
+import org.innovateuk.ifs.questionnaire.resource.ProjectOrganisationLinkResource;
 import org.innovateuk.ifs.questionnaire.resource.QuestionnaireLinkResource;
 import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
 import org.innovateuk.ifs.questionnaire.response.repository.QuestionnaireResponseRepository;
@@ -67,6 +68,7 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<QuestionnaireLinkResource> get(UUID questionnaireResponseId) {
+
         Optional<ApplicationOrganisationQuestionnaireResponse> maybeApplicationLink = applicationOrganisationQuestionnaireResponseRepository.findByQuestionnaireResponseId(questionnaireResponseId);
         if (maybeApplicationLink.isPresent()) {
             ApplicationOrganisationLinkResource link = new ApplicationOrganisationLinkResource();
@@ -77,6 +79,19 @@ public class QuestionnaireResponseLinkServiceImpl extends BaseTransactionalServi
             }
             link.setOrganisationId(maybeApplicationLink.get().getOrganisation().getId());
             link.setQuestionId(questionRepository.findByQuestionnaireId(maybeApplicationLink.get().getQuestionnaireResponse().getQuestionnaire().getId()).getId());
+            return serviceSuccess(link);
+        }
+
+        Optional<ProjectOrganisationQuestionnaireResponse> maybeProjectLink = projectOrganisationQuestionnaireResponseRepository.findByQuestionnaireResponseId(questionnaireResponseId);
+        if (maybeProjectLink.isPresent()) {
+            ProjectOrganisationLinkResource link = new ProjectOrganisationLinkResource();
+            link.setProjectId(maybeProjectLink.get().getProject().getId());
+            link.setProjectName(maybeProjectLink.get().getProject().getName());
+            if (isNullOrEmpty(link.getProjectName())) {
+                link.setProjectName("Untitled project");
+            }
+            link.setOrganisationId(maybeProjectLink.get().getOrganisation().getId());
+            link.setQuestionId(questionRepository.findByQuestionnaireId(maybeProjectLink.get().getQuestionnaireResponse().getQuestionnaire().getId()).getId());
             return serviceSuccess(link);
         }
         //other links go here;
