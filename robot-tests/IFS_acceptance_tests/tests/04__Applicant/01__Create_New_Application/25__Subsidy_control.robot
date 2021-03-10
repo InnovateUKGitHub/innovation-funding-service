@@ -47,6 +47,7 @@ Applicant completes the finances sections
     And the user selects the radio button                                     requestingFunding   false
     And the user selects the radio button                                     otherFunding  false
     Then the user clicks the button/link                                      jQuery = button:contains("Mark as complete")
+    And the user should see the element                                       jQuery = li:contains("Your funding") > .task-status-complete
 
 Applicant submits the applicantion
     [Documentation]  IFS-9309
