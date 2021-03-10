@@ -93,6 +93,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9241 KTP fEC/Non-fEC: 'Your project costs' conditions
 ...
+...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -356,6 +358,20 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      [Documentation]  IFS-9239
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
+
+New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
+     [Documentation]  IFS-9240
+     Given the user clicks the button/link                  link = Your fEC model
+     And the user clicks the button/link                    jQuery = button:contains("Edit your fEC Model")
+     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
+     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
+     Then the user should see a field and summary error     You must upload a file.
+
+New lead applicant uploads a document for the organisation's fEC model and save the selection
+     [Documentation]  IFS-9240
+     When the user uploads the file          css = .inputfile   testing_5MB.pdf
+     Then the user clicks the button/link    jQuery = button:contains("Mark as complete")
+     And The user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
