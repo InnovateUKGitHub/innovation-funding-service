@@ -19,7 +19,7 @@ ${atiSubsidyControl}             Aerospace Technology Institute (ATI) - Subsidy 
 ${atiStateAid}                   Aerospace Technology Institute (ATI) (opens in a new window)
 ${innovateUKSubsidyControl}      Innovate UK - Subsidy control (opens in a new window)
 ${innovateUKStateAid}            Innovate UK (opens in a new window)
-${subsidyControlFundingComp}     Subsidy control t and c competition
+${subsidyControlFundingComp}     Subsidy control competition
 ${subsidyControlFundingApp}      Subsidy control application
 
 *** Test Cases ***
@@ -109,7 +109,7 @@ Applicant can accept state aid terms and conditions based on NI declaration
     [Documentation]  IFS-9223
     Given the user creates an application             ${subsidyControlFundingComp}   ${subsidyControlFundingApp}
     And requesting subsidy control application id
-    When update NI declaration of the application
+    When update NI declaration of the application     ${subsidyControlAppId}
     And the user clicks the button/link               link = Award terms and conditions
     Then the user should see the element              jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user accepts terms and conditions
@@ -149,5 +149,6 @@ requesting subsidy control application id
     Set suite variable    ${subsidyControlAppId}
 
 update NI declaration of the application
-    execute sql string   UPDATE `${database_name}`.`application_finance` SET `northern_ireland_declaration`=1 WHERE `application_id`='${subsidyControlAppId}';
+    [Arguments]  ${subsidyControlApplicationID}
+    execute sql string  UPDATE `${database_name}`.`application_finance` SET `northern_ireland_declaration`=1 WHERE `application_id`='${subsidyControlApplicationID}';
     reload page
