@@ -4,7 +4,9 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectTermsViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -21,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceBuilder.newPendingPartnerProgressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -39,6 +42,8 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
     private OrganisationRestService organisationRestService;
     @Mock
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
+    @Mock
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @InjectMocks
     private ProjectTermsModelPopulator projectTermsModelPopulator;
@@ -69,6 +74,9 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(project.getId(), organisation.getId())).thenReturn(restSuccess(pendingPartnerProgress));
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+        when(projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId())).thenReturn(restSuccess(projectFinanceResource));
+
 
         ProjectTermsViewModel actual = projectTermsModelPopulator.populate(project.getId(), organisation.getId());
 

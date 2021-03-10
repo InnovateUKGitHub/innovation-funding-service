@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectTermsViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -17,15 +19,18 @@ public class ProjectTermsModelPopulator {
     private CompetitionRestService competitionRestService;
     private OrganisationRestService organisationRestService;
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     public ProjectTermsModelPopulator(ProjectRestService projectRestService,
                                       CompetitionRestService competitionRestService,
                                       OrganisationRestService organisationRestService,
-                                      PendingPartnerProgressRestService pendingPartnerProgressRestService) {
+                                      PendingPartnerProgressRestService pendingPartnerProgressRestService,
+                                      ProjectFinanceRestService projectFinanceRestService) {
         this.projectRestService = projectRestService;
         this.competitionRestService = competitionRestService;
         this.organisationRestService = organisationRestService;
         this.pendingPartnerProgressRestService = pendingPartnerProgressRestService;
+        this.projectFinanceRestService = projectFinanceRestService;
     }
 
     public ProjectTermsViewModel populate(long projectId,
@@ -38,9 +43,24 @@ public class ProjectTermsModelPopulator {
         return new ProjectTermsViewModel(
                 projectId,
                 organisation.getId(),
-                competition.getTermsAndConditions().getTemplate(),
+                getTermsAndConditionsTemplate(competition, projectId, organisationId),
                 pendingPartnerProgressResource.isTermsAndConditionsComplete(),
                 pendingPartnerProgressResource.getTermsAndConditionsCompletedOn()
         );
+    }
+
+    private String getTermsAndConditionsTemplate(CompetitionResource competition, long projectId, Long organisationId) {
+        if (competition.isFinanceType() && organisationId != null) {
+            ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
+            if (projectFinanceResource != null && isNorthernIrelandDeclaration(projectFinanceResource)
+                    && competition.getOtherFundingRulesTermsAndConditions() != null) {
+                return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
+            }
+        }
+        return competition.getTermsAndConditions().getTemplate();
+    }
+
+    private boolean isNorthernIrelandDeclaration(ProjectFinanceResource projectFinanceResource) {
+        return projectFinanceResource.getNorthernIrelandDeclaration() != null && projectFinanceResource.getNorthernIrelandDeclaration();
     }
 }
