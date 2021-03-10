@@ -3884,10 +3884,45 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
              aria-labelledby="accordion-finances-heading-9">
             <th:block
                 th:if="${model.isReadOnly(financeRowType)}">
-                <th:block th:insert="application/your-project-costs-fragments :: academic_and_secretarial_support_read_only"/>
+                <th:block
+                    th:insert="application/your-project-costs-fragments :: academic_and_secretarial_support_read_only"/>
             </th:block>
-            <th:block
-                th:unless="${model.isReadOnly(financeRowType)}">
+
+            <th:block th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block th:unless="${model.internal}">
+                    <p class="govuk-body">You may enter up to £875 (or up to £1,000 for London weighting) multiplied by the number of months your project will run.
+                    </p>
+                </th:block>
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="academic-secretarial-costs" scope="col" class="govuk-table__header table-header-width-15-percent alignright">
+                                Cost (£)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=academicAndSecretarialSupportForm)"/>
+                        <input type="number"
+                               id="academicAndSecretarialSupportForm"
+                               th:field="${form.academicAndSecretarialSupportForm.cost}"
+                               class="govuk-input academic-and-secretarial-support-totals width-15-percent"
+                               required="required"
+                               th:errorclass="govuk-input--error"
+                               placeholder="0"
+                               min="1"
+                               max="9999999999999999999"
+                               data-field-errormessage="This field can only accept whole numbers."
+                        />
+                        </td>
+                        </tbody>
+                    </table>
+                </div>
+
+
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total academic and secretarial support costs
                     <span class="govuk-heading-s"
@@ -3953,6 +3988,9 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These costs are calculated automatically and paid at 100%. The calculation is 46% of the sum of 2 grant amounts:'Associate employment costs' and the 'Academic and secretarial support costs'.</p>
+                </th:block>
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total indirect costs
                     <span class="govuk-heading-s"
@@ -3960,8 +3998,8 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                           th:text="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"></span>
                 </h4>
                 <input type="hidden"
-                       data-calculation-fields=".indirect-costs-totals"
-                       data-calculation-operations="+"
+                       data-calculation-operations="+,*,/"
+                       data-calculation-fields="#section-total-associate-salary-costs, #section-total-academic-and-secretarial-support, 46, 100"
                        id="section-total-indirect-costs"
                        th:attr="data-calculation-rawvalue=${form.totalIndirectCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
@@ -48,6 +49,8 @@ public class YourProjectCostsForm {
     private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
 
     private JustificationForm justificationForm = new JustificationForm();
+
+    private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm();
 
     private Boolean eligibleAgreement;
 
@@ -285,11 +288,15 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
-        return BigDecimal.ZERO;
+        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm.getCost())
+                .orElse(BigInteger.valueOf(0)));
     }
 
-    public BigDecimal getTotalIndirectCosts() {
-        return BigDecimal.ZERO;
+    public BigDecimal getTotalIndirectCosts()
+    {
+        BigDecimal percentage = new BigDecimal(46);
+        return this.getTotalAssociateSalaryCosts().add(this.getTotalAcademicAndSecretarialSupportCosts())
+                .multiply(percentage).divide(new BigDecimal(100));
     }
 
     public BigDecimal getOrganisationFinanceTotal() {
@@ -371,5 +378,13 @@ public class YourProjectCostsForm {
                 .values()
                 .stream()
                 .filter(cost -> cost.getType() != null && cost.getType() == KtpTravelCostType.SUPERVISOR));
+    }
+
+    public AcademicAndSecretarialSupportCostRowForm getAcademicAndSecretarialSupportForm() {
+        return academicAndSecretarialSupportForm;
+    }
+
+    public void setAcademicAndSecretarialSupportForm(AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm) {
+        this.academicAndSecretarialSupportForm = academicAndSecretarialSupportForm;
     }
 }
