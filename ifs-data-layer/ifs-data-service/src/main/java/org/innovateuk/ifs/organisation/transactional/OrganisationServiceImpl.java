@@ -5,13 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.organisation.domain.Academic;
-import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.*;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.AcademicRepository;
+import org.innovateuk.ifs.organisation.repository.ExecutiveOfficerRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.repository.SicCodeRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -46,10 +49,24 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private AcademicRepository academicRepository;
+
     @Autowired
     private OrganisationMapper organisationMapper;
+
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private SicCodeRepository sicCodeRepository;
+
+    @Autowired
+    private ExecutiveOfficerRepository executiveOfficerRepository;
+
+    @Autowired
+    private OrganisationAddressRepository organisationAddressRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Override
     public ServiceResult<Set<OrganisationResource>> findByApplicationId(final long applicationId) {
@@ -129,6 +146,53 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         Organisation savedOrganisation = organisationRepository.save(organisation);
 
         return savedOrganisation;
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<OrganisationResource> syncCompaniesHouseDetails(OrganisationResource organisationResource) {
+        return find(organisationRepository.findById(organisationResource.getId()), notFoundError(Organisation.class, organisationResource.getId()))
+                .andOnSuccess(organisation -> serviceSuccess(organisationMapper.mapToResource(syncOrganisation(organisation.getId(), organisationResource))));
+    }
+
+    private Organisation syncOrganisation(Long organisationId, OrganisationResource organisationToSync) {
+        Organisation organisation = organisationMapper.mapToDomain(organisationToSync);
+        setOrganisationIdForRelatedEntities(organisation);
+
+        deleteExistingCompaniesHouseDetails(organisationId, organisation);
+
+        Organisation savedOrganisation = organisationRepository.save(organisation);
+
+        return savedOrganisation;
+    }
+
+    private void deleteExistingCompaniesHouseDetails(Long organisationId, Organisation organisation) {
+        List<SicCode> removedSicCodes = sicCodeRepository.findByOrganisationId(organisationId).stream()
+                .filter(sicCode -> !organisation.getSicCodes().contains(sicCode))
+                .collect(Collectors.toList());
+        sicCodeRepository.deleteAll(removedSicCodes);
+
+        List<ExecutiveOfficer> removedExecutiveOfficers = executiveOfficerRepository.findByOrganisationId(organisationId).stream()
+                .filter(executiveOfficer -> !organisation.getExecutiveOfficers().contains(executiveOfficer))
+                .collect(Collectors.toList());
+        executiveOfficerRepository.deleteAll(removedExecutiveOfficers);
+
+        AddressType registeredAddressType = new AddressType();
+        registeredAddressType.setId(OrganisationAddressType.REGISTERED.getId());
+        registeredAddressType.setName(OrganisationAddressType.REGISTERED.name());
+        List<OrganisationAddress> removedOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisationId, registeredAddressType).stream()
+                .filter(organisationAddress -> !organisation.getAddresses().contains(organisationAddress))
+                .collect(Collectors.toList());
+        removedOrganisationAddresses.stream().forEach(organisationAddress -> {
+            addressRepository.delete(organisationAddress.getAddress());
+            organisationAddressRepository.delete(organisationAddress);
+        });
+    }
+
+    private void setOrganisationIdForRelatedEntities(Organisation mappedOrganisation) {
+        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getSicCodes().forEach(sicCode -> sicCode.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getExecutiveOfficers().forEach(director -> director.setOrganisation(mappedOrganisation));
     }
 
     @Override

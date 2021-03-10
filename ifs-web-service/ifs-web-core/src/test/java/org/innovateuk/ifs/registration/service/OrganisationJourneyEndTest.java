@@ -3,25 +3,38 @@ package org.innovateuk.ifs.registration.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.async.config.AsyncExecutionConfig;
+import org.innovateuk.ifs.async.executor.AsyncTaskDecorator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.core.task.TaskDecorator;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,10 +67,34 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
     @Mock
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
+    private CompaniesHouseRestService companiesHouseRestService;
+
+    @Mock
+    private TaskDecorator taskDecorator;
+
+    @Mock
+    private AsyncConfigurer taskExecutor;
+
+    @Mock
+    Executor executor;
+
+
     @Test
     public void completeProcess_newUser() {
         UserResource user = null;
         long organisationId = 1L;
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
+        OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
+
+        when(organisationRestService.getOrganisationById(organisationId))
+                .thenReturn(restSuccess(organisation));
+        when(companiesHouseRestService.getOrganisationById("1"))
+                .thenReturn(restSuccess(organisationSearchResult));
 
         String result = service.completeProcess(request, response, user, organisationId);
 
@@ -67,9 +104,18 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingLead_teamQuestion() {
-        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
         long organisationId = 1L;
         long competitionId = 2L;
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
+        OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
+
+        when(organisationRestService.getOrganisationById(organisationId))
+                .thenReturn(restSuccess(organisation));
+        when(companiesHouseRestService.getOrganisationById("1"))
+                .thenReturn(restSuccess(organisationSearchResult));
+
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
@@ -77,6 +123,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
 
         String result = service.completeProcess(request, response, user, organisationId);
 
@@ -87,9 +134,18 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingLead_noQuestion() {
-        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
         long organisationId = 1L;
         long competitionId = 2L;
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
+        OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
+
+        when(organisationRestService.getOrganisationById(organisationId))
+                .thenReturn(restSuccess(organisation));
+        when(companiesHouseRestService.getOrganisationById("1"))
+                .thenReturn(restSuccess(organisationSearchResult));
+
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
@@ -97,7 +153,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
-
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", application.getId()));
@@ -109,6 +165,15 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         long organisationId = 1L;
         long applicationId = 2L;
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
+        OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
+
+        when(organisationRestService.getOrganisationById(organisationId))
+                .thenReturn(restSuccess(organisation));
+        when(companiesHouseRestService.getOrganisationById("1"))
+                .thenReturn(restSuccess(organisationSearchResult));
+
         String inviteHash = "inviteHash";
         ApplicationInviteResource invite = newApplicationInviteResource().withApplication(applicationId).build();
 
@@ -117,7 +182,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getInviteHashCookieValue(request)).thenReturn(Optional.of(inviteHash));
         when(inviteRestService.getInviteByHash(inviteHash)).thenReturn(restSuccess(invite));
         when(inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId)).thenReturn(restSuccess());
-
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", applicationId));
@@ -127,9 +192,18 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingAssessor() {
-        UserResource user = newUserResource().withRoleGlobal(Role.ASSESSOR).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
         long organisationId = 1L;
         long competitionId = 2L;
+
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withCompaniesHouseNumber("1").build();
+        OrganisationSearchResult organisationSearchResult  = new OrganisationSearchResult();
+
+        when(organisationRestService.getOrganisationById(organisationId))
+                .thenReturn(restSuccess(organisation));
+        when(companiesHouseRestService.getOrganisationById("1"))
+                .thenReturn(restSuccess(organisationSearchResult));
+
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
@@ -138,6 +212,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
+        when(taskExecutor.getAsyncExecutor()).thenReturn(executor);
 
         String result = service.completeProcess(request, response, user, organisationId);
 
@@ -148,6 +223,8 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Override
     protected OrganisationJourneyEnd supplyServiceUnderTest() {
-        return new OrganisationJourneyEnd();
+        OrganisationJourneyEnd organisationJourneyEnd = new OrganisationJourneyEnd();
+        organisationJourneyEnd.setNewOrganisationSearchEnabled(Boolean.TRUE);
+        return  organisationJourneyEnd;
     }
 }
