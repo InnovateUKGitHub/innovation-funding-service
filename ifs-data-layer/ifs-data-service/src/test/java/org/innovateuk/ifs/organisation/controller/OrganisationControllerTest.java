@@ -10,13 +10,15 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.hamcrest.Matchers.is;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class OrganisationControllerTest extends BaseControllerMockMVCTest<OrganisationController> {
 
@@ -74,5 +76,38 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
         mockMvc.perform(get("/organisation/by-user-and-project-id/1/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("uniqueOrganisationName")));
+    }
+
+    @Test
+    public void updateCompaniesHouseDetailsReturnOrganisation() throws Exception {
+        OrganisationResource organisationResource = newOrganisationResource()
+                .withId(1L)
+                .withName("uniqueOrganisationName")
+                .build();
+
+        when(organisationServiceMock.syncCompaniesHouseDetails(any(OrganisationResource.class)))
+                .thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(put("/organisation/sync-companies-house-details")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(organisationResource)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(organisationResource)));
+    }
+
+    @Test
+    public void updateCompaniesHouseDetailsReturnsNotFound() throws Exception {
+        OrganisationResource organisationResource = newOrganisationResource()
+                .withId(1L)
+                .withName("uniqueOrganisationName")
+                .build();
+
+        when(organisationServiceMock.syncCompaniesHouseDetails(any(OrganisationResource.class)))
+                .thenReturn(serviceFailure(notFoundError(OrganisationResource.class)));
+
+        mockMvc.perform(put("/organisation/sync-companies-house-details")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(organisationResource)))
+                .andExpect(status().isNotFound());
     }
 }
