@@ -30,10 +30,6 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
     private ProjectUserInvite invite;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "projectId", referencedColumnName = "project_id", insertable = false, updatable = false),
             @JoinColumn(name = "organisationId", referencedColumnName = "organisation_id", insertable = false, updatable = false)
@@ -44,17 +40,11 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
     }
 
     public ProjectUser(User user, Project project, ProjectParticipantRole role, Organisation organisation) {
-        super(user, role);
+        super(user, role, project);
         if (!ProjectParticipantRole.PROJECT_USER_ROLES.contains(role)) {
             throw new IllegalArgumentException("ProjectUser cannot have role " + role);
         }
         this.organisation = organisation;
-        this.project = project;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
     }
 
     @Override

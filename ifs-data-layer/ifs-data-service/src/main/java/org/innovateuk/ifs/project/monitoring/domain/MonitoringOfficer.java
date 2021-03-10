@@ -23,21 +23,15 @@ public class MonitoringOfficer extends ProjectParticipant {
     private Project project;
 
     public MonitoringOfficer() {
-        super(null, MONITORING_OFFICER);
+        super(null, MONITORING_OFFICER, null);
     }
 
     public MonitoringOfficer(User user, Project project) {
-        super(user, MONITORING_OFFICER);
+        super(user, MONITORING_OFFICER, project);
         this.project = project;
     }
     public MonitoringOfficer(User user, Project project, ProjectParticipantRole role) {
-        super(user, role);
-        this.project = project;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
+        super(user, role, project);
     }
 
     @Override
