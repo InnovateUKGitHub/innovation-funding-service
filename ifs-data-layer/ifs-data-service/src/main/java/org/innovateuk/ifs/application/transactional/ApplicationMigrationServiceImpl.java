@@ -9,8 +9,8 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
-import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
@@ -23,7 +23,9 @@ import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -34,10 +36,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class ApplicationMigrationServiceImpl implements ApplicationMigrationService {
 
     @Autowired
-    private ApplicationRepository applicationRepository;
+    private ApplicationMigrationRepository applicationMigrationRepository;
 
     @Autowired
-    private ApplicationMigrationRepository applicationMigrationRepository;
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ActivityLogRepository activityLogRepository;
@@ -102,12 +104,16 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     @Autowired
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
 
+    @Autowired
+    private ApplicationDeletionService applicationDeletionService;
+
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
         return serviceSuccess(applicationMigrationRepository.findByApplicationIdAndStatus(applicationId, status));
     }
 
     @Override
+    @Transactional
     public ServiceResult<Application> migrateApplication(long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccessReturn(application -> {
@@ -149,9 +155,13 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 averageAssessorScoreRepository.save(averageAssessorScore);
                             });
 
-                    EuGrantTransfer euGrantTransfer = euGrantTransferRepository.findByApplicationId(application.getId());
-                    euGrantTransfer.setApplication(migratedApplication);
-                    euGrantTransferRepository.save(euGrantTransfer);
+                    serviceSuccess(euGrantTransferRepository.findByApplicationId(application.getId()))
+                            .andOnSuccessReturnVoid(euGrantTransfer -> {
+                                if (euGrantTransfer != null) {
+                                    euGrantTransfer.setApplication(migratedApplication);
+                                    euGrantTransferRepository.save(euGrantTransfer);
+                                }
+                            });
 
                     formInputResponseRepository.findByApplicationId(application.getId()).stream()
                             .forEach(formInputResponse -> {
@@ -159,7 +169,103 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 formInputResponseRepository.save(formInputResponse);
                             });
 
+                    processRoleRepository.findByApplicationId(application.getId()).stream()
+                            .forEach(processRole -> {
+                                processRole.setApplicationId(migratedApplication.getId());
+                                processRoleRepository.save(processRole);
+                            });
+
+                    projectRepository.findByApplicationId(application.getId()).ifPresent(
+                            project -> {
+                                project.setApplication(migratedApplication);
+                                projectRepository.save(project);
+                            }
+                    );
+
+                    projectToBeCreatedRepository.findByApplicationId(application.getId()).ifPresent(
+                            projectToBeCreated -> {
+                                projectToBeCreated.setApplication(migratedApplication);
+                                projectToBeCreatedRepository.save(projectToBeCreated);
+                            }
+                    );
+
+                    questionStatusRepository.findByApplicationId(application.getId()).stream()
+                            .forEach(questionStatus -> {
+                                questionStatus.setApplication(migratedApplication);
+                                questionStatusRepository.save(questionStatus);
+                            });
+
+                    serviceSuccess(grantProcessRepository.findOneByApplicationId(application.getId()))
+                            .andOnSuccessReturnVoid(grantProcess -> {
+                                if (grantProcess != null) {
+                                    GrantProcess migratedGrantProcess = new GrantProcess(migratedApplication.getId(), grantProcess.isPending());
+                                    migratedGrantProcess.setMessage(grantProcess.getMessage());
+                                    migratedGrantProcess.setLastProcessed(grantProcess.getLastProcessed());
+                                    migratedGrantProcess.setSentRequested(grantProcess.getSentRequested());
+                                    migratedGrantProcess.setSentSucceeded(grantProcess.getSentSucceeded());
+                                    grantProcessRepository.save(migratedGrantProcess);
+                                }
+                            });
+
+                    applicationProcessRepository.findByTargetId(application.getId()).stream()
+                            .forEach(applicationProcess -> {
+                                applicationProcess.setTarget(migratedApplication);
+                                applicationProcessRepository.save(applicationProcess);
+                            });
+
+                    assessmentRepository.findByTargetId(application.getId()).stream()
+                            .forEach(assessment -> {
+                                assessment.setTarget(migratedApplication);
+                                assessmentRepository.save(assessment);
+                            });
+
+                    interviewRepository.findByTargetId(application.getId()).stream()
+                            .forEach(interview -> {
+                                interview.setTarget(migratedApplication);
+                                interviewRepository.save(interview);
+                            });
+
+                    interviewAssignmentRepository.findByTargetId(application.getId()).stream()
+                            .forEach(interviewAssignment -> {
+                                interviewAssignment.setTarget(migratedApplication);
+                                interviewAssignmentRepository.save(interviewAssignment);
+                            });
+
+                    reviewRepository.findByTargetId(application.getId()).stream()
+                            .forEach(review -> {
+                                review.setTarget(migratedApplication);
+                                reviewRepository.save(review);
+                            });
+
+                    supporterAssignmentRepository.findByTargetId(application.getId()).stream()
+                            .forEach(supporterAssignment -> {
+                                supporterAssignment.setTarget(migratedApplication);
+                                supporterAssignmentRepository.save(supporterAssignment);
+                            });
+
+                    applicationInviteRepository.findByApplicationId(application.getId()).stream()
+                            .forEach(applicationInvite -> {
+                                applicationInvite.setTarget(migratedApplication);
+                                applicationInviteRepository.save(applicationInvite);
+                            });
+
+                    applicationKtaInviteRepository.findByApplicationId(application.getId()).ifPresent(
+                            applicationKtaInvite -> {
+                                applicationKtaInvite.setTarget(migratedApplication);
+                                applicationKtaInviteRepository.save(applicationKtaInvite);
+                            }
+                    );
+
+                    // TODO: Identify the reason why it is failing
+                    //applicationDeletionService.deleteApplication(application.getId());
+
                     return migratedApplication;
                 });
+    }
+
+    @Override
+    public ServiceResult<ApplicationMigration> updateApplicationMigrationStatus(ApplicationMigration applicationMigration) {
+        applicationMigration.setUpdatedOn(ZonedDateTime.now());
+        return serviceSuccess(applicationMigrationRepository.save(applicationMigration));
     }
 }

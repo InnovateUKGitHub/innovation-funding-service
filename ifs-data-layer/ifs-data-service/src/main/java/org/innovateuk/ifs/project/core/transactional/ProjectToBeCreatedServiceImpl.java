@@ -59,9 +59,16 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Transactional
     @Trace(dispatcher = true)
     public ServiceResult<ScheduleResponse> createProject(long applicationId) {
-        Long migratedApplicationId = migrateApplicationIfRequired(applicationId).getSuccess();
-        return find(projectToBeCreatedRepository.findByApplicationId(migratedApplicationId), notFoundError(ProjectToBeCreated.class, migratedApplicationId))
+        return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
+                .andOnSuccess(this::migrateApplicationIfRequired)
                 .andOnSuccess(this::createProject);
+        /*return migrateApplicationIfRequired(applicationId)
+                .andOnSuccessReturn(migratedApplicationId ->
+                    find(projectToBeCreatedRepository.findByApplicationId(migratedApplicationId), notFoundError(ProjectToBeCreated.class, migratedApplicationId))
+                            .andOnSuccess(this::createProject)
+                )
+                .andOnFailure(() ->
+                        new ScheduleResponse("Application migration is unsuccessful for application id: " + applicationId)); */
     }
 
     @Override
@@ -93,11 +100,15 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
                 });
     }
 
-    private ServiceResult<Long> migrateApplicationIfRequired(long applicationId) {
-        return applicationMigrationService.findByApplicationIdAndStatus(applicationId, MigrationStatus.CREATED).getSuccess()
-                .map(applicationMigration -> applicationMigrationService.migrateApplication(applicationId)
-                        .andOnSuccessReturn(Application::getId))
-                .orElse(serviceSuccess(applicationId));
+    private ServiceResult<ProjectToBeCreated> migrateApplicationIfRequired(ProjectToBeCreated projectToBeCreated) {
+        return applicationMigrationService.findByApplicationIdAndStatus(projectToBeCreated.getApplication().getId(), MigrationStatus.CREATED).getSuccess()
+                .map(applicationMigration -> applicationMigrationService.migrateApplication(projectToBeCreated.getApplication().getId())
+                        .andOnSuccessReturn(migratedApplication -> {
+                            applicationMigration.setStatus(MigrationStatus.MIGRATED);
+                            applicationMigrationService.updateApplicationMigrationStatus(applicationMigration);
+                            return projectToBeCreated;
+                        }))
+                .orElse(serviceSuccess(projectToBeCreated));
     }
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {
