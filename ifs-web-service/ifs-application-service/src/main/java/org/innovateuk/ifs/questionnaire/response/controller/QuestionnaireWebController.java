@@ -16,6 +16,7 @@ import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestion
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -61,11 +64,15 @@ public class QuestionnaireWebController {
     @Autowired
     private QuestionnaireResponseLinkRestService linkRestService;
 
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     @GetMapping("/{questionnaireResponseId}")
     public String welcomeScreen(Model model,
                                 HttpServletRequest request,
                                 UserResource user,
-                                @PathVariable String questionnaireResponseId) {
+                                @PathVariable String questionnaireResponseId
+    ) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
         if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
@@ -77,10 +84,18 @@ public class QuestionnaireWebController {
                 model.addAttribute("backButtonText", "Return to application overview");
                 model.addAttribute("backLinkUrl", String.format("~/application/%d", ((ApplicationOrganisationLinkResource) link).getApplicationId()));
             }
+            else if (link instanceof ProjectOrganisationLinkResource) {
+                model.addAttribute("subtitle", ((ProjectOrganisationLinkResource) link).getProjectName());
+                model.addAttribute("backLinkText", "Back to join project");
+                model.addAttribute("backButtonText", "Return to join project");
+                String backLinkUrl = String.format("~/project-setup/project/%d/organisation/%d/pending-partner-progress", ((ProjectOrganisationLinkResource) link).getProjectId(), ((ProjectOrganisationLinkResource) link).getOrganisationId());
+                model.addAttribute("backLinkUrl", backLinkUrl);
+            }
         }
         model.addAttribute("questionnaire", questionnaire);
         return "questionnaire/welcome";
     }
+
 
     @PostMapping("/{questionnaireResponseId}")
     public String start(Model model,
@@ -157,7 +172,7 @@ public class QuestionnaireWebController {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
         QuestionnaireTextOutcomeResource outcome = questionnaireTextOutcomeRestService.get(outcomeId).getSuccess();
-        String endUrl = getEndUrl(questionnaire, questionnaireResponseId);
+        String endUrl = getEndUrl(questionnaire, questionnaireResponseId, request);
         if (outcome.getImplementation() != null) {
             endUrl += "?outcome=" + outcome.getImplementation().name();
         }
@@ -169,11 +184,15 @@ public class QuestionnaireWebController {
         return "questionnaire/outcome";
     }
 
-    private String getEndUrl(QuestionnaireResource questionnaire, String questionnaireResponseId) {
+    private String getEndUrl(QuestionnaireResource questionnaire, String questionnaireResponseId, HttpServletRequest request) {
         if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
             QuestionnaireLinkResource link = linkRestService.getQuestionnaireLink(questionnaireResponseId).getSuccess();
             if (link instanceof ApplicationOrganisationLinkResource) {
                 return String.format("/application/%d/form/organisation/%d/question/%d/questionnaire/questionnaire-complete", ((ApplicationOrganisationLinkResource) link).getApplicationId(), ((ApplicationOrganisationLinkResource) link).getOrganisationId(), ((ApplicationOrganisationLinkResource) link).getQuestionId());
+            }
+            if (link instanceof ProjectOrganisationLinkResource) {
+                String redirectUrl = String.format("project-setup/project/%d/form/organisation/%d/question/%d/questionnaire/questionnaire-complete", ((ProjectOrganisationLinkResource) link).getProjectId(), ((ProjectOrganisationLinkResource) link).getOrganisationId(), ((ProjectOrganisationLinkResource) link).getQuestionId());
+                return navigationUtils.getDirectToSameDomainUrl(request, redirectUrl);
             }
         }
         return "/";
