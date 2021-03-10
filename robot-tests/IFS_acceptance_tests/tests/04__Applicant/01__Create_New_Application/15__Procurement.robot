@@ -222,8 +222,8 @@ Internal user makes changes to project finances
     Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
     When the user makes changes to the project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
-    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10000)
-    And the user should see the element                     jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10000)
+    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10,000)
+    And the user should see the element                     jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10,000)
     And the user should see the element                     jQuery = td:contains("£265,084")
 
 Internal user removes payment milestones
@@ -239,9 +239,11 @@ Internal user adds payment milestones
     Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
     And the user clicks the button/link                      link = Edit payment milestones
     And the user clicks the button/link                      jQuery = button:contains("Add another project milestone")
-    And the user clicks the button/link                      jQuery = button:contains("Open all")
-    When applicant fills in payment milestone                accordion-finances-content  21  Milestone 21  99913   Task Or Activity 2   Deliverable 2   Success Criteria 2
-    Then the user should see the element                     jQuery = h3:contains("Total payment requested") ~ h3:contains("100%") ~ h3:contains("£265,084")
+    And the user clicks the button/link                      css = #accordion-finances-heading-unsaved
+    When applicant fills in payment milestone                accordion-finances-content  21   Milestone 21   99913   Task or activity2   Deliverable2   Success Criteria2
+    And the user clicks the button/link                      jQuery = button:contains("Save and return to payment milestone check")
+    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£265,084")
 
 Applicant can view changes made to project finances
     [Documentation]  IFS-8944
@@ -422,8 +424,8 @@ the user makes changes to the project finances
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-7"]/div[2]/button
 
 the user should see all project finance changes
-    the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10000)
-    the user should see the element                    jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10000)
+    the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10,000)
+    the user should see the element                    jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10,000)
     the user should see the element                    jQuery = td:contains("12,523") ~ td:contains("- 100")
     the user should see the element                    jQuery = td:contains("12,121") ~ td:contains("+ 100")
 
