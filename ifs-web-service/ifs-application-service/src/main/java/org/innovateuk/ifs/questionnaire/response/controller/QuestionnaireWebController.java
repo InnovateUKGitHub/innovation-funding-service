@@ -173,7 +173,7 @@ public class QuestionnaireWebController {
         if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
             QuestionnaireLinkResource link = linkRestService.getQuestionnaireLink(questionnaireResponseId).getSuccess();
             if (link instanceof ApplicationOrganisationLinkResource) {
-                return String.format("/application/%d/form/organisation/%d/question/%d/questionnaire", ((ApplicationOrganisationLinkResource) link).getApplicationId(), ((ApplicationOrganisationLinkResource) link).getOrganisationId(), ((ApplicationOrganisationLinkResource) link).getQuestionId());
+                return String.format("/application/%d/form/organisation/%d/question/%d/questionnaire/questionnaire-complete", ((ApplicationOrganisationLinkResource) link).getApplicationId(), ((ApplicationOrganisationLinkResource) link).getOrganisationId(), ((ApplicationOrganisationLinkResource) link).getQuestionId());
             }
         }
         return "/";
