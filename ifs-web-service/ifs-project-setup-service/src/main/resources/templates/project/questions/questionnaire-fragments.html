@@ -1,24 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <th:block
-        th:with="projectName=${model.projectName}">
-        <th:block th:insert="fragments/layout :: head"
-                  th:with="pageTitle=|${model.questionName} - ${projectName}|"/>
-    </th:block>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 
-<body class="govuk-template__body">
+<th:block th:fragment="subsidy-basis(model)">
 
-<th:block th:insert="fragments/layout :: body-start"/>
-<th:block th:insert="fragments/layout :: global-header"/>
 
-<div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to project',linkUrl=@{/project/${projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId})}, dynamicBackLink=${true}"/>
 
-    <th:block th:insert="project/questions/questionnaire-fragments :: subsidy-basis (model=${model})" />
 
 
     <!--
@@ -101,9 +87,5 @@
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
     -->
-</div>
-<th:block th:insert="fragments/layout :: footer"/>
-<th:block th:insert="fragments/layout :: body-end"/>
-<th:block th:insert="fragments/service-layout :: body-end"/>
-</body>
-</html>
+</th:block>
+
