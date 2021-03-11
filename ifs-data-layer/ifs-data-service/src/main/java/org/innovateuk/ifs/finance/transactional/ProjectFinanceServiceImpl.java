@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -42,6 +43,9 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private ProjectFinanceMapper projectFinanceMapper;
+
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId) {
         return getProjectFinanceForOrganisation(new ProjectFinanceResourceId(projectId, organisationId));
@@ -65,14 +69,14 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     }
 
     @Override
-    public ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
+    public ServiceResult<ProjectFinanceResource> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
         long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
             updateFinancialYearData(dbFinance, projectFinanceResource);
             if (projectFinanceResource.getNorthernIrelandDeclaration() != null) {
                 dbFinance.setNorthernIrelandDeclaration(projectFinanceResource.getNorthernIrelandDeclaration());
             }
-            return serviceSuccess();
+            return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
         });
     }
 

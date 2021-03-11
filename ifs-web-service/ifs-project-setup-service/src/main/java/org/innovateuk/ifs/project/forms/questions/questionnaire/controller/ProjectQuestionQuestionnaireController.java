@@ -121,7 +121,7 @@ public class ProjectQuestionQuestionnaireController {
     private void setNorthernIrelandDeclaration(long projectId, long organisationId, boolean value) {
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         finance.setNorthernIrelandDeclaration(value);
-//        TODO qqRP projectFinanceRestService.update(finance.getId(), finance).getSuccess();
+        projectFinanceRestService.update(finance).getSuccess();
     }
 
     private String viewRedirectUrl(long projectId, long organisationId, long questionId) {

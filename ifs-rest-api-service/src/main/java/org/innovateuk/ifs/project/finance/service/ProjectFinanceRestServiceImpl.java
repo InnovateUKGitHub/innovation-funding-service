@@ -60,4 +60,9 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
         return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance/has-organisation-size-changed"), Boolean.class);
     }
+
+    @Override
+    public RestResult<ProjectFinanceResource> update(ProjectFinanceResource projectFinance) {
+        return postWithRestResult(format(PROJECT_FINANCE_REST_URL + "/project-finance"), projectFinance, ProjectFinanceResource.class);
+    }
 }

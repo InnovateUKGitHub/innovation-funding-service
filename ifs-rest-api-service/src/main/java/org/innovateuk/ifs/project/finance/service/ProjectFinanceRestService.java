@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 
 import java.util.List;
@@ -22,6 +23,5 @@ public interface ProjectFinanceRestService {
 
     RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
 
-
-
+    RestResult<ProjectFinanceResource> update(ProjectFinanceResource projectFinance);
 }

@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,4 +38,10 @@ public class ProjectFinanceController {
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(@PathVariable long projectId) {
         return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
     }
+
+    @PostMapping("/project-finance")
+    public RestResult<ProjectFinanceResource> update(@RequestBody final ProjectFinanceResource projectFinanceResource) {
+        return projectFinanceService.updateProjectFinance(projectFinanceResource).toPostWithBodyResponse();
+    }
+
 }
