@@ -19,4 +19,8 @@ public class ProjectQuestionQuestionnaireViewModel extends AbstractQuestionQuest
     public long getProjectId() {
         return projectId;
     }
+
+    public String getProjectName() {
+        return projectName;
+    }
 }
