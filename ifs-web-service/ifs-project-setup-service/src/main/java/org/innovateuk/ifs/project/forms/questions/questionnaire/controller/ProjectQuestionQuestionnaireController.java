@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.forms.questions.questionnaire.controller;
 
 
-import org.innovateuk.ifs.application.forms.questions.questionnaire.form.ApplicationQuestionQuestionnaireForm;
+import org.innovateuk.ifs.application.forms.questions.questionnaire.form.QuestionQuestionnaireForm;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -47,7 +47,7 @@ public class ProjectQuestionQuestionnaireController {
     @SecuredBySpring(value = "VIEW_PROJECT_QUESTION_QUESTIONNAIRE", description = "Applicants and internal users can view the project question questionnaire page")
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @GetMapping
-    public String view(@ModelAttribute(name = "form", binding = false) ApplicationQuestionQuestionnaireForm form,
+    public String view(@ModelAttribute(name = "form", binding = false) QuestionQuestionnaireForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        Model model,
                        @PathVariable long projectId,
@@ -96,7 +96,7 @@ public class ProjectQuestionQuestionnaireController {
                            @PathVariable long projectId,
                            @PathVariable long organisationId,
                            @PathVariable long questionId,
-                           @Valid @ModelAttribute("form") ApplicationQuestionQuestionnaireForm form,
+                           @Valid @ModelAttribute("form") QuestionQuestionnaireForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler,
                            HttpServletRequest request) {
