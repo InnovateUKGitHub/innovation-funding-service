@@ -303,9 +303,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private BigInteger calculateIndirectCost(YourProjectCostsForm form) {
         BigInteger percentage = BigInteger.valueOf(46);
 
-        BigInteger totalAssociateSalaryCost = form.getAssociateSalaryCostRows().entrySet().stream()
-                .map(Map.Entry::getValue)
-                .filter(associateSalaryCostRowForm -> !associateSalaryCostRowForm.isBlank())
+        BigInteger totalAssociateSalaryCost = form.getAssociateSalaryCostRows().values().stream()
+                .filter(associateSalaryCostRowForm -> !associateSalaryCostRowForm.isBlank() && associateSalaryCostRowForm.getCost() != null)
                 .map(AssociateSalaryCostRowForm::getCost)
                 .reduce(BigInteger::add)
                 .orElse(BigInteger.ZERO);
