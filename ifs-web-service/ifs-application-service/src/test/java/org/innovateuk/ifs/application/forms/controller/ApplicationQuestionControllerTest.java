@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -43,7 +45,9 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         QuestionResource question = newQuestionResource()
                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .build();
-
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withOrganisation(1l).build();
+        when(processRoleRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(processRoleResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(questionRestService.findById(question.getId())).thenReturn(restSuccess(question));
         when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(1L).build()));

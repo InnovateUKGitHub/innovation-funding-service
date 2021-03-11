@@ -5,13 +5,18 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+<<<<<<< HEAD:robot-tests/IFS_acceptance_tests/tests/02__Competition_Setup/07__Competition_setup_T_And_C.robot
 ...               IFS-9116 Applicant Subsidy Basis Questionnaire and Declaration Confirmation (Application)
+=======
+...               IFS-9233 Applicant can view and accept the correct T&Cs based on their determined Funding Rules
+>>>>>>> 4d31f599e8cdf48fd70cb64f3bc12af6cb939604:robot-tests/IFS_acceptance_tests/tests/04__Applicant/01__Create_New_Application/25__Subsidy_Control_T_And_C.robot
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
-Resource          ../../resources/defaultResources.robot
-Resource          ../../resources/common/Competition_Commons.robot
-Resource          ../../resources/common/Assessor_Commons.robot
+Resource          ../../../resources/defaultResources.robot
+Resource          ../../../resources/common/Competition_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${atiSubsidyControl}                 Aerospace Technology Institute (ATI) - Subsidy control (opens in a new window)
@@ -22,6 +27,9 @@ ${subsidyControlFundingComp}         Subsidy control competition
 ${leadSubsidyControlApplication}     Subsidy control application
 ${leadStateAidApplication}           State aid application
 &{scLeadApplicantCredentials}        janet.howard@example.com     ${short_password}
+
+#${subsidyControlFundingComp}     Subsidy control competition
+#${subsidyControlFundingApp}      Subsidy control application
 
 *** Test Cases ***
 Creating a new comp to confirm ATI subsidy control T&C's
@@ -202,6 +210,25 @@ Partner applicant declares subsidy basis as Northern Ireland Protocol when tradi
 Lead applicant completes state aid subsidy basis application
 
 
+#Applicant can accept subsidy control terms and conditions based on NI declaration
+#    [Documentation]  IFS-9223
+#    Given log in as a different user                               janet.howard@example.com     ${short_password}
+#    And the user select the competition and starts application     ${subsidyControlFundingComp}
+#    And the user clicks the button/link                            jQuery = button:contains("Save and continue")
+#    When the user clicks the button/link                           link = Award terms and conditions
+#    Then the user should see the element                           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+#    And the user should see the element                            jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
+#    And the user accepts terms and conditions
+#
+#Applicant can accept state aid terms and conditions based on NI declaration
+#    [Documentation]  IFS-9223
+#    Given the user creates an application             ${subsidyControlFundingComp}   ${subsidyControlFundingApp}
+#    And requesting subsidy control application id
+#    When update NI declaration of the application     ${subsidyControlAppId}
+#    And the user clicks the button/link               link = Award terms and conditions
+#    Then the user should see the element              jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+#    And the user accepts terms and conditions
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -233,3 +260,26 @@ the user starts the subsidy section again
     the user clicks the button/link     id = edit-application-details-button
     the user clicks the button/link     link = Start again
     the user clicks the button/link     jQuery = button:contains("Next")
+
+#the user creates an application
+#    [Arguments]  ${subsidyControlFundingComp}   ${subsidyControlFundingApp}
+#    the user select the competition and starts application      ${subsidyControlFundingComp}
+#    the user selects the radio button                           createNewApplication  true
+#    the user clicks the button/link                             jQuery = .govuk-button:contains("Continue")
+#    the user clicks the button/link                             css = .govuk-button[type="submit"]
+#    the user clicks the button/link                             link = Application details
+#    the user fills in the Application details                   ${subsidyControlFundingApp}  ${tomorrowday}  ${month}  ${nextyear}
+#
+#the user accepts terms and conditions
+#    the user selects the checkbox      agreed
+#    the user clicks the button/link    jQuery = button:contains("Agree and continue")
+#    the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
+#
+#requesting subsidy control application id
+#    ${subsidyControlAppId} =  get application id by name   ${subsidyControlFundingApp}
+#    Set suite variable    ${subsidyControlAppId}
+#
+#update NI declaration of the application
+#    [Arguments]  ${subsidyControlApplicationID}
+#    execute sql string  UPDATE `${database_name}`.`application_finance` SET `northern_ireland_declaration`=1 WHERE `application_id`='${subsidyControlApplicationID}';
+#    reload page

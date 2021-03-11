@@ -50,7 +50,7 @@ public class ApplicationQuestionController {
         QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         QuestionSetupType questionType = questionResource.getQuestionSetupType();
         ProcessRoleResource processRoleResource = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-        Optional<String> questionUrl = getQuestionUrl(questionType, questionId, processRoleResource.getOrganisationId(), applicationId);
+        Optional<String> questionUrl = getQuestionUrl(questionType, questionId, applicationId, processRoleResource.getOrganisationId());
         if (questionUrl.isPresent()) {
             return "redirect:" + questionUrl.get() + (showErrors.isPresent() ? "?show-errors=true" : "");
         }
