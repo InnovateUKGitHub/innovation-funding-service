@@ -11,12 +11,9 @@ import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestion
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.QuestionnaireQuestionViewModel;
-import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -27,7 +24,6 @@ import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireQuestionResp
 import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireResourceBuilder.newQuestionnaireResource;
 import static org.innovateuk.ifs.questionnaire.builder.QuestionnaireResponseResourceBuilder.newQuestionnaireResponseResource;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,9 +52,6 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
     @Mock
     private QuestionnaireQuestionViewModelPopulator questionnaireQuestionViewModelPopulator;
 
-    @Mock
-    private EncryptedCookieService encryptedCookieService;
-
     @Test
     public void welcomeScreen() throws Exception {
         UUID id = UUID.randomUUID();
@@ -70,13 +63,12 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
         when(questionnaireResponseRestService.get(id.toString())).thenReturn(restSuccess(response));
         when(questionnaireRestService.get(questionnaire.getId())).thenReturn(restSuccess(questionnaire));
 
-        mockMvc.perform(get("/questionnaire/{id}?redirectUrl={url}", id.toString(), "/redirect-here"))
+        mockMvc.perform(get("/questionnaire/{id}", id.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("questionnaire/welcome"))
                 .andExpect(model().attribute("questionnaire", questionnaire))
                 .andReturn();
 
-        verify(encryptedCookieService).saveToCookie(any(HttpServletResponse.class), eq(QuestionnaireWebController.REDIRECT_URL_COOKIE_KEY), eq("/redirect-here"));
     }
 
     @Test
@@ -110,14 +102,13 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
                 .thenReturn(restSuccess(response));
         when(questionnaireQuestionViewModelPopulator.populate(id.toString(), questionId)).thenReturn(viewModel);
 
-        mockMvc.perform(get("/questionnaire/{id}/question/{questionId}?redirectUrl={url}", id.toString(), questionId, "/redirect-here"))
+        mockMvc.perform(get("/questionnaire/{id}/question/{questionId}", id.toString(), questionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("questionnaire/question"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(model().attribute("form", lambdaMatches(f -> ((QuestionnaireQuestionForm)f).getOption().equals(2L))))
                 .andReturn();
 
-        verify(encryptedCookieService).saveToCookie(any(HttpServletResponse.class), eq(QuestionnaireWebController.REDIRECT_URL_COOKIE_KEY), eq("/redirect-here"));
     }
 
     @Test
@@ -151,14 +142,19 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
         textOutcome.setId(1L);
         textOutcome.setText("Finished");
 
-        when(encryptedCookieService.getCookieValue(any(HttpServletRequest.class), eq(QuestionnaireWebController.REDIRECT_URL_COOKIE_KEY))).thenReturn("/redirect-here");
+        QuestionnaireResource questionnaire = newQuestionnaireResource().build();
+        QuestionnaireResponseResource response = newQuestionnaireResponseResource()
+                .withQuestionnaire(questionnaire.getId())
+                .build();
+        when(questionnaireResponseRestService.get(id.toString())).thenReturn(restSuccess(response));
+        when(questionnaireRestService.get(questionnaire.getId())).thenReturn(restSuccess(questionnaire));
+
         when(questionnaireTextOutcomeRestService.get(textOutcome.getId())).thenReturn(restSuccess(textOutcome));
 
         mockMvc.perform(get("/questionnaire/{id}/outcome/{outcomeId}", id.toString(), textOutcome.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("questionnaire/outcome"))
                 .andExpect(model().attribute("model", textOutcome))
-                .andExpect(model().attribute("redirectUrl", "/redirect-here"))
                 .andReturn();
     }
 
