@@ -61,7 +61,7 @@ public class ProjectQuestionQuestionnaireController {
             return navigationUtils.getRedirectToSameDomainUrl(request, String.format("questionnaire/%s", viewModel.getQuestionnaireResponseId()));
         }
         model.addAttribute("model", viewModel);
-        return "project/questions/questionnaire";
+        return "application/questions/questionnaire";
     }
 
     @GetMapping("/questionnaire-complete")

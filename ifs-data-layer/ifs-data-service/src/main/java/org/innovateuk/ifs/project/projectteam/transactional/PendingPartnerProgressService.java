@@ -31,4 +31,10 @@ public interface PendingPartnerProgressService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'UPDATE_PENDING_PARTNER_PROGRESS')")
     ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'UPDATE_PENDING_PARTNER_PROGRESS')")
+    ServiceResult<Void> markSubsidyBasisIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'org.innovateuk.ifs.project.resource.PartnerOrganisationResource', 'UPDATE_PENDING_PARTNER_PROGRESS')")
+    ServiceResult<Void> markSubsidyBasisComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
 }

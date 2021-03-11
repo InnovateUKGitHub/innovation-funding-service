@@ -80,6 +80,20 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
 
     @Override
     @Transactional
+    public ServiceResult<Void> markSubsidyBasisIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
+                .andOnSuccessReturnVoid(PendingPartnerProgress::markSubsidyBasisIncomplete);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markSubsidyBasisComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
+                .andOnSuccessReturnVoid(PendingPartnerProgress::markSubsidyBasisComplete);
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccess(this::canJoinProject)

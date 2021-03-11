@@ -74,6 +74,10 @@ public class PendingPartnerProgress {
         subsidyBasisCompletedOn = ZonedDateTime.now();
     }
 
+    public void markSubsidyBasisIncomplete() {
+        subsidyBasisCompletedOn = null;
+    }
+
     public void markYourFundingComplete() {
         yourFundingCompletedOn = ZonedDateTime.now();
     }

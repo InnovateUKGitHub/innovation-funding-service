@@ -53,7 +53,7 @@ public class ProjectQuestionQuestionnaireModelPopulator {
 
         boolean open = userCanEdit && !progress.isCompleted();
 
-        boolean complete = progress.isCompleted();
+        boolean complete = progress.isSubsidyBasisComplete();
 
         String questionnaireResponseId = questionnaireResponseLinkRestService.getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(projectId, question.getQuestionnaireId(), organisationId)
                 .getSuccess()
