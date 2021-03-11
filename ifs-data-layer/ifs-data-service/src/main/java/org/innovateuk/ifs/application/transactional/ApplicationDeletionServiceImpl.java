@@ -135,6 +135,22 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
     }
 
     private ServiceResult<Void> deleteApplicationData(Application application) {
+        applicationFinanceRepository.deleteByApplicationId(application.getId());
+        processRoleRepository.deleteByApplicationId(application.getId());
+        formInputResponseRepository.deleteByApplicationId(application.getId());
+        questionStatusRepository.deleteByApplicationId(application.getId());
+        applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
+        processHistoryRepository.deleteByProcessId(application.getApplicationProcess().getId());
+        applicationRepository.delete(application);
+        applicationInviteRepository.deleteAll(application.getInvites());
+
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> deleteMigratedApplication(long applicationId) {
+        Application application = getApplication(applicationId).getSuccess();
+
         activityLogRepository.deleteByApplicationId(application.getId());
         applicationFinanceRepository.deleteByApplicationId(application.getId());
         applicationOrganisationAddressRepository.deleteByApplicationId(application.getId());
@@ -146,23 +162,23 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         processRoleRepository.deleteByApplicationId(application.getId());
         formInputResponseRepository.deleteByApplicationId(application.getId());
         questionStatusRepository.deleteByApplicationId(application.getId());
-        applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
-        processHistoryRepository.deleteByProcessId(application.getApplicationProcess().getId());
+        applicationProcessRepository.findByTargetId(application.getId()).stream().forEach(
+                applicationProcess -> processHistoryRepository.deleteByProcessId(applicationProcess.getId()));
         applicationProcessRepository.deleteByTargetId(application.getId());
         assessmentRepository.findByTargetId(application.getId()).stream().forEach(
                 assessmentProcess -> processHistoryRepository.deleteByProcessId(assessmentProcess.getId()));
         assessmentRepository.deleteByTargetId(application.getId());
         interviewRepository.findByTargetId(application.getId()).stream().forEach(
-                assessmentProcess -> processHistoryRepository.deleteByProcessId(assessmentProcess.getId()));
+                interviewProcess -> processHistoryRepository.deleteByProcessId(interviewProcess.getId()));
         interviewRepository.deleteByTargetId(application.getId());
         interviewAssignmentRepository.findByTargetId(application.getId()).stream().forEach(
-                assessmentProcess -> processHistoryRepository.deleteByProcessId(assessmentProcess.getId()));
+                interviewAssignmentProcess -> processHistoryRepository.deleteByProcessId(interviewAssignmentProcess.getId()));
         interviewAssignmentRepository.deleteByTargetId(application.getId());
         reviewRepository.findByTargetId(application.getId()).stream().forEach(
-                assessmentProcess -> processHistoryRepository.deleteByProcessId(assessmentProcess.getId()));
+                reviewProcess -> processHistoryRepository.deleteByProcessId(reviewProcess.getId()));
         reviewRepository.deleteByTargetId(application.getId());
         supporterAssignmentRepository.findByTargetId(application.getId()).stream().forEach(
-                assessmentProcess -> processHistoryRepository.deleteByProcessId(assessmentProcess.getId()));
+                supporterAssignmentProcess -> processHistoryRepository.deleteByProcessId(supporterAssignmentProcess.getId()));
         supporterAssignmentRepository.deleteByTargetId(application.getId());
         applicationInviteRepository.deleteAll(application.getInvites());
         applicationKtaInviteRepository.deleteByApplicationId(application.getId());

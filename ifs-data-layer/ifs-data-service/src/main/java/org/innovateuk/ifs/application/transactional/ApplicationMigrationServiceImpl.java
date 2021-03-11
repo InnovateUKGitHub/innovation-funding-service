@@ -264,7 +264,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             }
                     );
 
-                    applicationDeletionService.deleteApplication(application.getId());
+                    applicationDeletionService.deleteMigratedApplication(application.getId());
 
                     return applicationRepository.findById(migratedApplication.getId()).get();
                 });
