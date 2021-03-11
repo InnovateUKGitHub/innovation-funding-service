@@ -15,6 +15,7 @@ import org.innovateuk.ifs.questionnaire.response.form.QuestionnaireQuestionForm;
 import org.innovateuk.ifs.questionnaire.response.populator.QuestionnaireQuestionViewModelPopulator;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireQuestionResponseRestService;
 import org.innovateuk.ifs.questionnaire.response.service.QuestionnaireResponseRestService;
+import org.innovateuk.ifs.questionnaire.response.viewmodel.QuestionnaireWelcomeViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -68,17 +69,19 @@ public class QuestionnaireWebController {
                                 @PathVariable String questionnaireResponseId) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         QuestionnaireResource questionnaire = questionnaireRestService.get(response.getQuestionnaire()).getSuccess();
+        QuestionnaireWelcomeViewModel viewModel = new QuestionnaireWelcomeViewModel(questionnaire);
         if (questionnaire.getSecurityType() == QuestionnaireSecurityType.LINK) {
-            //TODO view model
             QuestionnaireLinkResource link = linkRestService.getQuestionnaireLink(questionnaireResponseId).getSuccess();
             if (link instanceof ApplicationOrganisationLinkResource) {
-                model.addAttribute("subtitle", ((ApplicationOrganisationLinkResource) link).getApplicationName());
-                model.addAttribute("backLinkText", "Back to application overview");
-                model.addAttribute("backButtonText", "Return to application overview");
-                model.addAttribute("backLinkUrl", String.format("~/application/%d", ((ApplicationOrganisationLinkResource) link).getApplicationId()));
+                ApplicationOrganisationLinkResource applicationOrganisationLink = (ApplicationOrganisationLinkResource) link;
+                viewModel = new QuestionnaireWelcomeViewModel(
+                        questionnaire,
+                        applicationOrganisationLink.getApplicationName(),
+                        String.format("~/application/%d", applicationOrganisationLink.getApplicationId()),
+                        "Return to application overview");
             }
         }
-        model.addAttribute("questionnaire", questionnaire);
+        model.addAttribute("model", viewModel);
         return "questionnaire/welcome";
     }
 
