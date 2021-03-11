@@ -147,13 +147,6 @@ public class Application implements ProcessActivity {
         this.competitionReferralSource = application.getCompetitionReferralSource();
         this.companyAge = application.getCompanyAge();
         this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
-        //this.processRoles = application.getProcessRoles();
-        //this.applicationFinances = application.getApplicationFinances();
-        //this.invites = application.getInvites();
-        //this.formInputResponses = application.getFormInputResponses();
-        //this.applicationProcess = application.getApplicationProcess();
-        //this.project = application.getProject();
-        //this.projectToBeCreated = application.getProjectToBeCreated();
     }
 
     protected boolean canEqual(Object other) {

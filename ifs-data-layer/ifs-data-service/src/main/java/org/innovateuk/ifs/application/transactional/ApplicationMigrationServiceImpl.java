@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.innovateuk.ifs.activitylog.domain.ActivityLog;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationMigration;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -113,7 +115,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<Application> migrateApplication(long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccessReturn(application -> {
@@ -121,8 +123,12 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
                     activityLogRepository.findByApplicationId(application.getId()).stream()
                             .forEach(activityLog -> {
-                                activityLog.setApplication(migratedApplication);
-                                activityLogRepository.save(activityLog);
+                                ActivityLog migratedActivityLog = new ActivityLog(migratedApplication, activityLog.getType(),
+                                        activityLog.getOrganisation().orElse(null),
+                                        activityLog.getCompetitionDocument().orElse(null),
+                                        activityLog.getQuery().orElse(null),
+                                        activityLog.getCreatedOn(), activityLog.getCreatedBy(), activityLog.getAuthor());
+                                activityLogRepository.save(migratedActivityLog);
                             });
 
                     applicationFinanceRepository.findByApplicationId(application.getId()).stream()
@@ -131,7 +137,8 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 applicationFinanceRepository.save(applicationFinance);
                             });
 
-                    // TODO: Not required as it is deleted audit
+                    // TODO: Is this not required as it is deleted audit for application
+                    //  as there is no FK defined to application in DeletedApplicationAudit
                     deletedApplicationRepository.findByApplicationId(application.getId()).stream()
                             .forEach(deletedApplicationAudit -> {
                                 deletedApplicationAudit.setApplicationId(migratedApplication.getId());
@@ -144,21 +151,18 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 applicationHiddenFromDashboardRepository.save(applicationHiddenFromDashboard);
                             });
 
-                    // TODO: needs to add
                     applicationOrganisationAddressRepository.findByApplicationId(application.getId()).stream()
                             .forEach(applicationOrganisationAddress -> {
                                 applicationOrganisationAddress.setApplication(migratedApplication);
                                 applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
                             });
 
-                    // TODO: needs to add
                     averageAssessorScoreRepository.findByApplicationId(application.getId()).ifPresent(
                             averageAssessorScore -> {
                                 averageAssessorScore.setApplication(migratedApplication);
                                 averageAssessorScoreRepository.save(averageAssessorScore);
                             });
 
-                    // TODO: needs to add
                     serviceSuccess(euGrantTransferRepository.findByApplicationId(application.getId()))
                             .andOnSuccessReturnVoid(euGrantTransfer -> {
                                 if (euGrantTransfer != null) {
@@ -179,7 +183,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 processRoleRepository.save(processRole);
                             });
 
-                    // TODO: needs to add
                     projectRepository.findByApplicationId(application.getId()).ifPresent(
                             project -> {
                                 project.setApplication(migratedApplication);
@@ -187,7 +190,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             }
                     );
 
-                    // TODO: needs to add
                     projectToBeCreatedRepository.findByApplicationId(application.getId()).ifPresent(
                             projectToBeCreated -> {
                                 projectToBeCreated.setApplication(migratedApplication);
@@ -201,7 +203,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 questionStatusRepository.save(questionStatus);
                             });
 
-                    // TODO: needs to add
                     serviceSuccess(grantProcessRepository.findOneByApplicationId(application.getId()))
                             .andOnSuccessReturnVoid(grantProcess -> {
                                 if (grantProcess != null) {
@@ -214,56 +215,48 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 }
                             });
 
-                    // TODO: needs to add
                     applicationProcessRepository.findByTargetId(application.getId()).stream()
                             .forEach(applicationProcess -> {
                                 applicationProcess.setTarget(migratedApplication);
                                 applicationProcessRepository.save(applicationProcess);
                             });
 
-                    // TODO: needs to add
                     assessmentRepository.findByTargetId(application.getId()).stream()
                             .forEach(assessment -> {
                                 assessment.setTarget(migratedApplication);
                                 assessmentRepository.save(assessment);
                             });
 
-                    // TODO: needs to add
                     interviewRepository.findByTargetId(application.getId()).stream()
                             .forEach(interview -> {
                                 interview.setTarget(migratedApplication);
                                 interviewRepository.save(interview);
                             });
 
-                    // TODO: needs to add
                     interviewAssignmentRepository.findByTargetId(application.getId()).stream()
                             .forEach(interviewAssignment -> {
                                 interviewAssignment.setTarget(migratedApplication);
                                 interviewAssignmentRepository.save(interviewAssignment);
                             });
 
-                    // TODO: needs to add
                     reviewRepository.findByTargetId(application.getId()).stream()
                             .forEach(review -> {
                                 review.setTarget(migratedApplication);
                                 reviewRepository.save(review);
                             });
 
-                    // TODO: needs to add
                     supporterAssignmentRepository.findByTargetId(application.getId()).stream()
                             .forEach(supporterAssignment -> {
                                 supporterAssignment.setTarget(migratedApplication);
                                 supporterAssignmentRepository.save(supporterAssignment);
                             });
 
-                    // TODO: needs to add
                     applicationInviteRepository.findByApplicationId(application.getId()).stream()
                             .forEach(applicationInvite -> {
                                 applicationInvite.setTarget(migratedApplication);
                                 applicationInviteRepository.save(applicationInvite);
                             });
 
-                    // TODO: needs to add
                     applicationKtaInviteRepository.findByApplicationId(application.getId()).ifPresent(
                             applicationKtaInvite -> {
                                 applicationKtaInvite.setTarget(migratedApplication);
@@ -271,14 +264,14 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             }
                     );
 
-                    // TODO: Identify the reason why it is failing
-                    //applicationDeletionService.deleteApplication(application.getId());
+                    applicationDeletionService.deleteApplication(application.getId());
 
-                    return migratedApplication;
+                    return applicationRepository.findById(migratedApplication.getId()).get();
                 });
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<ApplicationMigration> updateApplicationMigrationStatus(ApplicationMigration applicationMigration) {
         applicationMigration.setUpdatedOn(ZonedDateTime.now());
         return serviceSuccess(applicationMigrationRepository.save(applicationMigration));

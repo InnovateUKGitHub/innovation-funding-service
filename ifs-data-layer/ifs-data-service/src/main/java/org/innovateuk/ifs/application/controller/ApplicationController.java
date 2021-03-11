@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
-import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
-import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -55,6 +53,9 @@ public class ApplicationController {
 
     @Autowired
     private AssessmentService assessmentService;
+
+    @Autowired
+    private ApplicationMigrationService applicationMigrationService;
 
     @GetMapping("/{id}/has-assessment")
     public RestResult<Boolean> applicationHasAssessment(@PathVariable long id){
@@ -172,5 +173,9 @@ public class ApplicationController {
     @GetMapping("/get-latest-email-funding-date/{competitionId}")
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
+    }
+    @PostMapping("/migrate-application/{id}")
+    public RestResult<Application> migrateApplication(@PathVariable("id") final Long id) {
+        return applicationMigrationService.migrateApplication(id).toPostWithBodyResponse();
     }
 }

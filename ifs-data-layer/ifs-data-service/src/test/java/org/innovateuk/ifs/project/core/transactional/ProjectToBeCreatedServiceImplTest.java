@@ -92,7 +92,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         when(projectToBeCreatedRepository.findByApplicationId(application.getId())).thenReturn(of(projectToBeCreated));
         when(applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource)).thenReturn(serviceSuccess());
-        when(applicationMigrationService.findApplicationByIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
+        when(applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
 
         ServiceResult<ScheduleResponse> result = service.createProject(application.getId());
@@ -117,7 +117,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(application, emailMessage);
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
-        when(applicationMigrationService.findApplicationByIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
+        when(applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
         when(ktpProjectNotificationService.sendProjectSetupNotification(application.getId())).thenReturn(serviceSuccess());
 
@@ -142,7 +142,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(application, emailMessage);
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
-        when(applicationMigrationService.findApplicationByIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
+        when(applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
         when(ktpProjectNotificationService.sendProjectSetupNotification(application.getId()))
                 .thenReturn(serviceFailure(new Error(CommonFailureKeys.GENERAL_NOT_FOUND)));

@@ -13,4 +13,6 @@ public interface ApplicationOrganisationAddressRepository extends Repository<App
     Optional<ApplicationOrganisationAddress> findByApplicationIdAndOrganisationAddressOrganisationIdAndOrganisationAddressAddressTypeId(long applicationId, long organisationId, long addressTypeId);
 
     ApplicationOrganisationAddress save(ApplicationOrganisationAddress applicationOrganisationAddress);
+
+    void deleteByApplicationId(long applicationId);
 }
