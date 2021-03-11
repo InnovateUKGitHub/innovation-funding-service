@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -73,8 +72,8 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setFinancialYearAccounts(v), financialYearAccounts);
     }
 
-    public S withNorthernIrelandDeclaration(Boolean... northernIrelandDeclaration) {
-        return withArray((v, finance) -> finance.setNorthernIrelandDeclaration(v), northernIrelandDeclaration);
+    public S withNorthernIrelandDeclarations(Boolean... northernIrelandDeclarations) {
+        return withArray((northernIrelandDeclaration, finance) -> setField("northernIrelandDeclaration", northernIrelandDeclaration, finance), northernIrelandDeclarations);
     }
 
     @SafeVarargs
@@ -312,5 +311,4 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         .build())
         );
     }
-
 }
