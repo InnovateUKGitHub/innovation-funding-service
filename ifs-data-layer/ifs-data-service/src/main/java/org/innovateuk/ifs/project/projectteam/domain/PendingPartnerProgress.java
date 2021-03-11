@@ -131,12 +131,12 @@ public class PendingPartnerProgress {
         PartnerOrganisation partnerOrganisation = getPartnerOrganisation();
         Competition competition = partnerOrganisation.getProject().getApplication().getCompetition();
         Organisation organisation =  partnerOrganisation.getOrganisation();
-        return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+        return !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
     }
 
     public boolean isReadyToJoinProject() {
-        return (isYourOrganisationComplete() || isYourOrganisationRequired()) &&
-                (isSubsidyBasisComplete() || isSubsidyBasisRequired()) &&
+        return (isYourOrganisationComplete() || !isYourOrganisationRequired()) &&
+                (isSubsidyBasisComplete() || !isSubsidyBasisRequired()) &&
                 isYourFundingComplete() &&
                 isTermsAndConditionsComplete() &&
                 !isComplete();
