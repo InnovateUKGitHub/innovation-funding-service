@@ -66,7 +66,7 @@ public class QuestionnaireWebControllerTest extends BaseControllerMockMVCTest<Qu
         mockMvc.perform(get("/questionnaire/{id}", id.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("questionnaire/welcome"))
-                .andExpect(model().attribute("questionnaire", questionnaire))
+                .andExpect(model().attributeExists("model"))
                 .andReturn();
 
     }
