@@ -142,6 +142,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
                         subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
                 .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -209,6 +210,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -281,6 +283,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -353,6 +356,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -428,6 +432,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -501,6 +506,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 )
                         .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         );
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
@@ -570,6 +576,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId, false);
 
@@ -631,6 +638,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 

@@ -388,6 +388,11 @@ tr {
       padding: 0 10px 0 0;
     }
   }
+
+  .govuk-textarea--error {
+    @include box-shadow(none);
+    border: 4px solid $govuk-error-colour;
+  }
 }
 
 .form-group-error {
