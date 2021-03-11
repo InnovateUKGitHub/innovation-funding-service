@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -80,8 +81,8 @@ public class FinanceChecksQueriesAddQueryController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
-    private boolean northernIrelandSubsidyControlToggle;
+    @Value("${ifs.subsidy.control.northern.ireland.mode}")
+    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
 
 
     @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY')")
@@ -272,7 +273,7 @@ public class FinanceChecksQueriesAddQueryController {
                 FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL,
                 project.getApplication(),
                 competition.isProcurementMilestones(),
-                northernIrelandSubsidyControlToggle && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules())
+                SubsidyControlNorthernIrelandMode.FULL == subsidyControlNorthernIrelandMode && (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules())
         );
     }
 
