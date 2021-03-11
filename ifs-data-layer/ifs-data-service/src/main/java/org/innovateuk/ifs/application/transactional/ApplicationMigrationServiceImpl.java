@@ -119,7 +119,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                 .andOnSuccessReturn(application -> {
                     Application migratedApplication = applicationRepository.save(new Application(application));
 
-                    activityLogRepository.findByApplicationIdOrderByCreatedOnDesc(application.getId()).stream()
+                    activityLogRepository.findByApplicationId(application.getId()).stream()
                             .forEach(activityLog -> {
                                 activityLog.setApplication(migratedApplication);
                                 activityLogRepository.save(activityLog);
@@ -131,6 +131,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 applicationFinanceRepository.save(applicationFinance);
                             });
 
+                    // TODO: Not required as it is deleted audit
                     deletedApplicationRepository.findByApplicationId(application.getId()).stream()
                             .forEach(deletedApplicationAudit -> {
                                 deletedApplicationAudit.setApplicationId(migratedApplication.getId());
@@ -143,18 +144,21 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 applicationHiddenFromDashboardRepository.save(applicationHiddenFromDashboard);
                             });
 
+                    // TODO: needs to add
                     applicationOrganisationAddressRepository.findByApplicationId(application.getId()).stream()
                             .forEach(applicationOrganisationAddress -> {
                                 applicationOrganisationAddress.setApplication(migratedApplication);
                                 applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
                             });
 
+                    // TODO: needs to add
                     averageAssessorScoreRepository.findByApplicationId(application.getId()).ifPresent(
                             averageAssessorScore -> {
                                 averageAssessorScore.setApplication(migratedApplication);
                                 averageAssessorScoreRepository.save(averageAssessorScore);
                             });
 
+                    // TODO: needs to add
                     serviceSuccess(euGrantTransferRepository.findByApplicationId(application.getId()))
                             .andOnSuccessReturnVoid(euGrantTransfer -> {
                                 if (euGrantTransfer != null) {
@@ -175,6 +179,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 processRoleRepository.save(processRole);
                             });
 
+                    // TODO: needs to add
                     projectRepository.findByApplicationId(application.getId()).ifPresent(
                             project -> {
                                 project.setApplication(migratedApplication);
@@ -182,6 +187,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             }
                     );
 
+                    // TODO: needs to add
                     projectToBeCreatedRepository.findByApplicationId(application.getId()).ifPresent(
                             projectToBeCreated -> {
                                 projectToBeCreated.setApplication(migratedApplication);
@@ -195,6 +201,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 questionStatusRepository.save(questionStatus);
                             });
 
+                    // TODO: needs to add
                     serviceSuccess(grantProcessRepository.findOneByApplicationId(application.getId()))
                             .andOnSuccessReturnVoid(grantProcess -> {
                                 if (grantProcess != null) {
@@ -207,48 +214,56 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                                 }
                             });
 
+                    // TODO: needs to add
                     applicationProcessRepository.findByTargetId(application.getId()).stream()
                             .forEach(applicationProcess -> {
                                 applicationProcess.setTarget(migratedApplication);
                                 applicationProcessRepository.save(applicationProcess);
                             });
 
+                    // TODO: needs to add
                     assessmentRepository.findByTargetId(application.getId()).stream()
                             .forEach(assessment -> {
                                 assessment.setTarget(migratedApplication);
                                 assessmentRepository.save(assessment);
                             });
 
+                    // TODO: needs to add
                     interviewRepository.findByTargetId(application.getId()).stream()
                             .forEach(interview -> {
                                 interview.setTarget(migratedApplication);
                                 interviewRepository.save(interview);
                             });
 
+                    // TODO: needs to add
                     interviewAssignmentRepository.findByTargetId(application.getId()).stream()
                             .forEach(interviewAssignment -> {
                                 interviewAssignment.setTarget(migratedApplication);
                                 interviewAssignmentRepository.save(interviewAssignment);
                             });
 
+                    // TODO: needs to add
                     reviewRepository.findByTargetId(application.getId()).stream()
                             .forEach(review -> {
                                 review.setTarget(migratedApplication);
                                 reviewRepository.save(review);
                             });
 
+                    // TODO: needs to add
                     supporterAssignmentRepository.findByTargetId(application.getId()).stream()
                             .forEach(supporterAssignment -> {
                                 supporterAssignment.setTarget(migratedApplication);
                                 supporterAssignmentRepository.save(supporterAssignment);
                             });
 
+                    // TODO: needs to add
                     applicationInviteRepository.findByApplicationId(application.getId()).stream()
                             .forEach(applicationInvite -> {
                                 applicationInvite.setTarget(migratedApplication);
                                 applicationInviteRepository.save(applicationInvite);
                             });
 
+                    // TODO: needs to add
                     applicationKtaInviteRepository.findByApplicationId(application.getId()).ifPresent(
                             applicationKtaInvite -> {
                                 applicationKtaInvite.setTarget(migratedApplication);

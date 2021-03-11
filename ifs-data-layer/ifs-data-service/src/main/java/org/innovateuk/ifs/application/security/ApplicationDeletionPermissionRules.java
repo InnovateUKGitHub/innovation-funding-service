@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
 
 @PermissionRules
@@ -22,9 +23,9 @@ public class ApplicationDeletionPermissionRules extends BasePermissionRules {
                 && !applicationResource.isSubmitted();
     }
 
-    @PermissionRule(value = "DELETE_APPLICATION", description = "Only the system maintenance can delete application")
-    public boolean systemMaintenanceUserCanDeleteApplication(final ApplicationResource applicationResource, UserResource user) {
-        return isSystemMaintenanceUser(user);
+    @PermissionRule(value = "DELETE_APPLICATION", description = "Only the admin and system maintenance can delete application")
+    public boolean adminAndMaintenanceUserCanDeleteApplication(final ApplicationResource applicationResource, UserResource user) {
+        return isInternal(user) || isSystemMaintenanceUser(user);
     }
 
     @PermissionRule(value = "HIDE_APPLICATION", description = "Only the collaborators can hide applications")
