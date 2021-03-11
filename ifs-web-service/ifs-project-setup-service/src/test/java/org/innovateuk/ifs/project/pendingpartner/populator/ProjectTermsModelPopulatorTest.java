@@ -86,7 +86,7 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
         organisation = newOrganisationResource().withId(3L).build();
         pendingPartnerProgress = newPendingPartnerProgressResource().build();
         projectFinanceResource = newProjectFinanceResource()
-                .withNorthernIrelandDeclaration(false)
+                .withNorthernIrelandDeclarations(false)
                 .build();
 
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
