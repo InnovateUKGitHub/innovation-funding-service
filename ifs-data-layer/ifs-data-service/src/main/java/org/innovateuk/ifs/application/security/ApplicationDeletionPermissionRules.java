@@ -23,9 +23,9 @@ public class ApplicationDeletionPermissionRules extends BasePermissionRules {
                 && !applicationResource.isSubmitted();
     }
 
-    @PermissionRule(value = "DELETE_APPLICATION", description = "Only the admin and system maintenance can delete application")
-    public boolean adminAndMaintenanceUserCanDeleteApplication(final ApplicationResource applicationResource, UserResource user) {
-        return isInternal(user) || isSystemMaintenanceUser(user);
+    @PermissionRule(value = "DELETE_APPLICATION", description = "Only the system maintenance can delete application")
+    public boolean onlySystemMaintenanceUserCanDeleteApplication(final ApplicationResource applicationResource, UserResource user) {
+        return isSystemMaintenanceUser(user);
     }
 
     @PermissionRule(value = "HIDE_APPLICATION", description = "Only the collaborators can hide applications")
