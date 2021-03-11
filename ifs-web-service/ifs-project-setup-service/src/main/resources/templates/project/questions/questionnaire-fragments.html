@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="subsidy-basis(model)">
-
-
-
-
-
-    <!--
-    <main class="govuk-main-wrapper" id="main-content" role="main">
+<th:block th:fragment="subsidy-basis(model, title)">
+    <!--<main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              role="alert"
              tabindex="-1"

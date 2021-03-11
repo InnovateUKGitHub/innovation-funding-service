@@ -18,7 +18,7 @@
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to project',linkUrl=@{/project/${projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId})}, dynamicBackLink=${true}"/>
 
-    <th:block th:insert="project/questions/questionnaire-fragments :: subsidy-basis (model=${model})" />
+    <th:block th:insert="project/questions/questionnaire-fragments :: subsidy-basis (model=${model}, title=${model.projectName})" />
 
 
     <!--
