@@ -13,7 +13,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${questionnaire.title}, subTitle=${subtitle},size='govuk-heading-xl'" />
 
-        <div class="wysiwyg-styles" th:if="${questionnaire.description != null}" ifs:utext="${questionnaire.description}"></div>
+        <div class="govuk-body wysiwyg-styles" th:if="${questionnaire.description != null}" ifs:utext="${questionnaire.description}"></div>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                 method="post">
