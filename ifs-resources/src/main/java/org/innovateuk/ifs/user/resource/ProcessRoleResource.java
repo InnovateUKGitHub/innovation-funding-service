@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.user.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ProcessRoleResource {
     private Long id;
     private Long user;
@@ -75,5 +77,10 @@ public class ProcessRoleResource {
     public ProcessRoleResource setUserEmail(String userEmail) {
         this.userEmail = userEmail;
         return this;
+    }
+
+    @JsonIgnore
+    public boolean isLeadApplicant() {
+        return this.role == ProcessRoleType.LEADAPPLICANT;
     }
 }
