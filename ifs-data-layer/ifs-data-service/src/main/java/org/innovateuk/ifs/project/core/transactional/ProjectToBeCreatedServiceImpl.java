@@ -100,14 +100,6 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     }
 
     private ServiceResult<ScheduleResponse> migrateApplicationIfRequired(ProjectToBeCreated projectToBeCreated) {
-        /*return applicationMigrationService.findByApplicationIdAndStatus(projectToBeCreated.getApplication().getId(), MigrationStatus.CREATED).getSuccess()
-                .map(applicationMigration -> applicationMigrationService.migrateApplication(projectToBeCreated.getApplication().getId())
-                        .andOnSuccessReturn(migratedApplication -> {
-                            applicationMigration.setStatus(MigrationStatus.MIGRATED);
-                            return applicationMigrationService.updateApplicationMigrationStatus(applicationMigration);
-                        })
-                        .andOnSuccessReturn(() -> new ScheduleResponse("Migrated application: " + projectToBeCreated.getApplication().getId())))
-                .orElse(createProject(projectToBeCreated.getApplication().getId()));*/
         Optional<ApplicationMigration> applicationMigration = applicationMigrationService.findByApplicationIdAndStatus(projectToBeCreated.getApplication().getId(), MigrationStatus.CREATED).getSuccess();
         if (applicationMigration.isPresent()) {
             return applicationMigrationService.migrateApplication(projectToBeCreated.getApplication().getId())
