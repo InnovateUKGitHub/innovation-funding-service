@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -48,8 +49,14 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
     @InjectMocks
     private ProjectTermsModelPopulator projectTermsModelPopulator;
 
-    @Test
-    public void populate() {
+    private CompetitionResource competition;
+    private ProjectResource project;
+    private OrganisationResource organisation;
+    private PendingPartnerProgressResource pendingPartnerProgress;
+    private ProjectFinanceResource projectFinanceResource;
+
+    @Before
+    public void setUp() {
         String termsTemplate = "terms-template";
 
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
@@ -58,32 +65,68 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
                 .withVersion(1)
                 .build();
 
-        CompetitionResource competition = newCompetitionResource()
-                .withId(1L)
-                .withTermsAndConditions(grantTermsAndConditions)
+        String otherTermsTemplate = "other-terms-template";
+
+        GrantTermsAndConditionsResource otherGrantTermsAndConditions = newGrantTermsAndConditionsResource()
+                .withName("Name")
+                .withTemplate(otherTermsTemplate)
+                .withVersion(1)
                 .build();
 
-        ProjectResource project = newProjectResource()
+        competition = newCompetitionResource()
+                .withId(1L)
+                .withTermsAndConditions(grantTermsAndConditions)
+                .withOtherFundingRulesTermsAndConditions(otherGrantTermsAndConditions)
+                .build();
+
+        project = newProjectResource()
                 .withId(3L).withCompetition(competition.getId())
                 .build();
 
-        OrganisationResource organisation = newOrganisationResource().withId(3L).build();
-        PendingPartnerProgressResource pendingPartnerProgress = newPendingPartnerProgressResource().build();
+        organisation = newOrganisationResource().withId(3L).build();
+        pendingPartnerProgress = newPendingPartnerProgressResource().build();
+        projectFinanceResource = newProjectFinanceResource()
+                .withNorthernIrelandDeclaration(false)
+                .build();
 
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(project.getId(), organisation.getId())).thenReturn(restSuccess(pendingPartnerProgress));
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
         when(projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId())).thenReturn(restSuccess(projectFinanceResource));
+    }
 
+    @Test
+    public void populate() {
 
-        ProjectTermsViewModel actual = projectTermsModelPopulator.populate(project.getId(), organisation.getId());
+        ProjectTermsViewModel result = projectTermsModelPopulator.populate(project.getId(), organisation.getId());
 
-        assertEquals((long) project.getId(), actual.getProjectId());
-        assertEquals((long) organisation.getId(), actual.getOrganisationId());
-        assertEquals(competition.getTermsAndConditions().getTemplate(), actual.getCompetitionTermsTemplate());
-        assertEquals(pendingPartnerProgress.isTermsAndConditionsComplete(), actual.isTermsAccepted());
+        assertEquals((long) project.getId(), result.getProjectId());
+        assertEquals((long) organisation.getId(), result.getOrganisationId());
+        assertEquals(competition.getTermsAndConditions().getTemplate(), result.getCompetitionTermsTemplate());
+        assertEquals(pendingPartnerProgress.isTermsAndConditionsComplete(), result.isTermsAccepted());
+        assertNull(pendingPartnerProgress.getTermsAndConditionsCompletedOn());
+
+        InOrder inOrder = inOrder(projectRestService, organisationRestService, competitionRestService, pendingPartnerProgressRestService);
+        inOrder.verify(projectRestService).getProjectById(project.getId());
+        inOrder.verify(organisationRestService).getOrganisationById(organisation.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(project.getCompetition());
+        inOrder.verify(pendingPartnerProgressRestService).getPendingPartnerProgress(project.getId(), organisation.getId());
+
+        verifyNoMoreInteractions(projectRestService, organisationRestService, competitionRestService, pendingPartnerProgressRestService);
+    }
+
+    @Test
+    public void populateWithOtherTerms() {
+
+        projectFinanceResource.setNorthernIrelandDeclaration(true);
+
+        ProjectTermsViewModel result = projectTermsModelPopulator.populate(project.getId(), organisation.getId());
+
+        assertEquals((long) project.getId(), result.getProjectId());
+        assertEquals((long) organisation.getId(), result.getOrganisationId());
+        assertEquals(competition.getOtherFundingRulesTermsAndConditions().getTemplate(), result.getCompetitionTermsTemplate());
+        assertEquals(pendingPartnerProgress.isTermsAndConditionsComplete(), result.isTermsAccepted());
         assertNull(pendingPartnerProgress.getTermsAndConditionsCompletedOn());
 
         InOrder inOrder = inOrder(projectRestService, organisationRestService, competitionRestService, pendingPartnerProgressRestService);
