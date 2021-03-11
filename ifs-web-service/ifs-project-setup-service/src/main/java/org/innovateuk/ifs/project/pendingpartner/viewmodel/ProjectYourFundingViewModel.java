@@ -18,6 +18,7 @@ public class ProjectYourFundingViewModel {
     private final boolean leadOrganisation;
     private final boolean organisationRequiredAndNotCompleted;
     private final boolean subsidyBasisRequiredAndNotCompleted;
+    private final Long subsidyBasisQuestionId;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -29,7 +30,8 @@ public class ProjectYourFundingViewModel {
                                        OrganisationTypeEnum organisationType,
                                        boolean leadOrganisation,
                                        boolean subsidyBasisRequiredAndNotCompleted,
-                                       boolean organisationRequiredAndNotCompleted) {
+                                       boolean organisationRequiredAndNotCompleted,
+                                       Long subsidyBasisQuestionId) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -42,6 +44,7 @@ public class ProjectYourFundingViewModel {
         this.leadOrganisation = leadOrganisation;
         this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
         this.organisationRequiredAndNotCompleted = organisationRequiredAndNotCompleted;
+        this.subsidyBasisQuestionId = subsidyBasisQuestionId;
     }
 
     public String getProjectName() {
@@ -111,5 +114,9 @@ public class ProjectYourFundingViewModel {
 
     public boolean isSubsidyBasisRequiredAndNotCompleted() {
         return subsidyBasisRequiredAndNotCompleted;
+    }
+
+    public Long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId;
     }
 }

@@ -36,7 +36,7 @@
                 </li>
                 <li th:if="${model.subsidyBasisRequiredAndNotCompleted}">
                     you must mark the
-                    <a th:if="${!model.completed}" th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">Subsidy Basis</a>
+                    <a th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">subsidy basis</a>
                     page as complete
                 </li>
             </ul>
