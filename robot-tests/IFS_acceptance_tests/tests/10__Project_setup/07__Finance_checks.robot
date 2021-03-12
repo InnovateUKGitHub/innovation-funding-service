@@ -1308,9 +1308,9 @@ check finance checks status on dashboard
 
 the user should see the variance finance summary and project cost values
     # the below figures are listed as:                           RowNumber   TotalCosts   Funding level (%)   FundingSought   OtherPublicSectorFunding   ContributionToProject
-    the categories are verified for Project finances section     3           - 23119      ${empty}            - 6935.7          ${empty}                    - 16183.3
+    the categories are verified for Project finances section     3           - 23,119      ${empty}            - 6935.7          ${empty}                    - 16183.3
     # the below figures are listed as:                           RowNumber   Total cost   Labour     Overheads   Materials   CapitalUsage   Subcontracting   TravelandSubsistence   OtherCosts
-    the categories are verified for section changes              3           - £23119     + 56349    + 1954      - 20200     + 4498         - 79400          + 4030                 + 9650
+    the categories are verified for section changes              3           - £23,119     + 56349    + 1954      - 20200     + 4498         - 79400          + 4030                 + 9650
 
 the user should see the academic variance finance summary and project cost values
     # the below figures are listed as:                           RowNumber   TotalCosts   Funding level (%)   FundingSought   OtherPublicSectorFunding   ContributionToProject

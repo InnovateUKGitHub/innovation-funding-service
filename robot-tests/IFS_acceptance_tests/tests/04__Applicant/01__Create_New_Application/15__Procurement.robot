@@ -222,7 +222,7 @@ Internal user makes changes to project finances
     Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
     When the user makes changes to the project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
-    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10,000)
+    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(-10,000)
     And the user should see the element                     jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10,000)
     And the user should see the element                     jQuery = td:contains("£265,084")
 
@@ -243,7 +243,6 @@ Internal user adds payment milestones
     And the user clicks the button/link                      jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                      jQuery = div[id='accordion-finances'] div:nth-of-type(22) span:nth-of-type(4)
     When the user creates a new payment milestone
-    #When applicant fills in payment milestone                css = div[id='accordion-finances-unsaved']  21  Milestone 21  99913  Task or activity2  Deliverable2  Success Criteria2
     And the user clicks the button/link                      jQuery = button:contains("Save and return to payment milestone check")
     And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
     Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£265,084")

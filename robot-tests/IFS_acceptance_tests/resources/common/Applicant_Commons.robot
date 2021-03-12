@@ -747,7 +747,7 @@ applicant fills in payment milestone
 
 applicant views saved payment milestones
     [Arguments]   ${month}  ${paymentRequested}  ${description}  ${percentageOfProjectCost}  ${totalPayment}  ${totalPercentage}
-    the user clicks the button/link     link = Your payment milestones
+    the user clicks the button/link     link = Back to payment milestones
     the user should see the element     jQuery = div h4:contains("Month completed") ~ div .accordion-header-text:contains("${month}")
     the user should see the element     jQuery = div h4:contains("Milestone") ~ div button:contains("${description}")
     the user should see the element     jQuery = div h4:contains("% of project costs") ~ div .finance-total:contains("${percentageOfProjectCost}")
