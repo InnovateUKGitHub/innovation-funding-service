@@ -115,7 +115,8 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<Application> migrateApplication(long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccessReturn(application -> {
@@ -271,7 +272,8 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
+    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<ApplicationMigration> updateApplicationMigrationStatus(ApplicationMigration applicationMigration) {
         applicationMigration.setUpdatedOn(ZonedDateTime.now());
         return serviceSuccess(applicationMigrationRepository.save(applicationMigration));
