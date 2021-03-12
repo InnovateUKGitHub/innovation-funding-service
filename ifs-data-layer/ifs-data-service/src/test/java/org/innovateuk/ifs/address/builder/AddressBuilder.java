@@ -50,6 +50,10 @@ public class AddressBuilder extends BaseBuilder<Address, AddressBuilder> {
         return withArray((county, address) -> setField("county", county, address), counties);
     }
 
+    public AddressBuilder withCountry(String... countries) {
+        return withArray((country, address) -> setField("country", country, address), countries);
+    }
+
     public AddressBuilder withPostcode(String... postcodes) {
         return withArray((postcode, address) -> setField("postcode", postcode, address), postcodes);
     }
