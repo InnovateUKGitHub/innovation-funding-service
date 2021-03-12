@@ -5,14 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -76,13 +74,6 @@ public class Section implements Comparable<Section> {
         List<Section> nonEmptyChildSections = simpleFilterNot(childSections, child -> child.getChildSections().isEmpty() && child.getQuestions().isEmpty());
         List<List<Question>> allChildQuestions = simpleMap(nonEmptyChildSections, Section::fetchAllQuestionsAndChildQuestions);
         return combineLists(questions, flattenLists(allChildQuestions));
-    }
-
-    /**
-     * Get questions of type LEAD_ONLY
-     */
-    public List<Question> getLeadQuestions() {
-        return questions.stream().filter(question -> question.isType(QuestionType.LEAD_ONLY)).collect(Collectors.toList());
     }
 
     public Long getId() {

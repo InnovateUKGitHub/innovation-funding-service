@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
+import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+
 /**
  * Question defines database relations and a model to use client side and server side.
  */
@@ -26,9 +28,9 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     private QuestionType type;
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
+    private Long questionnaireId;
     //Used by @Cacheable
     @JsonIgnore
-
     private boolean competitionOpen;
 
     public QuestionResource() {
@@ -163,6 +165,18 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    public Long getQuestionnaireId() {
+        return questionnaireId;
+    }
+
+    public void setQuestionnaireId(Long questionnaireId) {
+        this.questionnaireId = questionnaireId;
+    }
+
+    public boolean requiresSetup() {
+        return type != LEAD_ONLY && questionSetupType != QuestionSetupType.SUBSIDY_BASIS;
     }
 
     @Override

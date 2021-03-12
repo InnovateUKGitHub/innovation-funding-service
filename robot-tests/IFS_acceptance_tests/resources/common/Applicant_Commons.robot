@@ -526,19 +526,27 @@ the user verifies his email and checks his organisation name
 
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    Bath  Bath Spa University
+    the user select the competition and starts application       ${competition}
+    the user clicks the button/link                              link = Apply with a different organisation
+    the user selects the radio button                            organisationTypeId  ${applicationType}
+    the user clicks the button/link                              jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house     Bath  Bath Spa University
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    ROYAL  ROYAL MAIL PLC
+    the user select the competition and starts application       ${competition}
+    the user clicks the button/link                              link = Apply with a different organisation
+    the user selects the radio button                            organisationTypeId  ${applicationType}
+    the user clicks the button/link                              jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house     ROYAL  ROYAL MAIL PLC
+
+existing user creates a new application
+    [Arguments]  ${competitionName}
+    the user select the competition and starts application      ${competitionName}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
+    Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true
+    ...                                                        AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link                             css = .govuk-button[type="submit"]
 
 the user enters organisation details manually on companies house link
     [Arguments]  ${organisationName}
@@ -846,3 +854,10 @@ applicant views readonly payment milestones subsections
     the user should see the element     jQuery = dd:contains("${deliverable}")
     the user should see the element     jQuery = dd:contains("${sucessCriteria}")
     the user clicks the button/link     link = Your project finances
+
+the user completes the application research category
+    [Arguments]   ${res_category}
+    the user clicks the button/link                link = Research category
+    the user clicks the button twice               jQuery = label:contains("${res_category}")
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Research category") > .task-status-complete
