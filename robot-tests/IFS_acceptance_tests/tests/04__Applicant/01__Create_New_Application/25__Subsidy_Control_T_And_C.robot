@@ -185,7 +185,7 @@ Lead applicant completes state aid subsidy basis application
     Then the user marks the finances as complete                                        ${leadStateAidApplication}  labour costs  54,000  yes
 
 Lead applicant accepts state aid terms and conditions based on NI declaration
-    [Documentation]  IFS-9223
+    [Documentation]  IFS-9233
     When the user clicks the button/link          link = Award terms and conditions
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user should not see the element       jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
@@ -198,7 +198,7 @@ Partner completes project finances and terms and conditions of state aid applica
     Then the user marks the subsidy contol finances as complete     ${leadStateAidApplication}  labour costs  54,000  yes
 
 Partner applicant can accept subsidy control terms and conditions based on NI declaration
-    [Documentation]  IFS-9223
+    [Documentation]  IFS-9233
     And the user clicks the button/link          link = Award terms and conditions
     Then the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user should see the element          jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
@@ -283,7 +283,7 @@ Partner applicant can accept state aid terms and conditions based on NI declarat
 Lead applicant submits subsidy control subsidy basis application
     [Documentation]  IFS-9116
     Given log in as a different user             &{scLeadApplicantCredentials}
-    And the user clicks the button/link          link = ${leadStateAidApplication}
+    When the user clicks the button/link          link = ${leadStateAidApplication}
     And the user clicks the button/link          link = Review and submit
     Then the user should not see the element     jQuery = .task-status-incomplete
     And the user clicks the button/link          jQuery = .govuk-button:contains("Submit application")
