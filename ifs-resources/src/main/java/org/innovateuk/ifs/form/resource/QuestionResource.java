@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
+import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+
 /**
  * Question defines database relations and a model to use client side and server side.
  */
@@ -171,6 +173,10 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public void setQuestionnaireId(Long questionnaireId) {
         this.questionnaireId = questionnaireId;
+    }
+
+    public boolean requiresSetup() {
+        return type != LEAD_ONLY && questionSetupType != QuestionSetupType.SUBSIDY_BASIS;
     }
 
     @Override
