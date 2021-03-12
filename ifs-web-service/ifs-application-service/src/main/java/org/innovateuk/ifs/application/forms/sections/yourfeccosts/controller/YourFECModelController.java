@@ -66,11 +66,12 @@ public class YourFECModelController {
             UserResource loggedInUser,
             Model model,
             @ModelAttribute("form") YourFECModelForm form) {
+
         formPopulator.populate(form, applicationId, organisationId);
-        YourFECViewModel YourFECViewModel =
+        YourFECViewModel yourFECViewModel =
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
-        model.addAttribute("model", YourFECViewModel);
+        model.addAttribute("model", yourFECViewModel);
         return VIEW_PAGE;
     }
 
@@ -131,11 +132,14 @@ public class YourFECModelController {
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
-            UserResource loggedInUser) {
+            UserResource loggedInUser,
+            Model model,
+            @ModelAttribute("form") YourFECModelForm form)  {
 
         ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
-        return redirectToViewPage(applicationId, organisationId, sectionId);
+        form.setDisplayBanner(true);
+        return viewPage(applicationId, organisationId, sectionId, loggedInUser, model,form);
     }
 
     private void updateFECModelEnabled(long applicationId,
