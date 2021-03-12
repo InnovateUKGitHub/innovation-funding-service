@@ -91,14 +91,13 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9124 Add dual T&Cs to Subsidy Control Competitions
 ...
-<<<<<<< HEAD
 ...            IFS-9242 KTP fEC/Non-fEC: Non-fEC project costs tables
 ...
-=======
 ...            IFS-9241 KTP fEC/Non-fEC: 'Your project costs' conditions
 ...
+...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
+...
 
->>>>>>> development
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -366,7 +365,7 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
-<<<<<<< HEAD
+
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
      [Documentation]  IFS-9242
      Given the user clicks the button/link               link = Your project costs
@@ -374,7 +373,21 @@ Knowledge based applicant cannot view or edit fEC specific project costs based o
      And the user should not see the element             jQuery = button:contains("Additional associate support")
      Then the user should not see the element            jQuery = button:contains("Associate estate costs")
      [Teardown]  the user fills in ktp project costs
-=======
+
+New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
+     [Documentation]  IFS-9240
+     Given the user clicks the button/link                  link = Your fEC model
+     And the user clicks the button/link                    jQuery = button:contains("Edit your fEC Model")
+     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
+     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
+     Then the user should see a field and summary error     You must upload a file.
+
+New lead applicant uploads a document for the organisation's fEC model and save the selection
+     [Documentation]  IFS-9240
+     When the user uploads the file          css = .inputfile   testing_5MB.pdf
+     Then the user clicks the button/link    jQuery = button:contains("Mark as complete")
+     And The user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
+
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
@@ -395,7 +408,6 @@ New lead applicant completes the project costs and project location
     And the user enters the project location
     Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
     And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
->>>>>>> development
 
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
