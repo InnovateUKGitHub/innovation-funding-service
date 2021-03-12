@@ -219,7 +219,7 @@ Internal user makes changes to the finance payment milestones
 
 Internal user makes changes to project finances
     [Documentation]   IFS-8944
-    Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
+    Given the user navigates to the page                    ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
     When the user makes changes to the project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
