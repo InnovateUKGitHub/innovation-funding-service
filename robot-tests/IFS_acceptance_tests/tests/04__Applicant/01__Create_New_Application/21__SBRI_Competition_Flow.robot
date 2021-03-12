@@ -158,7 +158,9 @@ Applicant adds another payment milestone
     [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                             jQuery = button:contains("Open all")
-    When applicant fills in payment milestone                       accordion-finances-content  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
+    #When applicant fills in payment milestone                       accordion-finances-content  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
+    When the applicant fills in a new payment milestone
+
     And the user clicks the button/link                             id = mark-all-as-complete
     Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
     And applicant views readonly payment milestones subsections     Task Or Activity 2   Deliverable 2   Success Criteria 2
@@ -515,6 +517,14 @@ the user should only see application related key statistics in applications page
     the user should see the element         jQuery = small:contains("Applications beyond 50%")
     the user should see the element         jQuery = small:contains("Applications submitted")
     the user should see the element         jQuery = small:contains("Ineligible applications")
+
+the applicant fills in a new payment milestone
+    the user selects the option from the drop-down menu       5   jQuery = div[id='accordion-finances'] div:nth-of-type(2) select
+    the user enters text to a text field                      css = [id^="accordion-finances-content-unsaved"] input[id^="milestones"][id$="description"]   Milestone month 2
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(2) textarea[id^="milestones"][id$="taskOrActivity"]    Task Or Activity 2
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(2) textarea[id^="milestones"][id$="deliverable"]   Deliverable 2
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(2) textarea[id^="milestones"][id$="successCriteria"]   Success Criteria 2
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(2) input[id^="milestones"][id$="payment"]   62839
 
 the user should see the correct data on finance check page
     the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")

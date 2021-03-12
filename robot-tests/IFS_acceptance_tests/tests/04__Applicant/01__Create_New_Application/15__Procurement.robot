@@ -402,7 +402,7 @@ the user makes changes to the payment milestones table
     the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
 
 the user makes changes to the project finances
-    the user clicks the button/link     id = accordion-finances-heading-5
+    the user clicks the button/link     jQuery = button:contains("Subcontracting")
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/a
     clear element text                  id = subcontractingRows[9455].cost
     input text                          id = subcontractingRows[9455].cost  80000
