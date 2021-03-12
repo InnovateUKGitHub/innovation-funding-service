@@ -222,8 +222,8 @@ Internal user makes changes to project finances
     Given the user navigates to the page                    https://ifs.local-dev/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
     When the user makes changes to the project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
-    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(-10,000)
-    And the user should see the element                     jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10,000)
+    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
+    And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
     And the user should see the element                     jQuery = td:contains("£265,084")
 
 Internal user removes payment milestones
@@ -402,7 +402,7 @@ the user makes changes to the payment milestones table
     the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
 
 the user makes changes to the project finances
-    the user clicks the button/link     jQuery = button:contains("Subcontracting")
+    the user clicks the button/link     id = accordion-finances-heading-5
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/a
     clear element text                  id = subcontractingRows[9455].cost
     input text                          id = subcontractingRows[9455].cost  80000
@@ -424,8 +424,8 @@ the user creates a new payment milestone
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) input[id^="milestones"][id$="payment"]   99913
 
 the user should see all project finance changes
-    the user should see the element                    jQuery = td:contains("90,000") + td:contains(80,000) + td:contains(- 10,000)
-    the user should see the element                    jQuery = td:contains("1,100") + td:contains(11,100) + td:contains(+ 10,000)
+    the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
+    the user should see the element                    jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
     the user should see the element                    jQuery = td:contains("12,523") ~ td:contains("- 100")
     the user should see the element                    jQuery = td:contains("12,121") ~ td:contains("+ 100")
 
