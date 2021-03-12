@@ -854,3 +854,10 @@ applicant views readonly payment milestones subsections
     the user should see the element     jQuery = dd:contains("${deliverable}")
     the user should see the element     jQuery = dd:contains("${sucessCriteria}")
     the user clicks the button/link     link = Your project finances
+
+the user completes the application research category
+    [Arguments]   ${res_category}
+    the user clicks the button/link                link = Research category
+    the user clicks the button twice               jQuery = label:contains("${res_category}")
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Research category") > .task-status-complete
