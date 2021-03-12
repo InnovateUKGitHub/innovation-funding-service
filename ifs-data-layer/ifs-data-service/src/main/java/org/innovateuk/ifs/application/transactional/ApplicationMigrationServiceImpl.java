@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +48,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private DeletedApplicationRepository deletedApplicationRepository;
 
     @Autowired
     private ApplicationHiddenFromDashboardRepository applicationHiddenFromDashboardRepository;
@@ -104,6 +102,9 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     @Autowired
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
+
+    @Autowired
+    private ProcessHistoryRepository processHistoryRepository;
 
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
@@ -210,33 +211,33 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             });
 
                     assessmentRepository.findByTargetId(application.getId()).stream()
-                            .forEach(assessment -> {
-                                assessment.setTarget(migratedApplication);
-                                assessmentRepository.save(assessment);
+                            .forEach(assessmentProcess -> {
+                                assessmentProcess.setTarget(migratedApplication);
+                                assessmentRepository.save(assessmentProcess);
                             });
 
                     interviewRepository.findByTargetId(application.getId()).stream()
-                            .forEach(interview -> {
-                                interview.setTarget(migratedApplication);
-                                interviewRepository.save(interview);
+                            .forEach(interviewProcess -> {
+                                interviewProcess.setTarget(migratedApplication);
+                                interviewRepository.save(interviewProcess);
                             });
 
                     interviewAssignmentRepository.findByTargetId(application.getId()).stream()
-                            .forEach(interviewAssignment -> {
-                                interviewAssignment.setTarget(migratedApplication);
-                                interviewAssignmentRepository.save(interviewAssignment);
+                            .forEach(interviewAssignmentProcess -> {
+                                interviewAssignmentProcess.setTarget(migratedApplication);
+                                interviewAssignmentRepository.save(interviewAssignmentProcess);
                             });
 
                     reviewRepository.findByTargetId(application.getId()).stream()
-                            .forEach(review -> {
-                                review.setTarget(migratedApplication);
-                                reviewRepository.save(review);
+                            .forEach(reviewProcess -> {
+                                reviewProcess.setTarget(migratedApplication);
+                                reviewRepository.save(reviewProcess);
                             });
 
                     supporterAssignmentRepository.findByTargetId(application.getId()).stream()
-                            .forEach(supporterAssignment -> {
-                                supporterAssignment.setTarget(migratedApplication);
-                                supporterAssignmentRepository.save(supporterAssignment);
+                            .forEach(supporterAssignmentProcess -> {
+                                supporterAssignmentProcess.setTarget(migratedApplication);
+                                supporterAssignmentRepository.save(supporterAssignmentProcess);
                             });
 
                     applicationInviteRepository.findByApplicationId(application.getId()).stream()
@@ -261,6 +262,11 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     private void deleteApplication(Application application) {
         activityLogRepository.deleteByApplicationId(application.getId());
         grantProcessRepository.deleteByApplicationId(application.getId());
+
+        applicationProcessRepository.findByTargetId(application.getId()).stream()
+                .forEach(applicationProcess -> processHistoryRepository.deleteByProcessId(applicationProcess.getId()));
+        applicationProcessRepository.deleteByTargetId(application.getId());
+
         applicationRepository.delete(application);
     }
 
