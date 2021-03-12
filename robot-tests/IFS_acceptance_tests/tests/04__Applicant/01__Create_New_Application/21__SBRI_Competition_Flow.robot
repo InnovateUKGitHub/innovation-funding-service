@@ -519,11 +519,11 @@ the user should only see application related key statistics in applications page
 
 the applicant fills in a new payment milestone
     the user selects the option from the drop-down menu       5   jQuery = div[id='accordion-finances'] div:nth-of-type(3) select
-    the user enters text to a text field                      css = [id^="accordion-finances-content-unsaved"] input[id^="milestones"][id$="description"]   Milestone month 2
+    the user enters text to a text field                      css = [id^="accordion-finances-content-unsaved"] input[id^="milestones"][id$="description"]   Milestone 2
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(3) textarea[id^="milestones"][id$="taskOrActivity"]    Task Or Activity 2
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(3) textarea[id^="milestones[uns"][id$="deliverable"]    Deliverable 2
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(3) textarea[id^="milestones"][id$="successCriteria"]   Success Criteria 2
-    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(3) input[id^="milestones[uns"][id$="payment"] 62839
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(3) input[id^="milestones[uns"][id$="payment"]  62839
 
 the user should see the correct data on finance check page
     the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
