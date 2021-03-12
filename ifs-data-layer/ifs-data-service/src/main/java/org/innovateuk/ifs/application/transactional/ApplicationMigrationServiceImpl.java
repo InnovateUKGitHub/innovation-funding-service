@@ -24,7 +24,6 @@ import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -106,9 +105,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     @Autowired
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
 
-    @Autowired
-    private ApplicationDeletionService applicationDeletionService;
-
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
         return serviceSuccess(applicationMigrationRepository.findByApplicationIdAndStatus(applicationId, status));
@@ -116,7 +112,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     @Override
     @Transactional
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<Application> migrateApplication(long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccessReturn(application -> {
@@ -136,14 +131,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             .forEach(applicationFinance -> {
                                 applicationFinance.setApplication(migratedApplication);
                                 applicationFinanceRepository.save(applicationFinance);
-                            });
-
-                    // TODO: Is this not required as it is deleted audit for application
-                    //  as there is no FK defined to application in DeletedApplicationAudit
-                    deletedApplicationRepository.findByApplicationId(application.getId()).stream()
-                            .forEach(deletedApplicationAudit -> {
-                                deletedApplicationAudit.setApplicationId(migratedApplication.getId());
-                                deletedApplicationRepository.save(deletedApplicationAudit);
                             });
 
                     applicationHiddenFromDashboardRepository.findByApplicationId(application.getId()).stream()
@@ -265,15 +252,20 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
                             }
                     );
 
-                    applicationDeletionService.deleteMigratedApplication(application.getId());
+                    deleteApplication(application);
 
                     return applicationRepository.findById(migratedApplication.getId()).get();
                 });
     }
 
+    private void deleteApplication(Application application) {
+        activityLogRepository.deleteByApplicationId(application.getId());
+        grantProcessRepository.deleteByApplicationId(application.getId());
+        applicationRepository.delete(application);
+    }
+
     @Override
     @Transactional
-    //@Transactional(propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<ApplicationMigration> updateApplicationMigrationStatus(ApplicationMigration applicationMigration) {
         applicationMigration.setUpdatedOn(ZonedDateTime.now());
         return serviceSuccess(applicationMigrationRepository.save(applicationMigration));

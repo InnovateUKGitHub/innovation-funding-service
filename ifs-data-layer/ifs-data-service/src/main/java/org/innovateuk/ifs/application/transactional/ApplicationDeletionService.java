@@ -14,7 +14,4 @@ public interface ApplicationDeletionService {
 
     @PreAuthorize("hasPermission(#id, 'HIDE_APPLICATION')")
     ServiceResult<Void> hideApplicationFromDashboard(ApplicationUserCompositeId id);
-
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'DELETE_APPLICATION')")
-    ServiceResult<Void> deleteMigratedApplication(long applicationId);
 }
