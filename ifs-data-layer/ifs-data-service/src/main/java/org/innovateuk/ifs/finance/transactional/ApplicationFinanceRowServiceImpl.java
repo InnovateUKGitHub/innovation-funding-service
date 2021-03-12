@@ -15,15 +15,18 @@ import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FINANCE_TYPE_NOT_SUPPORTED_BY_COMPETITION;
@@ -235,4 +238,27 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetNonFECCostRowEntries(long applicationId, long organisationId, long financeRowTargetId) {
+        Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+                applicationId, organisationId);
+        List<ApplicationFinanceRow> applicationFinanceRows = financeRowRepository.findByTargetId(financeRowTargetId);
+        Organisation organisation = organisationRepository.findById(organisationId).get();
+        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate
+                .getOrganisationFinanceHandler(applicationFinance.get().getApplication().getCompetition().getId(),
+                        organisation.getOrganisationType().getId());
+
+        List<ApplicationFinanceRow> nonFECFinanceRows = applicationFinanceRows.stream()
+                .filter(applicationFinanceRow ->
+                        (FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT  == applicationFinanceRow.getType()
+                                || FinanceRowType.INDIRECT_COSTS  == applicationFinanceRow.getType()))
+                .collect(Collectors.toList());
+        nonFECFinanceRows.forEach(nonFECFinanceRow -> {
+            nonFECFinanceRow.setCost(BigDecimal.ZERO);
+            organisationFinanceHandler.updateCost(nonFECFinanceRow);
+        });
+
+        return serviceSuccess();
+    }
 }

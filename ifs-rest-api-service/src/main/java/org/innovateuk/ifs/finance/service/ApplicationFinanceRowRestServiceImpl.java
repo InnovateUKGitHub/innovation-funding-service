@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.service;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,5 +12,11 @@ public class ApplicationFinanceRowRestServiceImpl extends BaseFinanceRowRestServ
 
     public ApplicationFinanceRowRestServiceImpl() {
         super("/application-finance-row");
+    }
+
+    @Override
+    public RestResult<Void> resetNonFECCostRowEntries(Long applicationId, Long organisationId, Long financeRowTargetId) {
+        String url = "/application-finance-row" + "/reset-nonfec/" + applicationId + "/" + organisationId + "/" + financeRowTargetId;
+        return putWithRestResult(url);
     }
 }

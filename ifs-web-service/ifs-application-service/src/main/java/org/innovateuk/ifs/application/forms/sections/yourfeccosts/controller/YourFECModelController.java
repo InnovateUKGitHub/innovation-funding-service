@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECMo
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -54,6 +55,8 @@ public class YourFECModelController {
     private SectionService sectionService;
     @Autowired
     private ProcessRoleRestService processRoleRestService;
+    @Autowired
+    private YourProjectCostsAutosaver yourProjectCostsAutosaver;
 
 
     @GetMapping
@@ -84,6 +87,7 @@ public class YourFECModelController {
             @ModelAttribute YourFECModelForm form) {
 
         updateFECModelEnabled(applicationId, organisationId, form);
+        yourProjectCostsAutosaver.resetNonFECCostRowEntries(applicationId, organisationId);
         return redirectToYourFinances(applicationId);
     }
 
@@ -138,8 +142,9 @@ public class YourFECModelController {
 
         ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
+
         form.setDisplayBanner(true);
-        return viewPage(applicationId, organisationId, sectionId, loggedInUser, model,form);
+        return viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
     }
 
     private void updateFECModelEnabled(long applicationId,
