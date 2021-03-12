@@ -568,6 +568,9 @@ the user selects temporary framework terms and conditions
 
 the user accept the temporary framework terms and conditions
     the user clicks the button/link     link = Award terms and conditions
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords    the user completes subsidy basis as subsidy control
+    ...                                    AND             the user clicks the button/link     link = Award terms and conditions
     the user should see the element     jQuery = h1:contains("New projects temporary framework terms and conditions")
     the user selects the checkbox       agreed
     the user clicks the button/link     jQuery = button:contains("Agree and continue")

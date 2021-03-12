@@ -131,7 +131,7 @@ Subsidy basis validation messages should display on continuing without selecting
 
 Lead applicant declares subsidy basis as Northern Ireland Protocol when activites have a direct link to Northern Ireland
     [Documentation]  IFS-9116
-    Given the user selects the subsidy basis option       1
+    Given the user selects the subsidy basis option       Yes
     When the user completes subsidy basis declaration
     Then the user should see the element                  jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under") span:contains("the Northern Ireland Protocol")
     And the user should see the element                   jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("Yes")
@@ -139,8 +139,8 @@ Lead applicant declares subsidy basis as Northern Ireland Protocol when activite
 Lead applicant declares subsidy basis as Northern Ireland Protocol when trading goods through Northern Ireland
     [Documentation]  IFS-9116
     Given the user starts the subsidy section again
-    When the user selects the subsidy basis option       2
-    And the user selects the subsidy basis option        3
+    When the user selects the subsidy basis option       No
+    And the user selects the subsidy basis option        Yes
     And the user completes subsidy basis declaration
     Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under") span:contains("the Northern Ireland Protocol")
     And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
@@ -167,8 +167,8 @@ Partner applicant declares subsidy basis as EU-UK Trade and Cooperation Agreemen
     [Documentation]  IFS-9116
     Given the user clicks the button/link                link = subsidy basis
     And the user clicks the button/link                  jQuery = button:contains("Next")
-    When the user selects the subsidy basis option       2
-    And the user selects the subsidy basis option        4
+    When the user selects the subsidy basis option       No
+    And the user selects the subsidy basis option        No
     And the user completes subsidy basis declaration
     Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under") span:contains("EU-UK Trade and Cooperation Agreement")
     And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
@@ -219,8 +219,8 @@ Lead applicant creates subsidy control subsidy basis application and declares su
     And the user fills in the Application details        ${leadSubsidyControlApplication}  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                  link = Subsidy basis
     And the user clicks the button/link                  jQuery = button:contains("Next")
-    When the user selects the subsidy basis option       2
-    And the user selects the subsidy basis option        4
+    When the user selects the subsidy basis option       No
+    And the user selects the subsidy basis option        No
     And the user completes subsidy basis declaration
     Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under") span:contains("EU-UK Trade and Cooperation Agreement")
     And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
@@ -234,7 +234,7 @@ Partner applicant declares subsidy basis as Northern Ireland Protocol when activ
     And the user clicks the button/link                   id = save-organisation-button
     And the user clicks the button/link                   link = Subsidy basis
     And the user clicks the button/link                   jQuery = button:contains("Next")
-    And the user selects the subsidy basis option         1
+    And the user selects the subsidy basis option         Yes
     And the user completes subsidy basis declaration
     Then the user should see the element                  jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under") span:contains("the Northern Ireland Protocol")
     And the user should see the element                   jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("Yes")
@@ -242,8 +242,8 @@ Partner applicant declares subsidy basis as Northern Ireland Protocol when activ
 Partner applicant declares subsidy basis as Northern Ireland Protocol when trading goods through Northern Ireland
     [Documentation]  IFS-9116
     Given the user starts the subsidy section again
-    When the user selects the subsidy basis option       2
-    And the user selects the subsidy basis option        3
+    When the user selects the subsidy basis option       No
+    And the user selects the subsidy basis option        Yes
     And the user completes subsidy basis declaration
     Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under") span:contains("the Northern Ireland Protocol")
     And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
@@ -312,7 +312,7 @@ the user completes subsidy basis declaration
 
 the user selects the subsidy basis option
     [Arguments]   ${answer}
-    the user selects the radio button     option  ${answer}
+    the user clicks the button twice      jQuery = label:contains("${answer}")
     the user clicks the button/link       jQuery = button:contains("Next")
 
 the user starts the subsidy section again
