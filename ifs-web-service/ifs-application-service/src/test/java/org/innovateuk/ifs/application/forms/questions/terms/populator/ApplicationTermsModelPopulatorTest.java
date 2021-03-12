@@ -13,15 +13,15 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -44,8 +44,8 @@ import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuild
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -63,7 +63,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
     @Mock
     private CompetitionRestService competitionRestServiceMock;
     @Mock
-    private OrganisationService organisationServiceMock;
+    private OrganisationRestService organisationRestService;
     @Mock
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
@@ -101,11 +101,6 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withQuestions(singletonList(questionId))
                 .build();
 
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withUser(currentUser)
-                .withApplication(application.getId())
-                .build(1);
-
         OrganisationResource organisation = newOrganisationResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
         QuestionResource subsidyBasisQuestion = newQuestionResource().build();
@@ -125,6 +120,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                         subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
                 .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId, false);
 
@@ -140,7 +136,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.getId()), actual.getSubsidyBasisQuestionUrl());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
@@ -182,11 +178,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         OrganisationResource organisation = newOrganisationResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
-                .build();
 
-        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
@@ -194,6 +186,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
@@ -207,7 +200,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
@@ -256,11 +249,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withMarkedAsCompleteByUserId(currentUser.getId())
                 .withMarkedAsCompleteByUserName(currentUser.getName())
                 .build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
-                .build();
 
-        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
@@ -268,6 +257,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(newOrganisationResource().build()));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
@@ -281,7 +271,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
@@ -330,11 +320,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withMarkedAsCompleteByUserId(currentUser.getId())
                 .withMarkedAsCompleteByUserName(currentUser.getName())
                 .build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
-                .build();
 
-        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
@@ -342,6 +328,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
@@ -356,7 +343,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
@@ -407,11 +394,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withMarkedAsCompleteByUserId(acceptedUser.getId())
                 .withMarkedAsCompleteByUserName(acceptedUser.getName())
                 .build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
-                .build();
 
-        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
@@ -419,6 +402,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
@@ -433,7 +417,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
@@ -476,11 +460,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         OrganisationResource organisation = newOrganisationResource().build();
         OrganisationResource collaboratorOrganisation = newOrganisationResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
-                .build();
 
-        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
@@ -494,6 +474,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                         .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         );
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
@@ -508,7 +489,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
@@ -580,7 +561,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
@@ -643,7 +624,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
@@ -692,6 +673,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
                 .withNorthernIrelandDeclarations(true)
                 .build();
+        QuestionResource subsidyBasisQuestion = newQuestionResource().build();
 
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
@@ -700,6 +682,12 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.SUBSIDY_BASIS)).thenReturn(restSuccess(subsidyBasisQuestion));
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
+                .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId, false);
 
@@ -714,7 +702,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(other_termsTemplate.equals(actual.getCompetitionTermsTemplate()));
 
         InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
         inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
