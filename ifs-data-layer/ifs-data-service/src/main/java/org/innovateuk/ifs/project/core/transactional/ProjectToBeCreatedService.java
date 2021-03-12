@@ -23,8 +23,4 @@ public interface ProjectToBeCreatedService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "MARK_APPLICATION_AS_READY_PS", description = "Comp admin can mark projects to create")
     ServiceResult<Void> markApplicationReadyToBeCreated(long applicationId, String emailBody);
-
-    @SecuredBySpring(value = "CREATE_PROJECT_SCHEDULE", description = "A System Maintinance User can migrate and create projects on schedule.")
-    @PreAuthorize("hasAuthority('system_maintainer')")
-    ServiceResult<ScheduleResponse> migrateOrCreateProject(long applicationId);
 }

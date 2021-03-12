@@ -162,7 +162,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         processRoleRepository.deleteByApplicationId(application.getId());
         formInputResponseRepository.deleteByApplicationId(application.getId());
         questionStatusRepository.deleteByApplicationId(application.getId());
-        applicationProcessRepository.findByTargetId(application.getId()).stream().forEach(
+        /*applicationProcessRepository.findByTargetId(application.getId()).stream().forEach(
                 applicationProcess -> processHistoryRepository.deleteByProcessId(applicationProcess.getId()));
         applicationProcessRepository.deleteByTargetId(application.getId());
         assessmentRepository.findByTargetId(application.getId()).stream().forEach(
@@ -179,7 +179,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         reviewRepository.deleteByTargetId(application.getId());
         supporterAssignmentRepository.findByTargetId(application.getId()).stream().forEach(
                 supporterAssignmentProcess -> processHistoryRepository.deleteByProcessId(supporterAssignmentProcess.getId()));
-        supporterAssignmentRepository.deleteByTargetId(application.getId());
+        supporterAssignmentRepository.deleteByTargetId(application.getId());*/
         applicationInviteRepository.deleteAll(application.getInvites());
         applicationKtaInviteRepository.deleteByApplicationId(application.getId());
         applicationRepository.delete(application);

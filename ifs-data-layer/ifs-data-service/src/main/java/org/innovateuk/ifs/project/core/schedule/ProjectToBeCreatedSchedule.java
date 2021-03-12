@@ -33,7 +33,7 @@ public class ProjectToBeCreatedSchedule {
         authenticationHelper.loginSystemUser();
         Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate(timesCalled);
         projectToCreated.ifPresent(id -> wrapper.doScheduledJob(String.format(JOB_NAME, id), () ->
-                        projectToBeCreatedService.migrateOrCreateProject(id),
+                        projectToBeCreatedService.createProject(id),
                 () -> {
                     if (timesCalled < 10) {
                         createProject(timesCalled + 1);

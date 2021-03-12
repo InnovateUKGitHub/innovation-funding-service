@@ -57,17 +57,12 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ScheduleResponse> migrateOrCreateProject(long applicationId) {
-        return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
-                .andOnSuccess(this::migrateApplicationIfRequired);
-    }
-
-    @Override
     @Transactional
     @Trace(dispatcher = true)
     public ServiceResult<ScheduleResponse> createProject(long applicationId) {
         return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
-                .andOnSuccess(this::createProject);
+                .andOnSuccess(this::createProject)
+                .andOnSuccess(this::migrateApplicationIfRequired);
     }
 
     @Override
@@ -90,30 +85,27 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
         page.getContent().forEach(this::createProject);
     }
 
-    private ServiceResult<ScheduleResponse> createProject(ProjectToBeCreated projectToBeCreated) {
+    private ServiceResult<ProjectToBeCreated> createProject(ProjectToBeCreated projectToBeCreated) {
         projectToBeCreated.setPending(false);
         return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
                 .andOnSuccessReturn(() -> {
                     projectToBeCreated.setMessage("Success");
-                    return new ScheduleResponse("Project created: " + projectToBeCreated.getApplication().getId());
+                    return projectToBeCreated;
                 });
     }
 
     private ServiceResult<ScheduleResponse> migrateApplicationIfRequired(ProjectToBeCreated projectToBeCreated) {
         Optional<ApplicationMigration> applicationMigration = applicationMigrationService.findByApplicationIdAndStatus(projectToBeCreated.getApplication().getId(), MigrationStatus.CREATED).getSuccess();
         if (applicationMigration.isPresent()) {
-            projectToBeCreated.setPending(false);
-            return applicationMigrationService.migrateApplication(projectToBeCreated.getApplication().getId())
-                    .andOnSuccessReturn(migrateApplication -> {
+            applicationMigrationService.migrateApplication(projectToBeCreated.getApplication().getId())
+                    .andOnSuccess(() -> {
                         ApplicationMigration migration = applicationMigration.get();
                         migration.setStatus(MigrationStatus.MIGRATED);
                         applicationMigrationService.updateApplicationMigrationStatus(migration);
-                        projectToBeCreated.setPending(true);
-                        return new ScheduleResponse("Migrated application: " + projectToBeCreated.getApplication().getId());
                     });
-        } else {
-            return createProject(projectToBeCreated.getApplication().getId());
         }
+
+        return serviceSuccess(new ScheduleResponse("Project created: " + projectToBeCreated.getApplication().getId()));
     }
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {
