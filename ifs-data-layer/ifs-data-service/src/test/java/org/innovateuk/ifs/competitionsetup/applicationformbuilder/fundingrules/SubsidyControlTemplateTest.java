@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 
 public class SubsidyControlTemplateTest {
     private SubsidyControlTemplate template;
-    List<SectionBuilder> sections;
+    private List<SectionBuilder> sections;
 
     @Before
     public void setUp() {
