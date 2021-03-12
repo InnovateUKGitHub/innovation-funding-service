@@ -283,7 +283,7 @@ Partner applicant can accept state aid terms and conditions based on NI declarat
 Lead applicant submits subsidy control subsidy basis application
     [Documentation]  IFS-9116
     Given log in as a different user             &{scLeadApplicantCredentials}
-    When the user clicks the button/link          link = ${leadStateAidApplication}
+    When the user clicks the button/link         link = ${leadSubsidyControlApplication}
     And the user clicks the button/link          link = Review and submit
     Then the user should not see the element     jQuery = .task-status-incomplete
     And the user clicks the button/link          jQuery = .govuk-button:contains("Submit application")
