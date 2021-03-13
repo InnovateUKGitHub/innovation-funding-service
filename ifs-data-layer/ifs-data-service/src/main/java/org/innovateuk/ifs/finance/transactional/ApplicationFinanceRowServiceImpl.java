@@ -240,25 +240,24 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetNonFECCostRowEntries(long applicationId, long organisationId, long financeRowTargetId) {
+    public ServiceResult<Void> resetNonFECCostRowEntries(long applicationId, long organisationId) {
         Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationId, organisationId);
-        List<ApplicationFinanceRow> applicationFinanceRows = financeRowRepository.findByTargetId(financeRowTargetId);
-        Organisation organisation = organisationRepository.findById(organisationId).get();
-        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate
-                .getOrganisationFinanceHandler(applicationFinance.get().getApplication().getCompetition().getId(),
-                        organisation.getOrganisationType().getId());
+        if (applicationFinance.isPresent()) {
+            List<ApplicationFinanceRow> applicationFinanceRows = financeRowRepository.findByTargetId(applicationFinance.get().getId());
+            OrganisationTypeFinanceHandler organisationFinanceHandler =
+                    organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.get().getApplication().getCompetition().getId(), applicationFinance.get().getOrganisation().getOrganisationType().getId());
 
-        List<ApplicationFinanceRow> nonFECFinanceRows = applicationFinanceRows.stream()
-                .filter(applicationFinanceRow ->
-                        (FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT  == applicationFinanceRow.getType()
-                                || FinanceRowType.INDIRECT_COSTS  == applicationFinanceRow.getType()))
-                .collect(Collectors.toList());
-        nonFECFinanceRows.forEach(nonFECFinanceRow -> {
-            nonFECFinanceRow.setCost(BigDecimal.ZERO);
-            organisationFinanceHandler.updateCost(nonFECFinanceRow);
-        });
-
+            List<ApplicationFinanceRow> nonFECFinanceRows = applicationFinanceRows.stream()
+                    .filter(applicationFinanceRow ->
+                            (FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT == applicationFinanceRow.getType()
+                                    || FinanceRowType.INDIRECT_COSTS == applicationFinanceRow.getType()))
+                    .collect(Collectors.toList());
+            nonFECFinanceRows.forEach(nonFECFinanceRow -> {
+                nonFECFinanceRow.setCost(BigDecimal.ZERO);
+                organisationFinanceHandler.updateCost(nonFECFinanceRow);
+            });
+        }
         return serviceSuccess();
     }
 }

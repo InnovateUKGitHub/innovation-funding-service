@@ -7,5 +7,5 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
  * Interface for CRUD operations on {@link FinanceRowItem} related data.
  */
 public interface ApplicationFinanceRowRestService extends FinanceRowRestService {
-    RestResult<Void> resetNonFECCostRowEntries(Long applicationId, Long organisationId, Long financeRowTargetId);
+    RestResult<Void> resetNonFECCostRowEntries(Long applicationId, Long organisationId);
 }

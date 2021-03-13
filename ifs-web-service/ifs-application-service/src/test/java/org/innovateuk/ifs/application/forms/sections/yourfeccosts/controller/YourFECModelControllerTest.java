@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECMo
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -51,6 +52,9 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     @Mock
     private OrganisationRestService organisationRestServiceMock;
+
+    @Mock
+    private YourProjectCostsAutosaver yourProjectCostsAutosaverMock;
 
     private long applicationId = 123L;
     private long sectionId = 456L;
@@ -109,7 +113,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
-
+        yourProjectCostsAutosaverMock.resetNonFECCostRowEntries(applicationId, organisationId);
         ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
@@ -142,6 +146,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
+        yourProjectCostsAutosaverMock.resetNonFECCostRowEntries(applicationId, organisationId);
 
         ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
@@ -177,21 +182,16 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         ProcessRoleResource processRole = newProcessRoleResource().build();
         when(processRoleRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
-
-        String viewUrl = String.format("redirect:/application/%d/form/your-fec-model/" +
-                "organisation/%d/section/%d", applicationId, organisationId, sectionId);
-
         mockMvc.perform(post("/application/{applicationId}/form/your-fec-model/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
                 .param("mark-as-incomplete", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(viewUrl))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application/sections/your-fec-model/your-fec-model"))
                 .andReturn();
 
         verify(processRoleRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsInComplete(sectionId, applicationId, processRole.getId());
 
-        verifyNoMoreInteractionsWithMocks();
     }
 
     private void verifyNoMoreInteractionsWithMocks() {

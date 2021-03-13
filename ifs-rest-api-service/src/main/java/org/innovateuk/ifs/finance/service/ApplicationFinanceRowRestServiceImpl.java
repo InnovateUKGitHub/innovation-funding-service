@@ -15,8 +15,8 @@ public class ApplicationFinanceRowRestServiceImpl extends BaseFinanceRowRestServ
     }
 
     @Override
-    public RestResult<Void> resetNonFECCostRowEntries(Long applicationId, Long organisationId, Long financeRowTargetId) {
-        String url = "/application-finance-row" + "/reset-nonfec/" + applicationId + "/" + organisationId + "/" + financeRowTargetId;
+    public RestResult<Void> resetNonFECCostRowEntries(Long applicationId, Long organisationId) {
+        String url = "/application-finance-row" + "/reset-nonfec/" + applicationId + "/" + organisationId;
         return putWithRestResult(url);
     }
 }

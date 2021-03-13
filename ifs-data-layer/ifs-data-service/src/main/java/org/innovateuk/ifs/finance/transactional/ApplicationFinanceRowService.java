@@ -27,5 +27,5 @@ public interface ApplicationFinanceRowService {
     FinanceRowHandler getCostHandler(long costItemId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<Void> resetNonFECCostRowEntries (long applicationId,long organisationId, long financeRowTargetId);
+    ServiceResult<Void> resetNonFECCostRowEntries(long applicationId,long organisationId);
 }
