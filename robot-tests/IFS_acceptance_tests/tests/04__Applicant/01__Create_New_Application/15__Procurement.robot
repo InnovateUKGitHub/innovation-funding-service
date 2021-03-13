@@ -404,16 +404,16 @@ the user makes changes to the payment milestones table
 the user makes changes to the project finances
     the user clicks the button/link     jQuery = button:contains("Subcontracting")
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/a
-    clear element text                  id = subcontractingRows[9455].cost
-    input text                          id = subcontractingRows[9455].cost  80000
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(4) input
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(4) input  80000
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-5"]/div[2]/button
     the user clicks the button/link     jQuery = button:contains("Other costs")
     the user clicks the button/link     xpath = //*[@id="accordion-finances-content-7"]/div[2]/a
-    clear element text                  id = otherRows[9457].estimate
-    clear element text                  id = otherRows[9457].description
-    input text                          id = otherRows[9457].estimate       11100
-    input text                          id = otherRows[9457].description    Some other costs
-    the user clicks the button/link     xpath = //*[@id="accordion-finances-content-7"]/div[2]/button
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]   11100
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) textarea   Some other costs
+    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) button:contains("Save")
 
 the user creates a new payment milestone
     the user selects the option from the drop-down menu       21   jQuery = div[id='accordion-finances'] div:nth-of-type(22) select
