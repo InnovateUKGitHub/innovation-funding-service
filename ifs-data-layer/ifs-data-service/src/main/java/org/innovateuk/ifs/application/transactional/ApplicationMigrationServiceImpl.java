@@ -113,9 +113,9 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     @Override
     @Transactional
-    public ServiceResult<Application> migrateApplication(long applicationId) {
+    public ServiceResult<Void> migrateApplication(long applicationId) {
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
-                .andOnSuccessReturn(application -> {
+                .andOnSuccess(application -> {
                     Application migratedApplication = applicationRepository.save(new Application(application));
 
                     activityLogRepository.findByApplicationId(application.getId()).stream()
@@ -255,18 +255,13 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
                     deleteApplication(application);
 
-                    return applicationRepository.findById(migratedApplication.getId()).get();
+                    return serviceSuccess();
                 });
     }
 
     private void deleteApplication(Application application) {
         activityLogRepository.deleteByApplicationId(application.getId());
         grantProcessRepository.deleteByApplicationId(application.getId());
-
-        applicationProcessRepository.findByTargetId(application.getId()).stream()
-                .forEach(applicationProcess -> processHistoryRepository.deleteByProcessId(applicationProcess.getId()));
-        applicationProcessRepository.deleteByTargetId(application.getId());
-
         applicationRepository.delete(application);
     }
 

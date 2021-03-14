@@ -174,8 +174,9 @@ public class ApplicationController {
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
     }
-    @PostMapping("/migrate-application/{id}")
-    public RestResult<Application> migrateApplication(@PathVariable("id") final Long id) {
-        return applicationMigrationService.migrateApplication(id).toPostWithBodyResponse();
+
+    @PostMapping("/migrate-application/{applicationId}")
+    public RestResult<Void> migrateApplication(@PathVariable("applicationId") final Long applicationId) {
+        return applicationMigrationService.migrateApplication(applicationId).toPostResponse();
     }
 }

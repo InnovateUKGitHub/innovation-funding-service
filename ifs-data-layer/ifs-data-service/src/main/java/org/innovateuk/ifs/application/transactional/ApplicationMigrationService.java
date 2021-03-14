@@ -17,7 +17,7 @@ public interface ApplicationMigrationService {
 
     @SecuredBySpring(value = "MIGRATE_APPLICATION", description = "A System Maintenance User can migrate application.")
     @PreAuthorize("hasAuthority('system_maintainer')")
-    ServiceResult<Application> migrateApplication(long applicationId);
+    ServiceResult<Void> migrateApplication(long applicationId);
 
     @SecuredBySpring(value = "UPDATE_APPLICATION_MIGRATION_STATUS", description = "A System Maintenance User can update application migration status.")
     @PreAuthorize("hasAuthority('system_maintainer')")
