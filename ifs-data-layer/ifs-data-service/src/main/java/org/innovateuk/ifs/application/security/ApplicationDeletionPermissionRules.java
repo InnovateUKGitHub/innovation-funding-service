@@ -21,6 +21,7 @@ public class ApplicationDeletionPermissionRules extends BasePermissionRules {
                 && !applicationResource.isSubmitted();
     }
 
+    @PermissionRule(value = "HIDE_APPLICATION", description = "Only the collaborators can hide applications")
     public boolean onlyCollaboratorsCanHideApplications(final ApplicationUserCompositeId id, UserResource user) {
         return checkProcessRole(user, id.getApplicationId(), COLLABORATOR, processRoleRepository)
                 && user.getId().equals(id.getUserId());

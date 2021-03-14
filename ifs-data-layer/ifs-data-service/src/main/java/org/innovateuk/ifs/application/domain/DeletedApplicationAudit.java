@@ -43,10 +43,6 @@ public class DeletedApplicationAudit {
         return applicationId;
     }
 
-    public void setApplicationId(long applicationId) {
-        this.applicationId = applicationId;
-    }
-
     public User getDeletedBy() {
         return deletedBy;
     }

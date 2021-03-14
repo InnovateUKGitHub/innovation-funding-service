@@ -12,14 +12,14 @@ import java.util.Optional;
 public interface ApplicationMigrationService {
 
     @SecuredBySpring(value = "FIND_APPLICATION_FOR_MIGRATION", description = "A System Maintenance User can find applications to migrate.")
-    @PreAuthorize("hasAnyAuthority('system_maintainer', 'comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status);
 
     @SecuredBySpring(value = "MIGRATE_APPLICATION", description = "A System Maintenance User can migrate application.")
-    @PreAuthorize("hasAnyAuthority('system_maintainer', 'comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<Application> migrateApplication(long applicationId);
 
     @SecuredBySpring(value = "UPDATE_APPLICATION_MIGRATION_STATUS", description = "A System Maintenance User can update application migration status.")
-    @PreAuthorize("hasAnyAuthority('system_maintainer', 'comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<ApplicationMigration> updateApplicationMigrationStatus(ApplicationMigration applicationMigration);
 }
