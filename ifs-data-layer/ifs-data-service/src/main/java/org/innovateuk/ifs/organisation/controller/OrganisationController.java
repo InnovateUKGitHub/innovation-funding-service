@@ -68,6 +68,11 @@ public class OrganisationController {
         return organisationService.update(organisationResource).toPutWithBodyResponse();
     }
 
+    @PutMapping("/sync-companies-house-details")
+    public RestResult<OrganisationResource> updateCompaniesHouseDetails(@RequestBody OrganisationResource organisationResource) {
+        return organisationService.syncCompaniesHouseDetails(organisationResource).toPutWithBodyResponse();
+    }
+
     @PostMapping("/update-name-and-registration/{organisationId}")
     public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();

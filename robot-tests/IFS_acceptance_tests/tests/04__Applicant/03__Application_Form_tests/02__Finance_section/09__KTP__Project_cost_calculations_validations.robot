@@ -171,10 +171,17 @@ the user enters T&S costs
     the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${costOfEachTrip}
 
 Custom suite setup
-    the user logs-in in new browser   &{KTPLead}
-    the user clicks the button/link   link = ${KTPapplication}
-    the user clicks the button/link   link = Your project finances
-    the user clicks the button/link   link = Your project costs
+    the user logs-in in new browser       &{KTPLead}
+    the user clicks the button/link       link = ${KTPapplication}
+    the user clicks the button/link       link = Your project finances
+    the user clicks the button/link       link = Your fEC model
+    the user selects the radio button     fecModelEnabled  fecModelEnabled-no
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    the user clicks the button/link       link = Your funding
+    the user selects the radio button     requestingFunding  request-funding-no
+    the user selects the radio button     otherFunding  other-funding-no
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    the user clicks the button/link       link = Your project costs
 
 the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="associateSalary.description"]
