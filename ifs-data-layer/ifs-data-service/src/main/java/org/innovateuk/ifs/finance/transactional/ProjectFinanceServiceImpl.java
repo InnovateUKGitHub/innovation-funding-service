@@ -81,7 +81,7 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
             updateFinancialYearData(dbFinance, projectFinanceResource);
             if (projectFinanceResource.getNorthernIrelandDeclaration() != null) {
-                if (!dbFinance.getNorthernIrelandDeclaration().equals(projectFinanceResource.getNorthernIrelandDeclaration())){
+                if (!projectFinanceResource.getNorthernIrelandDeclaration().equals(dbFinance.getNorthernIrelandDeclaration())){
                     pendingPartnerProgressService.resetPendingPartnerProgress(SUBSIDY_BASIS, projectFinanceResource.getProject(), projectFinanceResource.getOrganisation());
                 }
                 dbFinance.setNorthernIrelandDeclaration(projectFinanceResource.getNorthernIrelandDeclaration());
