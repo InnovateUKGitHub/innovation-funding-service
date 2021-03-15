@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
@@ -109,7 +108,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Project details".equals(sectionResource.getName())).findFirst();
         return section.isPresent() ? questionResources.stream()
                 .filter(questionResource -> section.get().getQuestions().contains(questionResource.getId()))
-                .filter(questionResource -> questionResource.getType() != LEAD_ONLY)
+                .filter(QuestionResource::requiresSetup)
                 .collect(Collectors.toList())
                 : new ArrayList<>();
     }

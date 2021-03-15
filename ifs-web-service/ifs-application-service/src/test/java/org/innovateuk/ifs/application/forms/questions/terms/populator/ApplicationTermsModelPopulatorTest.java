@@ -13,14 +13,15 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.ProcessRoleRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -43,6 +44,7 @@ import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuild
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
@@ -61,20 +63,22 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
     @Mock
     private CompetitionRestService competitionRestServiceMock;
     @Mock
-    private ProcessRoleRestService processRoleRestServiceMock;
-    @Mock
-    private OrganisationService organisationServiceMock;
+    private OrganisationRestService organisationRestService;
     @Mock
     private QuestionStatusRestService questionStatusRestServiceMock;
     @Mock
     private SectionService sectionServiceMock;
     @Mock
     private QuestionRestService questionRestService;
+    @Mock
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
     @InjectMocks
     private ApplicationTermsModelPopulator populator;
 
     @Test
     public void populate() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -97,44 +101,17 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withQuestions(singletonList(questionId))
                 .build();
 
-        List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withUser(currentUser)
-                .withApplication(application.getId())
-                .build(1);
-
         OrganisationResource organisation = newOrganisationResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
         QuestionResource subsidyBasisQuestion = newQuestionResource().build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withNorthernIrelandDeclarations(false)
+                .build();
 
-        /*
-             if (competition.isFinanceType()) {
-            Optional<QuestionResource> subsidyBasisQuestion = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.SUBSIDY_BASIS)
-                    .toOptionalIfNotFound()
-                    .getSuccess();
-            if (subsidyBasisQuestion.isPresent()) {
-                Optional<QuestionStatusResource> optionalMarkedAsCompleteQuestionStatus =
-                        questionStatusRestService.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
-                                subsidyBasisQuestion.get().getId(), application.getId(), organisation.getId()).getSuccess();
-
-                boolean subsidyComplete = optionalMarkedAsCompleteQuestionStatus
-                        .map(QuestionStatusResource::getMarkedAsComplete)
-                        .orElse(false);
-
-                boolean subsidyBasisRequiredButIncomplete = !subsidyComplete;
-
-                if (subsidyBasisRequiredButIncomplete) {
-                    return Optional.of(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.get().getId()));
-                }
-
-            }
-        }
-        return Optional.empty();
-         */
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
-        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId()))
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
@@ -143,8 +120,9 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                         subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
                 .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId, false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -157,13 +135,11 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isMigratedTerms());
         assertEquals(String.format("/application/%d/form/question/%d", application.getId(), subsidyBasisQuestion.getId()), actual.getSubsidyBasisQuestionUrl());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
-        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -171,6 +147,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_nonCollaborative() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = false;
 
@@ -204,15 +181,14 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
-        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId()))
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -223,13 +199,11 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
-        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -237,6 +211,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_accepted() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -277,15 +252,14 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
-        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId()))
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(newOrganisationResource().build()));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -296,13 +270,11 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
-        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -310,6 +282,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_migrated() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -350,15 +323,14 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
-        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId()))
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -370,13 +342,11 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertTrue(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
-        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -384,6 +354,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_acceptedByOtherUser() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -426,15 +397,14 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
-        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId()))
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -446,13 +416,11 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
-        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -460,6 +428,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_notAcceptedByCollaborator() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -494,9 +463,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
-        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId()))
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
                 .thenReturn(restSuccess(Optional.of(questionStatus)));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(
@@ -507,8 +474,9 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                         .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         );
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId,  false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -520,13 +488,11 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertFalse(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
-        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisation.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -534,6 +500,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_acceptedNoOrganisation() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -570,15 +537,18 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withMarkedAsCompleteByUserId(currentUser.getId())
                 .withMarkedAsCompleteByUserName(currentUser.getName())
                 .build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withNorthernIrelandDeclarations(false)
+                .build();
 
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
-        ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId, organisationId, false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -590,11 +560,10 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();
@@ -602,6 +571,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
     @Test
     public void populate_applicationSubmitted() {
+        long organisationId = 1L;
         String termsTemplate = "terms-template";
         boolean collaborative = true;
 
@@ -630,17 +600,18 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().build();
-        QuestionStatusResource questionStatus = newQuestionStatusResource().build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withNorthernIrelandDeclarations(false)
+                .build();
 
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(processRoleRestServiceMock.findProcessRole(processRoles.get(0).getApplicationId())).thenReturn(restSuccess(processRoles));
-        when(organisationServiceMock.getOrganisationForUser(currentUser.getId(), processRoles)).thenReturn(Optional.of(organisation));
         when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
         when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
 
-        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId, false);
 
         assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
@@ -652,12 +623,89 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         assertTrue(actual.isTermsAcceptedByAllOrganisations());
         assertFalse(actual.isMigratedTerms());
 
-        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock, processRoleRestServiceMock,
-                organisationServiceMock, questionStatusRestServiceMock, sectionServiceMock);
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
         inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
         inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
-        inOrder.verify(processRoleRestServiceMock).findProcessRole(processRoles.get(0).getApplicationId());
-        inOrder.verify(organisationServiceMock).getOrganisationForUser(currentUser.getId(), processRoles);
+        inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
+        inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void populate_other_terms() {
+        long organisationId = 1L;
+        String termsTemplate = "terms-template";
+        String other_termsTemplate = "other-terms-template";
+        boolean collaborative = true;
+
+        UserResource currentUser = newUserResource().withFirstName("tom").withLastName("baldwin").build();
+
+        GrantTermsAndConditionsResource grantTermsAndConditions =
+                new GrantTermsAndConditionsResource("name", termsTemplate, 1);
+
+        GrantTermsAndConditionsResource otherGrantTermsAndConditions =
+                new GrantTermsAndConditionsResource("other_termsTemplate", other_termsTemplate, 1);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withTermsAndConditions(grantTermsAndConditions)
+                .withOtherFundingRulesTermsAndConditions(otherGrantTermsAndConditions)
+                .withCompetitionStatus(OPEN)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withCollaborativeProject(collaborative)
+                .withApplicationState(ApplicationState.CREATED)
+                .build();
+
+        long questionId = 3L;
+        SectionResource termsAndConditionsSection = newSectionResource()
+                .withQuestions(singletonList(questionId))
+                .build();
+
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withUser(currentUser)
+                .withApplication(application.getId())
+                .build(1);
+
+        OrganisationResource organisation = newOrganisationResource().build();
+        QuestionStatusResource questionStatus = newQuestionStatusResource().build();
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withNorthernIrelandDeclarations(true)
+                .build();
+        QuestionResource subsidyBasisQuestion = newQuestionResource().build();
+
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
+        when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId))
+                .thenReturn(restSuccess(Optional.of(questionStatus)));
+        when(sectionServiceMock.getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS)).thenReturn(singletonList(termsAndConditionsSection));
+        when(sectionServiceMock.getCompletedSectionsByOrganisation(application.getId())).thenReturn(singletonMap(organisation.getId(), singleton(termsAndConditionsSection.getId())));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().build()));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.SUBSIDY_BASIS)).thenReturn(restSuccess(subsidyBasisQuestion));
+        when(questionStatusRestServiceMock.getMarkedAsCompleteByQuestionApplicationAndOrganisation(
+                subsidyBasisQuestion.getId(), application.getId(), organisation.getId()))
+                .thenReturn(restSuccess(Optional.of(newQuestionStatusResource().withMarkedAsComplete(false).build())));
+
+        ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, organisationId, false);
+
+        assertEquals((Long) application.getId(), actual.getApplicationId());
+        assertTrue(actual.isCollaborativeApplication());
+        assertTrue(actual.isShowHeaderAndFooter());
+        assertFalse(actual.getTermsAccepted().get());
+        assertFalse(actual.getTermsAcceptedByName().isPresent());
+        assertFalse(actual.getTermsAcceptedOn().isPresent());
+        assertTrue(actual.isTermsAcceptedByAllOrganisations());
+        assertFalse(actual.isMigratedTerms());
+        assertTrue(other_termsTemplate.equals(actual.getCompetitionTermsTemplate()));
+
+        InOrder inOrder = inOrder(applicationRestServiceMock, competitionRestServiceMock,
+                questionStatusRestServiceMock, sectionServiceMock);
+        inOrder.verify(applicationRestServiceMock).getApplicationById(application.getId());
+        inOrder.verify(competitionRestServiceMock).getCompetitionById(competition.getId());
+        inOrder.verify(questionStatusRestServiceMock).getMarkedAsCompleteByQuestionApplicationAndOrganisation(questionId, application.getId(), organisationId);
         inOrder.verify(sectionServiceMock).getSectionsForCompetitionByType(competition.getId(), TERMS_AND_CONDITIONS);
         inOrder.verify(sectionServiceMock).getCompletedSectionsByOrganisation(application.getId());
         inOrder.verifyNoMoreInteractions();

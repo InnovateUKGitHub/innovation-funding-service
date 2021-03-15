@@ -929,7 +929,9 @@ Monitoring officer can view the Finance checks project setup dashboard section
 
 Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
-    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
+    When the user clicks the button/link     link = view application overview
+    And the user clicks the button/link      id = accordion-questions-heading-4-1
+    And the user clicks the button/link      link = View terms and conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
 
 Internal user can see KTP GOL template
