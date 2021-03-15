@@ -26,6 +26,6 @@ public interface ApplicationFinanceRowService {
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(long costItemId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Void> resetNonFECCostRowEntries(long applicationId,long organisationId);
 }

@@ -55,7 +55,7 @@ public class ApplicationFinanceRowController {
         return applicationFinanceRowService.delete(id).toDeleteResponse();
     }
 
-    @PutMapping("/reset-nonfec/{applicationId}/{organisationId}/{financeRowTargetId}")
+    @PutMapping("/reset-nonfec/{applicationId}/{organisationId}")
     public RestResult<Void> resetNonFECCostRowEntries(@PathVariable("applicationId") final long applicationId,
                                                       @PathVariable("organisationId") final long organisationId) {
         return applicationFinanceRowService.resetNonFECCostRowEntries(applicationId, organisationId).toGetResponse();
