@@ -331,9 +331,7 @@ New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
     When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-<<<<<<< HEAD
     Then the user completes the KTP application except application team and your funding and your project costs
-=======
     Then the user completes the KTP application except application team and your project finances
 
 New lead applicant cannot enter project costs until fEC declaration and your funding section is complete
@@ -344,7 +342,6 @@ New lead applicant cannot enter project costs until fEC declaration and your fun
     When the user clicks the button/link      link = Your project costs
     Then the user should see the element      link = your fEC model
     And the user should see the element       link = your funding
->>>>>>> development
 
 New lead applicant is shown a validation error when marking a non-selected option as complete for the organisation's fEC model type
      [Documentation]  IFS-9239
@@ -365,7 +362,6 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      [Documentation]  IFS-9239
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
-
 
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
      [Documentation]  IFS-9242
@@ -1088,7 +1084,8 @@ The applicants should not see knowledge based organisations when joining a non-k
     Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 *** Keywords ***
-the lead applicant marks the KTP project location as complete
+the lead applicant marks the KTP project costs & project location as complete
+    the user fills in ktp project costs
     the user enters the project location
 
 the user sees fEC model validation error message
@@ -1203,20 +1200,13 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-<<<<<<< HEAD
 the user completes the KTP application except application team and your funding and your project costs
-=======
-the user completes the KTP application except application team and your project finances
->>>>>>> development
     the user clicks the button/link                                                             link = Application details
     the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-<<<<<<< HEAD
     the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
     the lead applicant marks the KTP project location as complete
-=======
->>>>>>> development
     the user accept the competition terms and conditions                                        Return to application overview
 
 the user fills in the KTP Application details
