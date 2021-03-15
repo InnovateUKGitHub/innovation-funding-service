@@ -41,4 +41,13 @@ public class PendingPartnerProgressResourceBuilder extends BaseBuilder<PendingPa
         return withArray((n, progress) -> progress.setTermsAndConditionsCompletedOn(n), termsAndConditionsCompletedOn);
     }
 
+    public PendingPartnerProgressResourceBuilder withSubsidyBasisRequired(Boolean... subsidyBasisRequired){
+        return withArraySetFieldByReflection("subsidyBasisRequired", subsidyBasisRequired);
+    }
+
+
+    public PendingPartnerProgressResourceBuilder withSubsidyBasisCompletedOn(ZonedDateTime... completedOn){
+        return withArraySetFieldByReflection("subsidyBasisCompletedOn", completedOn);
+    }
+
 }
