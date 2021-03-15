@@ -18,10 +18,6 @@ import static org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_
 @DiscriminatorValue("PROJECT_MONITORING_OFFICER")
 public class MonitoringOfficer extends ProjectParticipant {
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
     public MonitoringOfficer() {
         super(null, MONITORING_OFFICER, null);
     }
