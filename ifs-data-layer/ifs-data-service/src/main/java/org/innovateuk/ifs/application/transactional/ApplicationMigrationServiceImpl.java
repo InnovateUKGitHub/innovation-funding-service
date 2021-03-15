@@ -143,8 +143,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
                     applicationHiddenFromDashboardRepository.findByApplicationId(application.getId()).stream()
                             .forEach(applicationHiddenFromDashboard -> {
-                                //applicationHiddenFromDashboard.setApplication(migratedApplication);
-                                //applicationHiddenFromDashboard.save(migratedApplicationHiddenFromDashboard);
                                 ApplicationHiddenFromDashboard migratedApplicationHiddenFromDashboard = new ApplicationHiddenFromDashboard(migratedApplication, applicationHiddenFromDashboard.getUser());
                                 migratedApplicationHiddenFromDashboard.setCreatedOn(applicationHiddenFromDashboard.getCreatedOn());
                                 applicationHiddenFromDashboardRepository.save(migratedApplicationHiddenFromDashboard);
