@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
 @Component
@@ -60,11 +62,9 @@ public class ProjectYourFundingViewModelPopulator {
         boolean organisationRequiredAndNotCompleted = organisationSectionRequired && !progress.isYourOrganisationComplete();
         boolean fundingLevelConstant = grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess();
         PartnerOrganisationResource partnerOrganisationResource = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
-
-        boolean subsidyBasisRequiredAndNotCompleted = progress.isSubsidyBasisRequired() && !progress.isSubsidyBasisComplete();
         Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
-                ? Optional.of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
-                : Optional.empty();
+                ? of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
+                : empty();
 
         return new ProjectYourFundingViewModel(project,
                 organisationId,
@@ -75,8 +75,10 @@ public class ProjectYourFundingViewModelPopulator {
                 competition.getFundingType(),
                 organisation.getOrganisationTypeEnum(),
                 partnerOrganisationResource.isLeadOrganisation(),
-                subsidyBasisRequiredAndNotCompleted,
+                progress.isSubsidyBasisRequiredAndNotCompleted(),
                 organisationRequiredAndNotCompleted,
                 subsidyQuestionId);
     }
+
+
 }

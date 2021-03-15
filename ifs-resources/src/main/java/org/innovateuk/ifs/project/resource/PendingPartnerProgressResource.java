@@ -75,6 +75,11 @@ public class PendingPartnerProgressResource {
     }
 
     @JsonIgnore
+    public boolean isSubsidyBasisRequiredAndNotCompleted() {
+        return isSubsidyBasisRequired() && !isSubsidyBasisComplete();
+    }
+
+    @JsonIgnore
     public boolean isCompleted() {
         return completedOn != null;
     }

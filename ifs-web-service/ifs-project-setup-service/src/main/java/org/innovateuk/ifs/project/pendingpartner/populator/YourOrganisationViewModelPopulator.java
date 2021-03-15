@@ -44,6 +44,7 @@ public class YourOrganisationViewModelPopulator {
     private QuestionRestService questionRestService;
 
     public ProjectYourOrganisationViewModel populate(long projectId, long organisationId, UserResource user) {
+        PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -54,9 +55,6 @@ public class YourOrganisationViewModelPopulator {
                 organisation::getOrganisationTypeEnum,
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
 
-        PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
-
-        boolean subsidyBasisRequiredAndNotCompleted = progress.isSubsidyBasisRequired() && !progress.isSubsidyBasisComplete();
         Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
                 ? Optional.of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
                 : Optional.empty();
@@ -73,7 +71,7 @@ public class YourOrganisationViewModelPopulator {
                 pendingPartner.isYourOrganisationComplete(),
                 user,
                 true,
-                subsidyBasisRequiredAndNotCompleted ,
+                progress.isSubsidyBasisRequiredAndNotCompleted(),
                 subsidyQuestionId);
     }
 }

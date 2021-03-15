@@ -26,53 +26,67 @@
         </div>
 
         <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: main/th:block[0] "/>
-
-        <th:block>
-            <div class="message-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
-                    of the page.</p>
-            </div>
+        <th:block th:if="${model.termsAndConditionsSectionLocked}">
+            <p class="govuk-body">
+                Before you can supply your funding details:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li th:if="${model.subsidyBasisRequiredAndNotCompleted}">
+                    you must mark the
+                    <a th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">subsidy basis</a>
+                    page as complete
+                </li>
+            </ul>
         </th:block>
 
-        <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content "/>
-
-        <th:block>
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
-            <th:block th:unless="${model.termsAccepted}">
-                <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
-                      th:action="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                    <div class="govuk-form-group">
-
-                        <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input"
-                                   type="checkbox" data-switches-button-status="#agree-terms-button"
-                                   id="agreed"
-                                   th:field="*{agreed}" />
-                            <label for="agreed" class="govuk-label govuk-checkboxes__label">
-                                I agree to the award terms and conditions set out by Innovate UK.
-                            </label>
-                        </div>
-                    </div>
-                    <button type="submit"
-                            id="agree-terms-button"
-                            class="govuk-button">Agree and continue
-                    </button>
-                </form>
-            </th:block>
-            <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
-                <div class="form-footer__actions">
-                    Terms and conditions accepted
-                    <th:block>
-                        at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
-                        on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
-                        by you
-                    </th:block>
+        <th:block th:unless="${model.termsAndConditionsSectionLocked}">
+            <th:block>
+                <div class="message-alert govuk-!-margin-bottom-6">
+                    <p class="govuk-body">You must read these terms and conditions and accept them by ticking the box at the end
+                        of the page.</p>
                 </div>
-            </div>
-            <div>
-                <a class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}">Return
-                    to join project</a>
-            </div>
+            </th:block>
+
+            <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content "/>
+
+            <th:block>
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+                <th:block th:unless="${model.termsAccepted}">
+                    <form th:object="${form}" novalidate="novalidate" method="post" class="application-overview"
+                          th:action="@{/project/{projectId}/organisation/{organisationId}/terms-and-conditions(projectId=${model.projectId},organisationId=${model.organisationId})}">
+                        <div class="govuk-form-group">
+
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       type="checkbox" data-switches-button-status="#agree-terms-button"
+                                       id="agreed"
+                                       th:field="*{agreed}" />
+                                <label for="agreed" class="govuk-label govuk-checkboxes__label">
+                                    I agree to the award terms and conditions set out by Innovate UK.
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit"
+                                id="agree-terms-button"
+                                class="govuk-button">Agree and continue
+                        </button>
+                    </form>
+                </th:block>
+                <div id="terms-accepted" class="form-footer govuk-body govuk-!-margin-bottom-6" th:if="${model.termsAccepted}">
+                    <div class="form-footer__actions">
+                        Terms and conditions accepted
+                        <th:block>
+                            at <span th:text="${#strings.toLowerCase(#temporals.format(model.termsAcceptedOn.get(), 'h:mma'))}"> 6:10pm</span>
+                            on <span th:text="${#temporals.format(model.termsAcceptedOn.get(), 'd MMMM yyyy')}"> 08 May 2019</span>
+                            by you
+                        </th:block>
+                    </div>
+                </div>
+                <div>
+                    <a class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/organisation/{organisationId}/pending-partner-progress(projectId=${model.projectId},organisationId=${model.organisationId})}">Return
+                        to join project</a>
+                </div>
+            </th:block>
         </th:block>
     </main>
 </div>
