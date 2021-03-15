@@ -594,7 +594,7 @@ Partner can also see the KTA in Application team
     Then the user should not see the element     name = resend-kta
     And the user should see the element          jQuery = td:contains("${ktaEmail}")
 
-lead applicant can not assign application question to KTA user
+Lead applicant can not assign application question to KTA user
     [Documentation]  IFS-8311
     Given log in as a different user              &{ktpLeadApplicantCredentials}
     And the user clicks the button/link           link = ${ktpApplicationTitle}
@@ -603,7 +603,7 @@ lead applicant can not assign application question to KTA user
     And the user clicks the button/link           link = Assign to someone else.
     Then the user should not see the element      jQuery = label:contains("Simon Smith")
 
-new lead applicant can uploads an appendix file in KTP Application
+New lead applicant can uploads an appendix file in KTP Application
     [Documentation]  IFS-7958
     [Setup]  the user marks the questions as complete
     When the user clicks the button/link              link = 6. Innovation
@@ -694,7 +694,7 @@ MO can download the appendix file in the application
     Then the user downloads the file                           ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
     [Teardown]  remove the file from the operating system      ${valid_pdf}
 
-the project finance user cannot see the project start date
+The project finance user cannot see the project start date
     [Documentation]  IFS-7805
     Given Log in as a different user                   &{internal_finance_credentials}
     When the user navigates to the page                ${server}/project-setup-management/competition/${competitionId}/status/all
