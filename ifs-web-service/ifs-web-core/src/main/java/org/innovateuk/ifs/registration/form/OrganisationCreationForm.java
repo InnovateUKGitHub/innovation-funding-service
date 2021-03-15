@@ -13,6 +13,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,7 +37,11 @@ public class OrganisationCreationForm implements Serializable {
     private boolean organisationSearching;
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
+
+    //Regular experssion to match emojis
+    @Pattern(regexp = "[^\\u20a0-\\u32ff\\ud83c\\udc00-\\ud83d\\udeff\\udbb9\\udce5-\\udbb9\\udcee]*", message = "{validation.standard.organisation.name.invalid}")
     private String organisationName;
+
     private Boolean newOrganisationSearchEnabled;
     private Long selectedExistingOrganisationId;
     private String selectedExistingOrganisationName;

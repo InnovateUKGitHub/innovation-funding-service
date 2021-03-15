@@ -91,4 +91,14 @@ public class ApplicationDownloadController {
         final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
         return getFileResponseEntity(resource, fileDetails);
     }
+
+    @GetMapping("/{applicationFinanceId}/view-fec-certificate")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> viewFECCertificateFile(
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
+
+        final ByteArrayResource resource = financeService.getFECCertifcateFileByApplicationFinance(applicationFinanceId).getSuccess();
+        final FileEntryResource fileDetails = financeService.getFECEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
+        return getFileResponseEntity(resource, fileDetails);
+    }
 }
