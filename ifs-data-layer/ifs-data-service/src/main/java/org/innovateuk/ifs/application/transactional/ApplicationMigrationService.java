@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationMigration;
 import org.innovateuk.ifs.application.domain.MigrationStatus;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;

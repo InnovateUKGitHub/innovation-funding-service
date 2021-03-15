@@ -22,7 +22,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,9 +101,6 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
     @Autowired
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
-
-    @Autowired
-    private ProcessHistoryRepository processHistoryRepository;
 
     @Override
     public ServiceResult<Optional<ApplicationMigration>> findByApplicationIdAndStatus(long applicationId, MigrationStatus status) {
