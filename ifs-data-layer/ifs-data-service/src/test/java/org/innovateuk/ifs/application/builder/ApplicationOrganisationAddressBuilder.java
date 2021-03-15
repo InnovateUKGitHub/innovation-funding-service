@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.activitylog.domain.ActivityLogBuilder;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 
 import java.util.List;
@@ -32,5 +34,9 @@ public class ApplicationOrganisationAddressBuilder extends BaseBuilder<Applicati
 
     public ApplicationOrganisationAddressBuilder withId(Long... ids) {
         return withArray((id, application) -> setField("id", id, application), ids);
+    }
+
+    public ApplicationOrganisationAddressBuilder withApplication(Application... applications) {
+        return withArraySetFieldByReflection("application", applications);
     }
 }

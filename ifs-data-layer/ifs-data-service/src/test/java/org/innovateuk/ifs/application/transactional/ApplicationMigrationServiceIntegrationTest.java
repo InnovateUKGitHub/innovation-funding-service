@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
-import org.innovateuk.ifs.activitylog.domain.ActivityLog;
 import org.innovateuk.ifs.activitylog.domain.ActivityLogBuilder;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.builder.ApplicationOrganisationAddressBuilder;
 import org.innovateuk.ifs.application.builder.FormInputResponseBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusBuilder;
@@ -11,13 +11,11 @@ import org.innovateuk.ifs.application.domain.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.builder.AssessmentBuilder;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.grant.repository.GrantProcessRepository;
@@ -26,13 +24,10 @@ import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 import org.innovateuk.ifs.granttransfer.repository.EuGrantTransferRepository;
 import org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder;
 import org.innovateuk.ifs.interview.builder.InterviewBuilder;
-import org.innovateuk.ifs.interview.domain.Interview;
-import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder;
 import org.innovateuk.ifs.invite.builder.ApplicationKtaInviteBuilder;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
@@ -42,9 +37,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
 import org.innovateuk.ifs.review.builder.ReviewBuilder;
-import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
-import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
 import org.innovateuk.ifs.supporter.domain.builder.SupporterAssignmentBuilder;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
@@ -52,7 +45,6 @@ import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.workflow.audit.ProcessHistory;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,9 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -157,31 +147,49 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
                 .withId(getIfsAdmin().getId())
                 .build();
 
-        ProcessRole processRole = ProcessRoleBuilder.newProcessRole().build();
-
         application = applicationRepository.save(new Application());
 
-        activityLogRepository.save(ActivityLogBuilder.newActivityLog().build());
-        applicationFinanceRepository.save(ApplicationFinanceBuilder.newApplicationFinance().build());
+        ProcessRole processRole = ProcessRoleBuilder.newProcessRole()
+                .withApplication(application)
+                .build();
+
+        activityLogRepository.save(ActivityLogBuilder.newActivityLog()
+                .withApplication(application)
+                .withType(ActivityType.APPLICATION_SUBMITTED)
+                .build());
+        applicationFinanceRepository.save(ApplicationFinanceBuilder.newApplicationFinance()
+                .withApplication(application).build());
         applicationHiddenFromDashboardRepository.save(new ApplicationHiddenFromDashboard(application, user));
-        applicationOrganisationAddressRepository.save(ApplicationOrganisationAddressBuilder.newApplicationOrganisationAddress().build());
+        applicationOrganisationAddressRepository.save(ApplicationOrganisationAddressBuilder.newApplicationOrganisationAddress()
+                .withApplication(application).build());
         averageAssessorScoreRepository.save(new AverageAssessorScore(application, BigDecimal.TEN));
-        euGrantTransferRepository.save(EuGrantTransferBuilder.newEuGrantTransfer().build());
-        formInputResponseRepository.save(FormInputResponseBuilder.newFormInputResponse().build());
+        euGrantTransferRepository.save(EuGrantTransferBuilder.newEuGrantTransfer()
+                .withApplication(application).build());
+        formInputResponseRepository.save(FormInputResponseBuilder.newFormInputResponse()
+                .withApplication(application).build());
         processRoleRepository.save(processRole);
-        projectRepository.save(ProjectBuilder.newProject().build());
+        projectRepository.save(ProjectBuilder.newProject()
+                .withApplication(application).build());
         projectToBeCreatedRepository.save(new ProjectToBeCreated(application, "email"));
-        questionStatusRepository.save(QuestionStatusBuilder.newQuestionStatus().build());
+        questionStatusRepository.save(QuestionStatusBuilder.newQuestionStatus()
+                .withApplication(application).build());
         grantProcessRepository.save(new GrantProcess(application.getId()));
         applicationProcessRepository.save(new ApplicationProcess(application, processRole, ApplicationState.CREATED));
         applicationProcessRepository.save(new ApplicationProcess(application, processRole, ApplicationState.SUBMITTED));
-        assessmentRepository.save(AssessmentBuilder.newAssessment().build());
-        interviewRepository.save(InterviewBuilder.newInterview().build());
-        interviewAssignmentRepository.save(InterviewAssignmentBuilder.newInterviewAssignment().build());
-        reviewRepository.save(ReviewBuilder.newReview().build());
-        supporterAssignmentRepository.save(SupporterAssignmentBuilder.newSupporterAssignment().build());
-        applicationInviteRepository.save(ApplicationInviteBuilder.newApplicationInvite().build());
-        applicationKtaInviteRepository.save(ApplicationKtaInviteBuilder.newApplicationKtaInvite().build());
+        assessmentRepository.save(AssessmentBuilder.newAssessment()
+                .withApplication(application).build());
+        interviewRepository.save(InterviewBuilder.newInterview()
+                .withTarget(application).build());
+        interviewAssignmentRepository.save(InterviewAssignmentBuilder.newInterviewAssignment()
+                .withTarget(application).build());
+        reviewRepository.save(ReviewBuilder.newReview()
+                .withTarget(application).build());
+        supporterAssignmentRepository.save(SupporterAssignmentBuilder.newSupporterAssignment()
+                .withApplication(application).build());
+        applicationInviteRepository.save(ApplicationInviteBuilder.newApplicationInvite()
+                .withApplication(application).build());
+        applicationKtaInviteRepository.save(ApplicationKtaInviteBuilder.newApplicationKtaInvite()
+                .withApplication(application).build());
         applicationMigrationRepository.save(new ApplicationMigration(application.getId(), MigrationStatus.CREATED));
     }
 
@@ -208,55 +216,133 @@ public class ApplicationMigrationServiceIntegrationTest extends BaseAuthenticati
 
         assertThat(result.isSuccess(), equalTo(true));
 
-        Optional<Application> newApplication = applicationRepository.findById(application.getId());
+        Optional<Application> optionalNewApplication =  applicationRepository.findByPreviousApplicationId(application.getId());
+        assertTrue(optionalNewApplication.isPresent());
 
+        Application newApplication = optionalNewApplication.get();
+        assertNotEquals(newApplication.getId(), application.getId());
 
+        activityLogRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(activityLog -> {
+                    assertNotNull(activityLog);
+                    assertNotEquals(activityLog.getApplication().getId(), application.getId());
+                });
 
-        List<ActivityLog> activityLogs = activityLogRepository.findByApplicationId(application.getId());
+        applicationFinanceRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(applicationFinance -> {
+                    assertNotNull(applicationFinance);
+                    assertNotEquals(applicationFinance.getApplication().getId(), application.getId());
+                });
 
-        List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(application.getId());
+        applicationHiddenFromDashboardRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(applicationHiddenFromDashboard -> {
+                    assertNotNull(applicationHiddenFromDashboard);
+                    assertNotEquals(applicationHiddenFromDashboard.getApplication().getId(), application.getId());
+                });
 
-        List<ApplicationHiddenFromDashboard> applicationHiddenFromDashboards = applicationHiddenFromDashboardRepository.findByApplicationId(application.getId());
+       applicationOrganisationAddressRepository.findByApplicationId(newApplication.getId()).stream()
+               .forEach(applicationOrganisationAddress -> {
+                   assertNotNull(applicationOrganisationAddress);
+                   assertNotEquals(applicationOrganisationAddress.getApplication().getId(), application.getId());
+               });
 
-        List<ApplicationOrganisationAddress> applicationOrganisationAddresses = applicationOrganisationAddressRepository.findByApplicationId(application.getId());
+        Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(newApplication.getId());
+        assertTrue(averageAssessorScore.isPresent());
+        assertNotEquals(averageAssessorScore.get().getApplication().getId(), application.getId());
 
-        Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(application.getId());
+        EuGrantTransfer euGrantTransfer = euGrantTransferRepository.findByApplicationId(newApplication.getId());
+        assertNotNull(euGrantTransfer);
+        assertNotEquals(euGrantTransfer.getApplication().getId(), application.getId());
 
-        EuGrantTransfer euGrantTransfer = euGrantTransferRepository.findByApplicationId(application.getId());
+        formInputResponseRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(formInputResponse -> {
+                    assertNotNull(formInputResponse);
+                    assertNotEquals(formInputResponse.getApplication().getId(), application.getId());
+                });
 
-        List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationId(application.getId());
+        processRoleRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(processRole -> {
+                    assertNotNull(processRole);
+                    assertNotEquals(processRole.getApplicationId(), application.getId().longValue());
+                });
 
-        List<ProcessRole> processRoles = processRoleRepository.findByApplicationId(application.getId());
+        Optional<Project> project = projectRepository.findByApplicationId(newApplication.getId());
+        assertTrue(project.isPresent());
+        assertNotEquals(project.get().getApplication().getId(), application.getId());
 
-        Optional<Project> project = projectRepository.findByApplicationId(application.getId());
+        Optional<ProjectToBeCreated> projectToBeCreated = projectToBeCreatedRepository.findByApplicationId(newApplication.getId());
+        assertTrue(projectToBeCreated.isPresent());
+        assertNotEquals(projectToBeCreated.get().getApplication().getId(), application.getId());
 
-        Optional<ProjectToBeCreated> projectToBeCreated = projectToBeCreatedRepository.findByApplicationId(application.getId());
+        questionStatusRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(questionStatus -> {
+                    assertNotNull(questionStatus);
+                    assertNotEquals(questionStatus.getApplication().getId(), application.getId());
+                });
 
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(application.getId());
+        GrantProcess grantProcess = grantProcessRepository.findOneByApplicationId(newApplication.getId());
+        assertNotNull(grantProcess);
+        assertNotEquals(grantProcess.getApplicationId(), application.getId().longValue());
 
-        GrantProcess grantProcess = grantProcessRepository.findOneByApplicationId(application.getId());
+        applicationProcessRepository.findByTargetId(newApplication.getId()).stream()
+                .forEach(applicationProcess -> {
+                    assertNotNull(applicationProcess);
+                    assertNotEquals(applicationProcess.getTarget().getId(), application.getId());
+                });
 
-        List<ApplicationProcess> applicationProcesses = applicationProcessRepository.findByTargetId(application.getId());
+        processHistoryRepository.findByProcessId(newApplication.getId()).stream()
+                .forEach(processHistory -> {
+                    assertNotNull(processHistory);
+                    assertNotEquals(processHistory.getProcess().getTarget(), newApplication);
+                });
 
-        //List<ProcessHistory> processHistories = processHistoryRepository.findByProcessId(application.getId());
+        assessmentRepository.findByTargetId(newApplication.getId()).stream()
+                .forEach(assessment -> {
+                    assertNotNull(assessment);
+                    assertNotEquals(assessment.getTarget().getId(), application.getId());
+                });
 
-        List<Assessment> assessments = assessmentRepository.findByTargetId(application.getId());
+        interviewRepository.findByTargetId(newApplication.getId()).stream()
+                .forEach(interview -> {
+                    assertNotNull(interview);
+                    assertNotEquals(interview.getTarget().getId(), application.getId());
+                });
 
-        List<Interview> interviews = interviewRepository.findByTargetId(application.getId());
+       interviewAssignmentRepository.findByTargetId(newApplication.getId()).stream()
+               .forEach(interviewAssignment -> {
+                   assertNotNull(interviewAssignment);
+                   assertNotEquals(interviewAssignment.getTarget().getId(), application.getId());
+               });
 
-        List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetId(application.getId());
+        reviewRepository.findByTargetId(newApplication.getId()).stream()
+                .forEach(review -> {
+                    assertNotNull(review);
+                    assertNotEquals(review.getTarget().getId(), application.getId());
+                });
 
-        List<Review> reviews = reviewRepository.findByTargetId(application.getId());
+        supporterAssignmentRepository.findByTargetId(newApplication.getId()).stream()
+                .forEach(supporterAssignment -> {
+                    assertNotNull(supporterAssignment);
+                    assertNotEquals(supporterAssignment.getTarget().getId(), application.getId());
+                });
 
-        List<SupporterAssignment> supporterAssignments = supporterAssignmentRepository.findByTargetId(application.getId());
+        applicationInviteRepository.findByApplicationId(newApplication.getId()).stream()
+                .forEach(applicationInvite -> {
+                    assertNotNull(applicationInvite);
+                    assertNotEquals(applicationInvite.getTarget().getId(), application.getId());
+                });
 
-        List<ApplicationInvite> applicationInvites = applicationInviteRepository.findByApplicationId(application.getId());
+        Optional<ApplicationKtaInvite> applicationKtaInvite = applicationKtaInviteRepository.findByApplicationId(newApplication.getId());
+        assertTrue(applicationKtaInvite.isPresent());
+        assertNotEquals(applicationKtaInvite.get().getTarget().getId(), application.getId());
 
-        Optional<ApplicationKtaInvite> applicationKtaInvite = applicationKtaInviteRepository.findByApplicationId(application.getId());
+        Optional<Application> oldApplication = applicationRepository.findById(newApplication.getId());
+        assertFalse(oldApplication.isPresent());
 
-        Optional<Application> oldApplication = applicationRepository.findById(application.getId());
-
-        Optional<ApplicationMigration> applicationMigration = applicationMigrationRepository.findByApplicationIdAndStatus(application.getId(), MigrationStatus.MIGRATED);
+        Optional<ApplicationMigration> applicationMigration = applicationMigrationRepository.findByApplicationIdAndStatus(newApplication.getId(), MigrationStatus.MIGRATED);
+        assertTrue(applicationMigration.isPresent());
+        assertNotEquals(applicationMigration.get().getApplicationId(), application.getId());
+        assertNotEquals(applicationMigration.get().getStatus(), MigrationStatus.MIGRATED);
     }
 
     @Test
