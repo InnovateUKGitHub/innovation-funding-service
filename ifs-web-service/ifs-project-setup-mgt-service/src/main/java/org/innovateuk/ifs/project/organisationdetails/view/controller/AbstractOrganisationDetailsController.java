@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+
 public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdaptor {
     private static final String TEMPLATE = "project/organisationdetails/organisation-details";
     @Autowired
@@ -77,7 +79,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     project.getName(),
                     true,
                     loggedInUser,
-                    isAllEligibilityAndViabilityInReview(projectId)));
+                    isAllEligibilityAndViabilityInReview(projectId), false, empty())); // TODO qqRP - is this correct
 
             model.addAttribute("form", getForm(projectId, organisationId));
             model.addAttribute("formFragment", formFragment());
