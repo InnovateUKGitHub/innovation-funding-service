@@ -294,3 +294,9 @@ get spend profile value
     ${result} =  get from list  ${result}  0
     ${result} =  get from list  ${result}  0
     [Return]  ${result}
+
+get details of existing organisation
+    ${result} =  query  SELECT o.name, o.date_of_incorporation, s.sic_code, eo.name, a.address_line1, a.address_line2, a.address_line3, a.town, a.postcode, a.county, a.country FROM organisation o INNER JOIN sic_code s ON s.organisation_id = o.id INNER JOIN executive_officer eo ON eo.organisation_id = o.id INNER JOIN organisation_address oa ON oa.id = o.id INNER JOIN address a ON a.id = oa.address_id WHERE o.name = 'HAMPSHIRE COUNTY CRICKET COMPANY LIMITED';
+    log   ${result}
+    ${result} =  get from list  ${result}  0
+    [Return]  ${result}
