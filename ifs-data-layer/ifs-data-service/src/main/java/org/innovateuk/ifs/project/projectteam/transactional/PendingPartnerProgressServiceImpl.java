@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.projectteam.mapper.PendingPartnerProgressMappe
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,6 +100,22 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
                 .andOnSuccess(this::canJoinProject)
                 .andOnSuccess(this::sendNotification)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::complete);
+    }
+
+    @Override
+    public ServiceResult<Void> resetPendingPartnerProgress(QuestionSetupType subsidyBasis, long projectId, long organisationId) {
+        switch(subsidyBasis){
+            case SUBSIDY_BASIS: {
+                ProjectOrganisationCompositeId projectOrganisationCompositeId = ProjectOrganisationCompositeId.id(projectId, organisationId);
+                return markYourFundingIncomplete(projectOrganisationCompositeId)
+                        .andOnSuccess(() -> markYourOrganisationIncomplete(projectOrganisationCompositeId))
+                        .andOnSuccess(() -> markYourFundingIncomplete(projectOrganisationCompositeId));
+            }
+            default:
+                return serviceSuccess();
+
+        }
+
     }
 
     private ServiceResult<PendingPartnerProgress> sendNotification(PendingPartnerProgress pendingPartnerProgress){
