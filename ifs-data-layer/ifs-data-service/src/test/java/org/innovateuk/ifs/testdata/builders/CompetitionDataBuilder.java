@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -166,7 +168,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
-            grantClaimMaximumService.revertToDefault(data.getCompetition().getId());
+            setGrantClaimMaximums(competition);
 
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
@@ -202,6 +204,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
                 questionSetupCompetitionService.update(manyAnswers);
             }
+        });
+    }
+
+    private void setGrantClaimMaximums(CompetitionResource competition) {
+        grantClaimMaximumService.revertToDefault(competition.getId()).getSuccess();
+
+        List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).toOptionalIfNotFound().getSuccess()
+                .map(list ->
+                list.stream()
+                .filter(max -> max.getMaximum() == null)
+                .collect(Collectors.toList()))
+                .orElse(emptyList());
+        IntStream.range(0, maximumsNeedingALevel.size()).forEach(i -> {
+            GrantClaimMaximumResource maximum = maximumsNeedingALevel.get(i);
+            maximum.setMaximum(10 * i);
+            grantClaimMaximumService.save(maximum).getSuccess();
         });
     }
 

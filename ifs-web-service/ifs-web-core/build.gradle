@@ -6,13 +6,6 @@ apply plugin: 'idea'
 bootJar.enabled=false
 jar.enabled=true
 
-buildscript {
-
-    repositories {
-        jcenter()
-    }
-}
-
 group 'innovateuk'
 version project.version
 

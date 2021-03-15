@@ -18,5 +18,5 @@ public interface OrganisationRestService {
     RestResult<List<OrganisationResource>> getOrganisations(long userId, boolean international);
     RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);
-
+    RestResult<OrganisationResource> syncCompaniesHouseDetails(OrganisationResource organisation);
 }

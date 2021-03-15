@@ -43,7 +43,7 @@ public enum SectionType {
             if (lead) {
                 return this == ORGANISATION_FINANCES;
             } else {
-                return this == PROJECT_COST_FINANCES;
+                return (this == PROJECT_COST_FINANCES || this == FEC_COSTS_FINANCES);
             }
         }
         if (this == SectionType.TERMS_AND_CONDITIONS) {

@@ -27,6 +27,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8941  SBRI Milestones - Edit milestones in project setup
 ...
+...               IFS-8947  SBRI Milestones - Reset finances
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -557,10 +559,6 @@ the data is in the database correctly
      Should Be Equal As Integers   ${month1VAT}     11046
      Should Be Equal As Integers   ${month2VAT}     0
      Should Be Equal As Integers   ${month3VAT}     33135
-
-confirm viability and eligibility
-    confirm viability       0
-    confirm eligibility     0
 
 internal user generates the contract
     [Arguments]  ${projectID}

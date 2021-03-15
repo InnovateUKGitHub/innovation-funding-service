@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
@@ -10,11 +11,14 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
@@ -22,7 +26,7 @@ import java.util.List;
 
 @FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchDisabled", predicate = true, message = "{validation.standard.organisationsearchname.required}")
 @FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchEnabled", predicate = true, message = "{validation.improved.organisationsearchname.required}")
-@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
+@FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.manualentry.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
 
@@ -33,7 +37,11 @@ public class OrganisationCreationForm implements Serializable {
     private boolean organisationSearching;
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
+
+    //Regular experssion to match emojis
+    @Pattern(regexp = "[^\\u20a0-\\u32ff\\ud83c\\udc00-\\ud83d\\udeff\\udbb9\\udce5-\\udbb9\\udcee]*", message = "{validation.standard.organisation.name.invalid}")
     private String organisationName;
+
     private Boolean newOrganisationSearchEnabled;
     private Long selectedExistingOrganisationId;
     private String selectedExistingOrganisationName;
@@ -43,9 +51,20 @@ public class OrganisationCreationForm implements Serializable {
     private List<OrganisationSicCodeResource> sicCodes = new ArrayList<>();
     private List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
     private AddressResource organisationAddress;
+    private String organisationNumber;
+    private String businessType;
+
+    @Valid()
+    private AddressForm addressForm;
+
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
+        this.sicCodes = new ArrayList<>();
+        this.sicCodes.add(new OrganisationSicCodeResource());
+        this.executiveOfficers = new ArrayList<>();
+        executiveOfficers.add(new OrganisationExecutiveOfficerResource());
+
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
@@ -125,6 +144,31 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setTriedToSave(boolean triedToSave) {
         this.triedToSave = triedToSave;
+    }
+
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public void setOrganisationNumber(String organisationNumber) {
+        this.organisationNumber = organisationNumber;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+
+    public AddressForm getAddressForm() {
+        return addressForm;
+    }
+
+    public void setAddressForm(AddressForm addressForm) {
+        this.addressForm = addressForm;
     }
 
     @JsonIgnore
@@ -237,6 +281,11 @@ public class OrganisationCreationForm implements Serializable {
                 .append(organisationSearchResults, that.organisationSearchResults)
                 .append(organisationName, that.organisationName)
                 .append(searchPageIndexPosition, that.searchPageIndexPosition)
+                .append(organisationNumber, that.organisationNumber)
+                .append(businessType,that.businessType)
+                .append(sicCodes,that.sicCodes)
+                .append(executiveOfficers,that.executiveOfficers)
+                .append(addressForm,that.addressForm)
                 .append(dateOfIncorporation, that.dateOfIncorporation)
                 .append(sicCodes, that.sicCodes)
                 .append(executiveOfficers, that.executiveOfficers)
@@ -256,6 +305,11 @@ public class OrganisationCreationForm implements Serializable {
                 .append(organisationSearchResults)
                 .append(organisationName)
                 .append(searchPageIndexPosition)
+                .append(organisationNumber)
+                .append(businessType)
+                .append(sicCodes)
+                .append(executiveOfficers)
+                .append(addressForm)
                 .append(dateOfIncorporation)
                 .append(sicCodes)
                 .append(executiveOfficers)
