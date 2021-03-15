@@ -111,6 +111,7 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
+
     public Application() {
     }
 

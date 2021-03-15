@@ -24,6 +24,7 @@ public class ApplicationHiddenFromDashboard {
     private ZonedDateTime createdOn;
 
     @JoinColumn(name = "application_id", referencedColumnName="id")
+    //@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Application application;
 
@@ -45,6 +46,10 @@ public class ApplicationHiddenFromDashboard {
 
     public ZonedDateTime getCreatedOn() {
         return createdOn;
+    }
+
+    public void setCreatedOn(ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
     }
 
     public Application getApplication() {

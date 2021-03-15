@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.activitylog.domain.ActivityLog;
 import org.innovateuk.ifs.activitylog.repository.ActivityLogRepository;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationHiddenFromDashboard;
 import org.innovateuk.ifs.application.domain.ApplicationMigration;
 import org.innovateuk.ifs.application.domain.MigrationStatus;
 import org.innovateuk.ifs.application.repository.*;
@@ -142,8 +143,11 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
 
                     applicationHiddenFromDashboardRepository.findByApplicationId(application.getId()).stream()
                             .forEach(applicationHiddenFromDashboard -> {
-                                applicationHiddenFromDashboard.setApplication(migratedApplication);
-                                applicationHiddenFromDashboardRepository.save(applicationHiddenFromDashboard);
+                                //applicationHiddenFromDashboard.setApplication(migratedApplication);
+                                //applicationHiddenFromDashboard.save(migratedApplicationHiddenFromDashboard);
+                                ApplicationHiddenFromDashboard migratedApplicationHiddenFromDashboard = new ApplicationHiddenFromDashboard(migratedApplication, applicationHiddenFromDashboard.getUser());
+                                migratedApplicationHiddenFromDashboard.setCreatedOn(applicationHiddenFromDashboard.getCreatedOn());
+                                applicationHiddenFromDashboardRepository.save(migratedApplicationHiddenFromDashboard);
                             });
 
                     LOG.debug("Migrated application hidden from dashboard for application : " + application.getId());
@@ -304,6 +308,7 @@ public class ApplicationMigrationServiceImpl implements ApplicationMigrationServ
     private void deleteApplication(Application application) {
         activityLogRepository.deleteByApplicationId(application.getId());
         grantProcessRepository.deleteByApplicationId(application.getId());
+        applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
         applicationRepository.delete(application);
         LOG.debug("Deleted application : " + application.getId());
     }
