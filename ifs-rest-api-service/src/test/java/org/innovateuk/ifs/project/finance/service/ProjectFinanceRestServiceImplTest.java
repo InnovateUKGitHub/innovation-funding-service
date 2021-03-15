@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.junit.Test;
 
@@ -80,4 +81,17 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         RestResult<Boolean> results = service.hasAnyProjectOrganisationSizeChangedFromApplication(projectId);
         assertTrue(results.getSuccess());
     }
+
+
+    @Test
+    public void update() {
+        ProjectFinanceResource projectFinanceResource = ProjectFinanceResourceBuilder.newProjectFinanceResource().build();
+        setupPostWithRestResultExpectations(projectFinanceRestURL + "/project-finance", ProjectFinanceResource.class, projectFinanceResource, projectFinanceResource, OK);
+
+        RestResult<ProjectFinanceResource> results = service.update(projectFinanceResource);
+
+        assertTrue(results.isSuccess());
+        assertTrue(results.getSuccess().getId().equals(projectFinanceResource.getId()));
+    }
+
 }
