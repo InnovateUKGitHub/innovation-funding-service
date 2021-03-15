@@ -292,7 +292,6 @@ the user completes the application
     the user clicks the button/link                                                          link = Your project finances
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
-#    the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
 the partner selects new answer choice
