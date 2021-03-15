@@ -34,13 +34,14 @@ CompAdmin creates a new Generic competition
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879  IFS-5920
     [Tags]  HappyPath
-    [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
-    Given logged in user applies to competition     ${competitionName}   4
-    When the user clicks the button/link            link = Application details
-    Then the user fills in the Application details  Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
-    When the user clicks the button/link            link = Award terms and conditions
-    Then the user should see the element            jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
-    And the user should see the element             jQuery = .message-alert:contains("You must read these terms and conditions and accept them by ticking the box at the end")
+    [Setup]  Log in as a different user                          becky.mason@gmail.com  ${short_password}
+    Given logged in user applies to competition                  ${competitionName}   4
+    When the user clicks the button/link                         link = Application details
+    Then the user fills in the Application details               Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
+    When the user completes subsidy basis as subsidy control
+    And the user clicks the button/link                          link = Award terms and conditions
+    Then the user should see the element                         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    And the user should see the element                          jQuery = .message-alert:contains("You must read these terms and conditions and accept them by ticking the box at the end")
 
 *** Keywords ***
 Custom suite setup
