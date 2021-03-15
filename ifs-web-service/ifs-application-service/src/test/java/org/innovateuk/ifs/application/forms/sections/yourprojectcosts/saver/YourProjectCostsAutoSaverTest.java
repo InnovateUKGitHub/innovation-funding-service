@@ -104,7 +104,7 @@ public class YourProjectCostsAutoSaverTest {
 
     @Test
     public void academicAndSecretarialSupportCostRowsChangeTriggerAutoSaveForIndirectCost() {
-        String field = "academicAndSecretarialSupportCostRows[0].cost";
+        String field = "academicAndSecretarialSupportForm.cost";
         String value = "100";
         long applicationId = 1L;
         long organisationId = 2L;
