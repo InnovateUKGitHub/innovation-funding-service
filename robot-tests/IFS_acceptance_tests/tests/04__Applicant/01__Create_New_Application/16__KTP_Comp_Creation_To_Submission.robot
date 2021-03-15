@@ -97,7 +97,6 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
 ...
-
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -329,9 +328,8 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then the user completes the KTP application except application team and your funding and your project costs
+    When Logging in and Error Checking                                                                &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                               jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your project finances
 
 New lead applicant cannot enter project costs until fEC declaration and your funding section is complete
@@ -363,8 +361,6 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
      [Documentation]  IFS-9242
      Given the user clicks the button/link               link = Your project costs
@@ -372,8 +368,7 @@ Knowledge based applicant cannot view or edit fEC specific project costs based o
      And the user should not see the element             jQuery = button:contains("Additional associate support")
      Then the user should not see the element            jQuery = button:contains("Associate estate costs")
      [Teardown]  the user fills in ktp project costs
-=======
-=======
+
 New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
      [Documentation]  IFS-9240
      Given the user clicks the button/link                  link = Your fEC model
@@ -393,7 +388,6 @@ New lead applicant view the read-only page once marked as complete
      When the user clicks the button/link          link = Your fEC model
      Then the user checks the read-only page
 
->>>>>>> b08cb28090163b835ee28ba6f0e61cb51fb13711
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
     Given the user clicks the button/link                                    link = Back to your project finances
@@ -411,11 +405,10 @@ New applicant can access their project costs section once the your fEC model and
 
 New lead applicant completes the project costs and project location
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When the user fills in ktp project costs
+    #When the user fills in ktp project costs
     And the user enters the project location
     Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
     And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
->>>>>>> development
 
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
@@ -1204,21 +1197,14 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-<<<<<<< HEAD
-the user completes the KTP application except application team and your funding and your project costs
-=======
 the user completes the KTP application except application team and your project finances
->>>>>>> development
-    the user clicks the button/link                                                             link = Application details
-    the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                                                 link = Application details
+    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-<<<<<<< HEAD
-    the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
+    the user navigates to Your-finances page                                        ${ktpApplicationTitle}
     the lead applicant marks the KTP project location as complete
-=======
->>>>>>> development
-    the user accept the competition terms and conditions                                        Return to application overview
+    the user accept the competition terms and conditions                            Return to application overview
 
 the user fills in the KTP Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -1522,4 +1508,3 @@ the user checks the read-only page
     the user downloads the file                   ${lead_ktp_email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
     Download should be done
     remove the file from the operating system     ${uploadedPdf}
-
