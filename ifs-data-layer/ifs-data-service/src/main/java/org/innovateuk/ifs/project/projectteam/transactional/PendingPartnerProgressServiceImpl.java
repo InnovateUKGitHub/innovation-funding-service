@@ -103,6 +103,7 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> resetPendingPartnerProgress(QuestionSetupType subsidyBasis, long projectId, long organisationId) {
         switch(subsidyBasis){
             case SUBSIDY_BASIS: {

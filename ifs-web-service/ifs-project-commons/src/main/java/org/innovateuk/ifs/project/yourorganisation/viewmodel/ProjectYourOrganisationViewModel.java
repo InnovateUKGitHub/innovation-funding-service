@@ -6,6 +6,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.Optional;
+
 public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisationViewModel {
     private final long projectId;
     private final String projectName;
@@ -13,6 +15,8 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
     private final boolean readOnly;
     private final UserResource loggedInUser;
     private final boolean isAllEligibilityAndViabilityInReview;
+    private final boolean subsidyBasisRequiredAndNotCompleted;
+    private final Optional<Long> subsidyBasisQuestionId;
 
     public ProjectYourOrganisationViewModel(long applicationId,
                                             CompetitionResource competition,
@@ -23,7 +27,9 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
                                             String projectName,
                                             boolean readOnly,
                                             UserResource loggedInUser,
-                                            boolean isAllEligibilityAndViabilityInReview) {
+                                            boolean isAllEligibilityAndViabilityInReview,
+                                            boolean subsidyBasisRequiredAndNotCompleted,
+                                            Optional<Long> subsidyBasisQuestionId) {
         super(applicationId, competition, organisation.getOrganisationTypeEnum(), maximumFundingLevelConstant, showOrganisationSizeAlert, false);
         this.projectId = projectId;
         this.projectName = projectName;
@@ -31,6 +37,8 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
         this.readOnly = readOnly;
         this.loggedInUser = loggedInUser;
         this.isAllEligibilityAndViabilityInReview = isAllEligibilityAndViabilityInReview;
+        this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
+        this.subsidyBasisQuestionId = subsidyBasisQuestionId;
     }
 
     public long getProjectId() {
@@ -55,5 +63,17 @@ public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisatio
 
     public boolean isAllowedToEditOrganisationSize() {
         return getLoggedInUser().hasAuthority(Authority.PROJECT_FINANCE) && isAllEligibilityAndViabilityInReview;
+    }
+
+    public boolean isSubsidyBasisRequiredAndNotCompleted() {
+        return subsidyBasisRequiredAndNotCompleted;
+    }
+
+    public boolean isOrganisationSectionLocked() {
+        return subsidyBasisRequiredAndNotCompleted;
+    }
+
+    public Long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId.orElse(null);
     }
 }

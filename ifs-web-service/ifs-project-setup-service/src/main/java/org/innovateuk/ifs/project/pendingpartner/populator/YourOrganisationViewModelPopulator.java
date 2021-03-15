@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
@@ -13,6 +14,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
 /**
  * A populator to build a YourOrganisationViewModel for the "Your organisation" pages.
@@ -35,6 +40,9 @@ public class YourOrganisationViewModelPopulator {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
+    @Autowired
+    private QuestionRestService questionRestService;
+
     public ProjectYourOrganisationViewModel populate(long projectId, long organisationId, UserResource user) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
@@ -45,6 +53,13 @@ public class YourOrganisationViewModelPopulator {
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 organisation::getOrganisationTypeEnum,
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
+
+        PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
+
+        boolean subsidyBasisRequiredAndNotCompleted = progress.isSubsidyBasisRequired() && !progress.isSubsidyBasisComplete();
+        Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
+                ? Optional.of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
+                : Optional.empty();
 
         boolean showOrganisationSizeAlert = !isMaximumFundingLevelConstant && pendingPartner.isYourFundingComplete();
         return new ProjectYourOrganisationViewModel(
@@ -57,6 +72,8 @@ public class YourOrganisationViewModelPopulator {
                 project.getName(),
                 pendingPartner.isYourOrganisationComplete(),
                 user,
-                true);
+                true,
+                subsidyBasisRequiredAndNotCompleted ,
+                subsidyQuestionId);
     }
 }

@@ -19,6 +19,8 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
 @Component
@@ -55,14 +57,14 @@ public class ProjectYourFundingViewModelPopulator {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
-        boolean subsidyBasisRequiredAndNotCompleted =  progress.isSubsidyBasisRequired() && !progress.isSubsidyBasisComplete();
         boolean organisationRequiredAndNotCompleted = organisationSectionRequired && !progress.isYourOrganisationComplete();
         boolean fundingLevelConstant = grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess();
         PartnerOrganisationResource partnerOrganisationResource = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
-        Long subsidyQuestionId = null;
-        if (progress.isSubsidyBasisRequired()) {
-            subsidyQuestionId = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId();
-        }
+
+        boolean subsidyBasisRequiredAndNotCompleted = progress.isSubsidyBasisRequired() && !progress.isSubsidyBasisComplete();
+        Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
+                ? Optional.of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
+                : Optional.empty();
 
         return new ProjectYourFundingViewModel(project,
                 organisationId,

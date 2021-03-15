@@ -21,6 +21,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,7 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectFinanceResource> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
         long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {

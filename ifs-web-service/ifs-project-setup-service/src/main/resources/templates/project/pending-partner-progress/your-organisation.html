@@ -24,8 +24,21 @@
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
+        <th:block th:if="${model.organisationSectionLocked}">
+            <p class="govuk-body">
+                Before you can supply your funding details:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li th:if="${model.subsidyBasisRequiredAndNotCompleted}">
+                    you must mark the
+                    <a th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">subsidy basis</a>
+                    page as complete
+                </li>
+            </ul>
+        </th:block>
 
-        <form th:object="${form}"
+        <form th:unless="${model.organisationSectionLocked}"
+              th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               enctype="multipart/form-data"
               novalidate="novalidate"

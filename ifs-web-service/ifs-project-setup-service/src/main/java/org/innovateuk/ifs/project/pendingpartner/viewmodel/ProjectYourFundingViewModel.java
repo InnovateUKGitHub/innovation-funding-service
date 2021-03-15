@@ -4,6 +4,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.util.Optional;
+
 public class ProjectYourFundingViewModel {
 
     private final String projectName;
@@ -18,7 +20,7 @@ public class ProjectYourFundingViewModel {
     private final boolean leadOrganisation;
     private final boolean organisationRequiredAndNotCompleted;
     private final boolean subsidyBasisRequiredAndNotCompleted;
-    private final Long subsidyBasisQuestionId;
+    private final Optional<Long> subsidyBasisQuestionId;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -31,7 +33,7 @@ public class ProjectYourFundingViewModel {
                                        boolean leadOrganisation,
                                        boolean subsidyBasisRequiredAndNotCompleted,
                                        boolean organisationRequiredAndNotCompleted,
-                                       Long subsidyBasisQuestionId) {
+                                       Optional<Long> subsidyBasisQuestionId) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -117,6 +119,6 @@ public class ProjectYourFundingViewModel {
     }
 
     public Long getSubsidyBasisQuestionId() {
-        return subsidyBasisQuestionId;
+        return subsidyBasisQuestionId.orElse(null);
     }
 }
