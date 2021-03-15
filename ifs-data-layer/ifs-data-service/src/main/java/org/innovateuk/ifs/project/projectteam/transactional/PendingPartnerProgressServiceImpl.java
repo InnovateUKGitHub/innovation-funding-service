@@ -110,7 +110,8 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
                 ProjectOrganisationCompositeId projectOrganisationCompositeId = ProjectOrganisationCompositeId.id(projectId, organisationId);
                 return markYourFundingIncomplete(projectOrganisationCompositeId)
                         .andOnSuccess(() -> markYourOrganisationIncomplete(projectOrganisationCompositeId))
-                        .andOnSuccess(() -> markYourFundingIncomplete(projectOrganisationCompositeId));
+                        .andOnSuccess(() -> markYourFundingIncomplete(projectOrganisationCompositeId))
+                        .andOnSuccess(() -> markTermsAndConditionsIncomplete(projectOrganisationCompositeId));
             }
             default:
                 return serviceSuccess();
