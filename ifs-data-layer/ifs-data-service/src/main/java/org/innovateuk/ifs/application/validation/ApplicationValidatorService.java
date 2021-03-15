@@ -34,4 +34,7 @@ public interface ApplicationValidatorService {
 
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
     Boolean isFinanceOverviewComplete(Application application);
+
+    @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
+    ValidationMessages validateFECCertificateUpload(Application application, Long markedAsCompleteById);
 }

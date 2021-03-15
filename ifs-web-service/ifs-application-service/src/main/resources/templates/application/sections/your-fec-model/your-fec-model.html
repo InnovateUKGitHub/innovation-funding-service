@@ -8,6 +8,8 @@
 </head>
 <body class="govuk-template__body your-fec-model app-form">
 <th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/layout :: body-start" />
+
 <div class="govuk-width-container">
 
     <th:block th:insert="fragments/layout :: header-sub"
@@ -27,41 +29,77 @@
             <th:block th:insert="fragments/layout :: page-title"
                       th:with="pageTitle='Your fEC model',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
-
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-            Will you be using the full economic costing (fEC) funding model?
-        </legend>
-
-        <th:block
-            th:insert="question-type/form-elements :: form-hint (hint='This is very important for calculating your project costs.')"/>
-
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
 
+        <th:block th:unless="${model.readOnly}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fecModelEnabled')} ? 'govuk-form-group--error'">
-                <th:block th:if="${#fields.hasErrors('*{fecModelEnabled}')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}"></span>
-                </th:block>
-                <div class="govuk-radios">
-                    <div class="govuk-radios__item">
+                 <fieldset class="govuk-fieldset" aria-describedby="fec-hint">
+                   <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                      Will you be using the full economic costing (fEC) funding model?
+                   </legend>
+                    <div id="fec-hint" class="govuk-hint">
+                        This is very important for calculating your project costs.
+                    </div>
+                     <th:block th:if="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-form-group--error'">
+                         <span class="govuk-error-message" th:each="err : ${#fields.errors('*{fecModelEnabled}')}" th:text="${err}" />
+                     </th:block>
+
+                <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="govuk-radios__item" data-target="upload-fec"
+                         data-target-clear-validation="true" data-target-clear-form="true">
                         <input class="govuk-radios__input"
                                th:field="*{fecModelEnabled}"
+                               th:classappend="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-input--error'"
+                               th:attr="data-required-errormessage= #{validation.finance.fecmodel.fecModelEnabled.blank}"
                                id="fecModelEnabled-yes"
                                type="radio"
                                value="true"
                                required="required"
-                        >
+                               data-aria-controls="conditional-upload">
                         <label class="govuk-label govuk-radios__label" for="fecModelEnabled-yes">
                             Yes
                         </label>
                     </div>
-
-                    <div class="govuk-radios__item">
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-upload">
+                    <div id="upload-fec" class="upload-section ">
+                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                     Upload your fEC certificate
+                         </legend>
+                          <p class="govuk-body  govuk-!-margin-top-1">You must upload your fEC certificate before you can mark this page as complete.
+                                                                    We need this to verify your fEC funding model. </p>
+                            <details class="govuk-details govuk-!-margin-bottom-1" role="group">
+                                <summary class="govuk-details__summary">
+                                    <span class="govuk-details__summary-text">What can I upload?</span>
+                                </summary>
+                                <div class="govuk-details__text">
+                                    <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your fEC certificate must be:</p>
+                                       <ul class="govuk-list govuk-list--bullet">
+                                          <li>in portable document format (PDF) </li>
+                                          <li>less than 10 MB in size</li>
+                                      </ul>
+                                </div>
+                            </details>
+                          <div class="govuk-form-group">
+                            <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    @{/application/{applicationId}/form/{applicationFinanceId}/view-fec-certificate(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
+                                    ${form.fecCertificateFileName},
+                                    fecCertificateFile,
+                                    fecCertificateFile,
+                                    true,
+                                    remove_fecCertificateFile,
+                                    upload_fecCertificateFile)"/>
+                         </div>
+                    </div>
+                   </div>
+                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input"
                                th:field="*{fecModelEnabled}"
+                               th:classappend="${#fields.hasErrors('*{fecModelEnabled}')} ? 'govuk-input--error'"
+                               th:attr="data-required-errormessage= #{validation.finance.fecmodel.fecModelEnabled.blank}"
                                id="fecModelEnabled-no"
                                type="radio"
                                value="false"
@@ -72,28 +110,57 @@
                         </label>
                     </div>
                 </div>
+                </fieldset>
             </div>
-            <div class="form-footer" th:if="${model.open}">
-                <div class="form-footer__actions">
-                    <button id="mark_as_complete" th:unless="${model.readOnly}" type="submit" name="mark-as-complete"
-                            class="button-clear" value="true">Mark as complete
-                    </button>
-                    <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete"
-                            class="button-clear" value="true"
-                            th:text="${'Edit your fEC model'}">Edit
-                    </button>
+        </th:block>
+
+        <th:block th:if="${model.readOnly}">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
+                Will you be using the full economic costing (fEC) funding model?
+                <p class="govuk-list readonly-data  govuk-!-margin-top-0"
+                   th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5'
+                                                  : 'govuk-!-margin-bottom-7'"
+                   th:text="${form.fecModelEnabled} ? 'Yes' : 'No'"></p>
+            </legend>
+            <th:block th:if="${ form.fecModelEnabled}">
+                <div class="upload-section ">
+                    <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
+                    <div class="govuk-form-group">
+                        <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
+                                    @{/application/{applicationId}/form/{applicationFinanceId}/view-fec-certificate(applicationId=${model.applicationId},applicationFinanceId=${model.applicationFinanceId})},
+                                    ${form.fecCertificateFileName},
+                                    fecCertificateFile,
+                                    fecCertificateFile,
+                                    true,
+                                    remove_fecCertificateFile,
+                                    upload_fecCertificateFile)"/>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <a th:href="${model.financesUrl}"
+            </th:block>
+        </th:block>
+
+        <div class="form-footer" th:if="${model.open}">
+             <div class="form-footer__actions">
+                 <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"
+                            class="button-clear" value="true">Mark as complete
+                 </button>
+                 <button id="mark_as_incomplete" th:if="${model.complete}" type="submit" name="mark-as-incomplete"
+                            class="button-clear" value="true"
+                            th:text="${'Edit your fEC Model'}">Edit
+                 </button>
+             </div>
+        </div>
+        <div>
+             <a th:href="${model.financesUrl}"
                    th:if="${model.readOnly}"
                    class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
-                </a>
-                <button type="submit" th:unless="${model.readOnly}"
+             </a>
+             <button type="submit" th:unless="${model.readOnly}"
                         class="govuk-!-margin-top-6 govuk-button">
                     Save and return to project finances
-                </button>
-            </div>
+              </button>
+        </div>
+
         </form>
         <th:block th:fragment="main-content-end">
             <p class="govuk-body govuk-!-margin-top-9 user-feedback"><span class="govuk-!-font-weight-bold">Need help with this service?</span>
