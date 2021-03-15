@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.forms.questions.questionnaire.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;

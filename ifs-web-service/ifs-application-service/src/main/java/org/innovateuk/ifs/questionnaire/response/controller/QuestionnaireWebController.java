@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

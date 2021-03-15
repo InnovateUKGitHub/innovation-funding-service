@@ -15,9 +15,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerProgressService;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

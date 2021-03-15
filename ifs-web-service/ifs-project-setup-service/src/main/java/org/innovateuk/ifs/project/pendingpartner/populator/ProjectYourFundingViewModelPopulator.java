@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
