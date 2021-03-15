@@ -79,6 +79,7 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
         assertNull(pendingPartnerProgress.getTermsAndConditionsCompletedOn());
 
         InOrder inOrder = inOrder(projectRestService, organisationRestService, competitionRestService, pendingPartnerProgressRestService);
+        inOrder.verify(pendingPartnerProgressRestService).getPendingPartnerProgress(project.getId(), organisation.getId());
         inOrder.verify(projectRestService).getProjectById(project.getId());
         inOrder.verify(organisationRestService).getOrganisationById(organisation.getId());
         inOrder.verify(competitionRestService).getCompetitionById(project.getCompetition());

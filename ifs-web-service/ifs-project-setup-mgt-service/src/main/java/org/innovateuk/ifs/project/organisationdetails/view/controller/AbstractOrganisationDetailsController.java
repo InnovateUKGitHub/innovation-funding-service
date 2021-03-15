@@ -79,7 +79,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     project.getName(),
                     true,
                     loggedInUser,
-                    isAllEligibilityAndViabilityInReview(projectId), false, empty())); // TODO qqRP - is this correct
+                    isAllEligibilityAndViabilityInReview(projectId),
+                    false,
+                    empty()));
 
             model.addAttribute("form", getForm(projectId, organisationId));
             model.addAttribute("formFragment", formFragment());
