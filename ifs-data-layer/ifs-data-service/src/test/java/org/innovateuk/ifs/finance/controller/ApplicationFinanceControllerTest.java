@@ -158,4 +158,16 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         verify(financeServiceMock).financeDetails(123L);
     }
+
+    @Test
+    public void getFECcertificateFileDetails() throws Exception {
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+
+        when(financeFileEntryServiceMock.getFECCertificateFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
+
+        mockMvc.perform(get("/applicationfinance/fec-certificate-file/fileentry?applicationFinanceId=123"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(fileEntry)));
+    }
 }

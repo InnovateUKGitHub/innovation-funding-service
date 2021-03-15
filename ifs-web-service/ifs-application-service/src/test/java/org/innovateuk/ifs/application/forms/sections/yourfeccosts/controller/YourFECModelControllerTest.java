@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.application.forms.sections.yourfeccosts.controller;
 
 import org.innovateuk.ifs.AbstractAsyncWaitMockMVCTest;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -27,12 +29,13 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<YourFECModelController> {
 
     @Mock
-    private CommonYourFinancesViewModelPopulator commonYourFinancesViewModelPopulatorMock;
+    private YourFECViewModelPopulator YourFECViewModelPopulatorMock;
 
     @Mock
     private YourFECModelFormPopulator formPopulatorMock;
@@ -57,8 +60,8 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
-    private CommonYourProjectFinancesViewModel commonFinancesViewModel =
-            new CommonYourProjectFinancesViewModel("/finances", "Competition name", "Application name", 1L, 2L, false, false, true, false, false);
+    private YourFECViewModel yourFECViewModel =
+            new YourFECViewModel("/finances", "Competition name", "Application name", 1L, 2L, false, false, true, false, false, applicationFinance.getId());
 
     @Test
     public void viewPage() throws Exception {
@@ -77,12 +80,10 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
         assertViewPageSuccessful(true);
     }
 
+
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
-        YourFECModelForm form = new YourFECModelForm(true);
-
-        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonFinancesViewModel);
-        when(formPopulatorMock.populate(applicationId, organisationId)).thenReturn(form);
+        when(YourFECViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(yourFECViewModel);
 
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/your-fec-model/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId))
@@ -92,10 +93,9 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        assertThat(model.get("model")).isEqualTo(commonFinancesViewModel);
-        assertThat(model.get("form")).isEqualTo(form);
+        assertThat(model.get("model")).isEqualTo(yourFECViewModel);
 
-        verify(formPopulatorMock, times(1)).populate(applicationId, organisationId);
+        verify(formPopulatorMock, times(1)).populate(any(YourFECModelForm.class), eq(applicationId), eq(organisationId));
 
         verifyNoMoreInteractionsWithMocks();
     }
@@ -201,13 +201,6 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     @Override
     protected YourFECModelController supplyControllerUnderTest() {
-
-        return new YourFECModelController(
-                commonYourFinancesViewModelPopulatorMock,
-                formPopulatorMock,
-                applicationFinanceRestServiceMock,
-                sectionServiceMock,
-                processRoleRestServiceMock,
-                organisationRestServiceMock);
+        return new YourFECModelController();
     }
 }
