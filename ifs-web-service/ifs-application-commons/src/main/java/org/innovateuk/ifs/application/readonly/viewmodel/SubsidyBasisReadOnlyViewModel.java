@@ -39,4 +39,3 @@ public class SubsidyBasisReadOnlyViewModel extends AbstractQuestionReadOnlyViewM
 
 
 }
-
