@@ -97,7 +97,6 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
 ...
-
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -329,9 +328,8 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then the user completes the KTP application except application team and your funding and your project costs
+    When Logging in and Error Checking                                                                &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                               jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your project finances
 
 New lead applicant cannot enter project costs until fEC declaration and your funding section is complete
@@ -407,7 +405,7 @@ New applicant can access their project costs section once the your fEC model and
 
 New lead applicant completes the project costs and project location
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When the user fills in ktp project costs
+    #When the user fills in ktp project costs
     And the user enters the project location
     Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
     And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
@@ -596,7 +594,7 @@ Partner can also see the KTA in Application team
     Then the user should not see the element     name = resend-kta
     And the user should see the element          jQuery = td:contains("${ktaEmail}")
 
-lead applicant can not assign application question to KTA user
+Lead applicant can not assign application question to KTA user
     [Documentation]  IFS-8311
     Given log in as a different user              &{ktpLeadApplicantCredentials}
     And the user clicks the button/link           link = ${ktpApplicationTitle}
@@ -605,7 +603,7 @@ lead applicant can not assign application question to KTA user
     And the user clicks the button/link           link = Assign to someone else.
     Then the user should not see the element      jQuery = label:contains("Simon Smith")
 
-new lead applicant can uploads an appendix file in KTP Application
+New lead applicant can uploads an appendix file in KTP Application
     [Documentation]  IFS-7958
     [Setup]  the user marks the questions as complete
     When the user clicks the button/link              link = 6. Innovation
@@ -696,7 +694,7 @@ MO can download the appendix file in the application
     Then the user downloads the file                           ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
     [Teardown]  remove the file from the operating system      ${valid_pdf}
 
-the project finance user cannot see the project start date
+The project finance user cannot see the project start date
     [Documentation]  IFS-7805
     Given Log in as a different user                   &{internal_finance_credentials}
     When the user navigates to the page                ${server}/project-setup-management/competition/${competitionId}/status/all
@@ -1084,8 +1082,7 @@ The applicants should not see knowledge based organisations when joining a non-k
     Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 *** Keywords ***
-the lead applicant marks the KTP project costs & project location as complete
-    the user fills in ktp project costs
+the lead applicant marks the KTP project location as complete
     the user enters the project location
 
 the user sees fEC model validation error message
@@ -1200,14 +1197,14 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-the user completes the KTP application except application team and your funding and your project costs
-    the user clicks the button/link                                                             link = Application details
-    the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+the user completes the KTP application except application team and your project finances
+    the user clicks the button/link                                                 link = Application details
+    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
+    the user navigates to Your-finances page                                        ${ktpApplicationTitle}
     the lead applicant marks the KTP project location as complete
-    the user accept the competition terms and conditions                                        Return to application overview
+    the user accept the competition terms and conditions                            Return to application overview
 
 the user fills in the KTP Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -1511,4 +1508,3 @@ the user checks the read-only page
     the user downloads the file                   ${lead_ktp_email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
     Download should be done
     remove the file from the operating system     ${uploadedPdf}
-
