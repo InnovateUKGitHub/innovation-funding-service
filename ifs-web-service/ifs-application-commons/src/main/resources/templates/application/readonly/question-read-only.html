@@ -120,7 +120,7 @@
                 </td>
                 <td class="govuk-table__cell">
                     <th:block th:if="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">
-                        <th:block th:text="${row.northernIslandDeclaration ? 'Subsidy control' : 'State aid'}"></th:block>s
+                        <th:block th:text="${row.northernIslandDeclaration ? 'State aid' : 'Subsidy control'}"></th:block>
                     </th:block>
                     <th:block th:unless="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">Not determined</th:block>
                 </td>
