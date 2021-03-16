@@ -319,7 +319,9 @@ public class YourProjectCostsForm {
                 .add(getTotalConsumableCosts())
                 .add(getTotalKnowledgeBaseCosts())
                 .add(getTotalEstateCosts())
-                .add(getTotalKtpTravelCosts());
+                .add(getTotalKtpTravelCosts())
+                .add(getTotalAcademicAndSecretarialSupportCosts())
+                .add(getTotalIndirectCosts());
     }
 
     private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {
