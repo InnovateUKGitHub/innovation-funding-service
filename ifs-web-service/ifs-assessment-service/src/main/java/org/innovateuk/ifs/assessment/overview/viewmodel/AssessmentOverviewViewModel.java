@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationSubsidyBasisViewModel;
 
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class AssessmentOverviewViewModel {
     private final List<AssessmentOverviewSectionViewModel> sections;
     private final List<AssessmentOverviewAppendixViewModel> appendices;
     private final String termsAndConditionsTerminology;
-    private final ApplicationSubsidyBasisViewModel applicationSubsidyBasisViewModel;
 
     public AssessmentOverviewViewModel(long assessmentId,
                                        long applicationId,
@@ -32,8 +30,7 @@ public class AssessmentOverviewViewModel {
                                        long daysLeft,
                                        List<AssessmentOverviewSectionViewModel> sections,
                                        List<AssessmentOverviewAppendixViewModel> appendices,
-                                       String termsAndConditionsTerminology,
-                                       ApplicationSubsidyBasisViewModel applicationSubsidyBasisViewModel) {
+                                       String termsAndConditionsTerminology) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -44,7 +41,6 @@ public class AssessmentOverviewViewModel {
         this.sections = sections;
         this.appendices = appendices;
         this.termsAndConditionsTerminology = termsAndConditionsTerminology;
-        this.applicationSubsidyBasisViewModel = applicationSubsidyBasisViewModel;
     }
 
     public long getAssessmentId() {
@@ -87,15 +83,15 @@ public class AssessmentOverviewViewModel {
         return termsAndConditionsTerminology;
     }
 
-    public ApplicationSubsidyBasisViewModel getApplicationSubsidyBasisViewModel() {
-        return applicationSubsidyBasisViewModel;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AssessmentOverviewViewModel that = (AssessmentOverviewViewModel) o;
 
@@ -103,14 +99,12 @@ public class AssessmentOverviewViewModel {
                 .append(assessmentId, that.assessmentId)
                 .append(applicationId, that.applicationId)
                 .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
                 .append(daysLeft, that.daysLeft)
                 .append(applicationName, that.applicationName)
-                .append(competitionName, that.competitionName)
                 .append(sections, that.sections)
                 .append(appendices, that.appendices)
-                .append(termsAndConditionsTerminology, that.termsAndConditionsTerminology)
-                .append(applicationSubsidyBasisViewModel, that.applicationSubsidyBasisViewModel)
                 .isEquals();
     }
 
@@ -126,25 +120,6 @@ public class AssessmentOverviewViewModel {
                 .append(daysLeft)
                 .append(sections)
                 .append(appendices)
-                .append(termsAndConditionsTerminology)
-                .append(applicationSubsidyBasisViewModel)
                 .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "AssessmentOverviewViewModel{" +
-                "assessmentId=" + assessmentId +
-                ", applicationId=" + applicationId +
-                ", applicationName='" + applicationName + '\'' +
-                ", competitionId=" + competitionId +
-                ", competitionName='" + competitionName + '\'' +
-                ", daysLeftPercentage=" + daysLeftPercentage +
-                ", daysLeft=" + daysLeft +
-                ", sections=" + sections +
-                ", appendices=" + appendices +
-                ", termsAndConditionsTerminology='" + termsAndConditionsTerminology + '\'' +
-                ", applicationSubsidyBasisViewModel=" + applicationSubsidyBasisViewModel +
-                '}';
     }
 }

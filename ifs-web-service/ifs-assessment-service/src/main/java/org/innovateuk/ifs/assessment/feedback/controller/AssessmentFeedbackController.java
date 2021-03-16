@@ -95,6 +95,10 @@ public class AssessmentFeedbackController {
             return getApplicationDetails(model, assessmentId, question);
         }
 
+        if (question.getQuestionSetupType().equals(QuestionSetupType.SUBSIDY_BASIS)) {
+            return getApplicationDetails(model, assessmentId, question);
+        }
+
         populateQuestionForm(form, assessmentId, questionId);
         return doViewQuestion(model, assessmentId, question);
     }
