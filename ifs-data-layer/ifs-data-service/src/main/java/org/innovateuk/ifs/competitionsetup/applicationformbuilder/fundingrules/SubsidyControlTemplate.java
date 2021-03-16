@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -26,8 +25,8 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 @Component
 public class SubsidyControlTemplate implements FundingRulesTemplate {
 
-    @Value("${ifs.subsidy.control.northern.ireland.mode}")
-    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @Autowired
     private Environment environment;
@@ -44,7 +43,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
             return sectionBuilders;
         }
 
-        if (tacticalNorthernIrelandSubsidyControlModeEnabled() || generatingWebtestDataForComp(competition)) {
+        if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandDeclaration(sectionBuilders);
         }
         return sectionBuilders;
@@ -59,8 +58,8 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 && competition.getName().contains("Subsidy control tactical");
     }
 
-    private boolean tacticalNorthernIrelandSubsidyControlModeEnabled() {
-        return SubsidyControlNorthernIrelandMode.TACTICAL == subsidyControlNorthernIrelandMode;
+    private boolean northernIrelandSubsidyControlModeDisabled() {
+        return !northernIrelandSubsidyControlToggle;
     }
 
 

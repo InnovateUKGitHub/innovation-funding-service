@@ -5,7 +5,6 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
@@ -26,8 +25,8 @@ public class FundingLevelPercentageViewModelPopulator implements CompetitionSetu
     @Autowired
     private CategoryRestService categoryRestService;
 
-    @Value("${ifs.subsidy.control.northern.ireland.mode}")
-    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
@@ -40,6 +39,6 @@ public class FundingLevelPercentageViewModelPopulator implements CompetitionSetu
         return new FundingLevelPercentageViewModel(generalViewModel,
                 allResearchCategories.stream().filter(cat -> competition.getResearchCategories().contains(cat.getId())).collect(Collectors.toList()),
                 asList(OrganisationSize.values()),
-                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && SubsidyControlNorthernIrelandMode.FULL == subsidyControlNorthernIrelandMode);
+                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle);
     }
 }

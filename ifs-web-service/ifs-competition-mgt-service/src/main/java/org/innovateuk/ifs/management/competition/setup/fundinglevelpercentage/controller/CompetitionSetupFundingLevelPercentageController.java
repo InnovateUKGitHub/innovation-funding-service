@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
@@ -57,15 +56,15 @@ public class CompetitionSetupFundingLevelPercentageController {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    @Value("${ifs.subsidy.control.northern.ireland.mode}")
-    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @GetMapping
     public String fundingLevelPercentage(Model model,
                                          @PathVariable long competitionId,
                                          UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && SubsidyControlNorthernIrelandMode.FULL == subsidyControlNorthernIrelandMode) {
+        if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle) {
             CompetitionSetupViewModel viewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, FUNDING_LEVEL_PERCENTAGE);
             if (viewModel.getGeneral().isEditable()) {
                 return format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath(), competition.getFundingRules().toUrl());

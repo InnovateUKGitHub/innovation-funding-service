@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.TermsAndConditionsFormPopulator;
@@ -64,8 +63,8 @@ public class CompetitionSetupTermsAndConditionsController {
     @Autowired
     private CompetitionSetupService competitionSetupService;
 
-    @Value("${ifs.subsidy.control.northern.ireland.mode}")
-    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
+    private boolean subsidyControlNorthernIrelandEnabled;
 
     @GetMapping("/{competitionId}/section/terms-and-conditions")
     public String editTermsAndConditions(@PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -264,7 +263,7 @@ public class CompetitionSetupTermsAndConditionsController {
     }
 
     private boolean shouldHaveSeparateTerms(CompetitionResource competition) {
-        return SubsidyControlNorthernIrelandMode.FULL == subsidyControlNorthernIrelandMode
+        return subsidyControlNorthernIrelandEnabled
                 && FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
                 && !competition.isExpressionOfInterest();
     }

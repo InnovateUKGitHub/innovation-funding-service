@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
-import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -28,8 +27,8 @@ public class TermsAndConditionsModelPopulator {
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
 
-    @Value("${ifs.subsidy.control.northern.ireland.mode}")
-    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled:false}")
+    private Boolean subsidyControlNorthernIrelandEnabled;
 
     public TermsAndConditionsViewModel populateModel(CompetitionResource competitionResource, UserResource userResource, boolean stateAidPage) {
 
@@ -62,7 +61,7 @@ public class TermsAndConditionsModelPopulator {
     }
 
     private boolean includeStateAid(CompetitionResource competitionResource) {
-        return SubsidyControlNorthernIrelandMode.FULL == subsidyControlNorthernIrelandMode
+        return subsidyControlNorthernIrelandEnabled
                 && FundingRules.SUBSIDY_CONTROL == competitionResource.getFundingRules()
                 && !competitionResource.isExpressionOfInterest();
     }

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.featureswitch.SubsidyControlNorthernIrelandMode;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
@@ -38,8 +37,8 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     @Autowired
     private ResearchCategoryRepository researchCategoryRepository;
-    @Value("${ifs.subsidy.control.northern.ireland.mode}")
-    private SubsidyControlNorthernIrelandMode subsidyControlNorthernIrelandMode;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
@@ -90,7 +89,7 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             List<GrantClaimMaximum> maximums;
             if (competition.getFundingRules() == FundingRules.STATE_AID && !competition.getResearchCategories().isEmpty()) {
                 maximums = getStateAidGrantClaimMaxmimums();
-            } else if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && SubsidyControlNorthernIrelandMode.FULL == subsidyControlNorthernIrelandMode) {
+            } else if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle) {
                 maximums = getDualMaximumsForFundingRules(competition);
             } else {
                 maximums = getBlankGrantClaimMaxmimums();
