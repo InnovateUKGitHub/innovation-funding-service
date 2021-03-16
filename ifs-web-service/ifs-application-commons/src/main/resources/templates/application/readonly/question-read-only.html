@@ -102,6 +102,7 @@
     </div>
 </th:block>
 
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel"*/-->
 <th:block th:fragment="subsidy-basis (model)">
     <table class="govuk-table">
         <thead class="govuk-table__head">
@@ -325,10 +326,6 @@
         <a class="govuk-link" th:href="@{~/application/{apId}/form/terms-and-conditions/organisation/{oId}/question/{qId}(apId=${model.applicationId},qId=${model.questionId},oId=${model.leadOrganisationId})}"
            th:text="${model.termsAndConditionsTerminology}"></a>
     </p>
-</th:block>
-
-
-<th:block th:fragment="subsidy-basis(model)">
 </th:block>
 
 </html>
