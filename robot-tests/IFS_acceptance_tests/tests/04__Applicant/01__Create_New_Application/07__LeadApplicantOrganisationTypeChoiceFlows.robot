@@ -15,7 +15,6 @@ Suite Setup       the user starts a competition create account journey for both 
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 User should see RTO guidance when choosing RTO as a business type
@@ -75,10 +74,9 @@ the user starts a competition create account journey for both RTO and Business o
 
 the user starts a competition create account journey
     [Arguments]    ${competition_name}
-    the user searches for a competition                      ${competition_name}
     the user clicks the button/link in the paginated list    link = ${competition_name}
-    the user clicks the button/link                          link = Start new application
-    the user clicks the button/link                          link = Continue and create an account
+    the user clicks the button/link    link = Start new application
+    the user clicks the button/link    link = Continue and create an account
 
 User starts an application with a second organisation type
     the user select the competition and starts application     Performance testing competition

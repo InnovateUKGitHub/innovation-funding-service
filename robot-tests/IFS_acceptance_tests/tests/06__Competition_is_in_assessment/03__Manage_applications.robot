@@ -196,6 +196,7 @@ Assessor should see the reassigned application
 the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:contains(The Best Juggling Company)
     the user should see the element    jQuery = tr:nth-child(1) td:contains(Park living)
+    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("19")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(2):contains("Park living")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")

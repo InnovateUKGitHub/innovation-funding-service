@@ -12,7 +12,10 @@ def wait_for_autosave(formselector='css=[data-autosave]', completeselector='css=
 def repeat_string(string='', multiplicity=0):
     return string * int(multiplicity)
 
-def do_keyword_with_pagination_css(keyword, nextCss, *args):
+
+# Performs a keyword on a paginated page, clicking through to the next pages if the keyword is not successful, until
+# either the keyword succeeds or we run out of pages
+def do_keyword_with_pagination(keyword, *args):
 
     wait_until = BuiltIn().get_library_instance('WaitUntilLibrary')
 
@@ -24,20 +27,13 @@ def do_keyword_with_pagination_css(keyword, nextCss, *args):
 
     else:
 
-        next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('Click Element', 'css=' + nextCss)
+        next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('Click Element', 'css=li.next a')
 
         if not next_button_clicked:
             return 'FAIL'
         else:
-            return do_keyword_with_pagination_css(keyword, nextCss, *args)
+            return do_keyword_with_pagination(keyword, *args)
 
-def do_keyword_with_pagination_button(keyword, *args):
-    return do_keyword_with_pagination_css(keyword, 'button.next', *args)
-
-# Performs a keyword on a paginated page, clicking through to the next pages if the keyword is not successful, until
-# either the keyword succeeds or we run out of pages
-def do_keyword_with_pagination(keyword, *args):
-    return do_keyword_with_pagination_css(keyword, 'li.next a', *args)
 
 # same functionality as do_keyword_with_pagination() with the distinction that it will not cause a test failure if
 # the keyword fails on every page

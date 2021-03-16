@@ -29,7 +29,8 @@ Non registered users non companies house route
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1920  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page                         ${frontDoor}
-    And the user select the competition and starts application   ${createApplicationOpenCompetition}
+    And the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
+    And the user clicks the button/link                          jQuery = a:contains("Start new application")
     And the user clicks the button/link                          link = Continue and create an account
     And the user selects the radio button                        organisationTypeId    radio-1
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
@@ -109,10 +110,9 @@ The user can see this new application on their dashboard
     the user should see the element           link = ${application_name}
 
 Applicant goes to the registration form
-    the user navigates to the page                                  ${frontDoor}
-    the user searches for a competition                             ${createApplicationOpenCompetition}
-    the user clicks the button/link in the paginated list           link = ${createApplicationOpenCompetition}
-    And the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
+    the user navigates to the page   ${frontDoor}
+    the user clicks the button/link in the paginated list   link = ${createApplicationOpenCompetition}
+    And the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}

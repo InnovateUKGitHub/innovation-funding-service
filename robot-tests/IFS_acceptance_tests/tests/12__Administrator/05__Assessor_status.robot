@@ -151,7 +151,7 @@ the finance user searches for an assessor
     the user clicks the button/link         link = View details
 
 the assessor is assigned an application
-    the user navigates to the page                ${server}/management/assessment/competition/71/assessors/${assessor_myra_id}
+    the user navigates to the page                ${server}/management/assessment/competition/11/assessors/${assessor_myra_id}
     the user adds an application to an assessor   jQuery = tr:contains("Park living") :checkbox
 
 the user should be blocked from changing the role profile
@@ -163,7 +163,7 @@ the user should be blocked from changing the role profile
     the user should see the element         css = .message-alert
 
 the assessor is removed from all applications
-    the user navigates to the page       ${server}/management/assessment/competition/71/assessors/${assessor_myra_id}
+    the user navigates to the page       ${server}/management/assessment/competition/11/assessors/${assessor_myra_id}
     the user clicks the button/link      jQuery = td:contains("Park living") ~ td button:contains("Remove")
 
 the user should not be blocked from changing the role profile

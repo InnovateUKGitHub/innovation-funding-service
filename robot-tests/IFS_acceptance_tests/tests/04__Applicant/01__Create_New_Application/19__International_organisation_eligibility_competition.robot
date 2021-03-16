@@ -673,11 +673,7 @@ comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
      the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      the user selects the organisational eligibility                                   true    false
-<<<<<<< HEAD
-     the user completes all categories except organisational eligibility category      ${business_type_id}  ${ukLeadInternationalCompetition}  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative
-=======
      the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL
->>>>>>> b08cb28090163b835ee28ba6f0e61cb51fb13711
      the user clicks the button/link                                                   jQuery = a:contains("Complete")
      the user clicks the button/link                                                   jQuery = button:contains('Done')
 

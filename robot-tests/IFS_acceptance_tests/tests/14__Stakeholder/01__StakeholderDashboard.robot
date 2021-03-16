@@ -170,9 +170,9 @@ The Stakeholder is able to view application T&C's
 The Stakeholder cannot search for unassigned applications
     [Documentation]  IFS-4564
     [Tags]
-    Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER} // change to any number hes not assigned to
+    Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     When the user clicks the button/link          id = searchsubmit
-    Then the user should not see the element      jQuery = td:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
+    Then the user should see the element          jQuery = p:contains("0") strong:contains("${OPEN_COMPETITION_APPLICATION_1_NUMBER}")
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 The internal user removes a Stakeholder from the competition

@@ -302,7 +302,6 @@ enable assessment panel for the competition
     the user clicks the button/link    link = Assessors
     the user clicks the button/link    jQuery = button:contains("Edit")
     the user selects the radio button  hasAssessmentPanel  hasAssessmentPanel-0
-    the user selects the radio button  hasInterviewStage  hasInterviewStage-0
     the user selects the radio button  averageAssessorScore    0
     the user clicks the button/link    jQuery = button:contains("Done")
     the user clicks the button/link    link = Back to competition details

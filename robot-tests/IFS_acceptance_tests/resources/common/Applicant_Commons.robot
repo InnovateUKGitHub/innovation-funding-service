@@ -429,7 +429,6 @@ logged in user applies to competition
 the user select the competition and starts application
     [Arguments]  ${competition}
     the user navigates to the page                            ${frontDoor}
-    the user searches for a competition                       ${competition}
     the user clicks the button/link in the paginated list     link = ${competition}
     the user clicks the button/link                           link = Start new application
 
@@ -847,8 +846,3 @@ applicant views readonly payment milestones subsections
     the user should see the element     jQuery = dd:contains("${deliverable}")
     the user should see the element     jQuery = dd:contains("${sucessCriteria}")
     the user clicks the button/link     link = Your project finances
-
-The user searches for a competition
-    [Arguments]  ${competitionName}
-    the user enters text to a text field   id = keywords  ${competitionName}
-    the user clicks the button/link        jQuery = button:contains("Update results")
