@@ -86,6 +86,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("golTemplate").description("template").optional(),
             fieldWithPath("alwaysOpen").description("Competition always open").optional(),
             fieldWithPath("procurementMilestones").description("Does the competition have procurement milestones").optional(),
+            fieldWithPath("subsidyControl").description("Is this a subsidy control competition, by funding rules and presence of a subsidy basis question").optional(),
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
