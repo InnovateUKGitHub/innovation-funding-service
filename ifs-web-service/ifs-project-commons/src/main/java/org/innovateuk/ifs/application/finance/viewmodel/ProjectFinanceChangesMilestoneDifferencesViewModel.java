@@ -48,6 +48,6 @@ public class ProjectFinanceChangesMilestoneDifferencesViewModel {
     }
 
     public boolean hasChanges() {
-        return !milestoneDifferences.isEmpty();
+        return milestoneDifferences.stream().anyMatch(milestoneDifference -> !milestoneDifference.isSame());
     }
 }
