@@ -10,7 +10,6 @@ import org.innovateuk.ifs.questionnaire.link.repository.ProjectOrganisationQuest
 import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
 import org.innovateuk.ifs.questionnaire.response.repository.QuestionnaireResponseRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ public class QuestionnaireResponseSecurityHelper extends BasePermissionRules {
 
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
 
     public boolean hasUpdateOrDeletePermission(UUID questionnaireResponseId, UserResource user) {
         QuestionnaireResponse questionnaireResponse = questionnaireResponseRepository.findById(questionnaireResponseId).orElseThrow(ObjectNotFoundException::new);
