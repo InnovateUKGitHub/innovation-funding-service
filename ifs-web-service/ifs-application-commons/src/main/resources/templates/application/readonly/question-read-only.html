@@ -299,7 +299,7 @@
                 <a th:href="@{~/application/{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}(applicationId=${applicationId},questionId=${questionId},organisationId=${partner.partnerId})}"
                    class="govuk-link"
                    th:text="${partner.getTermsName()}"></a>
-            </td>ApplicationTermsModelPopulatorTest.javaApplicationTermsModelPopulatorTest.java
+            </td>
             <td class="govuk-table__cell"
                 th:if="${displayCompleteStatus}">
                 <span th:if="${partner.accepted}" class="accepted">Accepted</span>
