@@ -102,13 +102,14 @@
     </div>
 </th:block>
 
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel"*/-->
 <th:block th:fragment="subsidy-basis (model)">
     <table class="govuk-table">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Partner</th>
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Funding rules</th>
-                <th scope="col" class="govuk-table__header table-header-width-one-third">View</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third"></th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -120,14 +121,14 @@
                 </td>
                 <td class="govuk-table__cell">
                     <th:block th:if="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">
-                        <th:block th:text="${row.northernIslandDeclaration ? 'Subsidy control' : 'State aid'}"></th:block>s
+                        <th:block th:text="${row.northernIslandDeclaration ? 'State aid' : 'Subsidy control'}"></th:block>
                     </th:block>
                     <th:block th:unless="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">Not determined</th:block>
                 </td>
                 <td class="govuk-table__cell ifs-table__email">
                     <a th:if="${row.questionnaireMarkedAsComplete}"
                        th:href="@{~/application/{applicationId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(applicationId=${row.applicationId}, organisationId=${row.organisationId}, questionId=${row.questionId})}">
-                       View</a>
+                       View answers</a>
                 </td>
             </tr>
         </tbody>
@@ -325,10 +326,6 @@
         <a class="govuk-link" th:href="@{~/application/{apId}/form/terms-and-conditions/organisation/{oId}/question/{qId}(apId=${model.applicationId},qId=${model.questionId},oId=${model.leadOrganisationId})}"
            th:text="${model.termsAndConditionsTerminology}"></a>
     </p>
-</th:block>
-
-
-<th:block th:fragment="subsidy-basis(model)">
 </th:block>
 
 </html>
