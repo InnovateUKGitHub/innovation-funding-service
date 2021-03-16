@@ -74,4 +74,15 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
         List<ApplicationFinanceResource> finances = service.getFinanceDetails(123L).getSuccess();
         assertEquals(returnedResponse, finances);
     }
+
+    @Test
+    public void test_getFECFileDetails() {
+
+        FileEntryResource returnedResponse = new FileEntryResource();
+
+        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/fec-certificate-file/fileentry?applicationFinanceId=123", FileEntryResource.class, returnedResponse);
+
+        FileEntryResource fileDetails = service.getFECFileDetails(123L).getSuccess();
+        Assert.assertEquals(returnedResponse, fileDetails);
+    }
 }
