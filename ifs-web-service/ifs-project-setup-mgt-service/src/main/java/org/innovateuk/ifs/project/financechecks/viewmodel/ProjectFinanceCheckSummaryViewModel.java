@@ -16,7 +16,7 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean hasOrganisationSizeChanged;
     private boolean userHasExternalFinanceRole;
     private final boolean hasSpendProfileStage;
-    private final FundingRules fundingRules;
+    private final boolean subsidyControlCompetition;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
@@ -24,14 +24,14 @@ public class ProjectFinanceCheckSummaryViewModel {
                                                boolean hasOrganisationSizeChanged,
                                                boolean userHasExternalFinanceRole,
                                                boolean hasSpendProfileStage,
-                                               FundingRules fundingRules) {
+                                               boolean subsidyControlCompetition) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
         this.hasOrganisationSizeChanged = hasOrganisationSizeChanged;
         this.userHasExternalFinanceRole = userHasExternalFinanceRole;
         this.hasSpendProfileStage = hasSpendProfileStage;
-        this.fundingRules = fundingRules;
+        this.subsidyControlCompetition = subsidyControlCompetition;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -99,7 +99,6 @@ public class ProjectFinanceCheckSummaryViewModel {
     }
 
     public boolean isSubsidyControlCompetition() {
-        return FundingRules.SUBSIDY_CONTROL == fundingRules;
+        return subsidyControlCompetition;
     }
-
 }

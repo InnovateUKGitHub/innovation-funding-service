@@ -121,7 +121,7 @@ public class FinanceCheckController {
                 hasOrganisationSizeChanged(projectId),
                 userResource.hasRole(EXTERNAL_FINANCE),
                 hasSpendProfileStage,
-                competitionResource.getFundingRules()));
+                competitionResource.isSubsidyControl()));
         return "project/financecheck/summary";
     }
 

@@ -19,6 +19,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -958,6 +959,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isProcurementMilestones() {
         return isProcurement() &&
             sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
+    }
+
+    public boolean isSubsidyControl() {
+        return FundingRules.SUBSIDY_CONTROL == fundingRules
+                && questions.stream().anyMatch(question -> QuestionSetupType.SUBSIDY_BASIS == question.getQuestionSetupType());
     }
 
     @Override

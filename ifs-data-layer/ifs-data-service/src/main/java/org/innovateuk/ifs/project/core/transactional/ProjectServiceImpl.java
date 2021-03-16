@@ -373,7 +373,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> createFundingRulesProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
-        if (subsidyControlCompetition(project.getApplication().getCompetition())) {
+        if (project.getApplication().getCompetition().isSubsidyControl()) {
             List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
                     fundingRulesWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
                             serviceSuccess() :
@@ -382,11 +382,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return aggregate(results).andOnSuccessReturnVoid();
         }
         return serviceSuccess();
-    }
-
-    private boolean subsidyControlCompetition(Competition competition) {
-        return FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
-                && competition.getQuestions().stream().anyMatch(question -> QuestionSetupType.SUBSIDY_BASIS == question.getQuestionSetupType());
     }
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
