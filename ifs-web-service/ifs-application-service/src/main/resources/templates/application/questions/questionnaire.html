@@ -38,7 +38,7 @@
               novalidate="novalidate">
 
             <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">
-                Based on your answers, your subsidy basis has been determined as falling under <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">the Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
+                Based on your answers, your subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
 
             <th:block th:unless="${model.readOnly}">
                 <h2 class="govuk-heading-m">Declaration</h2>
