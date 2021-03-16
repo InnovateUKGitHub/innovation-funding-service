@@ -48,7 +48,7 @@ public class ProjectFinanceChangesMilestoneDifferencesViewModelTest {
     }
 
     @Test
-    public void shouldNotIndicateChangesIfAMilestoneDifferencesIsNotSame() {
+    public void shouldIndicateChangesIfAMilestoneDifferencesIsNotSame() {
 
         MilestoneChangeViewModel change1 = new MilestoneChangeViewModel();
         change1.setType(MilestoneChangeViewModel.MilestoneChangeType.SAME);
@@ -60,6 +60,6 @@ public class ProjectFinanceChangesMilestoneDifferencesViewModelTest {
 
         boolean result = viewModel.hasChanges();
 
-        assertThat(result).isFalse();
+        assertThat(result).isTrue();
     }
 }
