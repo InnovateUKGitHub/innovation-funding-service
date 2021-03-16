@@ -36,6 +36,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -372,7 +373,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> createFundingRulesProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
-        if (FundingRules.SUBSIDY_CONTROL == project.getApplication().getCompetition().getFundingRules()) {
+        if (subsidyControlCompetition(project.getApplication().getCompetition())) {
             List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
                     fundingRulesWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
                             serviceSuccess() :
@@ -381,6 +382,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return aggregate(results).andOnSuccessReturnVoid();
         }
         return serviceSuccess();
+    }
+
+    private boolean subsidyControlCompetition(Competition competition) {
+        return FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()
+                && competition.getQuestions().stream().anyMatch(question -> QuestionSetupType.SUBSIDY_BASIS == question.getQuestionSetupType());
     }
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
