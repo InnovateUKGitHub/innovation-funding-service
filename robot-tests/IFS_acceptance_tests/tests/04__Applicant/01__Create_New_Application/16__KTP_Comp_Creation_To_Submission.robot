@@ -361,55 +361,60 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
+New lead applicant can declare any other government funding received
+    [Documentation]  IFS-7956  IFS-7958
+    Given the user fills in the funding information                         ${KTPapplicationTitle}   yes
+    When the user clicks the button/link                                    link = Your funding
+    Then the user should see the element                                    jQuery = dt:contains("Funding level")+dd:contains("10.00%")
+    And the user should see the readonly view of other funding received
+
+New applicant can access their project costs section once the your fEC model and Your funding are marked as complete
+    [Documentation]  IFS-9241
+    Given the user clicks the button/link        jQuery = a:contains("Return to finances")
+    When the user clicks the button/link         link = Your project costs
+    Then the user should not see the element     link = your fEC model
+    And the user should not see the element      link = your funding
+
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
      [Documentation]  IFS-9242
-     Given the user clicks the button/link               link = Your project costs
-     When the user should not see the element            jQuery = button:contains("Knowledge base supervisor")
-     And the user should not see the element             jQuery = button:contains("Additional associate support")
+     Given the user should not see the element           jQuery = button:contains("Knowledge base supervisor")
+     When the user should not see the element            jQuery = button:contains("Additional associate support")
      Then the user should not see the element            jQuery = button:contains("Associate estate costs")
-     [Teardown]  the user fills in ktp project costs
 
-#New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
-#     [Documentation]  IFS-9240
-#     Given the user clicks the button/link                  link = Your fEC model
-#     And the user clicks the button/link                    jQuery = button:contains("Edit your fEC Model")
-#     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
-#     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
-#     Then the user should see a field and summary error     You must upload a file.
-#
-#New lead applicant uploads a document for the organisation's fEC model and save the selection
-#     [Documentation]  IFS-9240
-#     When the user uploads the file          css = .inputfile   testing_5MB.pdf
-#     Then the user clicks the button/link    jQuery = button:contains("Mark as complete")
-#     And The user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
-#
-#New lead applicant view the read-only page once marked as complete
-#     [Documentation]  IFS-9240
-#     When the user clicks the button/link          link = Your fEC model
-#     Then the user checks the read-only page
-#
-#New lead applicant can declare any other government funding received
-#    [Documentation]  IFS-7956  IFS-7958
-#    Given the user clicks the button/link                                    link = Back to your project finances
-#    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
-#    And the user clicks the button/link                                      link = Your funding
-#    Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
-#    And the user should see the readonly view of other funding received
-#
-#New applicant can access their project costs section once the your fEC model and Your funding are marked as complete
-#    [Documentation]  IFS-9241
-#    Given the user clicks the button/link        jQuery = a:contains("Return to finances")
-#    When the user clicks the button/link         link = Your project costs
-#    Then the user should not see the element     link = your fEC model
-#    And the user should not see the element      link = your funding
-#
-#New lead applicant completes the project costs and project location
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-#    #When the user fills in ktp project costs
-#    And the user enters the project location
-#    Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
-#    And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
-#
+New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
+     [Documentation]  IFS-9240
+     Given the user clicks the button/link                  link = Your project finances
+     And the user clicks the button/link                    link = Your fEC model
+     And the user clicks the button/link                    jQuery = button:contains("Edit your fEC Model")
+     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
+     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
+     Then the user should see a field and summary error     You must upload a file.
+
+New lead applicant uploads a document for the organisation's fEC model and save the selection
+     [Documentation]  IFS-9240
+     When the user uploads the file          css = .inputfile   testing_5MB.pdf
+     Then the user clicks the button/link    jQuery = button:contains("Mark as complete")
+     And The user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
+
+New lead applicant view the read-only page once marked as complete
+     [Documentation]  IFS-9240
+     When the user clicks the button/link          link = Your fEC model
+     Then the user checks the read-only page
+
+
+
+
+
+
+
+
+New lead applicant completes the project costs and project location
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
+    Given the user fills in ktp project costs
+    When the user enters the project location
+    Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
+    And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
+
 #New lead applicant opens the detailed KTP Guidance links in the new window
 #    [Documentation]  IFS-8212
 #    Given the user clicks the button/link                            jQuery = a:contains("Your project costs")
@@ -904,7 +909,7 @@ Knowledge based applicant cannot view or edit fEC specific project costs based o
 #    When The user clicks the button/link         link = Change funding level percentages
 #    Then The user should not see the element     jQuery = td:contains("ROYAL MAIL PLC") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
 #    And The user clicks the button/link          link = Back to finance overview
-#
+
 #Internal user should not see the start date in the Edit Project screen
 #    [Documentation]  IFS-8328
 #    Given The user clicks the button/link        link = Back to finance checks
