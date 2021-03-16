@@ -1,0 +1,2 @@
+ALTER TABLE application_finance ADD CONSTRAINT `fec_file_entry_id_fk` FOREIGN KEY (`fec_file_entry_id`) REFERENCES `file_entry` (`id`);
+ALTER TABLE project_finance ADD CONSTRAINT `fk_project_finance_fec_file_entry_id` FOREIGN KEY (`fec_file_entry_id`) REFERENCES `file_entry` (`id`);
