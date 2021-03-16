@@ -118,16 +118,4 @@ public class AssessmentOverviewSectionViewModel {
                 .append(termsAndConditions)
                 .toHashCode();
     }
-
-    @Override
-    public String toString() {
-        return "AssessmentOverviewSectionViewModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", guidance='" + guidance + '\'' +
-                ", questions=" + questions +
-                ", finance=" + finance +
-                ", termsAndConditions=" + termsAndConditions +
-                '}';
-    }
 }

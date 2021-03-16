@@ -49,7 +49,7 @@ public class ApplicationQuestionQuestionnaireController {
 
 
     @SecuredBySpring(value = "VIEW_APPLICATION_QUESTION_QUESTIONNAIRE", description = "Applicants and internal users can view the application question questionnaire page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor', 'monitoring_officer')")
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) QuestionQuestionnaireForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
