@@ -108,7 +108,7 @@
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Partner</th>
                 <th scope="col" class="govuk-table__header table-header-width-one-third">Funding rules</th>
-                <th scope="col" class="govuk-table__header table-header-width-one-third">View</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third"></th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -127,7 +127,7 @@
                 <td class="govuk-table__cell ifs-table__email">
                     <a th:if="${row.questionnaireMarkedAsComplete}"
                        th:href="@{~/application/{applicationId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(applicationId=${row.applicationId}, organisationId=${row.organisationId}, questionId=${row.questionId})}">
-                       View</a>
+                       View answers</a>
                 </td>
             </tr>
         </tbody>
