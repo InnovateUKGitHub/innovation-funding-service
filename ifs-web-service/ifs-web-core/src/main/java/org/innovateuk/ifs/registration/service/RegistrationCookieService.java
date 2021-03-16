@@ -39,7 +39,7 @@ public class RegistrationCookieService {
     }
 
     public void saveToOrganisationInternationalCookie(OrganisationInternationalForm organisationInternationalForm, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, ORGANISATION_INTERNATIONAL, JsonUtil.getSerializedObject(organisationInternationalForm));
+        cookieUtil.saveToCookie(response, ORGANISATION_INTERNATIONAL, JsonUtil.getSerializedObject(organisationInternationalForm));
     }
 
     public void saveToOrganisationCreationCookie(OrganisationCreationForm organisationFormForCookie, HttpServletResponse response) {
@@ -47,7 +47,7 @@ public class RegistrationCookieService {
     }
 
     public void saveToOrganisationInternationalDetailsCookie(OrganisationInternationalDetailsForm organisationFormForCookie, HttpServletResponse response) {
-        compressedCookieService.saveToCookie(response, ORGANISATION_INTERNATIONAL_DETAILS, JsonUtil.getSerializedObject(organisationFormForCookie));
+        cookieUtil.saveToCookie(response, ORGANISATION_INTERNATIONAL_DETAILS, JsonUtil.getSerializedObject(organisationFormForCookie));
     }
 
     public void saveToKnowledgeBaseDetailsCookie(KnowledgeBaseCreateForm organisationFormForCookie, HttpServletResponse response) {
@@ -79,7 +79,7 @@ public class RegistrationCookieService {
     }
 
     public Optional<OrganisationInternationalForm> getOrganisationInternationalCookieValue(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(compressedCookieService.getCookieValue(request, ORGANISATION_INTERNATIONAL), OrganisationInternationalForm.class));
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_INTERNATIONAL), OrganisationInternationalForm.class));
     }
 
     public Optional<OrganisationCreationForm> getOrganisationCreationCookieValue(HttpServletRequest request) {
@@ -87,7 +87,7 @@ public class RegistrationCookieService {
     }
 
     public Optional<OrganisationInternationalDetailsForm> getOrganisationInternationalDetailsValue(HttpServletRequest request) {
-        return Optional.ofNullable(getObjectFromJson(compressedCookieService.getCookieValue(request, ORGANISATION_INTERNATIONAL_DETAILS), OrganisationInternationalDetailsForm.class));
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_INTERNATIONAL_DETAILS), OrganisationInternationalDetailsForm.class));
     }
 
     public Optional<KnowledgeBaseCreateForm> getKnowledgeBaseDetailsValue(HttpServletRequest request) {
