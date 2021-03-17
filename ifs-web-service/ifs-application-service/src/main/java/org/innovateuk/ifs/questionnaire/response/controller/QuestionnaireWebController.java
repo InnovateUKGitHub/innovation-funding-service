@@ -90,7 +90,7 @@ public class QuestionnaireWebController {
                 viewModel = new QuestionnaireWelcomeViewModel(
                         questionnaire,
                         projectOrganisationLinkResource.getProjectName(),
-                        String.format("~/project-setup/project/%d/organisation/%d/pending-partner-progress", projectOrganisationLinkResource.getProjectId(), projectOrganisationLinkResource.getOrganisationId())
+                        String.format("~/project-setup/project/%d/organisation/%d/pending-partner-progress", projectOrganisationLinkResource.getProjectId(), projectOrganisationLinkResource.getOrganisationId()),
                         "Return to join project");
             }
         }
