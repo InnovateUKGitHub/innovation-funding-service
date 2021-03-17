@@ -11,7 +11,6 @@ public class PendingPartnerProgressResource {
     private ZonedDateTime termsAndConditionsCompletedOn;
     private ZonedDateTime completedOn;
     private ZonedDateTime subsidyBasisCompletedOn;
-    private boolean subsidyBasisRequired;
     private boolean readyToJoinProject;
 
     public ZonedDateTime getCompletedOn() {
@@ -75,11 +74,6 @@ public class PendingPartnerProgressResource {
     }
 
     @JsonIgnore
-    public boolean isSubsidyBasisRequiredAndNotCompleted() {
-        return isSubsidyBasisRequired() && !isSubsidyBasisComplete();
-    }
-
-    @JsonIgnore
     public boolean isCompleted() {
         return completedOn != null;
     }
@@ -92,11 +86,4 @@ public class PendingPartnerProgressResource {
         this.readyToJoinProject = readyToJoinProject;
     }
 
-    public boolean isSubsidyBasisRequired() {
-        return subsidyBasisRequired;
-    }
-
-    public void setSubsidyBasisRequired(boolean subsidyBasisRequired) {
-        this.subsidyBasisRequired = subsidyBasisRequired;
-    }
 }

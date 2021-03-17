@@ -57,6 +57,7 @@ public class PendingPartnerProgressLandingPageViewModelPopulatorTest {
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.GRANT)
                 .withIncludeJesForm(true)
+                .withSubsidyControl(true)
                 .build();
         ProjectResource project = newProjectResource()
                 .withName("proj")
@@ -67,7 +68,6 @@ public class PendingPartnerProgressLandingPageViewModelPopulatorTest {
                 .withYourOrganisationCompletedOn(ZonedDateTime.now())
                 .withTermsAndConditionsCompletedOn(ZonedDateTime.now())
                 .withSubsidyBasisCompletedOn(ZonedDateTime.now())
-                .withSubsidyBasisRequired(true)
                 .build();
         OrganisationResource organisation = newOrganisationResource()
                 .withOrganisationType(RESEARCH.getId())

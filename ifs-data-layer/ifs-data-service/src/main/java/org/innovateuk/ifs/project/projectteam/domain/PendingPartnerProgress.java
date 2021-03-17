@@ -119,13 +119,6 @@ public class PendingPartnerProgress {
         return termsAndConditionsCompletedOn != null;
     }
 
-    public boolean isSubsidyBasisRequired() {
-        PartnerOrganisation partnerOrganisation = getPartnerOrganisation();
-        Competition competition = partnerOrganisation.getProject().getApplication().getCompetition();
-        List<Question> questions = competition.getQuestions();
-        return questions.stream().filter(question -> SUBSIDY_BASIS.equals(question.getQuestionSetupType())).findFirst().isPresent();
-    }
-
     public boolean isYourOrganisationRequired() {
         PartnerOrganisation partnerOrganisation = getPartnerOrganisation();
         Competition competition = partnerOrganisation.getProject().getApplication().getCompetition();
@@ -134,8 +127,9 @@ public class PendingPartnerProgress {
     }
 
     public boolean isReadyToJoinProject() {
+        Competition competition = getPartnerOrganisation().getProject().getApplication().getCompetition();
         return (isYourOrganisationComplete() || !isYourOrganisationRequired()) &&
-                (isSubsidyBasisComplete() || !isSubsidyBasisRequired()) &&
+                (isSubsidyBasisComplete() || !competition.isSubsidyControl()) &&
                 isYourFundingComplete() &&
                 isTermsAndConditionsComplete() &&
                 !isComplete();

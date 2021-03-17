@@ -42,7 +42,8 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
+        boolean subsidyBasisRequired = competition.isSubsidyControl();
+        Optional<Long> subsidyQuestionId = subsidyBasisRequired
                 ? of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
                 : empty();
 
@@ -51,6 +52,7 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
                 organisationId,
                 progress,
                 !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()),
+                subsidyBasisRequired,
                 subsidyQuestionId);
     }
 }

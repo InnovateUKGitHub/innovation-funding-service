@@ -71,6 +71,7 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.GRANT)
                 .withIncludeJesForm(true)
+                .withSubsidyControl(true)
                 .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_2020)
                 .build();
         ProjectResource project = newProjectResource()
@@ -87,7 +88,6 @@ public class ProjectYourFundingModelPopulatorTest extends BaseUnitTest {
                 .withYourFundingCompletedOn(ZonedDateTime.now())
                 .withYourOrganisationCompletedOn(ZonedDateTime.now())
                 .withTermsAndConditionsCompletedOn(ZonedDateTime.now())
-                .withSubsidyBasisRequired(true)
                 .withSubsidyBasisCompletedOn(ZonedDateTime.now())
                 .build();
         UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();

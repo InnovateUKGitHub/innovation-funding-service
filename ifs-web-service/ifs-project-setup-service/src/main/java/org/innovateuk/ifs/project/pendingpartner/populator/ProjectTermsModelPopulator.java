@@ -41,8 +41,8 @@ public class ProjectTermsModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         PendingPartnerProgressResource pendingPartnerProgressResource = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
-
-        Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
+        boolean subsidyBasisRequired = competition.isSubsidyControl();
+        Optional<Long> subsidyQuestionId = subsidyBasisRequired
                 ? Optional.of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
                 : Optional.empty();
 
@@ -52,7 +52,7 @@ public class ProjectTermsModelPopulator {
                 competition.getTermsAndConditions().getTemplate(),
                 pendingPartnerProgressResource.isTermsAndConditionsComplete(),
                 pendingPartnerProgressResource.getTermsAndConditionsCompletedOn(),
-                progress.isSubsidyBasisRequiredAndNotCompleted(),
+                subsidyBasisRequired && !progress.isSubsidyBasisComplete(),
                 subsidyQuestionId
         );
     }
