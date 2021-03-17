@@ -37,7 +37,7 @@ public class ProjectFinanceController {
         return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
     }
 
-    @PostMapping("/project-finance")
+    @PutMapping("/project-finance")
     public RestResult<ProjectFinanceResource> update(@RequestBody final ProjectFinanceResource projectFinanceResource) {
         return projectFinanceService.updateProjectFinance(projectFinanceResource).toPostWithBodyResponse();
     }

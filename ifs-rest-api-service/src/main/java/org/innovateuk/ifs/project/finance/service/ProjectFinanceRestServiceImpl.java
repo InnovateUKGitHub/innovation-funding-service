@@ -63,6 +63,6 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<ProjectFinanceResource> update(ProjectFinanceResource projectFinance) {
-        return postWithRestResult(PROJECT_FINANCE_REST_URL + "/project-finance", projectFinance, ProjectFinanceResource.class);
+        return putWithRestResult(PROJECT_FINANCE_REST_URL + "/project-finance", projectFinance, ProjectFinanceResource.class);
     }
 }
