@@ -931,7 +931,8 @@ Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
     When the user clicks the button/link     link = view application overview
     And the user clicks the button/link      id = accordion-questions-heading-4-1
-    And the user clicks the button/link      link = View terms and conditions
+#    And the user clicks the button/link      link = View terms and conditions
+    And the user clicks the button/link      jQuery = a:contains("Knowledge Transfer Partnership (KTP)")
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
 
 Internal user can see KTP GOL template

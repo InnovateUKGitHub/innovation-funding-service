@@ -322,22 +322,22 @@ Comp admin assigns assessors to the competition and assigns the application to a
 
 Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
     [Documentation]  IFS-9200
-    Given The user navigates to the page                                                  ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
-    And The user clicks the button/link                                                   link = ${leadSubsidyControlApplication}
+    Given the user navigates to the page                                                  ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
+    And the user clicks the button/link                                                   link = ${leadSubsidyControlApplication}
     Then the user can see the terms and conditions for the lead and partner applicant
 
 Internal user marks subsidy control application to successful
     [Documentation]  IFS-9200
-    Given Log in as a different user                                        &{internal_finance_credentials}
+    Given log in as a different user                                        &{internal_finance_credentials}
     When the user navigates to the page                                     ${server}/management/competition/${subsidyControlCompetitionId}
-    And The user clicks the button/link                                     jQuery = button:contains("Close assessment")
+    And the user clicks the button/link                                     jQuery = button:contains("Close assessment")
     Then making the application a successful project from correct state     ${subsidyControlCompetitionId}  ${leadSubsidyControlApplication}
 
 MO can see T&Cs for the subsidy control application in project setup for both the applicants
     [Documentation]  IFS-9200
     [Setup]  Requesting Application ID of this application
-    Given Internal user assigns MO to application                                        ${subsidycontrolApplicationID}  ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
-    When Log in as a different user                                                      &{monitoring_officer_one_credentials}
+    Given internal user assigns MO to application                                        ${subsidycontrolApplicationID}  ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
+    When log in as a different user                                                      &{monitoring_officer_one_credentials}
     And the user navigates to the page                                                   ${server}/application/${subsidycontrolApplicationID}/summary
     And the user should see the element                                                  jQuery = h1:contains("Application overview")
     Then the user can see the terms and conditions for the lead and partner applicant
