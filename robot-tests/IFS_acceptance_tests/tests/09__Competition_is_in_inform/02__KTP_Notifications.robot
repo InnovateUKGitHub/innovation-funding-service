@@ -28,6 +28,8 @@ ${ktp_Partner_email}                jessica.doe@ludlow.co.uk
 ${MemberName}                       Member
 ${MemberEmail}                      member_email@gmail.com
 &{MemberCredentials}                email=${MemberEmail}    password=${short_password}
+${ktp_notification_application_id}      ${application_ids["KTP notifications application"]}
+
 
 *** Test Cases ***
 Lead invites a new team member to the project
@@ -105,7 +107,7 @@ the user makes the application unsuccessful and sends notification
      the user should see the element    jQuery = td:contains("${KTP_application}") ~ td:contains("Unsuccessful")
      the user clicks the button/link    link = Competition
      the user clicks the button/link    link = Manage funding notifications
-     the user selects the checkbox      app-row-301
+     the user selects the checkbox      app-row-${ktp_notification_application_id}
      the user clicks the button/link    jQuery = button:contains("Write and send email")
      the user clicks the button/link    jQuery = button:contains("Send email to all applicants")
      the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
