@@ -7,7 +7,6 @@ import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -346,7 +345,9 @@ public class CompetitionWebTestData {
                         .withAlwaysOpen(true)
                         .withResubmission(true),
                 ktpCompetition()
-                        .withName("FEC KTP competition")
+                        .withName("FEC KTP competition"),
+                grantCompetition()
+                        .withName("Improved organisation search performance competition")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

@@ -26,7 +26,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                             "AND p.publishDate < CURRENT_TIMESTAMP " +
                             "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
-            "ORDER BY start_milestone.date DESC")
+            "ORDER BY start_milestone.date, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByInnovationId(@Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
 
     @Query("SELECT c FROM Competition c " +
@@ -51,9 +51,9 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.publishDate < CURRENT_TIMESTAMP " +
                                 "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
-            "ORDER BY start_milestone.date DESC")
-
+            "ORDER BY start_milestone.date, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
+
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
             "INNER JOIN c.milestones start_milestone ON (start_milestone.type='OPEN_DATE') " +
@@ -62,7 +62,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                             "WHERE p.competitionId = c.id " +
                             "AND p.publishDate < CURRENT_TIMESTAMP " +
                             "AND p.inviteOnly = false) " +
-            "ORDER BY start_milestone.date DESC")
+            "ORDER BY start_milestone.date, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetition(Pageable pageable);
 
     PublicContent findByCompetitionId(Long id);
