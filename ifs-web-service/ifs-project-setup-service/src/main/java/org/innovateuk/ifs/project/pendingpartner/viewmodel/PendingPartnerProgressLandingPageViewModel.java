@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.util.Optional;
+
 public class PendingPartnerProgressLandingPageViewModel {
 
     private final long projectId;
@@ -17,9 +19,9 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean isReadyToJoinProject;
     private final boolean showSubsidyBasis;
     private final boolean subsidyBasisComplete;
-    private final Long subsidyBasisQuestionId;
+    private final Optional<Long> subsidyBasisQuestionId;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, Long subsidyBasisQuestionId) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, Optional<Long> subsidyBasisQuestionId) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -84,6 +86,6 @@ public class PendingPartnerProgressLandingPageViewModel {
     }
 
     public Long getSubsidyBasisQuestionId() {
-        return subsidyBasisQuestionId;
+        return subsidyBasisQuestionId.orElse(null);
     }
 }

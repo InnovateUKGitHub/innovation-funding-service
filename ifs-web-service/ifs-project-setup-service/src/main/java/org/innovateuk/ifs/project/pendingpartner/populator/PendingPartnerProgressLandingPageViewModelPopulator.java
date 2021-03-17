@@ -13,6 +13,10 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
 @Component
@@ -38,16 +42,15 @@ public class PendingPartnerProgressLandingPageViewModelPopulator {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        Long subsidyBasisQuestionId = null;
-        if (progress.isSubsidyBasisRequired()){
-            subsidyBasisQuestionId = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId();
-        }
+        Optional<Long> subsidyQuestionId = progress.isSubsidyBasisRequired()
+                ? of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
+                : empty();
 
         return new PendingPartnerProgressLandingPageViewModel(
                 project,
                 organisationId,
                 progress,
                 !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum()),
-                subsidyBasisQuestionId);
+                subsidyQuestionId);
     }
 }
