@@ -1,1 +1,0 @@
-ALTER TABLE pending_partner_progress ADD subsidy_basis_completed_on datetime;
