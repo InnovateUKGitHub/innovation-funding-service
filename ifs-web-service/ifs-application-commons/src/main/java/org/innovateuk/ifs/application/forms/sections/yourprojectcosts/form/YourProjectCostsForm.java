@@ -300,9 +300,8 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalIndirectCosts()
     {
-        BigDecimal percentage = new BigDecimal(46);
         return this.getTotalAssociateSalaryCosts().add(this.getTotalAcademicAndSecretarialSupportCosts())
-                .multiply(percentage).divide(new BigDecimal(100));
+                .multiply(INDIRECT_COST_PERCENTAGE).divide(new BigDecimal(100));
     }
 
     public BigDecimal getOrganisationFinanceTotal() {
@@ -320,7 +319,9 @@ public class YourProjectCostsForm {
                 .add(getTotalConsumableCosts())
                 .add(getTotalKnowledgeBaseCosts())
                 .add(getTotalEstateCosts())
-                .add(getTotalKtpTravelCosts());
+                .add(getTotalKtpTravelCosts())
+                .add(getTotalAcademicAndSecretarialSupportCosts())
+                .add(getTotalIndirectCosts());
     }
 
     private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {

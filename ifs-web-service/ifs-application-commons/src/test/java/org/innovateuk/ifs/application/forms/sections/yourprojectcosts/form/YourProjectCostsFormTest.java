@@ -54,4 +54,20 @@ public class YourProjectCostsFormTest {
         assertNotNull(form.getTotalIndirectCosts());
         assertEquals(expected, form.getTotalIndirectCosts().toBigInteger());
     }
+
+    @Test
+    public void getOrganisationFinanceTotalForNonFecModel() {
+        BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
+
+        YourProjectCostsForm form = new YourProjectCostsForm();
+
+        AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm(new AcademicAndSecretarialSupport());
+        academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
+        form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
+
+        BigDecimal expected = form.getTotalAcademicAndSecretarialSupportCosts().add(form.getTotalIndirectCosts());
+
+        assertNotNull(form.getOrganisationFinanceTotal());
+        assertEquals(expected, form.getOrganisationFinanceTotal());
+    }
 }

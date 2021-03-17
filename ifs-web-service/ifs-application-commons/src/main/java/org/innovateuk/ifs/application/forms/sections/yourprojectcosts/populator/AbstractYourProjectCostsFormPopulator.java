@@ -85,15 +85,13 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportCostRowForm(BaseFinanceResource finance) {
         Optional<FinanceRowCostCategory> financeRowCostCategory = Optional.ofNullable(
                 finance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT));
-        if (financeRowCostCategory.isPresent()) {
-            if (financeRowCostCategory.get().getCosts().isEmpty()) {
-                return new AcademicAndSecretarialSupportCostRowForm();
-            } else {
-                AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) financeRowCostCategory.get().getCosts().get(0);
-                return new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupport);
-            }
+
+        if (financeRowCostCategory.isPresent() && !financeRowCostCategory.get().getCosts().isEmpty()) {
+            AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) financeRowCostCategory.get().getCosts().get(0);
+            return new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupport);
         }
-        return null;
+
+        return new AcademicAndSecretarialSupportCostRowForm();
     }
 
     private JustificationForm justificationForm(BaseFinanceResource finance) {
