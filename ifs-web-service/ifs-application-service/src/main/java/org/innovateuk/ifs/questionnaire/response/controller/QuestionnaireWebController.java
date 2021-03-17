@@ -86,11 +86,12 @@ public class QuestionnaireWebController {
                         "Return to application overview");
             }
             else if (link instanceof ProjectOrganisationLinkResource) {
-                model.addAttribute("subtitle", ((ProjectOrganisationLinkResource) link).getProjectName());
-                model.addAttribute("backLinkText", "Back to join project");
-                model.addAttribute("backButtonText", "Return to join project");
-                String backLinkUrl = String.format("~/project-setup/project/%d/organisation/%d/pending-partner-progress", ((ProjectOrganisationLinkResource) link).getProjectId(), ((ProjectOrganisationLinkResource) link).getOrganisationId());
-                model.addAttribute("backLinkUrl", backLinkUrl);
+                ProjectOrganisationLinkResource projectOrganisationLinkResource = (ProjectOrganisationLinkResource) link;
+                viewModel = new QuestionnaireWelcomeViewModel(
+                        questionnaire,
+                        projectOrganisationLinkResource.getProjectName(),
+                        String.format("~/project-setup/project/%d/organisation/%d/pending-partner-progress", projectOrganisationLinkResource.getProjectId(), projectOrganisationLinkResource.getOrganisationId())
+                        "Return to join project");
             }
         }
         model.addAttribute("model", viewModel);
