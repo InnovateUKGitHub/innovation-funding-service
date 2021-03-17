@@ -14,8 +14,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +43,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectFinanceService.updateProjectFinance(argThat(received -> projectFinance.getId().equals(received.getId())))).thenReturn(serviceSuccess(projectFinance));
 
-        mockMvc.perform(post("/project/project-finance")
+        mockMvc.perform(put("/project/project-finance")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(projectFinance )))
                 .andExpect(status().isOk())

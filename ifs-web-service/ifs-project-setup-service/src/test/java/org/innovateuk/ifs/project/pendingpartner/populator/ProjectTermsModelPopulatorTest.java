@@ -64,6 +64,7 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withTermsAndConditions(grantTermsAndConditions)
+                .withSubsidyControl(true)
                 .build();
 
         ProjectResource project = newProjectResource()

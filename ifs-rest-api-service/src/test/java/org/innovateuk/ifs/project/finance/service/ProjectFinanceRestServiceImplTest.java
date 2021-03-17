@@ -86,7 +86,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void update() {
         ProjectFinanceResource projectFinanceResource = ProjectFinanceResourceBuilder.newProjectFinanceResource().build();
-        setupPostWithRestResultExpectations(projectFinanceRestURL + "/project-finance", ProjectFinanceResource.class, projectFinanceResource, projectFinanceResource, OK);
+        setupPutWithRestResultExpectations(projectFinanceRestURL + "/project-finance", ProjectFinanceResource.class, projectFinanceResource, projectFinanceResource, OK);
 
         RestResult<ProjectFinanceResource> results = service.update(projectFinanceResource);
 
