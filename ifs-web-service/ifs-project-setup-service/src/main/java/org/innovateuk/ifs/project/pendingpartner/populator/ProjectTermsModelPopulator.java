@@ -49,13 +49,11 @@ public class ProjectTermsModelPopulator {
         );
     }
 
-    private String getTermsAndConditionsTemplate(CompetitionResource competition, long projectId, Long organisationId) {
-        if (competition.isFinanceType() && organisationId != null) {
-            ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
-            if (projectFinanceResource != null && isNorthernIrelandDeclaration(projectFinanceResource)
-                    && competition.getOtherFundingRulesTermsAndConditions() != null) {
-                return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
-            }
+    private String getTermsAndConditionsTemplate(CompetitionResource competition, long projectId, long organisationId) {
+        ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
+        if (projectFinanceResource != null && isNorthernIrelandDeclaration(projectFinanceResource)
+                && competition.getOtherFundingRulesTermsAndConditions() != null) {
+            return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
         }
         return competition.getTermsAndConditions().getTemplate();
     }
