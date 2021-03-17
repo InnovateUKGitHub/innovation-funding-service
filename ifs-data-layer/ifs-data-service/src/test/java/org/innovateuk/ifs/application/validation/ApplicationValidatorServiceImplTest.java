@@ -12,10 +12,16 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.repository.FileEntryRepository;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
 import org.innovateuk.ifs.finance.handler.item.TravelCostHandler;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -30,6 +36,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -41,6 +48,7 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
@@ -50,18 +58,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.TRAVEL;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneBuilder.newApplicationProcurementMilestone;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -114,7 +128,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
     private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Mock
-    private ApplicationFinanceService applicationFinanceService;
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Test
     public void validateFormInputResponse() {
@@ -137,7 +151,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
 
         assertEquals(formInputResponses.size(), bindingResults.size());
-        assertEquals(Arrays.asList(bindingResult1, bindingResult2), bindingResults);
+        assertEquals(asList(bindingResult1, bindingResult2), bindingResults);
 
         verify(formInputResponseRepository).findByApplicationIdAndFormInputId(applicationId, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse1, false);
@@ -198,7 +212,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         List<BindingResult> bindingResults = service.validateFormInputResponse(applicationId, formInputId);
 
         assertEquals(formInputResponses.size() + 1, bindingResults.size());
-        assertEquals(Arrays.asList(bindingResult1, bindingResult2, applicationBindingResult), bindingResults);
+        assertEquals(asList(bindingResult1, bindingResult2, applicationBindingResult), bindingResults);
 
         verify(formInputResponseRepository).findByApplicationIdAndFormInputId(applicationId, formInputId);
         verify(applicationValidationUtil).validateResponse(formInputResponse1, false);
@@ -278,7 +292,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
                 .withApplication(1L)
                 .withFinanceFileEntry(1L)
                 .build();
-        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(expectedFinances.getId()), new TravelCost(expectedFinances.getId()));
+        List<FinanceRowItem> costItems = asList(new TravelCost(expectedFinances.getId()), new TravelCost(expectedFinances.getId()));
         FinanceRowCostCategory costCategory = newDefaultCostCategory().withCosts(costItems).build();
         expectedFinances.setFinanceOrganisationDetails(asMap(TRAVEL, costCategory));
 
@@ -321,7 +335,7 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
                 .withFinanceFileEntry(1L)
                 .build();
 
-        List<FinanceRowItem> costItems = Arrays.asList(new TravelCost(expectedFinances.getId()), new TravelCost(expectedFinances.getId()));
+        List<FinanceRowItem> costItems = asList(new TravelCost(expectedFinances.getId()), new TravelCost(expectedFinances.getId()));
         FinanceRowCostCategory costCategory = newDefaultCostCategory().withCosts(costItems).build();
         expectedFinances.setFinanceOrganisationDetails(asMap(TRAVEL, costCategory));
 
@@ -457,6 +471,44 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
         boolean result = service.isApplicationComplete(application);
         assertFalse(result);
+    }
+
+    @Test
+    public void validateFECCertificateUploadedBeforeMarkAsComplete() {
+        long markedAsCompleteById = 4L;
+        long organisationId = 7L;
+        long applicationId = 1L;
+
+        Organisation organisation = newOrganisation().withId(organisationId).build();
+        Application application = newApplication().withId(applicationId).withCompetition(newCompetition().build())
+                .withApplicationFinancesList(asList(
+                        newApplicationFinance()
+                                .withOrganisation(organisation)
+                                .withFecFileEntry(null)
+                                .withFecEnabled(true)
+                                .build())).build();
+        ProcessRole processRole = newProcessRole()
+                .withOrganisationId(organisationId)
+                .withId(markedAsCompleteById)
+                .build();
+
+        OrganisationResource organisationResult = newOrganisationResource().withId(organisationId).build();
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
+        User user = newUser().build();
+        ValidationMessages expectedValidationMessage = new ValidationMessages();
+        expectedValidationMessage.addError(fieldError("fecCertificateFileUpload", null, "validation.application.fec.upload.required"));
+
+        when(processRoleRepository.findById(markedAsCompleteById)).thenReturn(Optional.of(processRole));
+        when(organisationService.findById(organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationResult));
+        when(userRepository.findById(loggedInUser.getId())).thenReturn(Optional.of(user));
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId()))
+                .thenReturn(Optional.of(application.getApplicationFinances().get(0)));
+
+        ValidationMessages actual = service.validateFECCertificateUpload(application, markedAsCompleteById);
+
+        assertEquals(expectedValidationMessage, actual);
     }
 
     @Override

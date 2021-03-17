@@ -341,7 +341,6 @@ public class CompaniesHouseApiServiceImplTest {
 		assertEquals(0, result.getSuccess().getOrganisationExecutiveOfficers().size());
 	}
 
-
 	private Map<String, Object> companyResultMap() {
 		return asMap("company_number", "1234",
 				"title", "company name",
