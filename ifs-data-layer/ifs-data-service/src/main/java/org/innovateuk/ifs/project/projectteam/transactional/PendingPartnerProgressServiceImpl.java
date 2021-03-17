@@ -109,7 +109,6 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
             case SUBSIDY_BASIS: {
                 ProjectOrganisationCompositeId projectOrganisationCompositeId = ProjectOrganisationCompositeId.id(projectId, organisationId);
                 return markYourFundingIncomplete(projectOrganisationCompositeId)
-                        .andOnSuccess(() -> markYourOrganisationIncomplete(projectOrganisationCompositeId))
                         .andOnSuccess(() -> markYourFundingIncomplete(projectOrganisationCompositeId))
                         .andOnSuccess(() -> markTermsAndConditionsIncomplete(projectOrganisationCompositeId));
             }
