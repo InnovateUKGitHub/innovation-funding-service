@@ -11,3 +11,7 @@ CREATE TABLE application_migration (
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_on TIMESTAMP NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Add unique constraint to application migration rows
+ALTER TABLE application_migration
+ADD CONSTRAINT `UC_application_migration_unique_row` UNIQUE (`application_id`, `status`);
