@@ -7,7 +7,6 @@ import org.innovateuk.ifs.project.projectteam.builder.PendingPartnerProgressBuil
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.projectteam.mapper.PendingPartnerProgressMapper;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

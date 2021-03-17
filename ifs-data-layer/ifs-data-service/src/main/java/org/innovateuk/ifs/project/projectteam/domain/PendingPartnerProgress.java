@@ -1,15 +1,11 @@
 package org.innovateuk.ifs.project.projectteam.domain;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.List;
-
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
 /**
  * Represents a pending organisation joining a project.
