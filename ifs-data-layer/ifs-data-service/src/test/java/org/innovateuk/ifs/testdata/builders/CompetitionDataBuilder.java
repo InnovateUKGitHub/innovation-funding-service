@@ -488,6 +488,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionAssessmentConfigResource.setHasAssessmentPanel(line.getHasAssessmentPanel());
             competitionAssessmentConfigResource.setHasInterviewStage(line.getHasInterviewStage());
             competitionAssessmentConfigResource.setAssessorFinanceView(line.getAssessorFinanceView());
+            competitionAssessmentConfigResource.setIncludeAverageAssessorScoreInNotifications(false);
             competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }

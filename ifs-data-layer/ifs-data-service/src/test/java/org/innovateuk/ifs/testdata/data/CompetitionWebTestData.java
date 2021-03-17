@@ -56,7 +56,9 @@ public class CompetitionWebTestData {
                         .withLeadTechnologist(PETER_FREEMAN_ID)
                         .withResearchRatio(50),
                 grantCompetition()
-                        .withName("Integrated delivery programme - solar vehicles"),
+                        .withName("Integrated delivery programme - solar vehicles")
+                        .withHasAssessmentPanel(true)
+                        .withHasInterviewStage(true),
                 grantCompetition()
                         .withName("Enhanced energy saving competition")
                         .withLeadApplicantTypes(asSet(BUSINESS, RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY)),
@@ -188,6 +190,7 @@ public class CompetitionWebTestData {
                         .withName("KTP notifications"),
                 grantCompetition()
                         .withName("Living models for the future world")
+                        .withHasInterviewStage(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL))
@@ -209,6 +212,8 @@ public class CompetitionWebTestData {
         return asList(
                 grantCompetition()
                         .withName("Integrated delivery programme - low carbon vehicles")
+                        .withHasInterviewStage(true)
+                        .withHasAssessmentPanel(true)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK))
@@ -416,6 +421,8 @@ public class CompetitionWebTestData {
                 .withResearchRatio(30)
                 .withResubmission(false)
                 .withMultiStream(false)
+                .withHasAssessmentPanel(false)
+                .withHasInterviewStage(false)
                 .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
                 .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
@@ -515,6 +522,8 @@ public class CompetitionWebTestData {
                 .withResearchRatio(30)
                 .withResubmission(true)
                 .withMultiStream(false)
+                .withHasAssessmentPanel(false)
+                .withHasInterviewStage(false)
                 .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
                 .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
@@ -547,6 +556,8 @@ public class CompetitionWebTestData {
                 .withAssessorCount(5)
                 .withResubmission(true)
                 .withMultiStream(false)
+                .withHasAssessmentPanel(false)
+                .withHasInterviewStage(false)
                 .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
                 .withCompExecutive(EXECUTIVE_ID)
                 .withSetupComplete(true)
