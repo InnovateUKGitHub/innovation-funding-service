@@ -59,10 +59,9 @@ The Applicant completing the application details
     And the user selects Research category                      Feasibility studies
     And the lead applicant marks every question as complete     Scope
     And the lead applicant marks every question as complete     1. ${customQuestion}
-    #And the user accept the competition terms and conditions    Return to application overview
+    And the user accept the competition terms and conditions    Return to application overview
     And The user clicks the button/link                         link = Your project finances
     When the user marks the finances as complete                ${researchLeadApp}   Calculate  52,214  yes
-    And the user accept the competition terms and conditions    Return to application overview
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                         link = Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
@@ -143,21 +142,20 @@ Collaborating is required to submit the application if Research participation is
 
 the collaborator accepts and fills in his part in the application
     [Arguments]  ${competition}  ${application}  ${projectGrowth}
-    the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
-    the user is able to confirm the invite        ${collaborator}  ${short_password}
-    #the user accept the competition terms and conditions    Return to application overview
-    the user navigates to Your-finances page      ${application}
-    the user marks the finances as complete       ${application}  Calculate  52,214  ${projectGrowth}
-    the user accept the competition terms and conditions    Return to application overview
+    the user reads his email and clicks the link             ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
+    the user is able to confirm the invite                   ${collaborator}  ${short_password}
+    the user accept the competition terms and conditions     Return to application overview
+    the user navigates to Your-finances page                 ${application}
+    the user marks the finances as complete                  ${application}  Calculate  52,214  ${projectGrowth}
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}
-    log in as a different user       ${user}  ${short_password}
-    the user clicks the button/link  link = ${application}
+    log in as a different user                   ${user}  ${short_password}
+    the user clicks the button/link              link = ${application}
     the applicant completes application team
-    the user clicks the button/link  link = Review and submit
-    the user clicks the button/link  id = submit-application-button
-    the user clicks the button/link  link = Give us feedback
+    the user clicks the button/link              link = Review and submit
+    the user clicks the button/link              id = submit-application-button
+    the user clicks the button/link              link = Give us feedback
 
 the competition is now in Project Setup
     moving competition to Closed                  ${openCompetitionPublicSector}
