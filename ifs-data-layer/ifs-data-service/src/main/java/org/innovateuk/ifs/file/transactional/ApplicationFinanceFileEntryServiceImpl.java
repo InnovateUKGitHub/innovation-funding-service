@@ -40,4 +40,10 @@ public class ApplicationFinanceFileEntryServiceImpl extends RootTransactionalSer
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId).orElse(null), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
+
+    @Override
+    public ServiceResult<FileEntryResource> getFECCertificateFileEntryByApplicationFinanceId(Long applicationFinanceId) {
+        return find(applicationFinance(applicationFinanceId)).andOnSuccessReturn(finance -> mapper.mapToResource(finance.getFecFileEntry()));
+    }
+
 }
