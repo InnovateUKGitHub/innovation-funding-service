@@ -75,6 +75,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
     private Map<FundingRules, FundingRulesTemplate> fundingRulesTemplates;
 
+
     @Autowired
     public void setCompetitionTemplates(List<CompetitionTemplate> templateBeans) {
         templates = templateBeans.stream()
@@ -116,11 +117,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         List<SectionBuilder> sectionBuilders = template.sections();
 
         FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
+        Optional<FundingRulesTemplate> fundingRulesTemplate = Optional.ofNullable(fundingRulesTemplates.get(competition.getFundingRules()));
+
+        List<SectionBuilder> sectionBuilders = template.sections();
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
-
-        FundingRulesTemplate fundingRulesTemplate = fundingRulesTemplates.get(competition.getFundingRules());
-        sectionBuilders = fundingRulesTemplate.sections(competition, sectionBuilders);
-
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
         template.initialiseOrganisationConfig(competition);
@@ -128,6 +128,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         template.copyTemplatePropertiesToCompetition(competition);
         competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
         competition = fundingTypeTemplate.setGolTemplate(competition);
+        if (fundingRulesTemplate.isPresent()) {
+            sectionBuilders = fundingRulesTemplate.get().sections(sectionBuilders);
+        }
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
         return serviceSuccess(competitionRepository.save(competition));

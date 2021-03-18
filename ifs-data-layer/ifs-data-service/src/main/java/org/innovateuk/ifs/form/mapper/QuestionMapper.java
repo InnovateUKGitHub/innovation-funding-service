@@ -21,6 +21,10 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
         return question.getId();
     }
 
+
+    @Mappings({
+            @Mapping(source = "questionnaire.id", target = "questionnaireId"),
+    })
     public abstract QuestionResource mapToResource(Question domain);
 
     @Mappings({

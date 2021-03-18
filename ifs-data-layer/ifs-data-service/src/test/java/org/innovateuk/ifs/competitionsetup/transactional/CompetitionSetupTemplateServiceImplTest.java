@@ -12,8 +12,6 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.NotAidTemplate;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.StateAidTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.SubsidyControlTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.KtpTemplate;
@@ -79,13 +77,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private SubsidyControlTemplate subsidyControlTemplate;
-
-    @Mock
-    private StateAidTemplate stateAidTemplate;
-
-    @Mock
-    private NotAidTemplate notAidTemplate;
-
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
 
@@ -95,12 +86,10 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(loanTemplate.type()).thenReturn(FundingType.LOAN);
         when(grantTemplate.type()).thenReturn(FundingType.GRANT);
         when(ktpTemplate.type()).thenReturn(FundingType.KTP);
+        when(subsidyControlTemplate.type()).thenReturn(FundingRules.SUBSIDY_CONTROL);
         service.setCompetitionTemplates(newArrayList(programmeTemplate));
         service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate));
-        when(subsidyControlTemplate.type()).thenReturn(FundingRules.SUBSIDY_CONTROL);
-        when(stateAidTemplate.type()).thenReturn(FundingRules.STATE_AID);
-        when(notAidTemplate.type()).thenReturn(FundingRules.NOT_AID);
-        service.setFundingRulesTemplates(newArrayList(subsidyControlTemplate, stateAidTemplate, notAidTemplate));
+        service.setFundingRulesTemplates(newArrayList(subsidyControlTemplate));
     }
 
     @Test
@@ -164,7 +153,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(grantTemplate.sections(any())).thenReturn(newArrayList(aSection()));
-        when(subsidyControlTemplate.sections(any(), any())).thenReturn(newArrayList(aSection()));
         when(grantTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(grantTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(grantTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
@@ -179,6 +167,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+        verify(subsidyControlTemplate).sections(any());
     }
 
     @Test
@@ -193,13 +182,11 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFundingType(FundingType.LOAN)
-                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .build();
 
         when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(loanTemplate.sections(any())).thenReturn(newArrayList(aSection()));
-        when(subsidyControlTemplate.sections(any(), any())).thenReturn(newArrayList(aSection()));
         when(loanTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(loanTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(loanTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
@@ -215,6 +202,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+//        assertEquals(result.getSuccess().getTermsAndConditions(), fundingTypeTerms);
     }
 
     @Test
@@ -229,13 +217,11 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFundingType(FundingType.KTP)
-                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .build();
 
         when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(ktpTemplate.sections(any())).thenReturn(newArrayList(aSection()));
-        when(subsidyControlTemplate.sections(any(), any())).thenReturn(newArrayList(aSection()));
         when(ktpTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(ktpTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(ktpTemplate.overrideTermsAndConditions(any())).thenReturn(competition);

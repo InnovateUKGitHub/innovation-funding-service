@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Configure question'" />
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" />
+    <!--/*@thymesVar id="model" type="org.innovateuk.ifs.questionnaire.config.viewmodel.QuestionnaireQuestionConfigViewModel"*/-->
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Configure question',size='govuk-heading-xl'" />
+
+        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="POST">
+
+
+            <h3 class="govuk-heading-m" th:if="${model.linked}">Questions with a link to this one.</h3>
+            <h3 class="govuk-heading-s" th:each="previous : ${model.previousQuestions}">
+                <a th:href="@{/questionnaire-configure/{questionnaireId}/question/{questionId}(questionnaireId=${model.questionnaireId},questionId=${previous.id})}"
+                   th:text="${previous.name}"
+                   class="govuk-link" />
+            </h3>
+
+            <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Title',
+                        id='title',
+                        value=${form.title},
+                        required=true
+                        )" />
+
+            <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Question',
+                        id='question',
+                        value=${form.question},
+                        required=true
+                        )" />
+
+            <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Guidance',
+                        id='guidance',
+                        value=${form.question},
+                        required=false
+                        )" />
+
+
+
+            <th:block th:if="${model.linked or model.first}">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
+                        <h2 class="govuk-fieldset__heading">Options</h2>
+                    </legend>
+                    <div class="table-overflow">
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header">Text</th>
+                                <th class="govuk-table__header">Outcome type</th>
+                                <th class="govuk-table__header"></th>
+                                <th class="govuk-table__header"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row"
+                                    th:each="option, iter : ${form.options}"
+                                    th:with="path=|options[${iter.index}]|">
+                                    <th:block th:insert="fragments/form-elements/table ::
+                                        textfield(
+                                            label=|${iter.index}-text|,
+                                            id=__${path}__.text,
+                                            value=*{__${path}__.text}
+                                            )"
+                                            />
+                                    <td class="govuk-table__cell">
+                                        <th:block th:if="${option.isQuestionDecision()}">Question</th:block>
+                                        <th:block th:if="${option.isTextOutcomeDecision()}">Text</th:block>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        <input type="hidden" th:field="*{__${path}__.optionId}" />
+                                        <input type="hidden" th:field="*{__${path}__.decisionType}" />
+                                        <th:block th:if="${option.isQuestionDecision()}">
+                                            <input type="hidden" th:field="*{__${path}__.questionTitle}" />
+                                            <select class="govuk-select"
+                                                    th:field="*{__${path}__.decisionId}">
+                                                <option
+                                                    th:each="question : ${model.getAvailableQuestions()}"
+                                                    th:text="${question.name}" th:value="${question.id}"></option>
+                                            </select>
+                                        </th:block>
+                                        <th:block th:if="${option.isTextOutcomeDecision()}">
+                                            <input type="hidden" th:field="*{__${path}__.decisionId}" />
+                                           <th:block th:insert="fragments/form-elements/textfield ::
+                                                textfield(
+                                                    label='Outcome message',
+                                                    id=__${path}__.textOutcome,
+                                                    value=${option.textOutcome},
+                                                    required=true
+                                                    )" />
+                                        </th:block>
+                                    </td>
+                                    <td class="govuk-table__cell alignright">
+                                        <button th:if="${option.optionId == null}" class="button-clear alignright" name="remove-option" th:value="${iter.index}">Remove</button>
+                                        <button th:unless="${option.optionId == null}" class="button-clear alignright" name="delete-option" th:value="${option.optionId}">Remove</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+                <div><button name="add-option-question" class="button-clear">Add question outcome</button></div>
+                <div><button name="add-option-text" class="button-clear">Add text outcome</button></div>
+            </th:block>
+            <th:block th:unless="${model.linked or model.first}">
+                <p class="govuk-body">You must save and link this question to another in order to add options.</p>
+            </th:block>
+
+            <div><button name="save" class="govuk-button">Save</button></div>
+
+        </form>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

@@ -43,6 +43,9 @@ public class ApplicationUrlHelper {
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
             }
+            if (questionType.isQuestionnaire()) {
+                return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
+            }
         }
         return Optional.empty();
     }

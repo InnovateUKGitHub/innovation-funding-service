@@ -50,6 +50,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         when(processRoleRestService.findProcessRole(anyLong(), anyLong())).thenReturn(restSuccess(processRoleResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(questionRestService.findById(question.getId())).thenReturn(restSuccess(question));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(1L).build()));
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}", application.getId(), question.getId()))
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", application.getId(), question.getId())));
