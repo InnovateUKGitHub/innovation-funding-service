@@ -719,7 +719,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isNonFinanceType() {
-        return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
+         return sections.stream().noneMatch(section -> SectionType.FINANCE.equals(section.getType()));
     }
 
     @Override
