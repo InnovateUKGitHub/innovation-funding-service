@@ -100,8 +100,8 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
 
-    @Value("${ifs.system.internal.user.email.domain}")
-    private String internalUserEmailDomain;
+    @Value("${ifs.system.internal.user.email.domains}")
+    private String internalUserEmailDomains;
 
     @Value("${ifs.system.kta.user.email.domain}")
     private String ktaUserEmailDomain;
@@ -136,11 +136,15 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<Void> validateInternalUserEmailDomain(String email) {
 
-        internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
+        internalUserEmailDomains = StringUtils.defaultIfBlank(internalUserEmailDomains, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
 
         String domain = StringUtils.substringAfter(email, "@");
 
-        if (!internalUserEmailDomain.equalsIgnoreCase(domain)) {
+        String[] domains = internalUserEmailDomains.split(",");
+
+        boolean isInternal = Stream.of(domains).anyMatch(acceptedDomain -> acceptedDomain.equals(domain));
+
+        if (!isInternal) {
             return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
         }
 
