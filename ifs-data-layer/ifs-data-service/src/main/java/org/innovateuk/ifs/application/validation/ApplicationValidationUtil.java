@@ -120,6 +120,8 @@ public class ApplicationValidationUtil {
                     .stream()
                     .filter(competitionFinanceTypes::contains)
                     .forEach(type -> validationMessages.addAll(applicationValidatorService.validateCostItem(application.getId(), type, markedAsCompleteById)));
+        } else if (SectionType.FEC_COSTS_FINANCES == section.getType()) {
+            validationMessages.addAll(applicationValidatorService.validateFECCertificateUpload(application, markedAsCompleteById));
         }
         return validationMessages;
     }

@@ -255,4 +255,5 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             " and not (a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is not null)")
     List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
 
+    Optional<Application> findByPreviousApplicationId(long previousApplicationId);
 }

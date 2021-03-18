@@ -6,34 +6,34 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Future;
+import java.io.IOException;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 
 /**
  * The Controller for the "Your FEC Model" page in the Application Form process.
@@ -44,30 +44,17 @@ public class YourFECModelController {
 
     private static final String VIEW_PAGE = "application/sections/your-fec-model/your-fec-model";
 
-    private CommonYourFinancesViewModelPopulator commonViewModelPopulator;
+    @Autowired
+    private YourFECViewModelPopulator yourFECViewModelPopulator;
+    @Autowired
     private YourFECModelFormPopulator formPopulator;
+    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private ProcessRoleRestService processRoleRestService;
 
-    public YourFECModelController() {
-    }
-
-    @Autowired
-    YourFECModelController(
-            CommonYourFinancesViewModelPopulator commonViewModelPopulator,
-            YourFECModelFormPopulator formPopulator,
-            ApplicationFinanceRestService applicationFinanceRestService,
-            SectionService sectionService,
-            ProcessRoleRestService processRoleRestService,
-            OrganisationRestService organisationRestService) {
-
-        this.commonViewModelPopulator = commonViewModelPopulator;
-        this.formPopulator = formPopulator;
-        this.applicationFinanceRestService = applicationFinanceRestService;
-        this.sectionService = sectionService;
-        this.processRoleRestService = processRoleRestService;
-    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
@@ -77,17 +64,13 @@ public class YourFECModelController {
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser,
-            Model model) {
-
-       CommonYourProjectFinancesViewModel commonViewModelRequest =
+            Model model,
+            @ModelAttribute("form") YourFECModelForm form) {
+        formPopulator.populate(form, applicationId, organisationId);
+        YourFECViewModel YourFECViewModel =
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
-       YourFECModelForm formRequest =
-                formPopulator.populate(applicationId, organisationId);
-
-        model.addAttribute("model", commonViewModelRequest);
-        model.addAttribute("form", formRequest);
-
+        model.addAttribute("model", YourFECViewModel);
         return VIEW_PAGE;
     }
 
@@ -128,27 +111,17 @@ public class YourFECModelController {
             ValidationHandler validationHandler,
             Model model) {
 
-        Supplier<String> failureHandler = () -> {
-            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, loggedInUser);
-            model.addAttribute("model", viewModel);
-            model.addAttribute("form", form);
-            return VIEW_PAGE;
-        };
-
-        Supplier<String> successHandler = () -> {
-
+        Supplier<String> successView = () -> redirectToYourFinances(applicationId);
+        Supplier<String> failureView = () ->  viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
             updateFECModelEnabled(applicationId, organisationId, form);
-
-            ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
-            ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
-            validationHandler.addAnyErrors(validationMessages);
-
-            return validationHandler.failNowOrSucceedWith(failureHandler, () -> redirectToYourFinances(applicationId));
-        };
-
-        return validationHandler.
-                addAnyErrors(validateFECModelEnabled(bindingResult, organisationId, form)).
-                failNowOrSucceedWith(failureHandler, successHandler);
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                validationHandler.addAnyErrors(
+                        sectionService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, loggedInUser.getId()).getId()),
+                        mappingErrorKeyToField("validation.application.fec.upload.required", "fecCertificateFile"), defaultConverters());
+                return validationHandler.failNowOrSucceedWith(failureView, successView);
+            });
+        });
     }
 
     @PostMapping(params = "mark-as-incomplete")
@@ -171,19 +144,53 @@ public class YourFECModelController {
 
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
-
         finance.setFecModelEnabled(form.getFecModelEnabled());
-
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
-    // Note: intentionally added since we need to do file upload in the same page and may need some validations there.
-    private List<Error> validateFECModelEnabled(Errors errors, Long organisationId, YourFECModelForm form) {
-        return Collections.emptyList();
+    @PostMapping(params = "upload_fecCertificateFile")
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "UPLOAD_FEC_CERTIFICATE", description = "Lead applicant can upload their fec certificate")
+    public String uploadFECCertificateFile(Model model,
+                                UserResource user,
+                                @PathVariable long applicationId,
+                                @PathVariable long organisationId,
+                                @PathVariable long sectionId,
+                                @ModelAttribute("form") YourFECModelForm form,
+                                BindingResult bindingResult) throws IOException {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        MultipartFile fecCertificateFile = form.getFecCertificateFile();
+        RestResult<FileEntryResource> result = applicationFinanceRestService.addFECCertificateFile(finance.getId(), fecCertificateFile.getContentType(),
+                fecCertificateFile.getSize(), fecCertificateFile.getOriginalFilename(), fecCertificateFile.getBytes());
+        if(result.isFailure()) {
+            result.getErrors().forEach(error ->
+                    bindingResult.rejectValue("fecCertificateFile", error.getErrorKey(), error.getArguments().toArray(), "")
+            );
+        } else {
+               form.setFecCertificateFileName(result.getSuccess().getName());
+        }
+
+        model.addAttribute("model", getViewModel(applicationId, sectionId, organisationId, user));
+        return VIEW_PAGE;
     }
 
-    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
-        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
+    @PostMapping(params = "remove_fecCertificateFile")
+    @AsyncMethod
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "REMOVE_FEC_CERTIFICATE", description = "Lead applicant can remove their fec certificate")
+    public String removeFECCertificateFile(Model model,
+                                UserResource user,
+                                @PathVariable long applicationId,
+                                @PathVariable long organisationId,
+                                @PathVariable long sectionId,
+                                @ModelAttribute("form") YourFECModelForm form) {
+        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        applicationFinanceRestService.removeFECCertificateFile(finance.getId());
+        return redirectToViewPage(applicationId, organisationId, sectionId);
+    }
+
+    private YourFECViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
+        return yourFECViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
     }
 
     private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {
@@ -196,5 +203,9 @@ public class YourFECModelController {
 
     private String redirectToYourFinances(long applicationId) {
         return "redirect:" + String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
+    }
+
+    private ProcessRoleResource getProcessRole(long applicationId, long userId) {
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
     }
 }
