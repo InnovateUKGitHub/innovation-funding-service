@@ -383,7 +383,7 @@ public class ProjectFinanceChecksController {
                     && projectUser.getOrganisation().equals(organisationId)
         );
 
-        boolean showChangesLink = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, projectResource, organisationResource).hasChanges();
+        boolean showChangesLink = leadOrganisation && projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, projectResource, organisationResource).hasChanges();
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
