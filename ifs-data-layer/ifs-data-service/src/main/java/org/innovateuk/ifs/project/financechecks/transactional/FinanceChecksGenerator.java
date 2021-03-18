@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.transactional;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -7,6 +8,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
@@ -26,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -134,7 +137,7 @@ public class FinanceChecksGenerator {
             projectFinance.setMilestones(copyMilestones(applicationProcurementMilestones, projectFinanceForOrganisation));
         }
 
-        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
+        List<ApplicationFinanceRow> originalFinanceFigures = getApplicationFinanceRows(newProject, applicationFinanceForOrganisation, projectFinance);
 
         List<ProjectFinanceRow> copiedFinanceFigures = simpleMap(originalFinanceFigures, original -> {
             ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
@@ -161,6 +164,20 @@ public class FinanceChecksGenerator {
             });
         });
         return serviceSuccess(projectFinance);
+    }
+
+    private List<ApplicationFinanceRow> getApplicationFinanceRows(Project newProject, ApplicationFinance applicationFinanceForOrganisation, ProjectFinance projectFinance) {
+        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
+
+        if (newProject.getApplication().getCompetition().isKtp()) {
+            originalFinanceFigures = originalFinanceFigures.stream()
+                    .filter(applicationFinanceRow -> BooleanUtils.isFalse(projectFinance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType())
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType()))
+                    .collect(Collectors.toList());
+        }
+
+        return originalFinanceFigures;
     }
 
     private List<ProjectProcurementMilestone> copyMilestones(List<ApplicationProcurementMilestone> applicationProcurementMilestones, ProjectFinance projectFinance) {
