@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.activitylog.domain;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -37,6 +38,10 @@ public class ActivityLogBuilder extends BaseBuilder<ActivityLog, ActivityLogBuil
 
     public ActivityLogBuilder withCreatedBy(User... createdBys) {
         return withArraySetFieldByReflection("createdBy", createdBys);
+    }
+
+    public ActivityLogBuilder withType(ActivityType... activityTypes) {
+        return withArraySetFieldByReflection("type", activityTypes);
     }
 
     @Override

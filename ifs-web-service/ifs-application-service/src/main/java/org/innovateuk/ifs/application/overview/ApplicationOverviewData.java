@@ -106,4 +106,5 @@ public class ApplicationOverviewData {
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation() {
         return completedSectionsByOrganisation;
     }
+
 }

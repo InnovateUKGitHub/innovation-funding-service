@@ -299,9 +299,8 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalIndirectCosts()
     {
-        BigDecimal percentage = new BigDecimal(46);
         return this.getTotalAssociateSalaryCosts().add(this.getTotalAcademicAndSecretarialSupportCosts())
-                .multiply(percentage).divide(new BigDecimal(100));
+                .multiply(INDIRECT_COST_PERCENTAGE).divide(new BigDecimal(100));
     }
 
     public BigDecimal getOrganisationFinanceTotal() {

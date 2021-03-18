@@ -74,4 +74,8 @@ public class ProjectToBeCreated {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
 }

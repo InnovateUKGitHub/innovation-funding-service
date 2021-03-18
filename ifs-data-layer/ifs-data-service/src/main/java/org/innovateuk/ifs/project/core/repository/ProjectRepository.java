@@ -30,4 +30,6 @@ public interface ProjectRepository extends RefreshableCrudRepository<Project, Lo
 
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID)
     Page<Project> searchByCompetitionIdAndApplicationIdLike(long competitionId, String applicationSearchString, Pageable pageable);
+
+    void deleteByApplicationId(long applicationId);
 }

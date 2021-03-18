@@ -361,13 +361,30 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
+New lead applicant can declare any other government funding received
+    [Documentation]  IFS-7956  IFS-7958
+    Given the user fills in the funding information                         ${KTPapplicationTitle}   yes
+    When the user clicks the button/link                                    link = Your funding
+    Then the user should see the element                                    jQuery = dt:contains("Funding level")+dd:contains("10.00%")
+    And the user should see the readonly view of other funding received
+
+New applicant can access their project costs section once the your fEC model and Your funding are marked as complete
+    [Documentation]  IFS-9241
+    Given the user clicks the button/link        jQuery = a:contains("Return to finances")
+    When the user clicks the button/link         link = Your project costs
+    Then the user should not see the element     link = your fEC model
+    And the user should not see the element      link = your funding
+
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
      [Documentation]  IFS-9242
-     Given the user clicks the button/link               link = Your project costs
-     When the user should not see the element            jQuery = button:contains("Knowledge base supervisor")
-     And the user should not see the element             jQuery = button:contains("Additional associate support")
-     Then the user should not see the element            jQuery = button:contains("Associate estate costs")
-     [Teardown]  the user fills in ktp project costs
+     Given the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
+     When the user should not see the element      jQuery = button:contains("Additional associate support")
+     Then the user should not see the element      jQuery = button:contains("Associates estates costs")
+
+New lead applicant completes the project costs and project location
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
+    Given the user fills in ktp project costs
+    Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
 
 New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
      [Documentation]  IFS-9240
@@ -388,31 +405,10 @@ New lead applicant view the read-only page once marked as complete
      When the user clicks the button/link          link = Your fEC model
      Then the user checks the read-only page
 
-New lead applicant can declare any other government funding received
-    [Documentation]  IFS-7956  IFS-7958
-    Given the user clicks the button/link                                    link = Back to your project finances
-    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
-    And the user clicks the button/link                                      link = Your funding
-    Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
-    And the user should see the readonly view of other funding received
-
-New applicant can access their project costs section once the your fEC model and Your funding are marked as complete
-    [Documentation]  IFS-9241
-    Given the user clicks the button/link        jQuery = a:contains("Return to finances")
-    When the user clicks the button/link         link = Your project costs
-    Then the user should not see the element     link = your fEC model
-    And the user should not see the element      link = your funding
-
-New lead applicant completes the project costs and project location
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    #When the user fills in ktp project costs
-    And the user enters the project location
-    Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
-    And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
-
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
-    Given the user clicks the button/link                            jQuery = a:contains("Your project costs")
+    Given the user clicks the button/link                            link = Back to your project finances
+    And the user clicks the button/link                              jQuery = a:contains("Your project costs")
     And the user clicks the button/link                              id = edit
     When the user switch to the new tab on click guidance links      read our detailed guidance on KTP project costs (opens in a new window)
     Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
@@ -426,9 +422,9 @@ New lead applicant opens the KTP Project costs Guidance links in the new window
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814  IFS-9239
-    Given the user clicks the button/link                              link = Back to application overview
+    Given the user clicks the button/link                           link = Back to application overview
     When the lead invites a partner and accepted the invitation
-    Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
+    Then the user completes partner project finances                ${ktpApplicationTitle}  yes
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
@@ -1084,6 +1080,8 @@ The applicants should not see knowledge based organisations when joining a non-k
 *** Keywords ***
 the lead applicant marks the KTP project location as complete
     the user enters the project location
+    the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
+    the user clicks the button/link          link = Back to application overview
 
 the user sees fEC model validation error message
      the user clicks the button/link                   jQuery = button:contains("Mark as complete")
@@ -1259,13 +1257,16 @@ the user fills in ktp project costs
 the user fills in Associate employment
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="${associateSalaryTable}"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate employment")
-    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="duration"]  ${costsValue}  
-    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}  
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="duration"]  ${costsValue}
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 2") ~ td input[id$="duration"]  ${costsValue}
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 2") ~ td input[id$="cost"]  ${costsValue}
 
 the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="${associateDevelopmentTable}"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate development")
-    the user enters text to a text field    jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}  
+    the user enters text to a text field    jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}
+    the user enters text to a text field    jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 2") ~ td input[id$="cost"]  ${costsValue}
 
 Requesting KTP Organisation ID
     ${ktpOrganisationID} =  get organisation id by name     ${ktpOrgName}
@@ -1499,8 +1500,11 @@ the user sees the selection is saved
 
 the user marks the project costs complete after editing
     the user closes the last opened tab
-    the user clicks the button/link         css = label[for="stateAidAgreed"]
-    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+    # After edit fEC model has a 'yes' selection so we should see the elements we couldn't before
+    the user should see the element         jQuery = button:contains("Knowledge base supervisor")
+    the user should see the element         jQuery = button:contains("Additional associate support")
+    the user should see the element         jQuery = button:contains("Associates estates costs")
+    the user fills in ktp project costs
 
 the user checks the read-only page
     the user should see the element               jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
