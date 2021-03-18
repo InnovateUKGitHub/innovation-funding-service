@@ -74,7 +74,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         return aQuestion()
                 .withShortName("Subsidy basis")
                 .withName("Is your company based in Northern Ireland and/or are you planning to undertake any work for which you are seeking Innovate UK funding in Northern Ireland?")
-                .withAssignEnabled(false)
+                .withAssignEnabled(true)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(true)
                 .withType(QuestionType.GENERAL)
