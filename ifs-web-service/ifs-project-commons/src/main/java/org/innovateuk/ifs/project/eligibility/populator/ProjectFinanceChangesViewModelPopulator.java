@@ -171,7 +171,7 @@ public class ProjectFinanceChangesViewModelPopulator {
                 entries.add(new CostChangeViewModel("Company contribution (%)", BigDecimal.ZERO, BigDecimal.ZERO));
                 entries.add(new CostChangeViewModel("Company contribution (£)", BigDecimal.ZERO, BigDecimal.ZERO));
             } else {
-                BigDecimal contributionPercentage = appFinanceResource.getTotalContribution().multiply(new BigDecimal("100")).divide(appFinanceResource.getTotal(), RoundingMode.HALF_UP);
+                BigDecimal contributionPercentage = contributionPercentage(appFinanceResource);
                 entries.add(new CostChangeViewModel("Company contribution (%)", contributionPercentage, eligibilityOverview.getContributionPercentage()));
                 entries.add(new CostChangeViewModel("Company contribution (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
             }
@@ -179,6 +179,13 @@ public class ProjectFinanceChangesViewModelPopulator {
             entries.add(new CostChangeViewModel("Contribution to project (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
         }
         return new ProjectFinanceChangesFinanceSummaryViewModel(entries);
+    }
+
+    private BigDecimal contributionPercentage(ApplicationFinanceResource applicationFinanceResource) {
+        if (BigDecimal.ZERO.equals(applicationFinanceResource.getTotalContribution()) || BigDecimal.ZERO.equals(applicationFinanceResource.getTotal())) {
+            return BigDecimal.ZERO;
+        }
+        return applicationFinanceResource.getTotalContribution().multiply(new BigDecimal("100")).divide(applicationFinanceResource.getTotal(), RoundingMode.HALF_UP);
     }
 
     private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, OrganisationResource organisationResource, CompetitionResource competition) {
