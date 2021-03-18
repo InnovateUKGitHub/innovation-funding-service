@@ -31,6 +31,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8947 SBRI Milestones - Reset finances
 ...
+...             IFS-9359 Create new project IDs for successful applications to avoid duplication in IFS PA
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -163,12 +165,18 @@ Allocated assessor assess the application
     Then the user can see multiple appendices uploaded to the application question
     And the assessor submits the assessment
 
+User migrates application to avoid duplication in IFS PA
+    [Documentation]  IFS-9359
+    When the user checks null for previous application id
+    Then the user migrates application
+
 Comp admin closes the assessment and releases feedback
-    [Documentation]  IFS-2376
+    [Documentation]  IFS-2376  IFS-9359
     Given log in as a different user                     &{Comp_admin1_credentials}
     When making the application a successful project     ${competitionId}    ${appl_name}
     And moving competition to Project Setup              ${competitionId}
     Then the user should not see an error in the page
+    [Teardown]  the user checks migration is successful
 
 Procurement comp moves to project setup tab
     [Documentation]  IFS-2376  IFS-6368
@@ -432,7 +440,7 @@ the user should see all project finance changes
 internal user assign MO to loan project
     the user navigates to the page             ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Search for MO                              Orvill  Orville Gibbs
-    The internal user assign project to MO     ${application_id}  ${appl_name}
+    The internal user assign project to MO     ${migrated_application_id}  ${appl_name}
 
 internal user approve bank details
     the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/review-all-bank-details
@@ -486,3 +494,15 @@ Lead applicant upload the contract
     Log in as a different user         &{RTO_lead_applicant_credentials}
     the user navigates to the page     ${server}/project-setup/project/${ProjectID}
     Applicant uploads the contract
+
+the user checks null for previous application id
+    ${query} =  user queries previous application id     ${application_id}
+    Should be true     ${query} is None
+
+the user migrates application
+    user inserts application into application migration table     ${application_id}
+
+the user checks migration is successful
+    ${migrated_application_id} =  user queries migrated application id    ${application_id}
+    Should be true         ${migrated_application_id} != ${application_id}
+    Set suite variable     ${migrated_application_id}

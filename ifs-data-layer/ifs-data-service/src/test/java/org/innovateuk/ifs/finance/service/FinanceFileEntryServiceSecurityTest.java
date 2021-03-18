@@ -90,6 +90,39 @@ public class FinanceFileEntryServiceSecurityTest extends BaseServiceSecurityTest
                 });
     }
 
+    @Test
+    public void testcreateFECFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.createFECFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testDeleteFECCertificateFileEntryntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.deleteFECCertificateFileEntry(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testGetFECCertificateFileContents() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getFECCertificateFileContents(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).canViewApplication(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
     @Override
     protected Class<? extends FinanceFileEntryService> getClassUnderTest() {
         return FinanceFileEntryServiceImpl.class;

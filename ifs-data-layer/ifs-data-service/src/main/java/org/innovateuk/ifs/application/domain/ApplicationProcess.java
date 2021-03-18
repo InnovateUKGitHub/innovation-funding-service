@@ -77,6 +77,10 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
         return ineligibleOutcomes;
     }
 
+    public void setIneligibleOutcomes(List<IneligibleOutcome> ineligibleOutcomes) {
+        this.ineligibleOutcomes = ineligibleOutcomes;
+    }
+
     @Override
     public boolean equals(Object o) {
 
