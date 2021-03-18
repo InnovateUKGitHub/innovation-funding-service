@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -18,6 +19,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
@@ -112,6 +114,8 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
             withCompetition(competitionId).
             withProjectUsers(singletonList(financeContactProjectUser.getId())).build();
 
+    ProjectFinanceChangesViewModel projectFinanceChangesViewModel = new ProjectFinanceChangesViewModel();
+
     QueryResource thread;
     QueryResource thread2;
     QueryResource thread3;
@@ -158,6 +162,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     private CompetitionRestService competitionRestService;
 
     private ThreadViewModelPopulator threadViewModelPopulator;
+
+    @Mock
+    private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
 
     @Before
     public void setupCommonExpectations() {
@@ -206,6 +213,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(1));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
@@ -232,6 +240,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, financeContactUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
@@ -312,6 +321,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
@@ -371,6 +381,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check/1/new-response"))
                 .andExpect(view().name("project/finance-checks"))
@@ -419,6 +430,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -450,6 +462,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -482,6 +495,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -517,6 +531,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/123/finance-check/1/new-response").
@@ -588,6 +603,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(fileEntryResource);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -623,6 +639,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -657,6 +674,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         FileEntryResource attachment = new FileEntryResource(1L, "name", "mediaType", 2L);
 
@@ -695,6 +713,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-check/5/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

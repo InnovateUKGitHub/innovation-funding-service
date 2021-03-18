@@ -177,6 +177,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = new ProjectFinanceChangesViewModel();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
@@ -185,6 +186,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(emptyList()));
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
@@ -215,6 +217,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectResource project = newProjectResource().withId(projectId).withName(projectName).withApplication(application).withCompetition(competitionId).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = new ProjectFinanceChangesViewModel();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
@@ -223,6 +226,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, partnerOrganisation)).thenReturn(projectFinanceChangesViewModel);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
