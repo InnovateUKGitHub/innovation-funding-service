@@ -169,7 +169,8 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP cofunding"),
                 grantCompetition()
-                        .withName("Non KTP competition all finance overview"),
+                        .withName("Non KTP competition all finance overview")
+                        .withAssessorFinanceView(),
                 ktpCompetition()
                         .withName("KTP cofunding single application")
         )

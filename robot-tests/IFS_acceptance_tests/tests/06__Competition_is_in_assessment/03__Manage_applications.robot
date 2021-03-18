@@ -206,11 +206,11 @@ the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(6):contains("0")
 
 the available assessors information is correct
-    the user should see the element  jQuery = tr:contains( Assign an application to an assessor"Mabel Robinson") td:contains("2") + td:contains("0") + td:contains("0")
+    the user should see the element  jQuery = tr:contains("Mabel Robinson") td:contains("2") + td:contains("0") + td:contains("0")
     # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
-     the user should see the element  jQuery = .assessors-a Assign an application to an assessorssigned td:nth-child(1):contains("Paul Plum") ~ td:contains("Academic") ~ td:contains("Urban living") ~ td:contains("8") + td:contains("8")
+     the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Paul Plum") ~ td:contains("Academic") ~ td:contains("Urban living") ~ td:contains("8") + td:contains("8")
 
 the previously assigned list is correct
     the user should see the element    jQuery = .assessors-previous td:contains("Paul Plum") + td:contains("Academic") + td:contains("Urban living")

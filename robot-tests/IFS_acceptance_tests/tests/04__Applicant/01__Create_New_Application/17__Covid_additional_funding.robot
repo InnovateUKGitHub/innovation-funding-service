@@ -209,8 +209,8 @@ Competition goes into previous
     [Setup]  log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDcompetitionTitle}
-    when the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then the user should see the element     link = ${COVIDcompetitionTitle}
+    when the user clicks the button/link     jQuery = a:contains("Previous (")]
+    Then The user should see the element in the paginated list       link = ${COVIDcompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup
