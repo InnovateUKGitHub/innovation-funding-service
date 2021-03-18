@@ -1,7 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
@@ -11,10 +17,16 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeService;
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 
 @Component
@@ -47,10 +59,10 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     }
 
     @Override
-    public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
+    public List<SectionBuilder> sections(Competition competition, List<SectionBuilder> competitionTypeSections) {
 
         if (competitionTypeExcluded(competition.getCompetitionTypeEnum())) {
-            return sectionBuilders;
+            return competitionTypeSections;
         }
 
         if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
@@ -69,8 +81,8 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                                 .withQuestionSetupType(QuestionSetupType.SUBSIDY_BASIS)
                                 .withQuestionnaire(northernIrelandDeclaration()));
             }
-            return competitionTypeSections;
         }
+        return competitionTypeSections;
     }
 
     private boolean competitionTypeExcluded(CompetitionTypeEnum competitionType) {

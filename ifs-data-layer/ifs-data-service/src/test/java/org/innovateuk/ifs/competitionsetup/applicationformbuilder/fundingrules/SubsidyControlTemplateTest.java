@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionService;
@@ -13,14 +16,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.assertThat;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -51,6 +55,8 @@ public class SubsidyControlTemplateTest {
         Questionnaire questionnaireEntity = new Questionnaire();
         SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
 
+        Competition competition = newCompetition().build();
+
         when(questionnaireService.create(any())).thenAnswer((inv) -> {
             QuestionnaireResource questionnaire = inv.getArgument(0);
             questionnaire.setId(questionnaireId);
@@ -61,13 +67,13 @@ public class SubsidyControlTemplateTest {
         when(textOutcomeService.create(any())).thenAnswer((inv) -> serviceSuccess(inv.getArgument(0)));
         when(questionnaireRepository.findById(questionnaireId)).thenReturn(Optional.of(questionnaireEntity));
 
-        subsidyControlTemplate.sections(newArrayList(
+        subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
                 SectionBuilder.aSection().withName("Finances")
         ));
 
-        assertThat(projectDetails.getQuestions().get(0).getName(), is(equalTo("Subsidy basis")));
-        assertThat(projectDetails.getQuestions().get(0).getQuestionnaire(), is(questionnaireEntity));
+        assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("Subsidy basis");
+        assertThat(projectDetails.getQuestions().get(0).getQuestionnaire()).isEqualTo(questionnaireEntity);
 
         verify(questionnaireService).create(any());
         verify(questionnaireQuestionService, times(2)).create(any());
@@ -78,19 +84,23 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldInjectQuestionToProjectDetails() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
 
         Competition competition = newCompetition().build();
 
-        sections = subsidyControlTemplate.sections(competition, sections);
+        subsidyControlTemplate.sections(competition, newArrayList(
+                projectDetails,
+                SectionBuilder.aSection().withName("Finances")
+        ));
 
-        assertThat(sections).hasSize(2);
-        assertThat(sections.get(0).getQuestions()).hasSize(2);
-        assertThat(sections.get(0).getQuestions().get(0).getQuestionSetupType()).isEqualTo(QuestionSetupType.NORTHERN_IRELAND_DECLARATION);
+        assertThat(projectDetails.getQuestions()).hasSize(2);
+        assertThat(projectDetails.getQuestions().get(0).getQuestionSetupType()).isEqualTo(QuestionSetupType.NORTHERN_IRELAND_DECLARATION);
     }
 
     @Test
     public void shouldNotInjectQuestionToProjectDetailsIfPrincesTrustComp() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
 
         Competition competition = newCompetition().withCompetitionType(
                 newCompetitionType()
@@ -98,16 +108,19 @@ public class SubsidyControlTemplateTest {
                         .build())
                 .build();
 
-        sections = subsidyControlTemplate.sections(competition, sections);
+         subsidyControlTemplate.sections(competition, newArrayList(
+                projectDetails,
+                SectionBuilder.aSection().withName("Finances")
+        ));
 
-        assertThat(sections).hasSize(2);
-        assertThat(sections.get(0).getQuestions()).hasSize(1);
-        assertThat(sections.get(0).getQuestions().get(0).getName()).isEqualTo("question1");
+        assertThat(projectDetails.getQuestions()).hasSize(1);
+        assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("question1");
     }
 
     @Test
     public void shouldNotInjectQuestionToProjectDetailsIfExpressionOfInterestComp() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
 
         Competition competition = newCompetition().withCompetitionType(
                 newCompetitionType()
@@ -115,10 +128,12 @@ public class SubsidyControlTemplateTest {
                         .build())
                 .build();
 
-        sections = subsidyControlTemplate.sections(competition, sections);
+        subsidyControlTemplate.sections(competition, newArrayList(
+                projectDetails,
+                SectionBuilder.aSection().withName("Finances")
+        ));
 
-        assertThat(sections).hasSize(2);
-        assertThat(sections.get(0).getQuestions()).hasSize(1);
-        assertThat(sections.get(0).getQuestions().get(0).getName()).isEqualTo("question1");
+        assertThat(projectDetails.getQuestions()).hasSize(1);
+        assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("question1");
     }
 }
