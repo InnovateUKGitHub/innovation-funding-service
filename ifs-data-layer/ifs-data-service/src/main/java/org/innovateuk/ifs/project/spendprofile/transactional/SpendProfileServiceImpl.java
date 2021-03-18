@@ -140,6 +140,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
     @Autowired
+    private ProcurementMilestonesSpendProfileFigureDistributer procurementMilestonesSpendProfileFigureDistributer;
+    @Autowired
     private CompetitionService competitionService;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
@@ -308,6 +310,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<List<Cost>> costs;
         if (project.getApplication().getCompetition().isSbriPilot()) {
             costs = sbriPilotSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
+        } else if (project.getApplication().getCompetition().isProcurementMilestones()) {
+            costs = procurementMilestonesSpendProfileFigureDistributer.distributeCosts(project);
         } else {
             costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
         }
