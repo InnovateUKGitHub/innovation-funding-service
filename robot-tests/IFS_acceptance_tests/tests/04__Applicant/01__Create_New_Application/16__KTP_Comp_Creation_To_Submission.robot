@@ -377,9 +377,9 @@ New applicant can access their project costs section once the your fEC model and
 
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
      [Documentation]  IFS-9242
-     Given the user should not see the element           jQuery = button:contains("Knowledge base supervisor")
-     When the user should not see the element            jQuery = button:contains("Additional associate support")
-     Then the user should not see the element            jQuery = button:contains("Associates estates costs")
+     Given the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
+     When the user should not see the element      jQuery = button:contains("Additional associate support")
+     Then the user should not see the element      jQuery = button:contains("Associates estates costs")
 
 New lead applicant completes the project costs and project location
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
