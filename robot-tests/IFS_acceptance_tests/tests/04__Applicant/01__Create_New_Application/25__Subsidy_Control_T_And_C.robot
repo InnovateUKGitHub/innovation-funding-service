@@ -323,7 +323,7 @@ Comp admin assigns assessors to the competition and assigns the application to a
 Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
     [Documentation]  IFS-9200
     Given the user navigates to the page                                                  ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
-    And the user clicks the button/link                                                   link = ${leadSubsidyControlApplication}
+    When the user clicks the button/link                                                  link = ${leadSubsidyControlApplication}
     Then the user can see the terms and conditions for the lead and partner applicant
 
 Internal user marks subsidy control application to successful
@@ -432,5 +432,7 @@ the application is assigned to a assessor
     the user clicks the button/link       jQuery = button:contains("Confirm")
 
 the user can see the terms and conditions for the lead and partner applicant
-    the user should see the element     jQuery = td:contains("Big Riffs And Insane Solos Ltd")+ td:contains("Subsidy control")
-    the user should see the element     jQuery = td:contains("Ludlow")+ td:contains("State aid")
+    the user should see the element      jQuery = td:contains("Big Riffs And Insane Solos Ltd")+ td:contains("Subsidy control")
+    the user should see the element      link = Innovate UK - Subsidy control
+    the user should see the element      jQuery = td:contains("Ludlow")+ td:contains("State aid")
+    the user should see the element      link = Innovate UK
