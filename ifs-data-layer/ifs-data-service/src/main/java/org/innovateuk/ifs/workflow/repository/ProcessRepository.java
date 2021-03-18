@@ -14,4 +14,6 @@ public interface ProcessRepository<T> {
     T save(T instance);
 
     List<T> findByTargetId(long targetId);
+
+    void deleteByTargetId(long targetId);
 }

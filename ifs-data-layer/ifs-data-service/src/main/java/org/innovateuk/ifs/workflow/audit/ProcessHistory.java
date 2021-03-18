@@ -20,26 +20,30 @@ public class ProcessHistory extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, optional = false)
     @JoinColumn(name="process_id", referencedColumnName = "id")
-    private final Process process;
+    private Process process;
 
-    private final String processStateName;
+    private String processStateName;
 
     public ProcessHistory() {
         this.process = null;
         this.processStateName = null;
     }
 
-    ProcessHistory(Process process) {
+    public ProcessHistory(Process process) {
         if (process == null) throw new NullPointerException("process cannot be null");
 
         this.process = process;
         this.processStateName = process.getProcessState().getStateName();
     }
 
-    Process getProcess() {
+    public Process getProcess() {
         return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
     }
 
     String getProcessStateName() {

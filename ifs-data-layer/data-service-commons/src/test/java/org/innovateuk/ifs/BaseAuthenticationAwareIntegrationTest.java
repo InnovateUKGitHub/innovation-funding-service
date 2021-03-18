@@ -60,6 +60,10 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
         return getByEmail("ifs_web_user@innovateuk.org");
     }
 
+    protected UserResource getSystemMaintenanceUser() {
+        return getByEmail("ifs_system_maintenance_user@innovateuk.org");
+    }
+
     protected UserResource getByEmail(String email) {
         return userMapper.mapToResource(userRepository.findByEmail(email).orElse(null));
     }
@@ -80,6 +84,10 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     protected void loginSystemRegistrationUser() {
         setLoggedInUser(getSystemRegistrationUser());
+    }
+
+    protected void loginSystemMaintenanceUser() {
+        setLoggedInUser(getSystemMaintenanceUser());
     }
 
     protected void loginPeteTom() {
