@@ -168,7 +168,7 @@ public class CompetitionWebTestData {
                         .withName("KTP assessment Overview Finances"),
                 ktpCompetition()
                         .withName("KTP cofunding"),
-                ktpCompetition()
+                grantCompetition()
                         .withName("Non KTP competition all finance overview"),
                 ktpCompetition()
                         .withName("KTP cofunding single application")
@@ -177,6 +177,7 @@ public class CompetitionWebTestData {
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT))
                 .collect(Collectors.toList());
     }
+
 
     private static List<CompetitionLineBuilder> getFundersPanelCompetitionLineBuilders() {
         return asList(
@@ -352,7 +353,9 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("FEC KTP competition"),
                 grantCompetition()
-                        .withName("Improved organisation search performance competition")
+                        .withName("Improved organisation search performance competition"),
+                ktpCompetition()
+                        .withName("KTP dashboard competition")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

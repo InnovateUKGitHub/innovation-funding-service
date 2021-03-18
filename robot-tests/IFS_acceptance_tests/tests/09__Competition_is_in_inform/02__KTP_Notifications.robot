@@ -49,7 +49,7 @@ Internal user marks the KTP application as unsuccessful
 Internal user checks the status of the application
     [Documentation]  IFS-8549
     Given the user navigates to the page                          ${server}/management/dashboard/previous
-    When the user clicks the button/link                          link = ${KTP_competiton}
+    The user clicks the button/link in the paginated list         link = ${KTP_competiton}
     And the user clicks the button/link                           jQuery = button:contains("Projects")
     Then the user should see the element                          jQuery = tbody div:contains("${KTP_application}") ~ div:contains("Unsuccessful")
     And the user cannot make any changes in the project setup

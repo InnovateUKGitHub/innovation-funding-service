@@ -172,7 +172,7 @@ The Stakeholder cannot search for unassigned applications
     [Tags]
     Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     When the user clicks the button/link          id = searchsubmit
-    Then the user should see the element          jQuery = p:contains("0") strong:contains("${OPEN_COMPETITION_APPLICATION_1_NUMBER}")
+    Then the user should not see the element      link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 The internal user removes a Stakeholder from the competition

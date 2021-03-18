@@ -54,8 +54,8 @@ ${Assign_Project2}                        High Performance Gasoline Stratified
 ${sbri_applicaton_name}                   SBRI application
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
-${PSCapplicationID}                       212
 ${PSCapplicationTitle}                    PSC application 15
+${PSCapplicationID}                       ${application_ids["${PSCapplicationTitle}"]}
 ${PSC_Competition_Name}                   Project Setup Comp 15
 ${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
 
