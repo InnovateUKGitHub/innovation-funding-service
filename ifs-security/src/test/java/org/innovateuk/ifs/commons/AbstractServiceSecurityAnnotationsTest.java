@@ -12,10 +12,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.join;
 import static java.lang.reflect.Modifier.isPublic;
@@ -79,7 +76,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         assertNotNull(services);
         assertFalse(services.isEmpty());
 
-        List<Method> notSecured = new ArrayList<>();
+        List<Pair<Class, Method>> notSecured = new ArrayList<>();
         for (Object service : services) {
             // If we are secured at the class level it is not necessary to be secured at the method level.
             if (!isSecuredAtClassLevel(service)) {
@@ -99,12 +96,18 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
      * @param service
      * @throws Exception
      */
-    private List<Method> notSecuredAtMethodLevel(Object service) throws Exception {
-        List<Method> notSecured = new ArrayList<>();
+    private List<Pair<Class, Method>> notSecuredAtMethodLevel(Object service) throws Exception {
+        List<Pair<Class, Method>> notSecured = new ArrayList<>();
         for (Method method : service.getClass().getMethods()) {
             if (methodNeedsSecuring(method)) {
-                if (!hasOneOf(method, methodLevelSecurityAnnotations())) {
-                    notSecured.add(method);
+                boolean hasSecureInterfaceMethod = Arrays.stream(service.getClass().getInterfaces()).flatMap(i -> Arrays.stream(i.getMethods()))
+                        .filter(
+                                m -> m.getName().equals(method.getName()) && Arrays.equals(m.getParameterTypes(), method.getParameterTypes())
+                        )
+                        .anyMatch(m -> hasOneOf(m, methodLevelSecurityAnnotations()));
+                boolean hasSecureClassMethod = hasOneOf(method, methodLevelSecurityAnnotations());
+                if (!hasSecureClassMethod && !hasSecureInterfaceMethod) {
+                    notSecured.add(Pair.of(service.getClass(), method));
                 }
             }
         }
@@ -130,7 +133,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         assertFalse(services.isEmpty());
 
         List<Class<?>> classLevelFailures = new ArrayList<>();
-        List<Method> methodLevelFailures = new ArrayList<>();
+        List<Pair<Class, Method>>  methodLevelFailures = new ArrayList<>();
 
         for (Object service : services) {
             // First check at class level
@@ -145,7 +148,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
             for (Method method : service.getClass().getMethods()) {
                 if (methodNeedsSecuring(method)) {
                     if (requiresSecuredBySpringAnnotation(method) && !hasOneOf(method, Collections.singletonList(SecuredBySpring.class))) {
-                        methodLevelFailures.add(method);
+                        methodLevelFailures.add(Pair.of(service.getClass(), method));
                     }
                 }
             }
@@ -201,8 +204,8 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
                 join(",\n", simpleMap(failures, Class::getName));
     }
 
-    private String methodFailureMessage(String message, List<Method> failures) {
-        return message + "\n" + join(",\n", simpleMap(failures, m -> m.getName() + " on class " + m.getDeclaringClass()));
+    private String methodFailureMessage(String message, List<Pair<Class, Method>> failures) {
+        return message + "\n" + join(",\n", simpleMap(failures, p -> p.getRight().getName() + " on class " + p.getLeft().getName()));
     }
 
     /**
