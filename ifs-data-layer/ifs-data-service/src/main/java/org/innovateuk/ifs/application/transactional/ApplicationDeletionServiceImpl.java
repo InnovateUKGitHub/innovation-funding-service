@@ -67,7 +67,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
-    
+
     @Override
     @Transactional
     public ServiceResult<Void> deleteApplication(long applicationId) {
