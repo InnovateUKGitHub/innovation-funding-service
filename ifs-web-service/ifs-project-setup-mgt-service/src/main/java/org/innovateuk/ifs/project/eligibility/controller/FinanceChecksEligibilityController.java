@@ -159,6 +159,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 resetableGolState = golState.getState() != GrantOfferLetterState.APPROVED;
             }
 
+            boolean showChangesLink = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, organisation.get()).showChanges();
+
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
                     organisation.get().getName(),
                     isLeadPartnerOrganisation,
@@ -175,7 +177,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     isUsingJesFinances,
                     editAcademicFinances,
                     projectFinances,
-                    resetableGolState
+                    resetableGolState,
+                    showChangesLink
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
@@ -331,7 +334,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     public String viewExternalEligibilityChanges(@PathVariable long projectId, @PathVariable final Long organisationId, Model model, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
+        return doViewEligibilityChanges(project, organisation, model);
     }
 
     private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model, UserResource user) {
@@ -354,10 +357,11 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return EligibilityRagStatus.UNSET;
     }
 
-    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Model model) {
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator
-                .getProjectFinanceChangesViewModel(true, project, organisation, userId);
+                .getProjectFinanceChangesViewModel(true, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
+
         return "project/financecheck/eligibility-changes";
     }
 }

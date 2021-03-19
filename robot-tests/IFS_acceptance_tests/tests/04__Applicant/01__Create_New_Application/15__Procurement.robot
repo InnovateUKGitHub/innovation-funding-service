@@ -25,6 +25,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8940 SBRI Milestones - Edit project duration in application
 ...
+...             IFS-8944 SBRI Milestones - Record changes to milestones
+...
 ...             IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
 ...             IFS-8947 SBRI Milestones - Reset finances
@@ -42,10 +44,12 @@ Resource        ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${comp_name}                  Procurement AT Comp
 ${appl_name}                  Procurement app
+${appl_name2}                 SBRI application
 ${ods_file}                   file_example_ODS.ods
 ${excel_file}                 testing.xlsx
 ${pdf_file}                   testing.pdf
 ${multiple_choice_answer}     option2
+
 
 *** Test Cases ***
 Comp Admin creates procurement competition
@@ -211,6 +215,53 @@ Internal user generate the contract
     Then Lead applicant upload the contract
     And the internal user approve the contract               ${ProjectID}
 
+Internal user makes changes to the finance payment milestones
+    [Documentation]   IFS-8944
+    Given Requesting SBRI Project ID of this Project
+    And log in as a different user                            &{ifs_admin_user_credentials}
+    When the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    And the user makes changes to the payment milestones table
+    Then the user should see the element                      jQuery = td:contains("12,523") ~ td:contains("- 100")
+    And the user should see the element                       jQuery = td:contains("12,121") ~ td:contains("+ 100")
+    And the user should see the element                       jQuery = th:contains("Total payment requested") ~ td:contains("£265,084")
+
+Internal user makes changes to project finances
+    [Documentation]   IFS-8944
+    Given the user navigates to the page                    ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility
+    When the user makes changes to the project finances
+    And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
+    Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
+    And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
+    And the user should see the element                     jQuery = td:contains("£265,084")
+
+Internal user removes payment milestones
+    [Documentation]   IFS-8944
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    And the user clicks the button/link                      link = Edit payment milestones
+    When the user removes a payment milestone
+    Then the user should not see the element                 jQuery = button:contains("Milestone for month 21")
+    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("62.31%") ~ h3:contains("£165,171")
+
+Internal user adds payment milestones
+    [Documentation]   IFS-8944
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    And the user clicks the button/link                      link = Edit payment milestones
+    And the user clicks the button/link                      jQuery = button:contains("Open all")
+    And the user clicks the button/link                      jQuery = button:contains("Close all")
+    And the user clicks the button/link                      jQuery = button:contains("Add another project milestone")
+    And the user clicks the button/link                      jQuery = div[id='accordion-finances'] div:nth-of-type(22) span:nth-of-type(4)
+    When the user creates a new payment milestone
+    And the user clicks the button/link                      jQuery = button:contains("Save and return to payment milestone check")
+    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£265,084")
+
+Applicant can view changes made to project finances
+    [Documentation]  IFS-8944
+    Given Log in as a different user                        &{becky_mason_credentials}
+    When the user navigates to the page                     ${server}/project-setup/project/${SBRI_projectID}/finance-check
+    And the user clicks the button/link                     link = view any changes to finances
+    Then the user should see all project finance changes
+
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
@@ -273,6 +324,10 @@ the payment milestone table is visible in application summary
     the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£72,839") th:contains("100%")
     the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£72,839")
 
+the user removes a payment milestone
+    the user clicks the button/link             jQuery = button:contains("Milestone for month 21")
+    the user clicks the button/link             xpath = //*[@id="accordion-finances-content-27"]/p/button
+
 the applicant submits the procurement application
     the user clicks the button/link                              link = Review and submit
     the user should not see the element                          jQuery = .task-status-incomplete
@@ -324,7 +379,7 @@ the user checks the VAT calculations
     the user clicks the button/link                   link = Your project finances
 
 the user completes the project details
-    log in as a different user                   &{RTO_lead_applicant_credentials}
+    log in as a different user                    &{RTO_lead_applicant_credentials}
     the user navigates to the page                ${server}/project-setup/project/${ProjectID}
     the user clicks the button/link               link = view application feedback
     the user clicks the button/link               jQuery = button:contains("Technical approach")
@@ -340,6 +395,47 @@ the user completes the project details
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name     ${appl_name}
     Set suite variable    ${ProjectID}
+
+Requesting SBRI Project ID of this Project
+    ${SBRI_ProjectID} =  get project id by name    ${appl_name2}
+    Set suite variable    ${SBRI_ProjectID}
+
+the user makes changes to the payment milestones table
+    the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones?editMilestones=true
+    clear element text                  id = milestones[7].payment
+    input text                          id = milestones[7].payment  12523
+    clear element text                  id = milestones[8].payment
+    input text                          id = milestones[8].payment  12121
+    the user clicks the button/link     jQuery = button:contains("Save and return to payment milestone check")
+    the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
+
+the user makes changes to the project finances
+    the user clicks the button/link     jQuery = button:contains("Subcontracting")
+    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) a
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(4) input
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(4) input  80000
+    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) [class="govuk-button"]
+    the user clicks the button/link     jQuery = button:contains("Other costs")
+    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) a
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]   11100
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) textarea   Some other costs
+    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) [class="govuk-button"]
+
+the user creates a new payment milestone
+    the user selects the option from the drop-down menu       21   jQuery = div[id='accordion-finances'] div:nth-of-type(22) select
+    the user enters text to a text field                      css = [id^="accordion-finances-content-unsaved"] input[id^="milestones"][id$="description"]   Milestone month 21
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="taskOrActivity"]    Task Or Activity 21
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="deliverable"]   Deliverable 21
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="successCriteria"]   Success Criteria 21
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) input[id^="milestones"][id$="payment"]   99913
+
+the user should see all project finance changes
+    the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
+    the user should see the element                    jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
+    the user should see the element                    jQuery = td:contains("12,523") ~ td:contains("- 100")
+    the user should see the element                    jQuery = td:contains("12,121") ~ td:contains("+ 100")
 
 internal user assign MO to loan project
     the user navigates to the page             ${server}/project-setup-management/project/${ProjectID}/monitoring-officer

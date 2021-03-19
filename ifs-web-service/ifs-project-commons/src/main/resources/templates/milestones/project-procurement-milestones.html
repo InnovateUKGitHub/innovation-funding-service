@@ -17,7 +17,9 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
-    <th:block th:insert="fragments/layout :: header-sub"
+    <th:block th:if="${model.externalUser}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
+    <th:block th:unless="${model.externalUser}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -54,6 +56,10 @@
                 </p>
             </div>
         </th:block>
+
+        <p class="govuk-body" th:if="${model.showChangesLink}"><a
+            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${model.projectId},organisationId=${model.organisationId})}"
+            class="govuk-link">View changes to finances</a></p>
 
         <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                               data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
