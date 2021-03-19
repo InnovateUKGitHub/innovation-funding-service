@@ -31,10 +31,10 @@ public class CompetitionWebTestData {
         return combineLists(
                 getNonIfsLineBuilders(),
                 getReadyToOpenCompetitionLineBuilders(),
+                getAssessorFeedbackCompetitionLineBuilders(),
                 getOpenCompetitionLineBuilders(),
                 getClosedCompetitionLineBuilders(),
                 getInAssessmentCompetitionLineBuilders(),
-                getAssessorFeedbackCompetitionLineBuilders(),
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
         );
