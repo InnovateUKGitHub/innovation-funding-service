@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Configure questionnaire'" />
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" />
+    <!--/*@thymesVar id="model" type="org.innovateuk.ifs.questionnaire.config.viewmodel.QuestionnaireConfigViewModel"*/-->
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Configure questionnaire',size='govuk-heading-xl'" />
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Entry question</h2>
+        <ul class="task-list">
+            <li>
+                <div class="task">
+                    <h3 class="govuk-heading-s">
+                        <a th:href="@{/questionnaire-configure/{questionnaireId}/question/{questionId}(questionnaireId=${model.questionnaireId},questionId=${model.firstQuestion.id})}"
+                           th:text="${model.firstQuestion.name}"
+                           class="govuk-link" />
+                    </h3>
+                </div>
+            </li>
+        </ul>
+
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Questions in flow</h2>
+        <ul class="task-list">
+            <li th:each="question : ${model.linkedQuestions}">
+                <div class="task">
+                    <h3 class="govuk-heading-s">
+                        <a th:href="@{/questionnaire-configure/{questionnaireId}/question/{questionId}(questionnaireId=${model.questionnaireId},questionId=${question.id})}"
+                           th:text="${question.name}"
+                           class="govuk-link" />
+                    </h3>
+                </div>
+            </li>
+        </ul>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="POST">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Unlinked questions</h2>
+            <p class="govuk-body">These questions have not been linked to other parts of the questionnaire yet. They must be linked or deleted before the questionnaire can be live.</p>
+            <ul class="task-list">
+                <li th:each="question : ${model.unlinkedQuestions}">
+                    <div class="task">
+                        <h3 class="govuk-heading-s">
+                            <a th:href="@{/questionnaire-configure/{questionnaireId}/question/{questionId}(questionnaireId=${model.questionnaireId},questionId=${question.id})}"
+                               th:text="${question.name}"
+                               class="govuk-link" />
+
+                            <button class="button-clear alignright" name="delete-question" th:value="${question.id}">Remove</button>
+                        </h3>
+                    </div>
+                </li>
+            </ul>
+
+            <button class="button-clear">Add question</button>
+        </form>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

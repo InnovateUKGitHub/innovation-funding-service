@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.config;
 
 import org.apache.catalina.connector.Connector;
+import org.apache.coyote.ajp.AbstractAjpProtocol;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -37,17 +38,19 @@ public class AJPConfig {
             if(tomcatAjpEnabled) {
 
                 Connector ajpConnector = new Connector("AJP/1.3");
-                ajpConnector.setProtocol("AJP/1.3");
                 ajpConnector.setPort(ajpPort);
                 ajpConnector.setSecure(false);
                 ajpConnector.setAllowTrace(false);
-                ajpConnector.setAttribute("tomcatAuthentication", false);
-                ajpConnector.setAttribute("connectionTimeout", connectionTimeout);
-                ajpConnector.setAttribute("acceptCount", acceptCount);
-                ajpConnector.setAttribute("maxConnections", maxConnections);
-                ajpConnector.setAttribute("maxThreads", maxThreads);
-                ajpConnector.setAttribute("minSpareThreads", 20);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setTomcatAuthentication(false);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setConnectionTimeout(connectionTimeout);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setAcceptCount(acceptCount);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setMaxConnections(maxConnections);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setMaxThreads(maxThreads);
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setMinSpareThreads(20);
                 ajpConnector.setScheme("ajp");
+                ajpConnector.setProperty("address","0.0.0.0");
+                ajpConnector.setProperty("allowedRequestAttributesPattern",".*");
+                ((AbstractAjpProtocol)ajpConnector.getProtocolHandler()).setSecretRequired(false);
 
                 server.addAdditionalTomcatConnectors(ajpConnector);
             }

@@ -87,17 +87,17 @@ Lead can confirm t&c's
 Internal user sees correct label for T&C's
     [Documentation]  IFS-8164
     [Setup]  Update the competition with KTP africa T&C's      ${ktpAfricaPSCompId}
-    Given Log in as a different user         &{Comp_admin1_credentials}
+    Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${ktpAfricaApplicationLink}
     And the user clicks the button/link      jQuery = button:contains("${ktpAfricatandcLink}")
-    Then the user clicks the button/link     link = View terms and conditions
+    Then the user clicks the button/link     jQuery = a:contains("Knowledge Transfer Partnership (KTP) Africa")
     And the user should see the element      jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
 
 Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-8164
-    Given Log in as a different user         bob@knowledge.base  ${short_password}
-    When The user navigates to the page      ${ktpAfricaFeedbackLink}
-    Then the user clicks the button/link     link = View terms and conditions
+    Given log in as a different user         bob@knowledge.base  ${short_password}
+    When the user navigates to the page      ${ktpAfricaFeedbackLink}
+    Then the user clicks the button/link     jQuery = a:contains("Knowledge Transfer Partnership (KTP) Africa")
     And the user should see the element      jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
 
 Internal user can select Knowledge Transfer Partnership subsidy control t&c's while creating competition

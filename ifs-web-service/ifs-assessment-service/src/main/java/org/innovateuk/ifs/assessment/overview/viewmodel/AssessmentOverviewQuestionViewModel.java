@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Holder of model attributes for questions displayed within the Assessment Overview view.
@@ -146,5 +147,20 @@ public class AssessmentOverviewQuestionViewModel {
                 .append(scopeResponse)
                 .append(scoreResponse)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("questionId", questionId)
+                .append("questionName", questionName)
+                .append("questionNumber", questionNumber)
+                .append("maximumScore", maximumScore)
+                .append("responseRequired", responseRequired)
+                .append("assessed", assessed)
+                .append("scopeResponse", scopeResponse)
+                .append("scoreResponse", scoreResponse)
+                .append("scoreRequired", scoreRequired)
+                .toString();
     }
 }

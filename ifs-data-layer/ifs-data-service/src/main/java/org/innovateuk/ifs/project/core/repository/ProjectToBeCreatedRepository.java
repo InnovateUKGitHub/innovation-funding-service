@@ -13,4 +13,5 @@ public interface ProjectToBeCreatedRepository extends PagingAndSortingRepository
 
     Optional<ProjectToBeCreated> findByApplicationId(long applicationId);
 
+    void deleteByApplicationId(long applicationId);
 }
