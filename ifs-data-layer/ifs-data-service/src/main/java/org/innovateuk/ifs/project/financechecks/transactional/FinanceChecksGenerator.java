@@ -137,7 +137,7 @@ public class FinanceChecksGenerator {
             projectFinance.setMilestones(copyMilestones(applicationProcurementMilestones, projectFinanceForOrganisation));
         }
 
-        List<ApplicationFinanceRow> originalFinanceFigures = getApplicationFinanceRows(newProject, applicationFinanceForOrganisation, projectFinance);
+        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
 
         List<ProjectFinanceRow> copiedFinanceFigures = simpleMap(originalFinanceFigures, original -> {
             ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
@@ -164,20 +164,6 @@ public class FinanceChecksGenerator {
             });
         });
         return serviceSuccess(projectFinance);
-    }
-
-    private List<ApplicationFinanceRow> getApplicationFinanceRows(Project newProject, ApplicationFinance applicationFinanceForOrganisation, ProjectFinance projectFinance) {
-        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
-
-        if (newProject.getApplication().getCompetition().isKtp()) {
-            originalFinanceFigures = originalFinanceFigures.stream()
-                    .filter(applicationFinanceRow -> BooleanUtils.isFalse(projectFinance.getFecModelEnabled())
-                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType())
-                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType()))
-                    .collect(Collectors.toList());
-        }
-
-        return originalFinanceFigures;
     }
 
     private List<ProjectProcurementMilestone> copyMilestones(List<ApplicationProcurementMilestone> applicationProcurementMilestones, ProjectFinance projectFinance) {
