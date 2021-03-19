@@ -333,18 +333,17 @@ Internal user can see organisations subsidy basis funding rules in application o
     [Documentation]  IFS-9120
     Given Log in as a different user                        &{internal_finance_credentials}
     And making the application a successful project         ${subsidyControlFundingCompID}   ${leadSubsidyControlApplication}
-    #And moving competition to Project Setup                 ${subsidyControlFundingCompID}
     When the user navigates to the page                     ${server}/management/competition/${subsidyControlFundingCompID}/application/${leadSubsidyControlApplicationID}
-    And the user clicks the button/link                     link = accordion-questions-heading-1-1
     Then the user can see valid subsidy control answers
     And the user can see valid state aid answers
 
 Monitoring officer can see organisations subsidy basis funding rules in application feedback
     [Documentation]  IFS-9120
-    Given Internal user assigns MO to application     ${leadSubsidyControlApplicationID}   ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
-    And log in as a different user                    &{monitoring_officer_one_credentials}
-    When the user clicks the button/link              link = ${leadSubsidyControlApplication}
-    And the user clicks the button/link               link = view application feedback
+    Given Internal user assigns MO to application               ${leadSubsidyControlApplicationID}   ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
+    And log in as a different user                              &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When the user clicks the button/link                        link = ${leadSubsidyControlApplication}
+    And the user clicks the button/link                         link = view application feedback
     Then the user can see valid subsidy control answers
     And the user can see valid state aid answers
 
@@ -356,7 +355,7 @@ Lead applicant can see organisations subsidy basis funding rules in application 
     Then the user can see valid subsidy control answers
     And the user can see valid state aid answers
 
-Lead applicant can see organisations subsidy basis funding rules in application feedback
+Partner can see organisations subsidy basis funding rules in application feedback
     [Documentation]  IFS-9120
     Given log in as a different user                        &{partnerApplicantCredentials}
     When the user clicks the button/link                    link = ${leadSubsidyControlApplication}
