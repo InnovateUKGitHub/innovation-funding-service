@@ -476,7 +476,9 @@ public class ProjectFinanceChecksController {
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
-            Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream().filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId())).findFirst();
+            Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
+                    .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
+                    .findFirst();
             model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
