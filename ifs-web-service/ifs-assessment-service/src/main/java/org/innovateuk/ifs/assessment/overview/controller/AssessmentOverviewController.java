@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentDetailedFinancesModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
-import org.innovateuk.ifs.assessment.overview.populator.AssessmentTermsAndConditionsModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -51,9 +50,6 @@ public class AssessmentOverviewController {
     private AssessmentDetailedFinancesModelPopulator assessmentDetailedFinancesModelPopulator;
 
     @Autowired
-    private AssessmentTermsAndConditionsModelPopulator assessmentTermsAndConditionsModelPopulator;
-
-    @Autowired
     private AssessmentService assessmentService;
 
     @Autowired
@@ -77,12 +73,6 @@ public class AssessmentOverviewController {
     public String getFinancesSummary(Model model, @PathVariable("assessmentId") long assessmentId, UserResource user) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, user));
         return "assessment/application-finances-summary";
-    }
-
-    @GetMapping("/{assessmentId}/terms-and-conditions")
-    public String getTermsAndConditions(Model model, @PathVariable("assessmentId") long assessmentId) {
-        model.addAttribute("model", assessmentTermsAndConditionsModelPopulator.populate(assessmentId));
-        return "assessment/application-terms-and-conditions";
     }
 
     @GetMapping("/application/{applicationId}/detailed-finances/organisation/{organisationId}")

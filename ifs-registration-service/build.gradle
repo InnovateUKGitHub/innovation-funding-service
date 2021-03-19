@@ -1,5 +1,5 @@
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
-apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 def targetBuild = hasProperty('profile') ? profile : 'docker';
@@ -20,7 +20,7 @@ dependencies {
     compile("org.springframework.security:spring-security-ldap")
     compile("org.springframework.data:spring-data-ldap")
     compile("org.springframework.boot:spring-boot-starter-security")
-
+    compile("org.springframework.boot:spring-boot-starter-validation")
     testCompile("org.springframework.ldap:spring-ldap-test")
 }
 

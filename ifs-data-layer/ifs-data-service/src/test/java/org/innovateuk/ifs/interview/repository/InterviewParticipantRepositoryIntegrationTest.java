@@ -216,7 +216,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         flushAndClearSession();
 
         assertEquals(4, repository.count());
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<InterviewParticipant> pagedResult = repository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
@@ -286,7 +286,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         flushAndClearSession();
 
         assertEquals(1, repository.count());
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<InterviewAcceptedAssessorsResource> pagedResult = repository.getInterviewAcceptedAssessorsByCompetition(
                 competition.getId(),

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionFileView
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -22,14 +21,13 @@ import java.util.stream.Collectors;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
-import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
 
     @Override
-    public GenericQuestionReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
         Optional<FormInputResource> answerInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
                 || formInput.getType().equals(MULTIPLE_CHOICE))

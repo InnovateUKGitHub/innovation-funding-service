@@ -258,7 +258,7 @@ Comp admin assign project existing IFS user MO
 Internal user assigns a MO to a new project and removes a partner organisation
     [Documentation]    IFS-8753
     When Log in as a different user                      &{internal_finance_credentials}
-    Then Internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
+    Then internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
     And Internal user removes a partner organisation
 
 MO can now check the application feedback
