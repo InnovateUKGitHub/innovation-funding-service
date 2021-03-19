@@ -123,6 +123,11 @@ public class OrganisationPermissionRules {
         return isSystemRegistrationUser(user) && !organisationLinkedToAnApplication(organisation);
     }
 
+    @PermissionRule(value = "SYNC_COMPANIES_HOUSE_DETAILS", description = "The System Registration User can sync Organisations details on companies house update")
+    public boolean systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(OrganisationResource organisation, UserResource user) {
+        return isSystemRegistrationUser(user) || isMemberOfOrganisation(organisation, user);
+    }
+
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
     public boolean memberOfOrganisationCanUpdateOwnOrganisation(OrganisationResource organisation, UserResource user) {
         return isMemberOfOrganisation(organisation, user);
@@ -136,7 +141,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "A project finance user can update any Organisation")
     public boolean projectFinanceUserCanUpdateAnyOrganisation(OrganisationResource organisation, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "READ", description = "Project Partners can see the Partner Organisations within their Projects")

@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
@@ -79,8 +79,9 @@ public class ManageProjectStateController {
                 return projectStateRestService.completeProjectOffline(projectId);
             case ON_HOLD:
                 return projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource(form.getOnHoldReason(), form.getOnHoldDetails()));
+            default:
+                throw new IFSRuntimeException("Unknown project state");
         }
-        throw new IFSRuntimeException("Unknown project state");
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {

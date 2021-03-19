@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 
 /**
  * Defines the permissions for interaction with project finance queries.
@@ -32,7 +32,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Queries")
     public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
+        return hasProjectFinanceAuthority(user) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
     @PermissionRule(value = "PF_CREATE", description = "Only External Finance Users can create Queries")
@@ -55,7 +55,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_READ", description = "Project Finance can view Queries")
     public boolean projectFinanceUsersCanViewQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "PF_READ", description = "Competition Finance users can view Queries")
@@ -70,7 +70,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a query")
     public boolean projectFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk);
+        return hasProjectFinanceAuthority(user) && isProjectInSetup(query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "External Finance users can add posts to a query")

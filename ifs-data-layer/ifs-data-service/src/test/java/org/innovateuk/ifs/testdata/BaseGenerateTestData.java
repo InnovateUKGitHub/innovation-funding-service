@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.io.FileUtils;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -20,8 +22,10 @@ import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -37,6 +41,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -82,7 +87,7 @@ import static org.mockito.Mockito.when;
  *    In conjunction with "ifs.generate.test.data.competition.filter=BY_NAME", this parameter allows you to specify a
  *    single Competition to generate.
  */
-@ActiveProfiles({"integration-test,seeding-db"})
+@ActiveProfiles({"integration-test","seeding-db"})
 @DirtiesContext
 @SpringBootTest(classes = GenerateTestDataConfiguration.class)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
@@ -130,6 +135,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Value("${spring.flyway.placeholders.ifs.system.user.uuid}")
     private String systemUserUUID;
 
+    @Value("${ifs.data.service.file.storage.base}")
+    private String storageLocation;
+
     @Autowired
     private RegistrationService registrationService;
 
@@ -173,6 +181,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private SupporterDataService supporterDataService;
 
+    @Autowired
+    private ProjectToBeCreatedService projectToBeCreatedService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -187,7 +198,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Rolling stock future developments}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control competition}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -240,6 +251,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         BankDetailsService bankDetailsServiceUnwrapped = (BankDetailsService) unwrapProxy(bankDetailsService);
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
+    }
+
+    @After
+    public void tearDownFiles() throws Exception {
+        File f = new File(storageLocation);
+        if (f.exists()) {
+            FileUtils.deleteDirectory(new File(storageLocation));
+        }
     }
 
     @Test
@@ -301,6 +320,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                                 supporterFutures,
                                 competitionAssessmentPeriodsFutures
         ).join();
+
+        UserResource user = userService.findByEmail("ifs_system_maintenance_user@innovateuk.org").getSuccess();
+        setLoggedInUser(user);
+
+        projectToBeCreatedService.createAllPendingProjects();
 
         long after = System.currentTimeMillis();
 

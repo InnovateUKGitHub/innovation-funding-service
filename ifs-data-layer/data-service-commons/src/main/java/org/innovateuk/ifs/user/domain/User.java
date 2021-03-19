@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -256,5 +257,9 @@ public class User extends AuditableEntity implements Serializable {
 
     public boolean isActive() {
         return status == UserStatus.ACTIVE;
+    }
+
+    public boolean hasAuthority(Authority auth) {
+        return roles.stream().flatMap(r -> r.getAuthorities().stream()).anyMatch(a -> a == auth);
     }
 }

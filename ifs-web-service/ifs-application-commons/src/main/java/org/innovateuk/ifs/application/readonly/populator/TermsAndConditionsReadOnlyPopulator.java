@@ -80,7 +80,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
                             .withPartnerId(organisation.getId())
                             .withPartnerName(organisation.getName())
                             .withLead(application.getLeadOrganisationId().equals(organisation.getId()))
-                            .withAccepted(finalAcceptedOrgs.contains(organisation.getId()))
+                            .withAccepted(!application.isOpen() || finalAcceptedOrgs.contains(organisation.getId()))
                             .withTermsName(partnerUseCompetitionTermsAndConditions ? competition.getTermsAndConditions().getName() : competition.getOtherFundingRulesTermsAndConditions().getName())
                             .withFundingRules(partnerUseCompetitionTermsAndConditions ? competition.getFundingRules() : FundingRules.STATE_AID)
                             .build();
@@ -119,7 +119,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
         final Map<Long, ApplicationFinanceResource>[] financeResourceMap = new Map[]{null};
         return () -> {
             if (financeResourceMap[0] == null) {
-                financeResourceMap[0] = applicationFinanceRestService.getFinanceDetails(applicationId).getSuccess()
+                financeResourceMap[0] = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
                         .stream()
                         .collect(toMap(
                                 ApplicationFinanceResource::getOrganisation,

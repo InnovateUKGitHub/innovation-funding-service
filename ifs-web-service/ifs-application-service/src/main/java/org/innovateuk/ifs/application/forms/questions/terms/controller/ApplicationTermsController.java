@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.application.forms.questions.terms.controller;
 
 import org.innovateuk.ifs.application.common.populator.ApplicationTermsModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationTermsPartnerModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationTermsViewModel;
 import org.innovateuk.ifs.application.forms.questions.terms.form.ApplicationTermsForm;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -27,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/terms-and-conditions/organisation/{organisationId}/question/{questionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/terms-and-conditions")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance', 'supporter')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
@@ -43,8 +47,13 @@ public class ApplicationTermsController {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
 
+    @Autowired
+    private ApplicationRestService applicationRestService;
 
-    @GetMapping
+    @Autowired
+    private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
+
+    @GetMapping("/organisation/{organisationId}/question/{questionId}")
     public String getTerms(@PathVariable long applicationId,
                            @PathVariable long questionId,
                            @PathVariable long organisationId,
@@ -59,7 +68,7 @@ public class ApplicationTermsController {
         return "application/sections/terms-and-conditions/terms-and-conditions";
     }
 
-    @PostMapping
+    @PostMapping("/organisation/{organisationId}/question/{questionId}")
     public String acceptTerms(@PathVariable long applicationId,
                               @PathVariable long questionId,
                               @PathVariable long organisationId,
@@ -78,7 +87,23 @@ public class ApplicationTermsController {
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(
                             failureView,
-                            () -> format("redirect:%s%d/form/question/%d/terms-and-conditions#terms-accepted", APPLICATION_BASE_URL, applicationId, questionId));
+                            () -> format("redirect:/application/%d/form/terms-and-conditions/organisation/%d/question/%d#terms-accepted", applicationId, organisationId, questionId));
         });
+    }
+
+    @GetMapping("/question/{questionId}/partner-status")
+    public String getPartnerStatus(@PathVariable long applicationId,
+                                   @PathVariable long questionId,
+                                   Model model) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        if (!application.isOpen()) {
+            throw new ForbiddenActionException("Cannot view partners on a non-open application");
+        }
+        if (!application.isCollaborativeProject()) {
+            throw new ForbiddenActionException("Cannot view partners on a non-collaborative application");
+        }
+
+        model.addAttribute("model", applicationTermsPartnerModelPopulator.populate(application, questionId));
+        return "application/sections/terms-and-conditions/terms-and-conditions-partner-status";
     }
 }

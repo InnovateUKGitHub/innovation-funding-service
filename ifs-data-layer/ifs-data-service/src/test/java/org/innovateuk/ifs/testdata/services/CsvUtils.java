@@ -237,7 +237,7 @@ public class CsvUtils {
 
                 String categoryCell = currentLine.get(1);
 
-                if (asList("Working days per year", "Grant claim", "Organisation size", "Work postcode").contains(categoryCell)) {
+                if (asList("Working days per year", "Grant claim", "Organisation size", "Work postcode", "Fec model enabled", "Fec file uploaded").contains(categoryCell)) {
                     organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, singletonList(currentLine.get(2))));
                 } else {
 
@@ -674,12 +674,12 @@ public class CsvUtils {
             dateOfIncorporation = nullableDate(line.get(i++));
             String sicCodesLine = nullable(line.get(i++));
             sicCodes = sicCodesLine != null ?
-                    simpleMap(asList(sicCodesLine.split(",")), OrganisationSicCodeResource::new) :
+                    simpleMap(asList(sicCodesLine.split(";")), OrganisationSicCodeResource::new) :
                     emptyList();
             organisationNumber = nullable(line.get(i++));
             String executiveOfficersLine = nullable(line.get(i++));
             executiveOfficers = executiveOfficersLine != null ?
-                    simpleMap(asList(executiveOfficersLine.split(",")), OrganisationExecutiveOfficerResource::new) :
+                    simpleMap(asList(executiveOfficersLine.split(";")), OrganisationExecutiveOfficerResource::new) :
                     emptyList();
             businessType  = nullable(line.get(i++));
         }

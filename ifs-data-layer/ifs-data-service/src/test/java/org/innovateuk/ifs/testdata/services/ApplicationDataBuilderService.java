@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -462,6 +463,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 return builder.withOrganisationSize(OrganisationSize.findById(Long.valueOf(financeRow.metadata.get(0))));
             case "Work postcode":
                 return builder.withWorkPostcode(financeRow.metadata.get(0));
+            case "Fec model enabled":
+                return builder.withFecEnabled(Boolean.valueOf(financeRow.metadata.get(0)));
+            case "Fec file uploaded":
+                return builder.withUploadedFecFile();
             case "Labour":
                 return builder.withLabourEntry(
                         financeRow.metadata.get(0),
@@ -542,7 +547,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             return costsWithData;
         };
-
 
         return finance.
                 withIndustrialCosts(costBuilder);
@@ -657,15 +661,31 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
-            return builder[0].withOrganisationSize(SMALL).
-                    withLocation();
+            if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL) {
+                if (organisationName.equals("Northern Irish Ltd.")) {
+                    builder[0] = builder[0]
+                            .withNorthernIrelandDeclaration(true);
+                } else {
+                    builder[0] = builder[0]
+                            .withNorthernIrelandDeclaration(false);
+                }
+
+            }
+            return builder[0].withOrganisationSize(SMALL)
+                    .withLocation()
+                    .withFecEnabled(getDefaultFecModel(organisationType));
         };
+
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
                 withIndustrialCosts(costBuilder);
+    }
+
+    private Boolean getDefaultFecModel(OrganisationTypeEnum organisationType) {
+        return organisationType == OrganisationTypeEnum.KNOWLEDGE_BASE ? false : null;
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(

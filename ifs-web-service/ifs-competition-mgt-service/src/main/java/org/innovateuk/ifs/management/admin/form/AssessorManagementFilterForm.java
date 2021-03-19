@@ -7,9 +7,6 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public class AssessorManagementFilterForm extends BaseBindingResultTarget {
     private String filter;
 
-    public AssessorManagementFilterForm() {
-    }
-
     public String getFilter() {
         return filter;
     }

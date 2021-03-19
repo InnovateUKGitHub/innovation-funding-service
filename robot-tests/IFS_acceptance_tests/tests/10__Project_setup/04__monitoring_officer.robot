@@ -258,7 +258,7 @@ Comp admin assign project existing IFS user MO
 Internal user assigns a MO to a new project and removes a partner organisation
     [Documentation]    IFS-8753
     When Log in as a different user                      &{internal_finance_credentials}
-    Then Internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
+    Then internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
     And Internal user removes a partner organisation
 
 MO can now check the application feedback
@@ -369,7 +369,7 @@ The user enters the details
 The payment milestone table is visible in application overview
     the user expands the section                Funding breakdown
     the user should see the element             jQuery = h1:contains("Application overview")
-    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£265084") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£265,084") th:contains("100%")
     the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£265,084")
 
 MO enter details and create account

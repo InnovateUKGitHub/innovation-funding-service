@@ -6,5 +6,5 @@ import org.innovateuk.ifs.granttransfer.domain.EuGrantTransfer;
 public interface EuGrantTransferRepository extends RefreshableCrudRepository<EuGrantTransfer, Long> {
 
     EuGrantTransfer findByApplicationId(long applicationId);
-
+    void deleteByApplicationId(long applicationId);
 }

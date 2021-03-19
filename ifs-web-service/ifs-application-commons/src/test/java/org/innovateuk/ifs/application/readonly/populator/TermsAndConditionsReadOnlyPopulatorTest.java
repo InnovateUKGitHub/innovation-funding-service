@@ -89,7 +89,7 @@ public class TermsAndConditionsReadOnlyPopulatorTest {
             .put(organisations.get(0).getId(), newHashSet(sectionId))
             .put(organisations.get(1).getId(), newHashSet(sectionId))
         .build());
-        when(applicationFinanceRestService.getFinanceDetails(application.getId())).thenReturn(restSuccess(newApplicationFinanceResource()
+        when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(newApplicationFinanceResource()
                 .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId())
                 .withNorthernIrelandDeclaration(false, true)
                 .build(2)));

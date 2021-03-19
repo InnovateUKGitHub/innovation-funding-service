@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.async.config;
 
 import org.innovateuk.ifs.async.executor.AsyncTaskDecorator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class AsyncThreadPoolTaskExecutorConfig {
 
-    @Autowired
-    private AsyncTaskDecorator asyncTaskDecorator;
-
     @Value("${ifs.web.ajp.connections.max.total}")
     private int maxConnections;
 
@@ -24,7 +20,7 @@ public class AsyncThreadPoolTaskExecutorConfig {
     private int maxAsyncThreads;
 
     @Bean
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor(AsyncTaskDecorator asyncTaskDecorator) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setTaskDecorator(asyncTaskDecorator);
         executor.setCorePoolSize(maxConnections);

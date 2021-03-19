@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interceptors;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.navigation.PageHistoryService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR,
                         user != null &&
                         !user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) &&
-                        user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE));
+                        user.hasAuthority(Authority.COMP_ADMIN));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {

@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
@@ -31,11 +31,13 @@ createContainer.hostName = "application-svc"
 createContainer.containerName = "application-svc"
 createContainer.containerId = "application-svc"
 createContainer.portBindings = ['9001:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 pullImageAndCreateContainer.hostName = "application-svc"
 pullImageAndCreateContainer.containerName = "application-svc"
 pullImageAndCreateContainer.containerId = "application-svc"
 pullImageAndCreateContainer.portBindings = ['9001:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.application-service.pull.nexus.image') ? project.property('ifs.application-service.pull.nexus.image').toBoolean() : false

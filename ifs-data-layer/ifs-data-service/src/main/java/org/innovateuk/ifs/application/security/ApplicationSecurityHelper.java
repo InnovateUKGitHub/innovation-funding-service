@@ -2,11 +2,9 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,9 +13,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @Component
 public class ApplicationSecurityHelper extends BasePermissionRules {
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     /**
      * This method can be used anywhere giving permission for a user to see an application and related data.

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.admin.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserCompositeId;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -42,12 +43,6 @@ public class UserPermissionRules {
     @PermissionRule(value = "VIEW_USER_PAGE", description = "Project finance can view edit user page of assessors")
     public boolean projectFinanceCanViewAssessorsEditUserPage(UserCompositeId userCompositeId, UserResource user) {
         UserResource editUser = userRestService.retrieveUserById(userCompositeId.id()).getSuccess();
-        return editUser.hasRole(Role.ASSESSOR) && user.hasRole(Role.PROJECT_FINANCE);
-    }
-
-    @PermissionRule(value = "VIEW_USER_PAGE", description = "Comp admins can view edit user page of assessors")
-    public boolean compAdminCanViewAssessorsEditUserPage(UserCompositeId userCompositeId, UserResource user) {
-        UserResource editUser = userRestService.retrieveUserById(userCompositeId.id()).getSuccess();
-        return editUser.hasRole(Role.ASSESSOR) && user.hasRole(Role.COMP_ADMIN);
+        return editUser.hasRole(Role.ASSESSOR) && user.hasAuthority(Authority.COMP_ADMIN);
     }
 }

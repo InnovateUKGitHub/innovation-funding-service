@@ -288,7 +288,11 @@
         <tbody class="govuk-table__body">
         <tr th:each="partner : ${partners}" class="govuk-table__row">
             <!--/*@thymesVar id="partner" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsRowReadOnlyViewModel"*/-->
-            <td class="govuk-table__cell" th:text="${partner.partnerName}"> <span class="hint" th:if="${partner.lead}">(Lead)</span></td>
+            <td class="govuk-table__cell">
+                <th:block  th:text="${partner.partnerName}"></th:block>
+                <span class="hint" th:if="${partner.lead}">(Lead)</span>
+                <span th:if="${displayCompleteStatus and !partner.accepted}" class="error-icon-after"></span>
+            </td>
             <td class="govuk-table__cell" th:text="${partner.fundingRules.displayName}"
                 th:if="${includeFundingRules}"></td>
             <td class="govuk-table__cell">
@@ -298,8 +302,8 @@
             </td>
             <td class="govuk-table__cell"
                 th:if="${displayCompleteStatus}">
-                <th:block th:if="${partner.accepted}">Accepted</th:block>
-                <th:block th:unless="${partner.accepted}">Not yet accepted</th:block>
+                <span th:if="${partner.accepted}" class="accepted">Accepted</span>
+                <span th:unless="${partner.accepted}" class="unaccepted">Not yet accepted</span>
             </td>
         </tr>
         </tbody>
@@ -308,7 +312,24 @@
 
 
 <th:block th:fragment="terms-and-conditions (model)">
-    <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
-    <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
+    <div class="govuk-!-margin-bottom-3">
+        <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
+        <th:block th:unless="${model.complete}">
+            <div class="warning-alert">
+                <p class="govuk-body">The following organisations have not yet accepted:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <th:block th:each="nonAcceptedPartner : ${model.nonAcceptedPartners}">
+                        <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
+                    </th:block> 
+                </ul>
+                <p class="govuk-body">This application cannot be submitted until all partners accept our terms and conditions.</p>
+            </div>
+        </th:block>
+        <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
+    </div>
 </th:block>
+
+<th:block th:fragment="subsidy-basis(model)">
+</th:block>
+
 </html>

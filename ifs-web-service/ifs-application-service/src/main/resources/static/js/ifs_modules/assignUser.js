@@ -16,6 +16,14 @@ IFS.application.progressiveSelect = (function () {
       jQuery(document).on('click', function () {
         IFS.application.progressiveSelect.hideAll()
       })
+      jQuery('body').on('click', '[data-add-row-man]', function (e) {
+        e.preventDefault()
+        IFS.manuallyEnter.handleAddRowMan(this)
+      })
+      jQuery('body').on('click', '[data-remove-row-man]', function (e) {
+        e.preventDefault()
+        IFS.manuallyEnter.handleRemoveRowMan(this)
+      })
       jQuery('body').on('click', '.assign-button [aria-controls]', function (e) {
         e.stopPropagation()
         IFS.application.progressiveSelect.toggleDropdown(this)

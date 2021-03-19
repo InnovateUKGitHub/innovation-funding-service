@@ -3,9 +3,12 @@ package org.innovateuk.ifs.project.core.transactional;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationMigration;
+import org.innovateuk.ifs.application.domain.MigrationStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationMigrationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,6 +18,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,6 +38,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<ProjectToBeCreatedService> {
@@ -57,6 +62,11 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
     @Mock
     private KtpProjectNotificationService ktpProjectNotificationService;
+
+    @Mock
+    private ApplicationMigrationService applicationMigrationService;
+
+    private ArgumentCaptor<ApplicationMigration> applicationMigrationArgumentCaptor;
 
     @Test
     public void findProjectToCreate() {
@@ -87,6 +97,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         when(projectToBeCreatedRepository.findByApplicationId(application.getId())).thenReturn(of(projectToBeCreated));
         when(applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource)).thenReturn(serviceSuccess());
+        when(applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
 
         ServiceResult<ScheduleResponse> result = service.createProject(application.getId());
@@ -98,6 +109,48 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         verify(applicationFundingService).notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         verify(projectService).createProjectFromApplication(application.getId());
         verifyZeroInteractions(ktpProjectNotificationService);
+        verify(applicationMigrationService).findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED);
+    }
+
+    @Test
+    public void createProjectAndMigrateApplication() {
+        applicationMigrationArgumentCaptor = ArgumentCaptor.forClass(ApplicationMigration.class);
+        String emailMessage = "message";
+        Application application = newApplication()
+                .withCompetition(newCompetition().withFundingType(FundingType.GRANT).build())
+                .build();
+        ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(application, emailMessage);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource(emailMessage,
+                ImmutableMap.<Long, FundingDecision> builder()
+                        .put(application.getId(), FUNDED)
+                        .build());
+        ApplicationMigration applicationMigration = new ApplicationMigration(application.getId(), MigrationStatus.CREATED);
+
+        when(projectToBeCreatedRepository.findByApplicationId(application.getId())).thenReturn(of(projectToBeCreated));
+        when(applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource)).thenReturn(serviceSuccess());
+        when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
+        when(applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED))
+                .thenReturn(serviceSuccess(Optional.of(applicationMigration)));
+        when(applicationMigrationService.migrateApplication(application.getId())).thenReturn(serviceSuccess());
+        when(applicationMigrationService.updateApplicationMigrationStatus(any(ApplicationMigration.class)))
+                .thenReturn(serviceSuccess(applicationMigration));
+
+        ServiceResult<ScheduleResponse> result = service.createProject(application.getId());
+
+        assertTrue(result.isSuccess());
+        assertEquals("Project created: " + application.getId(), result.getSuccess().getResponse());
+        assertFalse(projectToBeCreated.isPending());
+
+        verify(applicationFundingService).notifyApplicantsOfFundingDecisions(fundingNotificationResource);
+        verify(projectService).createProjectFromApplication(application.getId());
+        verifyZeroInteractions(ktpProjectNotificationService);
+        verify(applicationMigrationService).findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED);
+        verify(applicationMigrationService).migrateApplication(application.getId());
+
+        verify(applicationMigrationService).updateApplicationMigrationStatus(applicationMigrationArgumentCaptor.capture());
+        ApplicationMigration updated = applicationMigrationArgumentCaptor.getValue();
+        assertEquals(application.getId(), updated.getApplicationId());
+        assertEquals(MigrationStatus.MIGRATED, updated.getStatus());
     }
 
     @Test
@@ -105,11 +158,13 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         long applicationId = 1L;
         String emailMessage = "message";
         Application application = newApplication()
+                .withId(applicationId)
                 .withCompetition(newCompetition().withFundingType(FundingType.KTP).build())
                 .build();
         ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(application, emailMessage);
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
+        when(applicationMigrationService.findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED)).thenReturn(serviceSuccess(Optional.empty()));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
         when(ktpProjectNotificationService.sendProjectSetupNotification(application.getId())).thenReturn(serviceSuccess());
 
@@ -122,6 +177,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         verifyZeroInteractions(applicationFundingService);
         verify(projectService).createProjectFromApplication(application.getId());
         verify(ktpProjectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
+        verify(applicationMigrationService).findByApplicationIdAndStatus(application.getId(), MigrationStatus.CREATED);
     }
 
     @Test
