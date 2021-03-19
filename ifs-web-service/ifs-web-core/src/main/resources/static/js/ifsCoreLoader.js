@@ -37,6 +37,7 @@ IFS.core.loadOrder = {
       IFS.core.autoComplete.init()
       IFS.core.exampleDate.init()
       IFS.core.pageHistory.init()
+      IFS.core.hashScroll.init()
     },
     finalize: function () {
       IFS.core.modal.init()

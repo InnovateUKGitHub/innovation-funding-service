@@ -2,6 +2,7 @@
 Documentation     IFS-3036 As an internal IFS user I am able to see the grant terms and conditions applicable to an application
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -13,19 +14,19 @@ Resource          ../../resources/common/Assessor_Commons.robot
 In Panel Dashboard
     [Documentation]
     [Tags]
-    Given the user navigates to the page      ${CA_Live}
-    When the user clicks the button/link      link = ${FUNDERS_PANEL_COMPETITION_NAME}
-    And the user should see the competition details  ${FUNDERS_PANEL_COMPETITION_NAME}  Panel   Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision
+    Given the user navigates to the page                             ${CA_Live}
+    When the user clicks the button/link                             link = ${FUNDERS_PANEL_COMPETITION_NAME}
+    And the user should see the competition details                  ${FUNDERS_PANEL_COMPETITION_NAME}  Panel   Materials and manufacturing  Digital manufacturing  Invite assessors to assess the competition  Input and review funding decision
     Then the user should see milestones for In Panel Competitions
 
 Internal user can see grant terms and conditions
     [Documentation]  IFS-3036  IFS-5920
     [Tags]
-    Given The user clicks the button/link  link = Applications: All, submitted, ineligible
-    And The user clicks the button/link    link = All applications
+    Given the user clicks the button/link  link = Applications: All, submitted, ineligible
+    And the user clicks the button/link    link = All applications
     When the user clicks the button/link   link = ${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
     And the user clicks the button/link    jQuery = button:contains("Award terms and conditions")
-    And the user clicks the button/link    link = View terms and conditions
+    And the user clicks the button/link    jQuery = a:contains("Innovate UK")
     Then the user should see the element   jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***

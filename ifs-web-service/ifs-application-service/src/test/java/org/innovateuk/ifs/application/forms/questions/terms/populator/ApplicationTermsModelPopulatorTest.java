@@ -105,7 +105,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
         QuestionResource subsidyBasisQuestion = newQuestionResource().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
+                .withNorthernIrelandDeclaration(false)
                 .build();
 
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
@@ -538,7 +538,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
                 .withMarkedAsCompleteByUserName(currentUser.getName())
                 .build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
+                .withNorthernIrelandDeclaration(false)
                 .build();
 
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
@@ -601,7 +601,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         OrganisationResource organisation = newOrganisationResource().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(false)
+                .withNorthernIrelandDeclaration(false)
                 .build();
 
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisationId)).thenReturn(restSuccess(applicationFinanceResource));
@@ -671,7 +671,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
         OrganisationResource organisation = newOrganisationResource().build();
         QuestionStatusResource questionStatus = newQuestionStatusResource().build();
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withNorthernIrelandDeclarations(true)
+                .withNorthernIrelandDeclaration(true)
                 .build();
         QuestionResource subsidyBasisQuestion = newQuestionResource().build();
 
