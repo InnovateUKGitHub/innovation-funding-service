@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
+import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -67,7 +66,7 @@ public class YourProjectCostsAutosaver {
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
             } else if (field.startsWith("associateSalaryCostRows")) {
-                return autosaveAssociateSalaryCost(field, value, finance);
+                return autosaveAssociateSalaryCost(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("associateDevelopmentCostRows")) {
                 return autosaveAssociateDevelopmentCost(field, value, finance);
             } else if (field.startsWith("associateSupportCostRows")) {
@@ -88,6 +87,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveVAT(value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("justificationForm.justification")) {
                 return autosaveJustification(value, finance, applicationId, organisation.getId());
+            } else if (field.startsWith("academicAndSecretarialSupportForm.cost")) {
+                return autosaveAcademicAndSecretarialSupportCostRows(field, value, finance, applicationId, organisation.getId());
             } else {
                 throw new IFSRuntimeException(format("Auto save field not handled %s", field), emptyList());
             }
@@ -95,6 +96,13 @@ public class YourProjectCostsAutosaver {
             LOG.debug("Error auto saving", e);
             LOG.info(format("Unable to auto save field (%s) value (%s)", field, value));
         }
+        return Optional.empty();
+    }
+
+    private Optional<Long> autosaveAcademicAndSecretarialSupport(String field, String value, ApplicationFinanceResource financeResource) {
+        AcademicAndSecretarialSupport academicAndSecretarialSupport = new AcademicAndSecretarialSupport();
+        academicAndSecretarialSupport.setCost(new BigInteger(value));
+        financeRowRestService.update(academicAndSecretarialSupport);
         return Optional.empty();
     }
 
@@ -251,7 +259,7 @@ public class YourProjectCostsAutosaver {
         return Optional.of(cost.getId());
     }
 
-    private Optional<Long> autosaveAssociateSalaryCost(String field, String value, ApplicationFinanceResource finance) {
+    private Optional<Long> autosaveAssociateSalaryCost(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
         String id = idFromRowPath(field);
         String rowField = fieldFromRowPath(field);
         AssociateSalaryCost cost = getCost(id, () -> new AssociateSalaryCost(finance.getId()));
@@ -270,7 +278,60 @@ public class YourProjectCostsAutosaver {
                 throw new IFSRuntimeException(format("Auto save associate salary field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
+        autoSaveIndirectCost(finance, applicationId, organisationId);
         return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveAcademicAndSecretarialSupportCostRows(String field, String value, ApplicationFinanceResource finance, long applicationId, Long organisationId) {
+        if (!finance.getFecModelEnabled()) {
+            ApplicationFinanceResource organisationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+            DefaultCostCategory financeOrganisationDetails = (DefaultCostCategory) organisationFinance.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT);
+            AcademicAndSecretarialSupport financeRowItem = (AcademicAndSecretarialSupport) financeOrganisationDetails.getCosts().stream()
+                    .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT)
+                    .findFirst()
+                    .orElseGet(() -> financeRowRestService.create(new AcademicAndSecretarialSupport(finance.getId())).getSuccess());
+
+            financeRowItem.setCost(new BigInteger(value));
+            financeRowRestService.update(financeRowItem);
+            autoSaveIndirectCost(finance, applicationId, organisationId);
+            return Optional.of(financeRowItem.getId());
+        }
+        return Optional.empty();
+    }
+
+    private void autoSaveIndirectCost(ApplicationFinanceResource finance, long applicationId, Long organisationId) {
+        if (BooleanUtils.isFalse(finance.getFecModelEnabled())) {
+            ApplicationFinanceResource organisationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+            DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinance.getFinanceOrganisationDetails(FinanceRowType.INDIRECT_COSTS);
+
+            IndirectCost indirectCost = (IndirectCost) defaultCostCategory.getCosts().stream()
+                    .filter(costRowItem -> costRowItem.getCostType() == FinanceRowType.INDIRECT_COSTS)
+                    .findFirst()
+                    .orElseGet(() -> financeRowRestService.create(new IndirectCost(finance.getId())).getSuccess());
+
+            BigDecimal calculateIndirectCost = calculateIndirectCost(organisationFinance);
+            indirectCost.setCost(calculateIndirectCost.toBigInteger());
+            financeRowRestService.update(indirectCost);
+        }
+    }
+
+    private BigDecimal calculateIndirectCost(ApplicationFinanceResource organisationFinance) {
+        BigDecimal totalAssociateSalaryCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS).getCosts().stream()
+                .filter(financeRowItem -> !financeRowItem.isEmpty())
+                .map(FinanceRowItem::getTotal)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        BigDecimal totalAcademicAndSecretarialSupportCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getCosts().stream()
+                .filter(financeRowItem -> !financeRowItem.isEmpty())
+                .map(FinanceRowItem::getTotal)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        return totalAssociateSalaryCost
+                .add(totalAcademicAndSecretarialSupportCost)
+                .multiply(YourProjectCostsForm.INDIRECT_COST_PERCENTAGE)
+                .divide(BigDecimal.valueOf(100));
     }
 
     private Optional<Long> autosaveAssociateSupportCost(String field, String value, ApplicationFinanceResource finance) {

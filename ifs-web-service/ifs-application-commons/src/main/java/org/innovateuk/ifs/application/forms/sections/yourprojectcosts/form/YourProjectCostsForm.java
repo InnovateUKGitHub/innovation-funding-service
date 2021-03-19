@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 public class YourProjectCostsForm {
 
     public static final BigDecimal VAT_RATE = BigDecimal.valueOf(20);
+    public final static BigDecimal INDIRECT_COST_PERCENTAGE = BigDecimal.valueOf(46);
 
     private LabourForm labour = new LabourForm();
 
@@ -48,6 +50,8 @@ public class YourProjectCostsForm {
     private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
 
     private JustificationForm justificationForm = new JustificationForm();
+
+    private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm();
 
     private Boolean eligibleAgreement;
 
@@ -284,6 +288,21 @@ public class YourProjectCostsForm {
         return calculateTotal(ktpTravelCostRows);
     }
 
+    public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
+        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm.getCost())
+                .orElse(BigInteger.valueOf(0)));
+    }
+
+    public BigDecimal getIndirectCostsPercentage() {
+        return INDIRECT_COST_PERCENTAGE;
+    }
+
+    public BigDecimal getTotalIndirectCosts()
+    {
+        return this.getTotalAssociateSalaryCosts().add(this.getTotalAcademicAndSecretarialSupportCosts())
+                .multiply(INDIRECT_COST_PERCENTAGE).divide(new BigDecimal(100));
+    }
+
     public BigDecimal getOrganisationFinanceTotal() {
         return getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
@@ -299,7 +318,9 @@ public class YourProjectCostsForm {
                 .add(getTotalConsumableCosts())
                 .add(getTotalKnowledgeBaseCosts())
                 .add(getTotalEstateCosts())
-                .add(getTotalKtpTravelCosts());
+                .add(getTotalKtpTravelCosts())
+                .add(getTotalAcademicAndSecretarialSupportCosts())
+                .add(getTotalIndirectCosts());
     }
 
     private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {
@@ -363,5 +384,13 @@ public class YourProjectCostsForm {
                 .values()
                 .stream()
                 .filter(cost -> cost.getType() != null && cost.getType() == KtpTravelCostType.SUPERVISOR));
+    }
+
+    public AcademicAndSecretarialSupportCostRowForm getAcademicAndSecretarialSupportForm() {
+        return academicAndSecretarialSupportForm;
+    }
+
+    public void setAcademicAndSecretarialSupportForm(AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm) {
+        this.academicAndSecretarialSupportForm = academicAndSecretarialSupportForm;
     }
 }
