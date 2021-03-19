@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.commons.validation;
 
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.junit.Before;
@@ -35,6 +36,7 @@ public class FieldComparisonValidatorTest {
         mockMvc = standaloneSetup(controller).build();
 
         localValidatorFactory = new LocalValidatorFactoryBean();
+        localValidatorFactory.setProviderClass(HibernateValidator.class);
         localValidatorFactory.afterPropertiesSet();
     }
 

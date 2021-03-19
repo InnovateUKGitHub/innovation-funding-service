@@ -24,7 +24,6 @@ import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplate
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
@@ -462,7 +461,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andReturn();
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
-        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, form.getAnnex());
+        assertEquals(uploadedFile, form.getAnnex());
     }
 
     @Test
@@ -506,7 +505,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andReturn();
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
-        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, form.getAnnex());
+        assertEquals(uploadedFile, form.getAnnex());
         assertEquals(Boolean.FALSE, ((GrantOfferLetterModel)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
     }
 

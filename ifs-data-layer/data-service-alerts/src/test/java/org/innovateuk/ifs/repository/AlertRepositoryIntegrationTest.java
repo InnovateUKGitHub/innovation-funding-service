@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@EnableAutoConfiguration
 @ActiveProfiles("integration-test")
 public class AlertRepositoryIntegrationTest {
 
