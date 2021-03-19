@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -61,31 +60,26 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     @Override
     public List<SectionBuilder> sections(Competition competition, List<SectionBuilder> competitionTypeSections) {
 
+        if (competitionTypeSections.stream().noneMatch(section -> section.getName().equals("Finances"))) {
+            return competitionTypeSections;
+        }
+
         if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
-            if (competitionTypeExcluded(competition.getCompetitionTypeEnum())) {
-                return competitionTypeSections;
-            }
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
         } else {
-            if (competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
-                competitionTypeSections.get(0)
-                        .getQuestions().add(0,
-                        aQuestion()
-                                .withShortName("Subsidy basis")
-                                .withName("Subsidy basis")
-                                .withDescription("Subsidy basis")
-                                .withMarkAsCompletedEnabled(true)
-                                .withMultipleStatuses(true)
-                                .withAssignEnabled(false)
-                                .withQuestionSetupType(QuestionSetupType.SUBSIDY_BASIS)
-                                .withQuestionnaire(northernIrelandDeclaration()));
-            }
+            competitionTypeSections.get(0)
+                    .getQuestions().add(0,
+                    aQuestion()
+                            .withShortName("Subsidy basis")
+                            .withName("Subsidy basis")
+                            .withDescription("Subsidy basis")
+                            .withMarkAsCompletedEnabled(true)
+                            .withMultipleStatuses(true)
+                            .withAssignEnabled(false)
+                            .withQuestionSetupType(QuestionSetupType.SUBSIDY_BASIS)
+                            .withQuestionnaire(northernIrelandDeclaration()));
         }
         return competitionTypeSections;
-    }
-
-    private boolean competitionTypeExcluded(CompetitionTypeEnum competitionType) {
-        return CompetitionTypeEnum.THE_PRINCES_TRUST == competitionType || CompetitionTypeEnum.EXPRESSION_OF_INTEREST == competitionType;
     }
 
     private boolean generatingWebtestDataForComp(Competition competition) {
@@ -170,28 +164,28 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         activitiesYes.setDecisionType(DecisionType.TEXT_OUTCOME);
         activitiesYes.setDecision(activitiesStateAidOutcome.getId());
         activitiesYes.setText("Yes");
-        activitiesYes = questionnaireOptionService.create(activitiesYes).getSuccess();
+        questionnaireOptionService.create(activitiesYes).getSuccess();
 
         QuestionnaireOptionResource activitiesNo = new QuestionnaireOptionResource();
         activitiesNo.setQuestion(activitiesQuestion.getId());
         activitiesNo.setDecisionType(DecisionType.QUESTION);
         activitiesNo.setDecision(tradeQuestion.getId());
         activitiesNo.setText("No");
-        activitiesNo = questionnaireOptionService.create(activitiesNo).getSuccess();
+        questionnaireOptionService.create(activitiesNo).getSuccess();
 
         QuestionnaireOptionResource tradeYes = new QuestionnaireOptionResource();
         tradeYes.setQuestion(tradeQuestion.getId());
         tradeYes.setDecisionType(DecisionType.TEXT_OUTCOME);
         tradeYes.setDecision(tradeStateAidOutcome.getId());
         tradeYes.setText("Yes");
-        tradeYes = questionnaireOptionService.create(tradeYes).getSuccess();
+        questionnaireOptionService.create(tradeYes).getSuccess();
 
         QuestionnaireOptionResource tradeNo = new QuestionnaireOptionResource();
         tradeNo.setQuestion(tradeQuestion.getId());
         tradeNo.setDecisionType(DecisionType.TEXT_OUTCOME);
         tradeNo.setDecision(tradeSubsidyControlOutcome.getId());
         tradeNo.setText("No");
-        tradeNo = questionnaireOptionService.create(tradeNo).getSuccess();
+        questionnaireOptionService.create(tradeNo).getSuccess();
 
         return questionnaireRepository.findById(questionnaire.getId()).get();
     }

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -26,7 +25,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -61,8 +59,6 @@ public class SubsidyControlTemplateTest {
         Questionnaire questionnaireEntity = new Questionnaire();
         SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
 
-        Competition competition = newCompetition().build();
-
         when(environment.getActiveProfiles()).thenReturn(new String[0]);
         when(questionnaireService.create(any())).thenAnswer((inv) -> {
             QuestionnaireResource questionnaire = inv.getArgument(0);
@@ -73,6 +69,7 @@ public class SubsidyControlTemplateTest {
         when(questionnaireOptionService.create(any())).thenAnswer((inv) -> serviceSuccess(inv.getArgument(0)));
         when(textOutcomeService.create(any())).thenAnswer((inv) -> serviceSuccess(inv.getArgument(0)));
         when(questionnaireRepository.findById(questionnaireId)).thenReturn(Optional.of(questionnaireEntity));
+        Competition competition = newCompetition().build();
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
@@ -93,7 +90,6 @@ public class SubsidyControlTemplateTest {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
         SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
                 .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
-
         Competition competition = newCompetition().build();
 
         subsidyControlTemplate.sections(competition, newArrayList(
@@ -106,44 +102,18 @@ public class SubsidyControlTemplateTest {
     }
 
     @Test
-    public void shouldNotInjectQuestionToProjectDetailsIfPrincesTrustComp() {
+    public void shouldNotInjectQuestionToProjectDetailsIfNoFinancesSectionPresent() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
         SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
                 .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
-
-        Competition competition = newCompetition().withCompetitionType(
-                newCompetitionType()
-                        .withName(CompetitionTypeEnum.THE_PRINCES_TRUST.getText())
-                        .build())
-                .build();
+        Competition competition = newCompetition().build();
 
          subsidyControlTemplate.sections(competition, newArrayList(
-                projectDetails,
-                SectionBuilder.aSection().withName("Finances")
+                projectDetails
         ));
 
         assertThat(projectDetails.getQuestions()).hasSize(1);
         assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("question1");
     }
 
-    @Test
-    public void shouldNotInjectQuestionToProjectDetailsIfExpressionOfInterestComp() {
-        ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
-                .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
-
-        Competition competition = newCompetition().withCompetitionType(
-                newCompetitionType()
-                        .withName(CompetitionTypeEnum.EXPRESSION_OF_INTEREST.getText())
-                        .build())
-                .build();
-
-        subsidyControlTemplate.sections(competition, newArrayList(
-                projectDetails,
-                SectionBuilder.aSection().withName("Finances")
-        ));
-
-        assertThat(projectDetails.getQuestions()).hasSize(1);
-        assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("question1");
-    }
 }
