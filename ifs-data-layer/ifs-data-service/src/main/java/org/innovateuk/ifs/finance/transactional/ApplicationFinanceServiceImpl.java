@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -31,6 +32,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -56,6 +58,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     @Autowired
     private CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
+
+    @Autowired
+    private QuestionStatusService questionStatusService;
 
     @Override
     @Transactional
@@ -147,8 +152,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                     if (applicationFinance.getInternationalLocation() != null) {
                         dbFinance.setInternationalLocation(applicationFinance.getInternationalLocation());
                     }
-                    if (applicationFinance.getNorthernIrelandDeclaration() != null) {
+                    if (applicationFinance.getNorthernIrelandDeclaration() != null && applicationFinance.getNorthernIrelandDeclaration() != dbFinance.getNorthernIrelandDeclaration()) {
                         dbFinance.setNorthernIrelandDeclaration(applicationFinance.getNorthernIrelandDeclaration());
+                        handleChangeToNorthernIrelandDeclaration(applicationFinance.getApplication(), applicationFinance.getOrganisation());
                     }
 
                     if (StringUtils.isEmpty(applicationFinance.getJustification())) {
@@ -164,6 +170,10 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                     return serviceSuccess(applicationFinanceMapper.mapToResource(dbFinance));
                 })
         );
+    }
+
+    private void handleChangeToNorthernIrelandDeclaration(long application, long organisation) {
+        questionStatusService.resetDependentQuestions(SUBSIDY_BASIS, application, organisation).getSuccess();
     }
 
     private ApplicationFinance setFecModel(ApplicationFinance dbFinance, ApplicationFinanceResource applicationFinance) {

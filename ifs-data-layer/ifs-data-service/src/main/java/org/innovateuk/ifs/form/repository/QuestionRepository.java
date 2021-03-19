@@ -35,4 +35,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
         return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
     }
     long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
+
+    Question findByQuestionnaireId(long id);
 }

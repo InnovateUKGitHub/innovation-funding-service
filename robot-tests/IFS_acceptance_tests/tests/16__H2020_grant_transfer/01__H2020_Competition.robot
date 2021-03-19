@@ -44,11 +44,9 @@ User can populate the Completion Stage, Milestones and Public content
 User can populate Terms and Conditions
     [Documentation]  IFS-5158  IFS-9124
     Given the user clicks the button/link           link = Terms and conditions
-    When the user clicks the button/link            jQuery = button:contains("Done")
-    And the user selects the radio button           termsAndConditionsId  24
+    When the user selects the radio button          termsAndConditionsId  24
     Then the user clicks the button/link            jQuery = button:contains("Done")
-    And the user should see the element             jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Horizon 2020")
-    And the user should see the element             jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Horizon 2020")
+    And the user should see the element             jQuery = p:contains("Horizon 2020 (opens in a new window)")
     [Teardown]  the user clicks the button/link     link = Return to setup overview
 
 User can populate Funding information and Project eligibility
@@ -57,7 +55,7 @@ User can populate Funding information and Project eligibility
     When the user completes funding information
     Then the user clicks the button/link                                        link = Return to setup overview
     And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
-    And the user fills in the CS funding eligibility                            false   ${compType_H2020}   SUBSIDY_CONTROL
+    And the user fills in the CS funding eligibility                            false   ${compType_H2020}   STATE_AID
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -249,7 +247,7 @@ A user starts a new competition
 The user is able to complete Initial details section
     the user enters text to a text field                              css = #title  ${competitionTitle}
     the user selects the radio button                                 fundingType  GRANT
-    And the user selects the radio button                             fundingRule  SUBSIDY_CONTROL
+    And the user selects the radio button                             fundingRule  STATE_AID
     the user selects the option from the drop-down menu               None  id = innovationSectorCategoryId
     the user selects the value from the drop-down menu                67  name = innovationAreaCategoryIds[0]
     the user enters text to a text field                              id = openingDateDay    10
@@ -263,7 +261,7 @@ The user is able to complete Initial details section
 The user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("H2020 Grant Transfer")
     the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
-    the user should see the element    jQuery = dt:contains("Competition funding rules") ~ dd:contains("Subsidy control")
+    the user should see the element    jQuery = dt:contains("Competition funding rules") ~ dd:contains("State aid")
     the user should see the element    jQuery = dd:contains("None")
     the user should see the element    jQuery = dd:contains("None")
     the user should see the element    jQuery = dd:contains("10 January ${nextyear}")

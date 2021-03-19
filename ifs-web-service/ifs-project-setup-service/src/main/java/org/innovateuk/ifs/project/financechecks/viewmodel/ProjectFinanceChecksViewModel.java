@@ -31,6 +31,7 @@ public class ProjectFinanceChecksViewModel {
     private final boolean ktpCompetition;
     private final boolean leadOrganisation;
     private final boolean paymentMilestonesLink;
+    private final boolean showChangesLink;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> pendingQueries,
@@ -47,7 +48,8 @@ public class ProjectFinanceChecksViewModel {
                                          boolean procurementCompetition,
                                          boolean ktpCompetition,
                                          boolean leadOrganisation,
-                                         boolean paymentMilestonesLink) {
+                                         boolean paymentMilestonesLink,
+                                         boolean showChangesLink) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
@@ -66,6 +68,7 @@ public class ProjectFinanceChecksViewModel {
         this.ktpCompetition = ktpCompetition;
         this.leadOrganisation = leadOrganisation;
         this.paymentMilestonesLink = paymentMilestonesLink;
+        this.showChangesLink = showChangesLink;
     }
 
     public Long getProjectId() {
@@ -215,5 +218,9 @@ public class ProjectFinanceChecksViewModel {
 
     public boolean isPaymentMilestonesLink() {
         return paymentMilestonesLink;
+    }
+
+    public boolean isShowChangesLink() {
+        return showChangesLink;
     }
 }
