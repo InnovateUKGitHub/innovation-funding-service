@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
@@ -92,26 +89,31 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
-        List<FinanceRowType> types = competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
+        List<FinanceRowType> financeRowTypes = competition.isKtp() ? filterFinanceRowTyoes(competition, finances, leadOrganisationId) :
+                competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
 
-        List<BreakdownTableRow> rows = organisations.stream()
+                List<BreakdownTableRow> rows = organisations.stream()
                 .filter(organisation -> competition.isKtp() ? organisation.getId().equals(leadOrganisationId) : true)
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition, canIncludeFinanceLink))
                 .collect(toList());
 
         if (addPendingOrganisations.test(application, competition)) {
-            rows.addAll(pendingOrganisations(application.getId(), types));
+            rows.addAll(pendingOrganisations(application.getId(), financeRowTypes));
         }
+
 
         return new ApplicationFundingBreakdownViewModel(application.getId(),
                 competition.getName(),
                 rows,
                 collaborativeProject,
                 competition.getFundingType() == FundingType.KTP,
-                types);
+                financeRowTypes);
     }
 
-
+    private List<FinanceRowType> filterFinanceRowTyoes(CompetitionResource competition,  Map<Long, BaseFinanceResource> finances, long leadOrganisationId) {
+        Optional<BaseFinanceResource> finance = Optional.ofNullable(finances.get(leadOrganisationId));
+        return competition.getFinanceRowTypesByFinance(finance).stream().filter(FinanceRowType::isCost).collect(toList());
+    }
 
     private Collection<BreakdownTableRow> pendingOrganisations(long applicationId, List<FinanceRowType> types) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
