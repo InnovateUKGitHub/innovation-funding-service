@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.commons.validation;
 
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ public class ValidAggregatedDateTest {
         mockMvc = standaloneSetup(controller).build();
 
         localValidatorFactory = new LocalValidatorFactoryBean();
+        localValidatorFactory.setProviderClass(HibernateValidator.class);
         localValidatorFactory.afterPropertiesSet();
     }
 

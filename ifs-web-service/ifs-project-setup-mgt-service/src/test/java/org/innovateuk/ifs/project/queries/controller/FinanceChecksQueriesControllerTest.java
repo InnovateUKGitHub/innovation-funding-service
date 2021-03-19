@@ -31,7 +31,6 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -547,7 +546,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_" + projectId + "_" + applicantOrganisationId + "_" + queryId));
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
-        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, form.getAttachment());
+        assertEquals(uploadedFile, form.getAttachment());
+
     }
 
     @Test

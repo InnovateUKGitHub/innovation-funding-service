@@ -1,23 +1,13 @@
 apply from: rootProject.file("gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/bom.gradle")
 
-apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
-jacocoTestReport{
-    additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
-    reports {
-        html.enabled true
-        xml.enabled true
-        csv.enabled false
-        html.destination file("build/reports/jacoco/html")
-    }
-    executionData.from = files('build/jacoco/test.exec')
-}
-
 dependencies {
-    if (project.hasProperty("cloud") && project.cloud == "development") {
-        compile "org.springframework.boot:spring-boot-devtools"
-    }
+// latest spring boot handles this IIRC
+//    if (project.hasProperty("cloud") && project.cloud == "development") {
+//        compile "org.springframework.boot:spring-boot-devtools"
+//    }
 
     if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
         compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.5"
@@ -28,7 +18,6 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
-    compile "org.apache.tomcat.embed:tomcat-embed-core:8.5.47"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
@@ -48,14 +37,6 @@ processTestResources {
 bootJar {
     classifier = 'executable'
     mainClassName = 'org.innovateuk.ifs.Application'
-}
-
-ext.springCloudVersion = 'Finchley.RELEASE'
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
 }
 
 test.finalizedBy jacocoTestReport

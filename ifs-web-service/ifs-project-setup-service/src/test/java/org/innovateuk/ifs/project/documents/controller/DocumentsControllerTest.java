@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
@@ -126,8 +125,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         expectedForm.setDocument(uploadedFile);
 
         assertEquals(viewModel, returnedViewModel);
-        DocumentForm actual = (DocumentForm) model.get("form");
-        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, actual.getDocument());
+        assertEquals(expectedForm, model.get("form"));
     }
 
     @Test

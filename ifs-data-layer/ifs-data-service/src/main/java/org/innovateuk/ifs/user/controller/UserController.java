@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 @RequestMapping("/user")
 public class UserController {
 
-    public static final Sort DEFAULT_USER_SORT = Sort.by(
+    public static final Sort DEFAULT_USER_SORT = new Sort(
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
