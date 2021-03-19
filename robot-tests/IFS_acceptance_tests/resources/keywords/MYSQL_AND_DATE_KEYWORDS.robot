@@ -300,3 +300,22 @@ get details of existing organisation
     log   ${result}
     ${result} =  get from list  ${result}  0
     [Return]  ${result}
+
+user queries previous application id
+    [Arguments]     ${application_id}
+    ${result} =  query  SELECT `previous_application_id` FROM `${database_name}`.`application` WHERE `id` = "${application_id}";
+    ${result} =  get from list  ${result}  0
+    ${previous_application_id} =  get from list  ${result}  0
+    [Return]  ${previous_application_id}
+
+user inserts application into application migration table
+    [Arguments]     ${application_id}
+    execute sql string     INSERT INTO `${database_name}`.`application_migration` (`application_id`) VALUES ("${application_id}");
+    reload page
+
+user queries migrated application id
+    [Arguments]     ${application_id}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`application` WHERE `previous_application_id` = "${application_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}

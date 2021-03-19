@@ -47,7 +47,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
 
         mockMvc.perform(get("/alert/findAllVisibleByType/" + AlertType.MAINTENANCE))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("[0]message", is("Test Maintenance")))
                 .andExpect(jsonPath("[0]type", is(AlertType.MAINTENANCE.toString())));
     }

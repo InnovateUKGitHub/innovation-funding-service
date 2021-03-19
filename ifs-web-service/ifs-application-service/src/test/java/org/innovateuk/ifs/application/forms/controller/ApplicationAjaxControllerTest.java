@@ -63,7 +63,6 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput[" + formInputId + "]")
                         .param("value", value)
-                        .param("multipleChoiceOptionId", "")
         ).andExpect(status().isOk());
 
         Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, null, false);
