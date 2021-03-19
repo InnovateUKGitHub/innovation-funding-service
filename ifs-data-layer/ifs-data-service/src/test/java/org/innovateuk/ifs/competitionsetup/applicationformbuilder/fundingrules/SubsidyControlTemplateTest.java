@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.env.Environment;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -49,14 +51,19 @@ public class SubsidyControlTemplateTest {
     @Mock
     private QuestionnaireRepository questionnaireRepository;
 
+    @Mock
+    private Environment environment;
+
     @Test
     public void sections() {
+        ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", true);
         long questionnaireId = 1L;
         Questionnaire questionnaireEntity = new Questionnaire();
         SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
 
         Competition competition = newCompetition().build();
 
+        when(environment.getActiveProfiles()).thenReturn(new String[0]);
         when(questionnaireService.create(any())).thenAnswer((inv) -> {
             QuestionnaireResource questionnaire = inv.getArgument(0);
             questionnaire.setId(questionnaireId);
@@ -84,7 +91,8 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldInjectQuestionToProjectDetails() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
+                .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
 
         Competition competition = newCompetition().build();
 
@@ -100,7 +108,8 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldNotInjectQuestionToProjectDetailsIfPrincesTrustComp() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
+                .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
 
         Competition competition = newCompetition().withCompetitionType(
                 newCompetitionType()
@@ -120,7 +129,8 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldNotInjectQuestionToProjectDetailsIfExpressionOfInterestComp() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
+                .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
 
         Competition competition = newCompetition().withCompetitionType(
                 newCompetitionType()

@@ -61,11 +61,10 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     @Override
     public List<SectionBuilder> sections(Competition competition, List<SectionBuilder> competitionTypeSections) {
 
-        if (competitionTypeExcluded(competition.getCompetitionTypeEnum())) {
-            return competitionTypeSections;
-        }
-
         if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
+            if (competitionTypeExcluded(competition.getCompetitionTypeEnum())) {
+                return competitionTypeSections;
+            }
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
         } else {
             if (competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
