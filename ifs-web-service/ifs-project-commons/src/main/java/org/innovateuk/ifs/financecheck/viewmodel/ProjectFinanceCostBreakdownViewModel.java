@@ -7,10 +7,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -28,7 +25,7 @@ public class ProjectFinanceCostBreakdownViewModel {
         this.finances = finances;
         this.organisationResources = organisationResources;
         this.total = finances.stream().map(ProjectFinanceResource::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.financeRowTypes = getFinanceRowTypes(finances, organisationResources, competition);
+        this.financeRowTypes = competition.getFinanceRowTypes();
     }
 
     public List<ProjectFinanceResource> getFinances() {
@@ -54,28 +51,5 @@ public class ProjectFinanceCostBreakdownViewModel {
 
     public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
-    }
-
-    private List<FinanceRowType> getFinanceRowTypes(List<ProjectFinanceResource> finances,
-                                                    List<PartnerOrganisationResource> organisationResources,
-                                                    CompetitionResource competition) {
-        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypes();
-
-        if (competition.isKtp()) {
-            Optional<PartnerOrganisationResource> lead = organisationResources.stream()
-                    .filter(partnerOrganisation -> partnerOrganisation.isLeadOrganisation())
-                    .findFirst();
-
-            if (lead.isPresent()) {
-                Optional<ProjectFinanceResource> leadProjectFinance = finances.stream()
-                        .filter(projectFinance -> projectFinance.getOrganisation().equals(lead.get().getOrganisation()))
-                        .findFirst();
-                financeRowTypes = competition.getFinanceRowTypesByFinance(leadProjectFinance);
-            }
-        }
-
-        return financeRowTypes.stream()
-                .filter(FinanceRowType::isCost)
-                .collect(toList());
     }
 }
