@@ -56,6 +56,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -137,10 +138,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             }
             EligibilityState eligibilityState = eligibility.get().getEligibility();
 
+            List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
+
             boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
                 boolean open = EligibilityState.APPROVED != eligibilityState && project.getProjectState().isActive();
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
+                Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
+                        .filter(projectFinance -> projectFinance.getOrganisation().longValue() == organisationId)
+                        .findFirst();
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, rowType, competition.get().getFinanceRowTypesByFinance(organisationProjectFinance), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
@@ -150,7 +156,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 }
             }
 
-            List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
             boolean resetableGolState = false;
