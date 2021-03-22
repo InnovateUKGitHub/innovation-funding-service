@@ -199,7 +199,7 @@ Internal user marks ATI application to successful
 MO can see application summary page for the ATI application in project setup before releasing the feedback
     [Documentation]  IFS-7647
     [Setup]  Requesting Application ID of this application
-    Given Internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
+    Given internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
     When Log in as a different user                            &{monitoring_officer_one_credentials}
     And the user navigates to the page                         ${server}/application/${atiApplicationID}/summary
     And the user should see the element                        jQuery = h1:contains("Application overview")
@@ -292,7 +292,6 @@ the user completes the application
     the user clicks the button/link                                                          link = Your project finances
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
-#    the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
 the partner selects new answer choice

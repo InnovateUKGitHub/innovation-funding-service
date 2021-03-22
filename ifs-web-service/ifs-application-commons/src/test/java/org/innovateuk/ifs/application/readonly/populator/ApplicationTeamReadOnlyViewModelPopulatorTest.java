@@ -135,7 +135,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
+        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
         assertEquals((Long) application.getId(), viewModel.getApplicationId());
         assertEquals((long) question.getId(), viewModel.getQuestionId());
