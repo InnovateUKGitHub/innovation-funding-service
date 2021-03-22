@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
@@ -243,7 +244,7 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
     public ServiceResult<Void> resetNonFECCostRowEntries(long applicationId, long organisationId) {
         Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationId, organisationId);
-        if (applicationFinance.isPresent()) {
+        if (applicationFinance.isPresent() && BooleanUtils.isTrue(applicationFinance.get().getFecModelEnabled())) {
             List<ApplicationFinanceRow> applicationFinanceRows = financeRowRepository.findByTargetId(applicationFinance.get().getId());
             OrganisationTypeFinanceHandler organisationFinanceHandler =
                     organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.get().getApplication().getCompetition().getId(), applicationFinance.get().getOrganisation().getOrganisationType().getId());
