@@ -30,8 +30,6 @@ ${subsidyControlFundingComp}         Subsidy control competition
 ${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
 ${leadStateAidApplication}           State aid application
-&{scLeadApplicantCredentials}        email=janet.howard@example.com     password=${short_password}
-&{partnerApplicantCredentials}       email=jessica.doe@ludlow.co.uk     password=${short_password}
 ${assessor1_email}                   addison.shannon@gmail.com
 ${assessor1_to_add}                  Addison Shannon
 ${assessor2_to_add}                  Alexis Colon
@@ -200,7 +198,7 @@ Lead applicant accepts state aid terms and conditions based on NI declaration
 
 Partner completes project finances and terms and conditions of state aid application
     [Documentation]  IFS-9116
-    Given log in as a different user                                &{partnerApplicantCredentials}
+    Given log in as a different user                                &{collaborator1_credentials}
     When the user navigates to Your-finances page                   ${leadStateAidApplication}
     Then the user marks the subsidy contol finances as complete     ${leadStateAidApplication}  labour costs  54,000  yes
 
@@ -272,7 +270,7 @@ Lead applicant can accept subsidy control terms and conditions based on NI decla
 
 Partner completes project finances and terms and conditions of subsidy control application
     [Documentation]  IFS-9116
-    Given log in as a different user                  &{partnerApplicantCredentials}
+    Given log in as a different user                  &{collaborator1_credentials}
     When the user navigates to Your-finances page     ${leadSubsidyControlApplication}
     Then the user marks the finances as complete      ${leadSubsidyControlApplication}  labour costs  54,000  yes
 
@@ -293,7 +291,7 @@ Lead applicant gets validation message when submiting the application without al
 
 Lead applicant submits subsidy control subsidy basis application
     [Documentation]  IFS-9116
-    Given log in as a different user                      &{partnerApplicantCredentials}
+    Given log in as a different user                      &{collaborator1_credentials}
     And the user clicks the button/link                   link = ${leadSubsidyControlApplication}
     And the user clicks the button/link                   link = Subsidy basis
     When the user completes subsidy basis declaration
@@ -308,7 +306,7 @@ Lead applicant can see organisations subsidy basis funding rules in application 
 
 Partner applicant can see organisations subsidy basis funding rules in application overview
     [Documentation]  IFS-9120
-    Given log in as a different user                       &{partnerApplicantCredentials}
+    Given log in as a different user                       &{collaborator1_credentials}
     And the user clicks the button/link                    link = ${leadSubsidyControlApplication}
     When the user clicks the button/link                   link = View application
     Then the user can see valid subsidy control answers
@@ -324,9 +322,14 @@ Comp admin assigns assessors to the competition and assigns the application to a
     And the assessors accept the invitation to assess the subsidy control competition
     Then the application is assigned to a assessor
 
+Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
+    [Documentation]  IFS-9200
+    Given the user navigates to the page                                                  ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
+    When the user clicks the button/link                                                  link = ${leadSubsidyControlApplication}
+    Then the user can see the terms and conditions for the lead and partner applicant
+
 Assessor can see organisations subsidy basis funding rules in assessment overview
     [Documentation]  IFS-9200
-    Given the user clicks the button/link                   link = ${leadSubsidyControlApplication}
     When the user clicks the button/link                    link = Subsidy basis
     And the user should see the element                     jQuery = td:contains("Big Riffs And Insane Solos Ltd") + td:contains("Subsidy control")+ td:contains("View answers")
     Then assessor should see valid subsidy basis answers
@@ -349,6 +352,13 @@ Monitoring officer can see organisations subsidy basis funding rules in applicat
     Then the user can see valid subsidy control answers
     And the user can see valid state aid answers
 
+MO can see T&Cs for the subsidy control application in project setup for both the applicants
+    [Documentation]  IFS-9200
+    Given the user navigates to the page                                                 ${server}/application/${leadSubsidyControlApplicationID}/summary
+    When the user clicks the button/link                                                 id = accordion-questions-heading-4-1
+    Then the user should see the element                                                 jQuery = h1:contains("Application overview")
+    And the user can see the terms and conditions for the lead and partner applicant
+
 Lead applicant can see organisations subsidy basis funding rules in application feedback
     [Documentation]  IFS-9120
     Given log in as a different user                        &{scLeadApplicantCredentials}
@@ -359,7 +369,7 @@ Lead applicant can see organisations subsidy basis funding rules in application 
 
 Partner can see organisations subsidy basis funding rules in application feedback
     [Documentation]  IFS-9120
-    Given log in as a different user                        &{partnerApplicantCredentials}
+    Given log in as a different user                        &{collaborator1_credentials}
     When the user clicks the button/link                    link = ${leadSubsidyControlApplication}
     And the user clicks the button/link                     link = view application feedback
     Then the user can see valid subsidy control answers
@@ -369,43 +379,12 @@ IFS admin can view the terms and conditions accepted by both the applicants
     [Documentation]  IFS-9200
     Given log in as a different user                                                      &{ifs_admin_user_credentials}
     When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
-    And the user clicks the button/link                                                   id = accordion-questions-heading-4-1
     Then the user can see the terms and conditions for the lead and partner applicant
 
-Internal users can view the terms and conditions accepted by the applicants
+Innovation lead can view the terms and conditions accepted by the applicants
     [Documentation]  IFS-9200
     Given log in as a different user                                                      &{innovation_lead_one}
     When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
-    Then the user can see the terms and conditions for the lead and partner applicant
-
-Comp admin assigns assessors to the competition and assigns the application to an assessor
-    [Documentation]  IFS-9200
-    [Setup]  update milestone to yesterday                                                ${subsidyControlCompetitionId}  SUBMISSION_DATE
-    Given log in as a different user                                                      &{ifs_admin_user_credentials}
-    And the user navigates to the page                                                    ${server}/management/competition/${subsidyControlCompetitionId}/assessors/find
-    When the user invites assessors to assess the subsidy control competition
-    And the assessors accept the invitation to assess the subsidy control competition
-    Then the application is assigned to a assessor
-
-Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
-    [Documentation]  IFS-9200
-    Given the user navigates to the page                                                  ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
-    When the user clicks the button/link                                                  link = ${leadSubsidyControlApplication}
-    Then the user can see the terms and conditions for the lead and partner applicant
-
-Internal user marks subsidy control application to successful
-    [Documentation]  IFS-9200
-    Given log in as a different user                                        &{internal_finance_credentials}
-    When the user navigates to the page                                     ${server}/management/competition/${subsidyControlCompetitionId}
-    And the user clicks the button/link                                     jQuery = button:contains("Close assessment")
-    Then making the application a successful project from correct state     ${subsidyControlCompetitionId}  ${leadSubsidyControlApplication}
-
-MO can see T&Cs for the subsidy control application in project setup for both the applicants
-    [Documentation]  IFS-9200
-    Given internal user assigns MO to application                                        ${leadSubsidyControlApplicationID}  ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
-    When log in as a different user                                                      &{monitoring_officer_one_credentials}
-    And the user navigates to the page                                                   ${server}/application/${leadSubsidyControlApplicationID}/summary
-    And the user should see the element                                                  jQuery = h1:contains("Application overview")
     Then the user can see the terms and conditions for the lead and partner applicant
 
 *** Keywords ***
@@ -460,7 +439,7 @@ the user marks the subsidy contol finances as complete
     the user should see the element                                       jQuery = li:contains("Your project finances") > .task-status-complete
 
 partner edits the subsidy basis section
-    log in as a different user          &{partnerApplicantCredentials}
+    log in as a different user          &{collaborator1_credentials}
     the user clicks the button/link     link = ${leadSubsidyControlApplication}
     the user clicks the button/link     link = Subsidy basis
     the user clicks the button/link     id = edit-application-details-button
