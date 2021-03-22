@@ -33,14 +33,6 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
         return withArray((internationalLocation, applicationFinanceResource) -> applicationFinanceResource.setInternationalLocation(internationalLocation), internationalLocations);
     }
 
-    public ApplicationFinanceResourceBuilder withFecEnabled(Boolean enabled) {
-        return with(finance -> finance.setFecModelEnabled(enabled));
-    }
-
-    public ApplicationFinanceResourceBuilder withFecFileEntry(Long fecFileEntry) {
-        return with(finance -> finance.setFecFileEntry(fecFileEntry));
-    }
-
     private ApplicationFinanceResourceBuilder(List<BiConsumer<Integer, ApplicationFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

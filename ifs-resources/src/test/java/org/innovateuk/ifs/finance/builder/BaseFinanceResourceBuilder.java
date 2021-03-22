@@ -328,4 +328,12 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         .build())
         );
     }
+
+    public S withFecEnabled(Boolean enabled) {
+        return with(finance -> finance.setFecModelEnabled(enabled));
+    }
+
+    public S withFecFileEntry(Long fecFileEntry) {
+        return with(finance -> finance.setFecFileEntry(fecFileEntry));
+    }
 }
