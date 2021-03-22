@@ -490,11 +490,9 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
                         FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
                         FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().build(),
                         FinanceRowType.CONSUMABLES, newDefaultCostCategory().build(),
-
                         FinanceRowType.ASSOCIATE_SUPPORT, newDefaultCostCategory().build(),
                         FinanceRowType.KNOWLEDGE_BASE, newDefaultCostCategory().build(),
                         FinanceRowType.ESTATE_COSTS, newDefaultCostCategory().build(),
-
                         FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build(),
                         FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT, newDefaultCostCategory().build(),
                         FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().build()))
