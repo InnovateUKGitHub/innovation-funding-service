@@ -495,7 +495,7 @@ the assessors accept the invitation to assess the subsidy control competition
     the user selects the radio button                     acceptInvitation   true
     the user clicks the button/link                       jQuery = button:contains("Confirm")
 
-the application is assigned to a assessor
+the application is assigned to be an assessor
     log in as a different user            &{Comp_admin1_credentials}
     the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/assessors
     the user selects the checkbox         assessor-row-1
