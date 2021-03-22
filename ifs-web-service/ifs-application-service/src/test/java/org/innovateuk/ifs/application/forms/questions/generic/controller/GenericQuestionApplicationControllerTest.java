@@ -22,6 +22,8 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Optional;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -87,7 +89,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .andExpect(view().name("application/questions/generic"))
                 .andExpect(model().attribute("model", viewModel));
 
-        verify(formPopulator).populate(any(), eq(applicantQuestion));
+        verify(formPopulator).populate(any(), eq(Optional.empty()), eq(applicantQuestion));
     }
 
     @Test
@@ -112,7 +114,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(model().attributeHasFieldErrorCode("form", "templateDocument", "validation.file.required"));
 
-        verify(formPopulator).populate(any(), eq(applicantQuestion));
+        verify(formPopulator).populate(any(), eq(Optional.empty()), eq(applicantQuestion));
         verify(validator).validate(any(), any());
 
     }
