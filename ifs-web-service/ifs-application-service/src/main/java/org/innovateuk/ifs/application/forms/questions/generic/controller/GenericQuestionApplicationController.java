@@ -52,7 +52,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
  */
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic")
+@RequestMapping({APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic",
+                APPLICATION_BASE_URL + "{applicationId}/form/organisation/{organisationId}/question/{questionId}/generic"})
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
@@ -92,10 +93,11 @@ public class GenericQuestionApplicationController {
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        Model model,
                        @PathVariable long applicationId,
+                       @PathVariable Optional<Long> organisationId,
                        @PathVariable long questionId,
                        UserResource user) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        formPopulator.populate(form, question);
+        formPopulator.populate(form, organisationId, question);
         return getView(model, question);
     }
 
@@ -109,10 +111,11 @@ public class GenericQuestionApplicationController {
                                          BindingResult bindingResult,
                                          Model model,
                                          @PathVariable long applicationId,
+                                         @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
-        formPopulator.populate(form, question);
+        formPopulator.populate(form, organisationId, question);
         validate(form, bindingResult, applicationId, questionId);
         return getView(model, question);
     }
@@ -123,6 +126,7 @@ public class GenericQuestionApplicationController {
                                  ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable long applicationId,
+                                 @PathVariable Optional<Long> organisationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
         save(form, applicationId, questionId, user);
@@ -135,12 +139,13 @@ public class GenericQuestionApplicationController {
                                         ValidationHandler validationHandler,
                                         Model model,
                                         @PathVariable long applicationId,
+                                        @PathVariable Optional<Long> organisationId,
                                         @PathVariable long questionId,
                                         UserResource user,
                                         HttpServletResponse response) {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         questionStatusRestService.assign(questionId, applicationId, getLeadProcessRole(applicationId).getId(), getUsersProcessRole(applicationId, user).getId()).getSuccess();
-        return redirectToQuestion(applicationId, questionId);
+        return redirectToQuestion(applicationId, organisationId, questionId);
     }
 
     @PostMapping(params = "complete")
@@ -149,6 +154,7 @@ public class GenericQuestionApplicationController {
                                  ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable long applicationId,
+                                 @PathVariable Optional<Long> organisationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
         Supplier<String> failureView = () -> {
@@ -165,23 +171,25 @@ public class GenericQuestionApplicationController {
                 List<ValidationMessages> validationMessages = questionStatusRestService.markAsComplete(questionId, applicationId, getUsersProcessRole(applicationId, user).getId()).getSuccess();
                 validationMessages.forEach(validationHandler::addAnyErrors);
                 return validationHandler.failNowOrSucceedWith(failureView,
-                        () -> redirectToQuestion(applicationId, questionId));
+                        () -> redirectToQuestion(applicationId, organisationId, questionId));
             });
         });
     }
 
     @PostMapping(params = "edit")
     public String edit(@PathVariable long applicationId,
+                       @PathVariable Optional<Long> organisationId,
                        @PathVariable long questionId,
                        UserResource user) {
         questionStatusRestService.markAsInComplete(questionId, applicationId, getUsersProcessRole(applicationId, user).getId()).getSuccess();
-        return redirectToQuestion(applicationId, questionId);
+        return redirectToQuestion(applicationId, organisationId, questionId);
     }
 
     @PostMapping("/auto-save")
     public @ResponseBody
     JsonNode autosave(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
                       @PathVariable long applicationId,
+                      @PathVariable Optional<Long> organisationId,
                       @PathVariable long questionId,
                        UserResource user) {
         save(form, applicationId, questionId, user);
@@ -194,6 +202,7 @@ public class GenericQuestionApplicationController {
                                          ValidationHandler validationHandler,
                                          Model model,
                                          @PathVariable long applicationId,
+                                         @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
         return handleFileUpload("templateDocument", FormInputType.TEMPLATE_DOCUMENT, form.getTemplateDocument(), questionId, applicationId, user, validationHandler, model);
@@ -206,6 +215,7 @@ public class GenericQuestionApplicationController {
                                          @RequestParam("removeTemplateDocument") long fileEntryId,
                                          Model model,
                                          @PathVariable long applicationId,
+                                         @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
         return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, fileEntryId, user, validationHandler, model);
@@ -217,6 +227,7 @@ public class GenericQuestionApplicationController {
                                          ValidationHandler validationHandler,
                                          Model model,
                                          @PathVariable long applicationId,
+                                         @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
         return handleFileUpload("appendix", FormInputType.FILEUPLOAD, form.getAppendix(), questionId, applicationId, user, validationHandler, model);
@@ -229,6 +240,7 @@ public class GenericQuestionApplicationController {
                                          @RequestParam("removeAppendix") long fileEntryId,
                                          Model model,
                                          @PathVariable long applicationId,
+                                         @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
         return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, fileEntryId, user, validationHandler, model);
@@ -320,7 +332,10 @@ public class GenericQuestionApplicationController {
                 .orElseThrow(ObjectNotFoundException::new);
     }
 
-    private String redirectToQuestion(long applicationId, long questionId) {
+    private String redirectToQuestion(long applicationId, Optional<Long> organisationId, long questionId) {
+        if (organisationId.isPresent()) {
+            return String.format("redirect:/application/%d/form/organisation/%d/question/%d/generic", applicationId, organisationId.get(), questionId);
+        }
         return String.format("redirect:/application/%d/form/question/%d/generic", applicationId, questionId);
     }
 

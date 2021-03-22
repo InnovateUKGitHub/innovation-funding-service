@@ -60,6 +60,8 @@ public class GenericQuestionApplicationModelPopulator {
                                                        .withLastUpdatedBy(response.getUpdatedByUser())
                                                        .withLastUpdatedByName(response.getUpdatedByUserName()));
 
+        boolean hideAssignButtons = !Boolean.TRUE.equals(question.isAssignEnabled());
+
         return viewModelBuilder.withApplicationId(application.getId())
                 .withCompetitionName(competition.getName())
                 .withApplicationName(application.getName())
@@ -70,10 +72,11 @@ public class GenericQuestionApplicationModelPopulator {
                 .withQuestionDescription(question.getDescription())
                 .withQuestionNumber(question.getQuestionNumber())
                 .withQuestionType(question.getQuestionSetupType())
+                .withQuestionHasMultipleStatus(Boolean.TRUE.equals(question.hasMultipleStatuses()))
                 .withComplete(applicantQuestion.isCompleteByApplicant(applicantQuestion.getCurrentApplicant()))
                 .withOpen(application.isOpen() && competition.isOpen())
                 .withLeadApplicant(applicantQuestion.getCurrentApplicant().isLead())
-                .withAssignButtonsViewModel(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, false))
+                .withAssignButtonsViewModel(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, hideAssignButtons))
                 .build();
     }
 

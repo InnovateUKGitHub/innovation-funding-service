@@ -107,4 +107,16 @@ public class ApplicationUrlHelperTest {
         // then
         assertEquals(Optional.of("/application/2/form/question/1/generic"), result);
     }
+
+    @Test
+    public void questionUrlForNiDeclaration() {
+        // given
+        QuestionSetupType questionSetupType = QuestionSetupType.NORTHERN_IRELAND_DECLARATION;
+
+        // when
+        Optional<String> result = ApplicationUrlHelper.getQuestionUrl(questionSetupType, QUESTION_ID, APPLICATION_ID, ORGANISATION_ID);
+
+        // then
+        assertEquals(Optional.of("/application/2/form/organisation/3/question/1/generic"), result);
+    }
 }

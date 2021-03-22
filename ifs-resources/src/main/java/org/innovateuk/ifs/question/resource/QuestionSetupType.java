@@ -15,7 +15,7 @@ public enum QuestionSetupType {
     TERMS_AND_CONDITIONS("T&C"),
     EQUALITY_DIVERSITY_INCLUSION("Equality, diversity & inclusion", FORM_INPUTS),
     SUBSIDY_BASIS("Subsidy basis", QUESTIONNAIRE),
-    NORTHERN_IRELAND_DECLARATION("Northern Ireland declaration", FORM_INPUTS),
+    NORTHERN_IRELAND_DECLARATION("Northern Ireland declaration", FORM_INPUTS, true),
     /* h2020 */
     GRANT_TRANSFER_DETAILS("Application details"),
     GRANT_AGREEMENT("Horizon 2020 grant agreement"),
@@ -24,6 +24,7 @@ public enum QuestionSetupType {
 
     private String shortName;
     private QuestionImplementationType implementationType;
+    private boolean multipleStatuses;
 
     QuestionSetupType(String shortName) {
         this.shortName = shortName;
@@ -32,6 +33,12 @@ public enum QuestionSetupType {
     QuestionSetupType(String shortName, QuestionImplementationType implementationType) {
         this.shortName = shortName;
         this.implementationType = implementationType;
+    }
+
+    QuestionSetupType(String shortName, QuestionImplementationType implementationType, boolean multipleStatuses) {
+        this.shortName = shortName;
+        this.implementationType = implementationType;
+        this.multipleStatuses = multipleStatuses;
     }
 
     public String getShortName() {
@@ -43,5 +50,8 @@ public enum QuestionSetupType {
     }
     public boolean isQuestionnaire() {
         return implementationType == QUESTIONNAIRE;
+    }
+    public boolean hasMultipleStatuses() {
+        return multipleStatuses;
     }
 }
