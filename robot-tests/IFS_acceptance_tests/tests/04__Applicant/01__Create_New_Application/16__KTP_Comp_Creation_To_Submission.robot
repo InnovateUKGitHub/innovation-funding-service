@@ -175,12 +175,12 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  27
-    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    Then the user sees that the radio button is selected     termsAndConditionsId  48
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
     And select window                        title = Terms and conditions of a Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
     And close window
@@ -193,7 +193,7 @@ T&c's can be confirmed
     When the user sees that the radio button is selected     termsAndConditionsId  34
     And the user should see the element                      link = Innovate UK (opens in a new window)
     And the user clicks the button/link                      jQuery = button:contains("Done")
-    And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
+    And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
     And the user should see the element                      jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
     Then the user clicks the button/link                     link = Back to competition details
     And the user should see the element                      jQuery = li:contains("Terms and conditions") .task-status-complete
