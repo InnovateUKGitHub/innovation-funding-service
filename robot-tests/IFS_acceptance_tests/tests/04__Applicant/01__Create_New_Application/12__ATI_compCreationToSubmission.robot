@@ -199,7 +199,7 @@ Internal user marks ATI application to successful
 MO can see application summary page for the ATI application in project setup before releasing the feedback
     [Documentation]  IFS-7647
     [Setup]  Requesting Application ID of this application
-    Given Internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
+    Given internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
     When Log in as a different user                            &{monitoring_officer_one_credentials}
     And the user navigates to the page                         ${server}/application/${atiApplicationID}/summary
     And the user should see the element                        jQuery = h1:contains("Application overview")

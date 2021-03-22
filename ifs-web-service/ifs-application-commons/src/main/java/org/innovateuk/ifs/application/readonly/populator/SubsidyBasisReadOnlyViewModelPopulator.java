@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.common.populator.ApplicationSubsidyBasisMo
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class SubsidyBasisReadOnlyViewModelPopulator implements QuestionReadOnlyV
     ApplicationSubsidyBasisModelPopulator applicationSubsidyBasisPopulator;
 
     @Override
-    public SubsidyBasisReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public SubsidyBasisReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         return new SubsidyBasisReadOnlyViewModel(
                 data,
                 question,

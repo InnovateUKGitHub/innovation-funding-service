@@ -11,6 +11,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9120 View Subsidy Basis answers and funding rules for each Partner Organisation in Application & Assessor Overviews
 ...
+...               IFS-9200 View Correct T&Cs for each Organisation (Internal and External Users)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -25,7 +27,7 @@ ${atiStateAid}                       Aerospace Technology Institute (ATI) (opens
 ${innovateUKSubsidyControl}          Innovate UK - Subsidy control (opens in a new window)
 ${innovateUKStateAid}                Innovate UK (opens in a new window)
 ${subsidyControlFundingComp}         Subsidy control competition
-${subsidyControlFundingCompID}       ${competition_ids['${subsidyControlFundingComp}']}
+${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
 ${leadStateAidApplication}           State aid application
 &{scLeadApplicantCredentials}        email=janet.howard@example.com     password=${short_password}
@@ -314,10 +316,10 @@ Partner applicant can see organisations subsidy basis funding rules in applicati
 
 Comp admin assigns assessors to the competition and assigns the application to an assessor
     [Documentation]  IFS-9200
-    [Setup]  update milestone to yesterday                                              ${subsidyControlFundingCompID}  SUBMISSION_DATE
+    [Setup]  update milestone to yesterday                                              ${subsidyControlCompetitionId}  SUBMISSION_DATE
     Given requesting application ID of this application
     And log in as a different user                                                      &{ifs_admin_user_credentials}
-    And the user navigates to the page                                                  ${server}/management/competition/${subsidyControlFundingCompID}/assessors/find
+    And the user navigates to the page                                                  ${server}/management/competition/${subsidyControlCompetitionId}/assessors/find
     When the user invites assessors to assess the subsidy control competition
     And the assessors accept the invitation to assess the subsidy control competition
     Then the application is assigned to a assessor
@@ -332,8 +334,8 @@ Assessor can see organisations subsidy basis funding rules in assessment overvie
 Internal user can see organisations subsidy basis funding rules in application overview
     [Documentation]  IFS-9120
     Given Log in as a different user                        &{internal_finance_credentials}
-    And making the application a successful project         ${subsidyControlFundingCompID}   ${leadSubsidyControlApplication}
-    When the user navigates to the page                     ${server}/management/competition/${subsidyControlFundingCompID}/application/${leadSubsidyControlApplicationID}
+    And making the application a successful project         ${subsidyControlCompetitionId}   ${leadSubsidyControlApplication}
+    When the user navigates to the page                     ${server}/management/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}
     Then the user can see valid subsidy control answers
     And the user can see valid state aid answers
 
@@ -362,6 +364,49 @@ Partner can see organisations subsidy basis funding rules in application feedbac
     And the user clicks the button/link                     link = view application feedback
     Then the user can see valid subsidy control answers
     And the user can see valid state aid answers
+
+IFS admin can view the terms and conditions accepted by both the applicants
+    [Documentation]  IFS-9200
+    Given log in as a different user                                                      &{ifs_admin_user_credentials}
+    When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
+    And the user clicks the button/link                                                   id = accordion-questions-heading-4-1
+    Then the user can see the terms and conditions for the lead and partner applicant
+
+Internal users can view the terms and conditions accepted by the applicants
+    [Documentation]  IFS-9200
+    Given log in as a different user                                                      &{innovation_lead_one}
+    When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
+    Then the user can see the terms and conditions for the lead and partner applicant
+
+Comp admin assigns assessors to the competition and assigns the application to an assessor
+    [Documentation]  IFS-9200
+    [Setup]  update milestone to yesterday                                                ${subsidyControlCompetitionId}  SUBMISSION_DATE
+    Given log in as a different user                                                      &{ifs_admin_user_credentials}
+    And the user navigates to the page                                                    ${server}/management/competition/${subsidyControlCompetitionId}/assessors/find
+    When the user invites assessors to assess the subsidy control competition
+    And the assessors accept the invitation to assess the subsidy control competition
+    Then the application is assigned to a assessor
+
+Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
+    [Documentation]  IFS-9200
+    Given the user navigates to the page                                                  ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
+    When the user clicks the button/link                                                  link = ${leadSubsidyControlApplication}
+    Then the user can see the terms and conditions for the lead and partner applicant
+
+Internal user marks subsidy control application to successful
+    [Documentation]  IFS-9200
+    Given log in as a different user                                        &{internal_finance_credentials}
+    When the user navigates to the page                                     ${server}/management/competition/${subsidyControlCompetitionId}
+    And the user clicks the button/link                                     jQuery = button:contains("Close assessment")
+    Then making the application a successful project from correct state     ${subsidyControlCompetitionId}  ${leadSubsidyControlApplication}
+
+MO can see T&Cs for the subsidy control application in project setup for both the applicants
+    [Documentation]  IFS-9200
+    Given internal user assigns MO to application                                        ${leadSubsidyControlApplicationID}  ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
+    When log in as a different user                                                      &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                                   ${server}/application/${leadSubsidyControlApplicationID}/summary
+    And the user should see the element                                                  jQuery = h1:contains("Application overview")
+    Then the user can see the terms and conditions for the lead and partner applicant
 
 *** Keywords ***
 Custom suite setup
@@ -473,13 +518,13 @@ the assessors accept the invitation to assess the subsidy control competition
 
 the application is assigned to a assessor
     log in as a different user            &{Comp_admin1_credentials}
-    the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlFundingCompID}/application/${leadSubsidyControlApplicationID}/assessors
+    the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/assessors
     the user selects the checkbox         assessor-row-1
     the user clicks the button/link       jQuery = button:contains("Add to application")
-    the user navigates to the page        ${server}/management/competition/${subsidyControlFundingCompID}
+    the user navigates to the page        ${server}/management/competition/${subsidyControlCompetitionId}
     the user clicks the button/link       jQuery = button:contains("Notify assessors")
     log in as a different user            ${assessor1_email}   ${short_password}
-    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${subsidyControlFundingCompID}
+    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
     the user clicks the button/link       link = ${leadSubsidyControlApplication}
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
@@ -491,3 +536,9 @@ assessor should see valid subsidy basis answers
     the user should see the element                 jQuery = td:contains("Ludlow") + td:contains("State aid")+ td:contains("View answers")
     the user clicks the button/link                 jQuery = tr:nth-child(2) a:contains("View answers")
     the user should see state aid answers
+
+the user can see the terms and conditions for the lead and partner applicant
+    the user should see the element      jQuery = td:contains("Big Riffs And Insane Solos Ltd")+ td:contains("Subsidy control")
+    the user should see the element      link = Innovate UK - Subsidy control
+    the user should see the element      jQuery = td:contains("Ludlow")+ td:contains("State aid")
+    the user should see the element      link = Innovate UK
