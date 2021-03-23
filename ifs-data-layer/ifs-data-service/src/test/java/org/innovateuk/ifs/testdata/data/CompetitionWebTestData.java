@@ -38,7 +38,9 @@ public class CompetitionWebTestData {
                 getAssessorFeedbackCompetitionLineBuilders(),
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
-        ).stream().sorted(Comparator.comparing(CompetitionLineBuilder::isPriority).reversed())
+        ).stream()
+                //Some ATs depend on the application ids being low so that they're prioritised for creating projects.
+                .sorted(Comparator.comparing(CompetitionLineBuilder::isPriority).reversed())
         .collect(Collectors.toList());
 
     }
@@ -192,7 +194,8 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP in panel"),
                 ktpCompetition()
-                        .withName("KTP notifications"),
+                        .withName("KTP notifications")
+                        .withPriority(true),
                 grantCompetition()
                         .withName("Living models for the future world")
                         .withHasInterviewStage(true)
