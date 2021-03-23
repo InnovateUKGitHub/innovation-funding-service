@@ -56,6 +56,7 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -137,10 +138,15 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             }
             EligibilityState eligibilityState = eligibility.get().getEligibility();
 
+            List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
+
             boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
                 boolean open = EligibilityState.APPROVED != eligibilityState && project.getProjectState().isActive();
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
+                Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
+                        .filter(projectFinance -> projectFinance.getOrganisation().longValue() == organisationId)
+                        .findFirst();
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, rowType, competition.get().getFinanceRowTypesByFinance(organisationProjectFinance), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
@@ -150,7 +156,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 }
             }
 
-            List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
             boolean resetableGolState = false;
@@ -158,6 +163,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
                 resetableGolState = golState.getState() != GrantOfferLetterState.APPROVED;
             }
+
+            boolean showChangesLink = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, organisation.get()).showChanges();
 
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
                     organisation.get().getName(),
@@ -175,7 +182,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     isUsingJesFinances,
                     editAcademicFinances,
                     projectFinances,
-                    resetableGolState
+                    resetableGolState,
+                    showChangesLink
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);
@@ -331,7 +339,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     public String viewExternalEligibilityChanges(@PathVariable long projectId, @PathVariable final Long organisationId, Model model, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
+        return doViewEligibilityChanges(project, organisation, model);
     }
 
     private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model, UserResource user) {
@@ -354,10 +362,11 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return EligibilityRagStatus.UNSET;
     }
 
-    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Model model) {
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator
-                .getProjectFinanceChangesViewModel(true, project, organisation, userId);
+                .getProjectFinanceChangesViewModel(true, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
+
         return "project/financecheck/eligibility-changes";
     }
 }

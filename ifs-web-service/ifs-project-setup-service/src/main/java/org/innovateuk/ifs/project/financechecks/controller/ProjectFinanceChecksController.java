@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
@@ -355,7 +356,7 @@ public class ProjectFinanceChecksController {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
+        return doViewEligibilityChanges(project, organisation, model);
     }
 
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
@@ -383,6 +384,8 @@ public class ProjectFinanceChecksController {
                     && projectUser.getOrganisation().equals(organisationId)
         );
 
+        boolean showChangesLink = leadOrganisation && projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, projectResource, organisationResource).hasChanges();
+
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
                 lastPostByInternalUserQueryThreads,
@@ -398,7 +401,8 @@ public class ProjectFinanceChecksController {
                 competition.isProcurement(),
                 competition.isKtp(),
                 leadOrganisation,
-                competition.isProcurementMilestones());
+                competition.isProcurementMilestones(),
+                showChangesLink);
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
@@ -475,11 +479,16 @@ public class ProjectFinanceChecksController {
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypes(), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP));
+            Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
+                    .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
+                    .findFirst();
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
+
+        boolean showChangesLink = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation).showChanges();
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
                 organisation.getName(),
@@ -496,7 +505,8 @@ public class ProjectFinanceChecksController {
                 true,
                 isUsingJesFinances,
                 false,
-                projectFinances, false));
+                projectFinances, false,
+                showChangesLink));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 
@@ -510,9 +520,10 @@ public class ProjectFinanceChecksController {
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
     }
 
-    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation, userId);
+    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Model model) {
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
+
         return "project/financecheck/eligibility-changes";
     }
 

@@ -13,7 +13,9 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.FundingRulesTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
@@ -71,6 +73,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
     private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
+    private Map<FundingRules, FundingRulesTemplate> fundingRulesTemplates;
+
 
     @Autowired
     public void setCompetitionTemplates(List<CompetitionTemplate> templateBeans) {
@@ -82,6 +86,12 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     public void setFundingTypeTemplates(List<FundingTypeTemplate> templateBeans) {
         fundingTypeTemplates = templateBeans.stream()
                 .collect(toMap(FundingTypeTemplate::type, Function.identity()));
+    }
+
+    @Autowired
+    public void setFundingRulesTemplates(List<FundingRulesTemplate> templateBeans) {
+        fundingRulesTemplates = templateBeans.stream()
+                .collect(toMap(FundingRulesTemplate::type, Function.identity()));
     }
 
     @Override
@@ -105,6 +115,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
         FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
+        Optional<FundingRulesTemplate> fundingRulesTemplate = Optional.ofNullable(fundingRulesTemplates.get(competition.getFundingRules()));
 
         List<SectionBuilder> sectionBuilders = template.sections();
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
@@ -115,6 +126,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         template.copyTemplatePropertiesToCompetition(competition);
         competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
         competition = fundingTypeTemplate.setGolTemplate(competition);
+        if (fundingRulesTemplate.isPresent()) {
+            sectionBuilders = fundingRulesTemplate.get().sections(sectionBuilders);
+        }
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
         return serviceSuccess(competitionRepository.save(competition));

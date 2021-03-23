@@ -85,12 +85,12 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId)).andOnSuccessReturn(finance -> {
-            List<ApplicationFinanceRow> costs = getCosts(applicationFinanceId, finance);
+            List<ApplicationFinanceRow> costs = getApplicationCosts(applicationFinanceId, finance);
             return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getApplication().getCompetition(), finance));
         }).getSuccess();
     }
 
-    private List<ApplicationFinanceRow> getCosts(long applicationFinanceId, ApplicationFinance finance) {
+    private List<ApplicationFinanceRow> getApplicationCosts(long applicationFinanceId, ApplicationFinance finance) {
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
 
         if (finance.getApplication().getCompetition().isKtp()) {
@@ -107,9 +107,23 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId) {
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccessReturn(finance -> {
-            List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+            List<ProjectFinanceRow> costs = getProjectCosts(projectFinanceId, finance);
             return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getProject().getApplication().getCompetition(), finance));
         }).getSuccess();
+    }
+
+    private List<ProjectFinanceRow> getProjectCosts(long projectFinanceId, ProjectFinance finance) {
+        List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+
+        if (finance.getApplication().getCompetition().isKtp()) {
+            costs = costs.stream()
+                    .filter(projectFinanceRow -> BooleanUtils.isFalse(finance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(projectFinanceRow.getType())
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(projectFinanceRow.getType()))
+                    .collect(Collectors.toList());
+        }
+
+        return costs;
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition, Finance finance) {
