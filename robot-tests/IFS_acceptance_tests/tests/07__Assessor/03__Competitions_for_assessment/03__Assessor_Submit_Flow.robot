@@ -122,7 +122,7 @@ Summary:Word count check(Your feedback)
     [Setup]    browser validations have been disabled
     Given the user enters multiple strings into a text field     id = feedback  t  5001
     When the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
-    Then the user should see a field and summary error           This field cannot contain more than 5,000 characters.
+    Then the user should see a field and summary error           This field cannot contain more than 5000 characters.
     And the user enter text more than maximum word count limit   feedback
     And the user enter correct word count                        feedback
 
