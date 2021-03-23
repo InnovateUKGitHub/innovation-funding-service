@@ -73,7 +73,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
     }
 
     private List<List<Cost>> ditributeWithNoVat(List<BigInteger> milestoneTotalsPerMonth, CostCategory otherCostsCategory){
-        List<Cost> otherCosts = range(0, milestoneTotalsPerMonth.size() - 1)
+        List<Cost> otherCosts = range(0, milestoneTotalsPerMonth.size())
                 .mapToObj(index ->
                         new Cost(new BigDecimal(milestoneTotalsPerMonth.get(index)))
                                 .withCategory(otherCostsCategory)
@@ -83,7 +83,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
     }
 
     private List<List<Cost>> distributeWithVat(List<BigInteger> milestoneTotalsPerMonth, CostCategory otherCostsCategory, CostCategory vatCategory, BigDecimal vatRate){
-        List<OtherAndVat> costs = range(0, milestoneTotalsPerMonth.size() - 1)
+        List<OtherAndVat> costs = range(0, milestoneTotalsPerMonth.size())
                 .mapToObj(index -> distributeMonthWithVat(milestoneTotalsPerMonth.get(index), index, otherCostsCategory, vatCategory, vatRate))
                 .collect(toList());
         List<Cost> other = costs.stream().map(otherAndVat -> otherAndVat.other).collect(toList());
