@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
@@ -54,6 +55,8 @@ public class YourProjectCostsForm {
     private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm();
 
     private Boolean eligibleAgreement;
+
+    private Boolean fecModelEnabled;
 
     public VatForm getVatForm() {
         return vatForm;
@@ -207,6 +210,14 @@ public class YourProjectCostsForm {
         this.justificationForm = justificationForm;
     }
 
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
+    }
+
     /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
@@ -299,15 +310,19 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalIndirectCosts()
     {
-        return this.getTotalAssociateSalaryCosts()
-                .add(this.getTotalAcademicAndSecretarialSupportCosts())
-                .multiply(INDIRECT_COST_PERCENTAGE)
-                .divide(new BigDecimal(100))
-                .setScale(0, RoundingMode.HALF_UP);
+        if (BooleanUtils.isFalse(fecModelEnabled)) {
+            return this.getTotalAssociateSalaryCosts()
+                    .add(this.getTotalAcademicAndSecretarialSupportCosts())
+                    .multiply(INDIRECT_COST_PERCENTAGE)
+                    .divide(new BigDecimal(100))
+                    .setScale(0, RoundingMode.HALF_UP);
+        } else {
+            return BigDecimal.ZERO;
+        }
     }
 
     public BigDecimal getOrganisationFinanceTotal() {
-        return getTotalLabourCosts()
+        BigDecimal total = getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
                 .add(getTotalMaterialCosts())
                 .add(getTotalProcurementOverheadCosts())
@@ -321,9 +336,14 @@ public class YourProjectCostsForm {
                 .add(getTotalConsumableCosts())
                 .add(getTotalKnowledgeBaseCosts())
                 .add(getTotalEstateCosts())
-                .add(getTotalKtpTravelCosts())
-                .add(getTotalAcademicAndSecretarialSupportCosts())
-                .add(getTotalIndirectCosts());
+                .add(getTotalKtpTravelCosts());
+
+        if (BooleanUtils.isFalse(fecModelEnabled)) {
+            return total.add(getTotalAcademicAndSecretarialSupportCosts())
+                    .add(getTotalIndirectCosts());
+        } else {
+            return total;
+        }
     }
 
     private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {
