@@ -38,7 +38,7 @@ public class CompetitionWebTestData {
                 getAssessorFeedbackCompetitionLineBuilders(),
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
-        ).stream().sorted(Comparator.comparing(CompetitionLineBuilder::isPriority))
+        ).stream().sorted(Comparator.comparing(CompetitionLineBuilder::isPriority).reversed())
         .collect(Collectors.toList());
 
     }
