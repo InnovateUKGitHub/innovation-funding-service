@@ -317,13 +317,13 @@ public class YourProjectCostsAutosaver {
 
     private BigDecimal calculateIndirectCost(ApplicationFinanceResource organisationFinance) {
         BigDecimal totalAssociateSalaryCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS).getCosts().stream()
-                .filter(financeRowItem -> !financeRowItem.isEmpty())
+                .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
                 .map(FinanceRowItem::getTotal)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
 
         BigDecimal totalAcademicAndSecretarialSupportCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getCosts().stream()
-                .filter(financeRowItem -> !financeRowItem.isEmpty())
+                .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
                 .map(FinanceRowItem::getTotal)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
