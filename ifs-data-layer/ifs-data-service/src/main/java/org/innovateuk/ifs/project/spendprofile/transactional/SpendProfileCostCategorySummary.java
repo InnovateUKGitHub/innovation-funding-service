@@ -31,6 +31,11 @@ public class SpendProfileCostCategorySummary {
         return total;
     }
 
+    // qqRP TODO - explain why.
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
     public long getProjectDurationInMonths() {
         return projectDurationInMonths;
     }
