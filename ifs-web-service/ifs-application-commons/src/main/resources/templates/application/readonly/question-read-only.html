@@ -12,7 +12,27 @@
             <label th:if="${model.question != null}" class="govuk-label">
                 <span th:text="${model.question}" class="govuk-heading-s"></span>
             </label>
-            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
+
+            <table th:if="${model.multipleStatuses}" class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Partner</th>
+                    <th scope="col" class="govuk-table__header">Answer</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr th:each="answerEntry : ${model.answerMap}" class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <th:block th:text="${answerEntry.key}"></th:block>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${answerEntry.value}"></p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
 
             <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
                 <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
@@ -330,9 +350,6 @@
 </th:block>
 
 <th:block th:fragment="subsidy-basis(model)">
-</th:block>
-
-<th:block th:fragment="ni-declaration(model)">
 </th:block>
 
 </html>

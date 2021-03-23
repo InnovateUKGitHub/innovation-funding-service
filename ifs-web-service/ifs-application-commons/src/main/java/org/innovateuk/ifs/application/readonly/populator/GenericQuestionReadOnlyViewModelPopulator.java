@@ -11,7 +11,10 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -26,6 +29,9 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
     @Override
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
@@ -39,20 +45,30 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResource> templateDocument = formInputs.stream().filter(formInput -> formInput.getType().equals(TEMPLATE_DOCUMENT))
                 .findAny();
 
-        Optional<FormInputResponseResource> textResponse = answerInput
-                .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
+        Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses = data.getFormInputIdToFormInputResponses();
+        boolean multipleStatuses = Boolean.TRUE.equals(question.hasMultipleStatuses());
+        String answer;
+        Map<String, String> answerMap;
+
+        if (multipleStatuses) {
+            answer = null;
+            answerMap = answerMapForMultipleStatuses(answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles());
+        } else {
+            answerMap = null;
+            answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
+        }
 
         Optional<FormInputResponseResource> appendixResponse = appendix
-                .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
+                .map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
 
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
-                .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
+                .map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
-                answerInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
-                        ? textResponse.map(FormInputResponseResource::getMultipleChoiceOptionText).orElse(null)
-                        : textResponse.map(FormInputResponseResource::getValue).orElse(null)).orElse(null),
+                multipleStatuses,
+                answer,
+                answerMap,
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
@@ -62,6 +78,43 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 totalScope(data, settings),
                 hasScope(data, question)
             );
+    }
+
+    private Map<String, String> answerMapForMultipleStatuses(Optional<FormInputResource> answerInput, Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses, List<ProcessRoleResource> applicationProcessRoles) {
+        Optional<List<FormInputResponseResource>> textResponses = answerInput.map(input -> formInputIdToFormInputResponses.get(input.getId()));
+        if (answerInput.isPresent() && textResponses.isPresent()) {
+            List<FormInputResponseResource> responses = textResponses.get();
+            return responses.stream().collect(Collectors.toMap(resp -> processRoleDisplay(applicationProcessRoles, resp.getUpdatedBy()), resp -> getAnswer(answerInput.get(), resp)));
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    private String processRoleDisplay(List<ProcessRoleResource> applicationProcessRoles, Long processRoleId) {
+        ProcessRoleResource processRoleResource = applicationProcessRoles.stream().filter(apr -> apr.getId().equals(processRoleId)).findAny().get();
+        Long orgId = processRoleResource.getOrganisationId();
+        return organisationRestService.getOrganisationById(orgId).getSuccess().getName();
+    }
+
+    private String answerForNotMultipleStatuses(Optional<FormInputResource> answerInput, Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses) {
+        Optional<FormInputResponseResource> textResponse = answerInput.map(input -> firstOrNull(formInputIdToFormInputResponses.get(input.getId())));
+        if (textResponse.isPresent()) {
+            return answerInput.map(input -> getAnswer(input, textResponse.get())).orElse(null);
+        }
+        return null;
+    }
+
+    private String getAnswer(FormInputResource input, FormInputResponseResource textResponse) {
+        return input.getType().equals(FormInputType.MULTIPLE_CHOICE)
+                ? textResponse.getMultipleChoiceOptionText()
+                : textResponse.getValue();
+    }
+
+    private FormInputResponseResource firstOrNull(List<FormInputResponseResource> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     private List<String> allFeedback(ApplicationReadOnlyData data, QuestionResource question, ApplicationReadOnlySettings settings) {

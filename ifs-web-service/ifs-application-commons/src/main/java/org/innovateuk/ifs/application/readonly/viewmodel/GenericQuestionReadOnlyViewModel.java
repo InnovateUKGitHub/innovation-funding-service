@@ -6,12 +6,15 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
     private final String displayName;
     private final String question;
+    private final boolean multipleStatuses;
     private final String answer;
+    private final Map<String, String> answerMap;
     private final List<GenericQuestionFileViewModel> appendices;
     private final GenericQuestionFileViewModel templateFile;
     private final String templateDocumentTitle;
@@ -23,11 +26,27 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final int totalScope;
     private final boolean hasScope;
 
-    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle, List<String> feedback, List<BigDecimal> scores, int inScope, int totalScope, boolean hasScope) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data,
+                                            QuestionResource questionResource,
+                                            String displayName,
+                                            String question,
+                                            boolean multipleStatuses,
+                                            String answer,
+                                            Map<String, String> answerMap,
+                                            List<GenericQuestionFileViewModel> appendices,
+                                            GenericQuestionFileViewModel templateFile,
+                                            String templateDocumentTitle,
+                                            List<String> feedback,
+                                            List<BigDecimal> scores,
+                                            int inScope,
+                                            int totalScope,
+                                            boolean hasScope) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
+        this.multipleStatuses = multipleStatuses;
         this.answer = answer;
+        this.answerMap = answerMap;
         this.appendices = appendices;
         this.templateFile = templateFile;
         this.templateDocumentTitle = templateDocumentTitle;
@@ -52,8 +71,16 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return question;
     }
 
+    public boolean isMultipleStatuses() {
+        return multipleStatuses;
+    }
+
     public String getAnswer() {
         return answer;
+    }
+
+    public Map<String, String> getAnswerMap() {
+        return answerMap;
     }
 
     public List<GenericQuestionFileViewModel> getAppendices() {
