@@ -228,7 +228,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         long competitionId = 1L;
         String assessorFilter = "Name";
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "firstName"));
 
         when(assessmentInviteServiceMock.getAvailableAssessors(competitionId, pageable, assessorFilter))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
@@ -265,7 +265,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         when(assessmentInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
@@ -301,7 +301,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
         Optional<Boolean> compliant = of(TRUE);
         Optional<String> assessorName = of("name");
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         List<AssessorInviteOverviewResource> content = newAssessorInviteOverviewResource().build(2);
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()

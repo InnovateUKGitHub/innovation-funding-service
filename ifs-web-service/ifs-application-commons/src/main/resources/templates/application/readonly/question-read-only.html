@@ -122,6 +122,39 @@
     </div>
 </th:block>
 
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel"*/-->
+<th:block th:fragment="subsidy-basis (model)">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Partner</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Funding rules</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third"></th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr th:each="row : ${model.partners}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <th:block th:text="${row.name}"></th:block>
+                    <th:block th:if="${row.lead}">(Lead)</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <th:block th:if="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">
+                        <th:block th:text="${row.northernIslandDeclaration ? 'State aid' : 'Subsidy control'}"></th:block>
+                    </th:block>
+                    <th:block th:unless="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">Not determined</th:block>
+                </td>
+                <td class="govuk-table__cell ifs-table__email">
+                    <a th:if="${row.questionnaireMarkedAsComplete}"
+                       th:href="@{~/application/{applicationId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(applicationId=${row.applicationId}, organisationId=${row.organisationId}, questionId=${row.questionId})}">
+                       View answers</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</th:block>
+
 <th:block th:fragment="research-category (model)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
@@ -330,7 +363,6 @@
     </table>
 </th:block>
 
-
 <th:block th:fragment="terms-and-conditions (model)">
     <div class="govuk-!-margin-bottom-3">
         <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
@@ -347,9 +379,6 @@
         </th:block>
         <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
     </div>
-</th:block>
-
-<th:block th:fragment="subsidy-basis(model)">
 </th:block>
 
 </html>
