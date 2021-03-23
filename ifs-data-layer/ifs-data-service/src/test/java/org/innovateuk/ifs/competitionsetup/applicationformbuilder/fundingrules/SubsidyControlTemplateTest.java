@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionService;

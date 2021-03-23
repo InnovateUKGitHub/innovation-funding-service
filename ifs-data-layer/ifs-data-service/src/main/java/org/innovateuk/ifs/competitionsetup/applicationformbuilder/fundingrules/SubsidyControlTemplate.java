@@ -1,12 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.form.resource.FormInputScope;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
@@ -66,7 +61,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
         if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
-        } else {
+        } else if (northernIrelandSubsidyControlToggle) {
             competitionTypeSections.get(0)
                     .getQuestions().add(0,
                     aQuestion()
