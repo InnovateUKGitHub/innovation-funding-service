@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.data;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder;
+import org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.BuilderOrder;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 
 import java.util.Comparator;
@@ -39,8 +40,7 @@ public class CompetitionWebTestData {
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
         ).stream()
-                //Some ATs depend on the application ids being low so that they're prioritised for creating projects.
-                .sorted(Comparator.comparing(CompetitionLineBuilder::isPriority).reversed())
+                .sorted(Comparator.comparing(l -> l.getBuilderOrder().ordinal()))
         .collect(Collectors.toList());
 
     }
@@ -190,12 +190,12 @@ public class CompetitionWebTestData {
                         .withName("Internet of Things")
                         .withResearchRatio(100)
                         .withLeadTechnologist(PETER_FREEMAN_ID)
-                        .withPriority(true),
+                        .withBuilderOrder(BuilderOrder.FIRST),
                 ktpCompetition()
                         .withName("KTP in panel"),
                 ktpCompetition()
                         .withName("KTP notifications")
-                        .withPriority(true),
+                        .withBuilderOrder(BuilderOrder.LAST),
                 grantCompetition()
                         .withName("Living models for the future world")
                         .withHasInterviewStage(true)

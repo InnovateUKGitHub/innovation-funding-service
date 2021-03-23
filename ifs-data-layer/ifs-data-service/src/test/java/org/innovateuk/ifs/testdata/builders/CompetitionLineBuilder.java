@@ -44,7 +44,7 @@ public final class CompetitionLineBuilder {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
-    private boolean priority;
+    private BuilderOrder builderOrder = BuilderOrder.ANYWHERE;
 
     private CompetitionLineBuilder() {
     }
@@ -118,8 +118,8 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
-    public CompetitionLineBuilder withPriority(boolean priority) {
-        this.priority = priority;
+    public CompetitionLineBuilder withBuilderOrder(BuilderOrder builderOrder) {
+        this.builderOrder = builderOrder;
         return this;
     }
 
@@ -273,7 +273,17 @@ public final class CompetitionLineBuilder {
         return competitionLine;
     }
 
-    public boolean isPriority() {
-        return priority;
+    public BuilderOrder getBuilderOrder() {
+        return builderOrder;
+    }
+
+    /*
+    Some ATs rely on competition ids being in an order so they appear on certain paginated pages, or so that
+    Their applications are prioritised by scheduled jobs to create applications.
+     */
+    public enum BuilderOrder {
+        FIRST,
+        ANYWHERE,
+        LAST;
     }
 }
