@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionService;
@@ -22,6 +24,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -54,7 +58,7 @@ public class SubsidyControlTemplateTest {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", true);
         long questionnaireId = 1L;
         Questionnaire questionnaireEntity = new Questionnaire();
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
+        SectionBuilder projectDetails = aSection().withName("Project details");
 
         when(environment.getActiveProfiles()).thenReturn(new String[0]);
         when(questionnaireService.create(any())).thenAnswer((inv) -> {
@@ -70,7 +74,7 @@ public class SubsidyControlTemplateTest {
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
-                SectionBuilder.aSection().withName("Finances")
+                aSection().withName("Finances")
         ));
 
         assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("Subsidy basis");
@@ -85,13 +89,13 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldInjectQuestionToProjectDetails() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
-                .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
+        SectionBuilder projectDetails = aSection().withName("Project details")
+                .withQuestions(newArrayList(aQuestion().withName("question1")));
         Competition competition = newCompetition().build();
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
-                SectionBuilder.aSection().withName("Finances")
+                aSection().withName("Finances")
         ));
 
         assertThat(projectDetails.getQuestions()).hasSize(2);
@@ -101,8 +105,8 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldNotInjectQuestionToProjectDetailsIfNoFinancesSectionPresent() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details")
-                .withQuestions(newArrayList(QuestionBuilder.aQuestion().withName("question1")));
+        SectionBuilder projectDetails = aSection().withName("Project details")
+                .withQuestions(newArrayList(aQuestion().withName("question1")));
         Competition competition = newCompetition().build();
 
          subsidyControlTemplate.sections(competition, newArrayList(
