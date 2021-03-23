@@ -44,7 +44,7 @@ public final class CompetitionLineBuilder {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
-    private int lineNumber;
+    private boolean priority;
 
     private CompetitionLineBuilder() {
     }
@@ -115,6 +115,11 @@ public final class CompetitionLineBuilder {
 
     public CompetitionLineBuilder withLeadTechnologist(Long leadTechnologist) {
         this.leadTechnologist = leadTechnologist;
+        return this;
+    }
+
+    public CompetitionLineBuilder withPriority(boolean priority) {
+        this.priority = priority;
         return this;
     }
 
@@ -228,11 +233,6 @@ public final class CompetitionLineBuilder {
         return this;
     }
 
-    public CompetitionLineBuilder withLineNumber(int lineNumber) {
-        this.lineNumber = lineNumber;
-        return this;
-    }
-
     public CompetitionLine build() {
         CompetitionLine competitionLine = new CompetitionLine();
         competitionLine.setId(id);
@@ -271,5 +271,9 @@ public final class CompetitionLineBuilder {
         competitionLine.setFundingRules(fundingRules);
         competitionLine.setAlwaysOpen(alwaysOpen);
         return competitionLine;
+    }
+
+    public boolean isPriority() {
+        return priority;
     }
 }

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,8 @@ public class CompetitionWebTestData {
                 getAssessorFeedbackCompetitionLineBuilders(),
                 getFundersPanelCompetitionLineBuilders(),
                 getProjectSetupCompetitionLineBuilders()
-        );
+        ).stream().sorted(Comparator.comparing(CompetitionLineBuilder::isPriority))
+        .collect(Collectors.toList());
 
     }
 
@@ -185,7 +187,8 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Internet of Things")
                         .withResearchRatio(100)
-                        .withLeadTechnologist(PETER_FREEMAN_ID),
+                        .withLeadTechnologist(PETER_FREEMAN_ID)
+                        .withPriority(true),
                 ktpCompetition()
                         .withName("KTP in panel"),
                 ktpCompetition()

@@ -43,6 +43,7 @@ public class CompetitionLine {
     private Boolean includeYourOrganisation;
     private FundingRules fundingRules;
     private Boolean alwaysOpen;
+    private boolean priority;
 
     public CompetitionLine() {
     }
