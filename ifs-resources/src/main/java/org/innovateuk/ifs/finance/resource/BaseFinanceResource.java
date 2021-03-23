@@ -12,6 +12,9 @@ import org.innovateuk.ifs.finance.resource.cost.Vat;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Optional.of;
 
 /**
  * Application finance resource holds the organisation's finance resources for an target
@@ -216,18 +219,25 @@ public abstract class BaseFinanceResource {
         return total;
     }
 
-    @JsonIgnore
-    public boolean isVatRegistered() {
+    private Optional<Vat> vat(){
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
             FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
-            Vat vat = financeRowCostCategory.getCosts().stream()
+            return financeRowCostCategory.getCosts().stream()
                     .findAny()
                     .filter(c -> c instanceof Vat)
-                    .map(c -> (Vat) c)
-                    .orElse(null);
-            return vat == null ? false : vat.getRegistered() == null ? false : vat.getRegistered();
+                    .map(c -> (Vat) c);
         } else {
-            return false;
+            return Optional.empty();
         }
+    }
+
+    @JsonIgnore
+    public boolean isVatRegistered() {
+        return vat().flatMap(vat -> of(vat.getRegistered())).orElse(false);
+    }
+
+    @JsonIgnore
+    public BigDecimal getVatRate() {
+        return vat().flatMap(vat -> of(vat.getRate())).orElse(BigDecimal.ZERO);
     }
 }
