@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -22,7 +23,10 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId, long organisationId) {
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    public Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId, long organisationId) {
         if (questionType != null) {
             switch (questionType) {
                 case APPLICATION_DETAILS:
@@ -44,7 +48,10 @@ public class ApplicationUrlHelper {
                 return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
             }
             if (questionType.hasFormInputResponses()) {
-                if (questionType.hasMultipleStatuses()) {
+
+                Boolean hasMultipleStatuses = questionRestService.findById(questionId).getSuccess().hasMultipleStatuses();
+
+                if (Boolean.TRUE.equals(hasMultipleStatuses)) {
                     return Optional.of(format("/application/%d/form/organisation/%d/question/%d/generic", applicationId, organisationId, questionId));
                 } else {
                     return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
