@@ -303,14 +303,10 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     }
 
     private BigDecimal calculateIndirectCost(YourProjectCostsForm form) {
+        form.recalculateTotals();
+
         BigDecimal totalAssociateSalaryCost = Optional.of(form.getTotalAssociateSalaryCosts())
                 .orElse(BigDecimal.ZERO);
-        /*BigDecimal totalAssociateSalaryCost = form.getAssociateSalaryCostRows().entrySet().stream()
-                .map(Map.Entry::getValue)
-                .filter(associateSalaryCostRowForm -> !associateSalaryCostRowForm.isBlank())
-                .map(AssociateSalaryCostRowForm::getTotal)
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO);*/
 
         BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(form.getTotalAcademicAndSecretarialSupportCosts())
                 .orElse(BigDecimal.ZERO);
