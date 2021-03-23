@@ -45,6 +45,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean eligibilityReadyToConfirm;
     private final boolean ktp;
     private final boolean resetableGolState;
+    private final boolean showChangesLink;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -64,7 +65,8 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean isUsingJesFinances,
                                              boolean canEditAcademicFinances,
                                              List<ProjectFinanceResource> projectFinances,
-                                             boolean resetableGolState) {
+                                             boolean resetableGolState,
+                                             boolean showChangesLink) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -91,6 +93,7 @@ public class FinanceChecksEligibilityViewModel {
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.ktp = competition.isKtp();
         this.resetableGolState = resetableGolState;
+        this.showChangesLink = showChangesLink;
     }
 
     public boolean isApproved() {
@@ -244,7 +247,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowChangesLink() {
-        return isProcurement() || isKtp() ? false: eligibilityOverview.isHasApplicationFinances();
+        return showChangesLink;
     }
 
     public boolean isEligibilityReadyToConfirm() {

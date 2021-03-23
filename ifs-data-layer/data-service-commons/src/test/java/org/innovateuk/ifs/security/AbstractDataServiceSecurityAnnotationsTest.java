@@ -15,7 +15,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.assertj.core.util.Lists.emptyList;
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 public abstract class AbstractDataServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnotationsTest {
@@ -27,7 +27,7 @@ public abstract class AbstractDataServiceSecurityAnnotationsTest extends Abstrac
 
     @Override
     protected final List<Class<? extends Annotation>> classLevelSecurityAnnotations() {
-        return emptyList();
+        return newArrayList();
     }
 
     @Override

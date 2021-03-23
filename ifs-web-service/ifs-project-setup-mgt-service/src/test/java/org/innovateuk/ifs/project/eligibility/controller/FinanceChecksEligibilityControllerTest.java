@@ -443,6 +443,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         when(financeCheckRestService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(eligibility));
         when(financeCheckRestService.getEligibility(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(eligibility));
         when(financeCheckRestService.getEligibility(project.getId(), kbOrganisation.getId())).thenReturn(restSuccess(eligibility));
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
     }
 
     private FinanceChecksEligibilityViewModel assertViewEligibilityDetails(EligibilityResource eligibility, MvcResult result, boolean expectedIsLeadPartnerOrganisation, String organisationName, boolean expectedIsUsingJesFinances, boolean isH2020) {
@@ -737,7 +738,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
-        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, industrialOrganisation, getLoggedInUser().getId())).thenReturn(viewModel);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, industrialOrganisation)).thenReturn(viewModel);
 
         mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes", projectId, organisationId)).
                 andExpect(status().isOk()).

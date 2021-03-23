@@ -70,12 +70,12 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 
-    public S withFinancialYearAccounts(FinancialYearAccountsResource... financialYearAccounts) {
-        return withArray((v, finance) -> finance.setFinancialYearAccounts(v), financialYearAccounts);
+    public S withNorthernIrelandDeclaration(Boolean... value) {
+        return withArray((v, finance) -> finance.setNorthernIrelandDeclaration(v), value);
     }
 
-    public S withNorthernIrelandDeclarations(Boolean... northernIrelandDeclarations) {
-        return withArray((northernIrelandDeclaration, finance) -> setField("northernIrelandDeclaration", northernIrelandDeclaration, finance), northernIrelandDeclarations);
+    public S withFinancialYearAccounts(FinancialYearAccountsResource... financialYearAccounts) {
+        return withArray((v, finance) -> finance.setFinancialYearAccounts(v), financialYearAccounts);
     }
 
     @SafeVarargs
