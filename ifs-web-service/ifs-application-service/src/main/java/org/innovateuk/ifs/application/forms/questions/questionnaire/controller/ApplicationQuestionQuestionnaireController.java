@@ -47,6 +47,9 @@ public class ApplicationQuestionQuestionnaireController {
     @Autowired
     private ProcessRoleRestService processRoleRestService;
 
+
+    @SecuredBySpring(value = "VIEW_APPLICATION_QUESTION_QUESTIONNAIRE", description = "Applicants and internal users can view the application question questionnaire page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor', 'monitoring_officer')")
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) ApplicationQuestionQuestionnaireForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,

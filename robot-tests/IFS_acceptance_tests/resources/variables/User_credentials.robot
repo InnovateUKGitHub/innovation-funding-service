@@ -38,7 +38,8 @@
 &{PS_EF_Application_Partner_Email_credentials}    email= ${test_mailbox_one}+karen@gmail.com             password=Passw0rd1357
 &{troy_ward_crendentials}                         email=troy.ward@gmail.com                              password=Passw0rd1357
 &{becky_mason_credentials}                        email=becky.mason@gmail.com                            password=Passw0rd1357
-&{abby_gallagher_credentials}                     email=abby.gallagher@example.com	                    password=Passw0rd1357
+&{abby_gallagher_credentials}                     email=abby.gallagher@example.com	                     password=Passw0rd1357
+&{scLeadApplicantCredentials}                     email=janet.howard@example.com                         password=${short_password}
 ##### DO NOT USE THIS USER FOR ANYTHING ELSE ######
 &{terms_and_conditions_login_credentials}         email=laura.jackson@example.com                        password=Passw0rd1357
 ###################################################

@@ -55,6 +55,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplicationFinances;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
@@ -197,8 +198,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
+    private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control competition}")
+    @Value("${ifs.generate.test.data.competition.filter.name:WTO comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -226,6 +228,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
+        questionnaireResponseLines = readQuestionnaireResponseLines();
     }
 
     @PostConstruct
@@ -421,14 +424,25 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
-        applicationFinances.join(); //wait for finances to be created.
+        applicationFinances.join(); // wait for finances to be created.
+
+        CompletableFuture<List<QuestionnaireResponseData>> questionnaireResponses = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createQuestionnaireResponse(applicationData, applicationLine, questionnaireResponseLines, externalUserLines),
+                taskExecutor);
+
+        List<QuestionnaireResponseData> questionnaireResponseData = questionnaireResponses.join();
+
+        CompletableFuture<List<SubsidyBasisData>> subsidyBasis = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createSubsidyBasis(applicationLine, questionnaireResponseData),
+                taskExecutor);
 
         CompletableFuture<List<ProcurementMilestoneData>> procurementMilestones = CompletableFuture.supplyAsync(() ->
                         applicationDataBuilderService.createProcurementMilestones(applicationData, applicationLine, externalUserLines),
                 taskExecutor);
 
 
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, procurementMilestones);
+
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, questionnaireResponses, subsidyBasis, procurementMilestones);
 
         return allQuestionsAnswered.thenApplyAsync(done -> {
 
