@@ -41,6 +41,7 @@
                        class="govuk-input govuk-input--width-25"
                        th:field="*{name}"
                        required="required"
+                       maxlength="255"
                        th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.international.organisationname.required}"/>
             </div>
@@ -52,6 +53,7 @@
                 <span class="govuk-hint">Enter your organisation's unique identification number, if it has one.</span>
                 <input id="companyRegistrationNumber"
                        type="text"
+                       maxlength="255"
                        class="govuk-input govuk-input--width-25"
                        th:field="*{companyRegistrationNumber}"/>
             </div>
@@ -76,6 +78,7 @@
                            class="govuk-input govuk-input--width-25"
                            th:field="*{addressLine1}"
                            required="required"
+                           maxlength="255"
                            th:errorclass="govuk-input--error"
                            th:attr="data-required-errormessage=#{validation.international.addressline1.required}"/>
                 </div>
@@ -88,6 +91,7 @@
                            type="text"
                            class="govuk-input govuk-input--width-25 govuk-!-margin-top-5"
                            th:field="*{addressLine2}"
+                           maxlength="255"
                            th:errorclass="govuk-input--error"/>
                 </div>
 
@@ -105,6 +109,7 @@
                            class="govuk-input govuk-input--width-20"
                            th:field="*{town}"
                            required="required"
+                           maxlength="255"
                            th:errorclass="govuk-input--error"
                            th:attr="data-required-errormessage=#{validation.international.town.required}"/>
                 </div>
@@ -138,6 +143,7 @@
                     </label>
                     <input id="zipCode"
                            type="text"
+                           maxlength="255"
                            class="govuk-input govuk-input--width-10"
                            th:field="*{zipCode}"/>
                 </div>

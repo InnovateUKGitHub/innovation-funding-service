@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface ApplicationKtaInviteRepository extends InviteRepository<ApplicationKtaInvite> {
 
     Optional<ApplicationKtaInvite> findByApplicationId(Long applicationId);
+    void deleteByApplicationId(long applicationId);
 }

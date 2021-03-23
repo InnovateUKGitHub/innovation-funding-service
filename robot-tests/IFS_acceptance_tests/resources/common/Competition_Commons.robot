@@ -601,15 +601,15 @@ making the application a successful project
 
 making the application a successful project from correct state
     [Arguments]  ${compID}  ${appTitle}
-    the user navigates to the page      ${server}/management/competition/${compID}
-    the user clicks the button/link  link = Input and review funding decision
-    the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
-    the user clicks the button/link  css = [type="submit"][value="FUNDED"]
-    the user navigates to the page   ${server}/management/competition/${compID}/manage-funding-applications
-    the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
-    the user clicks the button/link  css = [name="write-and-send-email"]
-    the internal sends the descision notification email to all applicants  Successful!
-    the user refreshes until element appears on page         jQuery = td:contains("${appTitle}") ~ td:contains("Sent")
+    the user navigates to the page                                            ${server}/management/competition/${compID}
+    the user clicks the button/link                                           link = Input and review funding decision
+    the user clicks the button/link                                           jQuery = tr:contains("${appTitle}") label
+    the user clicks the button/link                                           css = [type="submit"][value="FUNDED"]
+    the user navigates to the page                                            ${server}/management/competition/${compID}/manage-funding-applications
+    the user clicks the button/link                                           jQuery = tr:contains("${appTitle}") label
+    the user clicks the button/link                                           css = [name="write-and-send-email"]
+    the internal sends the descision notification email to all applicants     Successful!
+    the user refreshes until element appears on page                          jQuery = td:contains("${appTitle}") ~ td:contains("Sent")
 
 moving competition to Project Setup
     [Arguments]   ${compID}

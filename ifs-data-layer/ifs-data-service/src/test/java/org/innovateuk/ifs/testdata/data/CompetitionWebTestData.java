@@ -362,7 +362,10 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Improved organisation search performance competition"),
                 ktpCompetition()
-                        .withName("KTP dashboard competition")
+                        .withName("KTP dashboard competition"),
+                grantCompetition()
+                        .withName("Subsidy control t and c competition")
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

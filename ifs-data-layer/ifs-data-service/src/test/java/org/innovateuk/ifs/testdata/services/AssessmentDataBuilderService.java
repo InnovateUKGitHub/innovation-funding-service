@@ -121,7 +121,8 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
         List<AssessorResponseLine> assessorResponsesForAssessment = simpleFilter(assessorResponseLines, l ->
                 Objects.equals(l.applicationName, applicationName) &&
-                l.assessorEmail.equals(assessorEmail));
+                l.assessorEmail.equals(assessorEmail) &&
+                l.competitionName.equals(competition.getName()));
 
         if (!assessorResponsesForAssessment.isEmpty()) {
 
