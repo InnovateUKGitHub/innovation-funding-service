@@ -320,7 +320,7 @@ Comp admin assigns assessors to the competition and assigns the application to a
     And the user navigates to the page                                                  ${server}/management/competition/${subsidyControlCompetitionId}/assessors/find
     When the user invites assessors to assess the subsidy control competition
     And the assessors accept the invitation to assess the subsidy control competition
-    Then the application is assigned to a assessor
+    Then the application is assigned to be an assessor
 
 Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
     [Documentation]  IFS-9200
