@@ -240,7 +240,6 @@ Applicant - finance contact can respond to the query
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}/finance-check
     Then the user responds to the funding rule query
 
-
 IFS admin can see applicant response for funding rule query and mark discussion as resolved
     [Documentation]  IFS-9133
     Given log in as a different user             &{ifs_admin_user_credentials}

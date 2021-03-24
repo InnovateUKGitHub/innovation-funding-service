@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 import static org.springframework.util.StringUtils.isEmpty;
 
