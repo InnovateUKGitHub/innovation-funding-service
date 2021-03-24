@@ -70,11 +70,11 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
                 )).findFirst();
     }
 
-    private List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {
+    public List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {
         return organisationRepository.findByNameOrderById(organisationResource.getName());
     }
 
-    private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
+    public List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
         return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
     }
 }
