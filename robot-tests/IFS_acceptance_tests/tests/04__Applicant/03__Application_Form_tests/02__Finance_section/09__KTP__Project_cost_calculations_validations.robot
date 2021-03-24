@@ -13,6 +13,8 @@ Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-9242 KTP fEC/Non-fEC: Non-fEC project costs tables
 ...
+...               IFS-9239 KTP fEC/Non-fEC: Your fEC model
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -24,13 +26,35 @@ ${KTPapplication}  	               KTP application
 ${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
 ${KTPcompetiton}                   KTP new competition
 ${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                         email=bob@knowledge.base    password=Passw0rd1357
+&{KTPLead}                         email=bob@knowledge.base    password=${short_password}
 ${estateValue}                     11000
 ${associateSalaryTable}            associate-salary-costs-table
 ${associateDevelopmentTable}       associate-development-costs-table
 ${limitFieldValidationMessage}     You must provide justifications for exceeding allowable cost limits.
 
 *** Test Cases ***
+New lead applicant can make a 'No' selection for the organisation's fEC model and save the selection
+    [Documentation]  IFS-9239
+    Given the user selects the radio button          fecModelEnabled  fecModelEnabled-no
+    And the user clicks the button/link              link = Back to your project finances
+    And the user sees the selection is not saved
+    When the user selects the radio button           fecModelEnabled  fecModelEnabled-no
+    And the user clicks the button/link              jQuery = button:contains("Save and return to project finances")
+    Then the user sees the selection is saved
+
+New lead applicant can mark Your fEC model section as complete if 'No' is selected
+    [Documentation]  IFS-9239
+    When the user clicks the button/link     jQuery = button:contains("Mark as complete")
+    Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
+    [Teardown]   the user completes your funding section
+
+Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
+    [Documentation]  IFS-9242
+    Given the user clicks the button/link        link = Your project costs
+    When the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
+    And the user should not see the element      jQuery = button:contains("Additional associate support")
+    Then the user should not see the element     jQuery = button:contains("Associates estates costs")
+
 Associate employment and development client side validation
     [Documentation]  IFS-7790
     Given expand the sections
@@ -164,30 +188,6 @@ Internal user views values
     And The user clicks the button/link    jQuery = button:contains("Finances summary")
     Then the user should see the correct data in the finance tables
 
-#--------------------------------------------------------------------
-
-
-
-New lead applicant can make a 'No' selection for the organisation's fEC model and save the selection
-     [Documentation]  IFS-9239
-     Given the user selects the radio button          fecModelEnabled  fecModelEnabled-no
-     And the user clicks the button/link              link = Back to your project finances
-     And the user sees the selection is not saved
-     When the user selects the radio button           fecModelEnabled  fecModelEnabled-no
-     And the user clicks the button/link              jQuery = button:contains("Save and return to project finances")
-     Then the user sees the selection is saved
-
-New lead applicant can mark Your fEC model section as complete if 'No' is selected
-     [Documentation]  IFS-9239
-     When the user clicks the button/link     jQuery = button:contains("Mark as complete")
-     Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
-
-Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
-     [Documentation]  IFS-9242
-     Given the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
-     When the user should not see the element      jQuery = button:contains("Additional associate support")
-     Then the user should not see the element      jQuery = button:contains("Associates estates costs")
-
 *** Keywords ***
 the user enters T&S costs
     [Arguments]  ${typeOfCost}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
@@ -201,13 +201,6 @@ Custom suite setup
     the user clicks the button/link       link = ${KTPapplication}
     the user clicks the button/link       link = Your project finances
     the user clicks the button/link       link = Your fEC model
-    the user selects the radio button     fecModelEnabled  fecModelEnabled-no
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Your funding
-    the user selects the radio button     requestingFunding  request-funding-no
-    the user selects the radio button     otherFunding  other-funding-no
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Your project costs
 
 the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="associateSalary.description"]
@@ -257,7 +250,7 @@ the user should see the right T&S cost summary and total values
     the user should see the element     jQuery = span:contains("£6,150")
 
 the user should see the right values
-     [Arguments]   ${sectionTotal}    ${section}    ${total}
+    [Arguments]   ${sectionTotal}    ${section}    ${total}
     the user should see the element     jQuery = div:contains("${sectionTotal}") button:contains("${section}")
     the user should see the element     jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="${total}"]
 
@@ -288,3 +281,9 @@ the user sees the selection is not saved
 the user sees the selection is saved
     the user clicks the button/link                     link = Your fEC model
     the user sees that the radio button is selected     fecModelEnabled  fecModelEnabled-no
+
+the user completes your funding section
+    the user clicks the button/link       link = Your funding
+    the user selects the radio button     requestingFunding  request-funding-no
+    the user selects the radio button     otherFunding  other-funding-no
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
