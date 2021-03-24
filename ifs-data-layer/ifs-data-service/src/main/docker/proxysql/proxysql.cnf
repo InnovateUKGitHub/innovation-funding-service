@@ -57,7 +57,7 @@ mysql_users=
 		password = <<DB_PASS>> # default: ''
 		default_hostgroup = 0 # default: 0
 		active = 1            # default: 1
-		default_schema="<<DB_NAME>>"
+		default_schema= <<DB_NAME>>
 	}
 )
 
