@@ -127,6 +127,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.apache.commons:commons-pool2"
 
+    compile "io.springfox:springfox-boot-starter"
+
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert"
