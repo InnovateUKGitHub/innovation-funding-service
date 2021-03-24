@@ -620,7 +620,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private ServiceResult<Void> validateUserIsNotAlreadyInvitedToThisCompetition(int index, String email, long competitionId) {
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         AssessorCreatedInvitePageResource resource = getInvitePageResource(competitionId, pageable).getSuccess();
 

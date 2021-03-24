@@ -16,8 +16,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to application overview',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
-
+              th:with="linkTitle='Back to application overview',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}, dynamicBackLink=${true}"/>
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              role="alert"
@@ -38,7 +37,7 @@
               novalidate="novalidate">
 
             <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">
-                Based on your answers, your subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
+                Based on the answers, the subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
 
             <th:block th:unless="${model.readOnly}">
                 <h2 class="govuk-heading-m">Declaration</h2>
@@ -74,15 +73,24 @@
                     Edit
                 </button>
             </div>
+
             <div class="govuk-!-margin-top-6">
-                <a th:if="${model.readOnly}"
-                   th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-                   class="govuk-button">Return to application overview
-                </a>
+                <th:block th:if="${model.readOnly}">
+                    <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                       th:href="${cookieBackLinkUrl}"
+                       class="govuk-button govuk-button--secondary"
+                       th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to application overview</a>
+                    <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                       th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+                       class="govuk-button govuk-button--secondary">Return to application overview</a>
+                </th:block>
                 <button th:unless="${model.readOnly}" id="application-question-save" type="submit"
                         class="govuk-button">Save and return to application overview
                 </button>
             </div>
+
+
+
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
