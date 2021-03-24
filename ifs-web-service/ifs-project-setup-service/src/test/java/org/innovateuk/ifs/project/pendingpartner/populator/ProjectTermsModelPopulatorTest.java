@@ -62,7 +62,7 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
     private OrganisationResource organisation;
     private PendingPartnerProgressResource pendingPartnerProgress;
     private ProjectFinanceResource projectFinanceResource;
-    private QuestionResource questionResource;
+    private QuestionResource question;
 
     @Before
     public void setUp() {
@@ -94,11 +94,11 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
                 .build();
 
         organisation = newOrganisationResource().withId(3L).build();
-        pendingPartnerProgress = newPendingPartnerProgressResource().
+        pendingPartnerProgress = newPendingPartnerProgressResource()
                  .withSubsidyBasisCompletedOn(ZonedDateTime.now())
                 .build();
         projectFinanceResource = newProjectFinanceResource()
-                .withNorthernIrelandDeclarations(false)
+                .withNorthernIrelandDeclaration(false)
                 .build();
         question = newQuestionResource().build();
 
@@ -121,7 +121,6 @@ public class ProjectTermsModelPopulatorTest extends BaseUnitTest {
         assertEquals(pendingPartnerProgress.isTermsAndConditionsComplete(), result.isTermsAccepted());
         assertFalse(result.isSubsidyBasisRequiredAndNotCompleted());
         assertNull(pendingPartnerProgress.getTermsAndConditionsCompletedOn());
-        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS)).thenReturn(restSuccess(question));
 
         InOrder inOrder = inOrder(projectRestService, organisationRestService, competitionRestService, pendingPartnerProgressRestService);
         inOrder.verify(pendingPartnerProgressRestService).getPendingPartnerProgress(project.getId(), organisation.getId());
