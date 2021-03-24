@@ -89,7 +89,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
-        List<FinanceRowType> financeRowTypes = competition.isKtp() ? filterFinanceRowTyoes(competition, finances, leadOrganisationId) :
+        List<FinanceRowType> financeRowTypes = competition.isKtp() ? filterFinanceRowTypes(competition, finances, leadOrganisationId) :
                 competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
 
                 List<BreakdownTableRow> rows = organisations.stream()
@@ -110,7 +110,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 financeRowTypes);
     }
 
-    private List<FinanceRowType> filterFinanceRowTyoes(CompetitionResource competition,  Map<Long, BaseFinanceResource> finances, long leadOrganisationId) {
+    private List<FinanceRowType> filterFinanceRowTypes(CompetitionResource competition,  Map<Long, BaseFinanceResource> finances, long leadOrganisationId) {
         Optional<BaseFinanceResource> finance = Optional.ofNullable(finances.get(leadOrganisationId));
         return competition.getFinanceRowTypesByFinance(finance).stream().filter(FinanceRowType::isCost).collect(toList());
     }
