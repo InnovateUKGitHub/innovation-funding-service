@@ -331,10 +331,11 @@ the user checks for funding level guidance at application level
 
 the user checks for funding level guidance at PS level
     the user clicks the button/link     link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords    the user completes subsidy basis as subsidy control
+    ...                                    AND             the user clicks the button/link               link = Your funding
     the user selects the radio button   requestingFunding   true
     the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
-#    the user clicks the button/link     link = competition's rules (opens in a new window)
-#    the user closes the last opened tab
     the user clicks the button/link     link = Back to join project
 
 the user selects research area
