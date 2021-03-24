@@ -6,22 +6,23 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Map;
 
 import static org.innovateuk.ifs.finance.builder.AssociateSalaryCostBuilder.newAssociateSalaryCost;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class YourProjectCostsFormTest {
 
     @Test
-    public void getTotalIndirectCosts() {
+    public void getTotalIndirectCostsForNonFecModel() {
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
 
         YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setFecModelEnabled(false);
 
         AssociateSalaryCost associateOne = newAssociateSalaryCost()
                 .withCost(associateOneCost)
@@ -45,28 +46,57 @@ public class YourProjectCostsFormTest {
         academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
         form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
 
-        BigInteger expected = associateOneCost
-                .add(associateTwoCost)
-                .add(academicAndSecretarialSupportOneCost)
-                .multiply(BigInteger.valueOf(46))
-                .divide(BigInteger.valueOf(100));
+        BigDecimal expected = associateOneForm.getTotal()
+                .add(associateTwoForm.getTotal())
+                .add(new BigDecimal(academicAndSecretarialSupportForm.getCost()))
+                .multiply(BigDecimal.valueOf(46))
+                .divide(new BigDecimal(100))
+                .setScale(0, RoundingMode.HALF_UP);
 
+        assertFalse(form.getFecModelEnabled());
         assertNotNull(form.getTotalIndirectCosts());
-        assertEquals(expected, form.getTotalIndirectCosts().toBigInteger());
+        assertEquals(expected, form.getTotalIndirectCosts());
     }
 
     @Test
-    public void getOrganisationFinanceTotalForNonFecModel() {
+    public void getTotalIndirectCostsForFecModel() {
+        YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setFecModelEnabled(true);
+
+        BigDecimal expected = BigDecimal.ZERO;
+
+        assertTrue(form.getFecModelEnabled());
+        assertNotNull(form.getTotalIndirectCosts());
+        assertEquals(expected, form.getTotalIndirectCosts());
+    }
+
+    @Test
+    public void getOrganisationFinanceTotalForNonFecModelIncludesNewCostCategories() {
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
 
         YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setFecModelEnabled(false);
 
         AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm(new AcademicAndSecretarialSupport());
         academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
         form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
 
-        BigDecimal expected = form.getTotalAcademicAndSecretarialSupportCosts().add(form.getTotalIndirectCosts());
+        BigDecimal expected = form.getTotalAcademicAndSecretarialSupportCosts()
+                .add(form.getTotalIndirectCosts());
 
+        assertFalse(form.getFecModelEnabled());
+        assertNotNull(form.getOrganisationFinanceTotal());
+        assertEquals(expected, form.getOrganisationFinanceTotal());
+    }
+
+    @Test
+    public void getOrganisationFinanceTotalForFecModelExcludesNewCostCategories() {
+        YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setFecModelEnabled(true);
+
+        BigDecimal expected = BigDecimal.ZERO;
+
+        assertTrue(form.getFecModelEnabled());
         assertNotNull(form.getOrganisationFinanceTotal());
         assertEquals(expected, form.getOrganisationFinanceTotal());
     }

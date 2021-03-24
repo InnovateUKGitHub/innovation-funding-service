@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -310,20 +311,20 @@ public class YourProjectCostsAutosaver {
                     .orElseGet(() -> financeRowRestService.create(new IndirectCost(finance.getId())).getSuccess());
 
             BigDecimal calculateIndirectCost = calculateIndirectCost(organisationFinance);
-            indirectCost.setCost(calculateIndirectCost.toBigInteger());
+            indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
             financeRowRestService.update(indirectCost);
         }
     }
 
     private BigDecimal calculateIndirectCost(ApplicationFinanceResource organisationFinance) {
         BigDecimal totalAssociateSalaryCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS).getCosts().stream()
-                .filter(financeRowItem -> !financeRowItem.isEmpty())
+                .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
                 .map(FinanceRowItem::getTotal)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
 
         BigDecimal totalAcademicAndSecretarialSupportCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getCosts().stream()
-                .filter(financeRowItem -> !financeRowItem.isEmpty())
+                .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
                 .map(FinanceRowItem::getTotal)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
@@ -331,7 +332,8 @@ public class YourProjectCostsAutosaver {
         return totalAssociateSalaryCost
                 .add(totalAcademicAndSecretarialSupportCost)
                 .multiply(YourProjectCostsForm.INDIRECT_COST_PERCENTAGE)
-                .divide(BigDecimal.valueOf(100));
+                .divide(BigDecimal.valueOf(100))
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     private Optional<Long> autosaveAssociateSupportCost(String field, String value, ApplicationFinanceResource finance) {
