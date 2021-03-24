@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.Period;
@@ -37,6 +39,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 @Transactional(readOnly = true)
 public class EuGrantTransferServiceImpl implements EuGrantTransferService {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Value("#{T(java.time.LocalDate).parse('${ifs.data.horizon.2020.project.start.date:2019-04-01}')}")
     private LocalDate horizon2020StartDate;
@@ -150,7 +155,7 @@ public class EuGrantTransferServiceImpl implements EuGrantTransferService {
             application.setId(applicationId);
             grantTransfer.setApplication(application);
             grantTransfer = euGrantTransferRepository.save(grantTransfer);
-            euGrantTransferRepository.refresh(grantTransfer);
+            em.refresh(grantTransfer);
         }
         return serviceSuccess(grantTransfer);
 

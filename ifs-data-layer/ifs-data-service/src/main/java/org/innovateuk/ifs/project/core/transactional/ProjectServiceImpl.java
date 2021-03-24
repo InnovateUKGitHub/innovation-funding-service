@@ -40,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +63,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     private OrganisationMapper organisationMapper;
@@ -348,7 +353,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> spendProfileProcess = createSpendProfileProcess(newProject, originalLeadApplicantProjectUser);
 
-        projectRepository.refresh(newProject);
+        em.refresh(newProject);
 
         return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, golProcess, projectProcess, spendProfileProcess);
     }
