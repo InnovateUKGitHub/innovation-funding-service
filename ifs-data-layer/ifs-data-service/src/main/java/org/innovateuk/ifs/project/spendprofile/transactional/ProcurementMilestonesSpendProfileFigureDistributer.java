@@ -57,7 +57,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
                         .withTimePeriod(index, MONTH, 1, MONTH))
                 .collect(toList());
         List<Cost> otherCosts = range(0, costs.size())
-                .mapToObj(index -> new Cost(new BigDecimal(costs.get(index).vat))
+                .mapToObj(index -> new Cost(new BigDecimal(costs.get(index).other))
                         .withCategory(otherCostCategory)
                         .withTimePeriod(index, MONTH, 1, MONTH))
                 .collect(toList());
@@ -72,7 +72,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         return range(0, costsToAdjust.size()).mapToObj(index ->
         {
             OtherAndVat current = costsToAdjust.get(index);
-            if (index == costsToAdjust.size() - 1){
+            if (index != costsToAdjust.size() - 1){
                 return current;
             }
             return new OtherAndVat(current.other.add(toSumToOtherCosts.subtract(currentOtherCostsTotal)),
