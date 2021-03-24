@@ -6,7 +6,9 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
 
@@ -14,7 +16,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String question;
     private final boolean multipleStatuses;
     private final String answer;
-    private final Map<String, String> answerMap;
+    private final List<GenericQuestionAnswerRowReadOnlyViewModel> answers;
+    private final boolean statusDetailPresent;
     private final List<GenericQuestionFileViewModel> appendices;
     private final GenericQuestionFileViewModel templateFile;
     private final String templateDocumentTitle;
@@ -32,7 +35,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
                                             String question,
                                             boolean multipleStatuses,
                                             String answer,
-                                            Map<String, String> answerMap,
+                                            List<GenericQuestionAnswerRowReadOnlyViewModel> answers,
+                                            boolean statusDetailPresent,
                                             List<GenericQuestionFileViewModel> appendices,
                                             GenericQuestionFileViewModel templateFile,
                                             String templateDocumentTitle,
@@ -46,7 +50,8 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.question = question;
         this.multipleStatuses = multipleStatuses;
         this.answer = answer;
-        this.answerMap = answerMap;
+        this.answers = answers;
+        this.statusDetailPresent = statusDetailPresent;
         this.appendices = appendices;
         this.templateFile = templateFile;
         this.templateDocumentTitle = templateDocumentTitle;
@@ -79,8 +84,18 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return answer;
     }
 
-    public Map<String, String> getAnswerMap() {
-        return answerMap;
+    public List<GenericQuestionAnswerRowReadOnlyViewModel> getAnswers() {
+        return answers;
+    }
+
+    public boolean isStatusDetailPresent() {
+        return statusDetailPresent;
+    }
+
+    public List<GenericQuestionAnswerRowReadOnlyViewModel> getNonMarkedCompletePartners() {
+        return answers.stream()
+                .filter(negate(GenericQuestionAnswerRowReadOnlyViewModel::isMarkedComplete))
+                .collect(Collectors.toList());
     }
 
     public List<GenericQuestionFileViewModel> getAppendices() {
