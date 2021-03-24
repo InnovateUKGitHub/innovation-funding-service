@@ -104,8 +104,8 @@ Internal user sees correct T&C's in project setup
 Application feedback page shows the correct T&C's
     [Documentation]  IFS-8002
     Given Log in as a different user         &{troy_ward_crendentials}
-    When The user navigates to the page      ${continuityLoanFeedbackLink}
-    And the user clicks the button/link      link = View award terms and conditions
+    When the user navigates to the page      ${continuityLoanFeedbackLink}
+    And the user clicks the button/link      jQuery = a:contains("Innovation Continuity Loan")
     Then the user should see the element     jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
     And the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sTitle}")
 
@@ -145,4 +145,4 @@ Update the competition with innovation continuity loan T&C's
 the user navigates to terms and conditions
     the user navigates to the page       ${continuityLoanApplicationLink}
     the user clicks the button/link      jQuery = button:contains("${applicationT&CLink}")
-    the user clicks the button/link      link = View terms and conditions
+    the user clicks the button/link     jQuery = a:contains("Innovation Continuity Loan")

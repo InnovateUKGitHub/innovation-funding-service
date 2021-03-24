@@ -10,8 +10,10 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
+import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackSubsidyBasisModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
+import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackSubsidyBasisViewModel;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
@@ -83,6 +85,9 @@ public class AssessmentFeedbackController {
     @Autowired
     private ProcessRoleRestService processRoleRestService;
 
+    @Autowired
+    private AssessmentFeedbackSubsidyBasisModelPopulator assessmentFeedbackSubsidyBasisModelPopulator;
+
     @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) Form form,
@@ -93,6 +98,10 @@ public class AssessmentFeedbackController {
 
         if (question.getQuestionSetupType().equals(QuestionSetupType.APPLICATION_DETAILS)) {
             return getApplicationDetails(model, assessmentId, question);
+        }
+
+        if (question.getQuestionSetupType().equals(QuestionSetupType.SUBSIDY_BASIS)) {
+            return getSubsidyBasis(model, assessmentId, question);
         }
 
         populateQuestionForm(form, assessmentId, questionId);
@@ -204,6 +213,20 @@ public class AssessmentFeedbackController {
 
         return "assessment/application-details";
     }
+
+    private String getSubsidyBasis(Model model, long assessmentId, QuestionResource question) {
+        AssessmentFeedbackSubsidyBasisViewModel viewModel = assessmentFeedbackSubsidyBasisModelPopulator.populate(assessmentId, question);
+        AssessmentFeedbackNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("navigation", navigationViewModel);
+
+//        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(viewModel.getApplicationId()).getSuccess();
+//        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
+
+        return "assessment/subsidy-basis";
+    }
+
+
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {
         return formInputs.stream()

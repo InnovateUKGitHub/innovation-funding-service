@@ -55,6 +55,10 @@ public class ProcessRole {
         return applicationId;
     }
 
+    public void setApplicationId(long applicationId) {
+        this.applicationId = applicationId;
+    }
+
     public Long getOrganisationId() {
         return organisationId;
     }

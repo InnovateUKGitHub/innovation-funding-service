@@ -405,3 +405,17 @@ table {
     float: left;
   }
 }
+
+.error-icon-after {
+  &:after {
+    content: "";
+    background-image: url('../images/ifs-images/icons/icon-alert.png');
+    background-repeat: no-repeat;
+    background-position: left 100%;
+    background-size: 14px;
+    width: 20px;
+    height: 20px;
+    float: right;
+  }
+}
+
