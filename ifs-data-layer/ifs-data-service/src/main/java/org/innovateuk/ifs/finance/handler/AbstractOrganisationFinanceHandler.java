@@ -85,20 +85,17 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId)).andOnSuccessReturn(finance -> {
-            List<FinanceRow<? extends Finance>> costs = getApplicationCosts(applicationFinanceId, finance);
+            List<? extends FinanceRow> costs = getApplicationCosts(applicationFinanceId, finance);
             return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getApplication().getCompetition(), finance));
         }).getSuccess();
     }
 
-    private List<FinanceRow<? extends Finance>> getApplicationCosts(long applicationFinanceId, ApplicationFinance finance) {
+    private List<? extends FinanceRow> getApplicationCosts(long applicationFinanceId, ApplicationFinance finance) {
         List<ApplicationFinanceRow> applicationFinanceRows = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        List<FinanceRow<? extends Finance>> financeRows = applicationFinanceRows.stream()
-                .map(FinanceRow.class::cast)
-                .collect(Collectors.toList());
-        return filterKtpFecCostCategoriesIfRequired(finance, financeRows);
+        return filterKtpFecCostCategoriesIfRequired(finance, applicationFinanceRows);
     }
 
-    private List<FinanceRow<? extends Finance>> filterKtpFecCostCategoriesIfRequired(Finance finance, List<FinanceRow<? extends Finance>> financeRows) {
+    private List<? extends FinanceRow> filterKtpFecCostCategoriesIfRequired(Finance finance, List<? extends FinanceRow> financeRows) {
         if (finance.getApplication().getCompetition().isKtp()) {
             financeRows = financeRows.stream()
                     .filter(financeRow -> BooleanUtils.isFalse(finance.getFecModelEnabled())
@@ -113,17 +110,14 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId) {
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccessReturn(finance -> {
-            List<FinanceRow<? extends Finance>> costs = getProjectCosts(projectFinanceId, finance);
+            List<? extends FinanceRow> costs = getProjectCosts(projectFinanceId, finance);
             return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getProject().getApplication().getCompetition(), finance));
         }).getSuccess();
     }
 
-    private List<FinanceRow<? extends Finance>> getProjectCosts(long projectFinanceId, ProjectFinance finance) {
+    private List<? extends FinanceRow> getProjectCosts(long projectFinanceId, ProjectFinance finance) {
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        List<FinanceRow<? extends Finance>> financeRows = projectFinanceRows.stream()
-                .map(FinanceRow.class::cast)
-                .collect(Collectors.toList());
-        return filterKtpFecCostCategoriesIfRequired(finance, financeRows);
+        return filterKtpFecCostCategoriesIfRequired(finance, projectFinanceRows);
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition, Finance finance) {
