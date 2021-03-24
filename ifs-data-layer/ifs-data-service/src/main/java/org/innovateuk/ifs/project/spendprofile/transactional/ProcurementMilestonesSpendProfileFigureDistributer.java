@@ -39,7 +39,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
 
 
         ProjectFinanceResource projectFinance = projectFinanceService.financeChecksDetails(project.getId(), organisation.getId()).getSuccess();
-        List<ProjectProcurementMilestoneResource> milestones = projectProcurementMilestoneService.getByProjectId(project.getId()).getSuccess();
+        List<ProjectProcurementMilestoneResource> milestones = projectProcurementMilestoneService.getByProjectIdAndOrganisationId(project.getId(), organisation.getId()).getSuccess();
         Long durationInMonths = project.getDurationInMonths();
         BigDecimal vatRate = projectFinance.getVatRate();
         CostCategory otherCostCategory = costCategory(costCategorySummaries, OTHER_COSTS);
