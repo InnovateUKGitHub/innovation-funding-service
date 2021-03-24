@@ -1,7 +1,7 @@
 
 ext {
-    bomSpringBootVersion = '2.0.9.RELEASE'
-    bomSpringCloudVersion = 'Finchley.RELEASE'
+    bomSpringBootVersion = '2.4.1'
+    bomSpringCloudVersion = '2020.0.1'
 }
 
 dependencies {
@@ -30,7 +30,7 @@ dependencies {
     implementation('com.google.guava:guava') {
         version {
             // Tika wants this one
-            strictly '28.0-jre'
+            strictly '29.0-jre'
         }
     }
 
@@ -43,14 +43,6 @@ dependencies {
     implementation('javax.mail:mail') {
         version {
             strictly '1.4.7'
-        }
-    }
-
-    implementation('org.mariadb.jdbc:mariadb-java-client') {
-        version {
-            // This is different to current mariadb in spring dependencies
-            // It should probably just track with spring as they will do a lot more compatibility testing!
-            '2.4.4'
         }
     }
 

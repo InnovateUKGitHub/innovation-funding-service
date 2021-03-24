@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.viewmodel;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

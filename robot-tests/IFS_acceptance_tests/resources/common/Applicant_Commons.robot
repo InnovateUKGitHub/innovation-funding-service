@@ -314,6 +314,10 @@ the user fills in the organisation information
 the user checks Your Funding section
     [Arguments]  ${Application}
     the user clicks the button/link  link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords    the user completes subsidy basis as subsidy control
+    ...                                    AND             the user navigates to Your-finances page      ${application}
+    ...                                    AND             the user clicks the button/link               link = Your funding
     ${Research_category_selected} =   run keyword and return status without screenshots    Element Should Not Be Visible   jQuery = a:contains("research category")
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}   no
@@ -526,19 +530,27 @@ the user verifies his email and checks his organisation name
 
 logged in user applies to competition research
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    Bath  Bath Spa University
+    the user select the competition and starts application       ${competition}
+    the user clicks the button/link                              link = Apply with a different organisation
+    the user selects the radio button                            organisationTypeId  ${applicationType}
+    the user clicks the button/link                              jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house     Bath  Bath Spa University
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application   ${competition}
-    the user clicks the button/link     link = Apply with a different organisation
-    the user selects the radio button   organisationTypeId  ${applicationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    ROYAL  ROYAL MAIL PLC
+    the user select the competition and starts application       ${competition}
+    the user clicks the button/link                              link = Apply with a different organisation
+    the user selects the radio button                            organisationTypeId  ${applicationType}
+    the user clicks the button/link                              jQuery = button:contains("Save and continue")
+    the user search for organisation name on Companies house     ROYAL  ROYAL MAIL PLC
+
+existing user creates a new application
+    [Arguments]  ${competitionName}
+    the user select the competition and starts application      ${competitionName}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
+    Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true
+    ...                                                        AND    And the user clicks the button/link    jQuery=.govuk-button:contains("Continue")
+    the user clicks the button/link                             css = .govuk-button[type="submit"]
 
 the user enters organisation details manually on companies house link
     [Arguments]  ${organisationName}
@@ -605,6 +617,9 @@ the user selects medium organisation size
 the user accept the competition terms and conditions
     [Arguments]  ${returnLink}
     the user clicks the button/link    link = Award terms and conditions
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords    the user completes subsidy basis as subsidy control
+    ...                                    AND             the user clicks the button/link     link = Award terms and conditions
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
@@ -620,12 +635,12 @@ the user accept the procurement terms and conditions
     the user clicks the button/link    link = Return to application overview
 
 the internal user should see read only view of terms and conditions
-    [Arguments]  ${url}  ${applicationid}  ${heading}
+    [Arguments]  ${url}  ${applicationid}  ${heading}  ${t&cName}
     the user navigates to the page             ${url}
     the user clicks the button/link            link = ${applicationid}
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element   jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link     jQuery = button:contains("Award terms and conditions")[aria-expanded="false"]
-    the user clicks the button/link            link = View terms and conditions
+    the user clicks the button/link            jQuery = a:contains("${t&cName}")
     the user should see the element            jQuery = h1:contains("${heading}")
     the user should not see the element        jQuery = button:contains("Agree and continue")
 
@@ -846,3 +861,23 @@ applicant views readonly payment milestones subsections
     the user should see the element     jQuery = dd:contains("${deliverable}")
     the user should see the element     jQuery = dd:contains("${sucessCriteria}")
     the user clicks the button/link     link = Your project finances
+
+the user completes the application research category
+    [Arguments]   ${res_category}
+    the user clicks the button/link                link = Research category
+    the user clicks the button twice               jQuery = label:contains("${res_category}")
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Research category") > .task-status-complete
+
+the user completes subsidy basis as subsidy control
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'     the user clicks the button/link     link = Subsidy basis
+    ...         ELSE                          the user clicks the button/link     link = subsidy basis
+    the user clicks the button/link               jQuery = button:contains("Next")
+    the user clicks the button twice              jQuery = label:contains("No")
+    the user clicks the button/link               jQuery = button:contains("Next")
+    the user clicks the button twice              jQuery = label:contains("No")
+    the user clicks the button/link               jQuery = button:contains("Next")
+    the user selects the checkbox                 agreement
+    the user clicks the button/link               id = mark-questionnaire-complete
+    the user should see the element               jQuery = li:contains("Subsidy basis") > .task-status-complete

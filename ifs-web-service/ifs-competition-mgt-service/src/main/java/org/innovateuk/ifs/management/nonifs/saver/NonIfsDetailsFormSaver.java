@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.nonifs.saver;
 
 import com.google.common.collect.ImmutableSet;
-import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
