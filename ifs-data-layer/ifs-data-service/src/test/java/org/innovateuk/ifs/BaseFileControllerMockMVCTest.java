@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
+import org.junit.Before;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.request.ParameterDescriptor;
@@ -47,6 +48,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public abstract class BaseFileControllerMockMVCTest<ControllerType> extends BaseControllerMockMVCTest {
+
+    private InputStream stream = null;
+
+    @Before
+    public void resetStreamCache() {
+        stream = null;
+    }
 
     // having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
     // than JSON and XML
@@ -437,7 +445,10 @@ public abstract class BaseFileControllerMockMVCTest<ControllerType> extends Base
 
     protected Supplier<InputStream> fileUploadInputStreamExpectations(String expectedContent) {
         return createLambdaMatcher(is -> {
-            assertInputStreamContents(is.get(), expectedContent);
+            if (stream == null) {
+                stream = is.get();
+            }
+            assertInputStreamContents(stream, expectedContent);
         });
     }
 

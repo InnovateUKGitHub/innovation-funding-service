@@ -72,7 +72,7 @@ public class ApplicationAjaxController {
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                                     @RequestParam("value") String value,
-                                    @RequestParam("multipleChoiceOptionId") Long multipleChoiceOptionId,
+                                    @RequestParam(required = false, value = "multipleChoiceOptionId") Long multipleChoiceOptionId,
                                     @PathVariable(APPLICATION_ID) Long applicationId,
                                     @PathVariable("competitionId") Long competitionId,
                                     UserResource user,

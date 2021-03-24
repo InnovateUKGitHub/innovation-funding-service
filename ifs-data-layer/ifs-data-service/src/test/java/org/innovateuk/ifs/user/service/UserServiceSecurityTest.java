@@ -142,7 +142,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findActive("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActive("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActive("", PageRequest.of(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -153,7 +153,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findInactive("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactive("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactive("", PageRequest.of(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -164,7 +164,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findActiveExternal("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActiveExternal("", PageRequest.of(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -175,7 +175,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findInactiveExternal("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactiveExternal("", PageRequest.of(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });

@@ -75,9 +75,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     static {
         Map<String, Sort> sortFieldToDbSortFields = new HashMap<>();
-        sortFieldToDbSortFields.put("name", new Sort(ASC, new String[]{"name", "id"}));
-        sortFieldToDbSortFields.put("duration", new Sort(ASC, new String[]{"durationInMonths", "id"}));
-        sortFieldToDbSortFields.put("percentageComplete", new Sort(DESC, "completion").and(new Sort(ASC, "id")));
+        sortFieldToDbSortFields.put("name", Sort.by(ASC, "name", "id"));
+        sortFieldToDbSortFields.put("duration", Sort.by(ASC, "durationInMonths", "id"));
+        sortFieldToDbSortFields.put("percentageComplete", Sort.by(DESC, "completion").and(Sort.by(ASC, "id")));
 
         SORT_FIELD_TO_DB_SORT_FIELDS = Collections.unmodifiableMap(sortFieldToDbSortFields);
 
@@ -265,7 +265,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     private Sort getApplicationSummarySortField(String sortBy) {
         Sort result = SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
-        return result != null ? result : new Sort(ASC, new String[]{"id"});
+        return result != null ? result : Sort.by(ASC, new String[]{"id"});
     }
 
     private String trimFilterString(Optional<String> filterString) {
