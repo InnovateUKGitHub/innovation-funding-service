@@ -21,6 +21,10 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
         return withArray((applicationId, applicationFinanceResource) -> applicationFinanceResource.setApplication(applicationId), applicationIds);
     }
 
+    public ApplicationFinanceResourceBuilder withNorthernIrelandDeclaration(Boolean... northernIrelandDeclarations) {
+        return withArraySetFieldByReflection("northernIrelandDeclaration", northernIrelandDeclarations);
+    }
+
     public ApplicationFinanceResourceBuilder withId(Long... ids) {
         return withArray((id, applicationFinanceResource) -> applicationFinanceResource.setId(id), ids);
     }

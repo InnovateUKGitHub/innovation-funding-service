@@ -33,7 +33,6 @@ dependencies {
 
     compile('org.apache.httpcomponents:httpclient')
     compile('org.springframework:spring-web')
-    compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
     compile project(':ifs-resources')
     compile project(':ifs-rest-util')
     compile project(':ifs-commons')

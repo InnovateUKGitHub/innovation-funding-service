@@ -179,7 +179,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
         flushAndClearSession();
 
         assertEquals(4, repository.count());
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<ReviewParticipant> pagedResult = repository.getPanelAssessorsByCompetitionAndStatusContains(
                 competition.getId(),

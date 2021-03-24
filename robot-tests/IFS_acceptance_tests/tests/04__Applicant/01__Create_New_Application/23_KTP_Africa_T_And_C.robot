@@ -5,6 +5,8 @@ Documentation     IFS-8164  KTP AFRICA - T&Cs
 ...
 ...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+...               IFS-9403 KTP updated T&Cs
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -28,7 +30,7 @@ ${ktpAfricaFeedbackLink}        ${server}/application/${ktpAfricaPSApplicationId
 *** Test Cases ***
 Creating a new KTP africa comp to confirm T&c's
     [Documentation]  IFS-8164  IFS-8779  IFS-9124
-    Given the user fills in initial details
+    Given the user fills in initial details     KTP Africa competition
     When the user clicks the button/link        link = Terms and conditions
     And the user selects the radio button       termsAndConditionsId  33
     And the user clicks the button/link         jQuery = button:contains("Done")
@@ -98,6 +100,24 @@ Application feedback page shows the correct link for t&c's
     Then the user clicks the button/link     jQuery = a:contains("Knowledge Transfer Partnership (KTP) Africa")
     And the user should see the element      jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
 
+Internal user can select Knowledge Transfer Partnership subsidy control t&c's while creating competition
+    [Documentation]  IFS-9403
+    Given Log in as a different user            &{Comp_admin1_credentials}
+    And the user fills in initial details       KTP subsidy control competition
+    When the user clicks the button/link        link = Terms and conditions
+    And the user clicks the button/link         jQuery = button:contains("Done")
+    And the user clicks the button/link         jQuery = button:contains("Done")
+    Then the user should see the element        jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
+    And the user should see the element         jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
+
+KTP subsidy basis t&c's are correct
+    [Documentation]  IFS-9403
+    Given the user clicks the button/link     jQuery = button:contains("Edit")
+    When the user clicks the button/link      link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
+    And select window                         title = Terms and conditions of a Knowledge Transfer Partnership award - Innovation Funding Service
+    Then the user should see the element      jQuery = h1:contains("Terms and conditions of a Knowledge Transfer Partnership award")
+    [Teardown]  close window
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -109,9 +129,10 @@ Custom Suite teardown
     Disconnect from database
 
 the user fills in initial details
+    [Arguments]  ${compName}
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     KTP Africa competition  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
+    the user fills in the CS Initial details      ${compName}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
 
 Update the competition with KTP africa T&C's
     [Arguments]  ${competitionID}

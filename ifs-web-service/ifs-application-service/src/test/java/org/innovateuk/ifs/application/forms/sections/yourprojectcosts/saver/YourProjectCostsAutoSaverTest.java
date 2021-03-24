@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
 
@@ -55,7 +56,7 @@ public class YourProjectCostsAutoSaverTest {
         String value = "100";
         long applicationId = 1L;
         long organisationId = 2L;
-        BigInteger expectedIndirectCost = BigInteger.valueOf(46);
+        BigDecimal expectedIndirectCost = BigDecimal.valueOf(46);
 
         UserResource user = newUserResource().build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -98,8 +99,8 @@ public class YourProjectCostsAutoSaverTest {
         IndirectCost indirectCostToSave = (IndirectCost) costArgumentCaptor.getAllValues().get(1);
         assertNotNull(indirectCostToSave);
         assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCostToSave.getCostType());
-        assertEquals(expectedIndirectCost, indirectCostToSave.getCost());
-        assertEquals(expectedIndirectCost, indirectCostToSave.getTotal().toBigInteger());
+        assertEquals(expectedIndirectCost.toBigIntegerExact(), indirectCostToSave.getCost());
+        assertEquals(expectedIndirectCost, indirectCostToSave.getTotal());
     }
 
     @Test
@@ -108,7 +109,7 @@ public class YourProjectCostsAutoSaverTest {
         String value = "100";
         long applicationId = 1L;
         long organisationId = 2L;
-        BigInteger expectedIndirectCost = BigInteger.valueOf(46);
+        BigDecimal expectedIndirectCost = BigDecimal.valueOf(46);
 
         UserResource user = newUserResource().build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -150,8 +151,8 @@ public class YourProjectCostsAutoSaverTest {
         IndirectCost indirectCostToSave = (IndirectCost) costArgumentCaptor.getAllValues().get(1);
         assertNotNull(indirectCostToSave);
         assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCostToSave.getCostType());
-        assertEquals(expectedIndirectCost, indirectCostToSave.getCost());
-        assertEquals(expectedIndirectCost, indirectCostToSave.getTotal().toBigInteger());
+        assertEquals(expectedIndirectCost.toBigIntegerExact(), indirectCostToSave.getCost());
+        assertEquals(expectedIndirectCost, indirectCostToSave.getTotal());
     }
 
     @Test
