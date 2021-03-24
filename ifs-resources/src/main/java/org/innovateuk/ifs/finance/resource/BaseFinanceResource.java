@@ -233,11 +233,17 @@ public abstract class BaseFinanceResource {
 
     @JsonIgnore
     public boolean isVatRegistered() {
-        return vat().flatMap(vat -> of(vat.getRegistered())).orElse(false);
+        return vat()
+                .flatMap(vat -> of(vat.getRegistered()))
+                .orElse(false);
     }
 
     @JsonIgnore
     public BigDecimal getVatRate() {
-        return vat().flatMap(vat -> of(vat.getRate())).orElse(BigDecimal.ZERO);
+        return vat()
+                .filter(vat -> vat.getRegistered() != null)
+                .filter(Vat::getRegistered)
+                .flatMap(vat -> of(vat.getRate()))
+                .orElse(BigDecimal.ZERO);
     }
 }
