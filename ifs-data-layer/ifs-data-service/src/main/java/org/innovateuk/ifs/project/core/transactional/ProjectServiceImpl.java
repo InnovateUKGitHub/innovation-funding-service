@@ -64,9 +64,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
     private OrganisationMapper organisationMapper;
 
@@ -352,9 +349,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> spendProfileProcess = createSpendProfileProcess(newProject, originalLeadApplicantProjectUser);
-
-        em.refresh(newProject);
-
         return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, golProcess, projectProcess, spendProfileProcess);
     }
 
