@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.projectteam.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
+import org.innovateuk.ifs.project.projectteam.builder.PendingPartnerProgressBuilder;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.projectteam.mapper.PendingPartnerProgressMapper;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -25,6 +27,7 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.projectteam.builder.PendingPartnerProgressBuilder.newPendingPartnerProgress;
 import static org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId.id;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +59,18 @@ public class PendingPartnerProgressServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(resource, result.getSuccess());
+    }
+
+    @Test
+    public void markSubsidyBasisComplete() {
+        // Setup
+        PendingPartnerProgress pendingPartnerProgress = new PendingPartnerProgress(null);
+        when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(PROJECT_ID, ORGANISATION_ID)).thenReturn(Optional.of(pendingPartnerProgress));
+        // Method under test
+        ServiceResult<Void> result = service.markSubsidyBasisComplete(id(PROJECT_ID, ORGANISATION_ID));
+        // Assertions
+        assertTrue(result.isSuccess());
+        assertTrue(pendingPartnerProgress.isSubsidyBasisComplete());
     }
 
     @Test
@@ -92,6 +107,19 @@ public class PendingPartnerProgressServiceImplTest {
     }
 
     @Test
+    public void markSubsidyBasisIncomplete() {
+        // Setup
+        PendingPartnerProgress pendingPartnerProgress = new PendingPartnerProgress(null);
+        when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(PROJECT_ID, ORGANISATION_ID)).thenReturn(Optional.of(pendingPartnerProgress));
+        // Method under test
+        ServiceResult<Void> result = service.markSubsidyBasisIncomplete(id(PROJECT_ID, ORGANISATION_ID));
+        // Assertions
+        assertTrue(result.isSuccess());
+        assertFalse(pendingPartnerProgress.isSubsidyBasisComplete());
+    }
+
+
+    @Test
     public void markYourOrganisationIncomplete() {
         PendingPartnerProgress pendingPartnerProgress = new PendingPartnerProgress(null);
         when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(PROJECT_ID, ORGANISATION_ID)).thenReturn(Optional.of(pendingPartnerProgress));
@@ -122,6 +150,24 @@ public class PendingPartnerProgressServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertFalse(pendingPartnerProgress.isTermsAndConditionsComplete());
+    }
+
+    @Test
+    public void resetPendingPartnerProgress() {
+        // Setup
+        PendingPartnerProgress pendingPartnerProgress = PendingPartnerProgressBuilder.newPendingPartnerProgress()
+                .withTermsAndConditionsCompletedOn(ZonedDateTime.now())
+                .withYourFundingCompletedOn(ZonedDateTime.now())
+                .withTermsAndConditionsCompletedOn(ZonedDateTime.now())
+                .build();
+        when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(PROJECT_ID, ORGANISATION_ID)).thenReturn(Optional.of(pendingPartnerProgress));
+        // Method under test
+        ServiceResult<Void> result = service.resetPendingPartnerProgress(SUBSIDY_BASIS, PROJECT_ID, ORGANISATION_ID);
+        // Assertions
+        assertTrue(result.isSuccess());
+        assertFalse(pendingPartnerProgress.isTermsAndConditionsComplete());
+        assertFalse(pendingPartnerProgress.isYourFundingComplete());
+        assertFalse(pendingPartnerProgress.isYourOrganisationComplete());
     }
 
     @Test

@@ -9,17 +9,32 @@ public class ProjectTermsViewModel {
     private final String competitionTermsTemplate;
     private final boolean termsAccepted;
     private final ZonedDateTime termsAcceptedOn;
+    private final boolean subsidyBasisRequiredAndNotCompleted;
+    private final Optional<Long> subsidyBasisQuestionId;
 
     public ProjectTermsViewModel(long projectId,
                                  long organisationId,
                                  String competitionTermsTemplate,
                                  boolean termsAccepted,
-                                 ZonedDateTime termsAcceptedOn) {
+                                 ZonedDateTime termsAcceptedOn,
+                                 boolean subsidyBasisRequiredAndNotCompleted,
+                                 Optional<Long> subsidyBasisQuestionId) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.termsAccepted = termsAccepted;
         this.termsAcceptedOn = termsAcceptedOn;
+        this.subsidyBasisRequiredAndNotCompleted = subsidyBasisRequiredAndNotCompleted;
+        this.subsidyBasisQuestionId = subsidyBasisQuestionId;
+    }
+
+
+    public boolean isSubsidyBasisRequiredAndNotCompleted() {
+        return subsidyBasisRequiredAndNotCompleted;
+    }
+
+    public Long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId.orElse(null);
     }
 
     public long getProjectId() {
@@ -41,4 +56,9 @@ public class ProjectTermsViewModel {
     public Optional<ZonedDateTime> getTermsAcceptedOn() {
         return Optional.ofNullable(termsAcceptedOn);
     }
+
+    public boolean isTermsAndConditionsSectionLocked() {
+        return subsidyBasisRequiredAndNotCompleted;
+    }
+
 }
