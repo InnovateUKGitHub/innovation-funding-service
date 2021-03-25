@@ -30,7 +30,7 @@ public class ProjectProcurementMilestoneViewModelPopulator {
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
 
-    public ProjectProcurementMilestoneViewModel populate(long projectId, long organisationId, UserResource userResource, boolean editMilestones) {
+    public ProjectProcurementMilestoneViewModel populate(long projectId, long organisationId, UserResource userResource, boolean editMilestones, boolean showChangesLink) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         PaymentMilestoneResource paymentMilestoneResource = financeCheckRestService.getPaymentMilestoneState(projectId, organisationId).getSuccess();
@@ -53,7 +53,8 @@ public class ProjectProcurementMilestoneViewModelPopulator {
                 paymentMilestoneResource,
                 userResource.isInternalUser() ? isAllEligibilityAndViabilityApproved(projectId) : false,
                 userResource.isExternalUser(),
-                resettableGolState);
+                resettableGolState,
+                showChangesLink);
     }
 
     private boolean isAllEligibilityAndViabilityApproved(long projectId) {

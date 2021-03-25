@@ -430,7 +430,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}
-    project lead submits project details and team  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    project lead submits project details and team  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}   projectManager2
 
 project lead submits project address
     [Arguments]  ${project_id}
@@ -441,10 +441,10 @@ project lead submits project address
     the user clicks the button/link               jQuery = button:contains("Save address")
 
 project lead submits project details and team
-    [Arguments]  ${project_id}
+    [Arguments]  ${project_id}  ${projectManager}
     project lead submits project address    ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/team/project-manager
-    the user selects the radio button  projectManager  projectManager2
+    the user selects the radio button  projectManager  ${projectManager}
     the user clicks the button/link    jQuery = .govuk-button:contains("Save")
     the user navigates to the page     ${server}/project-setup/project/${project_id}/team
 
@@ -799,7 +799,7 @@ the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
     the user should see the element     link = ${reviewProgressLink}
 
-Internal user assigns MO to application
+internal user assigns MO to application
     [Arguments]  ${applicationID}  ${applicationTitle}  ${MO_name}  ${MO_fullname}
     the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all
     Search for MO                                     ${MO_name}  ${MO_fullname}

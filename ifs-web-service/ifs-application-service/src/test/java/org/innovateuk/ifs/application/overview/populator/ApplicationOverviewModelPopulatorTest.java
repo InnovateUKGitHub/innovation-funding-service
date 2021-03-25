@@ -94,16 +94,17 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withQuestionNumber("4")
                 .build(1);
         UserResource user = newUserResource().build();
+        OrganisationResource organisation = newOrganisationResource().build();
         List<ProcessRoleResource> processRoles = newProcessRoleResource()
                 .withUser(user, newUserResource().build())
-                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)
+                .withOrganisation(organisation.getId(), 99L)
                 .build(2);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .withMarkedAsComplete(false)
                 .withAssignee(processRoles.get(1).getId())
                 .build(1);
-        OrganisationResource organisation = newOrganisationResource().build();
 
         SectionResource childSection = newSectionResource()
                 .withName("Child finance")

@@ -29,13 +29,13 @@ public class HighPrecedenceServiceResultExceptionHandlingInterceptor implements 
         try {
             return invocation.proceed();
         } catch (AccessDeniedException e) {
-            LOG.warn("Authentication denied calling method [" + "class:" + invocation.getMethod().getDeclaringClass().getName() + " method:" + invocation.getMethod().getName() +  "]");
+            LOG.warn("Authentication denied calling method [" + "class:" + invocation.getThis().getClass().getName() + " method:" + invocation.getMethod().getName() +  "]");
             return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
         } catch (AuthenticationCredentialsNotFoundException e) {
             LOG.error("AuthenticationCredentialsNotFoundException caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
             return serviceFailure(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION);
         } catch (ObjectOptimisticLockingFailureException e) {
-            LOG.warn("Optimistic locking failure calling method [" + "class:" + invocation.getMethod().getDeclaringClass().getName() + " method:" + invocation.getMethod().getName() +  "]");
+            LOG.warn("Optimistic locking failure calling method [" + "class:" + invocation.getThis().getClass().getName() + " method:" + invocation.getMethod().getName() +  "]");
             return serviceFailure(GENERAL_OPTIMISTIC_LOCKING_FAILURE);
         }
         catch (Exception e) {

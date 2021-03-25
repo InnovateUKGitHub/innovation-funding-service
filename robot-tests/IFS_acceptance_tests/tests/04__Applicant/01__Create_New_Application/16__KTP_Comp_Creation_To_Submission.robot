@@ -91,6 +91,11 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9124 Add dual T&Cs to Subsidy Control Competitions
 ...
+...            IFS-9241 KTP fEC/Non-fEC: 'Your project costs' conditions
+...
+...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -150,6 +155,7 @@ ${financeBanerText}                   Only members from your organisation will b
 ${ktpTandC}                           Terms and conditions of a Knowledge Transfer Partnership award
 ${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
 ${leadTeamMember}                     susan.brown@gmail.com
+${uploadedPdf}                        testing_5MB.pdf
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -169,12 +175,12 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  27
-    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    Then the user sees that the radio button is selected     termsAndConditionsId  48
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) - Subsidy control (opens in a new window)
     And select window                        title = Terms and conditions of a Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
     And close window
@@ -187,7 +193,7 @@ T&c's can be confirmed
     When the user sees that the radio button is selected     termsAndConditionsId  34
     And the user should see the element                      link = Innovate UK (opens in a new window)
     And the user clicks the button/link                      jQuery = button:contains("Done")
-    And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
+    And the user should see the element                      jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Knowledge Transfer Partnership (KTP) - Subsidy control")
     And the user should see the element                      jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Innovate UK")
     Then the user clicks the button/link                     link = Back to competition details
     And the user should see the element                      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -323,12 +329,20 @@ New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
     When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then the user completes the KTP application except application team and your funding
+    Then the user completes the KTP application except application team and your project finances
+
+New lead applicant cannot enter project costs until fEC declaration and your funding section is complete
+    [Documentation]  IFS-9241
+    Given the user clicks the button/link     link = Your project finances
+    And the user should see the element       jQuery = li:contains("Your fEC model") > div:contains("Incomplete")
+    And the user should see the element       jQuery = li:contains("Your funding") > div:contains("Incomplete")
+    When the user clicks the button/link      link = Your project costs
+    Then the user should see the element      link = your fEC model
+    And the user should see the element       link = your funding
 
 New lead applicant is shown a validation error when marking a non-selected option as complete for the organisation's fEC model type
      [Documentation]  IFS-9239
-     Given the user clicks the button/link                     link = Your project finances
-     When the user clicks the button/link                      link = Your fEC model
+     When the user clicks the button/link                      link = your fEC model
      And the user should see the element                       jQuery = h1:contains("Your fEC model")
      Then the user sees fEC model validation error message
 
@@ -346,6 +360,47 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
      When the user clicks the button/link     jQuery = button:contains("Mark as complete")
      Then the user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
 
+New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
+     [Documentation]  IFS-9240
+     Given the user clicks the button/link                  link = Your fEC model
+     And the user clicks the button/link                    jQuery = button:contains("Edit your fEC Model")
+     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
+     And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
+     Then the user should see a field and summary error     You must upload a file.
+
+New lead applicant uploads a document for the organisation's fEC model and save the selection
+     [Documentation]  IFS-9240
+     When the user uploads the file          css = .inputfile   testing_5MB.pdf
+     Then the user clicks the button/link    jQuery = button:contains("Mark as complete")
+     And The user should see the element     jQuery = li:contains("Your fEC model") span:contains("Complete")
+
+New lead applicant view the read-only page once marked as complete
+     [Documentation]  IFS-9240
+     When the user clicks the button/link          link = Your fEC model
+     Then the user checks the read-only page
+
+New lead applicant can declare any other government funding received
+    [Documentation]  IFS-7956  IFS-7958
+    Given the user clicks the button/link                                    link = Back to your project finances
+    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
+    And the user clicks the button/link                                      link = Your funding
+    Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
+    And the user should see the readonly view of other funding received
+
+New applicant can access their project costs section once the your fEC model and Your funding are marked as complete
+    [Documentation]  IFS-9241
+    Given the user clicks the button/link        jQuery = a:contains("Return to finances")
+    When the user clicks the button/link         link = Your project costs
+    Then the user should not see the element     link = your fEC model
+    And the user should not see the element      link = your funding
+
+New lead applicant completes the project costs and project location
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
+    When the user fills in ktp project costs
+    And the user enters the project location
+    Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
+    And the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
+
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
     Given the user clicks the button/link                            jQuery = a:contains("Your project costs")
@@ -356,23 +411,13 @@ New lead applicant opens the detailed KTP Guidance links in the new window
 New lead applicant opens the KTP Project costs Guidance links in the new window
     [Documentation]  IFS-8212
     Given the user closes the last opened tab
-    When the user switch to the new tab on click guidance links      KTP project costs guidance (opens in a new window)
-    Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
-
-New lead applicant can declare any other government funding received
-    [Documentation]  IFS-7956  IFS-7958
-    Given the user closes the last opened tab
-    And the user clicks the button/link                                      css = label[for="stateAidAgreed"]
-    And the user clicks the button/link                                      jQuery = button:contains("Mark as complete")
-    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
-    And the user clicks the button/link                                      link = Your funding
-    Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
-    And the user should see the readonly view of other funding received
+    When the user switch to the new tab on click guidance links           KTP project costs guidance (opens in a new window)
+    Then the user should see the element                                  jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
+    [Teardown]  the user marks the project costs complete after editing
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814  IFS-9239
-    Given the user clicks the button/link                            link = Return to finances
-    And the user clicks the button/link                              link = Back to application overview
+    Given the user clicks the button/link                              link = Back to application overview
     When the lead invites a partner and accepted the invitation
     Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
 
@@ -907,7 +952,10 @@ Monitoring officer can view the Finance checks project setup dashboard section
 
 Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
-    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
+    When the user clicks the button/link     link = view application overview
+    And the user clicks the button/link      id = accordion-questions-heading-4-1
+#    And the user clicks the button/link      link = View terms and conditions
+    And the user clicks the button/link      jQuery = a:contains("Knowledge Transfer Partnership (KTP)")
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
 
 Internal user can see KTP GOL template
@@ -1031,7 +1079,6 @@ The applicants should not see knowledge based organisations when joining a non-k
 the lead applicant marks the KTP project costs & project location as complete
     the user fills in ktp project costs
     the user enters the project location
-    the user clicks the button/link          link = Back to application overview
 
 the user sees fEC model validation error message
      the user clicks the button/link                   jQuery = button:contains("Mark as complete")
@@ -1145,13 +1192,11 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-the user completes the KTP application except application team and your funding
+the user completes the KTP application except application team and your project finances
     the user clicks the button/link                                                             link = Application details
     the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
-    the lead applicant marks the KTP project costs & project location as complete
     the user accept the competition terms and conditions                                        Return to application overview
 
 the user fills in the KTP Application details
@@ -1194,7 +1239,6 @@ Custom suite teardown
     Disconnect from database
 
 the user fills in ktp project costs
-    the user clicks the button/link             link = Your project costs
     the user fills in Associate employment
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
@@ -1439,9 +1483,22 @@ the user removes uploaded file
     Wait Until Page Contains Without Screenshots    ${message}
 
 the user sees the selection is not saved
-     the user clicks the button/link                         link = Your fEC model
-     the user sees that the radio button is not selected     fecModelEnabled  fecModelEnabled-no
+    the user clicks the button/link                         link = Your fEC model
+    the user sees that the radio button is not selected     fecModelEnabled  fecModelEnabled-no
 
 the user sees the selection is saved
-     the user clicks the button/link                     link = Your fEC model
-     the user sees that the radio button is selected     fecModelEnabled  fecModelEnabled-no
+    the user clicks the button/link                     link = Your fEC model
+    the user sees that the radio button is selected     fecModelEnabled  fecModelEnabled-no
+
+the user marks the project costs complete after editing
+    the user closes the last opened tab
+    the user clicks the button/link         css = label[for="stateAidAgreed"]
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+
+the user checks the read-only page
+    the user should see the element               jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
+    the user should see the element               jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
+    the user downloads the file                   ${lead_ktp_email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
+    Download should be done
+    remove the file from the operating system     ${uploadedPdf}
+
