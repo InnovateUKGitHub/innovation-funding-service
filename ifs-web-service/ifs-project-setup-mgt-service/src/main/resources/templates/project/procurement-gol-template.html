@@ -1218,9 +1218,33 @@
 
     Approved Project Milestones:
 
+    <table>
+        <thead>
+            <tr>
+                <th>Milestone number</th>
+                <th>Milestone and/or deliverable</th>
+                <th>Completion date</th>
+                <th>Success criteria</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="milestone, iStat : ${model.milestones}">
+                <th th:text="${iStat.index + 1}">1</th>
+                <td th:text="${milestone.description}">Evidence identified</td>
+                <td th:text="${#temporals.format(model.completionDate)}"></td>
+                <td th:text="${milestone.successCriteria}">Evidence sources clearly identified</td>
+            </tr>
+        </tbody>
+    </table>
 
-
-
+    <div class="letter-size">
+        <p>SECTION 4</p>
+        <p>FINANCIAL ARRANGEMENTS</p>
+    </div>
+    <div class="letter-size">
+        <p>It is intended that the indicated amounts will be paid by the Authority to the Contractor within 30 days subject to contract conditions being met.</p>
+        <p>Maximum Total Contract Value (inclusive of VAT):</p>
+    </div>
 
 
 </main>
