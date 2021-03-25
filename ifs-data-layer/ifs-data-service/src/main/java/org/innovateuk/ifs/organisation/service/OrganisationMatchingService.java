@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrganisationMatchingService {
-
-    @NotSecured(mustBeSecuredByOtherServices = false, value = "Service compares organisation instances and is called form other services always")
+    @NotSecured(value = "Service compares organisation instances and is called form other services always")
     Optional<Organisation> findOrganisationMatch(OrganisationResource organisationResource);
 
     @NotSecured(value = "Service compares organisation instances and is called form other services always")

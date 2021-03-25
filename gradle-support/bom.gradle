@@ -9,12 +9,6 @@ dependencies {
     implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
 
-    implementation('io.springfox:springfox-boot-starter') {
-        version {
-            strictly '3.0.0'
-        }
-    }
-
     implementation('org.apache.commons:commons-text') {
         version {
             strictly '1.3'
