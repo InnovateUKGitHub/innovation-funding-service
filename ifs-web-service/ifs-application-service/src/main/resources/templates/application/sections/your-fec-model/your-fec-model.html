@@ -124,7 +124,7 @@
                    th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5' : 'govuk-!-margin-bottom-7'"
                    th:text="${form.fecModelEnabled}? 'Yes' : 'No'"></p>
             </legend>
-            <th:block th:if="${form.fecModelEnabled && model.complete}">
+            <th:block th:if="${form.fecModelEnabled and model.complete}">
                 <div class="upload-section ">
                     <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
                     <div class="govuk-form-group">
