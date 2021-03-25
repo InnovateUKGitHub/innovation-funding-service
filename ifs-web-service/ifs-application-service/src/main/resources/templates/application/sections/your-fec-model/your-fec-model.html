@@ -119,12 +119,11 @@
                 Will you be using the full economic costing (fEC) funding model?
                <p class="govuk-body" th:if="${!model.complete}">
                     Question not answered.</p>
-                <p class="govuk-list readonly-data  govuk-!-margin-top-0"
+                <p class="govuk-list readonly-data  govuk-!-margin-top-0 govuk-!-margin-bottom-5"
                    th:if="${model.complete}"
-                   th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5' : 'govuk-!-margin-bottom-7'"
                    th:text="${form.fecModelEnabled}? 'Yes' : 'No'"></p>
             </legend>
-            <th:block th:if="${form.fecModelEnabled and model.complete}">
+            <th:block th:if="${form.fecModelEnabled != null and form.fecModelEnabled and model.complete != null and model.complete}">
                 <div class="upload-section ">
                     <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
                     <div class="govuk-form-group">
