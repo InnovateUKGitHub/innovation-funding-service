@@ -100,7 +100,7 @@ function inject_db_configuration_into_proxysql_cnf() {
   echo "db pass $DB_PASS"
   echo "db port $DB_PORT"
 
-    sed -i "s/<<DB_USER>>/$DB_USER/g;s/<<DB_HOST>>/$DB_HOST/g;s/<<DB_PASS>>/$DB_PASS/g;s/<<DB_PORT>>/$DB_PORT/g;s/<<DB_NAME>>/$DB_NAME/g" /etc/proxysql.cnf
+    sed -i -e "s/<<DB_USER>>/$DB_USER/g;s/<<DB_HOST>>/$DB_HOST/g;s/<<DB_PASS>>/$DB_PASS/g;s/<<DB_PORT>>/$DB_PORT/g;s/<<DB_NAME>>/$DB_NAME/g" /etc/proxysql.cnf
 }
 
 # the entrypoint into this script
