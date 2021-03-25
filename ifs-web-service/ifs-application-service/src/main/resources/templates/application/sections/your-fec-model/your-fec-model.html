@@ -118,7 +118,7 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
                 Will you be using the full economic costing (fEC) funding model?
                <p class="govuk-body" th:if="${!model.complete}">
-                    Question not Answered.</p>
+                    Question not answered.</p>
                 <p class="govuk-list readonly-data  govuk-!-margin-top-0"
                    th:if="${model.complete}"
                    th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5' : 'govuk-!-margin-bottom-7'"
