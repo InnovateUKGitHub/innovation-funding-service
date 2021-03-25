@@ -356,6 +356,7 @@ public class CompetitionWebTestData {
                         .withName("No aid comp"),
                 grantCompetition()
                         .withName("Subsidy control competition")
+                        .withResubmission(true)
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
                         .withName("Always open competition")
