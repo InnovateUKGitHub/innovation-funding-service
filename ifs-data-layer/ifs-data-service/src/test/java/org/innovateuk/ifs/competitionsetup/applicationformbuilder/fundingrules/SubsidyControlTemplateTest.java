@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -45,8 +46,25 @@ public class SubsidyControlTemplateTest {
     @Mock
     private QuestionnaireRepository questionnaireRepository;
 
+
+    @Test
+    public void sections_featureToggleOff() {
+        ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle",
+                false);
+
+        SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");
+
+        assertEquals(2, subsidyControlTemplate.sections(newArrayList(
+                projectDetails,
+                SectionBuilder.aSection().withName("Finances")
+        )).size());
+    }
+
     @Test
     public void sections() {
+        ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle",
+                true);
+
         long questionnaireId = 1L;
         Questionnaire questionnaireEntity = new Questionnaire();
         SectionBuilder projectDetails = SectionBuilder.aSection().withName("Project details");

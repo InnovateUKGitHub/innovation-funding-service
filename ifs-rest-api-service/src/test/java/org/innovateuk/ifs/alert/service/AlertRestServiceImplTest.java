@@ -50,12 +50,6 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
     }
 
     @Test
-    public void findAllVisibleFallback() {
-        assertTrue(service.findAllVisibleFallback(new Throwable()).getSuccess().isEmpty());
-    }
-
-
-    @Test
     public void findAllVisibleByType() throws Exception {
         final AlertResource expected1 = new AlertResource();
         expected1.setId(8888L);
