@@ -2,11 +2,6 @@
 
 set -e
 
-DB_USER=$DB_USER
-DB_PASS=$DB_PASS
-DB_HOST=$DB_HOST
-DB_PORT=$DB_PORT
-DB_NAME=$DB_NAME
 
 # A function to generate a set of query_rules for proxysql to rewrite data as it is being selected by mysqldump.
 # This takes rules defined in files in the /dump/rewrites folder and builds a set of proxysql configuration to apply
