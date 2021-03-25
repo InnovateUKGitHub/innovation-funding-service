@@ -355,7 +355,8 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("No aid comp"),
                 grantCompetition()
-                        .withName("WTO comp"),
+                        .withName("Subsidy control competition")
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
                 grantCompetition()
                         .withName("Always open competition")
                         .withAlwaysOpen(true)
