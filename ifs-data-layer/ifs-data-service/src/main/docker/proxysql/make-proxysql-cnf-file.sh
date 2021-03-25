@@ -8,6 +8,10 @@ DB_HOST=$DB_HOST
 DB_PORT=$DB_PORT
 DB_NAME=$DB_NAME
 
+inject_db_configuration_into_proxysql_cnf
+generate_query_rules_for_proxysql
+inject_query_rules_into_proxysql_cnf
+
 # A function to generate a set of query_rules for proxysql to rewrite data as it is being selected by mysqldump.
 # This takes rules defined in files in the /dump/rewrites folder and builds a set of proxysql configuration to apply
 # those rewrites.  These rules will be written to /dump/query_rules
@@ -99,20 +103,9 @@ function inject_query_rules_into_proxysql_cnf() {
 
 # a function to replace database configuration replacement tokens in proxysql.cnf with real values
 function inject_db_configuration_into_proxysql_cnf() {
-  echo "db user $DB_USER"
-  echo "db host $DB_HOST"
-  echo "db name $DB_NAME"
-  echo "db pass $DB_PASS"
-  echo "db port $DB_PORT"
-
     sed -i "s/<<DB_USER>>/$DB_USER/g;s/<<DB_HOST>>/$DB_HOST/g;s/<<DB_PASS>>/$DB_PASS/g;s/<<DB_PORT>>/$DB_PORT/g;s/<<DB_NAME>>/$DB_NAME/g" /etc/proxysql.cnf
 }
 
 # the entrypoint into this script
 
 . /dump/rewrite-rule-generator.sh
-
-inject_db_configuration_into_proxysql_cnf
-generate_query_rules_for_proxysql
-inject_query_rules_into_proxysql_cnf
-
