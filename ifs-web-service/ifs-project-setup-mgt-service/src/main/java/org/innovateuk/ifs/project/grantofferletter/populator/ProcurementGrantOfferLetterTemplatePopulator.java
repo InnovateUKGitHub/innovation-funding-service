@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOff
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +12,6 @@ import java.util.List;
 
 @Component
 public class ProcurementGrantOfferLetterTemplatePopulator {
-
-    @Autowired
-    private ProjectRestService projectRestService;
 
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
