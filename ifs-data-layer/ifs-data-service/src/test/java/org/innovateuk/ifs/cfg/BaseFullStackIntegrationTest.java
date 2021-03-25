@@ -3,6 +3,7 @@ package org.innovateuk.ifs.cfg;
 import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.config.audit.AuditConfig;
+import org.innovateuk.ifs.config.repository.RefreshableCrudRepositoryImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
@@ -52,7 +53,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 @RunWith(SpringRunner.class)
 @ActiveProfiles("integration-test")
 @EntityScan(basePackageClasses = Application.class)
-@EnableJpaRepositories(basePackageClasses = Application.class)
+@EnableJpaRepositories(basePackageClasses = Application.class, repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 @EnableAutoConfiguration(exclude = {RedisAutoConfiguration.class})
 @TestPropertySource(properties = {
         "spring.jpa.show-sql=true",

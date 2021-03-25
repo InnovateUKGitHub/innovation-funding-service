@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.api;
 
-import io.swagger.annotations.ApiOperation;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -3,8 +3,6 @@ package org.innovateuk.ifs.organisation.controller;
 import org.innovateuk.ifs.address.mapper.AddressMapperImpl;
 import org.innovateuk.ifs.address.mapper.AddressTypeMapperImpl;
 import org.innovateuk.ifs.cfg.BaseFullStackIntegrationTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapperImpl;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapperImpl;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapperImpl;

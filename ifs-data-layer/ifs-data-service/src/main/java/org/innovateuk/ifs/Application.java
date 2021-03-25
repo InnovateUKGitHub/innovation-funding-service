@@ -2,6 +2,7 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.config.repository.RefreshableCrudRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -20,7 +21,7 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 @EnableScheduling
 @EnableSpringDataWebSupport
-@EnableJpaRepositories
+@EnableJpaRepositories(repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 @EnableCaching
 public class Application extends SpringBootServletInitializer {
     private static final Log LOG = LogFactory.getLog(Application.class);
