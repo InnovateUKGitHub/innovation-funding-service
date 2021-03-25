@@ -67,37 +67,69 @@ public class OrganisationControllerFullIntegrationTest extends BaseFullStackInte
     private static String CHN_UPDATED = "987654321";
 
     @Before
-    public void initTestData() {
-        List<Organisation> orgs = organisationRepository.findByNameOrderById(TEST_ORG_NAME_NO_CHN);
-        orgs.forEach(o -> organisationRepository.deleteById(o.getId()));
-        orgs = organisationRepository.findByNameOrderById(TEST_ORG_NAME_WITH_CHN);
-        orgs.forEach(o -> organisationRepository.deleteById(o.getId()));
+    public void clearDatabaseTestData() {
+        clearDatabaseByName(TEST_ORG_NAME_NO_CHN);
+        clearDatabaseByName(TEST_ORG_NAME_WITH_CHN);
+    }
 
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName(TEST_ORG_NAME_NO_CHN);
-        organisationResource.setOrganisationType(OrganisationTypeEnum.BUSINESS.getId());
-        organisationService.create(organisationResource);
+    @Test
+    public void testFindOrganisationWithChn() {
+        createDatabaseOrganisation(TEST_ORG_NAME_WITH_CHN, Optional.of(CHN));
+        assertOneResultWithNameAndChn(
+                organisationController.findOrganisationsByCompaniesHouseNumber(CHN).getSuccess(),
+                TEST_ORG_NAME_WITH_CHN,
+                Optional.of(CHN)
+        );
+    }
 
-        organisationResource = new OrganisationResource();
-        organisationResource.setName(TEST_ORG_NAME_WITH_CHN);
-        organisationResource.setCompaniesHouseNumber(CHN);
-        organisationResource.setOrganisationType(OrganisationTypeEnum.BUSINESS.getId());
-        organisationService.create(organisationResource);
+    @Test
+    public void testFindOrganisationNoChn() {
+        createDatabaseOrganisation(TEST_ORG_NAME_NO_CHN, Optional.empty());
+        assertOneResultWithNameAndChn(
+                organisationController.findOrganisationsByName(TEST_ORG_NAME_NO_CHN).getSuccess(),
+                TEST_ORG_NAME_NO_CHN,
+                Optional.empty()
+        );
     }
 
     @Test
     public void testUpdateOrganisation() {
-        List<OrganisationResource> organisations = organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN).getSuccess();
-        assertThat(organisations.size(), equalTo(1));
-        assertThat(organisations.get(0).getName(), equalTo(TEST_ORG_NAME_WITH_CHN));
-        assertThat(organisations.get(0).getCompaniesHouseNumber(), equalTo(CHN));
-        Long id = organisations.get(0).getId();
+        createDatabaseOrganisation(TEST_ORG_NAME_WITH_CHN, Optional.of(CHN));
+        OrganisationResource organisationResource = assertOneResultWithNameAndChn(
+            organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN).getSuccess(),
+            TEST_ORG_NAME_WITH_CHN,
+            Optional.of(CHN)
+        );
+        Long id = organisationResource.getId();
         organisationController.updateNameAndRegistration(id, TEST_ORG_NAME_WITH_CHN + UPDATED, CHN_UPDATED);
+        assertOneResultWithNameAndChn(
+                organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN + UPDATED).getSuccess(),
+                TEST_ORG_NAME_WITH_CHN + UPDATED,
+                Optional.of(CHN_UPDATED)
+        );
+    }
 
-        RestResult<List<OrganisationResource>> organisationResult = organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN);
-        assertThat(organisationResult.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+    private OrganisationResource assertOneResultWithNameAndChn(List<OrganisationResource> organisations, String name, Optional<String> companiesHouseNumber) {
+        assertThat(organisations.size(), equalTo(1));
+        assertThat(organisations.get(0).getName(), equalTo(name));
+        if (companiesHouseNumber.isPresent()) {
+            assertThat(organisations.get(0).getCompaniesHouseNumber(), equalTo(companiesHouseNumber.get()));
+        }
+        return organisations.get(0);
+    }
 
-        organisationResult = organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN + UPDATED);
-        assertThat(organisationResult.getSuccess().size(), equalTo(1));
+    private void clearDatabaseByName(String name) {
+        organisationRepository.findByNameOrderById(name).forEach(o -> organisationRepository.deleteById(o.getId()));
+        assertThat(organisationController.findOrganisationsByName(name).getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+    }
+
+    private void createDatabaseOrganisation(String name, Optional<String> companiesHouseNumber) {
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setName(name);
+        if (companiesHouseNumber.isPresent()) {
+            organisationResource.setCompaniesHouseNumber(companiesHouseNumber.get());
+        }
+        organisationResource.setOrganisationType(OrganisationTypeEnum.BUSINESS.getId());
+        organisationService.create(organisationResource);
     }
 }
