@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
@@ -149,7 +151,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
                         .withTimePeriod(index, MONTH, 1, MONTH))
                 .collect(toList());
         List<Cost> otherCosts = range(0, costs.size())
-                .mapToObj(index -> new Cost(new BigDecimal(costs.get(index).other))
+                .mapToObj(index -> new Cost(new BigDecimal(costs.get(index).otherCosts))
                         .withCategory(otherCostCategory)
                         .withTimePeriod(index, MONTH, 1, MONTH))
                 .collect(toList());
@@ -176,7 +178,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
     private OtherAndVat breakoutCosts(BigInteger milestoneTotal, BigDecimal vatRate){
         BigInteger otherCosts = new BigDecimal(milestoneTotal).divide(BigDecimal.ONE.add(vatRate), 1, BigDecimal.ROUND_HALF_DOWN).toBigInteger();
         BigInteger vat = milestoneTotal.subtract(otherCosts);
-        return new OtherAndVat(otherCosts, vat);
+        return new OtherAndVat().withOtherCost(otherCosts).withVat(vat);
     }
 
     /**
@@ -192,38 +194,97 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         BigInteger correctVatTotal = cost(costCategorySummaries, VAT).getTotal().toBigIntegerExact();
         BigInteger correctOtherCostsTotal = cost(costCategorySummaries, OTHER_COSTS).getTotal().toBigIntegerExact();
         BigInteger currentVatTotal = costsToAdjust.stream().map(otherAndVat -> otherAndVat.vat).reduce(BigInteger::add).orElse(ZERO);
-        BigInteger currentOtherCostsTotal = costsToAdjust.stream().map(otherAndVat -> otherAndVat.other).reduce(BigInteger::add).orElse(ZERO);
+        BigInteger currentOtherCostsTotal = costsToAdjust.stream().map(otherAndVat -> otherAndVat.otherCosts).reduce(BigInteger::add).orElse(ZERO);
         if (!correctVatTotal.subtract(currentVatTotal).equals(currentOtherCostsTotal.subtract(correctOtherCostsTotal))){
             throw new IllegalStateException("The absolute amount we have to change other costs and vat by is not the same");
         }
         return adjustedCosts(costsToAdjust, currentVatTotal.subtract(correctVatTotal));
     }
 
-    private List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVat){
-        List<OtherAndVat> adjustedCosts = new ArrayList(costsToAdjust);
+    List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVat){
+        BigInteger amountToChangeVat = amountToAddToVat;
+        BigInteger amountToChangeOtherCosts = amountToChangeVat.negate();
+        BigInteger initialTotalVat = costsToAdjust.stream().map(otherAndVat -> otherAndVat.vat).reduce(BigInteger::add).orElse(ZERO);
+        BigInteger initialTotalOtherCosts = costsToAdjust.stream().map(otherAndVat -> otherAndVat.otherCosts).reduce(BigInteger::add).orElse(ZERO);
 
-        while (amountToAddToVat.equals(ZERO)) {
-            for (int index = 0; index < adjustedCosts.size() - 1; ) {
-                if (!amountToAddToVat.equals(ZERO)) {
-                    OtherAndVat unAdjusted = costsToAdjust.get(index);
-                    if (unAdjusted.other.compareTo(ZERO) > 0) {
-                        costsToAdjust.set(index, new OtherAndVat(unAdjusted.other.subtract(ONE), unAdjusted.vat.add(ONE)));
-                        amountToAddToVat = amountToAddToVat.subtract(ONE);
-                    }
+        // Validate that we have enough other costs and vat to make the adjustment.
+        if (isLessThanZero(initialTotalVat.add(amountToChangeVat)) ||
+                isLessThanZero(initialTotalOtherCosts.add(amountToChangeOtherCosts))) {
+            throw new IllegalStateException(
+                    "initial vat: " + initialTotalVat + ". " +
+                    "initial other costs: " + initialTotalOtherCosts + ". " +
+                    "amount to change vat: " + amountToAddToVat + ". " +
+                    "amount to change other costs: " + amountToChangeOtherCosts);
+        }
+
+        List<OtherAndVat> adjustedCosts = new ArrayList(costsToAdjust);
+        for (int index = 0; index < adjustedCosts.size(); index++) {
+            if (!amountToChangeVat.equals(ZERO)) {
+                OtherAndVat unAdjusted = costsToAdjust.get(index);
+                if (isLessThanZero(amountToAddToVat) && isGreaterThanZero(unAdjusted.vat)){
+                    adjustedCosts.set(index, new OtherAndVat().withOtherCost(unAdjusted.otherCosts.add(ONE)).withVat(unAdjusted.vat.subtract(ONE)));
+                    amountToChangeVat = amountToChangeVat.add(ONE);
+                }
+                else if (isGreaterThanZero(amountToAddToVat) && isGreaterThanZero(unAdjusted.otherCosts)) {
+                    adjustedCosts.set(index, new OtherAndVat().withOtherCost(unAdjusted.otherCosts.subtract(ONE)).withVat(unAdjusted.vat.add(ONE)));
+                    amountToChangeVat = amountToChangeVat.subtract(ONE);
                 }
             }
         }
-        return adjustedCosts;
+        return amountToChangeVat.equals(ZERO) ? adjustedCosts : adjustedCosts(adjustedCosts, amountToChangeVat);
+    }
+
+    private boolean isGreaterThanZero(BigInteger value) {
+        return value.compareTo(ZERO) > 0;
+    }
+
+    private boolean isLessThanZero(BigInteger value) {
+        return value.compareTo(ZERO) < 0;
     }
 
 
-    private static class OtherAndVat{
-        private BigInteger other;
+    static class OtherAndVat{
+        private BigInteger otherCosts;
         private BigInteger vat;
 
-        public OtherAndVat(BigInteger other, BigInteger vat) {
-            this.other = other;
+        OtherAndVat withOtherCost(BigInteger otherCosts){
+            this.otherCosts = otherCosts;
+            return  this;
+        }
+
+        OtherAndVat withVat(BigInteger vat){
             this.vat = vat;
+            return  this;
+        }
+
+        @Override
+        public String toString() {
+            return "OtherAndVat{" +
+                    "otherCosts=" + otherCosts +
+                    ", vat=" + vat +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            OtherAndVat that = (OtherAndVat) o;
+
+            return new EqualsBuilder()
+                    .append(otherCosts, that.otherCosts)
+                    .append(vat, that.vat)
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(otherCosts)
+                    .append(vat)
+                    .toHashCode();
         }
     }
 }

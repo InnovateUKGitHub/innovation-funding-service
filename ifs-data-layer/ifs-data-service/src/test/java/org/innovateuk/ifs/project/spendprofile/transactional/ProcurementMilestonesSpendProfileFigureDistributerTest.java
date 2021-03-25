@@ -1,81 +1,114 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
-import org.innovateuk.ifs.procurement.milestone.transactional.ProjectProcurementMilestoneService;
-import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.financechecks.domain.Cost;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
-import org.innovateuk.ifs.project.financechecks.domain.CostTimePeriod;
+import org.innovateuk.ifs.project.spendprofile.transactional.ProcurementMilestonesSpendProfileFigureDistributer.OtherAndVat;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.List;
+import static org.junit.Assert.assertEquals;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
-import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
-import static org.mockito.Mockito.when;
+import static java.math.BigInteger.valueOf;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.fail;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ProcurementMilestonesSpendProfileFigureDistributerTest {
-    @InjectMocks
-    private ProcurementMilestonesSpendProfileFigureDistributer distributer;
-    @Mock
-    private ProjectProcurementMilestoneService projectProcurementMilestoneService;
 
     @Test
-    public void distributeCosts() {
+    public void testAdjustCostsRemoveTooMuchVat() {
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
+        );
+        try {
+            // Total vat = 3 try to remove 4
+            new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(-4));
+            fail("We should get an illegal state exception if we try to remove too much vat");
+        } catch (IllegalStateException e){
+            // Pass
+        }
+    }
 
-        /// TODO qqRP
-//        Project project = ProjectBuilder.newProject().withDuration(4L).build();
-//
-//        ProjectProcurementMilestoneResource firstMonthOne = newProjectProcurementMilestoneResource()
-//                .withMonth(1).withPayment(BigInteger.valueOf(12000L))
-//                .build();
-//        ProjectProcurementMilestoneResource firstMonthTwo = newProjectProcurementMilestoneResource()
-//                .withMonth(1).withPayment(BigInteger.valueOf(24000L))
-//                .build();
-//        ProjectProcurementMilestoneResource secondMonth = newProjectProcurementMilestoneResource()
-//                .withMonth(2).withPayment(BigInteger.valueOf(12000L))
-//                .build();
-//        ProjectProcurementMilestoneResource fourthMonth = newProjectProcurementMilestoneResource()
-//                .withMonth(4).withPayment(BigInteger.valueOf(1200L))
-//                .build();
-//        List<ProjectProcurementMilestoneResource> milestones = Arrays.asList(firstMonthOne, firstMonthTwo, secondMonth, fourthMonth);
-//
-//        when(projectProcurementMilestoneService.getByProjectId(project.getId())).thenReturn(serviceSuccess(milestones));
-//
-//        List<List<Cost>> result = distributer.distributeCosts(project);
-//
-//        assertThat(result).hasSize(2);
-//        List<Cost> otherCosts = result.get(0);
-//        List<Cost> vat = result.get(1);
-//        assertThat(otherCosts).hasSize(4);
-//        assertThat(result.get(1)).hasSize(4);
-//        assertThat(otherCosts.get(0).getCostTimePeriod().getOffsetAmount()).isEqualTo(0);
-//        assertThat(otherCosts.get(0).getValue()).isEqualTo(new BigDecimal("30000"));
-//        assertThat(otherCosts.get(1).getCostTimePeriod().getOffsetAmount()).isEqualTo(1);
-//        assertThat(otherCosts.get(1).getValue()).isEqualTo(new BigDecimal("10000"));
-//        assertThat(otherCosts.get(2).getCostTimePeriod().getOffsetAmount()).isEqualTo(2);
-//        assertThat(otherCosts.get(2).getValue()).isEqualTo(BigDecimal.ZERO);
-//        assertThat(otherCosts.get(3).getCostTimePeriod().getOffsetAmount()).isEqualTo(3);
-//        assertThat(otherCosts.get(3).getValue()).isEqualTo(new BigDecimal("1000"));
-//        assertThat(vat.get(0).getCostTimePeriod().getOffsetAmount()).isEqualTo(0);
-//        assertThat(vat.get(0).getValue()).isEqualTo(new BigDecimal("6000"));
-//        assertThat(vat.get(1).getCostTimePeriod().getOffsetAmount()).isEqualTo(1);
-//        assertThat(vat.get(1).getValue()).isEqualTo(new BigDecimal("2000"));
-//        assertThat(vat.get(2).getCostTimePeriod().getOffsetAmount()).isEqualTo(2);
-//        assertThat(vat.get(2).getValue()).isEqualTo(BigDecimal.ZERO);
-//        assertThat(vat.get(3).getCostTimePeriod().getOffsetAmount()).isEqualTo(3);
-//        assertThat(vat.get(3).getValue()).isEqualTo(new BigDecimal("200"));
+    @Test
+    public void testAdjustCostsRemoveTooMuchOtherCosts() {
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
+        );
+        try {
+            // Total other costs = 6, try to remove 7.
+            new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(7));
+            fail("We should get an illegal state exception if we try to remove too much vat");
+        } catch (IllegalStateException e){
+            // Pass
+        }
+    }
+
+    @Test
+    public void testAdjustCostsAddToVat() {
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(1)).withVat(valueOf(0)),
+                new OtherAndVat().withOtherCost(valueOf(1)).withVat(valueOf(0)),
+                new OtherAndVat().withOtherCost(valueOf(1)).withVat(valueOf(0))
+        );
+        List<OtherAndVat> expected = asList(
+                new OtherAndVat().withOtherCost(valueOf(0)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(0)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(1)).withVat(valueOf(0))
+        );
+        // Call method under test add 2 to vat (subtract 2 from other costs)
+        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(2));
+        assertEquals(expected, adjusted);
+    }
+
+    @Test
+    public void testAdjustCostsSubtractFromVat() {
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
+        );
+        List<OtherAndVat> expected = asList(
+                new OtherAndVat().withOtherCost(valueOf(3)).withVat(valueOf(0)),
+                new OtherAndVat().withOtherCost(valueOf(3)).withVat(valueOf(0)),
+                new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
+        );
+        // Call method under test add 2 to other costs (subtract 2 from vat)
+        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(-2));
+        assertEquals(expected, adjusted);
+    }
+
+    @Test
+    public void testAdjustCostsAddToVatMultipleIterationsRequired() {
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(10)).withVat(valueOf(5)),
+                new OtherAndVat().withOtherCost(valueOf(1)).withVat(valueOf(0)),
+                new OtherAndVat().withOtherCost(valueOf(5)).withVat(valueOf(1))
+        );
+        List<OtherAndVat> expected = asList(
+                new OtherAndVat().withOtherCost(valueOf(7)).withVat(valueOf(8)),
+                new OtherAndVat().withOtherCost(valueOf(0)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(3)).withVat(valueOf(3))
+        );
+        // Call method under test add 6 to vat (subtract 6 from other costs)
+        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(6));
+        assertEquals(expected, adjusted);
+    }
+
+    @Test
+    public void testAdjustCostsAddToOtherCostsMultipleIterationsRequired() {
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(10)).withVat(valueOf(5)),
+                new OtherAndVat().withOtherCost(valueOf(3)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(20)).withVat(valueOf(10))
+        );
+        List<OtherAndVat> expected = asList(
+                new OtherAndVat().withOtherCost(valueOf(12)).withVat(valueOf(3)),
+                new OtherAndVat().withOtherCost(valueOf(4)).withVat(valueOf(0)),
+                new OtherAndVat().withOtherCost(valueOf(21)).withVat(valueOf(9))
+        );
+        // Call method under test add 4 to other costs (subtract 4 from vat)
+        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(-4));
+        assertEquals(expected, adjusted);
     }
 }
