@@ -21,7 +21,8 @@ public class QuestionDocs {
             fieldWithPath("competition").description("Id of the competition").optional(),
             fieldWithPath("type").description("The type of question").optional(),
             fieldWithPath("questionSetupType").description("The setup type of question").optional(),
-            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor").optional()
+            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor").optional(),
+            fieldWithPath("questionnaireId").description("Id of the questionnaire completed as part of this question.").optional()
     };
 
     public static final QuestionResourceBuilder questionBuilder = newQuestionResource()

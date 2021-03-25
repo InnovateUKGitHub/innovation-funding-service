@@ -187,7 +187,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
 
-        when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
@@ -206,7 +206,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         assertFalse(viewModel.isKtpCompetition());
 
-        verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
+        verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 
     @Test
@@ -297,7 +297,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
 
-        when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
@@ -352,7 +352,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         assertTrue(viewModel.isKtpCompetition());
 
-        verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
+        verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 
 }

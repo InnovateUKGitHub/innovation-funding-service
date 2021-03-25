@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;

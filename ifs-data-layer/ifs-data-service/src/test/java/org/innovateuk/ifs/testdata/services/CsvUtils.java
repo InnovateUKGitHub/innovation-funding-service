@@ -18,6 +18,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerReso
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
@@ -56,6 +57,10 @@ public class CsvUtils {
 
     public static List<OrganisationLine> readOrganisations() {
         return simpleMap(readCsvLines("organisations"), OrganisationLine::new);
+    }
+
+    public static List<QuestionnaireResponseLine> readQuestionnaireResponseLines(){
+        return simpleMap(readCsvLines("questionnaire-responses"), QuestionnaireResponseLine::new);
     }
 
     public static List<ExternalUserLine> readExternalUsers() {
@@ -548,6 +553,37 @@ public class CsvUtils {
             includeYourOrganisation = nullableBoolean(line.get(i++));
             fundingRules = FundingRules.valueOf(line.get(i++));
             alwaysOpen = nullableBoolean(line.get(i++));
+        }
+    }
+
+
+    public static class QuestionnaireResponseLine {
+
+        public String user;
+        public String competitionName;
+        public String applicationName;
+        public String organisationName;
+        public QuestionSetupType questionSetupType;
+        public List<String> options;
+
+        private QuestionnaireResponseLine(List<String> line) {
+            int i = 0;
+            user = line.get(i++);
+            competitionName = line.get(i++);
+            applicationName = line.get(i++);
+            organisationName = line.get(i++);
+            questionSetupType = QuestionSetupType.valueOf(line.get(i++));
+            options= asList(line.get(i++).split(","));
+
+        }
+
+        public QuestionnaireResponseLine(String user, String competitionName, String applicationName, String organisationName, QuestionSetupType questionSetupType, List<String> options) {
+            this.user = user;
+            this.competitionName = competitionName;
+            this.applicationName = applicationName;
+            this.organisationName = organisationName;
+            this.questionSetupType = questionSetupType;
+            this.options = options;
         }
     }
 
