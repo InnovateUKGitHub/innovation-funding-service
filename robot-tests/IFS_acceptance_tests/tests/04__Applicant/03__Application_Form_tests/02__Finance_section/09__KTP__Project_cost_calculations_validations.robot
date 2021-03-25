@@ -1,19 +1,21 @@
 *** Settings ***
-Documentation     IFS-7790  KTP: Your finances - Edit
+Documentation     IFS-7790 KTP: Your finances - Edit
 ...
-...               IFS-7959  KTP Your Project Finances - Links for Detailed Finances
+...               IFS-7959 KTP Your Project Finances - Links for Detailed Finances
 ...
 ...               IFS-8156 KTP Project costs - T&S
 ...
 ...               IFS-8154 KTP Project Costs - consumables
 ...
-...               IFS-8157  KTP Project costs - Subcontracting costs
+...               IFS-8157 KTP Project costs - Subcontracting costs
 ...
-...               IFS-8158  KTP project costs justification
+...               IFS-8158 KTP project costs justification
 ...
 ...               IFS-9242 KTP fEC/Non-fEC: Non-fEC project costs tables
 ...
 ...               IFS-9239 KTP fEC/Non-fEC: Your fEC model
+...
+...               IFS-9243 KTP fEC/Non-fEC: academic and secretarial support cost category
 ...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
@@ -22,15 +24,16 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	               KTP application
-${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                   KTP new competition
-${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                         email=bob@knowledge.base    password=${short_password}
-${estateValue}                     11000
-${associateSalaryTable}            associate-salary-costs-table
-${associateDevelopmentTable}       associate-development-costs-table
-${limitFieldValidationMessage}     You must provide justifications for exceeding allowable cost limits.
+${KTPapplication}  	                      KTP application
+${KTPapplicationId}                       ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}                          KTP new competition
+${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
+&{KTPLead}                                email=bob@knowledge.base    password=${short_password}
+${estateValue}                            11000
+${associateSalaryTable}                   associate-salary-costs-table
+${associateDevelopmentTable}              associate-development-costs-table
+${limitFieldValidationMessage}            You must provide justifications for exceeding allowable cost limits.
+${academic_secretarial_support_table}     academic-secretarial-costs-table
 
 *** Test Cases ***
 New lead applicant can make a 'No' selection for the organisation's fEC model and save the selection
@@ -83,6 +86,13 @@ Calculation for associate employment and development
      When the user should see the element            jQuery = span:contains("123") ~ button:contains("Associate development")
      Then the user should see the right values       123   Associate employment    246
      And the user should not see the element         jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
+
+KB applicant can provide an academic and secretarial support cost in a non-fEC project cost table
+    [Documentation]  IFS-9243
+    Given the user collapses and expands the academic and secretarial support section
+    When the user enters text to a text field     id = academicAndSecretarialSupportForm  123
+    Then the user should see the element          jQuery = span:contains("123") ~ button:contains("Academic and secretarial support")
+    And the user should see the element           jQuery = h4:contains("Total academic and secretarial support costs") span:contains("123")
 
 Knowledge base supervisor can only add two rows
     [Documentation]  IFS-7790
@@ -218,6 +228,7 @@ the user should see the validation messages for addition company costs
 
 the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total associate employment costs") ~ td:contains("£123")
+    the user should see the element       jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("£123")
     the user should see the element       jQuery = th:contains("Total associate development costs") ~ td:contains("£123")
     the user should see the element       jQuery = th:contains("Total travel and subsistence costs") ~ td:contains("£6,150")
     the user should see the element       jQuery = th:contains("Total consumables costs") ~ td:contains("£2,000")
@@ -229,6 +240,7 @@ the user should see the read only view of KTP
 
 the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Academic and secretarial support") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Associate development") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Travel and subsistence") ~ td:contains("6,150")
     the user should see the element       jQuery = td:contains("Consumables") ~ td:contains("2,000")
@@ -287,3 +299,9 @@ the user completes your funding section
     the user selects the radio button     requestingFunding  request-funding-no
     the user selects the radio button     otherFunding  other-funding-no
     the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user collapses and expands the academic and secretarial support section
+    the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
+    the user should not see the element     id = academicAndSecretarialSupportForm
+    the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
+    the user should see the element         jQuery = p:contains("You may enter up to £875")
