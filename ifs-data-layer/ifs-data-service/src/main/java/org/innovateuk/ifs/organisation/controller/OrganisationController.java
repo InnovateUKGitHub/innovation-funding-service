@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.controller;
 import org.innovateuk.ifs.api.RenameOrganisationV1Api;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationMatchingService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
@@ -32,27 +33,18 @@ public class OrganisationController implements RenameOrganisationV1Api {
     @Autowired
     private OrganisationMatchingService organisationMatchingService;
 
+    @Autowired
+    private OrganisationMapper organisationMapper;
+
     @Override
-    public RestResult<List<Organisation>> findOrganisationsByCompaniesHouseNumber(
+    public RestResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseNumber(
             @PathVariable("companiesHouseNumber") final String companiesHouseNumber) {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setCompaniesHouseNumber(companiesHouseNumber);
-        List<Organisation> organisations =  organisationMatchingService.findOrganisationByCompaniesHouseId(organisationResource);
-        if (!organisations.isEmpty()) {
-            return RestResult.restSuccess(organisations);
-        }
-        return RestResult.restFailure(HttpStatus.NOT_FOUND);
+        return RestResult.toListResponse(organisationMatchingService.findOrganisationsByCompaniesHouseId(companiesHouseNumber));
     }
 
     @Override
-    public RestResult<List<Organisation>> findOrganisationsByName(@PathVariable("name") final String name) {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName(name);
-        List<Organisation> organisations =  organisationMatchingService.findOrganisationByName(organisationResource);
-        if (!organisations.isEmpty()) {
-            return RestResult.restSuccess(organisations);
-        }
-        return RestResult.restFailure(HttpStatus.NOT_FOUND);
+    public RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable("name") final String name) {
+        return RestResult.toListResponse(organisationMatchingService.findOrganisationsByName(name));
     }
 
     @GetMapping("/find-by-application-id/{applicationId}")
@@ -103,7 +95,10 @@ public class OrganisationController implements RenameOrganisationV1Api {
     }
 
     @Override
-    public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
+    public RestResult<OrganisationResource> updateNameAndRegistration(
+                @PathVariable("organisationId") Long organisationId,
+                @RequestParam(value = "name") String name,
+                @RequestParam(value = "registration") String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
     }
 }

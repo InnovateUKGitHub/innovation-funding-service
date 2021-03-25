@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.organisation.service;
 
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,9 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
 
     @Autowired
     private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private OrganisationMapper organisationMapper;
 
     @Autowired
     private OrganisationPatternMatcher organisationPatternMatcher;
@@ -70,11 +75,25 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
                 )).findFirst();
     }
 
-    public List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {
+    private List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {
         return organisationRepository.findByNameOrderById(organisationResource.getName());
     }
 
-    public List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
+    private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
         return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
+    }
+
+    @Transactional
+    public List<OrganisationResource> findOrganisationsByName(String name) {
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setName(name);
+        return organisationMapper.mapToResources(findOrganisationByName(organisationResource));
+    }
+
+    @Transactional
+    public List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setCompaniesHouseNumber(companiesHouseNumber);
+        return organisationMapper.mapToResources(findOrganisationByCompaniesHouseId(organisationResource));
     }
 }

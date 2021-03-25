@@ -9,12 +9,12 @@ import java.util.Optional;
 
 public interface OrganisationMatchingService {
 
-    @NotSecured(value = "Service compares organisation instances and is called form other services always")
+    @NotSecured(mustBeSecuredByOtherServices = false, value = "Service compares organisation instances and is called form other services always")
     Optional<Organisation> findOrganisationMatch(OrganisationResource organisationResource);
 
     @NotSecured(value = "Service compares organisation instances and is called form other services always")
-    List<Organisation> findOrganisationByName(OrganisationResource organisationResource);
+    List<OrganisationResource> findOrganisationsByName(String organisationName);
 
     @NotSecured(value = "Service compares organisation instances and is called form other services always")
-    List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource);
+    List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseId);
 }

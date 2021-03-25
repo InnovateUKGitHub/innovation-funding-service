@@ -516,6 +516,19 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
         return restSuccess(NO_CONTENT);
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a DELETE request that is
+     * deleting data.
+     *
+     * This will be a bodiless RestResult with a "204 - No content" response.
+     */
+    public static <T> RestResult<List<T>> toListResponse(List<T> list) {
+        if (list.isEmpty()) {
+            return restFailure(NOT_FOUND);
+        }
+        return restSuccess(list);
+    }
+
 
     /**
      * Aggregate a {@link List} of {@link RestResult} into a {@link RestResult} containing a {@list List}
