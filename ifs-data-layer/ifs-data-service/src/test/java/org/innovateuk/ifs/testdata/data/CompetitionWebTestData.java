@@ -176,7 +176,10 @@ public class CompetitionWebTestData {
                         .withName("Non KTP competition all finance overview")
                         .withAssessorFinanceView(AssessorFinanceView.ALL),
                 ktpCompetition()
-                        .withName("KTP cofunding single application")
+                        .withName("KTP cofunding single application"),
+                grantCompetition()
+                        .withName("Subsidy control comp in assessment")
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT))
