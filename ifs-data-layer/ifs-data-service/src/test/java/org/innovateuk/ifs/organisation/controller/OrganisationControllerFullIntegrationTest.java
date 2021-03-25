@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.address.mapper.AddressMapperImpl;
 import org.innovateuk.ifs.address.mapper.AddressTypeMapperImpl;
 import org.innovateuk.ifs.cfg.BaseFullStackIntegrationTest;
@@ -68,6 +69,27 @@ public class OrganisationControllerFullIntegrationTest extends BaseFullStackInte
     public void clearDatabaseTestData() {
         clearDatabaseByName(TEST_ORG_NAME_NO_CHN);
         clearDatabaseByName(TEST_ORG_NAME_WITH_CHN);
+    }
+
+    @Test
+    public void validationNoOrgId() {
+        HttpStatus statusCode = organisationController.updateNameAndRegistration(Long.MAX_VALUE,
+                TEST_ORG_NAME_WITH_CHN + UPDATED, CHN_UPDATED).getStatusCode();
+        assertThat(statusCode, equalTo(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void validationTestNameTooLong() {
+        createDatabaseOrganisation(TEST_ORG_NAME_WITH_CHN, Optional.of(CHN));
+        OrganisationResource organisationResource = assertOneResultWithNameAndChn(
+                organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN).getSuccess(),
+                TEST_ORG_NAME_WITH_CHN,
+                Optional.of(CHN)
+        );
+        HttpStatus statusCode = organisationController
+                .updateNameAndRegistration(organisationResource.getId(),
+                        RandomStringUtils.randomAlphanumeric(260), CHN).getStatusCode();
+        assertThat(statusCode, equalTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test

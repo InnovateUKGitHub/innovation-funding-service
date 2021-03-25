@@ -2,6 +2,8 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.api.RenameOrganisationV1Api;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -9,10 +11,13 @@ import org.innovateuk.ifs.organisation.service.OrganisationMatchingService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -98,6 +103,14 @@ public class OrganisationController implements RenameOrganisationV1Api {
                 @PathVariable("organisationId") Long organisationId,
                 @RequestParam(value = "name") String name,
                 @RequestParam(value = "registration") String registration) {
-        return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
+        FailingOrSucceedingResult<OrganisationResource, ServiceFailure> serviceResponse
+                = organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration);
+        if (serviceResponse.isFailure()) {
+            if (serviceResponse.getFailure().contains(BANK_DETAILS_COMPANY_NAME_TOO_LONG)) {
+                return RestResult.restFailure(HttpStatus.BAD_REQUEST);
+            }
+            return RestResult.restFailure(HttpStatus.NOT_FOUND);
+        }
+        return RestResult.restSuccess(serviceResponse.getSuccess());
     }
 }
