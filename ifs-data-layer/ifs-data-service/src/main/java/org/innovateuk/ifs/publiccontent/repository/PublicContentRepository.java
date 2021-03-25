@@ -26,7 +26,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                             "AND p.publishDate < CURRENT_TIMESTAMP " +
                             "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
-            "ORDER BY start_milestone.date, c.name DESC")
+            "ORDER BY start_milestone.date DESC, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByInnovationId(@Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
 
     @Query("SELECT c FROM Competition c " +
@@ -38,7 +38,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.id IN :filteredPublicContentIds " +
                                 "AND p.publishDate < CURRENT_TIMESTAMP " +
                                 "AND p.inviteOnly = false) " +
-            "ORDER BY start_milestone.date, c.name DESC")
+            "ORDER BY start_milestone.date DESC, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByKeywords(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable);
     
     @Query("SELECT c FROM Competition c " +
@@ -51,7 +51,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.publishDate < CURRENT_TIMESTAMP " +
                                 "AND p.inviteOnly = false)" +
             "AND c.id IN :competitionIds " +
-            "ORDER BY start_milestone.date, c.name DESC")
+            "ORDER BY start_milestone.date DESC, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
 
     @Query("SELECT c FROM Competition c " +
@@ -62,7 +62,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                             "WHERE p.competitionId = c.id " +
                             "AND p.publishDate < CURRENT_TIMESTAMP " +
                             "AND p.inviteOnly = false) " +
-            "ORDER BY start_milestone.date, c.name DESC")
+            "ORDER BY start_milestone.date DESC, c.name DESC")
     Page<Competition> findAllPublishedForOpenCompetition(Pageable pageable);
 
     PublicContent findByCompetitionId(Long id);
