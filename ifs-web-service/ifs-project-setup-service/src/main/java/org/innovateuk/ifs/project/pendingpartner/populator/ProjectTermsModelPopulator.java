@@ -53,6 +53,7 @@ public class ProjectTermsModelPopulator {
 
         return new ProjectTermsViewModel(
                 projectId,
+                project.getName(),
                 organisation.getId(),
                 getTermsAndConditionsTemplate(competition, projectId, organisationId),
                 pendingPartnerProgressResource.isTermsAndConditionsComplete(),

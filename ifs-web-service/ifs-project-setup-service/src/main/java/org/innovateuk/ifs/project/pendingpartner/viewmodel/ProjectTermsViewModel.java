@@ -6,6 +6,7 @@ import java.util.Optional;
 public class ProjectTermsViewModel {
     private final long projectId;
     private final long organisationId;
+    private final String projectName;
     private final String competitionTermsTemplate;
     private final boolean termsAccepted;
     private final ZonedDateTime termsAcceptedOn;
@@ -13,6 +14,7 @@ public class ProjectTermsViewModel {
     private final Optional<Long> subsidyBasisQuestionId;
 
     public ProjectTermsViewModel(long projectId,
+                                 String projectName,
                                  long organisationId,
                                  String competitionTermsTemplate,
                                  boolean termsAccepted,
@@ -20,6 +22,7 @@ public class ProjectTermsViewModel {
                                  boolean subsidyBasisRequiredAndNotCompleted,
                                  Optional<Long> subsidyBasisQuestionId) {
         this.projectId = projectId;
+        this.projectName = projectName;
         this.organisationId = organisationId;
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.termsAccepted = termsAccepted;
@@ -61,4 +64,7 @@ public class ProjectTermsViewModel {
         return subsidyBasisRequiredAndNotCompleted;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
 }
