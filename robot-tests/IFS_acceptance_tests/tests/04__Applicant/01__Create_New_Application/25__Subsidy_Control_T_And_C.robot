@@ -39,7 +39,7 @@ Creating a new comp to confirm ATI subsidy control T&C's
     [Documentation]  IFS-8994  IFS-9137  IFS-9124
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  45
+    And the user selects the radio button       termsAndConditionsId  47
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user selects the radio button       termsAndConditionsId  35
     And the user clicks the button/link         jQuery = button:contains("Done")
@@ -54,7 +54,7 @@ ATI subsidy control t&c's are correct
     When the user clicks the button/link                 link = ${atiSubsidyControl}
     And select window                                    title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an ATI Programme grant")
-    And the user should see the element                  jQuery = li:contains("State Aid/Subsidy Control obligations")
+    And the user should see the element                  jQuery = li:contains("State Aid and Subsidy Control obligations")
     [Teardown]   the user closes the last opened tab
 
 ATI State aid t&c's are correct
