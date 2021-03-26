@@ -8,7 +8,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,17 +82,4 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
         return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
     }
 
-    @Transactional
-    public List<OrganisationResource> findOrganisationsByName(String name) {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName(name);
-        return organisationMapper.mapToResources(findOrganisationByName(organisationResource));
-    }
-
-    @Transactional
-    public List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setCompaniesHouseNumber(companiesHouseNumber);
-        return organisationMapper.mapToResources(findOrganisationByCompaniesHouseId(organisationResource));
-    }
 }

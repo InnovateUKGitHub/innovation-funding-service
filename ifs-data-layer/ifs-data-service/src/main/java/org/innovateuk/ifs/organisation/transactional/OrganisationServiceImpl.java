@@ -200,7 +200,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public FailingOrSucceedingResult<OrganisationResource, ServiceFailure>
+    public ServiceResult<OrganisationResource>
         updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber) {
         ServiceResult<Organisation> lookup = getOrganisation(organisationId);
         if (lookup.isFailure()) {
@@ -270,5 +270,23 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     private List<OrganisationResource> organisationsToResources(List<Organisation> organisations) {
         return simpleMap(organisations, organisation -> organisationMapper.mapToResource(organisation));
+    }
+
+    @Transactional
+    public List<OrganisationResource> findOrganisationsByName(String name) {
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setName(name);
+        return organisationMapper.mapToResources(
+            organisationRepository.findByNameOrderById(organisationResource.getName())
+        );
+    }
+
+    @Transactional
+    public List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setCompaniesHouseNumber(companiesHouseNumber);
+        return organisationMapper.mapToResources(
+            organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber())
+        );
     }
 }

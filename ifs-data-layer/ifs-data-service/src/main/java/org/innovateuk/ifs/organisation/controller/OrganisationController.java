@@ -2,8 +2,7 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.api.RenameOrganisationV1Api;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -43,12 +42,12 @@ public class OrganisationController implements RenameOrganisationV1Api {
     @Override
     public RestResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseNumber(
             @PathVariable("companiesHouseNumber") final String companiesHouseNumber) {
-        return RestResult.toListResponse(organisationMatchingService.findOrganisationsByCompaniesHouseId(companiesHouseNumber));
+        return RestResult.toListResponse(organisationService.findOrganisationsByCompaniesHouseId(companiesHouseNumber));
     }
 
     @Override
     public RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable("name") final String name) {
-        return RestResult.toListResponse(organisationMatchingService.findOrganisationsByName(name));
+        return RestResult.toListResponse(organisationService.findOrganisationsByName(name));
     }
 
     @GetMapping("/find-by-application-id/{applicationId}")
@@ -100,10 +99,8 @@ public class OrganisationController implements RenameOrganisationV1Api {
 
     @Override
     public RestResult<OrganisationResource> updateNameAndRegistration(
-                @PathVariable("organisationId") Long organisationId,
-                @RequestParam(value = "name") String name,
-                @RequestParam(value = "registration") String registration) {
-        FailingOrSucceedingResult<OrganisationResource, ServiceFailure> serviceResponse
+                @PathVariable Long organisationId, @RequestParam String name, @RequestParam String registration) {
+        ServiceResult<OrganisationResource> serviceResponse
                 = organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration);
         if (serviceResponse.isFailure()) {
             if (serviceResponse.getFailure().contains(BANK_DETAILS_COMPANY_NAME_TOO_LONG)) {

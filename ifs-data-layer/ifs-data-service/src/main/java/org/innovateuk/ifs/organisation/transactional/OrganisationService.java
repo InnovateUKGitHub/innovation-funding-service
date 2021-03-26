@@ -2,15 +2,13 @@ package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Set;
@@ -48,7 +46,7 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> syncCompaniesHouseDetails(@P("organisation") OrganisationResource organisationResource);
 
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
-    FailingOrSucceedingResult<OrganisationResource, ServiceFailure> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber);
+    ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber);
 
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
     ServiceResult<OrganisationResource> addAddress(@P("organisationId") long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
@@ -58,4 +56,10 @@ public interface OrganisationService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") long searchOrganisationId);
+
+    @PreAuthorize("hasAuthority('system_maintainer')")
+    List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseId);
+
+    @PreAuthorize("hasAuthority('system_maintainer')")
+    List<OrganisationResource> findOrganisationsByName(String organisationName);
 }
