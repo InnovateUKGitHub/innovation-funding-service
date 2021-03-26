@@ -2,6 +2,7 @@ package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -58,8 +59,10 @@ public interface OrganisationService {
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") long searchOrganisationId);
 
     @PreAuthorize("hasAuthority('system_maintainer')")
+    @SecuredBySpring(value = "READ", description = "Only the system maintainer can search by companies house Id.")
     List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseId);
 
     @PreAuthorize("hasAuthority('system_maintainer')")
+    @SecuredBySpring(value = "READ", description = "Only the system maintainer can search by company name.")
     List<OrganisationResource> findOrganisationsByName(String organisationName);
 }
