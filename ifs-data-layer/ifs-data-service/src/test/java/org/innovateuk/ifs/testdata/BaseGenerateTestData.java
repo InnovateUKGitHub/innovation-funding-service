@@ -53,6 +53,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplicationFinances;
@@ -103,7 +104,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         NO_COMPETITIONS(competitionLine -> false),
         BY_NAME(competitionLine -> {
             assert competitionNameForFilter != null;
-            return competitionNameForFilter.equals(competitionLine.name);
+            return competitionNameForFilter.equals(competitionLine.getName());
         });
 
         private Predicate<CompetitionLine> test;
@@ -200,7 +201,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.InviteLine> inviteLines;
     private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:WTO comp in assessment}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -215,7 +216,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Before
     public void readCsvs() {
         organisationLines = readOrganisations();
-        competitionLines = readCompetitions();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
         externalUserLines = readExternalUsers();
@@ -228,6 +228,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
+        competitionLines = buildCompetitionLines();
         questionnaireResponseLines = readQuestionnaireResponseLines();
     }
 
@@ -347,7 +348,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitions.forEach(competition -> {
 
             CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
+                    Objects.equals(l.getName(), competition.getCompetition().getName()));
 
             applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
         });
@@ -407,7 +408,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createCompetitionAssessmentPeriods(competitions);
     }
 
-    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
+    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CompetitionLine> competitionLines) {
         return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() ->
                 competitionDataBuilderService.createCompetition(line), taskExecutor));
     }
