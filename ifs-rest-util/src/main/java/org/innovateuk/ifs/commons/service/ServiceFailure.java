@@ -42,6 +42,16 @@ public class ServiceFailure implements ErrorHolder {
         return is(new Error(expectedErrorTemplate, arguments));
     }
 
+    public boolean contains(ErrorTemplate errorTemplate) {
+        return contains(errorTemplate.getErrorKey());
+    }
+
+    public boolean contains(String errorKey) {
+        return errors.stream()
+                .map(e -> e.getErrorKey())
+                .collect(Collectors.toList()).contains(errorKey);
+    }
+
     public List<Error> getErrors() {
         return errors;
     }
