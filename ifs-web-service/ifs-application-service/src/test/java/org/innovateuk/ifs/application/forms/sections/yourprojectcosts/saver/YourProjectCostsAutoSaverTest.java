@@ -56,7 +56,8 @@ public class YourProjectCostsAutoSaverTest {
         String value = "100";
         long applicationId = 1L;
         long organisationId = 2L;
-        BigDecimal expectedIndirectCost = BigDecimal.valueOf(46);
+        BigDecimal grantClaimPercentage = BigDecimal.valueOf(50);
+        BigDecimal expectedIndirectCost = BigDecimal.valueOf(23);
 
         UserResource user = newUserResource().build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -74,7 +75,9 @@ public class YourProjectCostsAutoSaverTest {
                         FinanceRowType.ASSOCIATE_SALARY_COSTS, associateCostCategory,
                         FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT, newDefaultCostCategory().build(),
                         FinanceRowType.INDIRECT_COSTS, indirectCostCategory
-                )).build();
+                ))
+                .withGrantClaimPercentage(grantClaimPercentage)
+                .build();
 
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getApplicationFinance(applicationId, organisationId)).thenReturn(restSuccess(applicationFinance));
@@ -109,7 +112,8 @@ public class YourProjectCostsAutoSaverTest {
         String value = "100";
         long applicationId = 1L;
         long organisationId = 2L;
-        BigDecimal expectedIndirectCost = BigDecimal.valueOf(46);
+        BigDecimal grantClaimPercentage = BigDecimal.valueOf(50);
+        BigDecimal expectedIndirectCost = BigDecimal.valueOf(23);
 
         UserResource user = newUserResource().build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -124,7 +128,9 @@ public class YourProjectCostsAutoSaverTest {
                         FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
                         FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT, academicAndSecretarialSupportCostCategory,
                         FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().build()
-                )).build();
+                ))
+                .withGrantClaimPercentage(grantClaimPercentage)
+                .build();
 
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(applicationFinanceRestService.getApplicationFinance(applicationId, organisationId)).thenReturn(restSuccess(applicationFinance));
