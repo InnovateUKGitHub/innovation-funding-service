@@ -1236,6 +1236,41 @@
         <p>Maximum Total Contract Value (inclusive of VAT):</p>
     </div>
 
+    <table>
+        <thead>
+        <tr>
+            <th>Project month</th>
+            <th th:each="milestone : ${model.milestoneMonths}" th:text="${milestone.month}">1</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Invoice net</th>
+                <td th:each="milestone : ${model.milestoneMonths}">
+                    £<th:block th:text="${milestone.invoiceNet}" />
+                </td>
+            </tr>
+            <tr>
+                <th>VAT</th>
+                <td th:each="milestone : ${model.milestoneMonths}">
+                    £<th:block th:text="${milestone.vat}" />
+                </td>
+            </tr>
+            <tr>
+                <th>Total</th>
+                <td th:each="milestone : ${model.milestoneMonths}">
+                    £<th:block th:text="${milestone.total}" />
+                </td>
+            </tr>
+            <tr>
+                <th>Milestone Nos.</th>
+                <td th:each="milestone : ${model.milestoneMonths}">
+                    £<th:block th:text="${milestone.numbers}" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 </main>
 </body>
 </html>
