@@ -253,7 +253,9 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
         Application application = newApplication().withCompetition(competition).build();
         OrganisationType organisationType = newOrganisationType().withOrganisationType(RESEARCH).build();
         Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
-        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
+        ApplicationFinance applicationFinance = newApplicationFinance()
+                .withFecEnabled(false)
+                .withApplication(application).withOrganisation(organisation).build();
         ApplicationFinanceRow nonFECAcademicCostRow = newApplicationFinanceRow()
                 .withTarget(applicationFinance).withType(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).withCost(BigDecimal.TEN).build();
         ApplicationFinanceRow nonFECIndirectCostRow = newApplicationFinanceRow()
@@ -269,7 +271,7 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(applicationFinanceRowRepositoryMock, organisationFinanceDelegateMock);
-        inOrder.verify(applicationFinanceRowRepositoryMock).findByTargetId(applicationFinance.getId());
+//        inOrder.verify(applicationFinanceRowRepositoryMock).findByTargetId(applicationFinance.getId());
 
     }
 }
