@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/application")
 @SecuredBySpring(value="Controller",
-        description = "Any applicant is allowed to see the print page for any application they are a part of",
+        description = "Applicants, monitoring officers and kta have permission to view the print page",
         securedType = ApplicationPrintController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'supporter')")
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'monitoring_officer', 'knowledge_transfer_adviser', 'supporter')")
 public class ApplicationPrintController {
 
     @Autowired
