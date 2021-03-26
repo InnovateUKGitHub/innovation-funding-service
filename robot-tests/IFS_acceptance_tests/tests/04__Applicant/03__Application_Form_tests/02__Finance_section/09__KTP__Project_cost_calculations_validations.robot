@@ -33,6 +33,9 @@ ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]
 ${KTPcompetiton}                          KTP new competition
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
+${ktp_KTA_email}                          hermen.mermen@ktn-uk.test
+${KTA_invitation_email_subject}           Invitation to be Knowledge Transfer Adviser
+${invited_email_pattern}                  You have been invited to be the knowledge transfer adviser for the Innovation Funding Service application:
 ${estateValue}                            11000
 ${associateSalaryTable}                   associate-salary-costs-table
 ${associateDevelopmentTable}              associate-development-costs-table
@@ -181,6 +184,14 @@ Business user can view the read-only view for 'No' selected fEC declaration
     And the user clicks the button/link                                 link = Finances overview
     Then the user should see read only view for non-fec declaration
 
+KTA user assigned to application can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  knowledge based applicant invites KTA user to the application
+    Given the user clicks the button/link                               jQuery = a:contains("Applications")
+    When the user clicks the button/link                                link = ${KTPapplication}
+    And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
+    Then the user should see read only view for non-fec declaration
+
 *** Keywords ***
 the user enters T&S costs
     [Arguments]  ${typeOfCost}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
@@ -203,6 +214,17 @@ the user should see read only view for non-fec declaration
     non-applicant user navigates to your FEC model page
     the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
     the user should see the element                         jQuery = p:contains(No)
+
+knowledge based applicant invites KTA user to the application
+    the user logs-in in new browser                  &{KTPLead}
+    the user clicks the button/link                  link = ${KTPapplication}
+    the user clicks the button/link                  link = Application team
+    the user enters text to a text field             id = ktaEmail   ${ktp_KTA_email}
+    the user clicks the button/link                  name = invite-kta
+    logout as user
+    the user reads his email and clicks the link     ${ktp_KTA_email}   ${KTA_invitation_email_subject}   ${invited_email_pattern}
+    the user clicks the button/link                  jQuery = a:contains("Continue")
+    logging in and error checking                    ${ktp_KTA_email}   ${short_password}
 
 the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="associateSalary.description"]
