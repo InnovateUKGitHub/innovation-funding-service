@@ -19,6 +19,8 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-9244 KTP fEC/Non-fEC: indirect costs cost category
 ...
+...               IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -160,6 +162,25 @@ Internal user views values
     And The user clicks the button/link    jQuery = button:contains("Finances summary")
     Then the user should see the correct data in the finance tables
 
+Customer support user can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                    &{support_user_credentials}
+    When the user navigates to the page                                 ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
+    Then the user should see read only view for non-fec declaration
+
+IFS admin can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                    &{ifs_admin_user_credentials}
+    When the user navigates to the page                                 ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
+    Then the user should see read only view for non-fec declaration
+
+Business user can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                    &{collaborator1_credentials}
+    When the user clicks the button/link                                link = ${KTPapplication}
+    And the user clicks the button/link                                 link = Finances overview
+    Then the user should see read only view for non-fec declaration
+
 *** Keywords ***
 the user enters T&S costs
     [Arguments]  ${typeOfCost}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
@@ -169,10 +190,19 @@ the user enters T&S costs
     the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${costOfEachTrip}
 
 Custom suite setup
-    the user logs-in in new browser       &{KTPLead}
-    the user clicks the button/link       link = ${KTPapplication}
-    the user clicks the button/link       link = Your project finances
-    the user clicks the button/link       link = Your fEC model
+    the user logs-in in new browser     &{KTPLead}
+    the user clicks the button/link     link = ${KTPapplication}
+    the user clicks the button/link     link = Your project finances
+    the user clicks the button/link     link = Your fEC model
+
+non-applicant user navigates to your FEC model page
+    the user clicks the button/link     jQuery = div:contains(A base of knowledge) ~ a:contains("View finances")
+    the user clicks the button/link     link = Your fEC model
+
+the user should see read only view for non-fec declaration
+    non-applicant user navigates to your FEC model page
+    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
+    the user should see the element                         jQuery = p:contains(No)
 
 the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="associateSalary.description"]
@@ -207,9 +237,9 @@ the user should see the correct data in the finance tables
     the user should see the element         jQuery = td:contains("Associate development") ~ td:contains("100")
     the user should see the element         jQuery = td:contains("Travel and subsistence") ~ td:contains("6,150")
     the user should see the element         jQuery = td:contains("Consumables") ~ td:contains("2,000")
-    the user should not see the element     jQuery = td:contains("Knowledge base supervisor")
-    the user should not see the element     jQuery = td:contains("Estate")
-    the user should not see the element     jQuery = td:contains("Additional associate support")
+    the user should not see the element     jQuery = td:contains("Knowledge base supervisor") ~ td:contains("123")
+    the user should not see the element     jQuery = td:contains("Estate") ~ td:contains("1,000")
+    the user should not see the element     jQuery = td:contains("Additional associate support") ~ td:contains("1,000")
     the user should see the element         jQuery = td:contains("Other costs") ~ td:contains("1,000")
     the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("92")
     the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,542")
