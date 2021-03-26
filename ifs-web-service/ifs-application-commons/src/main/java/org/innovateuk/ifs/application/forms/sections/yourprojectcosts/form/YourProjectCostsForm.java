@@ -58,6 +58,8 @@ public class YourProjectCostsForm {
 
     private Boolean fecModelEnabled;
 
+    private BigDecimal grantClaimPercentage;
+
     public VatForm getVatForm() {
         return vatForm;
     }
@@ -218,6 +220,10 @@ public class YourProjectCostsForm {
         this.fecModelEnabled = fecModelEnabled;
     }
 
+    public void setGrantClaimPercentage(BigDecimal grantClaimPercentage) {
+        this.grantClaimPercentage = grantClaimPercentage;
+    }
+
     /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
@@ -233,6 +239,12 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalAssociateSalaryCosts() {
         return calculateTotal(associateSalaryCostRows);
+    }
+
+    public BigDecimal getTotalGrantAssociateSalaryCosts() {
+        return getTotalAssociateSalaryCosts()
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
     }
 
     public BigDecimal getTotalOverheadCosts() {
@@ -302,6 +314,12 @@ public class YourProjectCostsForm {
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
         return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm.getCost())
                 .orElse(BigInteger.valueOf(0)));
+    }
+
+    public BigDecimal getTotalGrantAcademicAndSecretarialSupportCosts() {
+        return getTotalAcademicAndSecretarialSupportCosts()
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
     }
 
     public BigDecimal getIndirectCostsPercentage() {

@@ -292,7 +292,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                         .findFirst()
                         .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
 
-                BigDecimal calculateIndirectCost = calculateIndirectCost(form);
+                BigDecimal calculateIndirectCost = calculateIndirectCost(form, finance);
 
                 indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
                 messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
@@ -302,17 +302,25 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
-    private BigDecimal calculateIndirectCost(YourProjectCostsForm form) {
+    private BigDecimal calculateIndirectCost(YourProjectCostsForm form, BaseFinanceResource finance) {
         form.recalculateTotals();
 
         BigDecimal totalAssociateSalaryCost = Optional.of(form.getTotalAssociateSalaryCosts())
                 .orElse(BigDecimal.ZERO);
 
+        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
+                .multiply(finance.getGrantClaimPercentage())
+                .divide(new BigDecimal(100));
+
         BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(form.getTotalAcademicAndSecretarialSupportCosts())
                 .orElse(BigDecimal.ZERO);
 
-        return totalAssociateSalaryCost
-                .add(totalAcademicAndSecretarialSupportCost)
+        BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
+                .multiply(finance.getGrantClaimPercentage())
+                .divide(new BigDecimal(100));
+
+        return totalGrantAssociateSalaryCost
+                .add(totalGrantAcademicAndSecretarialSupportCost)
                 .multiply(form.INDIRECT_COST_PERCENTAGE)
                 .divide(new BigDecimal(100))
                 .setScale(0, RoundingMode.HALF_UP);
