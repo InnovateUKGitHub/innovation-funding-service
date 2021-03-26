@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.organisation.service;
 
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -22,9 +21,6 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
 
     @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private OrganisationMapper organisationMapper;
 
     @Autowired
     private OrganisationPatternMatcher organisationPatternMatcher;
@@ -81,5 +77,4 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     private List<Organisation> findOrganisationByCompaniesHouseId(OrganisationResource organisationResource) {
         return organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber());
     }
-
 }
