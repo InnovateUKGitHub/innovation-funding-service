@@ -36,6 +36,8 @@ ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Cryptocurrencies_id}  ${application_ids['Living with Cryptocurrencies']}
 ${Paul_Plum_id}        ${user_ids['${assessor_credentials["email"]}']}
 ${Intelligent_water}   ${application_ids['Intelligent water system']}
+${Park_living}      ${application_ids["Park living"]}
+${Nanotechnology}      ${application_ids["Living with Nanotechnology"]}
 
 *** Test Cases ***
 View the list of the applications
@@ -101,8 +103,8 @@ Assign an application to an assessor
     And the user clicks the button/link               jQuery = a:contains("41 to")
     When the user clicks the button/link              jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
     Then the user should see the element              jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
-    When the user adds an application to an assessor  jQuery = tr:contains("36") :checkbox
-    Then the user should see the element              jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
+    When the user adds an application to an assessor  jQuery = tr:contains("${Nanotechnology}") :checkbox
+    Then the user should see the element              jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("${Nanotechnology}")
 
 Filter by application number on the assessor page
     [Documentation]    IFS-400
@@ -196,7 +198,7 @@ Assessor should see the reassigned application
 the application list is correct before changes
     the user should see the element    jQuery = tr:nth-child(1) td:contains(The Best Juggling Company)
     the user should see the element    jQuery = tr:nth-child(1) td:contains(Park living)
-    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("19")
+    the user should see the element    jQuery = tr:nth-child(1) td:nth-child(1):contains("${Park_living}")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(2):contains("Park living")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
     the user should see the element    jQuery = tr:nth-child(1) td:nth-child(4):contains("2")
