@@ -13,15 +13,15 @@ public interface RenameOrganisationV1Api {
 
     @GetMapping("/find-organisations-by-companies-house-number/{companiesHouseNumber}")
     RestResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseNumber(
-            @PathVariable("companiesHouseNumber") final String companiesHouseNumber);
+            @PathVariable final String companiesHouseNumber);
 
     @GetMapping("/find-organisations-by-name/{name}")
-    RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable("name") final String name);
+    RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable final String name);
 
     @PostMapping("/update-name-and-registration/{organisationId}")
     RestResult<OrganisationResource> updateNameAndRegistration(
-            @PathVariable("organisationId") Long organisationId,
-            @RequestParam(value = "name") String name,
-            @RequestParam(value = "registration") String registration);
+            @PathVariable Long organisationId,
+            @RequestParam String name,
+            @RequestParam String registration);
 
 }

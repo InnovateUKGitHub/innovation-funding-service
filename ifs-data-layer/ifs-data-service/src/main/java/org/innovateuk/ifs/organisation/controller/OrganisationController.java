@@ -41,12 +41,12 @@ public class OrganisationController implements RenameOrganisationV1Api {
 
     @Override
     public RestResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseNumber(
-            @PathVariable("companiesHouseNumber") final String companiesHouseNumber) {
+            @PathVariable final String companiesHouseNumber) {
         return RestResult.toListResponse(organisationService.findOrganisationsByCompaniesHouseId(companiesHouseNumber));
     }
 
     @Override
-    public RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable("name") final String name) {
+    public RestResult<List<OrganisationResource>> findOrganisationsByName(@PathVariable final String name) {
         return RestResult.toListResponse(organisationService.findOrganisationsByName(name));
     }
 
