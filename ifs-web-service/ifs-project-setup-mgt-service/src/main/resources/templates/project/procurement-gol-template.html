@@ -1208,7 +1208,7 @@
     <p>Approved Project Milestones:</p>
     </div>
 
-    <table>
+    <table class="letter-table">
         <thead>
         <tr>
             <th>Milestone number</th>
@@ -1221,7 +1221,7 @@
         <tr th:each="milestone, iStat : ${model.milestones}">
             <th th:text="${iStat.index + 1}">1</th>
             <td th:text="${milestone.description}">Evidence identified</td>
-            <td th:text="${#temporals.format(model.completionDate)}"></td>
+            <td th:text="${#temporals.format(milestone.completionDate)}"></td>
             <td th:text="${milestone.successCriteria}">Evidence sources clearly identified</td>
         </tr>
         </tbody>
@@ -1236,7 +1236,7 @@
         <p>Maximum Total Contract Value (inclusive of VAT):</p>
     </div>
 
-    <table>
+    <table class="letter-table">
         <thead>
         <tr>
             <th>Project month</th>
@@ -1265,7 +1265,7 @@
             <tr>
                 <th>Milestone Nos.</th>
                 <td th:each="milestone : ${model.milestoneMonths}">
-                    £<th:block th:text="${milestone.numbers}" />
+                    <th:block th:text="${milestone.numbers}" />
                 </td>
             </tr>
         </tbody>

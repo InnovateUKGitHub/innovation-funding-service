@@ -728,7 +728,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         KtpGrantOfferLetterTemplateViewModel viewModel = mock(KtpGrantOfferLetterTemplateViewModel.class);
 
-        when(ktpGrantOfferLetterTemplatePopulator.populate(projectResource, competition)).thenReturn(viewModel);
+        when(ktpGrantOfferLetterTemplatePopulator.populate(projectResource)).thenReturn(viewModel);
 
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())

@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.project.grantofferletter.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,15 +24,15 @@ import java.util.stream.LongStream;
 public class ProcurementGrantOfferLetterTemplatePopulator {
 
     @Autowired
-    private ProjectRestService projectRestService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
-    private PartnerOrganisationRestService partnerOrganisationRestService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Autowired
     private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
-    public ProcurementGrantOfferLetterTemplateViewModel populate(ProjectResource project, CompetitionResource competition) {
+    public ProcurementGrantOfferLetterTemplateViewModel populate(ProjectResource project) {
         long applicationId = project.getApplication();
         List<PartnerOrganisationResource> organisations = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
         PartnerOrganisationResource organisation = organisations.get(0);
@@ -43,7 +43,9 @@ public class ProcurementGrantOfferLetterTemplatePopulator {
                 .map(m -> entryForMilestone(project, m))
                 .collect(Collectors.toList());
 
-        List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths = milestoneMonths(project, milestones);
+        ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getOrganisation()).getSuccess();
+
+        List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths = milestoneMonths(project, milestones, projectFinanceResource);
 
         return new ProcurementGrantOfferLetterTemplateViewModel(applicationId,
                 organisation.getOrganisationName(),
@@ -58,22 +60,37 @@ public class ProcurementGrantOfferLetterTemplatePopulator {
         return new ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(description, successCriteria, completionDate);
     }
 
-    private List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths(ProjectResource project, List<ProjectProcurementMilestoneResource> milestones) {
+    private List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths(ProjectResource project,
+                                                                                                  List<ProjectProcurementMilestoneResource> milestones,
+                                                                                                  ProjectFinanceResource projectFinanceResource) {
         Long duration = project.getDurationInMonths();
 
         return LongStream.range(1L, duration + 1).mapToObj(month -> {
-            List<ProjectProcurementMilestoneResource> milestonesForMonth = milestones.stream().filter(m -> month == m.getMonth()).collect(Collectors.toList());
+
+            List<ProjectProcurementMilestoneResource> milestonesForMonth = new ArrayList<>();
+            List<Integer> milestoneIndices = new ArrayList<>();
+            for(int i = 0; i < milestones.size(); i++) {
+                ProjectProcurementMilestoneResource milestone = milestones.get(i);
+                if (milestone.getMonth() == month) {
+                    milestonesForMonth.add(milestone);
+                    milestoneIndices.add(i + 1);
+                }
+            }
+
             BigInteger payment = milestonesForMonth.stream()
                     .map(ProjectProcurementMilestoneResource::getPayment)
                     .reduce(ProcurementGrantOfferLetterTemplatePopulator::sumOfBigIntegers)
                     .orElse(BigInteger.ZERO);
 
-            BigInteger invoiceNet = payment.multiply(BigInteger.valueOf(5L)).divide(BigInteger.valueOf(6L));
+            BigInteger invoiceNet;
+            if (projectFinanceResource.isVatRegistered()) {
+                invoiceNet = payment.multiply(BigInteger.valueOf(5L)).divide(BigInteger.valueOf(6L));
+            } else {
+                invoiceNet = payment;
+            }
             BigInteger invoiceVat = payment.subtract(invoiceNet);
 
-            List<Integer> milestoneNumbers = new ArrayList<>();
-
-            return new ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel(month, invoiceNet, invoiceVat, milestoneNumbers);
+            return new ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel(month, invoiceNet, invoiceVat, milestoneIndices);
         }).collect(Collectors.toList());
     }
 

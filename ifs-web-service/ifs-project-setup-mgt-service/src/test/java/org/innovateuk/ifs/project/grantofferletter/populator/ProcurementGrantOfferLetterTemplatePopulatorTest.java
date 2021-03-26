@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.project.grantofferletter.populator;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -34,13 +34,13 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
     private ProcurementGrantOfferLetterTemplatePopulator populator;
 
     @Mock
-    private ProjectRestService projectRestService;
-
-    @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Mock
     private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
+
+    @Mock
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Test
     public void populate() {
@@ -53,7 +53,6 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
                 .withTargetStartDate(projectStartDate)
                 .withDuration(4L)
                 .withApplication(applicationId).build();
-        CompetitionResource competition = newCompetitionResource().build();
         Long firstOrgId = 9L;
         Long secondOrgId = 10L;
         String firstPartnerName = "one";
@@ -68,7 +67,10 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
                 .withPayment(new BigInteger("100"), new BigInteger("200"), new BigInteger("300"))
                 .build(3);
         when(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, firstOrgId)).thenReturn(restSuccess(milestones));
-        ProcurementGrantOfferLetterTemplateViewModel result = populator.populate(project, competition);
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+        when(projectFinanceRestService.getProjectFinance(projectId, firstOrgId)).thenReturn(restSuccess(projectFinanceResource));
+
+        ProcurementGrantOfferLetterTemplateViewModel result = populator.populate(project);
 
         assertThat(result.getApplicationId()).isEqualTo(applicationId);
         assertThat(result.getOrganisationName()).isEqualTo(firstPartnerName);
@@ -91,6 +93,5 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
         assertThat(fourthMilestoneMonth.getNumbers()).isEqualTo("");
         assertThat(fourthMilestoneMonth.getTotal()).isEqualTo(BigInteger.ZERO);
     }
-
 
 }
