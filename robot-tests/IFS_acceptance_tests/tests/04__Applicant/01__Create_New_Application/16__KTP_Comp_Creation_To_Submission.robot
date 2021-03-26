@@ -1467,6 +1467,7 @@ the user removes uploaded file
 
 the user marks the project costs complete after editing
     the user closes the last opened tab
+    the user should not see the element     jQuery = button:contains("Academic and secretarial support")
     the user should see the element         jQuery = button:contains("Knowledge base supervisor")
     the user should see the element         jQuery = button:contains("Additional associate support")
     the user should see the element         jQuery = button:contains("Associates estates costs")
