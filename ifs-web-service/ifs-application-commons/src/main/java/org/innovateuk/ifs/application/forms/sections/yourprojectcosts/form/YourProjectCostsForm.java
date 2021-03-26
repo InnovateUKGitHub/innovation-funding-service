@@ -220,6 +220,10 @@ public class YourProjectCostsForm {
         this.fecModelEnabled = fecModelEnabled;
     }
 
+    public BigDecimal getGrantClaimPercentage() {
+        return grantClaimPercentage;
+    }
+
     public void setGrantClaimPercentage(BigDecimal grantClaimPercentage) {
         this.grantClaimPercentage = grantClaimPercentage;
     }
@@ -329,8 +333,8 @@ public class YourProjectCostsForm {
     public BigDecimal getTotalIndirectCosts()
     {
         if (BooleanUtils.isFalse(fecModelEnabled)) {
-            return this.getTotalAssociateSalaryCosts()
-                    .add(this.getTotalAcademicAndSecretarialSupportCosts())
+            return this.getTotalGrantAssociateSalaryCosts()
+                    .add(this.getTotalGrantAcademicAndSecretarialSupportCosts())
                     .multiply(INDIRECT_COST_PERCENTAGE)
                     .divide(new BigDecimal(100))
                     .setScale(0, RoundingMode.HALF_UP);
