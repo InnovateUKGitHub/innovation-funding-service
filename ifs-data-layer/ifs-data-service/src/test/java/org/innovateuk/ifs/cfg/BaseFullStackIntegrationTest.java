@@ -49,18 +49,12 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
  */
 @Transactional
 @SpringBootTest
-@Import(AuditConfig.class)
+@Import({AuditConfig.class})
 @RunWith(SpringRunner.class)
-@ActiveProfiles("integration-test")
+@ActiveProfiles({"integration-test"})
 @EntityScan(basePackageClasses = Application.class)
 @EnableJpaRepositories(basePackageClasses = Application.class, repositoryBaseClass = RefreshableCrudRepositoryImpl.class)
 @EnableAutoConfiguration(exclude = {RedisAutoConfiguration.class})
-@TestPropertySource(properties = {
-        "spring.jpa.show-sql=true",
-        "spring.jpa.properties.hibernate.format_sql=true",
-        "logging.level.org.hibernate.SQL=DEBUG",
-        "logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE"
-})
 public abstract class BaseFullStackIntegrationTest {
 
     /**

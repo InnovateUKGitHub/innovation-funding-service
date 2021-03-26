@@ -100,14 +100,6 @@ public class OrganisationController implements RenameOrganisationV1Api {
     @Override
     public RestResult<OrganisationResource> updateNameAndRegistration(
                 @PathVariable Long organisationId, @RequestParam String name, @RequestParam String registration) {
-        ServiceResult<OrganisationResource> serviceResponse
-                = organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration);
-        if (serviceResponse.isFailure()) {
-            if (serviceResponse.getFailure().contains(BANK_DETAILS_COMPANY_NAME_TOO_LONG)) {
-                return RestResult.restFailure(HttpStatus.BAD_REQUEST);
-            }
-            return RestResult.restFailure(HttpStatus.NOT_FOUND);
-        }
-        return RestResult.restSuccess(serviceResponse.getSuccess());
+        return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostWithBodyResponse();
     }
 }
