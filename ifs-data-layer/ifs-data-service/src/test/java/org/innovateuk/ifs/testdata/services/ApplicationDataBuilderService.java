@@ -604,6 +604,44 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         financeRow.metadata.get(0),
                         LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN),
                         bd(financeRow.metadata.get(2)));
+            case "Associate Employment":
+                return builder.withAssociateSalaryCosts(
+                        financeRow.metadata.get(0),
+                        Integer.valueOf(financeRow.metadata.get(1)),
+                        bi(financeRow.metadata.get(2))
+                );
+            case "Associate development":
+                return builder.withAssociateDevelopmentCosts(
+                        financeRow.metadata.get(0),
+                        Integer.valueOf(financeRow.metadata.get(1)),
+                        bi(financeRow.metadata.get(2))
+                );
+            case "Ktp Travel and subsistence":
+                return builder.withKtpTravel(
+                        KtpTravelCost.KtpTravelCostType.valueOf(financeRow.metadata.get(0)),
+                        financeRow.metadata.get(1),
+                        bd(financeRow.metadata.get(2)),
+                        Integer.valueOf(financeRow.metadata.get(3)));
+            case "Consumables":
+                return builder.withConsumables(
+                        financeRow.metadata.get(0),
+                        bi(financeRow.metadata.get(1)),
+                        Integer.valueOf(financeRow.metadata.get(2))
+                );
+            case "Additional company costs":
+                return builder.withAdditionalCompanyCosts(
+                        AdditionalCompanyCost.AdditionalCompanyCostType.valueOf(financeRow.metadata.get(0)),
+                        financeRow.metadata.get(1),
+                        bi(financeRow.metadata.get(2))
+                );
+            case "Academic and secretarial support":
+                return builder.withAcademicAndSecretarialSupport(
+                        bi(financeRow.metadata.get(0))
+                );
+            case "Indirect costs":
+                return builder.withIndirectCosts(
+                        bi(financeRow.metadata.get(0))
+                );
             default:
                 throw new RuntimeException("Unknown category " + financeRow.category);
         }
@@ -725,10 +763,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
                         break;
                     case ACADEMIC_AND_SECRETARIAL_SUPPORT:
-                        builder[0] = builder[0].withAcademicAndSecretarialSupport(new BigDecimal("18.00"));
+                        builder[0] = builder[0].withAcademicAndSecretarialSupport(new BigInteger("18"));
                         break;
                     case INDIRECT_COSTS:
-                        builder[0] = builder[0].withIndirectCosts(new BigDecimal("19.00"));
+                        builder[0] = builder[0].withIndirectCosts(new BigInteger("20"));
                         break;
                 }
             };
@@ -838,5 +876,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
+    }
+
+    private BigInteger bi(String value) {
+        return new BigInteger(value);
     }
 }
