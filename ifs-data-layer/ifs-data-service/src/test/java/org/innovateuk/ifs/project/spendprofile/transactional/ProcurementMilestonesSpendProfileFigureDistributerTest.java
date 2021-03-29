@@ -14,8 +14,8 @@ import java.util.List;
 
 import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.OTHER_COSTS;
-import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.VAT;
+import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.junit.Assert.assertEquals;

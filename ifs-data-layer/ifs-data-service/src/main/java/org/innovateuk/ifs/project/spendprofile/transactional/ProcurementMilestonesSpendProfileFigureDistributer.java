@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
@@ -25,8 +25,8 @@ import static java.math.BigInteger.ZERO;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
-import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.OTHER_COSTS;
-import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.VAT;
+import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 
 @Component
@@ -162,14 +162,14 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         return asList(otherCosts, vat);
     }
 
-    private SpendProfileCostCategorySummary cost(SpendProfileCostCategorySummaries summaryPerCategory, SbriPilotCostCategoryGenerator generator){
+    private SpendProfileCostCategorySummary cost(SpendProfileCostCategorySummaries summaryPerCategory, ProcurementCostCategoryGenerator generator){
         return summaryPerCategory.getCosts().stream()
                 .filter(cost -> generator.getDisplayName().equals(cost.getCategory().getName()))
                 .findFirst()
                 .get();
     }
 
-    private CostCategory costCategory(SpendProfileCostCategorySummaries summaryPerCategory, SbriPilotCostCategoryGenerator generator){
+    private CostCategory costCategory(SpendProfileCostCategorySummaries summaryPerCategory, ProcurementCostCategoryGenerator generator){
         return cost(summaryPerCategory, generator).getCategory();
     }
 

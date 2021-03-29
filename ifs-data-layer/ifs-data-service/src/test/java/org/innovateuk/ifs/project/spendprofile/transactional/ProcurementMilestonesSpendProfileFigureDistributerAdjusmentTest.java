@@ -1,11 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
-import org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder;
-import org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummariesBuilder;
-import org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummaryBuilder;
 import org.innovateuk.ifs.project.spendprofile.transactional.ProcurementMilestonesSpendProfileFigureDistributer.OtherAndVat;
 import org.junit.Test;
 
@@ -16,10 +10,9 @@ import java.util.List;
 
 import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.OTHER_COSTS;
-import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.VAT;
+import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
-import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummariesBuilder.newSpendProfileCostCategorySummaries;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummaryBuilder.newSpendProfileCostCategorySummary;
 import static org.junit.Assert.assertEquals;
