@@ -199,9 +199,9 @@ KTA user assigned to application can view the read-only view for 'No' selected f
     And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
     Then the user should see read only view for non-fec declaration
 
-#KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
-#    [Documentation]  IFS-9246
-#    [Setup]  complete and submit application
+KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  complete and submit application
 
 *** Keywords ***
 the user enters T&S costs
@@ -346,6 +346,8 @@ complete and submit application
     the user fills in the funding information                         ${KTPapplication}   no
     the user marks the KTP project location as complete
     the user fills in the KTP organisation information
+    the user clicks the button/link                                   link = Back to application overview
+    the user accept the competition terms and conditions              Return to application overview
 
 the user marks the KTP project location as complete
     the user enters the project location
