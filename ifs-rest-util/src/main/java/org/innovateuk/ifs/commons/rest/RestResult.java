@@ -517,19 +517,6 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
     }
 
     /**
-     * Convenience method to convert a potentially empty list into a list response or 404.
-     *
-     * This will return 200 with payload if the list contains entries otherwise 404.
-     */
-    public static <T> RestResult<List<T>> toListResponse(List<T> list) {
-        if (list.isEmpty()) {
-            return restFailure(NOT_FOUND);
-        }
-        return restSuccess(list);
-    }
-
-
-    /**
      * Aggregate a {@link List} of {@link RestResult} into a {@link RestResult} containing a {@list List}
      *
      * @param input

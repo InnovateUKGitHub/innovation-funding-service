@@ -8,8 +8,6 @@ import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.*;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -202,16 +200,15 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<OrganisationResource>
         updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber) {
-        ServiceResult<Organisation> lookup = getOrganisation(organisationId);
-        if (lookup.isFailure()) {
-            return serviceFailure(GENERAL_NOT_FOUND);
-        }
-        if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
-            lookup.getSuccess().setName(decodeOrganisationName(organisationName));
-            lookup.getSuccess().setCompaniesHouseNumber(registrationNumber);
-            return serviceSuccess(organisationMapper.mapToResource(lookup.getSuccess()));
-        }
-        return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);
+        return getOrganisation(organisationId)
+            .andOnSuccess(org -> {
+                if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
+                    org.setName(decodeOrganisationName(organisationName));
+                    org.setCompaniesHouseNumber(registrationNumber);
+                    return serviceSuccess(organisationMapper.mapToResource(org));
+                }
+                return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);
+            });
     }
 
     @Override
@@ -272,17 +269,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return simpleMap(organisations, organisation -> organisationMapper.mapToResource(organisation));
     }
 
-    @Transactional
-    public List<OrganisationResource> findOrganisationsByName(String name) {
-        return organisationMapper.mapToResources(
-            organisationRepository.findByNameOrderById(name)
-        );
+    public ServiceResult<List<OrganisationResource>> findOrganisationsByName(String name) {
+        return find(organisationRepository.findByNameOrderById(name), notFoundError(Organisation.class, name))
+                .andOnSuccessReturn(organisationMapper::mapToResources);
     }
 
-    @Transactional
-    public List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
-        return organisationMapper.mapToResources(
-            organisationRepository.findByCompaniesHouseNumberOrderById(companiesHouseNumber)
-        );
+    public ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
+        return find(organisationRepository.findByCompaniesHouseNumberOrderById(companiesHouseNumber), notFoundError(Organisation.class, companiesHouseNumber))
+                .andOnSuccessReturn(organisationMapper::mapToResources);
     }
 }

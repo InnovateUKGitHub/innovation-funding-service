@@ -60,9 +60,9 @@ public interface OrganisationService {
 
     @PreAuthorize("hasAuthority('system_maintainer')")
     @SecuredBySpring(value = "READ", description = "Only the system maintainer can search by companies house Id.")
-    List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseId);
+    ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseId);
 
     @PreAuthorize("hasAuthority('system_maintainer')")
     @SecuredBySpring(value = "READ", description = "Only the system maintainer can search by company name.")
-    List<OrganisationResource> findOrganisationsByName(String organisationName);
+    ServiceResult<List<OrganisationResource>> findOrganisationsByName(String organisationName);
 }
