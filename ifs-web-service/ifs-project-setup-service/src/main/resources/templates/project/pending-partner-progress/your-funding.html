@@ -25,14 +25,19 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your funding',subTitle=${model.projectName},size='govuk-heading-xl'" />
         <th:block th:if="${model.fundingSectionLocked}">
             <p class="govuk-body">
-                Before you can supply your funding details:
+                Before you progress with your application you must:
             </p>
             <ul class="govuk-list govuk-list--bullet">
-                <li>
-                    you must mark the
+                <li th:if="${model.organisationRequiredAndNotCompleted}">
+                    mark the
                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/your-organisation(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                       class="govuk-link">your organisation</a>
+                       class="govuk-link">Your organisation</a>
                      page as complete
+                </li>
+                <li th:if="${model.subsidyBasisRequiredAndNotCompleted}">
+                    mark the
+                    <a th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">Subsidy basis</a>
+                    page as complete
                 </li>
             </ul>
         </th:block>
@@ -76,7 +81,7 @@
                     </button>
                 </div>
             </form>
-
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

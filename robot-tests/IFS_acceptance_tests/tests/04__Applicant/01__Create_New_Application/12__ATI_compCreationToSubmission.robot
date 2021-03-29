@@ -25,6 +25,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-9133 Query a Partners NI declaration questions and determined funding rules in project setup
 ...
+...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -213,12 +215,38 @@ Internal user add new partner orgnisation after moving competition to project se
     And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
     Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  ROYAL  ROYAL MAIL PLC  ${atiApplicationID}  ${ATIapplicationTitle}
 
-New partner orgination checks for funding level guidance
+New partner orgination checks
     [Documentation]  IFS-6725
-    Given log in as a different user                                ${partnerEmail}   ${short_password}
-    When the user clicks the button/link                            link = ${ATIapplicationTitle}
-    And The new partner can complete Your organisation
-    Then the user checks for funding level guidance at PS level
+    Given log in as a different user                        ${partnerEmail}   ${short_password}
+    When the user clicks the button/link                    link = ${ATIapplicationTitle}
+    Then The new partner can complete Your organisation
+
+PS partner applicant can not accept the terms and conditions without determining subsidy basis type
+    [Documentation]  IFS-9289
+    When the user clicks the button/link      link = Award terms and conditions
+    Then the user should see the element      link = Subsidy basis
+
+PS partner applicant can not complete funding details without determining subsidy basis type
+    [Documentation]  IFS-9289
+    Given the user clicks the button/link     link = Back to join project
+    When the user clicks the button/link      link = Your funding
+    Then the user should see the element      link = Subsidy basis
+
+PS partner checks funding level guidance after completing subsidy basis
+    [Documentation]  IFS-9289  IFS-6725
+    Given the user completes subsidy basis as subsidy control
+    When the user clicks the button/link                          link = Your funding
+    And the user selects the radio button                         requestingFunding   true
+    Then the user should see the element                          jQuery = .govuk-hint:contains("The maximum you can enter is")
+    And the user clicks the button/link                           link = Back to join project
+
+PS partner sucessfully joins the project after completing subsidy basis
+    [Documentation]  IFS-9289  IFS-6725
+    Given the user clicks the button/link                        link = Your funding
+    And the user marks your funding section as complete
+    And the user accept the competition terms and conditions     Back to join project
+    When the user clicks the button/link                         id = submit-join-project-button
+    Then the user should see the element                         jQuery = h1:contains("Set up your project") span:contains("${ATIapplicationTitle}")
 
 Lead Applicant completes Project Details
     [Documentation]  IFS-2332  IFS-9133
