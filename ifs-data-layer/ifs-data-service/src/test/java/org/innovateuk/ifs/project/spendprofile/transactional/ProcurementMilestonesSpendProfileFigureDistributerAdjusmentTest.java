@@ -3,14 +3,17 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 import org.innovateuk.ifs.project.spendprofile.transactional.ProcurementMilestonesSpendProfileFigureDistributer.OtherAndVat;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 
 import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.springframework.util.ReflectionUtils.*;
 
-public class ProcurementMilestonesSpendProfileFigureDistributerTest {
+public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
 
     @Test
     public void testAdjustCostsRemoveTooMuchVat() {
@@ -21,7 +24,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
         );
         try {
             // Total vat = 3 try to remove 4
-            new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(-4));
+            callAdjustCosts(toAdjust, valueOf(-4));
             fail("We should get an illegal state exception if we try to remove too much vat");
         } catch (IllegalStateException e){
             // Pass
@@ -37,7 +40,8 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
         );
         try {
             // Total other costs = 6, try to remove 7.
-            new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(7));
+
+            callAdjustCosts(toAdjust, valueOf(7));
             fail("We should get an illegal state exception if we try to remove too much vat");
         } catch (IllegalStateException e){
             // Pass
@@ -57,7 +61,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
                 new OtherAndVat().withOtherCost(valueOf(1)).withVat(valueOf(0))
         );
         // Call method under test add 2 to vat (subtract 2 from other costs)
-        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(2));
+        List<OtherAndVat> adjusted = callAdjustCosts(toAdjust, valueOf(2));
         assertEquals(expected, adjusted);
     }
 
@@ -74,7 +78,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
                 new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
         );
         // Call method under test add 2 to other costs (subtract 2 from vat)
-        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(-2));
+        List<OtherAndVat> adjusted = callAdjustCosts(toAdjust, valueOf(-2));
         assertEquals(expected, adjusted);
     }
 
@@ -91,7 +95,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
                 new OtherAndVat().withOtherCost(valueOf(3)).withVat(valueOf(3))
         );
         // Call method under test add 6 to vat (subtract 6 from other costs)
-        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(6));
+        List<OtherAndVat> adjusted = callAdjustCosts(toAdjust, valueOf(6));
         assertEquals(expected, adjusted);
     }
 
@@ -108,7 +112,13 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
                 new OtherAndVat().withOtherCost(valueOf(21)).withVat(valueOf(9))
         );
         // Call method under test add 4 to other costs (subtract 4 from vat)
-        List<OtherAndVat> adjusted = new ProcurementMilestonesSpendProfileFigureDistributer().adjustedCosts(toAdjust, valueOf(-4));
+        List<OtherAndVat> adjusted = callAdjustCosts(toAdjust, valueOf(-4));
         assertEquals(expected, adjusted);
+    }
+
+    private List<OtherAndVat> callAdjustCosts(List<OtherAndVat> toAdjust, BigInteger amountToAddToVat){
+        Method adjustedCostsMethod = findMethod(ProcurementMilestonesSpendProfileFigureDistributer.class, "adjustedCosts", List.class, BigInteger.class);
+        makeAccessible(adjustedCostsMethod);
+        return (List<OtherAndVat>) invokeMethod(adjustedCostsMethod, new ProcurementMilestonesSpendProfileFigureDistributer(), toAdjust, amountToAddToVat);
     }
 }

@@ -201,7 +201,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         return adjustedCosts(costsToAdjust, currentVatTotal.subtract(correctVatTotal));
     }
 
-    List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVat){
+    private List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVat){
         BigInteger amountToChangeVat = amountToAddToVat;
         BigInteger amountToChangeOtherCosts = amountToChangeVat.negate();
         BigInteger initialTotalVat = costsToAdjust.stream().map(otherAndVat -> otherAndVat.vat).reduce(BigInteger::add).orElse(ZERO);
