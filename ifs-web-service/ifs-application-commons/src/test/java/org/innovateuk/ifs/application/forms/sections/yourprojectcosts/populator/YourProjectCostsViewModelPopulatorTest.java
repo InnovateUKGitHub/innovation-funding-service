@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -135,6 +136,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertTrue(viewModel.isReadOnly());
         assertTrue(viewModel.isProcurementCompetition());
         assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
+        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -166,6 +168,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertFalse(viewModel.isProcurementCompetition());
         assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
+        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -215,6 +218,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(true)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -238,6 +242,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals(yourFundingSectionId, viewModel.getYourFundingSectionId());
         assertFalse(viewModel.isYourFecCostRequired());
         assertEquals(yourFecCostSectionId, viewModel.getYourFecCostSectionId());
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -287,6 +292,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(true)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -310,6 +316,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals(yourFundingSectionId, viewModel.getYourFundingSectionId());
         assertTrue(viewModel.isYourFecCostRequired());
         assertEquals(yourFecCostSectionId, viewModel.getYourFecCostSectionId());
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -348,6 +355,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(true)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -370,6 +378,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNull(viewModel.getYourFundingSectionId());
         assertFalse(viewModel.isYourFecCostRequired());
         assertNull(viewModel.getYourFecCostSectionId());
+        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -423,6 +432,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(true)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -444,6 +454,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -497,6 +508,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(false)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -518,6 +530,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -571,6 +584,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(true)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -592,6 +606,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
+        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -645,6 +660,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
                 .withFecEnabled(false)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
@@ -666,5 +682,6 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
+        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
     }
 }
