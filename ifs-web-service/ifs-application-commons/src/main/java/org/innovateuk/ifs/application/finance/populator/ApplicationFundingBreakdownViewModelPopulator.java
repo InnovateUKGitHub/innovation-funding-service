@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.populator;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
@@ -92,7 +91,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
-        List<FinanceRowType> types = competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
+        List<FinanceRowType> types = getFinanceRowTypes(finances, leadOrganisationId, competition);
 
         List<BreakdownTableRow> rows = organisations.stream()
                 .filter(organisation -> competition.isKtp() ? organisation.getId().equals(leadOrganisationId) : true)
@@ -111,7 +110,19 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 types);
     }
 
+    private List<FinanceRowType> getFinanceRowTypes(Map<Long, BaseFinanceResource> finances,
+                                                    long leadOrganisationId,
+                                                    CompetitionResource competition) {
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypes();
 
+        if (competition.isKtp()) {
+            financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(finances.get(leadOrganisationId)));
+        }
+
+        return financeRowTypes.stream()
+                .filter(FinanceRowType::isCost)
+                .collect(toList());
+    }
 
     private Collection<BreakdownTableRow> pendingOrganisations(long applicationId, List<FinanceRowType> types) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()

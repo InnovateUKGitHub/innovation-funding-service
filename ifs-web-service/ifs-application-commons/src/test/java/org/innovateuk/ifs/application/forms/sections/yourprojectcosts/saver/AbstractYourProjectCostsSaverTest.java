@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Map;
 
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
@@ -208,11 +209,6 @@ public class AbstractYourProjectCostsSaverTest {
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger expected = associateOneCost
-                .add(associateTwoCost)
-                .add(academicAndSecretarialSupportOneCost)
-                .multiply(BigInteger.valueOf(46))
-                .divide(BigInteger.valueOf(100));
 
         YourProjectCostsForm form = new YourProjectCostsForm();
 
@@ -224,6 +220,12 @@ public class AbstractYourProjectCostsSaverTest {
 
         OrganisationResource organisationResource = newOrganisationResource().withId(2L).build();
 
+        BigDecimal expected = form.getTotalAssociateSalaryCosts()
+                .add(form.getTotalAcademicAndSecretarialSupportCosts())
+                .multiply(BigDecimal.valueOf(46))
+                .divide(new BigDecimal(100))
+                .setScale(0, RoundingMode.HALF_UP);
+
         ServiceResult<Void> result = targetWithEmptyIndirectCost.save(form, 1L, organisationResource, new ValidationMessages());
 
         assertTrue(result.isSuccess());
@@ -234,8 +236,8 @@ public class AbstractYourProjectCostsSaverTest {
         IndirectCost indirectCostToSave = indirectCostArgumentCaptor.getValue();
         assertNotNull(indirectCostToSave);
         assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCostToSave.getCostType());
-        assertEquals(expected, indirectCostToSave.getCost());
-        assertEquals(expected, indirectCostToSave.getTotal().toBigInteger());
+        assertEquals(expected.toBigIntegerExact(), indirectCostToSave.getCost());
+        assertEquals(expected, indirectCostToSave.getTotal());
 
         verifyNoMoreInteractions(financeRowRestService);
     }

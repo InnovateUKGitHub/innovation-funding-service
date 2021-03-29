@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -310,7 +311,7 @@ public class YourProjectCostsAutosaver {
                     .orElseGet(() -> financeRowRestService.create(new IndirectCost(finance.getId())).getSuccess());
 
             BigDecimal calculateIndirectCost = calculateIndirectCost(organisationFinance);
-            indirectCost.setCost(calculateIndirectCost.toBigInteger());
+            indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
             financeRowRestService.update(indirectCost);
         }
     }
@@ -331,7 +332,8 @@ public class YourProjectCostsAutosaver {
         return totalAssociateSalaryCost
                 .add(totalAcademicAndSecretarialSupportCost)
                 .multiply(YourProjectCostsForm.INDIRECT_COST_PERCENTAGE)
-                .divide(BigDecimal.valueOf(100));
+                .divide(BigDecimal.valueOf(100))
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     private Optional<Long> autosaveAssociateSupportCost(String field, String value, ApplicationFinanceResource finance) {
