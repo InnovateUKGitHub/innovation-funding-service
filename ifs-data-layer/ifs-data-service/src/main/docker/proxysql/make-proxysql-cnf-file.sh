@@ -91,8 +91,8 @@ function generate_query_rules_for_proxysql() {
 
 # a function to replace the <<QUERY_RULES>> token in proxysql.cnf with the rewrite rules stored within /dump/query_rules
 function inject_query_rules_into_proxysql_cnf() {
-    sed -i "@<<QUERY_RULES>>@{
-        s@<<QUERY_RULES>>@g
+    sed -i "/<<QUERY_RULES>>/{
+        s/<<QUERY_RULES>>//g
         r /dump/query_rules
     }" /etc/proxysql.cnf
 }
@@ -106,6 +106,6 @@ function inject_db_configuration_into_proxysql_cnf() {
 
 . /dump/rewrite-rule-generator.sh
 
-inject_db_configuration_into_proxysql_cnf
 generate_query_rules_for_proxysql
 inject_query_rules_into_proxysql_cnf
+inject_db_configuration_into_proxysql_cnf
