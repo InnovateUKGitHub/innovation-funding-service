@@ -12,6 +12,8 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
@@ -107,7 +109,7 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
     public void addDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
 
-        when(sectionRepositoryMock.findByTypeAndCompetitionId(SectionType.APPLICATION_QUESTIONS, competitionInWrongState.getId())).thenReturn(null);
+        when(sectionRepositoryMock.findByTypeAndCompetitionId(SectionType.APPLICATION_QUESTIONS, competitionInWrongState.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
 

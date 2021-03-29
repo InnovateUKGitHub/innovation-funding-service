@@ -56,7 +56,7 @@ public class QuestionPriorityOrderService {
                 (createdQuestion.getCompetition().getId(), QuestionSetupType.APPLICATION_DETAILS);
 
         updateFollowingQuestionsPrioritiesByDelta(1, applicationDetailsQuestion.getPriority(), createdQuestion.getCompetition()
-                .getId(), SectionType.APPLICATION_QUESTIONS);
+                .getId(), SectionType.PROJECT_DETAILS);
 
         createdQuestion.setPriority(applicationDetailsQuestion.getPriority() + 1);
         return questionRepository.save(createdQuestion);

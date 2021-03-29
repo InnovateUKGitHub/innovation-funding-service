@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireOptionService;
@@ -81,7 +82,7 @@ public class SubsidyControlTemplateTest {
 
         subsidyControlTemplate.sections(newArrayList(
                 projectDetails,
-                SectionBuilder.aSection().withName("Finances")
+                SectionBuilder.aSection().withType(SectionType.FINANCES)
         ));
 
         assertThat(projectDetails.getQuestions().get(0).getName(), is(equalTo("Subsidy basis")));
