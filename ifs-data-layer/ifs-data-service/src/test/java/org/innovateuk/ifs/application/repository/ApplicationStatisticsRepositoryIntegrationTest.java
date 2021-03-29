@@ -166,7 +166,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         processRoleRepository.save(processRole);
         flushAndClearSession();
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "id"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "id"));
 
         Page<ApplicationCountSummaryResource> statisticsPage = repository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, "", pageable);
         assertEquals(6, statisticsPage.getTotalElements());

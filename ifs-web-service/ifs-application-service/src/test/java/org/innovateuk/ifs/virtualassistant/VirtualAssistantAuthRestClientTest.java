@@ -63,7 +63,7 @@ public class VirtualAssistantAuthRestClientTest {
         assertThat(virtualAssistantModel.isServerAvailable(), equalTo(false));
         assertThat(virtualAssistantModel.getBotId(), equalTo(NO_REMOTE_SERVER_MSG));
         assertThat(virtualAssistantModel.getClientToken(), equalTo(NO_REMOTE_SERVER_MSG));
-        assertThat(virtualAssistantModel.getErrorMessage(), equalTo(String.valueOf(HttpStatus.UNAUTHORIZED.value())));
+        assertThat(virtualAssistantModel.getErrorMessage(), equalTo(String.valueOf(HttpStatus.UNAUTHORIZED.toString())));
     }
 
     @Test
