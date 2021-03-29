@@ -39,9 +39,4 @@ public abstract class OrganisationMapper extends BaseMapper<Organisation, Organi
         return object.getId();
     }
 
-    public List<OrganisationResource> mapToResources(List<Organisation> domains) {
-        List<OrganisationResource> resources = new ArrayList<>(domains.size());
-        domains.forEach(d -> resources.add(mapToResource(d)));
-        return resources;
-    }
 }
