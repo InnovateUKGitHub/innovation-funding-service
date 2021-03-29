@@ -94,7 +94,6 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-9241 KTP fEC/Non-fEC: 'Your project costs' conditions
 ...
 ...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
-
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -114,7 +113,6 @@ ${nonKTPCompettittionInPS}            Project Setup Comp 8
 &{ktpExistingPartnerCredentials}      email=${existing_partner_ktp_email}  password=${short_password}
 &{ktpExistingAcademicCredentials}     email=${existing_academic_email}  password=${short_password}
 &{ktaUserCredentials}                 email=${ktaEmail}  password=${short_password}
-#${existingRegisteredPartner}          ${collaborator1_credentials["email"]}
 ${ktpApplicationTitle}                KTP New Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         Middlesex University Higher Education Corporation
@@ -1384,8 +1382,8 @@ admin adds a partner to non-ktp application from project setup
     Requesting IDs of this non-ktp application
     the user clicks the button/link                    jQuery = tr:contains("${noKTPApplicationName}") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
-    the user adds a new partner organisation           Ludlow   Jessica Doe   ${existingRegisteredPartner}
-    organisation is able to accept project invite      Jessica   Doe   ${existingRegisteredPartner}   ${nonKTPApplicationID}   ${noKTPApplicationName}
+    the user adds a new partner organisation           Ludlow   Jessica Doe   ${collaborator1_credentials["email"]}
+    organisation is able to accept project invite      Jessica   Doe   ${collaborator1_credentials["email"]}    ${nonKTPApplicationID}   ${noKTPApplicationName}
     the user clicks the button/link                    link = Continue, sign in
 
 the user can see project cost breakdown of lead organisation
