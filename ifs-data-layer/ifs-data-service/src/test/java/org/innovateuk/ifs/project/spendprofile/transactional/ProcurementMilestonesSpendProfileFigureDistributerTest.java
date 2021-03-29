@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
-import org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.spendprofile.transactional.ProcurementMilestonesSpendProfileFigureDistributer.OtherAndVat;
@@ -20,9 +18,9 @@ import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGene
 import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.util.ReflectionUtils.*;
-import static org.junit.Assert.assertEquals;
 
 public class ProcurementMilestonesSpendProfileFigureDistributerTest {
 
