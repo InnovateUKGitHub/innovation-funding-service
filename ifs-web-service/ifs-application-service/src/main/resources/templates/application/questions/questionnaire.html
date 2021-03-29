@@ -36,44 +36,7 @@
               enctype="multipart/form-data"
               novalidate="novalidate">
 
-            <p th:if="${model.getNorthernIrelandDeclaration() != null}" class="govuk-body">
-                Based on the answers, the subsidy basis has been determined as falling under the <span class="govuk-!-font-weight-bold"><th:block th:if="${model.getNorthernIrelandDeclaration()}">Northern Ireland Protocol</th:block><th:block th:unless="${model.getNorthernIrelandDeclaration()}">EU-UK Trade and Cooperation Agreement</th:block></span>.</p>
-
-            <th:block th:unless="${model.readOnly}">
-                <h2 class="govuk-heading-m">Declaration</h2>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agreement')} ? 'govuk-form-group--error'">
-                    <div class="govuk-checkboxes">
-                        <span class="govuk-error-message" th:if="${#fields.hasErrors('agreement')}" th:errors="*{agreement}"></span>
-                        <div class="govuk-checkboxes__item">
-                            <input id="agreement"
-                                   class="govuk-checkboxes__input"
-                                   type="checkbox"
-                                   th:field="*{agreement}"
-                                   data-switches-button-status="#mark-questionnaire-complete"/>
-                            <label for="agreement"
-                                   class="govuk-label govuk-checkboxes__label">
-                                Based on the answers I have provided; I agree to the subsidy basis that has been determined for my organisation's application.
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
-            </th:block>
-
-            <th:block th:insert="questionnaire/fragments :: answer-table(${model.answers})" />
-
-            <!--/* Read only template */-->
-            <th:block th:if="${model.readOnly}">
-            </th:block>
-            <div th:if="${model.open}" class="form-footer">
-                <button id="mark-questionnaire-complete" th:unless="${model.complete}" type="submit" name="complete"
-                        class="button-clear">Mark as complete
-                </button>
-                <button th:if="${model.complete}" id="edit-application-details-button" type="submit" name="edit" class="button-clear">
-                    Edit
-                </button>
-            </div>
-
+            <th:block th:insert="questionnaire/fragments :: subsidy-basis(model= ${model})"/>
             <div class="govuk-!-margin-top-6">
                 <th:block th:if="${model.readOnly}">
                     <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
@@ -88,11 +51,7 @@
                         class="govuk-button">Save and return to application overview
                 </button>
             </div>
-
-
-
         </form>
-
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>

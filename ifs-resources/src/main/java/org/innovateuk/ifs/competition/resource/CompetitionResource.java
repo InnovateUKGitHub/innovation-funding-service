@@ -111,6 +111,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean procurementMilestones;
     private CovidType covidType;
     private boolean alwaysOpen;
+    private boolean subsidyControl;
 
     public CompetitionResource() {
     }
@@ -829,6 +830,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.procurementMilestones = procurementMilestones;
     }
 
+    public boolean isSubsidyControl() {
+        return subsidyControl;
+    }
+
+    public void setSubsidyControl(boolean subsidyControl) {
+        this.subsidyControl = subsidyControl;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -906,6 +915,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
                 .append(alwaysOpen, that.alwaysOpen)
+                .append(subsidyControl, that.subsidyControl)
                 .isEquals();
     }
 
@@ -971,6 +981,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(modifiedBy)
                 .append(modifiedOn)
                 .append(alwaysOpen)
+                .append(subsidyControl)
                 .toHashCode();
     }
 

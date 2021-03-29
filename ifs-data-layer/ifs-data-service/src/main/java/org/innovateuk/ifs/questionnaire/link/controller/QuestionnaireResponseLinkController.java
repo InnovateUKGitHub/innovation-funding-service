@@ -33,4 +33,14 @@ public class QuestionnaireResponseLinkController {
                 .andOnSuccessReturn(StringResource::new)
                 .toGetResponse();
     }
+    @GetMapping("/{questionnaireId}/project/{projectId}/organisation/{organisationId}")
+    public RestResult<StringResource> getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(@PathVariable long questionnaireId,
+                                          @PathVariable long projectId,
+                                          @PathVariable long organisationId) {
+        return service.getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(projectId, organisationId, questionnaireId)
+                .andOnSuccessReturn(UUID::toString)
+                .andOnSuccessReturn(StringResource::new)
+                .toGetResponse();
+    }
+
 }
