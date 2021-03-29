@@ -34,7 +34,7 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     private GrantClaimMaximumService grantClaimMaximumService;
 
     protected abstract ServiceResult<Finance> getFinance(long targetId, long organisationId);
-    protected abstract ServiceResult<Void> updateFinance(Finance finance);
+    protected abstract ServiceResult<Finance> updateFinance(Finance finance);
     protected abstract ServiceResult<FinanceRowItem> saveGrantClaim(GrantClaim grantClaim);
     protected abstract ServiceResult<CompetitionResource> getCompetitionFromTargetId(long targetId);
     protected abstract void resetYourFundingSection(Finance finance, long competitionId, long userId);

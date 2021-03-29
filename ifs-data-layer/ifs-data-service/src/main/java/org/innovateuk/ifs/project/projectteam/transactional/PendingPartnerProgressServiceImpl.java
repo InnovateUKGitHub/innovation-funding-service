@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.projectteam.mapper.PendingPartnerProgressMappe
 import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressRepository;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,11 +81,42 @@ public class PendingPartnerProgressServiceImpl extends RootTransactionalService 
 
     @Override
     @Transactional
+    public ServiceResult<Void> markSubsidyBasisIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
+                .andOnSuccessReturnVoid(PendingPartnerProgress::markSubsidyBasisIncomplete);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markSubsidyBasisComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        return getPartnerProgress(projectOrganisationCompositeId)
+                .andOnSuccessReturnVoid(PendingPartnerProgress::markSubsidyBasisComplete);
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> completePartnerSetup(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         return getPartnerProgress(projectOrganisationCompositeId)
                 .andOnSuccess(this::canJoinProject)
                 .andOnSuccess(this::sendNotification)
                 .andOnSuccessReturnVoid(PendingPartnerProgress::complete);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetPendingPartnerProgress(QuestionSetupType subsidyBasis, long projectId, long organisationId) {
+        switch(subsidyBasis){
+            case SUBSIDY_BASIS: {
+                ProjectOrganisationCompositeId projectOrganisationCompositeId = ProjectOrganisationCompositeId.id(projectId, organisationId);
+                return markYourFundingIncomplete(projectOrganisationCompositeId)
+                        .andOnSuccess(() -> markYourFundingIncomplete(projectOrganisationCompositeId))
+                        .andOnSuccess(() -> markTermsAndConditionsIncomplete(projectOrganisationCompositeId));
+            }
+            default:
+                return serviceSuccess();
+
+        }
+
     }
 
     private ServiceResult<PendingPartnerProgress> sendNotification(PendingPartnerProgress pendingPartnerProgress){
