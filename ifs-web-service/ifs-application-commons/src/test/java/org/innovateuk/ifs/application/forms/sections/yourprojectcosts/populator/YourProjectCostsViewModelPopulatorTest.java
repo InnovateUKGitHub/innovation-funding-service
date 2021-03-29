@@ -102,6 +102,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withName("Name")
                 .build();
         UserResource user = newUserResource().build();
+        ApplicantResource applicantResource = newApplicantResource()
+                .withOrganisation(organisation)
+                .build();
         SectionResource section = newSectionResource()
                 .withId(SECTION_ID)
                 .withCompetition(competition.getId())
@@ -109,7 +112,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         ApplicantSectionResource applicantSection = newApplicantSectionResource()
                 .withSection(section)
                 .withCompetition(competition)
+                .withCurrentApplicant(applicantResource)
                 .build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -119,6 +124,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
@@ -155,6 +162,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withName("Name")
                 .build();
         UserResource user = newUserResource().build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withOrganisation(organisation.getId())
@@ -163,6 +171,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
@@ -232,6 +242,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -242,6 +253,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals(yourFundingSectionId, viewModel.getYourFundingSectionId());
         assertFalse(viewModel.isYourFecCostRequired());
         assertEquals(yourFecCostSectionId, viewModel.getYourFecCostSectionId());
+        assertTrue(viewModel.getFecModelEnabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -306,6 +318,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -316,6 +329,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertEquals(yourFundingSectionId, viewModel.getYourFundingSectionId());
         assertTrue(viewModel.isYourFecCostRequired());
         assertEquals(yourFecCostSectionId, viewModel.getYourFecCostSectionId());
+        assertTrue(viewModel.getFecModelEnabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -368,6 +382,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Collections.singletonList(SECTION_ID));
         when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -378,7 +393,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertNull(viewModel.getYourFundingSectionId());
         assertFalse(viewModel.isYourFecCostRequired());
         assertNull(viewModel.getYourFecCostSectionId());
-        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
+        assertTrue(viewModel.getFecModelEnabled());
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -446,6 +462,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -454,6 +471,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
+        assertTrue(viewModel.getFecModelEnabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -522,6 +540,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -530,6 +549,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
+        assertFalse(viewModel.getFecModelEnabled());
         assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
@@ -598,6 +618,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -606,7 +627,8 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
-        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
+        assertTrue(viewModel.getFecModelEnabled());
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 
     @Test
@@ -674,6 +696,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
         when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(fecCostFinanceSection);
         when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
 
         YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
 
@@ -682,6 +705,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
 
         assertNotNull(viewModel.getFinanceRowTypes());
         assertThat(viewModel.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
-        assertEquals(BigDecimal.ZERO, viewModel.getGrantClaimPercentage());
+        assertFalse(viewModel.getFecModelEnabled());
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
     }
 }
