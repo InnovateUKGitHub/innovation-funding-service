@@ -47,8 +47,8 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
      * Secondly we have milestones, which represent the costs for a particular month. These have no concept of category.
      * These are found here by querying the milestones repository.
      *
-     * These sets of figures are stored separately but the totals must have the same value, and this is enforced by the
-     * system.
+     * Both these sets of figures are stored separately but the totals must have the same value, and this is enforced by
+     * the system.
      *
      * We use the values in the milestones to distribute the costs in the spend profile. This is achieved by taking
      * the value for each milestone and breaking it out into other costs and vat.
@@ -77,8 +77,9 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
      * Month 3         £10        £8.33  =>  £8    £1.6666 => £2
      * Total           £36                  £29               £7
      *
-     * The summation of all figures add up, and always will. But the summation per cost category is slightly out. The
-     * maximum amount that a cost category total can be out by is the number of milestones in pounds.
+     * The summation of all figures add up, and always will (in the example above the total is £36). But the summation
+     * per cost category is slightly out. The maximum amount that a cost category total can be out by is the number of
+     * milestones in pounds.
      *
      * However it is preferable that the totals per category are not out. To achieve this we adjust the calculated
      * breakout figures. The adjustments must keep the breakout for a particular milestone summing to the total for that
@@ -205,8 +206,8 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         return adjustedCosts(costsToAdjust, correctVatTotal.subtract(currentVatTotal));
     }
 
-    private List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVat){
-        BigInteger amountToChangeVat = amountToAddToVat;
+    private List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVatAndSubtractFromOtherCosts){
+        BigInteger amountToChangeVat = amountToAddToVatAndSubtractFromOtherCosts;
         BigInteger amountToChangeOtherCosts = amountToChangeVat.negate();
         BigInteger initialTotalVat = costsToAdjust.stream().map(otherAndVat -> otherAndVat.vat).reduce(BigInteger::add).orElse(ZERO);
         BigInteger initialTotalOtherCosts = costsToAdjust.stream().map(otherAndVat -> otherAndVat.otherCosts).reduce(BigInteger::add).orElse(ZERO);
@@ -217,7 +218,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
             throw new IllegalStateException(
                     "initial vat: " + initialTotalVat + ". " +
                     "initial other costs: " + initialTotalOtherCosts + ". " +
-                    "amount to change vat: " + amountToAddToVat + ". " +
+                    "amount to change vat: " + amountToChangeVat + ". " +
                     "amount to change other costs: " + amountToChangeOtherCosts);
         }
 
@@ -225,11 +226,11 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         for (int index = 0; index < adjustedCosts.size(); index++) {
             if (!amountToChangeVat.equals(ZERO)) {
                 OtherAndVat unAdjusted = costsToAdjust.get(index);
-                if (isLessThanZero(amountToAddToVat) && isGreaterThanZero(unAdjusted.vat)){
+                if (isLessThanZero(amountToChangeVat) && isGreaterThanZero(unAdjusted.vat)){
                     adjustedCosts.set(index, new OtherAndVat().withOtherCost(unAdjusted.otherCosts.add(ONE)).withVat(unAdjusted.vat.subtract(ONE)));
                     amountToChangeVat = amountToChangeVat.add(ONE);
                 }
-                else if (isGreaterThanZero(amountToAddToVat) && isGreaterThanZero(unAdjusted.otherCosts)) {
+                else if (isGreaterThanZero(amountToChangeVat) && isGreaterThanZero(unAdjusted.otherCosts)) {
                     adjustedCosts.set(index, new OtherAndVat().withOtherCost(unAdjusted.otherCosts.subtract(ONE)).withVat(unAdjusted.vat.add(ONE)));
                     amountToChangeVat = amountToChangeVat.subtract(ONE);
                 }
