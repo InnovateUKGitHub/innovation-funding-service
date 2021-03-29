@@ -274,19 +274,15 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Transactional
     public List<OrganisationResource> findOrganisationsByName(String name) {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName(name);
         return organisationMapper.mapToResources(
-            organisationRepository.findByNameOrderById(organisationResource.getName())
+            organisationRepository.findByNameOrderById(name)
         );
     }
 
     @Transactional
     public List<OrganisationResource> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setCompaniesHouseNumber(companiesHouseNumber);
         return organisationMapper.mapToResources(
-            organisationRepository.findByCompaniesHouseNumberOrderById(organisationResource.getCompaniesHouseNumber())
+            organisationRepository.findByCompaniesHouseNumberOrderById(companiesHouseNumber)
         );
     }
 }
