@@ -202,7 +202,7 @@ the user should see the read only view of KTP
     the user should not see the element     jQuery = th:contains("Total associates estates costs") ~ td:contains("£1,000")
     the user should not see the element     jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element         jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
-    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("£92")
+    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("£46")
     the user should see the element         jQuery = th:contains("Total additional company cost estimates") ~ td:contains("£600")
 
 the user should see the correct data in the finance tables
@@ -216,7 +216,7 @@ the user should see the correct data in the finance tables
     the user should not see the element     jQuery = td:contains("Additional associate support") ~ td:contains("£1,000")
     the user should see the element         jQuery = td:contains("Other costs") ~ td:contains("1,000")
     the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("46")
-    the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,542")
+    the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,496")
 
 the user fills in consumables
     the user enters text to a text field     css = input[id^="consumableCost"][id$="item"]  consumable
@@ -263,10 +263,11 @@ the user sees the selection is saved
     the user sees that the radio button is selected     fecModelEnabled  fecModelEnabled-no
 
 the user completes your funding section
-    the user clicks the button/link       link = Your funding
-    the user selects the radio button     requestingFunding  request-funding-no
-    the user selects the radio button     otherFunding  other-funding-no
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    the user clicks the button/link        link = Your funding
+    the user selects the radio button      requestingFunding  request-funding-yes
+    the user enters text to a text field   css = input[id^="grantClaimPercentage"]    50
+    the user selects the radio button      otherFunding  other-funding-no
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
 the user collapses and expands the academic and secretarial support section
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
