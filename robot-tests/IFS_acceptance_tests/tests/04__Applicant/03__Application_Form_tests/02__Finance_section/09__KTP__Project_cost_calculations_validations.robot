@@ -33,7 +33,9 @@ ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]
 ${KTPcompetiton}                          KTP new competition
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
+${ktp_KTA_name}                           Hermen Mermen
 ${ktp_KTA_email}                          hermen.mermen@ktn-uk.test
+&{KTA_assessor_credentials}               hermen.mermen@ktn-uk.test   password=${short_password}
 ${KTA_invitation_email_subject}           Invitation to be Knowledge Transfer Adviser
 ${invited_email_pattern}                  You have been invited to be the knowledge transfer adviser for the Innovation Funding Service application:
 ${estateValue}                            11000
@@ -197,6 +199,10 @@ KTA user assigned to application can view the read-only view for 'No' selected f
     And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
     Then the user should see read only view for non-fec declaration
 
+#KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
+#    [Documentation]  IFS-9246
+#    [Setup]  complete and submit application
+
 *** Keywords ***
 the user enters T&S costs
     [Arguments]  ${typeOfCost}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
@@ -326,3 +332,54 @@ the user collapses and expands the academic and secretarial support section
     the user should not see the element     id = academicAndSecretarialSupportForm
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
     the user should see the element         jQuery = p:contains("You may enter up to £875")
+
+complete and submit application
+    log in as a different user                                        &{KTPLead}
+    the user clicks the button/link                                   link = ${KTPapplication}
+    the user clicks the button/link                                   link = Your project finances
+    the user marks the KTP project location as complete
+    the user accept the competition terms and conditions              Return to application overview
+    log in as a different user                                        &{collaborator1_credentials}
+    the user clicks the button/link                                   link = ${KTPapplication}
+    the user clicks the button/link                                   link = Your project finances
+    the user fills in the funding information                         ${KTPapplication}   no
+    the user marks the KTP project location as complete
+    the user fills in the KTP organisation information
+
+the user marks the KTP project location as complete
+    the user enters the project location
+    the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
+    the user clicks the button/link          link = Back to application overview
+
+the user fills in the KTP organisation information
+    the user clicks the button/link                                                link = Your project finances
+    the user clicks the button/link                                                link = Your organisation
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots     page should contain element  jQuery = button:contains("Edit")
+    Run Keyword If    '${status}' == 'PASS'                                        the user clicks the button/link  jQuery = button:contains("Edit")
+    the user selects the radio button                                              organisationSize  ${SMALL_ORGANISATION_SIZE}
+    the user enters text to a text field                                           name = financialYearEndMonthValue  04
+    the user enters text to a text field                                           name = financialYearEndYearValue   2020
+    the user fills financial overview section
+    the user clicks the button/link                                                jQuery = button:contains("Mark as complete")
+    the user should see the element                                                jQuery = li:contains("Your organisation") span:contains("Complete")
+
+the user invites a registered KTA user to assess competition
+    update milestone to yesterday            ${KTPcompetitonId}  SUBMISSION_DATE
+    log in as a different user               &{Comp_admin1_credentials}
+    the user clicks the button/link          link = ${KTPcompetiton}
+    the user clicks the button/link          link = Invite assessors to assess the competition
+    the user enters text to a text field     id = assessorNameFilter   ${ktp_KTA_name}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+    the user clicks the button/link          jQuery = tr:contains("${ktp_KTA_name}") label[for^="assessor-row"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+    the user clicks the button/link          link = Invite
+    the user clicks the button/link          link = Review and send invites
+    the user enters text to a text field     id = message    This is custom text
+    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+
+the allocated assessor accepts invite to assess the competition
+    log in as a different user                            &{KTA_assessor_credentials}
+    the user clicks the button/link                       link = ${KTPcompetiton}
+    the user selects the radio button                     acceptInvitation  true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
+    the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
