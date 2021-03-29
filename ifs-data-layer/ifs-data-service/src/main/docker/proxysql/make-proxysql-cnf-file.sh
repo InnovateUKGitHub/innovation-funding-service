@@ -23,6 +23,8 @@ function generate_query_rules_for_proxysql() {
         # the table name is the name of the file e.g. "user"
         table_name=$(echo $i | sed "s/.*\///" | sed "s/.*\///" | sed "s/\..*//")
 
+        echo "table name $table_name"
+
         # the column_array is an array of the column names that are rewrite candidates for this table e.g. "first_name"
         mapfile -t column_array < <(sed 's/^\(.*\)|.*$/\1/g' $i)
 
@@ -40,6 +42,10 @@ function generate_query_rules_for_proxysql() {
              WHERE t.col IS NOT NULL) , ' FROM $table_name' );"
 
         # the base select statement that we wish mysqldump to issue against this table when running a dump of its data
+        echo "query $full_select_statement_query"
+        echo "db host $DB_HOST"
+        echo "db user $DB_USER"
+        echo "db port $DB_PORT"
         full_select_statement_result=$(mysql -h$DB_HOST -u$DB_USER -p$DB_PASS -P$DB_PORT $DB_NAME -N -s -e "$full_select_statement_query")
 
         # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from
@@ -106,6 +112,6 @@ function inject_db_configuration_into_proxysql_cnf() {
 
 . /dump/rewrite-rule-generator.sh
 
-inject_db_configuration_into_proxysql_cnf
 generate_query_rules_for_proxysql
 inject_query_rules_into_proxysql_cnf
+inject_db_configuration_into_proxysql_cnf
