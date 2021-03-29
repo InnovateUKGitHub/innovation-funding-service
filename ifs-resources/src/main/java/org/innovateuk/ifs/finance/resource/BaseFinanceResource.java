@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 /**
  * Application finance resource holds the organisation's finance resources for an target
@@ -234,7 +234,7 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public boolean isVatRegistered() {
         return vat()
-                .flatMap(vat -> of(vat.getRegistered()))
+                .flatMap(vat -> ofNullable(vat.getRegistered()))
                 .orElse(false);
     }
 
@@ -243,7 +243,7 @@ public abstract class BaseFinanceResource {
         return vat()
                 .filter(vat -> vat.getRegistered() != null)
                 .filter(Vat::getRegistered)
-                .flatMap(vat -> of(vat.getRate()))
+                .flatMap(vat -> ofNullable(vat.getRate()))
                 .orElse(BigDecimal.ZERO);
     }
 }
