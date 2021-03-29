@@ -53,10 +53,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
         List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionResource.getId()).getSuccess();
-        List<SectionResource> generalSections = sections.stream()
-                .filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL)
-                .collect(Collectors.toList());
-        List<SectionResource> parentSections = generalSections.stream()
+        List<SectionResource> parentSections = sections.stream()
                 .filter(sectionResource -> sectionResource.getParentSection() == null)
                 .collect(Collectors.toList());
 
