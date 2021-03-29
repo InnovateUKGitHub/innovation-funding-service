@@ -86,7 +86,7 @@ Calculation for associate employment and development
     [Documentation]  IFS-7790
      Given the user enters text to a text field     jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  100
      When the user should see the element           jQuery = span:contains("100") ~ button:contains("Associate development")
-     Then the user should see the right values      100   Associate employment    246
+     Then the user should see the right values      100   Associate employment    223
      And the user should not see the element        jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
 
 KB applicant can provide an academic and secretarial support cost in a non-fEC project cost table
@@ -99,7 +99,7 @@ KB applicant can provide an academic and secretarial support cost in a non-fEC p
 Calculate indirect cost
     [Documentation]  IFS-9244
     Given the user should see the element     jQuery = p:contains("The calculation is 46% of the sum of 2 grant amounts:'Associate employment costs' and the 'Academic and secretarial support costs'.")
-    Then the user should see the element      jQuery = h4:contains("Total indirect costs"):contains("92")
+    Then the user should see the element      jQuery = h4:contains("Total indirect costs"):contains("46")
 
 Subcontracting costs should not display in project costs
     [Documentation]  IFS-8157
@@ -115,17 +115,17 @@ Travel and subsistence cost calculations
 Consumables calculations
     [Documentation]  IFS-7790
     Given the user fills in consumables
-    Then the user should see the right values    2,000    Consumables    8542
+    Then the user should see the right values    2,000    Consumables    8496
 
 Other costs calculations
     [Documentation]  IFS-7790
     Given the user fills in ktp other costs     Other costs   1000
-    Then the user should see the right values   1,000    Other costs    9542
+    Then the user should see the right values   1,000    Other costs    9496
 
 Total cost calculation
     [Documentation]  IFS-9245
     Given the user should see the element     jQuery = label:contains("'A base of knowledge' Total project costs")
-    Then the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9542"]
+    Then the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9496"]
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
@@ -215,7 +215,7 @@ the user should see the correct data in the finance tables
     the user should not see the element     jQuery = td:contains("Estate") ~ td:contains("£1,000")
     the user should not see the element     jQuery = td:contains("Additional associate support") ~ td:contains("£1,000")
     the user should see the element         jQuery = td:contains("Other costs") ~ td:contains("1,000")
-    the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("92")
+    the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("46")
     the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,542")
 
 the user fills in consumables
