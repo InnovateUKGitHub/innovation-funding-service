@@ -16,8 +16,6 @@ import static org.innovateuk.ifs.project.grantofferletter.viewmodel.KtpFinanceMo
 @Component
 public class KtpFinanceModelPopulator {
 
-    private static final BigDecimal academicAndSecretarialSupportFixedAnnualRate = new BigDecimal("10500");
-
     public KtpFinanceModel populate(ProjectResource project, ProjectFinanceResource leadFinances) {
         BigDecimal claimPercentage = leadFinances.getGrantClaimPercentage();
 
@@ -32,13 +30,10 @@ public class KtpFinanceModelPopulator {
                 .withAdditionalSupportCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SUPPORT), claimPercentage, fundingRunningTotal))
                 .withOtherCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.OTHER_COSTS), claimPercentage, fundingRunningTotal))
                 .withAssociateEstateCosts(rowFromRunningTotal(fundingRunningTotal, leadFinances))
-                .withAcademicAndSecretarialSupport(row(calculateAcademicAndSecretarialSupport(project), claimPercentage, fundingRunningTotal))
+                .withAcademicAndSecretarialSupport(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT),
+                        claimPercentage, fundingRunningTotal))
                 .withClaimPercentage(claimPercentage)
                 .build();
-    }
-
-    private static BigDecimal calculateAcademicAndSecretarialSupport(ProjectResource project) {
-        return BigDecimal.valueOf(project.getDurationInMonths()).divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).multiply(academicAndSecretarialSupportFixedAnnualRate);
     }
 
     private static KtpFinanceRowModel rowFromRunningTotal(KtpFundingRowsRunningTotal fundingRowsRunningTotal, ProjectFinanceResource leadFinances) {
