@@ -1,7 +1,12 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
+import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
+import org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.spendprofile.transactional.ProcurementMilestonesSpendProfileFigureDistributer.OtherAndVat;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -11,7 +16,10 @@ import java.util.List;
 
 import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.junit.Assert.fail;
 import static org.springframework.util.ReflectionUtils.*;
 import static org.junit.Assert.assertEquals;
@@ -98,6 +106,49 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
         // Method under test
         assertEquals(expectedWhenVatRateNotZero, callBreakoutCosts(milestoneTotalsPerMonth, vatRateNotZero));
         assertEquals(expectedWhenVatRateZero, callBreakoutCosts(milestoneTotalsPerMonth, BigDecimal.ZERO));
+    }
+
+
+    @Test
+    public void testToCosts(){
+        List<OtherAndVat> adjustedCosts = asList(
+                new OtherAndVat().withOtherCost(valueOf(10)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(7)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(12)).withVat(valueOf(3)),
+                new OtherAndVat().withOtherCost(valueOf(0)).withVat(valueOf(0))
+        );
+        // Method under test
+        List<List<Cost>> costs = callToCosts(
+                adjustedCosts,
+                newCostCategory().withName(OTHER_COSTS.getDisplayName()).build(),
+                newCostCategory().withName(VAT.getDisplayName()).build()
+        );
+        // Assertions
+        Assert.assertEquals(2, costs.size());
+        Assert.assertEquals(5, costs.get(0).size());
+        Assert.assertEquals(5, costs.get(1).size());
+
+        List<Cost> otherCosts = costs.stream().filter(costsList-> costsList.get(0).getCostCategory().getName().equals(OTHER_COSTS.getDisplayName())).findFirst().get();
+        List<Cost> vatCosts = costs.stream().filter(costsList-> costsList.get(0).getCostCategory().getName().equals(VAT.getDisplayName())).findFirst().get();
+
+        Assert.assertEquals(new BigDecimal("10"), otherCosts.get(0).getValue());
+        Assert.assertEquals(new BigDecimal("8"), otherCosts.get(1).getValue());
+        Assert.assertEquals(new BigDecimal("7"), otherCosts.get(2).getValue());
+        Assert.assertEquals(new BigDecimal("12"), otherCosts.get(3).getValue());
+        Assert.assertEquals(new BigDecimal("0"), otherCosts.get(4).getValue());
+
+        Assert.assertEquals(new BigDecimal("2"), vatCosts.get(0).getValue());
+        Assert.assertEquals(new BigDecimal("1"), vatCosts.get(1).getValue());
+        Assert.assertEquals(new BigDecimal("1"), vatCosts.get(2).getValue());
+        Assert.assertEquals(new BigDecimal("3"), vatCosts.get(3).getValue());
+        Assert.assertEquals(new BigDecimal("0"), vatCosts.get(4).getValue());
+    }
+
+    private List<List<Cost>> callToCosts(List<OtherAndVat> adjustedCosts, CostCategory otherCostCategory, CostCategory vatCostCategory){
+        Method toCostsMethod = findMethod(ProcurementMilestonesSpendProfileFigureDistributer.class, "toCosts", List.class, CostCategory.class, CostCategory.class);
+        makeAccessible(toCostsMethod);
+        return (List<List<Cost>>) invokeMethod(toCostsMethod, new ProcurementMilestonesSpendProfileFigureDistributer(),adjustedCosts, otherCostCategory, vatCostCategory);
     }
 
     private List<OtherAndVat> callBreakoutCosts(List<BigInteger> milestoneTotalsPerMonth, BigDecimal vatRate){
