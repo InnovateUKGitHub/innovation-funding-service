@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,7 +138,8 @@ public class YourProjectCostsViewModelPopulator {
                 yourFundingRequired,
                 yourFundingSectionId,
                 yourFecCostRequired,
-                yourFecCostSectionId);
+                yourFecCostSectionId,
+                getGrantClaimPercentage(application.getId(), organisation.getId()));
     }
 
     private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, long applicationId, long organisationId) {
@@ -149,6 +151,11 @@ public class YourProjectCostsViewModelPopulator {
         }
 
         return costTypes;
+    }
+
+    private BigDecimal getGrantClaimPercentage(long applicationId, long organisationId) {
+        ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
+        return applicationFinance.getGrantClaimPercentage();
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId) {
