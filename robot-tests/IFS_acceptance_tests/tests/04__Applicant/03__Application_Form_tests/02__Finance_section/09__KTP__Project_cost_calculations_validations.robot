@@ -118,15 +118,20 @@ Travel and subsistence cost calculations
     And the user enters T&S costs                                            Associate  2  3 trips to Glasgow  3  200
     Then the user should see the right T&S cost summary and total values
 
-Other costs calculations
-    [Documentation]  IFS-7790
-    Given the user fills in ktp other costs     Other costs   1000
-    Then the user should see the right values   1,000    Other costs    7542
-
 Consumables calculations
     [Documentation]  IFS-7790
     Given the user fills in consumables
-    Then the user should see the right values    2,000    Consumables    9542
+    Then the user should see the right values    2,000    Consumables    8542
+
+Other costs calculations
+    [Documentation]  IFS-7790
+    Given the user fills in ktp other costs     Other costs   1000
+    Then the user should see the right values   1,000    Other costs    9542
+
+Total cost calculation
+    [Documentation]  IFS-9245
+    Given the user should see the element     jQuery = label:contains("'A base of knowledge' Total project costs")
+    Then the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9542"]
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
@@ -246,9 +251,9 @@ the user should see the read only view of KTP
     the user should see the element         jQuery = th:contains("Total associate development costs") ~ td:contains("£100")
     the user should see the element         jQuery = th:contains("Total travel and subsistence costs") ~ td:contains("£6,150")
     the user should see the element         jQuery = th:contains("Total consumables costs") ~ td:contains("£2,000")
-    the user should not see the element     jQuery = th:contains("Total knowledge base supervisor costs")
-    the user should not see the element     jQuery = th:contains("Total associates estates costs")
-    the user should not see the element     jQuery = th:contains("Total additional associate support costs")
+    the user should not see the element     jQuery = th:contains("Total knowledge base supervisor costs") ~ td:contains("£123")
+    the user should not see the element     jQuery = th:contains("Total associates estates costs") ~ td:contains("£1,000")
+    the user should not see the element     jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element         jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
     the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("£92")
     the user should see the element         jQuery = th:contains("Total additional company cost estimates") ~ td:contains("£600")
@@ -259,9 +264,9 @@ the user should see the correct data in the finance tables
     the user should see the element         jQuery = td:contains("Associate development") ~ td:contains("100")
     the user should see the element         jQuery = td:contains("Travel and subsistence") ~ td:contains("6,150")
     the user should see the element         jQuery = td:contains("Consumables") ~ td:contains("2,000")
-    the user should not see the element     jQuery = td:contains("Knowledge base supervisor") ~ td:contains("123")
-    the user should not see the element     jQuery = td:contains("Estate") ~ td:contains("1,000")
-    the user should not see the element     jQuery = td:contains("Additional associate support") ~ td:contains("1,000")
+    the user should not see the element     jQuery = td:contains("Knowledge base supervisor") ~ td:contains("£123")
+    the user should not see the element     jQuery = td:contains("Estate") ~ td:contains("£1,000")
+    the user should not see the element     jQuery = td:contains("Additional associate support") ~ td:contains("£1,000")
     the user should see the element         jQuery = td:contains("Other costs") ~ td:contains("1,000")
     the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("92")
     the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,542")

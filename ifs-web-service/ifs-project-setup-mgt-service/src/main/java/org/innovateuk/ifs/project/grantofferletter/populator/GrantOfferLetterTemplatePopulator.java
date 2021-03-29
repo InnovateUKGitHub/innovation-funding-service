@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -73,6 +74,8 @@ public class GrantOfferLetterTemplatePopulator {
         AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competition);
         SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competition);
 
+        Map<String, String> termsAndConditions = termsAndConditions(competition, allProjectFinances);
+
         return new GrantOfferLetterTemplateViewModel(applicationId,
                                                      projectManagerFirstName,
                                                      projectManagerLastName,
@@ -81,11 +84,38 @@ public class GrantOfferLetterTemplatePopulator {
                                                      projectName,
                                                      leadOrgName,
                                                      allProjectNotes,
-                                                     competition.getTermsAndConditions().getTemplate(),
+                                                     termsAndConditions,
                                                      industrialFinanceTableModel,
                                                      academicFinanceTableModel,
                                                      summaryFinanceTableModel,
                                                      competition.isProcurement());
+    }
+
+    private Map<String, String> termsAndConditions(CompetitionResource competition, List<ProjectFinanceResource> projectFinances) {
+        boolean subsidyControlCompetition = FundingRules.SUBSIDY_CONTROL == competition.getFundingRules();
+
+        String mainType = subsidyControlCompetition ? "subsidy control" : "state aid";
+        String otherType = subsidyControlCompetition ? "state aid" : "subsidy control";
+
+        Map<String, String> termsMap = new HashMap<>();
+        if (shouldPopulateRegularTerms(projectFinances)) {
+            termsMap.put(mainType, competition.getTermsAndConditions().getTemplate());
+        }
+        if (shouldPopulateAdditionalTerms(projectFinances)) {
+            termsMap.put(otherType, competition.getOtherFundingRulesTermsAndConditions().getTemplate());
+        }
+
+        return termsMap;
+    }
+
+    private boolean shouldPopulateRegularTerms(List<ProjectFinanceResource> projectFinances) {
+        return projectFinances.stream()
+                .anyMatch(projectFinance -> !Boolean.TRUE.equals(projectFinance.getNorthernIrelandDeclaration()));
+    }
+
+    private boolean shouldPopulateAdditionalTerms(List<ProjectFinanceResource> projectFinances) {
+        return projectFinances.stream()
+                        .anyMatch(projectFinance -> Boolean.TRUE.equals(projectFinance.getNorthernIrelandDeclaration()));
     }
 
     private List<String> getAddressLines(ProjectResource project) {

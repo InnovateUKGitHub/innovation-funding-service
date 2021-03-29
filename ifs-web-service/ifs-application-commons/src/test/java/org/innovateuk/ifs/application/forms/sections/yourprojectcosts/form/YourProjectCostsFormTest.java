@@ -17,12 +17,15 @@ public class YourProjectCostsFormTest {
 
     @Test
     public void getTotalIndirectCostsForNonFecModel() {
+        BigDecimal grantClaimPercentage = BigDecimal.valueOf(50);
+
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
         BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
 
         YourProjectCostsForm form = new YourProjectCostsForm();
         form.setFecModelEnabled(false);
+        form.setGrantClaimPercentage(grantClaimPercentage);
 
         AssociateSalaryCost associateOne = newAssociateSalaryCost()
                 .withCost(associateOneCost)
@@ -41,14 +44,22 @@ public class YourProjectCostsFormTest {
         Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows = asMap("associate_salary_costs-1", associateOneForm,
                 "associate_salary_costs-2", associateTwoForm);
 
+        BigDecimal totalGrantAssociateSalaryCost = associateOneForm.getTotal()
+                .add(associateTwoForm.getTotal())
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
+
         form.setAssociateSalaryCostRows(associateSalaryCostRows);
         AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm(new AcademicAndSecretarialSupport());
         academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
         form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
 
-        BigDecimal expected = associateOneForm.getTotal()
-                .add(associateTwoForm.getTotal())
-                .add(new BigDecimal(academicAndSecretarialSupportForm.getCost()))
+        BigDecimal totalGrantAcademicAndSecretarialSupportCost = new BigDecimal(academicAndSecretarialSupportForm.getCost())
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
+
+        BigDecimal expected = totalGrantAssociateSalaryCost
+                .add(totalGrantAcademicAndSecretarialSupportCost)
                 .multiply(BigDecimal.valueOf(46))
                 .divide(new BigDecimal(100))
                 .setScale(0, RoundingMode.HALF_UP);
@@ -62,6 +73,7 @@ public class YourProjectCostsFormTest {
     public void getTotalIndirectCostsForFecModel() {
         YourProjectCostsForm form = new YourProjectCostsForm();
         form.setFecModelEnabled(true);
+        form.setGrantClaimPercentage(BigDecimal.ZERO);
 
         BigDecimal expected = BigDecimal.ZERO;
 
@@ -76,6 +88,7 @@ public class YourProjectCostsFormTest {
 
         YourProjectCostsForm form = new YourProjectCostsForm();
         form.setFecModelEnabled(false);
+        form.setGrantClaimPercentage(BigDecimal.valueOf(50));
 
         AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm(new AcademicAndSecretarialSupport());
         academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
