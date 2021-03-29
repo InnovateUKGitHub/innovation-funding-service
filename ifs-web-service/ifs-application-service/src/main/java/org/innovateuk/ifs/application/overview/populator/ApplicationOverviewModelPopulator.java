@@ -134,25 +134,25 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         String messageCode;
 
-        switch (section.getName()) {
-            case "Finances":
+        switch (section.getType()) {
+            case FINANCES:
                 messageCode = getFinanceSectionSubTitle(competition);
                 break;
-            case "Project details":
+            case PROJECT_DETAILS: //"Project details":
                 if (competition.isKtp()) {
                     messageCode = "ifs.section.projectDetails.ktp.description";
                 } else {
                     messageCode = "ifs.section.projectDetails.description";
                 }
                 break;
-            case "Terms and conditions":
+            case TERMS_AND_CONDITIONS: //"Terms and conditions"
                 if (competition.isExpressionOfInterest()) {
                     messageCode = "ifs.section.termsAndConditionsEoi.description";
                 } else {
                     messageCode = "ifs.section.termsAndConditions.description";
                 }
                 break;
-            case "Application questions":
+            case APPLICATION_QUESTIONS: //"Application questions":
                 if (!competition.isKtp()) {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;

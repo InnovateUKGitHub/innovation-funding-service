@@ -51,7 +51,7 @@ public class LoanTemplate implements FundingTypeTemplate {
 
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-        competitionTypeSections.stream().filter(section -> "Project details".equals(section.getName()))
+        competitionTypeSections.stream().filter(section -> PROJECT_DETAILS.equals(section.getName()))
                 .findAny()
                 .ifPresent(section ->
                         section.getQuestions().stream().filter(question -> EQUALITY_DIVERSITY_INCLUSION.equals(question.getQuestionSetupType()))

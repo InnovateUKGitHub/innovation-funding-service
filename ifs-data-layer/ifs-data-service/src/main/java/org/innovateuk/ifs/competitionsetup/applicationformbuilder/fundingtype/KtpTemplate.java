@@ -50,7 +50,7 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
-        competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
+        competitionTypeSections.stream().filter(section -> section.getType() == SectionType.FINANCES)
                 .findAny()
                 .ifPresent(financeSection ->
                 {
@@ -139,7 +139,7 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {
         Optional<SectionBuilder> applicationQuestionSection = sections.stream()
-                .filter(sectionBuilder -> sectionBuilder.getName().equals("Application questions"))
+                .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.APPLICATION_QUESTIONS)
                 .findFirst();
 
         applicationQuestionSection.ifPresent(sectionBuilder -> {

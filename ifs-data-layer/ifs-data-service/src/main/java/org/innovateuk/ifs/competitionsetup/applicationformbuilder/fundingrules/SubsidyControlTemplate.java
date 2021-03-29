@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
@@ -46,7 +47,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-        if (northernIrelandSubsidyControlToggle && competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
+        if (northernIrelandSubsidyControlToggle && competitionTypeSections.stream().anyMatch(section -> section.getType() == SectionType.FINANCES)) {
             competitionTypeSections.get(0)
                     .getQuestions().add(0,
                     aQuestion()
