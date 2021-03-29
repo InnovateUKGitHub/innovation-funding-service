@@ -122,6 +122,10 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
     }
 
     private List<BigInteger> milestoneTotalsPerMonth(int durationInMonths, List<ProjectProcurementMilestoneResource> milestones) {
+        int maxMilestoneMonth = milestones.stream().map(ProjectProcurementMilestoneResource::getMonth).max(Integer::compareTo).orElse(0);
+        if (maxMilestoneMonth > durationInMonths) {
+            throw new IllegalStateException("Duration in months cannot be less than the maximum milestone month");
+        }
         return range(0, durationInMonths).mapToObj(
                 index -> milestones.stream()
                         .filter(milestone -> index == milestone.getIndex().intValue()) // There can be multiple milestones per month
@@ -171,15 +175,15 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
 
     private List<OtherAndVat> breakoutCosts(List<BigInteger> milestoneTotalsPerMonth, BigDecimal vatRate){
         return range(0, milestoneTotalsPerMonth.size())
-                .mapToObj(index -> breakoutCosts(milestoneTotalsPerMonth.get(index), vatRate))
+                .mapToObj(index -> {
+                    BigInteger milestoneTotalForMonth = milestoneTotalsPerMonth.get(index);
+                    BigInteger otherCosts = new BigDecimal(milestoneTotalForMonth).divide(BigDecimal.ONE.add(vatRate), 0, BigDecimal.ROUND_HALF_DOWN).toBigIntegerExact();
+                    BigInteger vat = milestoneTotalForMonth.subtract(otherCosts);
+                    return new OtherAndVat().withOtherCost(otherCosts).withVat(vat);
+                })
                 .collect(toList());
     }
 
-    private OtherAndVat breakoutCosts(BigInteger milestoneTotal, BigDecimal vatRate){
-        BigInteger otherCosts = new BigDecimal(milestoneTotal).divide(BigDecimal.ONE.add(vatRate), 1, BigDecimal.ROUND_HALF_DOWN).toBigInteger();
-        BigInteger vat = milestoneTotal.subtract(otherCosts);
-        return new OtherAndVat().withOtherCost(otherCosts).withVat(vat);
-    }
 
     /**
      * There are many different ways in which we could adjust costs but however it is done, the totals per a month must
@@ -198,7 +202,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         if (!correctVatTotal.subtract(currentVatTotal).equals(currentOtherCostsTotal.subtract(correctOtherCostsTotal))){
             throw new IllegalStateException("The absolute amount we have to change other costs and vat by is not the same");
         }
-        return adjustedCosts(costsToAdjust, currentVatTotal.subtract(correctVatTotal));
+        return adjustedCosts(costsToAdjust, correctVatTotal.subtract(currentVatTotal));
     }
 
     private List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVat){

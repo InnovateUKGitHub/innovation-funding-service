@@ -1,14 +1,27 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
+import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
+import org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder;
+import org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummariesBuilder;
+import org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummaryBuilder;
 import org.innovateuk.ifs.project.spendprofile.transactional.ProcurementMilestonesSpendProfileFigureDistributer.OtherAndVat;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
 import static java.math.BigInteger.valueOf;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.OTHER_COSTS;
+import static org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator.VAT;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummariesBuilder.newSpendProfileCostCategorySummaries;
+import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummaryBuilder.newSpendProfileCostCategorySummary;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.util.ReflectionUtils.*;
@@ -114,6 +127,90 @@ public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
         // Call method under test add 4 to other costs (subtract 4 from vat)
         List<OtherAndVat> adjusted = callAdjustCosts(toAdjust, valueOf(-4));
         assertEquals(expected, adjusted);
+    }
+
+    @Test
+    public void testToAdjustAmountToChangeOtherAndVatNotTheSame() {
+        List<OtherAndVat> toAdjust = asList(new OtherAndVat().withOtherCost(valueOf(10)).withVat(valueOf(4)));
+
+        SpendProfileCostCategorySummaries costCategorySummaries =
+                newSpendProfileCostCategorySummaries()
+                .withCosts(asList(
+                        newSpendProfileCostCategorySummary()
+                                .withTotal(new BigDecimal("11"))
+                                .withCategory(
+                                        newCostCategory()
+                                                .withName(VAT.getDisplayName())
+                                                .build())
+                                .build(),
+                        newSpendProfileCostCategorySummary()
+                                .withTotal(new BigDecimal("2"))
+                                .withCategory(
+                                        newCostCategory()
+                                                .withName(OTHER_COSTS.getDisplayName())
+                                                .build())
+                                .build()
+                        ))
+                        .build();
+        // Other costs 10, vat 4. Adjusted to other 11, vat 2 should give an error as we are no changing by the same
+        // absolute amount
+        try {
+            callAdjustCosts(toAdjust, costCategorySummaries);
+            fail("We should get an illegal state exception if we try to adjust by different absolute amounts");
+        }
+        catch (IllegalStateException e){
+            // Pass
+        }
+    }
+
+    @Test
+    public void testToAdjustAmountToChange() {
+        // Vat rate 0.2. Costs of 42. Vat of 8.4 => 8. Total = 42 + 8 = 50
+        SpendProfileCostCategorySummaries costCategorySummaries =
+                newSpendProfileCostCategorySummaries()
+                        .withCosts(asList(
+                                newSpendProfileCostCategorySummary()
+                                        .withTotal(new BigDecimal("42"))
+                                        .withCategory(
+                                                newCostCategory()
+                                                        .withName(OTHER_COSTS.getDisplayName())
+                                                        .build())
+                                        .build(),
+                                newSpendProfileCostCategorySummary()
+                                        .withTotal(new BigDecimal("8"))
+                                        .withCategory(
+                                                newCostCategory()
+                                                        .withName(VAT.getDisplayName())
+                                                        .build())
+                                        .build()
+                        ))
+                        .build();
+
+        // 5 milestone of 10. Total = 50. Vat rate = 20. Per milestone Other = 8.33... => 8, Vat = 1.66... => 2
+        List<OtherAndVat> toAdjust = asList(
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2))
+                );
+        // Need to add 2 to other and remove 2 from vat to arrive at totals of Other = 42 and Vat = 8
+        List<OtherAndVat> expected = asList(
+                new OtherAndVat().withOtherCost(valueOf(9)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(9)).withVat(valueOf(1)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)),
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2))
+        );
+        // Call the method under test
+        assertEquals(expected, callAdjustCosts(toAdjust, costCategorySummaries));
+    }
+
+
+    private List<OtherAndVat> callAdjustCosts(List<OtherAndVat> toAdjust, SpendProfileCostCategorySummaries costCategorySummaries){
+        Method adjustedCostsMethod = findMethod(ProcurementMilestonesSpendProfileFigureDistributer.class, "adjustedCosts", List.class, SpendProfileCostCategorySummaries.class);
+        makeAccessible(adjustedCostsMethod);
+        return (List<OtherAndVat>) invokeMethod(adjustedCostsMethod, new ProcurementMilestonesSpendProfileFigureDistributer(), toAdjust, costCategorySummaries);
     }
 
     private List<OtherAndVat> callAdjustCosts(List<OtherAndVat> toAdjust, BigInteger amountToAddToVat){

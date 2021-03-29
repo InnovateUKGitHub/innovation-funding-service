@@ -13,6 +13,10 @@ public class SpendProfileCostCategorySummary {
     private BigDecimal total;
     private long projectDurationInMonths;
 
+    public SpendProfileCostCategorySummary(){
+
+    }
+
     public SpendProfileCostCategorySummary(CostCategory category, BigDecimal totalWithScale, long projectDurationInMonths) {
 
         // Set the scale of the roundedTotal to zero to ignore the pence figures.
@@ -31,7 +35,6 @@ public class SpendProfileCostCategorySummary {
         return total;
     }
 
-    // qqRP TODO - explain why.
     public void setTotal(BigDecimal total) {
         this.total = total;
     }
