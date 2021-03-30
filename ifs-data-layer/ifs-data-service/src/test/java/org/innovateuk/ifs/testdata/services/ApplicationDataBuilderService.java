@@ -400,6 +400,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withExistingApplication(applicationData).
                 markApplicationDetailsComplete(applicationLine.markQuestionsComplete).
                 markEdiComplete(applicationLine.markQuestionsComplete).
+                markLoanBusinessAndFinancialInformationComplete(applicationLine.markQuestionsComplete).
                 markApplicationTeamComplete(applicationLine.markQuestionsComplete).
                 markResearchCategoryComplete(applicationLine.markQuestionsComplete);
         if (applicationLine.submittedDate != null) {

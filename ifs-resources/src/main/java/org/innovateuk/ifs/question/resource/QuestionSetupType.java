@@ -19,7 +19,10 @@ public enum QuestionSetupType {
     GRANT_TRANSFER_DETAILS("Application details"),
     GRANT_AGREEMENT("Horizon 2020 grant agreement"),
     /* KTP */
-    KTP_ASSESSMENT("Ktp Assessment", FORM_INPUTS);
+    KTP_ASSESSMENT("Ktp Assessment", FORM_INPUTS),
+    /* Loan */
+    LOAN_BUSINESS_AND_FINANCIAL_INFORMATION("Equality, diversity & inclusion", FORM_INPUTS);
+
 
     private String shortName;
     private QuestionImplementationType implementationType;

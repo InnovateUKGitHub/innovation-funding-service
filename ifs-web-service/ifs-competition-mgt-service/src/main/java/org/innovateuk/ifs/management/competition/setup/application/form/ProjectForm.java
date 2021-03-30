@@ -7,6 +7,8 @@ public class ProjectForm extends AbstractQuestionForm {
 
     private boolean removable;
 
+    private Integer numberOfUploads;
+
     @Override
     public boolean isRemovable() {
         return removable;
@@ -14,6 +16,14 @@ public class ProjectForm extends AbstractQuestionForm {
 
     public void setRemovable(boolean removable) {
         this.removable = removable;
+    }
+
+    public Integer getNumberOfUploads() {
+        return numberOfUploads;
+    }
+
+    public void setNumberOfUploads(Integer numberOfUploads) {
+        this.numberOfUploads = numberOfUploads;
     }
 
 }

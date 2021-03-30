@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "guidance", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "guidance2", argument="guidanceRequired2", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "guidanceTitle", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "shortTitle", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "title", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
@@ -49,6 +50,7 @@ public class CompetitionSetupQuestionResource {
     private String guidanceTitle;
 
     private String guidance;
+    private String guidance2;
 
     /* text area */
     private Boolean textArea;
@@ -125,6 +127,14 @@ public class CompetitionSetupQuestionResource {
 
     public void setGuidanceTitle(String guidanceTitle) {
         this.guidanceTitle = guidanceTitle;
+    }
+
+    public String getGuidance2() {
+        return guidance2;
+    }
+
+    public void setGuidance2(String guidance2) {
+        this.guidance2 = guidance2;
     }
 
     public String getGuidance() {
@@ -346,6 +356,11 @@ public class CompetitionSetupQuestionResource {
     @JsonIgnore
     public boolean isGuidanceRequired() {
         return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type && QuestionSetupType.KTP_ASSESSMENT != type;
+    }
+
+    @JsonIgnore
+    public boolean isGuidance2Required() {
+        return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == type;
     }
 
     @JsonIgnore
