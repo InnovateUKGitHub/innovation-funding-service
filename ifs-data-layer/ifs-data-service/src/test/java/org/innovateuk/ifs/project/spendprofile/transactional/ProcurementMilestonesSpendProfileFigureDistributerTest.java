@@ -18,8 +18,7 @@ import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGe
 import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.springframework.util.ReflectionUtils.*;
 
 public class ProcurementMilestonesSpendProfileFigureDistributerTest {
@@ -43,13 +42,10 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
                 newProjectProcurementMilestoneResource().withMonth(durationOfProject + 1).withPayment(valueOf(10)).build()
         );
 
-        try {
-            // Method under test
-            callMilestoneTotalsPerMonth(durationOfProject, durationTooShortForMilestones);
-            fail("We should get an illegal state exception if the duration is not long enough for the milestones");
-        } catch (IllegalStateException e) {
-            // Success
-        }
+        // Method under test
+         assertThrows("We should get an illegal state exception if the duration is not long enough for the milestones",
+                 IllegalStateException.class,
+                 () -> callMilestoneTotalsPerMonth(durationOfProject, durationTooShortForMilestones));
     }
 
     @Test

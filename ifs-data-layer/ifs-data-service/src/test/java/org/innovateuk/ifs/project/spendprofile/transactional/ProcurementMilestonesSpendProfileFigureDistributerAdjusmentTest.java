@@ -15,8 +15,7 @@ import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGe
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummariesBuilder.newSpendProfileCostCategorySummaries;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileCostCategorySummaryBuilder.newSpendProfileCostCategorySummary;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.springframework.util.ReflectionUtils.*;
 
 public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
@@ -28,13 +27,10 @@ public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
                 new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
                 new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
         );
-        try {
             // Total vat = 3 try to remove 4
-            callAdjustCosts(toAdjust, valueOf(-4));
-            fail("We should get an illegal state exception if we try to remove too much vat");
-        } catch (IllegalStateException e){
-            // Pass
-        }
+        assertThrows("We should get an illegal state exception if we try to remove too much vat",
+                IllegalStateException .class,
+                () -> callAdjustCosts(toAdjust, valueOf(-4)));
     }
 
     @Test
@@ -44,14 +40,11 @@ public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
                 new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1)),
                 new OtherAndVat().withOtherCost(valueOf(2)).withVat(valueOf(1))
         );
-        try {
-            // Total other costs = 6, try to remove 7.
 
-            callAdjustCosts(toAdjust, valueOf(7));
-            fail("We should get an illegal state exception if we try to remove too much vat");
-        } catch (IllegalStateException e){
-            // Pass
-        }
+        // Total other costs = 6, try to remove 7.
+         assertThrows("We should get an illegal state exception if we try to remove too much other costs",
+                 IllegalStateException.class,
+                 ()-> callAdjustCosts(toAdjust, valueOf(7)));
     }
 
     @Test
@@ -147,15 +140,12 @@ public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
                                 .build()
                         ))
                         .build();
-        // Other costs 10, vat 4. Adjusted to other 11, vat 2 should give an error as we are no changing by the same
-        // absolute amount
-        try {
-            callAdjustCosts(toAdjust, costCategorySummaries);
-            fail("We should get an illegal state exception if we try to adjust by different absolute amounts");
-        }
-        catch (IllegalStateException e){
-            // Pass
-        }
+        // Other costs 10, vat 4. Adjusted to other 11, vat 2. Thus we need to add 1 to other and subtract 2 from vat.
+        // This should give an error as we are not changing by the same absolute amount
+        assertThrows("We should get an exception if we try to adjust by different absolute amounts",
+                IllegalStateException .class,
+                () -> callAdjustCosts(toAdjust, costCategorySummaries));
+
     }
 
     @Test
