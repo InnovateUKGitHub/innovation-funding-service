@@ -40,7 +40,6 @@ function generate_query_rules_for_proxysql() {
              WHERE t.col IS NOT NULL) , ' FROM $table_name' );"
 
         # the base select statement that we wish mysqldump to issue against this table when running a dump of its data
-        printf "db host $DB_HOST"
         full_select_statement_result=$(mysql -h$DB_HOST -u$DB_USER -p$DB_PASS -P$DB_PORT $DB_NAME -N -s -e "$full_select_statement_query")
 
         # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from
