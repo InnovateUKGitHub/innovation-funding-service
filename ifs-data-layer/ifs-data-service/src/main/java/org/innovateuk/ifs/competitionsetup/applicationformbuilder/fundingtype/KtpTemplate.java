@@ -114,7 +114,7 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     @Override
     public Competition initialiseFinanceTypes(Competition competition) {
-        List<FinanceRowType> types = newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING);
+        List<FinanceRowType> types = newArrayList(ASSOCIATE_SALARY_COSTS, ACADEMIC_AND_SECRETARIAL_SUPPORT, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, INDIRECT_COSTS);
         return commonBuilders.saveFinanceRows(competition, types);
     }
 

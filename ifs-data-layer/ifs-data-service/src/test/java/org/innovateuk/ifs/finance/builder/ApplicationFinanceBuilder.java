@@ -33,12 +33,16 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
         return with(finance -> finance.setOrganisation(organisation));
     }
 
-    public ApplicationFinanceBuilder withWorkPostcode(String workPostcode) {
-        return with(finance -> finance.setWorkPostcode(workPostcode));
+    public ApplicationFinanceBuilder withFecModelEnabled(Boolean fecModelEnabled) {
+        return with(finance -> finance.setFecModelEnabled(fecModelEnabled));
     }
 
     public ApplicationFinanceBuilder withEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
         return with(finance -> finance.setEmployeesAndTurnover(employeesAndTurnover));
+    }
+
+    public ApplicationFinanceBuilder withWorkPostcode(String workPostcode) {
+        return with(finance -> finance.setWorkPostcode(workPostcode));
     }
 
     private ApplicationFinanceBuilder(List<BiConsumer<Integer, ApplicationFinance>> newMultiActions) {
