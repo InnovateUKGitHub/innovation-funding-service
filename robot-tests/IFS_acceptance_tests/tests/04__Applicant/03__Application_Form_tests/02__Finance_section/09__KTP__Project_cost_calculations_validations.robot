@@ -37,6 +37,8 @@ ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 ${ktp_KTA_name}                           Hermen Mermen
 ${ktp_KTA_email}                          hermen.mermen@ktn-uk.test
 &{KTA_assessor_credentials}               email=hermen.mermen@ktn-uk.test   password=${short_password}
+&{supporter_credentials}                  email=hubert.cumberdale@salad-fingers.com   password=${short_password}
+${supporter_name}                         Hubert Cumberdale
 ${KTA_invitation_email_subject}           Invitation to be Knowledge Transfer Adviser
 ${invited_email_pattern}                  You have been invited to be the knowledge transfer adviser for the Innovation Funding Service application:
 ${estateValue}                            11000
@@ -209,11 +211,18 @@ KTA user assigned to application can view the read-only view for 'No' selected f
 
 KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
-    [Setup]  complete and submit application
+    [Setup]  knowledge based applicant completes and submits application
     Given update milestone to yesterday                                     ${KTPcompetitonId}  SUBMISSION_DATE
     When the user invites a registered KTA user to assess competition
     And the allocated assessor accepts invite to assess the competition
     And the user navigates to the page                                      ${server}/application/${KTPapplicationId}/summary
+    Then the user should see read only view for non-fec declaration
+
+Supporter can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  ifs admin invites a supporter to the ktp application
+    Given log in as a different user                                    &{supporter_credentials}
+    When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
 
 *** Keywords ***
@@ -353,29 +362,29 @@ the user collapses and expands the academic and secretarial support section
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
     the user should see the element         jQuery = p:contains("You may enter up to £875")
 
-complete and submit application
-    log in as a different user                                        &{KTPLead}
-    the user clicks the button/link                                   link = ${KTPapplication}
-    the user clicks the button/link                                   link = Your project finances
+knowledge based applicant completes and submits application
+    log in as a different user                               &{KTPLead}
+    the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Your project finances
     the user marks the KTP project location as complete
-    the user accept the competition terms and conditions              Return to application overview
-    log in as a different user                                        &{collaborator1_credentials}
-    the user clicks the button/link                                   link = ${KTPapplication}
-    the user clicks the button/link                                   link = Your project finances
+    the user accept the competition terms and conditions     Return to application overview
+    log in as a different user                               &{collaborator1_credentials}
+    the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Your project finances
     the user marks the KTP project location as complete
     the user fills in the KTP organisation information
     the user completes other funding section
-    the user clicks the button/link                                   link = Back to application overview
-    the user accept the competition terms and conditions              Return to application overview
-    log in as a different user                                        &{KTPLead}
-    the user clicks the button/link                                   link = ${KTPapplication}
-    the user clicks the button/link                                   link = Review and submit
-    the user clicks the button/link                                   jQuery = button:contains("Submit application")
+    the user clicks the button/link                          link = Back to application overview
+    the user accept the competition terms and conditions     Return to application overview
+    log in as a different user                               &{KTPLead}
+    the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Review and submit
+    the user clicks the button/link                          jQuery = button:contains("Submit application")
 
 the user completes other funding section
-    the user clicks the button/link              link = Other funding
-    the user selects the radio button            otherFunding  false
-    the user clicks the button/link              jQuery = button:contains("Mark as complete")
+    the user clicks the button/link       link = Other funding
+    the user selects the radio button     otherFunding  false
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
 
 the user marks the KTP project location as complete
     the user enters the project location
@@ -452,3 +461,14 @@ the allocated assessor accepts invite to assess the competition
     the user selects the radio button                     acceptInvitation  true
     the user clicks the button/link                       jQuery = button:contains("Confirm")
     the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
+
+ifs admin invites a supporter to the ktp application
+    log in as a different user               &{ifs_admin_user_credentials}
+    the user clicks the button/link          link = ${KTPcompetiton}
+    the user clicks the button/link          link = Manage supporters
+    the user clicks the button/link          link = Assign supporters to applications
+    the user clicks the button/link          jQuery = td:contains("${KTPapplication}") ~ td a:contains("Assign")
+    the user enters text to a text field     id = filter    ${supporter_name}
+    the user clicks the button/link          jQuery = button:contains("Filter")
+    the user selects the checkbox            select-all-check
+    the user clicks the button/link          jQuery = button:contains("Add selected to application")
