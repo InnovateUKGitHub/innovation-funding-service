@@ -62,7 +62,7 @@ function generate_query_rules_for_proxysql() {
 
             # and swap out the original column in the select statement with this replacement (taking care to only
             # replace exact column names and not partial substrings of other column names!)
-            new_replacement_pattern=$( echo "$replacement_pattern" | sed "s@\([ ,]\+\)${column_array[j]}\([ ,]\+\)@\1$final_rewrite\2@g" )
+            new_replacement_pattern=$( echo "$replacement_pattern" | sed "s#\([ ,]\+\)${column_array[j]}\([ ,]\+\)#\1$final_rewrite\2#g" )
 
             if [[ "$new_replacement_pattern" == "$replacement_pattern" ]]; then
               if [[ "$replacement_pattern" != "assessor_pay" && "$table_name" != "competition" ]]; then
@@ -73,16 +73,14 @@ function generate_query_rules_for_proxysql() {
             else
                 replacement_pattern=$new_replacement_pattern
             fi
-          printf "iterating column array"
+
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
         if [ "$rule_id" -gt "1" ]; then
-          printf "rule is greater than 1"
            echo '    ,' >> /dump/query_rules
         fi
 
-        printf "dump query rules"
         echo '    {' >> /dump/query_rules
         echo "        rule_id=$rule_id" >> /dump/query_rules
         echo '        active=1' >> /dump/query_rules
@@ -93,7 +91,6 @@ function generate_query_rules_for_proxysql() {
         echo '        apply=1' >> /dump/query_rules
         echo '    }' >> /dump/query_rules
 
-        printf "rule id is $rule_id"
         rule_id=$((rule_id + 1))
 
     done
