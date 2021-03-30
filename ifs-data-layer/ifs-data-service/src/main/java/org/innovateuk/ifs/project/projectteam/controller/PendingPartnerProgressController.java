@@ -50,8 +50,20 @@ public class PendingPartnerProgressController {
         return pendingPartnerProgressService.markTermsAndConditionsIncomplete(id(projectId, organisationId)).toPostResponse();
     }
 
+    @PostMapping("/subsidy-basis-incomplete")
+    public RestResult<Void> markSubsidyBasisIncomplete(@PathVariable long projectId, @PathVariable long organisationId) {
+        return pendingPartnerProgressService.markSubsidyBasisIncomplete(id(projectId, organisationId)).toPostResponse();
+    }
+
+    @PostMapping("/subsidy-basis-complete")
+    public RestResult<Void> markSubsidyBasisComplete(@PathVariable long projectId, @PathVariable long organisationId) {
+        return pendingPartnerProgressService.markSubsidyBasisComplete(id(projectId, organisationId)).toPostResponse();
+    }
+
     @PostMapping
     public RestResult<Void> completePartnerSetup(@PathVariable long projectId, @PathVariable long organisationId) {
         return pendingPartnerProgressService.completePartnerSetup(id(projectId, organisationId)).toPostResponse();
     }
+
+
 }

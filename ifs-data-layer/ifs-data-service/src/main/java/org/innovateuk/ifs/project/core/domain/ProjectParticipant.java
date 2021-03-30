@@ -31,12 +31,22 @@ public abstract class ProjectParticipant extends Participant<Project, ProjectPar
     @Column(name = "project_role")
     private ProjectParticipantRole role;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId", referencedColumnName = "id")
+    protected Project project;
+
     protected ProjectParticipant() {
     }
 
-    public ProjectParticipant(User user, ProjectParticipantRole role) {
+    public ProjectParticipant(User user, ProjectParticipantRole role, Project project) {
         this.user = user;
         this.role = role;
+        this.project = project;
+    }
+
+    @Override
+    public Project getProcess() {
+        return project;
     }
 
     public User getUser() {
