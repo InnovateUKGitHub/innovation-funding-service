@@ -511,6 +511,21 @@ Partner organisation can see lead organisation funding level information
     Then the user should see the element      jQuery = h1:contains("Your funding")
     And the user should see the element       jQuery = dt:contains("Funding level") ~ dd:contains("10.00%")
 
+Customer support user can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  Requesting IDs of this application
+    Given log in as a different user                                &{support_user_credentials}
+    And Get competitions id and set it as suite variable            ${ktpCompetitionName}
+    When the user navigates to the page                             ${server}/management/competition/${competitionId}/application/${ApplicationID}
+    And The user clicks the button/link                             jQuery = button:contains("Finances summary")
+    Then the user should see read only view for FEC declaration
+
+IFS admin can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                &{ifs_admin_user_credentials}
+    When the user navigates to the page                             ${server}/management/competition/${competitionId}/application/${ApplicationID}
+    Then the user should see read only view for FEC declaration
+
 Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
     [Documentation]  IFS-7958
     Given Log in as a different user                                          &{ktpLeadApplicantCredentials}
@@ -1440,8 +1455,8 @@ the user should see the changes in the finance table in Overview screen
     the user should see the element     jQuery = th:contains("Other funding (£)")
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") + td:contains("2,369")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") + td:contains("2,369")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
     the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("90.00%")
     the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("2,132")
 
@@ -1549,7 +1564,7 @@ the user marks the project costs as complete
    the user clicks the button/link     jQuery = button:contains("Mark as complete")
 
 non-applicant user navigates to your FEC model page
-    the user clicks the button/link     jQuery = div:contains("Middlesex University Higher Education Corporation") ~ a:contains("View finances")
+    the user clicks the button/link     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
     the user clicks the button/link     link = Your fEC model
 
 the user should see read only view for FEC declaration
