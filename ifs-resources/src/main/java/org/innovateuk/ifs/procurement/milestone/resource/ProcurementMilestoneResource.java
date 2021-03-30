@@ -25,10 +25,6 @@ public abstract class ProcurementMilestoneResource {
         return month;
     }
 
-    public Integer getIndex() {
-        return month != null ?  month - 1 : null;
-    }
-
     public void setMonth(Integer month) {
         this.month = month;
     }

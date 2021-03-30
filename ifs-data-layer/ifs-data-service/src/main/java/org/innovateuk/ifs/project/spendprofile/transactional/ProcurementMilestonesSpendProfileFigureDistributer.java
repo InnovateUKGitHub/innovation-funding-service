@@ -25,6 +25,7 @@ import static java.math.BigInteger.ZERO;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
+import static java.util.stream.IntStream.rangeClosed;
 import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.OTHER_COSTS;
 import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
@@ -127,9 +128,9 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         if (maxMilestoneMonth > durationInMonths) {
             throw new IllegalStateException("Duration in months cannot be less than the maximum milestone month");
         }
-        return range(0, durationInMonths).mapToObj(
-                index -> milestones.stream()
-                        .filter(milestone -> index == milestone.getIndex().intValue()) // There can be multiple milestones per month
+        return rangeClosed(1, durationInMonths).mapToObj(
+                month -> milestones.stream()
+                        .filter(milestone -> month == milestone.getMonth().intValue()) // There can be multiple milestones per month
                         .map(milestone -> milestone.getPayment())
                         .reduce(BigInteger::add)
                         .orElse(ZERO))
