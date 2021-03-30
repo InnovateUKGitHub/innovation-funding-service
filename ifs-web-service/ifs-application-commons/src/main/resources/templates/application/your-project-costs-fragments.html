@@ -4001,7 +4001,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                        data-calculation-operations="+,*,/"
                        id="section-total-indirect-costs"
                        th:attr="data-calculation-rawvalue=${form.totalIndirectCosts},
-                       data-calculation-fields=${'#section-total-associate-salary-costs, #section-total-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
+                                data-calculation-fields=${'#total-grant-associate-salary-costs, #total-grant-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>
             </th:block>
             <th:block th:if="${model.internal}"
@@ -4024,7 +4024,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                        data-calculation-operations="+,*,/"
                        id="section-total-indirect-costs"
                        th:attr="data-calculation-rawvalue=${form.totalIndirectCosts},
-                       data-calculation-fields=${'#section-total-associate-salary-costs, #section-total-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
+                                data-calculation-fields=${'#total-grant-associate-salary-costs, #total-grant-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>
             </tr>
             </tfoot>
