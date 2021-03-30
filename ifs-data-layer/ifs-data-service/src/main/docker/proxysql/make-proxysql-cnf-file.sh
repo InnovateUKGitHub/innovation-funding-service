@@ -23,7 +23,7 @@ function generate_query_rules_for_proxysql() {
         # the table name is the name of the file e.g. "user"
         table_name=$(echo $i | sed "s/.*\///" | sed "s/.*\///" | sed "s/\..*//")
 
-        echo "table name $table_name"
+        printf "table name $table_name"
 
         # the column_array is an array of the column names that are rewrite candidates for this table e.g. "first_name"
         mapfile -t column_array < <(sed 's/^\(.*\)|.*$/\1/g' $i)
@@ -42,10 +42,10 @@ function generate_query_rules_for_proxysql() {
              WHERE t.col IS NOT NULL) , ' FROM $table_name' );"
 
         # the base select statement that we wish mysqldump to issue against this table when running a dump of its data
-        echo "query $full_select_statement_query"
-        echo "db host $DB_HOST"
-        echo "db user $DB_USER"
-        echo "db port $DB_PORT"
+        printf "query $full_select_statement_query"
+        printf "db host $DB_HOST"
+        printf "db user $DB_USER"
+        printf "db port $DB_PORT"
         full_select_statement_result=$(mysql -h$DB_HOST -u$DB_USER -p$DB_PASS -P$DB_PORT $DB_NAME -N -s -e "$full_select_statement_query")
 
         # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from
@@ -72,14 +72,16 @@ function generate_query_rules_for_proxysql() {
             else
                 replacement_pattern=$new_replacement_pattern
             fi
-
+          printf "iterating column array"
         done
 
         # and finally output this table's rewrite rule to /dump/query_rules
         if [ "$rule_id" -gt "1" ]; then
+          printf "rule is greater than 1"
            echo '    ,' >> /dump/query_rules
         fi
 
+        printf "dump query rules"
         echo '    {' >> /dump/query_rules
         echo "        rule_id=$rule_id" >> /dump/query_rules
         echo '        active=1' >> /dump/query_rules
@@ -90,6 +92,7 @@ function generate_query_rules_for_proxysql() {
         echo '        apply=1' >> /dump/query_rules
         echo '    }' >> /dump/query_rules
 
+        printf "rule id is $rule_id"
         rule_id=$((rule_id + 1))
 
     done
@@ -97,6 +100,7 @@ function generate_query_rules_for_proxysql() {
 
 # a function to replace the <<QUERY_RULES>> token in proxysql.cnf with the rewrite rules stored within /dump/query_rules
 function inject_query_rules_into_proxysql_cnf() {
+  printf "inside injecting query rules"
     sed -i "/<<QUERY_RULES>>/{
         s/<<QUERY_RULES>>//g
         r /dump/query_rules
@@ -105,6 +109,7 @@ function inject_query_rules_into_proxysql_cnf() {
 
 # a function to replace database configuration replacement tokens in proxysql.cnf with real values
 function inject_db_configuration_into_proxysql_cnf() {
+  printf "inside injecting db config"
     sed -i "s@<<DB_USER>>@$DB_USER@g;s@<<DB_HOST>>@$DB_HOST@g;s@<<DB_PASS>>@$DB_PASS@g;s@<<DB_PORT>>@$DB_PORT@g;s@<<DB_NAME>>@$DB_NAME@g" /etc/proxysql.cnf
 }
 
