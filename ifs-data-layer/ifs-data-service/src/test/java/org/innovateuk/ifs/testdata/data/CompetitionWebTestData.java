@@ -605,6 +605,7 @@ public class CompetitionWebTestData {
                 .withInnovationSector("Emerging and enabling")
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withFundingType(FundingType.GRANT)
                 .withPublished(true)
                 .withNonIfs(true)
                 .withNonIfsUrl("https://www.gov.uk/government/organisations/innovate-uk")
