@@ -65,8 +65,11 @@ function generate_query_rules_for_proxysql() {
             new_replacement_pattern=$( echo "$replacement_pattern" | sed "s@\([ ,]\+\)${column_array[j]}\([ ,]\+\)@\1$final_rewrite\2@g" )
 
             if [[ "$new_replacement_pattern" == "$replacement_pattern" ]]; then
+              if [[ "$replacement_pattern" != "assessor_pay" && "$table_name" != "competition" ]]; then
                 echo "Unable to replace column \"${column_array[j]}\" with a replacement value.  Is it definitely a column in the \"$table_name\" table?"
                 exit 1
+              fi
+
             else
                 replacement_pattern=$new_replacement_pattern
             fi
