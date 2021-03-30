@@ -73,10 +73,10 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
 
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
     [Documentation]  IFS-9242
-    Given the user clicks the button/link        link = Your project costs
-    When the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
-    And the user should not see the element      jQuery = button:contains("Additional associate support")
-    Then the user should not see the element     jQuery = button:contains("Associates estates costs")
+    When the user clicks the button/link        link = Your project costs
+    Then the user should not see the element    jQuery = button:contains("Knowledge base supervisor")
+    And the user should not see the element     jQuery = button:contains("Additional associate support")
+    And the user should not see the element     jQuery = button:contains("Associates estates costs")
 
 Associate employment and development client side validation
     [Documentation]  IFS-7790
@@ -110,9 +110,9 @@ Calculation for associate employment and development
 KB applicant can provide an academic and secretarial support cost in a non-fEC project cost table
     [Documentation]  IFS-9243
     Given the user collapses and expands the academic and secretarial support section
-    When the user enters text to a text field     id = academicAndSecretarialSupportForm  100
-    Then the user should see the element          jQuery = span:contains("100") ~ button:contains("Academic and secretarial support")
-    And the user should see the element           jQuery = h4:contains("Total academic and secretarial support costs") span:contains("100")
+    When the user enters text to a text field                                            id = academicAndSecretarialSupportForm  100
+    Then the user should see the element                                                 jQuery = span:contains("100") ~ button:contains("Academic and secretarial support")
+    And the user should see the element                                                  jQuery = h4:contains("Total academic and secretarial support costs") span:contains("100")
 
 Calculate indirect cost
     [Documentation]  IFS-9244
@@ -142,8 +142,8 @@ Other costs calculations
 
 Total cost calculation
     [Documentation]  IFS-9245
-    Given the user should see the element     jQuery = label:contains("'A base of knowledge' Total project costs")
-    Then the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9496"]
+    Then the user should see the element     jQuery = label:contains("'A base of knowledge' Total project costs")
+    And the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9496"]
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154

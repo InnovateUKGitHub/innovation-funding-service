@@ -115,7 +115,6 @@ ${nonKTPCompettittionInPS}            Project Setup Comp 8
 &{ktpExistingPartnerCredentials}      email=${existing_partner_ktp_email}  password=${short_password}
 &{ktpExistingAcademicCredentials}     email=${existing_academic_email}  password=${short_password}
 &{ktaUserCredentials}                 email=${ktaEmail}  password=${short_password}
-${existingRegisteredPartner}          jessica.doe@ludlow.co.uk
 ${ktpApplicationTitle}                KTP New Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         Middlesex University Higher Education Corporation
@@ -164,7 +163,6 @@ ${estateValue}                        11000
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
     Given Logging in and Error Checking                             &{ktpExistingLeadCredentials}
-#    Given log in as a different user                                &{ktpExistingLeadCredentials}
     When the user select the competition and starts application     ${nonKTPCompettitionName}
     And the user selects the radio button                           international   false
     And the user clicks the button/link                             id = international-organisation-cta
@@ -173,7 +171,7 @@ The applicants should not see knowledge based organisations when creating a non-
 The applicants should not see knowledge based organisations when joining a non-ktp applications
     [Documentation]  IFS-8035
     Given the user clicks the button/link                    id = save-organisation-button
-    And the lead invites already registered user             ${existingRegisteredPartner}   ${nonKTPCompettitionName}
+    And the lead invites already registered user              ${collaborator1_credentials["email"]}   ${nonKTPCompettitionName}
     When partner login to see your organisation details
     Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
 
@@ -182,7 +180,7 @@ The applicants should not see knowledge based organisations when joining a non-k
     Given log in as a different user                                        &{ifs_admin_user_credentials}
     And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
     When admin adds a partner to non-ktp application from project setup
-    And logging in and error checking                                       ${existingRegisteredPartner}   ${short_password}
+    And logging in and error checking                                       ${collaborator1_credentials["email"]}   ${short_password}
     Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 Comp Admin creates an KTP competition
@@ -375,7 +373,7 @@ New lead applicant is shown a validation error when marking a non-selected optio
 
 New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
      [Documentation]  IFS-9240
-     Given the user selects the radio button                fecModelEnabled  fecModelEnabled-yes
+     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
      And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
      Then the user should see a field and summary error     You must upload a file.
 
@@ -406,7 +404,7 @@ New applicant can access their project costs section once the your fEC model and
 
 New lead applicant completes the project costs
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    Given the user fills in ktp project costs
+    When the user fills in ktp project costs
     Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
 
 Knowledge base supervisor can only add two rows
@@ -440,7 +438,7 @@ Estate validations
 
 Estate calculations
     [Documentation]  IFS-7790
-    Given the user enters text to a text field    css = input[id^="estate"][id$="cost"]  1000
+    When the user enters text to a text field     css = input[id^="estate"][id$="cost"]  1000
     Then the user should see the right values     1,000   Associates estates cost    1369
 
 Additional associate support validations
@@ -1406,8 +1404,8 @@ admin adds a partner to non-ktp application from project setup
     Requesting IDs of this non-ktp application
     the user clicks the button/link                    jQuery = tr:contains("${noKTPApplicationName}") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
-    the user adds a new partner organisation           Ludlow   Jessica Doe   ${existingRegisteredPartner}
-    organisation is able to accept project invite      Jessica   Doe   ${existingRegisteredPartner}   ${nonKTPApplicationID}   ${noKTPApplicationName}
+    the user adds a new partner organisation           Ludlow   Jessica Doe   ${collaborator1_credentials["email"]}
+    organisation is able to accept project invite      Jessica   Doe   ${collaborator1_credentials["email"]}    ${nonKTPApplicationID}   ${noKTPApplicationName}
     the user clicks the button/link                    link = Continue, sign in
 
 the user can see project cost breakdown of lead organisation
