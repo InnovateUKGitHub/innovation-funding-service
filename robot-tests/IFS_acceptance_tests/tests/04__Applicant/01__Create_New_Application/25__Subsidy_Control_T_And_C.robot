@@ -11,6 +11,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9200 View Correct T&Cs for each Organisation (Internal and External Users)
 ...
+...               IFS-9127 View and Change an Organisations NI Declaration determined Funding Rules after Application Submittal
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -29,6 +31,7 @@ ${leadSubsidyControlApplication}     Subsidy control application
 ${leadStateAidApplication}           State aid application
 &{scLeadApplicantCredentials}        email=janet.howard@example.com     password=${short_password}
 ${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
+${subsidyOrgName}                    Big Riffs And Insane Solos Ltd
 ${assessor1_to_add}                  Addison Shannon
 ${assessor2_to_add}                  Alexis Colon
 ${assessor1_email}                   addison.shannon@gmail.com
@@ -342,6 +345,19 @@ MO can see T&Cs for the subsidy control application in project setup for both th
     And the user should see the element                                                  jQuery = h1:contains("Application overview")
     Then the user can see the terms and conditions for the lead and partner applicant
 
+Internal user can view and change the project's funding rules
+    [Documentation]  IFS-9127
+    [Setup]  Requesting Organisation Id of this application
+    Given Requesting Project ID of this Project
+    And Log in as a different user                      &{ifs_admin_user_credentials}
+    When the user navigates to the page                 ${server}/project-setup-management/project/${subsidyProjectId}/finance-check/organisation/${subsidyOrgID}/funding-rules/edit
+    And the user selects the checkbox                   id = override-funding-rules
+    And the user clicks the button/link                 jQuery = button:contains("Save and return")
+    And the user clicks the button/link                 jQuery = a:contains("Return to finance checks")
+    And the user navigates to the page                  ${server}/project-setup-management/project/${subsidyProjectId}/finance-check/organisation/${subsidyOrgID}/eligibility/changes
+    Then the user should see the element                jQuery = th:contains("Funding rules") ~ td:contains("State aid") ~ td:contains("Subsidy control")
+
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -396,6 +412,14 @@ the user marks the subsidy contol finances as complete
 Requesting Application ID of this application
     ${subsidycontrolApplicationID} =  get application id by name  ${leadSubsidyControlApplication}
     Set suite variable    ${subsidycontrolApplicationID}
+
+Requesting Project ID of this Project
+    ${subsidyProjectId} =  get project id by name    ${leadSubsidyControlApplication}
+    Set suite variable    ${subsidyProjectId}
+
+Requesting Organisation Id of this application
+    ${subsidyOrgId}=    get organisation id by name     ${subsidyOrgName}
+    Set suite variable      ${subsidyOrgId}
 
 the user invites assessors to assess the subsidy control competition
     the user selects the checkbox       assessor-row-1
