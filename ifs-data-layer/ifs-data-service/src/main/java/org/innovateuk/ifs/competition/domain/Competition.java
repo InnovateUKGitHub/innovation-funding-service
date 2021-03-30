@@ -19,7 +19,6 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -35,7 +34,9 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 /**
@@ -961,11 +962,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
             sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
     }
 
-    public boolean isSubsidyControl() {
-        return FundingRules.SUBSIDY_CONTROL == fundingRules
-                && questions.stream().anyMatch(question -> QuestionSetupType.SUBSIDY_BASIS == question.getQuestionSetupType());
-    }
-
     @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
@@ -989,5 +985,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public boolean isAlwaysOpen() {
         return BooleanUtils.isTrue(alwaysOpen);
+    }
+
+    public boolean isSubsidyControl() {
+        return SUBSIDY_CONTROL.equals(fundingRules)
+                && questions.stream().anyMatch(question -> SUBSIDY_BASIS == question.getQuestionSetupType());
     }
 }

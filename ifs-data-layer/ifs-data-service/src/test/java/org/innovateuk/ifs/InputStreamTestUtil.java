@@ -15,6 +15,7 @@ public class InputStreamTestUtil {
 
     public static void assertInputStreamContents(InputStream inputStream, String expectedContents) {
         try (InputStream retrievedInputStream = inputStream) {
+            retrievedInputStream.reset();
             try (BufferedReader buffer = new BufferedReader(new InputStreamReader(retrievedInputStream))) {
                 assertEquals(expectedContents, buffer.readLine());
             }

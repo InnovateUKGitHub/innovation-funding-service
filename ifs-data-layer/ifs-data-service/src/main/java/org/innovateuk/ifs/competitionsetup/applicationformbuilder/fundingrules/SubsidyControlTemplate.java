@@ -11,6 +11,7 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireService;
 import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeService;
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,6 +36,9 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     @Autowired
     private QuestionnaireRepository questionnaireRepository;
 
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
+
     @Override
     public FundingRules type() {
         return FundingRules.SUBSIDY_CONTROL;
@@ -42,7 +46,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
 
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-        if (competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
+        if (northernIrelandSubsidyControlToggle && competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
             competitionTypeSections.get(0)
                     .getQuestions().add(0,
                     aQuestion()

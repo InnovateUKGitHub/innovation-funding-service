@@ -178,7 +178,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
 
@@ -286,7 +286,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
-        Pageable pageable = PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "firstName"));
 
         Page<User> pagedUsers = repository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, assessorFilter, pageable);
 
@@ -311,7 +311,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
 
-        Pageable pageable = PageRequest.of(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
+        Pageable pageable = PageRequest.of(1, 2, Sort.by(Sort.Direction.ASC, "firstName"));
 
         Page<User> pagedUsers = repository.findAssessorsByCompetition(competition.getId(), pageable);
 
@@ -334,7 +334,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
 
-        Pageable pageable = PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "firstName"));
 
         Page<User> pagedUsers = repository.findAssessorsByCompetition(competition.getId(), pageable);
 
