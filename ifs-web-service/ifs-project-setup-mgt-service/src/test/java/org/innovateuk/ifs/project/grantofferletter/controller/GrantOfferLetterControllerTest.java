@@ -126,6 +126,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
         assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertFalse(golViewModel.getSignedGrantOfferLetterRejected());
+        assertFalse(golViewModel.isProcurement());
         assertTrue(golViewModel.isProjectIsActive());
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");

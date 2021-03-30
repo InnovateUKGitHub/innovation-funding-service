@@ -290,11 +290,11 @@ The new partner cannot complete funding without organisation
     Given log in as a different user         ${intFinanceAddOrgEmail}  ${short_password}
     And the user clicks the button/link      link = ${applicationName}
     When the user clicks the button/link     link = Your funding
-    Then the user should see the element     link = your organisation
+    Then the user should see the element     link = Your organisation
 
 The new partner can complete Your organisation
     [Documentation]  IFS-6491
-    Given the user clicks the button/link    link = your organisation
+    Given the user clicks the button/link    link = Your organisation
     And the user should see the element      jQuery = p:contains("You must tell us the size of your organisation to determine the level of funding you are eligible for.")
     When the user completes your organisation
     Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
