@@ -95,7 +95,6 @@ function generate_query_rules_for_proxysql() {
 
 # a function to replace the <<QUERY_RULES>> token in proxysql.cnf with the rewrite rules stored within /dump/query_rules
 function inject_query_rules_into_proxysql_cnf() {
-  printf "inside injecting query rules"
     sed -i "/<<QUERY_RULES>>/{
         s/<<QUERY_RULES>>//g
         r /dump/query_rules
@@ -104,7 +103,6 @@ function inject_query_rules_into_proxysql_cnf() {
 
 # a function to replace database configuration replacement tokens in proxysql.cnf with real values
 function inject_db_configuration_into_proxysql_cnf() {
-  printf "inside injecting db config"
     sed -i "s@<<DB_USER>>@$DB_USER@g;s@<<DB_HOST>>@$DB_HOST@g;s@<<DB_PASS>>@$DB_PASS@g;s@<<DB_PORT>>@$DB_PORT@g;s@<<DB_NAME>>@$DB_NAME@g" /etc/proxysql.cnf
 }
 
