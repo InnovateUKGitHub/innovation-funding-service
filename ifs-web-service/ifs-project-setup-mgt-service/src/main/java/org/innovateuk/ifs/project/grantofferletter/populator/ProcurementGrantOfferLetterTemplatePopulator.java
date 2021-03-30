@@ -65,7 +65,7 @@ public class ProcurementGrantOfferLetterTemplatePopulator {
                                                                                                   ProjectFinanceResource projectFinanceResource) {
         Long duration = project.getDurationInMonths();
 
-        return LongStream.range(1L, duration + 1).mapToObj(month -> {
+        return LongStream.rangeClosed(1L, duration).mapToObj(month -> {
 
             List<ProjectProcurementMilestoneResource> milestonesForMonth = new ArrayList<>();
             List<Integer> milestoneIndices = new ArrayList<>();
