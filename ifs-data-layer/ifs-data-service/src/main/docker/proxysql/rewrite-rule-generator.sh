@@ -215,6 +215,6 @@ function generate_rewrite_from_rule() {
          echo "CURDATE()"
          exit 0
     fi
-    printf "final replacement is $replacement"
+
     echo "$replacement"
 }

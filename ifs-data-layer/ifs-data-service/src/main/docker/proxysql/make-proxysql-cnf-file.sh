@@ -41,11 +41,8 @@ function generate_query_rules_for_proxysql() {
 
         # the base select statement that we wish mysqldump to issue against this table when running a dump of its data
         printf "db host $DB_HOST"
-        printf "db user $DB_USER"
-        printf "db port $DB_PORT"
         full_select_statement_result=$(mysql -h$DB_HOST -u$DB_USER -p$DB_PASS -P$DB_PORT $DB_NAME -N -s -e "$full_select_statement_query")
 
-        printf "full statement result $full_select_statement_result"
         # now we replace every column name that we wish to replace with its replacement i.e. replace every entry from
         # column_array (e.g. "user") with its rewrite from column_rewrite_array (e.g. "CONCAT(first_name, 'XXX')")
         replacement_pattern=$full_select_statement_result
@@ -62,10 +59,10 @@ function generate_query_rules_for_proxysql() {
 
             # and swap out the original column in the select statement with this replacement (taking care to only
             # replace exact column names and not partial substrings of other column names!)
-            new_replacement_pattern=$( echo "$replacement_pattern" | sed "s@\([ ,]\+\)${column_array[j]}\([ ,]\+\)@\1$final_rewrite\2@g" )
-            printf "new replacement pattern is $new_replacement_pattern"
+            new_replacement_pattern=$( echo "$replacement_pattern" | sed "s#\([ ,]\+\)${column_array[j]}\([ ,]\+\)#\1$final_rewrite\2#g" )
+
             if [[ "$new_replacement_pattern" == "$replacement_pattern" ]]; then
-              if [[ "new_replacement_pattern" != "assessor_pay" && "$table_name" != "competition" ]]; then
+              if [[ "${column_array[j]}" != "assessor_pay" && "$table_name" != "competition" ]]; then
                 echo "Unable to replace column \"${column_array[j]}\" with a replacement value.  Is it definitely a column in the \"$table_name\" table?"
                 exit 1
               fi
