@@ -92,7 +92,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributerTest {
                 new OtherAndVat().withOtherCost(valueOf(10)).withVat(valueOf(2)), // 10, 2
                 new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(2)), // 8.333..., 1.666...
                 new OtherAndVat().withOtherCost(valueOf(12)).withVat(valueOf(2)), // 11.666..., 2.333...
-                new OtherAndVat().withOtherCost(valueOf(7)).withVat(valueOf(2)) // 7.5, 2.5
+                new OtherAndVat().withOtherCost(valueOf(8)).withVat(valueOf(1)) // 7.5, 2.5
         );
         List<OtherAndVat> expectedWhenVatRateZero = asList(
                 new OtherAndVat().withOtherCost(valueOf(0)).withVat(valueOf(0)),

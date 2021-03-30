@@ -178,7 +178,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         return range(0, milestoneTotalsPerMonth.size())
                 .mapToObj(index -> {
                     BigInteger milestoneTotalForMonth = milestoneTotalsPerMonth.get(index);
-                    BigInteger otherCosts = new BigDecimal(milestoneTotalForMonth).divide(BigDecimal.ONE.add(vatRate), 0, BigDecimal.ROUND_HALF_DOWN).toBigIntegerExact();
+                    BigInteger otherCosts = new BigDecimal(milestoneTotalForMonth).divide(BigDecimal.ONE.add(vatRate), 0, BigDecimal.ROUND_HALF_UP).toBigIntegerExact();
                     BigInteger vat = milestoneTotalForMonth.subtract(otherCosts);
                     return new OtherAndVat().withOtherCost(otherCosts).withVat(vat);
                 })
@@ -201,11 +201,24 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
         BigInteger currentVatTotal = costsToAdjust.stream().map(otherAndVat -> otherAndVat.vat).reduce(BigInteger::add).orElse(ZERO);
         BigInteger currentOtherCostsTotal = costsToAdjust.stream().map(otherAndVat -> otherAndVat.otherCosts).reduce(BigInteger::add).orElse(ZERO);
         if (!correctVatTotal.subtract(currentVatTotal).equals(currentOtherCostsTotal.subtract(correctOtherCostsTotal))){
+            // We should never get here because it would mean that the total milestones do not add up to the total of
+            // the categories and this should be enforced. However we check to be sure.
             throw new IllegalStateException("The absolute amount we have to change other costs and vat by is not the same");
         }
         return adjustedCosts(costsToAdjust, correctVatTotal.subtract(currentVatTotal));
     }
 
+    /**
+     * The current strategy to adjust the costs is that we:
+     * Starting at the first month, add £1 to the vat and subtract £1 from other costs (or vice versa) from each month
+     * in turn until we have made the required adjustment, so that the totals per category are correct. We only do this
+     * with months that have sufficient amounts, we do not subtract past zero.
+     * Note that to achieve the required adjustment we may require several iterations. There should always be sufficient
+     * amounts that the adjustment can be made, but we check before to be sure.
+     * @param costsToAdjust
+     * @param amountToAddToVatAndSubtractFromOtherCosts
+     * @return
+     */
     private List<OtherAndVat> adjustedCosts(List<OtherAndVat> costsToAdjust, BigInteger amountToAddToVatAndSubtractFromOtherCosts){
         BigInteger amountToChangeVat = amountToAddToVatAndSubtractFromOtherCosts;
         BigInteger amountToChangeOtherCosts = amountToChangeVat.negate();
@@ -236,6 +249,7 @@ public class ProcurementMilestonesSpendProfileFigureDistributer {
                 }
             }
         }
+        // If we need to remove some more then do another iteration
         return amountToChangeVat.equals(ZERO) ? adjustedCosts : adjustedCosts(adjustedCosts, amountToChangeVat);
     }
 

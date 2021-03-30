@@ -38,7 +38,7 @@ public class SpendProfileCostCategorySummaryBuilder extends BaseBuilder<SpendPro
 
     @Override
     protected SpendProfileCostCategorySummary createInitial() {
-        return new SpendProfileCostCategorySummary();
+        return newInstance(SpendProfileCostCategorySummary.class);
     }
 
 }

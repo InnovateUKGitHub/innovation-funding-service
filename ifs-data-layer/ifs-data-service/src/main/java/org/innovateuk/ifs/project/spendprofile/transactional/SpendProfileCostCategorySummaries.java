@@ -12,7 +12,7 @@ public class SpendProfileCostCategorySummaries {
     private List<SpendProfileCostCategorySummary> costs;
     private CostCategoryType costCategoryType;
 
-    public SpendProfileCostCategorySummaries(){
+    private SpendProfileCostCategorySummaries(){
 
     }
 

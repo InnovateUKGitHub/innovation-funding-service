@@ -100,7 +100,9 @@ public class ProcurementMilestonesSpendProfileFigureDistributerAdjusmentTest {
                 new OtherAndVat().withOtherCost(valueOf(0)).withVat(valueOf(1)),
                 new OtherAndVat().withOtherCost(valueOf(3)).withVat(valueOf(3))
         );
-        // Call method under test add 6 to vat (subtract 6 from other costs)
+        // Call method under test add 6 to vat (subtract 6 from other costs).
+        // This means we will need to add more than one to some of the vat figures (and subtract more than one from some
+        // of the other costs figures)
         List<OtherAndVat> adjusted = callAdjustCosts(toAdjust, valueOf(6));
         assertEquals(expected, adjusted);
     }

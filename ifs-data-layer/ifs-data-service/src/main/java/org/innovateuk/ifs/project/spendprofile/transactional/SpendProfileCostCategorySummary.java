@@ -13,7 +13,7 @@ public class SpendProfileCostCategorySummary {
     private BigDecimal total;
     private long projectDurationInMonths;
 
-    public SpendProfileCostCategorySummary(){
+    private SpendProfileCostCategorySummary(){
 
     }
 
