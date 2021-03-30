@@ -815,14 +815,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.procurementMilestones = procurementMilestones;
     }
 
-    public boolean isSubsidyControl() {
-        return subsidyControl;
-    }
-
-    public void setSubsidyControl(boolean subsidyControl) {
-        this.subsidyControl = subsidyControl;
-    }
-
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
