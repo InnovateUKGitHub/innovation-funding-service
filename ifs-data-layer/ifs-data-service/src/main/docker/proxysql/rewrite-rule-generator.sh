@@ -112,8 +112,6 @@ function generate_rewrite_from_rule() {
     column_name="$1"
     replacement="$2"
 
-    printf "column name is $column_name"
-    printf "replacement value is $replacement"
     # this case generates the SQL from a rewrite rule like "REPLACE('X')"
     replace_test=$(echo "$replacement" | sed "$REPLACE_REPLACEMENT_TOKEN_EXTRACTOR")
     if [[ "$replace_test" != "$replacement" ]]; then
