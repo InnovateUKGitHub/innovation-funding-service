@@ -155,11 +155,35 @@ ${ktpTandC}                           Terms and conditions of a Knowledge Transf
 ${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
 ${leadTeamMember}                     susan.brown@gmail.com
 ${uploadedPdf}                        testing_5MB.pdf
+${estateValue}                        11000
 
 *** Test Cases ***
+The applicants should not see knowledge based organisations when creating a non-ktp applications
+    [Documentation]  IFS-8035
+    Given Logging in and Error Checking                             &{ktpExistingLeadCredentials}
+    When the user select the competition and starts application     ${nonKTPCompettitionName}
+    And the user selects the radio button                           international   false
+    And the user clicks the button/link                             id = international-organisation-cta
+    Then the user should not see the element                        jQuery = dt:contains("${secondKTPOrgName}")
+
+The applicants should not see knowledge based organisations when joining a non-ktp applications
+    [Documentation]  IFS-8035
+    Given the user clicks the button/link                    id = save-organisation-button
+    And the lead invites already registered user              ${collaborator1_credentials["email"]}   ${nonKTPCompettitionName}
+    When partner login to see your organisation details
+    Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
+
+The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
+    [Documentation]  IFS-8035
+    Given log in as a different user                                        &{ifs_admin_user_credentials}
+    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
+    When admin adds a partner to non-ktp application from project setup
+    And logging in and error checking                                       ${collaborator1_credentials["email"]}   ${short_password}
+    Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
+
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779
-    Given the user logs-in in new browser               &{Comp_admin1_credentials}
+    Given log in as a different user                    &{Comp_admin1_credentials}
     Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
@@ -347,7 +371,7 @@ New lead applicant is shown a validation error when marking a non-selected optio
 
 New lead applicant makes a 'Yes' selection for the organisation's fEC model without uploading a document
      [Documentation]  IFS-9240
-     Given the user selects the radio button                fecModelEnabled  fecModelEnabled-yes
+     When the user selects the radio button                 fecModelEnabled  fecModelEnabled-yes
      And the user clicks the button/link                    jQuery = button:contains("Mark as complete")
      Then the user should see a field and summary error     You must upload a file.
 
@@ -378,8 +402,58 @@ New applicant can access their project costs section once the your fEC model and
 
 New lead applicant completes the project costs
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    Given the user fills in ktp project costs
+    When the user fills in ktp project costs
     Then the user should see the element         jQuery = li:contains("Your project costs") span:contains("Complete")
+
+Knowledge base supervisor can only add two rows
+    [Documentation]  IFS-7790
+    Given the user clicks the button/link        jQuery = a:contains("Your project costs")
+    And the user clicks the button/link          id = edit
+    And the user clicks the button/link          jQuery = button:contains("Open all")
+    When the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
+    Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
+
+Knowledge base supervisor validations
+    [Documentation]  IFS-7790
+    Given the user clicks the button/link        jQuery = table[id="knowledge-base-table"] button:contains("Remove"):last
+    When the user enters text to a text field    css = table[id="knowledge-base-table"] input[id$="description"]  ${EMPTY}
+    And the user enters text to a text field     css = table[id="knowledge-base-table"] input[id$="cost"]         ${EMPTY}
+    Then the user should see the element         jQuery = table[id="knowledge-base-table"] td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
+
+Knowledge base supervisor calculations
+    [Documentation]  IFS-7790
+    Given the user enters text to a text field    css = table[id="knowledge-base-table"] input[id$="description"]  supervisor
+    When the user enters text to a text field     css = table[id="knowledge-base-table"] input[id$="cost"]        123
+    Then the user should see the element          jQuery = div:contains("123") button:contains("Knowledge base supervisor")
+    And the user should not see the element       jQuery = table[id="knowledge-base-table"] td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
+
+Estate validations
+    [Documentation]  IFS-7790
+    Given the user enters text to a text field             css = input[id^="estate"][id$="description"]  estate
+    When The user enters text to a text field              css = input[id^="estate"][id$="cost"]  ${estateValue}
+    And the user marks the project costs as complete
+    Then The user should see a field and summary error     ${estate_Error_Message}
+
+Estate calculations
+    [Documentation]  IFS-7790
+    When the user enters text to a text field     css = input[id^="estate"][id$="cost"]  1000
+    Then the user should see the right values     1,000   Associates estates cost    1369
+
+Additional associate support validations
+   [Documentation]  IFS-7790
+   Given the user enters text to a text field    css = input[id^="associateSupport"][id$="description"]  ${EMPTY}
+   When The user enters text to a text field     css = input[id^="associateSupport"][id$="cost"]  ${EMPTY}
+   Then the user should see the element          jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="cost"]
+   And the user should see the element           jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
+
+Additional associate support calculation
+   [Documentation]  IFS-7790
+   Given the user enters text to a text field     css = input[id^="associateSupport"][id$="description"]  associate support
+   When The user enters text to a text field      css = input[id^="associateSupport"][id$="cost"]  1000
+   Then the user should see the right values      1,000   Additional associate support     2369
+   And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="cost"]
+   And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
+   And the user clicks the button/link            jQuery = button:contains("Mark as complete")
 
 New lead applicant opens the detailed KTP Guidance links in the new window
     [Documentation]  IFS-8212
@@ -932,7 +1006,6 @@ Monitoring officer can view the Finance checks project setup dashboard section
 
 Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
-    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     When the user clicks the button/link     link = view application overview
     And the user clicks the button/link      id = accordion-questions-heading-4-1
     And the user clicks the button/link      jQuery = a:contains("Knowledge Transfer Partnership (KTP)")
@@ -1031,29 +1104,6 @@ Internal user approves GOL and Annex documents
     Then the user should see the element       jQuery = h2:contains("These documents have been approved.")
     And the user should see the element        jQuery = h2:contains("Signed grant offer letter") ~ div p:contains("GOL_template.pdf (opens in a new window)")
     And the user should see the element        jQuery = h2:contains("Signed annex") ~ div p:contains("testing.pdf (opens in a new window)")
-
-The applicants should not see knowledge based organisations when creating a non-ktp applications
-    [Documentation]  IFS-8035
-    Given log in as a different user                                &{ktpExistingLeadCredentials}
-    When the user select the competition and starts application     ${nonKTPCompettitionName}
-    And the user selects the radio button                           international   false
-    And the user clicks the button/link                             id = international-organisation-cta
-    Then the user should not see the element                        jQuery = dt:contains("${secondKTPOrgName}")
-
-The applicants should not see knowledge based organisations when joining a non-ktp applications
-    [Documentation]  IFS-8035
-    Given the user clicks the button/link                    id = save-organisation-button
-    And the lead invites already registered user             ${lead_ktp_email}  ${nonKTPCompettitionName}
-    When partner login to see your organisation details
-    Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
-
-The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
-    [Documentation]  IFS-8035
-    Given log in as a different user                                        &{ifs_admin_user_credentials}
-    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
-    When admin adds a partner to non-ktp application from project setup
-    And logging in and error checking                                       ${lead_ktp_email}   ${short_password}
-    Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 *** Keywords ***
 the lead applicant marks the KTP project location as complete
@@ -1324,7 +1374,7 @@ the user should see KTP finance sections are complete
     the user should see the element     jQuery = li:contains("Your organisation") span:contains("Complete")
 
 partner login to see your organisation details
-    Logging in and Error Checking         &{ktpLeadApplicantCredentials}
+    Logging in and Error Checking         &{collaborator1_credentials}
     the user selects the radio button     international   false
     the user clicks the button/link       id = international-organisation-cta
 
@@ -1332,8 +1382,8 @@ admin adds a partner to non-ktp application from project setup
     Requesting IDs of this non-ktp application
     the user clicks the button/link                    jQuery = tr:contains("${noKTPApplicationName}") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
-    the user adds a new partner organisation           ${ktpOrgName}  Indi Gardiner  ${lead_ktp_email}
-    organisation is able to accept project invite      Indi  Gardiner  ${lead_ktp_email}   ${nonKTPApplicationID}   ${noKTPApplicationName}
+    the user adds a new partner organisation           Ludlow   Jessica Doe   ${collaborator1_credentials["email"]}
+    organisation is able to accept project invite      Jessica   Doe   ${collaborator1_credentials["email"]}    ${nonKTPApplicationID}   ${noKTPApplicationName}
     the user clicks the button/link                    link = Continue, sign in
 
 the user can see project cost breakdown of lead organisation
@@ -1341,25 +1391,25 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = td:contains("Associate development")+td:contains("123")
     the user should see the element     jQuery = td:contains("Travel and subsistence")+td:contains("0")
     the user should see the element     jQuery = td:contains("Consumables")+td:contains("0")
-    the user should see the element     jQuery = td:contains("Knowledge base supervisor")+td:contains("0")
-    the user should see the element     jQuery = td:contains("Estate")+td:contains("0")
-    the user should see the element     jQuery = td:contains("Additional associate support")+td:contains("0")
+    the user should see the element     jQuery = td:contains("Knowledge base supervisor")+td:contains("123")
+    the user should see the element     jQuery = td:contains("Estate")+td:contains("1,000")
+    the user should see the element     jQuery = td:contains("Additional associate support")+td:contains("1,000")
     the user should see the element     jQuery = td:contains("Other costs")+td:contains("0")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
 
 the user can view lead and partner finance summary calculations
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("246")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("2,369")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("25")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("237")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("2,132")
     the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
     the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,369")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("237")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("2,132")
 
 the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation
@@ -1370,7 +1420,7 @@ the user should see application details
     the user should see the element     jQuery = dt:contains("Application number:")+dd:contains("${ApplicationID}")
     the user should see the element     jQuery = dt:contains("Lead organisation:")+dd:contains("${ktpOrgName}")
     the user should see the element     jQuery = dt:contains("Partners:")+dd:contains("${newPartnerOrgName}")
-    the user should see the element     jQuery = dt:contains("Total project costs:")+dd:contains("${246}")
+    the user should see the element     jQuery = dt:contains("Total project costs:")+dd:contains("${2,369}")
 
 the user switch to the new tab on click guidance links
     [Arguments]  ${link}
@@ -1381,10 +1431,10 @@ the user should see the changes in the finance table in Overview screen
     the user should see the element     jQuery = th:contains("Other funding (£)")
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") + td:contains("£246")
+    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") + td:contains("2,369")
     the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
     the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("90.00%")
-    the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("2,132")
 
 the user sees the changes in the finance summary table in Eligibility screen
     the user should see the element     jQuery = th:contains("Other funding (£)")
@@ -1479,3 +1529,12 @@ the user checks the read-only page
     the user downloads the file                   ${lead_ktp_email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
     Download should be done
     remove the file from the operating system     ${uploadedPdf}
+
+the user should see the right values
+    [Arguments]   ${sectionTotal}    ${section}    ${total}
+    the user should see the element     jQuery = div:contains("${sectionTotal}") button:contains("${section}")
+    the user should see the element     jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="${total}"]
+
+the user marks the project costs as complete
+    the user clicks the button/link     css = label[for="stateAidAgreed"]
+    the user clicks the button/link     jQuery = button:contains("Mark as complete")

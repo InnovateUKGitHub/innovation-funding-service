@@ -58,6 +58,8 @@ public class YourProjectCostsForm {
 
     private Boolean fecModelEnabled;
 
+    private BigDecimal grantClaimPercentage;
+
     public VatForm getVatForm() {
         return vatForm;
     }
@@ -218,6 +220,14 @@ public class YourProjectCostsForm {
         this.fecModelEnabled = fecModelEnabled;
     }
 
+    public BigDecimal getGrantClaimPercentage() {
+        return grantClaimPercentage;
+    }
+
+    public void setGrantClaimPercentage(BigDecimal grantClaimPercentage) {
+        this.grantClaimPercentage = grantClaimPercentage;
+    }
+
     /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
@@ -233,6 +243,12 @@ public class YourProjectCostsForm {
 
     public BigDecimal getTotalAssociateSalaryCosts() {
         return calculateTotal(associateSalaryCostRows);
+    }
+
+    public BigDecimal getTotalGrantAssociateSalaryCosts() {
+        return getTotalAssociateSalaryCosts()
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
     }
 
     public BigDecimal getTotalOverheadCosts() {
@@ -304,6 +320,12 @@ public class YourProjectCostsForm {
                 .orElse(BigInteger.valueOf(0)));
     }
 
+    public BigDecimal getTotalGrantAcademicAndSecretarialSupportCosts() {
+        return getTotalAcademicAndSecretarialSupportCosts()
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
+    }
+
     public BigDecimal getIndirectCostsPercentage() {
         return INDIRECT_COST_PERCENTAGE;
     }
@@ -311,8 +333,8 @@ public class YourProjectCostsForm {
     public BigDecimal getTotalIndirectCosts()
     {
         if (BooleanUtils.isFalse(fecModelEnabled)) {
-            return this.getTotalAssociateSalaryCosts()
-                    .add(this.getTotalAcademicAndSecretarialSupportCosts())
+            return this.getTotalGrantAssociateSalaryCosts()
+                    .add(this.getTotalGrantAcademicAndSecretarialSupportCosts())
                     .multiply(INDIRECT_COST_PERCENTAGE)
                     .divide(new BigDecimal(100))
                     .setScale(0, RoundingMode.HALF_UP);
