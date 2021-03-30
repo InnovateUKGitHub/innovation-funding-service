@@ -134,7 +134,10 @@ public class CompetitionWebTestData {
                         .withName("KTP Africa project setup"),
                 grantCompetition()
                         .withName("Live project competition")
-                        .withLeadApplicantTypes(asSet(BUSINESS, RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY))
+                        .withLeadApplicantTypes(asSet(BUSINESS, RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY)),
+                grantCompetition()
+                        .withName("subsidy control comp in project setup")
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL)
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.PROJECT_SETUP))

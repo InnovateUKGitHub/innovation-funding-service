@@ -81,6 +81,24 @@ public class PendingPartnerProgressRestServiceImplTest extends BaseRestServiceUn
     }
 
     @Test
+    public void markSubsidyBasisIncomplete() {
+        setupPostWithRestResultExpectations(format(pendingPartnerProgressUrl, projectId, organisationId) + "/subsidy-basis-incomplete", HttpStatus.OK);
+
+        RestResult<Void> result = service.markSubsidyBasisIncomplete(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void markSubsidyBasisComplete() {
+        setupPostWithRestResultExpectations(format(pendingPartnerProgressUrl, projectId, organisationId) + "/subsidy-basis-complete", HttpStatus.OK);
+
+        RestResult<Void> result = service.markSubsidyBasisComplete(projectId, organisationId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void completePartnerSetup() {
         setupPostWithRestResultExpectations(format(pendingPartnerProgressUrl, projectId, organisationId), HttpStatus.OK);
 
