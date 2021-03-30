@@ -5,7 +5,7 @@ SET @system_maintenance_user_id = (
     FROM user
     WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
 
-SET @new_terms_id = 49;
+SET @new_terms_id = 50;
 
 INSERT INTO terms_and_conditions (id, name, template, version, type, created_by, created_on, modified_by, modified_on)
 VALUES (@new_terms_id, 'Automotive Transformation Fund (ATF)', 'atf-terms-and-conditions-v1', 1, 'GRANT',
