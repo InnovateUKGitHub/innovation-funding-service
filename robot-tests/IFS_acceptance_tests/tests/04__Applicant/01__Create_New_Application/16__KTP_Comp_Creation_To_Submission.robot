@@ -95,6 +95,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
 ...
+...            IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -476,6 +478,11 @@ New lead applicant invites a new partner organisation user and fills in project 
     Given the user clicks the button/link                           link = Back to application overview
     When the lead invites a partner and accepted the invitation
     Then the user completes partner project finances                ${ktpApplicationTitle}  yes
+
+Business user can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    When the user clicks the button/link                            link = Finances overview
+    Then the user should see read only view for FEC declaration
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
@@ -1540,3 +1547,12 @@ the user should see the right values
 the user marks the project costs as complete
    the user clicks the button/link     css = label[for="stateAidAgreed"]
    the user clicks the button/link     jQuery = button:contains("Mark as complete")
+
+non-applicant user navigates to your FEC model page
+    the user clicks the button/link     jQuery = div:contains("Middlesex University Higher Education Corporation") ~ a:contains("View finances")
+    the user clicks the button/link     link = Your fEC model
+
+the user should see read only view for FEC declaration
+    non-applicant user navigates to your FEC model page
+    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
+    the user checks the read-only page

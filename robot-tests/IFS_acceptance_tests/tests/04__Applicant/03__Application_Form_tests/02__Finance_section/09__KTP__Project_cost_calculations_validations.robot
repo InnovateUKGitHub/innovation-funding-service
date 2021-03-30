@@ -246,7 +246,7 @@ Custom suite teardown
     Disconnect from database
 
 non-applicant user navigates to your FEC model page
-    the user clicks the button/link     jQuery = div:contains(A base of knowledge) ~ a:contains("View finances")
+    the user clicks the button/link     jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
     the user clicks the button/link     link = Your fEC model
 
 the user should see read only view for non-fec declaration
