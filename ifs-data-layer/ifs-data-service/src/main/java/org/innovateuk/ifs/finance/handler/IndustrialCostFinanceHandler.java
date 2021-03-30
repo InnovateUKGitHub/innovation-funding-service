@@ -4,10 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -55,12 +52,14 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
     }
 
     @Override
-    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition) {
+    protected Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition, Finance finance) {
         Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
-        for (FinanceRowType costType : competition.getFinanceRowTypes()) {
+
+        for (FinanceRowType costType : competition.getFinanceRowTypesByFinance(finance)) {
             FinanceRowCostCategory financeRowCostCategory = createCostCategoryByType(costType);
             costCategories.put(costType, financeRowCostCategory);
         }
+
         return costCategories;
     }
 

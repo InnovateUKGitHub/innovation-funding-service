@@ -10,6 +10,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -22,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 
@@ -48,6 +54,9 @@ public class YourProjectCostsViewModelPopulator {
     private ProcessRoleRestService processRoleRestService;
 
     @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Autowired
     private ApplicantRestService applicantRestService;
 
     @Value("${ifs.ktp.fec.finance.model.enabled}")
@@ -58,6 +67,7 @@ public class YourProjectCostsViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+        BaseFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
@@ -71,7 +81,7 @@ public class YourProjectCostsViewModelPopulator {
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
         if (isUserCanEditFecFinance(competition, section, open)) {
-            return getYourFecProjectCostsViewModel(application, competition, organisation, section, completedSectionIds, open, complete, includeVat);
+            return getYourFecProjectCostsViewModel(application, competition, organisation, section, finance, completedSectionIds, open, complete, includeVat);
         } else {
             return new YourProjectCostsViewModel(applicationId,
                     competition.getName(),
@@ -86,10 +96,12 @@ public class YourProjectCostsViewModelPopulator {
                     getYourFinancesUrl(applicationId, organisationId),
                     FundingType.PROCUREMENT == competition.getFundingType(),
                     FundingType.KTP == competition.getFundingType(),
-                    competition.getFinanceRowTypes(),
+                    getFinanceRowTypes(competition, finance),
                     competition.isOverheadsAlwaysTwenty(),
                     CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
-                    organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()));
+                    organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()),
+                    finance.getFecModelEnabled(),
+                    getGrantClaimPercentage(application.getId(), organisation.getId()));
         }
     }
 
@@ -102,7 +114,8 @@ public class YourProjectCostsViewModelPopulator {
 
     private YourProjectCostsViewModel getYourFecProjectCostsViewModel(ApplicationResource application, CompetitionResource competition,
                                                                       OrganisationResource organisation, ApplicantSectionResource section,
-                                                                      List<Long> completedSectionIds, boolean open, boolean complete, boolean includeVat) {
+                                                                      BaseFinanceResource finance, List<Long> completedSectionIds,
+                                                                      boolean open, boolean complete, boolean includeVat) {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
@@ -122,7 +135,7 @@ public class YourProjectCostsViewModelPopulator {
                 getYourFinancesUrl(application.getId(), organisation.getId()),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
-                competition.getFinanceRowTypes(),
+                getFinanceRowTypes(competition, finance),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()),
                 organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()),
@@ -130,7 +143,24 @@ public class YourProjectCostsViewModelPopulator {
                 yourFundingRequired,
                 yourFundingSectionId,
                 yourFecCostRequired,
-                yourFecCostSectionId);
+                yourFecCostSectionId,
+                finance.getFecModelEnabled(),
+                getGrantClaimPercentage(application.getId(), organisation.getId()));
+    }
+
+    private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, BaseFinanceResource finance) {
+        List<FinanceRowType> costTypes = competition.getFinanceRowTypes();
+
+        if (competition.isKtp()) {
+            costTypes = competition.getFinanceRowTypesByFinance(Optional.of(finance));
+        }
+
+        return costTypes;
+    }
+
+    private BigDecimal getGrantClaimPercentage(long applicationId, long organisationId) {
+        ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+        return applicationFinance.getGrantClaimPercentage();
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId) {
