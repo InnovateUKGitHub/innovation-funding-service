@@ -32,14 +32,6 @@ public abstract class BaseMapper<D, R, I extends Serializable> {
 
     public abstract R mapToResource(D domain);
 
-    public List<R> mapToResources(List<D> domains) {
-        return domains.stream().map(this::mapToResource).collect(Collectors.toList());
-    }
-
-    public List<D> mapToDomains(List<R> resources) {
-        return resources.stream().map(this::mapToDomain).collect(Collectors.toList());
-    }
-
     public abstract Iterable<R> mapToResource(Iterable<D> domain);
     public abstract D mapToDomain(R resource);
     public abstract Iterable<D> mapToDomain(Iterable<R> resource);
