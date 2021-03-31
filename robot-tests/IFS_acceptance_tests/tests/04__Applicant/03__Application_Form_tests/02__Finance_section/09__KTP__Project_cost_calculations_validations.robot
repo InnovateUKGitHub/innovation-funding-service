@@ -264,7 +264,7 @@ Supporter can view read-only view of the project cost table in finance summary s
     Then the user should see the correct data in the finance tables
 
 Supporter can view the project cost tabel in the print view
-   [Documentation]   IFS-9340
+    [Documentation]   IFS-9340
     Given the user navigates to the page                                                ${server}/application/${KTPapplicationId}/summary
     When the user clicks the button/link                                                link = Print application
     Then the user should see the correct values in project cost table in print view
