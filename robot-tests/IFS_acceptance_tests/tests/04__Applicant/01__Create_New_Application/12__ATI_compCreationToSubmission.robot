@@ -27,6 +27,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
 ...
+...               IFS-9297 PCR - Applicant can view and accept the correct T&Cs (Project Setup)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -240,9 +242,15 @@ PS partner checks funding level guidance after completing subsidy basis
     Then the user should see the element                          jQuery = .govuk-hint:contains("The maximum you can enter is")
     And the user clicks the button/link                           link = Back to join project
 
+PS partner should see correct terms and conditions after completing subsidy basis
+    [Documentation]  IFS-9297
+     When the user clicks the button/link     link = Award terms and conditions
+     Then the user should see the element     jQuery = li:contains("Subsidy Control/ State aid obligations")
+
 PS partner sucessfully joins the project after completing subsidy basis
     [Documentation]  IFS-9289  IFS-6725
-    Given the user clicks the button/link                        link = Your funding
+    Given the user clicks the button/link                        link = Back to join project
+    And the user clicks the button/link                          link = Your funding
     And the user marks your funding section as complete
     And the user accept the competition terms and conditions     Back to join project
     When the user clicks the button/link                         id = submit-join-project-button
