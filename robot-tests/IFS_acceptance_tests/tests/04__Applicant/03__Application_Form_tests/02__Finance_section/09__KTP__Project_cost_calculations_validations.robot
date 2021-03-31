@@ -19,7 +19,10 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-9244 KTP fEC/Non-fEC: indirect costs cost category
 ...
+...               IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
+...
 Suite Setup       Custom Suite Setup
+Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
 Resource          ../../../../resources/common/Competition_Commons.robot
@@ -31,11 +34,26 @@ ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]
 ${KTPcompetiton}                          KTP new competition
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
+${ktp_KTA_name}                           Hermen Mermen
+${ktp_KTA_email}                          hermen.mermen@ktn-uk.test
+&{KTA_assessor_credentials}               email=hermen.mermen@ktn-uk.test   password=${short_password}
+&{supporter_credentials}                  email=hubert.cumberdale@salad-fingers.com   password=${short_password}
+${supporter_name}                         Hubert Cumberdale
+${KTA_invitation_email_subject}           Invitation to be Knowledge Transfer Adviser
+${invited_email_pattern}                  You have been invited to be the knowledge transfer adviser for the Innovation Funding Service application:
+${estateValue}                            11000
 ${associateSalaryTable}                   associate-salary-costs-table
 ${associateDevelopmentTable}              associate-development-costs-table
 ${limitFieldValidationMessage}            You must provide justifications for exceeding allowable cost limits.
 ${academic_secretarial_support_table}     academic-secretarial-costs-table
 ${academicSecretarialCost}                academic-secretarial-costs
+@{turnover}                               100000  98000   96000
+@{preTaxProfit}                           98000   96000   94000
+@{netCurrentAssets}                       100000  100000  100000
+@{liabilities}                            20000   15000   10000
+@{shareHolderFunds}                       20000   15000   10000
+@{loans}                                  35000   40000   45000
+@{employees}                              2000    1500    1200
 
 *** Test Cases ***
 New lead applicant can make a 'No' selection for the organisation's fEC model and save the selection
@@ -164,6 +182,49 @@ Internal user views values
     And The user clicks the button/link    jQuery = button:contains("Finances summary")
     Then the user should see the correct data in the finance tables
 
+Customer support user can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                    &{support_user_credentials}
+    When the user navigates to the page                                 ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
+    Then the user should see read only view for non-fec declaration
+
+IFS admin can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                    &{ifs_admin_user_credentials}
+    When the user navigates to the page                                 ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
+    Then the user should see read only view for non-fec declaration
+
+Business user can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                    &{collaborator1_credentials}
+    When the user clicks the button/link                                link = ${KTPapplication}
+    And the user clicks the button/link                                 link = Finances overview
+    Then the user should see read only view for non-fec declaration
+
+KTA user assigned to application can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  knowledge based applicant invites KTA user to the application
+    Given the user clicks the button/link                               jQuery = a:contains("Applications")
+    When the user clicks the button/link                                link = ${KTPapplication}
+    And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
+    Then the user should see read only view for non-fec declaration
+
+KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  knowledge based applicant completes and submits application
+    Given update milestone to yesterday                                     ${KTPcompetitonId}  SUBMISSION_DATE
+    When the user invites a registered KTA user to assess competition
+    And the allocated assessor accepts invite to assess the competition
+    And the user navigates to the page                                      ${server}/application/${KTPapplicationId}/summary
+    Then the user should see read only view for non-fec declaration
+
+Supporter can view the read-only view for 'No' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  ifs admin invites a supporter to the ktp application
+    Given log in as a different user                                    &{supporter_credentials}
+    When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
+    Then the user should see read only view for non-fec declaration
+
 *** Keywords ***
 the user enters T&S costs
     [Arguments]  ${typeOfCost}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
@@ -173,10 +234,36 @@ the user enters T&S costs
     the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${costOfEachTrip}
 
 Custom suite setup
-    the user logs-in in new browser       &{KTPLead}
-    the user clicks the button/link       link = ${KTPapplication}
-    the user clicks the button/link       link = Your project finances
-    the user clicks the button/link       link = Your fEC model
+    Set predefined date variables
+    Connect to database                 @{database}
+    the user logs-in in new browser     &{KTPLead}
+    the user clicks the button/link     link = ${KTPapplication}
+    the user clicks the button/link     link = Your project finances
+    the user clicks the button/link     link = Your fEC model
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
+
+non-applicant user navigates to your FEC model page
+    the user clicks the button/link     jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
+    the user clicks the button/link     link = Your fEC model
+
+the user should see read only view for non-fec declaration
+    non-applicant user navigates to your FEC model page
+    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
+    the user should see the element                         jQuery = p:contains(No)
+
+knowledge based applicant invites KTA user to the application
+    the user logs-in in new browser                  &{KTPLead}
+    the user clicks the button/link                  link = ${KTPapplication}
+    the user clicks the button/link                  link = Application team
+    the user enters text to a text field             id = ktaEmail   ${ktp_KTA_email}
+    the user clicks the button/link                  name = invite-kta
+    logout as user
+    the user reads his email and clicks the link     ${ktp_KTA_email}   ${KTA_invitation_email_subject}   ${invited_email_pattern}
+    the user clicks the button/link                  jQuery = a:contains("Continue")
+    logging in and error checking                    ${ktp_KTA_email}   ${short_password}
 
 the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="associateSalary.description"]
@@ -274,3 +361,114 @@ the user collapses and expands the academic and secretarial support section
     the user should not see the element     id = academicAndSecretarialSupportForm
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")
     the user should see the element         jQuery = p:contains("You may enter up to £875")
+
+knowledge based applicant completes and submits application
+    log in as a different user                               &{KTPLead}
+    the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Your project finances
+    the user marks the KTP project location as complete
+    the user accept the competition terms and conditions     Return to application overview
+    log in as a different user                               &{collaborator1_credentials}
+    the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Your project finances
+    the user marks the KTP project location as complete
+    the user fills in the KTP organisation information
+    the user completes other funding section
+    the user clicks the button/link                          link = Back to application overview
+    the user accept the competition terms and conditions     Return to application overview
+    log in as a different user                               &{KTPLead}
+    the user clicks the button/link                          link = ${KTPapplication}
+    the user clicks the button/link                          link = Review and submit
+    the user clicks the button/link                          jQuery = button:contains("Submit application")
+
+the user completes other funding section
+    the user clicks the button/link       link = Other funding
+    the user selects the radio button     otherFunding  false
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user marks the KTP project location as complete
+    the user enters the project location
+    the user should see the element          jQuery = li:contains("Your project location") span:contains("Complete")
+    the user clicks the button/link          link = Back to application overview
+
+the user fills in the KTP organisation information
+    the user clicks the button/link                                                link = Your project finances
+    the user clicks the button/link                                                link = Your organisation
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots     page should contain element  jQuery = button:contains("Edit")
+    Run Keyword If    '${status}' == 'PASS'                                        the user clicks the button/link  jQuery = button:contains("Edit")
+    the user selects the radio button                                              organisationSize  ${SMALL_ORGANISATION_SIZE}
+    the user enters text to a text field                                           name = financialYearEndMonthValue  04
+    the user enters text to a text field                                           name = financialYearEndYearValue   2020
+    the user fills financial overview section
+    the user clicks the button/link                                                jQuery = button:contains("Mark as complete")
+    the user should see the element                                                jQuery = li:contains("Your organisation") span:contains("Complete")
+
+the user fills financial overview section
+    ${i} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{turnover}
+             \    the user enters text to a text field     id = years[${i}].turnover  ${ELEMENT}
+             \    ${i} =   Evaluate   ${i} + 1
+
+    ${j} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{preTaxProfit}
+             \    the user enters text to a text field     id = years[${j}].preTaxProfit  ${ELEMENT}
+             \    ${j} =   Evaluate   ${j} + 1
+
+    ${k} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{netCurrentAssets}
+             \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
+             \    ${k} =   Evaluate   ${k} + 1
+
+    ${l} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{liabilities}
+             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
+             \    ${l} =   Evaluate   ${l} + 1
+
+    ${m} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
+             \    the user enters text to a text field     id = years[${m}].shareholderValue  ${ELEMENT}
+             \    ${m} =   Evaluate   ${m} + 1
+
+    ${n} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{loans}
+             \    the user enters text to a text field     id = years[${n}].loans  ${ELEMENT}
+             \    ${n} =   Evaluate   ${n} + 1
+
+    ${a} =  Set Variable   0
+        :FOR   ${ELEMENT}   IN    @{employees}
+             \    the user enters text to a text field     id = years[${a}].employees  ${ELEMENT}
+             \    ${a} =   Evaluate   ${a} + 1
+
+    the user enters text to a text field     id = groupEmployees  200
+
+the user invites a registered KTA user to assess competition
+    log in as a different user               &{Comp_admin1_credentials}
+    the user clicks the button/link          link = ${KTPcompetiton}
+    the user clicks the button/link          link = Invite assessors to assess the competition
+    the user enters text to a text field     id = assessorNameFilter   ${ktp_KTA_name}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+    the user clicks the button/link          jQuery = tr:contains("${ktp_KTA_name}") label[for^="assessor-row"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Add selected to invite list")
+    the user clicks the button/link          link = Invite
+    the user clicks the button/link          link = Review and send invites
+    the user enters text to a text field     id = message    This is custom text
+    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
+
+the allocated assessor accepts invite to assess the competition
+    log in as a different user                            &{KTA_assessor_credentials}
+    the user clicks the button/link                       jQuery = a:contains("Assessments")
+    the user clicks the button/link                       link = ${KTPcompetiton}
+    the user selects the radio button                     acceptInvitation  true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
+    the user should be redirected to the correct page     ${server}/assessment/assessor/dashboard
+
+ifs admin invites a supporter to the ktp application
+    log in as a different user               &{ifs_admin_user_credentials}
+    the user clicks the button/link          link = ${KTPcompetiton}
+    the user clicks the button/link          link = Manage supporters
+    the user clicks the button/link          link = Assign supporters to applications
+    the user clicks the button/link          jQuery = td:contains("${KTPapplication}") ~ td a:contains("Assign")
+    the user enters text to a text field     id = filter    ${supporter_name}
+    the user clicks the button/link          jQuery = button:contains("Filter")
+    the user selects the checkbox            select-all-check
+    the user clicks the button/link          jQuery = button:contains("Add selected to application")
