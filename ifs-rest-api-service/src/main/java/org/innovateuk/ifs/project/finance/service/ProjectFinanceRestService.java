@@ -22,6 +22,5 @@ public interface ProjectFinanceRestService {
 
     RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
 
-
-
+    RestResult<ProjectFinanceResource> update(ProjectFinanceResource projectFinance);
 }
