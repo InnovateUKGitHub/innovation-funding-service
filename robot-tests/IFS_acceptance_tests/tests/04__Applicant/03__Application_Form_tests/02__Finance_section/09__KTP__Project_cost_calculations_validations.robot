@@ -31,7 +31,6 @@ ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]
 ${KTPcompetiton}                          KTP new competition
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
-${estateValue}                            11000
 ${associateSalaryTable}                   associate-salary-costs-table
 ${associateDevelopmentTable}              associate-development-costs-table
 ${limitFieldValidationMessage}            You must provide justifications for exceeding allowable cost limits.
@@ -56,10 +55,10 @@ New lead applicant can mark Your fEC model section as complete if 'No' is select
 
 Knowledge based applicant cannot view or edit fEC specific project costs based on non-fEC selection
     [Documentation]  IFS-9242
-    Given the user clicks the button/link        link = Your project costs
-    When the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
-    And the user should not see the element      jQuery = button:contains("Additional associate support")
-    Then the user should not see the element     jQuery = button:contains("Associates estates costs")
+    When the user clicks the button/link        link = Your project costs
+    Then the user should not see the element    jQuery = button:contains("Knowledge base supervisor")
+    And the user should not see the element     jQuery = button:contains("Additional associate support")
+    And the user should not see the element     jQuery = button:contains("Associates estates costs")
 
 Associate employment and development client side validation
     [Documentation]  IFS-7790
@@ -87,20 +86,20 @@ Calculation for associate employment and development
     [Documentation]  IFS-7790
      Given the user enters text to a text field     jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  100
      When the user should see the element           jQuery = span:contains("100") ~ button:contains("Associate development")
-     Then the user should see the right values      100   Associate employment    246
+     Then the user should see the right values      100   Associate employment    223
      And the user should not see the element        jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
 
 KB applicant can provide an academic and secretarial support cost in a non-fEC project cost table
     [Documentation]  IFS-9243
     Given the user collapses and expands the academic and secretarial support section
-    When the user enters text to a text field     id = academicAndSecretarialSupportForm  100
-    Then the user should see the element          jQuery = span:contains("100") ~ button:contains("Academic and secretarial support")
-    And the user should see the element           jQuery = h4:contains("Total academic and secretarial support costs") span:contains("100")
+    When the user enters text to a text field                                            id = academicAndSecretarialSupportForm  100
+    Then the user should see the element                                                 jQuery = span:contains("100") ~ button:contains("Academic and secretarial support")
+    And the user should see the element                                                  jQuery = h4:contains("Total academic and secretarial support costs") span:contains("100")
 
 Calculate indirect cost
     [Documentation]  IFS-9244
     Given the user should see the element     jQuery = p:contains("The calculation is 46% of the sum of 2 grant amounts:'Associate employment costs' and the 'Academic and secretarial support costs'.")
-    Then the user should see the element      jQuery = h4:contains("Total indirect costs"):contains("92")
+    Then the user should see the element      jQuery = h4:contains("Total indirect costs"):contains("46")
 
 Subcontracting costs should not display in project costs
     [Documentation]  IFS-8157
@@ -113,15 +112,20 @@ Travel and subsistence cost calculations
     And the user enters T&S costs                                            Associate  2  3 trips to Glasgow  3  200
     Then the user should see the right T&S cost summary and total values
 
-Other costs calculations
-    [Documentation]  IFS-7790
-    Given the user fills in ktp other costs     Other costs   1000
-    Then the user should see the right values   1,000    Other costs    7542
-
 Consumables calculations
     [Documentation]  IFS-7790
     Given the user fills in consumables
-    Then the user should see the right values    2,000    Consumables    9542
+    Then the user should see the right values    2,000    Consumables    8496
+
+Other costs calculations
+    [Documentation]  IFS-7790
+    Given the user fills in ktp other costs     Other costs   1000
+    Then the user should see the right values   1,000    Other costs    9496
+
+Total cost calculation
+    [Documentation]  IFS-9245
+    Then the user should see the element     jQuery = label:contains("'A base of knowledge' Total project costs")
+    And the user should see the element      jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="9496"]
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
@@ -194,11 +198,11 @@ the user should see the read only view of KTP
     the user should see the element         jQuery = th:contains("Total associate development costs") ~ td:contains("£100")
     the user should see the element         jQuery = th:contains("Total travel and subsistence costs") ~ td:contains("£6,150")
     the user should see the element         jQuery = th:contains("Total consumables costs") ~ td:contains("£2,000")
-    the user should not see the element     jQuery = th:contains("Total knowledge base supervisor costs")
-    the user should not see the element     jQuery = th:contains("Total associates estates costs")
-    the user should not see the element     jQuery = th:contains("Total additional associate support costs")
+    the user should not see the element     jQuery = th:contains("Total knowledge base supervisor costs") ~ td:contains("£123")
+    the user should not see the element     jQuery = th:contains("Total associates estates costs") ~ td:contains("£1,000")
+    the user should not see the element     jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element         jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
-    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("£92")
+    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("£46")
     the user should see the element         jQuery = th:contains("Total additional company cost estimates") ~ td:contains("£600")
 
 the user should see the correct data in the finance tables
@@ -207,12 +211,12 @@ the user should see the correct data in the finance tables
     the user should see the element         jQuery = td:contains("Associate development") ~ td:contains("100")
     the user should see the element         jQuery = td:contains("Travel and subsistence") ~ td:contains("6,150")
     the user should see the element         jQuery = td:contains("Consumables") ~ td:contains("2,000")
-    the user should not see the element     jQuery = td:contains("Knowledge base supervisor")
-    the user should not see the element     jQuery = td:contains("Estate")
-    the user should not see the element     jQuery = td:contains("Additional associate support")
+    the user should not see the element     jQuery = td:contains("Knowledge base supervisor") ~ td:contains("£123")
+    the user should not see the element     jQuery = td:contains("Estate") ~ td:contains("£1,000")
+    the user should not see the element     jQuery = td:contains("Additional associate support") ~ td:contains("£1,000")
     the user should see the element         jQuery = td:contains("Other costs") ~ td:contains("1,000")
-    the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("92")
-    the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,542")
+    the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("46")
+    the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,496")
 
 the user fills in consumables
     the user enters text to a text field     css = input[id^="consumableCost"][id$="item"]  consumable
@@ -259,10 +263,11 @@ the user sees the selection is saved
     the user sees that the radio button is selected     fecModelEnabled  fecModelEnabled-no
 
 the user completes your funding section
-    the user clicks the button/link       link = Your funding
-    the user selects the radio button     requestingFunding  request-funding-no
-    the user selects the radio button     otherFunding  other-funding-no
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+    the user clicks the button/link        link = Your funding
+    the user selects the radio button      requestingFunding  request-funding-yes
+    the user enters text to a text field   css = input[id^="grantClaimPercentage"]    50
+    the user selects the radio button      otherFunding  other-funding-no
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
 the user collapses and expands the academic and secretarial support section
     the user clicks the button/link         jQuery = button:contains("Academic and secretarial support")

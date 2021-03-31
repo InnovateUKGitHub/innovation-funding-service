@@ -9,6 +9,8 @@ public interface PendingPartnerProgressRestService {
     RestResult<Void> markYourOrganisationComplete(long projectId, long organisationId);
     RestResult<Void> markYourFundingComplete(long projectId, long organisationId);
     RestResult<Void> markTermsAndConditionsComplete(long projectId, long organisationId);
+    RestResult<Void> markSubsidyBasisComplete(long projectId, long organisationId);
+    RestResult<Void> markSubsidyBasisIncomplete(long projectId, long organisationId);
     RestResult<Void> markYourOrganisationIncomplete(long projectId, long organisationId);
     RestResult<Void> markYourFundingIncomplete(long projectId, long organisationId);
     RestResult<Void> markTermsAndConditionsIncomplete(long projectId, long organisationId);

@@ -519,7 +519,8 @@ The applications should be sorted by column
     @{sorted_column_contents}=    Create List
     : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
+    \    ${converted_contents}=     to number if number    ${cell_contents}
+    \    append to list    ${sorted_column_contents}    ${converted_contents}
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
