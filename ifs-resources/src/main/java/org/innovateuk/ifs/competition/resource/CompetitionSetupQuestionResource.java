@@ -359,7 +359,7 @@ public class CompetitionSetupQuestionResource {
     }
 
     @JsonIgnore
-    public boolean isGuidance2Required() {
+    public boolean isGuidanceRequired2() {
         return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == type;
     }
 

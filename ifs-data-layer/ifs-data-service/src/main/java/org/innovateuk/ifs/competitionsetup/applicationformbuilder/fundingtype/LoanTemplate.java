@@ -85,7 +85,16 @@ public class LoanTemplate implements FundingTypeTemplate {
                 .withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)
                 .withShortName("Business and financial information")
                 .withName("Have you completed the business information, including uploading your financial submission")
-                .withDescription("First part of guidance")
+                .withDescription(
+                        "<p><strong>Business &amp; financial details</strong></p>" +
+                        "<p>For us to consider the suitability of your business for a loan, we need detailed information about your business as well as financial information and forecasts</p>" +
+                        "<p><strong>Business information</strong></p>" +
+                        "<p>You must submit information to us about your business. This is done through answering questions in the format of an online survey. If you would like to see the business questions before filling out the online survey, you can <a href=\"TODO\" target=\"_blank\">download an example PDF survey (opens in a new window)</a></p>"
+                )
+                .withDescription2(
+                        "<p><strong>Financial information</strong></p>" +
+                        "<p>You must submit financial information to us about your business. This is done through completion of a spreadsheet template. Please download the financial spreadsheet template and fill this in offline. At the end of the survey you will be asked to upload the financial spreadsheet.</p>"
+                        )
                 .withFormInputs(asList(aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
