@@ -21,6 +21,10 @@ Documentation     IFS-7790 KTP: Your finances - Edit
 ...
 ...               IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
 ...
+...               IFS-9339 KTP fEC/Non-fEC: application changes for read-only finance tables
+...
+...               IFS-9340 KTP fEC/Non-fEC: application changes for print view
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../../resources/defaultResources.robot
@@ -182,11 +186,22 @@ Internal user views values
     And The user clicks the button/link    jQuery = button:contains("Finances summary")
     Then the user should see the correct data in the finance tables
 
+Internal user can view the project cost tabel in the print view
+    [Documentation]   IFS-9340
+    When the user clicks the button/link                                                link = Print application
+    Then the user should see the correct values in project cost table in print view
+    [Teardown]   the user closes the last opened tab
+
 Customer support user can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
     Given log in as a different user                                    &{support_user_credentials}
     When the user navigates to the page                                 ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
     Then the user should see read only view for non-fec declaration
+
+Customer support user can view read-only view of the project cost table in finance overview section
+   [Documentation]   IFS-9339
+   When the user navigates to the page                                 ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
+   Then the user should see the correct data in the finance tables
 
 IFS admin can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
@@ -201,6 +216,12 @@ Business user can view the read-only view for 'No' selected fEC declaration
     And the user clicks the button/link                                 link = Finances overview
     Then the user should see read only view for non-fec declaration
 
+Business user can view read-only view of the project cost table in finance overview section
+   [Documentation]   IFS-9339
+   When the user navigates to the page                                 ${server}/application/${KTPapplicationId}
+   And the user clicks the button/link                                 link = Finances overview
+   Then the user should see the correct data in the finance tables
+
 KTA user assigned to application can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
     [Setup]  knowledge based applicant invites KTA user to the application
@@ -208,6 +229,18 @@ KTA user assigned to application can view the read-only view for 'No' selected f
     When the user clicks the button/link                                link = ${KTPapplication}
     And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
     Then the user should see read only view for non-fec declaration
+
+KTA user can view read-only view of the project cost table in finance summary section
+    [Documentation]   IFS-9339
+    Given the user navigates to the page                                ${server}/application/${KTPapplicationId}/summary
+    Then the user should see the correct data in the finance tables
+
+KTA user can view the project cost tabel in the print view
+   [Documentation]   IFS-9340
+    Given the user navigates to the page                                                ${server}/application/${KTPapplicationId}/summary
+    When the user clicks the button/link                                                link = Print application
+    Then the user should see the correct values in project cost table in print view
+    [Teardown]   the user closes the last opened tab
 
 KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
     [Documentation]  IFS-9246
@@ -224,6 +257,26 @@ Supporter can view the read-only view for 'No' selected fEC declaration
     Given log in as a different user                                    &{supporter_credentials}
     When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
+
+Supporter can view read-only view of the project cost table in finance summary section
+    [Documentation]   IFS-9339
+    When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
+    Then the user should see the correct data in the finance tables
+
+Supporter can view the project cost tabel in the print view
+   [Documentation]   IFS-9340
+    Given the user navigates to the page                                                ${server}/application/${KTPapplicationId}/summary
+    When the user clicks the button/link                                                link = Print application
+    Then the user should see the correct values in project cost table in print view
+    [Teardown]   the user closes the last opened tab
+
+KB can view the project cost tabel in the print view
+   [Documentation]   IFS-9340
+    Given log in as a different user                                                    &{KTPLead}
+    And the user navigates to the page                                                  ${server}/application/${KTPapplicationId}
+    When the user clicks the button/link                                                link = Print application
+    Then the user should see the correct values in project cost table in print view
+    [Teardown]   the user closes the last opened tab
 
 *** Keywords ***
 the user enters T&S costs
@@ -304,6 +357,19 @@ the user should see the correct data in the finance tables
     the user should see the element         jQuery = td:contains("Other costs") ~ td:contains("1,000")
     the user should see the element         jQuery = td:contains("Indirect costs") ~ td:contains("46")
     the user should see the element         jQuery = th:contains("Total") ~ td:contains("£9,496")
+
+the user should see the correct values in project cost table in print view
+    the user should see the element         xpath = //td[text()='100']/..//td[text()='Associate Employment']
+    the user should see the element         xpath = //td[text()='100']/..//td[text()='Academic and secretarial support']
+    the user should see the element         xpath = //td[text()='100']/..//td[text()='Associate development']
+    the user should see the element         xpath = //td[text()='6,150']/..//td[text()='Travel and subsistence']
+    the user should see the element         xpath = //td[text()='2,000']/..//td[text()='Consumables']
+    the user should not see the element     xpath = //td[text()='123']/..//td[text()='Knowledge base supervisor']
+    the user should not see the element     xpath = //td[text()='1,000']/..//td[text()='Estate']
+    the user should not see the element     xpath = //td[text()='1,000']/..//td[text()='Additional associate support']
+    the user should see the element         xpath = //td[text()='1,000']/..//td[text()='Other costs']
+    the user should see the element         xpath = //td[text()='46']/..//td[text()='Indirect costs']
+    the user should see the element         xpath = //td[text()='£9,496']/..//th[text()='Total']
 
 the user fills in consumables
     the user enters text to a text field     css = input[id^="consumableCost"][id$="item"]  consumable
