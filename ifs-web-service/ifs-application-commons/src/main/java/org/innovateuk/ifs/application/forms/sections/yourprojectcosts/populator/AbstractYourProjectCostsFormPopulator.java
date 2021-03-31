@@ -7,16 +7,19 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -68,6 +71,10 @@ public abstract class AbstractYourProjectCostsFormPopulator {
 
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
 
+        form.setFecModelEnabled(finance.getFecModelEnabled());
+        form.setGrantClaimPercentage(finance.getGrantClaimPercentage());
+        form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportCostRowForm(finance));
+
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         if (ApplicationFinanceResource.class.equals(finance.getClass()) && organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
@@ -75,6 +82,18 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         }
 
         return form;
+    }
+
+    private AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportCostRowForm(BaseFinanceResource finance) {
+        Optional<FinanceRowCostCategory> financeRowCostCategory = Optional.ofNullable(
+                finance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT));
+
+        if (financeRowCostCategory.isPresent() && !financeRowCostCategory.get().getCosts().isEmpty()) {
+            AcademicAndSecretarialSupport academicAndSecretarialSupport = (AcademicAndSecretarialSupport) financeRowCostCategory.get().getCosts().get(0);
+            return new AcademicAndSecretarialSupportCostRowForm(academicAndSecretarialSupport);
+        }
+
+        return new AcademicAndSecretarialSupportCostRowForm();
     }
 
     private JustificationForm justificationForm(BaseFinanceResource finance) {
