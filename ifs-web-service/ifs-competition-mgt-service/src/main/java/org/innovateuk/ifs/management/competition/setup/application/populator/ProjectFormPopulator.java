@@ -38,6 +38,19 @@ public class ProjectFormPopulator extends AbstractFormInputQuestionFormPopulator
             competitionSetupForm.setQuestion(questionResource);
             competitionSetupForm.setRemovable(true);
             populateCommon(questionResource, competitionSetupForm);
+            if (questionResource.getNumberOfUploads() != null) {
+                // TODO we can commonise
+                if (questionResource.getNumberOfUploads() == 0) {
+                    competitionSetupForm.setNumberOfUploads(0);
+                    questionResource.setAppendix(false);
+                } else {
+                    competitionSetupForm.setNumberOfUploads(questionResource.getNumberOfUploads());
+                    questionResource.setAppendix(true);
+                }
+            }
+
+
+
         } else {
             throw new ObjectNotFoundException();
         }

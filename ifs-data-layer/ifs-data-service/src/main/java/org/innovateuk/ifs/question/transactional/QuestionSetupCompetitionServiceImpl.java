@@ -83,6 +83,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         setupResource.setShortTitle(question.getShortName());
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
+        setupResource.setSubTitle2(question.getDescription2());
         setupResource.setQuestionId(question.getId());
         setupResource.setType(question.getQuestionSetupType());
 

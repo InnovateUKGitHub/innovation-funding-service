@@ -77,7 +77,7 @@ public class LoanTemplate implements FundingTypeTemplate {
     }
 
     private void addLoanBusinessAndFinanceInformationQuestion(SectionBuilder projectDetailSection){
-        projectDetailSection.getQuestions().add(0, loanBusinessAndFinancialInformation());
+        projectDetailSection.getQuestions().add(loanBusinessAndFinancialInformation());
     }
 
     private static QuestionBuilder loanBusinessAndFinancialInformation() {
@@ -109,6 +109,7 @@ public class LoanTemplate implements FundingTypeTemplate {
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
                                 .withActive(false)));
+
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {
