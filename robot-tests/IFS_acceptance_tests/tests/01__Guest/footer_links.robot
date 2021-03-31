@@ -20,8 +20,9 @@ Guest user can click on the footer links
     And the user navigates to the page       ${LOGIN_URL}
     When Logging in and Error Checking       &{lead_applicant_credentials}
     Then the user tries the footer links     ${APPLICANT_DASHBOARD_URL}
-    zap write to json
-    zap export report
+#    Zap Write To Json File
+ #   zap export report
+    zap shutdown
 *** Keywords ***
 the user tries the footer links
     [Arguments]    ${page}

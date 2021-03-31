@@ -49,3 +49,6 @@ USER gluster
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
 
+FROM owasp/zap2docker-stable
+RUN pip3 install RoboZap
+
