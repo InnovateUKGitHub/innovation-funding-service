@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM owasp/zap2docker-stable:latest
 
 RUN apt-get update && \
     apt-get install -y mysql-client && \
@@ -48,7 +48,3 @@ USER gluster
 
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
-
-FROM owasp/zap2docker-stable:2.10.0
-RUN pip3 install RoboZap
-
