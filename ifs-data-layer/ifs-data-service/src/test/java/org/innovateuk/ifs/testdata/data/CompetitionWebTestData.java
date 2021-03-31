@@ -431,7 +431,7 @@ public class CompetitionWebTestData {
     }
 
     private static CompetitionLineBuilder grantCompetition() {
-        return aCompetitionLine()
+        return anIfsCompetition()
                 .withFundingType(FundingType.GRANT);
     }
 
