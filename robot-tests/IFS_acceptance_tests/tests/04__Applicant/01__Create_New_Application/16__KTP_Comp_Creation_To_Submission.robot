@@ -637,14 +637,17 @@ The KTA cannot edit any application section
 
 The KTA is able to see lead and non lead applicant's project finances
     [Documentation]  IFS-7983  IFS-7958
-    Given the user clicks the button/link                                    id = accordion-questions-heading-3-1
-    When the user clicks the button/link                                     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    When the user clicks the button/link                                     jQuery = div:contains("Middlesex University Higher Education Corporation") ~ a:contains("View finances")
     Then the user can view lead and partner finance summary calculations
 
 The KTA is able to see lead applicant's project costs summary
     [Documentation]  IFS-7983  IFS-7958
     Given the user clicks the button/link                                 link = Back to application overview
     Then the user can see project cost breakdown of lead organisation
+
+The KTA is able view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    Then the user should see read only view for FEC declaration
 
 Lead applicant verifies the KTA inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
