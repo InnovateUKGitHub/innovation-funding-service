@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
@@ -53,6 +55,7 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
                 .withTargetStartDate(projectStartDate)
                 .withDuration(4L)
                 .withApplication(applicationId).build();
+        CompetitionResource competition = newCompetitionResource().build();
         Long firstOrgId = 9L;
         Long secondOrgId = 10L;
         String firstPartnerName = "one";
@@ -70,7 +73,7 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
         when(projectFinanceRestService.getProjectFinance(projectId, firstOrgId)).thenReturn(restSuccess(projectFinanceResource));
 
-        ProcurementGrantOfferLetterTemplateViewModel result = populator.populate(project);
+        ProcurementGrantOfferLetterTemplateViewModel result = populator.populate(project, competition);
 
         assertThat(result.getApplicationId()).isEqualTo(applicationId);
         assertThat(result.getOrganisationName()).isEqualTo(firstPartnerName);

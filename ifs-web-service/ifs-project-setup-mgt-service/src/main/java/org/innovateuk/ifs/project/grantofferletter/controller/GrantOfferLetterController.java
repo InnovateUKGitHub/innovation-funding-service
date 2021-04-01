@@ -310,7 +310,7 @@ public class GrantOfferLetterController {
         } else if (template.getName().equals(FundingType.KTP.getGolType())) {
             model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project));
         } else if (template.getName().equals(FundingType.PROCUREMENT.getGolType())) {
-            model.addAttribute("model", procurementGrantOfferLetterTemplatePopulator.populate(project));
+            model.addAttribute("model", procurementGrantOfferLetterTemplatePopulator.populate(project, competition));
         }
         return "project/" + template.getTemplate();
     }
