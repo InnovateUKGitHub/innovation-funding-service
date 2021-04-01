@@ -1,5 +1,5 @@
 FROM owasp/zap2docker-stable:latest
-
+USER root
 RUN apt-get update && \
     apt-get install -y mysql-client && \
     apt-get install -y curl && \
