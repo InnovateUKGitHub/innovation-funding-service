@@ -138,21 +138,21 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
             case FINANCES:
                 messageCode = getFinanceSectionSubTitle(competition);
                 break;
-            case PROJECT_DETAILS: //"Project details":
+            case PROJECT_DETAILS:
                 if (competition.isKtp()) {
                     messageCode = "ifs.section.projectDetails.ktp.description";
                 } else {
                     messageCode = "ifs.section.projectDetails.description";
                 }
                 break;
-            case TERMS_AND_CONDITIONS: //"Terms and conditions"
+            case TERMS_AND_CONDITIONS:
                 if (competition.isExpressionOfInterest()) {
                     messageCode = "ifs.section.termsAndConditionsEoi.description";
                 } else {
                     messageCode = "ifs.section.termsAndConditions.description";
                 }
                 break;
-            case APPLICATION_QUESTIONS: //"Application questions":
+            case APPLICATION_QUESTIONS:
                 if (!competition.isKtp()) {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;
