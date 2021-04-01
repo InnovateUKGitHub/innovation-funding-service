@@ -30,7 +30,8 @@ The user downloads the file
     [Documentation]    Makes use of a download script that logs in, grabs a cookie and downloads
     ...     the file all in one package
     [Arguments]    ${user}    ${url}    ${filename}
-    ${script return status}=    Run and Return RC    python3 download.py ${user} ${short_password} ${url} ${filename}
+    ${script return status}=    Run Keyword if  '${user}' == '${new_partner_ktp_email}'    Run and Return RC    python3 download.py ${user} ${correct_password} ${url} ${filename}
+    ...       ELSE              run keyword                                                Run and Return RC    python3 download.py ${user} ${short_password} ${url} ${filename}
     should be equal as integers    ${script return status}    0    The download script failed, probably this means the regex for the login page will need updating
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
 
