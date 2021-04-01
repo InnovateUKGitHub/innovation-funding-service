@@ -9,7 +9,9 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOff
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,6 +29,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,6 +46,9 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
 
     @Mock
     private ProjectFinanceRestService projectFinanceRestService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     @Test
     public void populate() {
@@ -72,11 +78,15 @@ public class ProcurementGrantOfferLetterTemplatePopulatorTest {
         when(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, firstOrgId)).thenReturn(restSuccess(milestones));
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
         when(projectFinanceRestService.getProjectFinance(projectId, firstOrgId)).thenReturn(restSuccess(projectFinanceResource));
+        String projectManagerName = "Bill";
+        ProjectUserResource projectManager = newProjectUserResource().withUserName(projectManagerName).build();
+        when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(projectManager));
 
         ProcurementGrantOfferLetterTemplateViewModel result = populator.populate(project, competition);
 
         assertThat(result.getApplicationId()).isEqualTo(applicationId);
         assertThat(result.getOrganisationName()).isEqualTo(firstPartnerName);
+        assertThat(result.getProjectManagerName()).isEqualTo(projectManagerName);
         assertThat(result.getMilestones()).hasSize(3);
         assertThat(result.getMilestoneMonths()).hasSize(4);
         ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel firstMilestoneMonth = result.getMilestoneMonths().get(0);
