@@ -201,7 +201,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentResource,
                 competitionResource,
                 questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 true,
                 false,
@@ -286,7 +288,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource,
                 questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 true,
                 false,
@@ -546,7 +550,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         List<ResearchCategoryResource> researchCategoryResources = setupResearchCategories();
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource, questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 false,
                 true,
@@ -616,7 +622,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         List<ResearchCategoryResource> researchCategoryResources = null;
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource, questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 false,
                 true,

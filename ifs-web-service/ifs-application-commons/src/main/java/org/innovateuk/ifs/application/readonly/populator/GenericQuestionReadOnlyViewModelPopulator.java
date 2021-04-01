@@ -59,8 +59,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         if (multipleStatuses) {
             answer = null;
-            Collection<QuestionStatusResource> questionStatus = data.getQuestionToQuestionStatus().get(question.getId());
-            answers = answerMapForMultipleStatuses(answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles(), questionStatus);
+            answers = answerMapForMultipleStatuses(answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles());
         } else {
             answers = null;
             answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
@@ -91,8 +90,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     private List<GenericQuestionAnswerRowReadOnlyViewModel> answerMapForMultipleStatuses(Optional<FormInputResource> answerInput,
                                                                                          Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses,
-                                                                                         List<ProcessRoleResource> applicationProcessRoles,
-                                                                                         Collection<QuestionStatusResource> questionStatus) {
+                                                                                         List<ProcessRoleResource> applicationProcessRoles) {
 
         Optional<List<FormInputResponseResource>> textResponses = answerInput.map(input -> formInputIdToFormInputResponses.get(input.getId()));
 
@@ -111,13 +109,12 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 );
 
         return processRoleResourcesGroupedByOrgId.entrySet().stream()
-                .map(entry -> rowViewModel(entry.getKey(), entry.getValue(), answerInput, textResponses, questionStatus))
+                .map(entry -> rowViewModel(entry.getKey(), entry.getValue(), answerInput, textResponses))
                 .collect(Collectors.toList());
     }
 
     private GenericQuestionAnswerRowReadOnlyViewModel rowViewModel(Long organisationId, List<ProcessRoleResource> processRoles,
-                                                                   Optional<FormInputResource> answerInput, Optional<List<FormInputResponseResource>> textResponses,
-                                                                   Collection<QuestionStatusResource> questionStatus) {
+                                                                   Optional<FormInputResource> answerInput, Optional<List<FormInputResponseResource>> textResponses) {
         OrganisationResource org = organisationRestService.getOrganisationById(organisationId).getSuccess();
         String partnerName = org.getName();
         boolean lead = processRoles.stream().anyMatch(ProcessRoleResource::isLeadApplicant);
@@ -134,14 +131,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             }
         }
 
-        boolean markedAsComplete = markedAsComplete(organisationId, questionStatus);
-
-        return new GenericQuestionAnswerRowReadOnlyViewModel(partnerName, lead, answer, markedAsComplete);
-    }
-
-    private boolean markedAsComplete(Long organisationId, Collection<QuestionStatusResource> questionStatus) {
-        return questionStatus.stream()
-                .anyMatch(status -> Boolean.TRUE.equals(status.getMarkedAsComplete()) && organisationId.equals(status.getMarkedAsCompleteByOrganisationId()));
+        return new GenericQuestionAnswerRowReadOnlyViewModel(partnerName, lead, answer);
     }
 
     private Predicate<ProcessRoleResource> distinctByOrgId() {

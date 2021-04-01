@@ -12,6 +12,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -31,7 +32,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final String questionShortName;
     private final String questionName;
     private final Integer maximumScore;
+    private final boolean multipleStatuses;
     private final String applicantResponse;
+    private final Map<String, String> applicantResponses;
     private final List<FormInputResource> assessmentFormInputs;
     private final boolean scoreFormInputExists;
     private final boolean scopeFormInputExists;
@@ -51,7 +54,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         String questionShortName,
                                         String questionName,
                                         Integer maximumScore,
+                                        boolean multipleStatuses,
                                         String applicantResponse,
+                                        Map<String, String> applicantResponses,
                                         List<FormInputResource> assessmentFormInputs,
                                         boolean scoreFormInputExists,
                                         boolean scopeFormInputExists,
@@ -70,7 +75,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.questionShortName = questionShortName;
         this.questionName = questionName;
         this.maximumScore = maximumScore;
+        this.multipleStatuses = multipleStatuses;
         this.applicantResponse = applicantResponse;
+        this.applicantResponses = applicantResponses;
         this.assessmentFormInputs = assessmentFormInputs;
         this.scoreFormInputExists = scoreFormInputExists;
         this.scopeFormInputExists = scopeFormInputExists;
@@ -81,7 +88,12 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.fundingType = fundingType;
     }
 
-    public AssessmentFeedbackViewModel(AssessmentResource assessment, CompetitionResource competition, QuestionResource question, String applicantResponse,
+    public AssessmentFeedbackViewModel(AssessmentResource assessment,
+                                       CompetitionResource competition,
+                                       QuestionResource question,
+                                       boolean multipleStatuses,
+                                       String applicantResponse,
+                                       Map<String, String> applicantResponses,
                                        List<FormInputResource> assessmentFormInputs,
                                        boolean scoreFormInputExists,
                                        boolean scopeFormInputExists,
@@ -99,7 +111,9 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 question.getShortName(),
                 question.getName(),
                 question.getAssessorMaximumScore(),
+                multipleStatuses,
                 applicantResponse,
+                applicantResponses,
                 assessmentFormInputs,
                 scoreFormInputExists,
                 scopeFormInputExists,
@@ -150,8 +164,20 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return maximumScore;
     }
 
+    public boolean isMultipleStatuses() {
+        return multipleStatuses;
+    }
+
+    public boolean hasResponse() {
+        return applicantResponse != null || (applicantResponses != null && !applicantResponses.isEmpty());
+    }
+
     public String getApplicantResponse() {
         return applicantResponse;
+    }
+
+    public Map<String, String> getApplicantResponses() {
+        return applicantResponses;
     }
 
     public List<FormInputResource> getAssessmentFormInputs() {

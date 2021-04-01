@@ -98,11 +98,11 @@ public class GenericQuestionApplicationController {
                        UserResource user) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         formPopulator.populate(form, organisationId, question);
-        return getView(model, question);
+        return getView(model, organisationId, question);
     }
 
-    private String getView(Model model, ApplicantQuestionResource question) {
-        model.addAttribute("model", modelPopulator.populate(question));
+    private String getView(Model model, Optional<Long> organisationId, ApplicantQuestionResource question) {
+        model.addAttribute("model", modelPopulator.populate(question, organisationId));
         return "application/questions/generic";
     }
 
@@ -117,7 +117,7 @@ public class GenericQuestionApplicationController {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         formPopulator.populate(form, organisationId, question);
         validate(form, bindingResult, applicationId, questionId);
-        return getView(model, question);
+        return getView(model, organisationId, question);
     }
 
     @PostMapping
@@ -159,7 +159,7 @@ public class GenericQuestionApplicationController {
                                  UserResource user) {
         Supplier<String> failureView = () -> {
             questionStatusRestService.markAsInComplete(questionId, applicationId, getUsersProcessRole(applicationId, user).getId()).getSuccess();
-            return getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
+            return getView(model, organisationId, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
         };
 
         validate(form, bindingResult, applicationId, questionId);
@@ -205,7 +205,7 @@ public class GenericQuestionApplicationController {
                                          @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleFileUpload("templateDocument", FormInputType.TEMPLATE_DOCUMENT, form.getTemplateDocument(), questionId, applicationId, user, validationHandler, model);
+        return handleFileUpload("templateDocument", FormInputType.TEMPLATE_DOCUMENT, form.getTemplateDocument(), questionId, applicationId, organisationId, user, validationHandler, model);
     }
 
     @PostMapping(params = "removeTemplateDocument")
@@ -218,7 +218,7 @@ public class GenericQuestionApplicationController {
                                          @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, fileEntryId, user, validationHandler, model);
+        return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, organisationId, fileEntryId, user, validationHandler, model);
     }
 
     @PostMapping(params = "uploadAppendix")
@@ -230,7 +230,7 @@ public class GenericQuestionApplicationController {
                                          @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleFileUpload("appendix", FormInputType.FILEUPLOAD, form.getAppendix(), questionId, applicationId, user, validationHandler, model);
+        return handleFileUpload("appendix", FormInputType.FILEUPLOAD, form.getAppendix(), questionId, applicationId, organisationId, user, validationHandler, model);
     }
 
     @PostMapping(params = "removeAppendix")
@@ -243,7 +243,7 @@ public class GenericQuestionApplicationController {
                                          @PathVariable Optional<Long> organisationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, fileEntryId, user, validationHandler, model);
+        return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, organisationId, fileEntryId, user, validationHandler, model);
     }
 
     @GetMapping("/form-input/{formInputId}/download-template-file")
@@ -261,8 +261,8 @@ public class GenericQuestionApplicationController {
                 formInput.getId(), form.getAnswer(), form.getMultipleChoiceOptionId(), false);
     }
 
-    private String handleFileUpload(String field, FormInputType type, MultipartFile file, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {
-        Supplier<String> view = () -> getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
+    private String handleFileUpload(String field, FormInputType type, MultipartFile file, long questionId, long applicationId, Optional<Long> organisationId, UserResource user, ValidationHandler validationHandler, Model model) {
+        Supplier<String> view = () -> getView(model, organisationId, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
 
         return validationHandler.performFileUpload(field, view, () -> {
             FormInputResource formInput = getByType(questionId, type);
@@ -277,7 +277,7 @@ public class GenericQuestionApplicationController {
         });
     }
 
-    private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, long fileEntryId, UserResource user, ValidationHandler validationHandler, Model model) {
+    private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, Optional<Long> organisationId, long fileEntryId, UserResource user, ValidationHandler validationHandler, Model model) {
         FormInputResource formInput = getByType(questionId, type);
         ProcessRoleResource processRole = getUsersProcessRole(applicationId, user);
 
@@ -286,7 +286,7 @@ public class GenericQuestionApplicationController {
                 processRole.getId(),
                 fileEntryId);
 
-        Supplier<String> view = () -> getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
+        Supplier<String> view = () -> getView(model, organisationId, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
 
         return validationHandler.performActionOrBindErrorsToField(field, view, view, () -> result);
     }

@@ -14,15 +14,7 @@
             </label>
 
             <th:block th:if="${model.multipleStatuses}">
-                <div class="warning-alert" th:if="${model.statusDetailPresent AND !model.nonMarkedCompletePartners.empty}">
-                    <p class="govuk-body">The following organisations have not yet marked this question complete:</p>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <th:block th:each="nonAcceptedPartner : ${model.nonMarkedCompletePartners}">
-                            <li th:text="${nonAcceptedPartner.partnerName}">Non accepted partner organisation</li>
-                        </th:block>
-                    </ul>
-                    <p class="govuk-body">This application cannot be submitted until all partners complete the question.</p>
-                </div>
+
                 <table class="govuk-table">
 
                     <thead class="govuk-table__head">

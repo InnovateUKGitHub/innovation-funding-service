@@ -83,7 +83,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
-        when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
+        when(modelPopulator.populate(applicantQuestion, Optional.empty())).thenReturn(viewModel);
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId))
                 .andExpect(view().name("application/questions/generic"))
@@ -107,7 +107,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
-        when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
+        when(modelPopulator.populate(applicantQuestion, Optional.empty())).thenReturn(viewModel);
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/generic?show-errors=true", applicationId, questionId))
                 .andExpect(view().name("application/questions/generic"))
@@ -227,7 +227,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
-        when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
+        when(modelPopulator.populate(applicantQuestion, Optional.empty())).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
                 .withRole(COLLABORATOR)
@@ -268,7 +268,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
-        when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
+        when(modelPopulator.populate(applicantQuestion, Optional.empty())).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
                 .withRole(COLLABORATOR)
@@ -304,7 +304,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
-        when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
+        when(modelPopulator.populate(applicantQuestion, Optional.empty())).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
                 .withRole(COLLABORATOR)
@@ -345,7 +345,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
         when(applicantRestService.getQuestion(loggedInUser.getId(), applicationId, questionId)).thenReturn(applicantQuestion);
-        when(modelPopulator.populate(applicantQuestion)).thenReturn(viewModel);
+        when(modelPopulator.populate(applicantQuestion, Optional.empty())).thenReturn(viewModel);
 
         ProcessRoleResource userProcessRole = newProcessRoleResource()
                 .withRole(COLLABORATOR)

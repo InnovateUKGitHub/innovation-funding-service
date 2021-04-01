@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.Option;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class GenericQuestionApplicationModelPopulator {
     @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
 
-    public GenericQuestionApplicationViewModel populate(ApplicantQuestionResource applicantQuestion) {
+    public GenericQuestionApplicationViewModel populate(ApplicantQuestionResource applicantQuestion, Optional<Long> organisationId) {
         Map<FormInputType, ApplicantFormInputResource> formInputs = applicantQuestion.getApplicantFormInputs()
                 .stream()
                 .collect(toMap(input -> input.getFormInput().getType(), Function.identity()));
@@ -47,7 +48,7 @@ public class GenericQuestionApplicationModelPopulator {
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
         ofNullable(formInputs.get(FormInputType.TEXTAREA)).ifPresent(input -> buildTextAreaViewModel(viewModelBuilder, input));
-        ofNullable(formInputs.get(FormInputType.MULTIPLE_CHOICE)).ifPresent(input -> buildMultipleChoiceOptionsViewModel(viewModelBuilder, input));
+        ofNullable(formInputs.get(FormInputType.MULTIPLE_CHOICE)).ifPresent(input -> buildMultipleChoiceOptionsViewModel(viewModelBuilder, organisationId, input));
         ofNullable(formInputs.get(FormInputType.FILEUPLOAD)).ifPresent(input -> buildAppendixViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.TEMPLATE_DOCUMENT)).ifPresent(input -> buildTemplateDocumentViewModel(viewModelBuilder, input));
 
@@ -104,9 +105,9 @@ public class GenericQuestionApplicationModelPopulator {
                 .withWordsLeft(firstResponse(input).map(FormInputResponseResource::getWordCountLeft).orElse(input.getFormInput().getWordCount()));
     }
 
-    private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
+    private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, Optional<Long> organisationId, ApplicantFormInputResource input) {
         viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
-                .withSelectedMultipleChoiceOption(multipleChoiceOptionResponseOrNull(input))
+                .withSelectedMultipleChoiceOption(multipleChoiceOptionResponseOrNull(input, organisationId))
                 .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
                 .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
                 .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
@@ -127,17 +128,29 @@ public class GenericQuestionApplicationModelPopulator {
                 .flatMap(resp -> resp.getFileEntries().stream().findFirst());
     }
 
-    private MultipleChoiceOptionResource multipleChoiceOptionResponseOrNull(ApplicantFormInputResource input) {
-        return firstResponse(input)
+    private MultipleChoiceOptionResource multipleChoiceOptionResponseOrNull(ApplicantFormInputResource input, Optional<Long> organisationId) {
+
+        return firstResponse(input, organisationId)
                 .map(formInputResponse -> new MultipleChoiceOptionResource(formInputResponse.getMultipleChoiceOptionId(),
                         formInputResponse.getMultipleChoiceOptionText()))
                 .orElse(null);
     }
 
     private Optional<FormInputResponseResource> firstResponse(ApplicantFormInputResource input) {
+        return firstResponse(input, Optional.empty());
+    }
+
+    private Optional<FormInputResponseResource> firstResponse(ApplicantFormInputResource input, Optional<Long> organisationId) {
+
         return input.getApplicantResponses()
                 .stream()
-                .findAny() //Generic questions only have one respsonse.
+                .filter(resp -> {
+                    if (organisationId.isPresent()) {
+                        return organisationId.get().equals(resp.getApplicant().getOrganisation().getId());
+                    } else {
+                        return true;
+                    }
+                }).findAny()
                 .map(ApplicantFormInputResponseResource::getResponse);
     }
 }

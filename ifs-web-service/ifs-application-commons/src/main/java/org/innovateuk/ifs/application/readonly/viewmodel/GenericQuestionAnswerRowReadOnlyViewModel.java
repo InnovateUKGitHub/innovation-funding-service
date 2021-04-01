@@ -4,13 +4,11 @@ public class GenericQuestionAnswerRowReadOnlyViewModel {
     private final String partnerName;
     private final boolean lead;
     private final String answer;
-    private final boolean markedComplete;
 
-    public GenericQuestionAnswerRowReadOnlyViewModel(String partnerName, boolean lead, String answer, boolean markedComplete) {
+    public GenericQuestionAnswerRowReadOnlyViewModel(String partnerName, boolean lead, String answer) {
         this.partnerName = partnerName;
         this.lead = lead;
         this.answer = answer;
-        this.markedComplete = markedComplete;
     }
 
     public String getPartnerName() {
@@ -24,7 +22,4 @@ public class GenericQuestionAnswerRowReadOnlyViewModel {
         return answer;
     }
 
-    public boolean isMarkedComplete() {
-        return markedComplete;
-    }
 }

@@ -92,12 +92,6 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return statusDetailPresent;
     }
 
-    public List<GenericQuestionAnswerRowReadOnlyViewModel> getNonMarkedCompletePartners() {
-        return answers.stream()
-                .filter(negate(GenericQuestionAnswerRowReadOnlyViewModel::isMarkedComplete))
-                .collect(Collectors.toList());
-    }
-
     public List<GenericQuestionFileViewModel> getAppendices() {
         return appendices;
     }
