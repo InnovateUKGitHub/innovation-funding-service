@@ -249,7 +249,7 @@ public class CompetitionSetupApplicationController {
                 Optional.ofNullable(questionId));
     }
 
-    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
+    @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile", "question.type=ASSESSED_QUESTION"})
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
@@ -271,7 +271,7 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
-    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=KTP_ASSESSMENT")
+    @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile","question.type=KTP_ASSESSMENT"})
     public String submitKtpAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) KtpAssessmentForm competitionSetupForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
@@ -336,7 +336,7 @@ public class CompetitionSetupApplicationController {
                 formInputRestService.findFile(question.getTemplateFormInput()).getSuccess());
     }
 
-    @PostMapping("/question/{questionId}/edit")
+    @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile"})
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
