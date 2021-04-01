@@ -138,8 +138,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
     @Autowired
-    private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
-    @Autowired
     private CompetitionService competitionService;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
@@ -266,7 +264,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
-        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findById(spendProfileCostCategorySummaries.getCostCategoryType().getId()).orElse(null);
         SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
         spendProfileRepository.save(spendProfile);
@@ -304,13 +302,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
-        List<List<Cost>> costs;
-        if (project.getApplication().getCompetition().isSbriPilot()) {
-            costs = sbriPilotSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
-        } else {
-            costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
-        }
+    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory) {
+        List<List<Cost>> costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
         return flattenLists(costs);
     }
 
