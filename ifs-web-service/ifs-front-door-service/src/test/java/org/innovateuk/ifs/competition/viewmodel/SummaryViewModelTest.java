@@ -69,7 +69,7 @@ public class SummaryViewModelTest {
 
         assertEquals(FALSE, viewModel.hasAttachment(contentGroupId));
 
-        viewModel.setFileEntries(asMap(contentGroupId, newFileEntryResource().withId(null).build()));
+        viewModel.setFileEntries(asMap(contentGroupId, newFileEntryResource().withId((Long) null).build()));
 
         assertEquals(FALSE, viewModel.hasAttachment(contentGroupId));
 

@@ -25,6 +25,21 @@
 
         <p class="govuk-body">You need to complete all sections before you can join this project.</p>
         <ul class="task-list">
+
+            <li th:if="${model.showSubsidyBasis}">
+                <div class="task">
+                    <h3 class="govuk-heading-s">
+                        <span th:if="${model.completed}">Subsidy basis</span>
+                        <a th:if="${!model.completed}" th:href="@{/project/{projectId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(projectId=${model.projectId}, organisationId=${model.organisationId}, questionId=${model.subsidyBasisQuestionId})}" class="govuk-link">Subsidy basis</a>
+                    </h3>
+                </div>
+                <div th:if="${model.subsidyBasisComplete}"
+                     class="task-status-complete"><span>Complete</span></div>
+                <div th:unless="${model.subsidyBasisComplete}"
+                     class="task-status-incomplete"><span>Incomplete</span></div>
+            </li>
+
+
             <li th:if="${model.showYourOrganisation}">
                 <div class="task">
                     <h3 class="govuk-heading-s">

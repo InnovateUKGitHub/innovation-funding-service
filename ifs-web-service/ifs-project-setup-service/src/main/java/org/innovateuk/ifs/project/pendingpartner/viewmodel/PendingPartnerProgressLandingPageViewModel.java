@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.util.Optional;
+
 public class PendingPartnerProgressLandingPageViewModel {
 
     private final long projectId;
@@ -15,8 +17,11 @@ public class PendingPartnerProgressLandingPageViewModel {
     private final boolean showYourOrganisation;
     private final boolean completed;
     private final boolean isReadyToJoinProject;
+    private final boolean showSubsidyBasis;
+    private final boolean subsidyBasisComplete;
+    private final Optional<Long> subsidyBasisQuestionId;
 
-    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation) {
+    public PendingPartnerProgressLandingPageViewModel(ProjectResource project, long organisationId, PendingPartnerProgressResource progress, boolean showYourOrganisation, boolean showSubsidyBasis, Optional<Long> subsidyBasisQuestionId) {
         this.projectId = project.getId();
         this.organisationId = organisationId;
         this.applicationId = project.getApplication();
@@ -27,6 +32,9 @@ public class PendingPartnerProgressLandingPageViewModel {
         this.showYourOrganisation = showYourOrganisation;
         this.completed = progress.isCompleted();
         this.isReadyToJoinProject = progress.isReadyToJoinProject();
+        this.showSubsidyBasis = showSubsidyBasis;
+        this.subsidyBasisComplete = progress.isSubsidyBasisComplete();
+        this.subsidyBasisQuestionId = subsidyBasisQuestionId;
     }
 
     public long getProjectId() {
@@ -67,5 +75,17 @@ public class PendingPartnerProgressLandingPageViewModel {
 
     public boolean isCompleted() {
         return completed;
+    }
+
+    public boolean isShowSubsidyBasis() {
+        return showSubsidyBasis;
+    }
+
+    public boolean isSubsidyBasisComplete() {
+        return subsidyBasisComplete;
+    }
+
+    public Long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId.orElse(null);
     }
 }

@@ -39,22 +39,27 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
 
     @Before
     public void setup() {
-
-        applicationContext.registerBeanDefinition("springWrappedTestServiceLevel1", new RootBeanDefinition(TestServiceLevel1.class));
-        springWrappedTestServiceLevel1 = (TestServiceLevel1) applicationContext.getBean("springWrappedTestServiceLevel1");
-        applicationContext.registerBeanDefinition("springWrappedTestServiceLevel2", new RootBeanDefinition(TestServiceLevel2.class));
-        springWrappedTestServiceLevel2 = (TestServiceLevel2) applicationContext.getBean("springWrappedTestServiceLevel2");
-        applicationContext.registerBeanDefinition("springWrappedTestServiceLevel3", new RootBeanDefinition(TestServiceLevel3.class));
-        springWrappedTestServiceLevel3 = (TestServiceLevel3) applicationContext.getBean("springWrappedTestServiceLevel3");
-
-        applicationContext.registerBeanDefinition("springWrappedTestServiceLevel1Impl", new RootBeanDefinition(TestServiceLevel1Impl.class));
-        springWrappedTestServiceLevel1Impl = (ITestServiceLevel1) applicationContext.getBean("springWrappedTestServiceLevel1Impl");
-        applicationContext.registerBeanDefinition("springWrappedTestServiceLevel2Impl", new RootBeanDefinition(TestServiceLevel2Impl.class));
-        springWrappedTestServiceLevel2Impl = (ITestServiceLevel2) applicationContext.getBean("springWrappedTestServiceLevel2Impl");
-        applicationContext.registerBeanDefinition("springWrappedTestServiceLevel3Impl", new RootBeanDefinition(TestServiceLevel3Impl.class));
-        springWrappedTestServiceLevel3Impl = (ITestServiceLevel3) applicationContext.getBean("springWrappedTestServiceLevel3Impl");
-
+        springWrappedTestServiceLevel1 =
+                (TestServiceLevel1) cleanBeanDefinitionAndRegister("springWrappedTestServiceLevel1", TestServiceLevel1.class);
+        springWrappedTestServiceLevel2 =
+                (TestServiceLevel2) cleanBeanDefinitionAndRegister("springWrappedTestServiceLevel2", TestServiceLevel2.class);
+        springWrappedTestServiceLevel3 =
+                (TestServiceLevel3) cleanBeanDefinitionAndRegister("springWrappedTestServiceLevel3", TestServiceLevel3.class);
+        springWrappedTestServiceLevel1Impl =
+                (ITestServiceLevel1) cleanBeanDefinitionAndRegister("springWrappedTestServiceLevel1Impl", TestServiceLevel1Impl.class);
+        springWrappedTestServiceLevel2Impl =
+                (ITestServiceLevel2) cleanBeanDefinitionAndRegister("springWrappedTestServiceLevel2Impl", TestServiceLevel2Impl.class);
+        springWrappedTestServiceLevel3Impl =
+                (ITestServiceLevel3) cleanBeanDefinitionAndRegister("springWrappedTestServiceLevel3Impl", TestServiceLevel3Impl.class);
         setLoggedInUser(newUserResource().build());
+    }
+
+    private Object cleanBeanDefinitionAndRegister(String beanDefinition, Class clz) {
+        if (applicationContext.containsBeanDefinition(beanDefinition)) {
+            applicationContext.removeBeanDefinition(beanDefinition);
+        }
+        applicationContext.registerBeanDefinition(beanDefinition, new RootBeanDefinition(clz));
+        return applicationContext.getBean(beanDefinition);
     }
 
     @Test

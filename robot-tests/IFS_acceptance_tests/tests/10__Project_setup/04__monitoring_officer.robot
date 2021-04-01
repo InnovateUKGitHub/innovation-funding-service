@@ -52,10 +52,11 @@ ${Assign_Project}                         Climate control solution
 ${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
 ${Assign_Project2}                        High Performance Gasoline Stratified
 ${sbri_applicaton_name}                   SBRI application
+${sbri_application_id}                    ${application_ids["${sbri_applicaton_name}"]}
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
-${PSCapplicationID}                       212
 ${PSCapplicationTitle}                    PSC application 15
+${PSCapplicationID}                       ${application_ids["${PSCapplicationTitle}"]}
 ${PSC_Competition_Name}                   Project Setup Comp 15
 ${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
 
@@ -312,7 +313,7 @@ The SBRI MO assignee has been changed
     log in as a different user                  &{Comp_admin1_credentials}
     the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
     the user clicks the button/link             link = Change monitoring officer
-    internal user assigns mo to application     255  SBRI application  Orvill  Orville Gibbs
+    internal user assigns mo to application     ${sbri_application_id}      ${sbri_applicaton_name}     Orvill    Orville Gibbs
 
 Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
