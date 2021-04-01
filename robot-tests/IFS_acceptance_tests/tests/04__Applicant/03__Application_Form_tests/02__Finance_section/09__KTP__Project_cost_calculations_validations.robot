@@ -255,7 +255,7 @@ the user should see read only view for non-fec declaration
     the user should see the element                         jQuery = p:contains(No)
 
 knowledge based applicant invites KTA user to the application
-    the user logs-in in new browser                  &{KTPLead}
+    log in as a different user                       &{KTPLead}
     the user clicks the button/link                  link = ${KTPapplication}
     the user clicks the button/link                  link = Application team
     the user enters text to a text field             id = ktaEmail   ${ktp_KTA_email}

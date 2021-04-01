@@ -559,4 +559,3 @@ the user checks the read-only page
     Select Window                                                    NEW
     the user should not see internal server and forbidden errors
     the user closes the last opened tab
-=
