@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.populator;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
@@ -138,7 +139,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
-                competition.getFinanceRowTypes().stream()
+                competition.getFinanceRowTypesByFinance(finance).stream()
                     .filter(FinanceRowType::isCost)
                         .collect(toMap(Function.identity(),
                                 type -> finance.map(f -> f.getFinanceOrganisationDetails().get(type).getTotal()).orElse(BigDecimal.ZERO)

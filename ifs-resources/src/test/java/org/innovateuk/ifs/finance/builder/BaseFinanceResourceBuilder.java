@@ -15,6 +15,7 @@ import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.finance.builder.ConsumablesBuilder.newConsumabl
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.EstateCostBuilder.newEstateCost;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.IndirectCostBuilder.newIndirectCost;
 import static org.innovateuk.ifs.finance.builder.KnowledgeBaseCostBuilder.newKnowledgeBaseCost;
 import static org.innovateuk.ifs.finance.builder.KtpTravelCostBuilder.newKtpTravelCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -233,6 +235,21 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCost(new BigInteger("123")).
                                 withDescription("Something").
                                 build(6))
+                        .build(),
+                FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().withCosts(
+                        Collections.singletonList(
+                                newIndirectCost()
+                                        .withId(1L)
+                                        .withCost(BigInteger.ZERO)
+                                        .build())
+                        ).build()
+                )
+        );
+    }
+
+    public S withEmptyIndirectCosts() {
+        return withFinanceOrganisationDetails(asMap(
+                FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory()
                         .build())
         );
     }
