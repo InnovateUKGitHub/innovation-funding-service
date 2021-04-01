@@ -386,7 +386,7 @@ New lead applicant uploads a document for the organisation's fEC model and save 
 New lead applicant view the read-only page once marked as complete
      [Documentation]  IFS-9240
      When the user clicks the button/link          link = Your fEC model
-     Then the user checks the read-only page
+     Then the user checks the read-only page       ${lead_ktp_email}
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
@@ -480,7 +480,7 @@ New lead applicant invites a new partner organisation user and fills in project 
 Business user can view the read-only view for 'Yes' selected fEC declaration
     [Documentation]  IFS-9246
     When the user clicks the button/link                            link = Finances overview
-    Then the user should see read only view for FEC declaration
+    Then the user should see read only view for FEC declaration     ${new_partner_ktp_email}
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
@@ -516,13 +516,13 @@ Customer support user can view the read-only view for 'Yes' selected fEC declara
     And Get competitions id and set it as suite variable            ${ktpCompetitionName}
     When the user navigates to the page                             ${server}/management/competition/${competitionId}/application/${ApplicationID}
     And The user clicks the button/link                             jQuery = button:contains("Finances summary")
-    Then the user should see read only view for FEC declaration
+    Then the user should see read only view for FEC declaration     support@innovateuk.test
 
 IFS admin can view the read-only view for 'Yes' selected fEC declaration
     [Documentation]  IFS-9246
     Given log in as a different user                                &{ifs_admin_user_credentials}
     When the user navigates to the page                             ${server}/management/competition/${competitionId}/application/${ApplicationID}
-    Then the user should see read only view for FEC declaration
+    Then the user should see read only view for FEC declaration     arden.pimenta@innovateuk.test
 
 Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
     [Documentation]  IFS-7958
@@ -647,7 +647,7 @@ The KTA is able to see lead applicant's project costs summary
 
 The KTA is able view the read-only view for 'Yes' selected fEC declaration
     [Documentation]  IFS-9246
-    Then the user should see read only view for FEC declaration
+    Then the user should see read only view for FEC declaration     ${ktaEmail}
 
 Lead applicant verifies the KTA inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
@@ -1549,9 +1549,10 @@ the user marks the project costs complete after editing
     the user fills in ktp project costs
 
 the user checks the read-only page
+    [Arguments]   ${email}
     the user should see the element               jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
     the user should see the element               jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
-    the user downloads the file                   ${lead_ktp_email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
+    the user downloads the file                   ${email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
     Download should be done
     remove the file from the operating system     ${uploadedPdf}
 
@@ -1569,6 +1570,7 @@ non-applicant user navigates to your FEC model page
     the user clicks the button/link     link = Your fEC model
 
 the user should see read only view for FEC declaration
+    [Arguments]   ${email}
     non-applicant user navigates to your FEC model page
     the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
-    the user checks the read-only page
+    the user checks the read-only page                      ${email}
