@@ -254,11 +254,7 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
                 .withOrganisation(organisationId)
                 .withFinanceOrganisationDetails(financeOrganisationDetails)
                 .build();
-        when(applicationFinanceRestService.getFinanceDetails(applicationId, organisationId)).thenReturn(restSuccess(applicationFinanceResource));
-
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withFinanceOrganisationDetails(financeOrganisationDetails).build();
-        when(projectFinanceRestService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
-
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel =
                 populator.getProjectFinancesViewModel(competitionResource,organisationResource,applicationFinanceResource,projectFinanceResource);
         List<CostChangeViewModel> costChangeViewModelsList = projectFinanceChangesProjectFinancesViewModel.getEntries();
@@ -276,6 +272,4 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         assertThat(isIndirectCostRowPresent).isTrue();
         assertThat(isAcademicAndSecreterialSupport).isTrue();
     }
-
-
 }
