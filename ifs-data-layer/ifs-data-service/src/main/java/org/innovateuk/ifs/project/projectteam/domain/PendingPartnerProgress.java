@@ -24,6 +24,7 @@ public class PendingPartnerProgress {
     private ZonedDateTime yourOrganisationCompletedOn;
     private ZonedDateTime yourFundingCompletedOn;
     private ZonedDateTime termsAndConditionsCompletedOn;
+    private ZonedDateTime subsidyBasisCompletedOn;
     private ZonedDateTime completedOn;
 
     public PendingPartnerProgress() {}
@@ -52,12 +53,24 @@ public class PendingPartnerProgress {
         return termsAndConditionsCompletedOn;
     }
 
+    public ZonedDateTime getSubsidyBasisCompletedOn() {
+        return subsidyBasisCompletedOn;
+    }
+
     public ZonedDateTime getCompletedOn() {
         return completedOn;
     }
 
     public void markYourOrganisationComplete() {
         yourOrganisationCompletedOn = ZonedDateTime.now();
+    }
+
+    public void markSubsidyBasisComplete() {
+        subsidyBasisCompletedOn = ZonedDateTime.now();
+    }
+
+    public void markSubsidyBasisIncomplete() {
+        subsidyBasisCompletedOn = null;
     }
 
     public void markYourFundingComplete() {
@@ -88,6 +101,12 @@ public class PendingPartnerProgress {
         return yourOrganisationCompletedOn != null;
     }
 
+
+
+    public boolean isSubsidyBasisComplete() {
+        return  subsidyBasisCompletedOn != null;
+    }
+
     public boolean isYourFundingComplete() {
         return yourFundingCompletedOn != null;
     }
@@ -100,11 +119,13 @@ public class PendingPartnerProgress {
         PartnerOrganisation partnerOrganisation = getPartnerOrganisation();
         Competition competition = partnerOrganisation.getProject().getApplication().getCompetition();
         Organisation organisation =  partnerOrganisation.getOrganisation();
-        return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+        return !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
     }
 
     public boolean isReadyToJoinProject() {
-        return (isYourOrganisationComplete() || isYourOrganisationRequired()) &&
+        Competition competition = getPartnerOrganisation().getProject().getApplication().getCompetition();
+        return (isYourOrganisationComplete() || !isYourOrganisationRequired()) &&
+                (isSubsidyBasisComplete() || !competition.isSubsidyControl()) &&
                 isYourFundingComplete() &&
                 isTermsAndConditionsComplete() &&
                 !isComplete();

@@ -303,6 +303,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfigResources);
     }
 
+    public CompetitionResourceBuilder withSubsidyControl(Boolean... subsidyControls) {
+        return withArraySetFieldByReflection("subsidyControl", subsidyControls);
+    }
+
+    public CompetitionResourceBuilder withProcurementMilestones(boolean... procurementMilestones) {
+        return withArray((procurementMilestone, competitionResource) -> competitionResource.setProcurementMilestones(procurementMilestone), procurementMilestones);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

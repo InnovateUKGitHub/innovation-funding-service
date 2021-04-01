@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +25,6 @@ import java.util.Map;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.finance.builder.AcademicAndSecretarialSupportBuilder.newAcademicAndSecretarialSupport;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.AssociateSalaryCostBuilder.newAssociateSalaryCost;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -81,16 +79,25 @@ public class AbstractYourProjectCostsSaverTest {
 
     @Test
     public void save() {
+        BigDecimal grantClaimPercentage = BigDecimal.valueOf(50);
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
-        BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger expected = associateOneCost
+        BigInteger academicAndSecretarialSupportCost = BigInteger.valueOf(300);
+        BigInteger totalGrantAssociateSalaryCost = associateOneCost
                 .add(associateTwoCost)
-                .add(academicAndSecretarialSupportOneCost)
+                .multiply(grantClaimPercentage.toBigIntegerExact())
+                .divide(BigInteger.valueOf(100));
+        BigInteger totalGrantAcademicAndSecretarialSupportCost = academicAndSecretarialSupportCost
+                .multiply(grantClaimPercentage.toBigIntegerExact())
+                .divide(BigInteger.valueOf(100));
+        BigInteger expected = totalGrantAssociateSalaryCost
+                .add(totalGrantAcademicAndSecretarialSupportCost)
                 .multiply(BigInteger.valueOf(46))
                 .divide(BigInteger.valueOf(100));
 
         YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setFecModelEnabled(false);
+        form.setGrantClaimPercentage(grantClaimPercentage);
 
         LabourForm labourForm = new LabourForm();
         labourForm.setWorkingDaysPerYear(365);
@@ -135,7 +142,7 @@ public class AbstractYourProjectCostsSaverTest {
         form.getAdditionalCompanyCostForm().setOtherCosts(new AdditionalCostAndDescription());
         form.getAdditionalCompanyCostForm().setOtherStaff(new AdditionalCostAndDescription());
 
-        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, form);
+        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportCost, form);
 
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
@@ -178,7 +185,7 @@ public class AbstractYourProjectCostsSaverTest {
         verifyNoMoreInteractions(financeRowRestService);
     }
 
-    private void setupDataForIndirectCost(BigInteger associateOneCost, BigInteger associateTwoCost, BigInteger academicAndSecretarialSupportOneCost, YourProjectCostsForm form) {
+    private void setupDataForIndirectCost(BigInteger associateOneCost, BigInteger associateTwoCost, BigInteger academicAndSecretarialSupportCost, YourProjectCostsForm form) {
         AssociateSalaryCost associateOne = newAssociateSalaryCost()
                 .withCost(associateOneCost)
                 .withDuration(1)
@@ -198,31 +205,38 @@ public class AbstractYourProjectCostsSaverTest {
 
         form.setAssociateSalaryCostRows(associateSalaryCostRows);
         AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm = new AcademicAndSecretarialSupportCostRowForm();
-        academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportOneCost);
+        academicAndSecretarialSupportForm.setCost(academicAndSecretarialSupportCost);
         form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportForm);
     }
 
-
     @Test
     public void saveIndirectCostCreatesFinanceRow() {
+        BigDecimal grantClaimPercentage = BigDecimal.valueOf(50);
         BigInteger associateOneCost = BigInteger.valueOf(100);
         BigInteger associateTwoCost = BigInteger.valueOf(200);
-        BigInteger academicAndSecretarialSupportOneCost = BigInteger.valueOf(300);
-        BigInteger expected = associateOneCost
-                .add(associateTwoCost)
-                .add(academicAndSecretarialSupportOneCost)
-                .multiply(BigInteger.valueOf(46))
-                .divide(BigInteger.valueOf(100));
+        BigInteger academicAndSecretarialSupportCost = BigInteger.valueOf(300);
 
         YourProjectCostsForm form = new YourProjectCostsForm();
+        form.setGrantClaimPercentage(grantClaimPercentage);
 
-        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportOneCost, form);
+        setupDataForIndirectCost(associateOneCost, associateTwoCost, academicAndSecretarialSupportCost, form);
 
         IndirectCost indirectCost = new IndirectCost(1L);
         when(financeRowRestService.create(any())).thenReturn(restSuccess(indirectCost));
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
 
         OrganisationResource organisationResource = newOrganisationResource().withId(2L).build();
+
+        BigDecimal totalGrantAssociateSalaryCost = form.getTotalAssociateSalaryCosts()
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
+        BigDecimal totalGrantAcademicAndSecretarialSupportCost = form.getTotalAcademicAndSecretarialSupportCosts()
+                .multiply(grantClaimPercentage)
+                .divide(new BigDecimal(100));
+        BigDecimal expected = totalGrantAssociateSalaryCost
+                .add(totalGrantAcademicAndSecretarialSupportCost)
+                .multiply(BigDecimal.valueOf(46))
+                .divide(new BigDecimal(100));
 
         ServiceResult<Void> result = targetWithEmptyIndirectCost.save(form, 1L, organisationResource, new ValidationMessages());
 
@@ -234,8 +248,8 @@ public class AbstractYourProjectCostsSaverTest {
         IndirectCost indirectCostToSave = indirectCostArgumentCaptor.getValue();
         assertNotNull(indirectCostToSave);
         assertEquals(FinanceRowType.INDIRECT_COSTS, indirectCostToSave.getCostType());
-        assertEquals(expected, indirectCostToSave.getCost());
-        assertEquals(expected, indirectCostToSave.getTotal().toBigInteger());
+        assertEquals(expected.toBigIntegerExact(), indirectCostToSave.getCost());
+        assertEquals(expected, indirectCostToSave.getTotal());
 
         verifyNoMoreInteractions(financeRowRestService);
     }

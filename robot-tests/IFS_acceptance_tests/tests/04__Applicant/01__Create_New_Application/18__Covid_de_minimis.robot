@@ -148,7 +148,7 @@ Competition goes into previous
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDdeminimuscompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then the user should see the element     link = ${COVIDdeminimuscompetitionTitle}
+    then The user should see the element in the paginated list       link = ${COVIDdeminimuscompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup

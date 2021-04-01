@@ -70,6 +70,10 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 
+    public S withNorthernIrelandDeclaration(Boolean... value) {
+        return withArray((v, finance) -> finance.setNorthernIrelandDeclaration(v), value);
+    }
+
     public S withFinancialYearAccounts(FinancialYearAccountsResource... financialYearAccounts) {
         return withArray((v, finance) -> finance.setFinancialYearAccounts(v), financialYearAccounts);
     }
@@ -323,5 +327,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 build(2))
                         .build())
         );
+    }
+
+    public S withFecEnabled(Boolean enabled) {
+        return with(finance -> finance.setFecModelEnabled(enabled));
+    }
+
+    public S withFecFileEntry(Long fecFileEntry) {
+        return with(finance -> finance.setFecFileEntry(fecFileEntry));
     }
 }

@@ -519,7 +519,8 @@ The applications should be sorted by column
     @{sorted_column_contents}=    Create List
     : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
+    \    ${converted_contents}=     to number if number    ${cell_contents}
+    \    append to list    ${sorted_column_contents}    ${converted_contents}
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
@@ -600,15 +601,15 @@ making the application a successful project
 
 making the application a successful project from correct state
     [Arguments]  ${compID}  ${appTitle}
-    the user navigates to the page      ${server}/management/competition/${compID}
-    the user clicks the button/link  link = Input and review funding decision
-    the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
-    the user clicks the button/link  css = [type="submit"][value="FUNDED"]
-    the user navigates to the page   ${server}/management/competition/${compID}/manage-funding-applications
-    the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
-    the user clicks the button/link  css = [name="write-and-send-email"]
-    the internal sends the descision notification email to all applicants  Successful!
-    the user refreshes until element appears on page         jQuery = td:contains("${appTitle}") ~ td:contains("Sent")
+    the user navigates to the page                                            ${server}/management/competition/${compID}
+    the user clicks the button/link                                           link = Input and review funding decision
+    the user clicks the button/link                                           jQuery = tr:contains("${appTitle}") label
+    the user clicks the button/link                                           css = [type="submit"][value="FUNDED"]
+    the user navigates to the page                                            ${server}/management/competition/${compID}/manage-funding-applications
+    the user clicks the button/link                                           jQuery = tr:contains("${appTitle}") label
+    the user clicks the button/link                                           css = [name="write-and-send-email"]
+    the internal sends the descision notification email to all applicants     Successful!
+    the user refreshes until element appears on page                          jQuery = td:contains("${appTitle}") ~ td:contains("Sent")
 
 moving competition to Project Setup
     [Arguments]   ${compID}

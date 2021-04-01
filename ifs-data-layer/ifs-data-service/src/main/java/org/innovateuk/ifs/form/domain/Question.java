@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -54,6 +55,10 @@ public class Question {
     private QuestionSetupType questionSetupType;
 
     private Integer assessorMaximumScore;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "questionnaire_id", referencedColumnName = "id")
+    private Questionnaire questionnaire;
 
     public Question() {
         //default constructor
@@ -196,6 +201,14 @@ public class Question {
 
     public void setQuestionSetupType(QuestionSetupType questionSetupType) {
         this.questionSetupType = questionSetupType;
+    }
+
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
     }
 
     public boolean isScope() {

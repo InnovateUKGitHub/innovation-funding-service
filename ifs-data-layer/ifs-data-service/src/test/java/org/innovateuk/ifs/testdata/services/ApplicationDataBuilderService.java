@@ -9,8 +9,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -45,13 +43,18 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.ProcurementMilestoneDataBuilder.newProcurementMilestoneDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
+import static org.innovateuk.ifs.testdata.builders.QuestionnaireResponseDataBuilder.newQuestionnaireResponseDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.SubsidyBasisDataBuilder.newSubsidyBasisDataBuilder;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -75,6 +78,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
     private ProcurementMilestoneDataBuilder procurementMilestoneDataBuilder;
     private QuestionResponseDataBuilder questionResponseDataBuilder;
+    private QuestionnaireResponseDataBuilder questionnaireResponseDataBuilder;
+    private SubsidyBasisDataBuilder subsidyBasisDataBuilder;
 
     @PostConstruct
     public void readCsvs() {
@@ -86,6 +91,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
         procurementMilestoneDataBuilder = newProcurementMilestoneDataBuilder(serviceLocator);
+        questionnaireResponseDataBuilder = newQuestionnaireResponseDataBuilder(serviceLocator);
+        subsidyBasisDataBuilder = newSubsidyBasisDataBuilder(serviceLocator);
     }
 
     public List<ApplicationQuestionResponseData> createApplicationQuestionResponses(
@@ -252,27 +259,100 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return simpleMap(builders, BaseBuilder::build);
     }
 
+    private List<QuestionnaireResponseLine> defaultApplicationQuestionnaireResponseLines(ApplicationData applicationData,
+                                                                                                  ApplicationLine applicationLine,
+                                                                                                  List<ExternalUserLine> externalUsers){
+        if (applicationLine.markQuestionsComplete && applicationData.getCompetition().getFundingRules().equals(SUBSIDY_CONTROL)){
+            // Generate the default for the application.
+            return uniqueOrganisations(applicationLine, externalUsers).stream()
+                    .map(organisation -> new QuestionnaireResponseLine(
+                            organisation.getLeft(),
+                            applicationData.getCompetition().getName(),
+                            applicationData.getApplication().getName(),
+                            organisation.getMiddle(),
+                            SUBSIDY_BASIS,
+                            asList("No", "No")))
+                    .collect(toList());
+        }
+        return emptyList();
+    }
+
+    private List<QuestionnaireResponseLine> specifiedQuestionnaireResponseLines(ApplicationLine applicationLine,
+                                                                                  List<QuestionnaireResponseLine> questionnaireResponseLines){
+        return questionnaireResponseLines.stream()
+                .filter(line -> line.competitionName.equals(applicationLine.competitionName))
+                .filter(line -> line.applicationName.equals(applicationLine.title))
+                .collect(toList());
+    }
+
+    public List<QuestionnaireResponseData> createQuestionnaireResponse(ApplicationData applicationData,
+                                                                       ApplicationLine applicationLine,
+                                                                       List<QuestionnaireResponseLine> questionnaireResponseLines,
+                                                                       List<ExternalUserLine> externalUsers) {
+        List<QuestionnaireResponseLine> specifiedLines = specifiedQuestionnaireResponseLines(applicationLine, questionnaireResponseLines);
+        List<QuestionnaireResponseLine> defaultLines = defaultApplicationQuestionnaireResponseLines(applicationData, applicationLine, externalUsers);
+        // Override defaults.
+        List<QuestionnaireResponseLine> lines = defaultLines.stream()
+                .map(defaultLine -> specifiedLines.stream()
+                        .filter(specifiedLine -> defaultLine.organisationName.equals(specifiedLine.organisationName))
+                        .findFirst()
+                        .orElse(defaultLine))
+                .collect(toList());
+        return lines.stream()
+                .map(line -> questionnaireResponseDataBuilder
+                        .withCompetition(applicationData.getCompetition())
+                        .withQuestionSetup(line.questionSetupType)
+                        .withApplication(applicationData.getApplication())
+                        .withOrganisationName(line.organisationName)
+                        .withUser(line.user)
+                        .withSelectedOptions(line.options)
+                        .withQuestionnaireResponse())
+                .map(QuestionnaireResponseDataBuilder::build).collect(toList());
+    }
+
+    public List<SubsidyBasisData> createSubsidyBasis(ApplicationLine applicationLine,
+                                                     List<QuestionnaireResponseData> questionnaireResponseData) {
+        return  questionnaireResponseData.stream()
+                .filter(line -> line.getQuestionSetupType().equals(SUBSIDY_BASIS) &&
+                        line.getCompetition().getName().equals(applicationLine.competitionName) &&
+                        line.getApplication().getName().equals(applicationLine.title))
+                .map(line -> subsidyBasisDataBuilder
+                        .withCompetition(line.getCompetition())
+                        .withQuestionnaireResponseUuid(line.getQuestionnaireResponseUuid())
+                        .withApplication(line.getApplication())
+                        .withOrganisationName(line.getOrganisationName())
+                        .withUser(line.getUser())
+                        .withOutcome(line.getOutcome())
+                        .withSubsidyBasis())
+                .map(SubsidyBasisDataBuilder::build).collect(toList());
+    }
+
+    private List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations(ApplicationLine applicationLine, List<ExternalUserLine> externalUsers){
+        Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
+
+        List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
+
+        List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+
+            UserResource user = retrieveUserByEmail(email);
+            OrganisationResource organisation = organisationByName(usersOrganisations.get(email));
+
+            return Triple.of(user.getEmail(), organisation.getName(),
+                    OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+        });
+
+        return simpleFilter(organisations, triple ->
+                isUniqueOrFirstDuplicateOrganisation(triple, organisations));
+    }
+
     public List<ProcurementMilestoneData> createProcurementMilestones(
             ApplicationData applicationData,
             ApplicationLine applicationLine,
             List<ExternalUserLine> externalUsers) {
 
         if (applicationData.getCompetition().isProcurement() && applicationLine.createFinanceResponses) {
-            Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
 
-            List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
-
-            List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
-
-                UserResource user = retrieveUserByEmail(email);
-                OrganisationResource organisation = organisationByName(usersOrganisations.get(email));
-
-                return Triple.of(user.getEmail(), organisation.getName(),
-                        OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
-            });
-
-            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = simpleFilter(organisations, triple ->
-                    isUniqueOrFirstDuplicateOrganisation(triple, organisations));
+            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = uniqueOrganisations(applicationLine, externalUsers);
 
             List<ProcurementMilestoneDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
                 String user = orgDetails.getLeft();
@@ -352,11 +432,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-        if (!competition.getCompetition().isKtp() && asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.competitionStatus)) {
+        if (!competition.getCompetition().isKtp() && asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.getCompetitionStatus())) {
 
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
-                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name, applicationLines)).
+                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.getName(), applicationLines)).
                     build();
         }
     }
@@ -524,6 +604,44 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         financeRow.metadata.get(0),
                         LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN),
                         bd(financeRow.metadata.get(2)));
+            case "Associate Employment":
+                return builder.withAssociateSalaryCosts(
+                        financeRow.metadata.get(0),
+                        Integer.valueOf(financeRow.metadata.get(1)),
+                        bi(financeRow.metadata.get(2))
+                );
+            case "Associate development":
+                return builder.withAssociateDevelopmentCosts(
+                        financeRow.metadata.get(0),
+                        Integer.valueOf(financeRow.metadata.get(1)),
+                        bi(financeRow.metadata.get(2))
+                );
+            case "Ktp Travel and subsistence":
+                return builder.withKtpTravel(
+                        KtpTravelCost.KtpTravelCostType.valueOf(financeRow.metadata.get(0)),
+                        financeRow.metadata.get(1),
+                        bd(financeRow.metadata.get(2)),
+                        Integer.valueOf(financeRow.metadata.get(3)));
+            case "Consumables":
+                return builder.withConsumables(
+                        financeRow.metadata.get(0),
+                        bi(financeRow.metadata.get(1)),
+                        Integer.valueOf(financeRow.metadata.get(2))
+                );
+            case "Additional company costs":
+                return builder.withAdditionalCompanyCosts(
+                        AdditionalCompanyCost.AdditionalCompanyCostType.valueOf(financeRow.metadata.get(0)),
+                        financeRow.metadata.get(1),
+                        bi(financeRow.metadata.get(2))
+                );
+            case "Academic and secretarial support":
+                return builder.withAcademicAndSecretarialSupport(
+                        bi(financeRow.metadata.get(0))
+                );
+            case "Indirect costs":
+                return builder.withIndirectCosts(
+                        bi(financeRow.metadata.get(0))
+                );
             default:
                 throw new RuntimeException("Unknown category " + financeRow.category);
         }
@@ -645,10 +763,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
                         break;
                     case ACADEMIC_AND_SECRETARIAL_SUPPORT:
-                        builder[0] = builder[0].withAcademicAndSecretarialSupport(new BigDecimal("18.00"));
+                        builder[0] = builder[0].withAcademicAndSecretarialSupport(new BigInteger("18"));
                         break;
                     case INDIRECT_COSTS:
-                        builder[0] = builder[0].withIndirectCosts(new BigDecimal("19.00"));
+                        builder[0] = builder[0].withIndirectCosts(new BigInteger("20"));
                         break;
                 }
             };
@@ -674,7 +792,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
-            if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL) {
+            if (competition.getFundingRules() == SUBSIDY_CONTROL) {
                 if (organisationName.equals("Northern Irish Ltd.")) {
                     builder[0] = builder[0]
                             .withNorthernIrelandDeclaration(true);
@@ -758,5 +876,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
+    }
+
+    private BigInteger bi(String value) {
+        return new BigInteger(value);
     }
 }
