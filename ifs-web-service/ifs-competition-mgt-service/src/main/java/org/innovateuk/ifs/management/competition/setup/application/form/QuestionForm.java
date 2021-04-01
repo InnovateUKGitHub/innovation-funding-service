@@ -15,9 +15,8 @@ public class QuestionForm extends AbstractQuestionForm {
     @Valid
     private List<GuidanceRowForm> guidanceRows = new ArrayList<>();
 
-    private MultipartFile templateDocumentFile;
+
     private boolean removable;
-    private Integer numberOfUploads;
 
     public List<GuidanceRowForm> getGuidanceRows() {
         return guidanceRows;
@@ -25,14 +24,6 @@ public class QuestionForm extends AbstractQuestionForm {
 
     public void setGuidanceRows(List<GuidanceRowForm> guidanceRows) {
         this.guidanceRows = guidanceRows;
-    }
-
-    public MultipartFile getTemplateDocumentFile() {
-        return templateDocumentFile;
-    }
-
-    public void setTemplateDocumentFile(MultipartFile templateDocumentFile) {
-        this.templateDocumentFile = templateDocumentFile;
     }
 
     @Override
@@ -44,11 +35,5 @@ public class QuestionForm extends AbstractQuestionForm {
         this.removable = removable;
     }
 
-    public Integer getNumberOfUploads() {
-        return numberOfUploads;
-    }
 
-    public void setNumberOfUploads(Integer numberOfUploads) {
-        this.numberOfUploads = numberOfUploads;
-    }
 }

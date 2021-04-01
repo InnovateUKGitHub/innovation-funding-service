@@ -294,7 +294,7 @@ public class CompetitionSetupApplicationController {
     }
 
 
-    @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "uploadTemplateDocumentFile"})
+    @PostMapping(value = "/question/{questionId}/edit", params = {"uploadTemplateDocumentFile"})
     public String uploadTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                              BindingResult bindingResult,
                                              ValidationHandler validationHandler,
@@ -312,7 +312,7 @@ public class CompetitionSetupApplicationController {
                         file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
-    @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "removeTemplateDocumentFile"})
+    @PostMapping(value = "/question/{questionId}/edit", params = {"removeTemplateDocumentFile"})
     public String removeTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                              BindingResult bindingResult,
                                              ValidationHandler validationHandler,
@@ -341,9 +341,10 @@ public class CompetitionSetupApplicationController {
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
                                                @PathVariable long competitionId,
+                                               @PathVariable long questionId,
                                                UserResource loggedInUser,
                                                Model model) {
-        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult);
+        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult, questionId);
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 

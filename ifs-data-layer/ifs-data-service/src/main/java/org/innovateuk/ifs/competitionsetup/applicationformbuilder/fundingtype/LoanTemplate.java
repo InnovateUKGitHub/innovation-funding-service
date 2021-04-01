@@ -108,7 +108,12 @@ public class LoanTemplate implements FundingTypeTemplate {
                         aFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withActive(false)));
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false)
+                        ));
 
     }
 
