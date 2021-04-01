@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOff
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProcurementGrantOfferLetterTemplateViewModel.ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,9 +33,15 @@ public class ProcurementGrantOfferLetterTemplatePopulator {
     @Autowired
     private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
+    @Autowired
+    private ProjectRestService projectRestService;
+
+    public ProcurementGrantOfferLetterTemplateViewModel populate(ProjectResource project, CompetitionResource competition) {
     public ProcurementGrantOfferLetterTemplateViewModel populate(ProjectResource project) {
         long applicationId = project.getApplication();
         List<PartnerOrganisationResource> organisations = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
+        ProjectUserResource projectManager = projectRestService.getProjectManager(project.getId()).getSuccess();
+        return new ProcurementGrantOfferLetterTemplateViewModel(applicationId, organisations.get(0).getOrganisationName(), project.getName(), competition.getName(), projectManager.getUserName());
         PartnerOrganisationResource organisation = organisations.get(0);
 
         List<ProjectProcurementMilestoneResource> milestones = projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(project.getId(), organisation.getOrganisation()).getSuccess();
@@ -47,8 +54,13 @@ public class ProcurementGrantOfferLetterTemplatePopulator {
 
         List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths = milestoneMonths(project, milestones, projectFinanceResource);
 
+        ProjectUserResource projectManager = projectRestService.getProjectManager(project.getId()).getSuccess();
+
         return new ProcurementGrantOfferLetterTemplateViewModel(applicationId,
                 organisation.getOrganisationName(),
+                project.getName(),
+                competition.getName(),
+                projectManager.getUserName(),
                 milestoneEntries,
                 milestoneMonths);
     }

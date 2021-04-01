@@ -12,6 +12,32 @@ def wait_for_autosave(formselector='css=[data-autosave]', completeselector='css=
 def repeat_string(string='', multiplicity=0):
     return string * int(multiplicity)
 
+def to_number_if_number(item):
+    if(item.isnumeric()):
+        return int(item)
+    return item
+
+# Performs a keyword on a paginated page, clicking through to the next pages if the keyword is not successful, until
+# either the keyword succeeds or we run out of pages
+def do_keyword_with_pagination_selector(selector, keyword, *args):
+
+    wait_until = BuiltIn().get_library_instance('WaitUntilLibrary')
+
+    keyword_succeeded = wait_until.run_keyword_and_return_status_without_screenshots(keyword, *args)
+
+    if keyword_succeeded:
+
+        return 'PASS'
+
+    else:
+
+        next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('Click Element', selector)
+
+        if not next_button_clicked:
+            return 'FAIL'
+        else:
+            return do_keyword_with_pagination(keyword, *args)
+
 
 # Performs a keyword on a paginated page, clicking through to the next pages if the keyword is not successful, until
 # either the keyword succeeds or we run out of pages

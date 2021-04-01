@@ -1,22 +1,23 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ProcurementGrantOfferLetterTemplateViewModel {
 
     private final long applicationId;
     private final String organisationName;
+    private final String projectName;
+    private final String competitionName;
+    private final String projectManagerName;
     private final List<ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel> milestones;
     private final List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths;
 
-    public ProcurementGrantOfferLetterTemplateViewModel(long applicationId, String organisationName,
+    public ProcurementGrantOfferLetterTemplateViewModel(long applicationId, String organisationName, String projectName, String competitionName, String projectManagerName,
                                                         List<ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel> milestones,
                                                         List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths) {
         this.applicationId = applicationId;
         this.organisationName = organisationName;
+        this.projectName = projectName;
+        this.competitionName = competitionName;
+        this.projectManagerName = projectManagerName;
         this.milestones = milestones;
         this.milestoneMonths = milestoneMonths;
     }
@@ -27,6 +28,18 @@ public class ProcurementGrantOfferLetterTemplateViewModel {
 
     public String getOrganisationName() {
         return organisationName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public String getProjectManagerName() {
+        return projectManagerName;
     }
 
     public List<ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel> getMilestones() {

@@ -39,7 +39,7 @@ mysql_servers=
 (
 	{
 		address = "<<DB_HOST>>" # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
-		port = <<DB_PORT>>           # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
+		port = "<<DB_PORT>>"           # no default, required . If port is 0 , address is interpred as a Unix Socket Domain
 		hostgroup = 0	        # no default, required
 		status = "ONLINE"     # default: ONLINE
 		weight = 1            # default: 1
@@ -57,7 +57,7 @@ mysql_users=
 		password = "<<DB_PASS>>" # default: ''
 		default_hostgroup = 0 # default: 0
 		active = 1            # default: 1
-		default_schema="<<DB_NAME>>"
+		default_schema= "<<DB_NAME>>"
 	}
 )
 

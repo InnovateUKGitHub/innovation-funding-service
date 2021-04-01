@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:ifs="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>
         Print version with CSS
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0b0c0c" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#0b0c0c"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 </head>
 <body>
 <main>
@@ -16,25 +16,28 @@
             .letter-size {
                 padding: 4em;
             }
+
             .letter-image {
                 max-width: 12em;
                 padding: 0 0 4em 0;
             }
-
         }
 
         .letter-logo {
             margin: 0 auto;
         }
+
         .letter-page-break {
             page-break-before: always
         }
+
         .letter-size,
         .letter-size * {
             font-family: "Arial", "Helvetica", sans-serif;
             /*font-size: 16px;*/
             font-size: 10pt;
         }
+
         .letter-image {
             /*max-width: 300px;*/
             padding: 0 0 60px 0;
@@ -61,9 +64,10 @@
         .letter-table .letter-table--right {
             text-align: right;
         }
-        .letter-list {
 
+        .letter-list {
         }
+
         .letter-list li,
         .terms-and-conditions li {
             padding: 4px 0
@@ -78,15 +82,18 @@
             counter-reset: item;
             padding: 15px 0;
         }
+
         ol.list-alpha li {
             display: block;
             padding: 10px 0 10px 45px;
             counter-increment: item;
         }
+
         ol.list-alpha li:before {
-             position: absolute;
-             content: counter(item, upper-alpha);
-             margin-left:-45px; //negative of the ol li padding
+            position: absolute;
+            content: counter(item, upper-alpha);
+            margin-left: -45px;
+        / / negative of the ol li padding
         }
 
         ol.ifs-list--number {
@@ -95,22 +102,26 @@
             margin: 0;
             padding: 0;
         }
+
         ol.ifs-list--number > li {
             display: table;
             counter-increment: item;
             margin-bottom: 0.6em;
         }
+
         ol.ifs-list--number > li:not(.regular) {
             font-weight: bold;
         }
+
         ol.ifs-list--number > li.regular {
             font-weight: normal;
         }
+
         ol.ifs-list--number > li:before {
-             content: counters(item, ".") ". ";
-             display: table-cell;
-             padding-right: 0.6em;
-         }
+            content: counters(item, ".") ". ";
+            display: table-cell;
+            padding-right: 0.6em;
+        }
 
         ol.ifs-list--number > li ol.ifs-list--number {
             list-style-type: none;
@@ -118,1094 +129,606 @@
             margin: 0;
             padding: 0;
         }
+
         ol.ifs-list--number > li ol.ifs-list--number > li {
             margin: 0;
             font-weight: normal;
         }
+
         ol.ifs-list--number > li ol.ifs-list--number > li:before {
-             content: counters(item, ".") " ";
+            content: counters(item, ".") " ";
         }
-
     </style>
-
     <!-- TODO fragments. -->
-
-
-
     <div class="letter-size">
         <p>AGREEMENT</p>
         <p>BETWEEN</p>
         <p>INNOVATE UK part of UK Research and Innovation</p>
         <p>AND</p>
         <p th:text="${model.organisationName}">Contractor</p>
-        <p>Project Ref. <th:block th:text="${model.applicationId}">xxx</th:block></p>
+        <p>Project Ref.
+            <th:block th:text="${model.applicationId}">xxx</th:block>
+        </p>
     </div>
-
-
     <div class="letter-size">
-        <p>Section 1 : Form of Agreement</p>
-        <p>This Agreement is made between</p>
+        <p><strong>Section 1 : Form of Agreement</strong></p>
+        <p><strong>This Agreement</strong> is made between</p>
         <p>INNOVATE UK - a part of UK Research and Innovation (UKRI-Innovate UK), a body corporate established by statute pursuant to the commencement of section 91 of the Higher Education and Research Act 2017 whose principal place of business is at Polaris House, North Star Avenue, Swindon, SN2 1FL (the “Authority“);</p>
         <p>and</p>
-        <p>(2)	[<th:block th:text="${model.organisationName}"></th:block>]  ("the Contractor")</p>
+        <p>(2) [<th:block th:text="${model.organisationName}"></th:block>] ("the Contractor")
+        </p>
         <p>the Authority and the Contractor being together called "the Parties".</p>
-        <p>IT IS AGREED as follows:</p>
-        <p>The Contractor will undertake an innovation and development project entitled ‘[   ]’ in accordance with the specification as detailed in Section 3  (“the Project”) as part of a competitive research and development in phases project carried out by the Authority under the Pre-Commercial Procurement principles.</p>
-        <p>The Authority will pay the Contractor the Approved Cost as set out in Section 4 for:</p>
-        <p>undertaking the Project; and</p>
-        <p>in respect of any assignment of any Intellectual Property rights in the Material to the Authority on behalf of the Crown made pursuant to Clauses 17 and 18 of Section 2.</p>
-        <p>No payments will be made until the approvals sought pursuant to Clause 3.3 of Section 2 are obtained unconditionally.</p>
-        <p>Payments made under this agreement are inclusive of VAT and any other taxes and duties  which shall (if applicable) be payable by a party at the rate and in the manner from time to time prescribed by law.</p>
-        <p>This Form of Agreement (Section 1) together with the attached Sections 2 to 6 inclusive are the documents which collectively form “the Agreement”. If there is any inconsistency between Sections 3 to 6 of the Agreement and this Section 1 or the Terms and Conditions set out in Section 2, the provisions of Section 1 and 2 shall prevail.</p>
-        <p>The contract effected by the signing of this Form of Agreement constitutes the whole agreement between the Parties and supersedes all prior negotiations, agreements, representations or understandings between them relating to the subject matter of this Agreement.</p>
-        <p>Each party acknowledges that, in entering into the Agreement, it does not rely on any statement, representation, assurance or warranty (“Representation”) of any person (whether a party to this Agreement or not) other than as expressly set out in the Agreement. Each party agrees that the only remedies available to it arising out of or in connection with a Representation shall be for breach of contract.</p>
-        <p>Nothing in this Agreement shall limit or exclude any liability for fraud.</p>
-        <p>Signed by the duly authorised signatory</p>
-        <p>of the Authority:					……………………………………………………………</p>
-        <p>Signature</p>
-        <p>……………………………………………………………</p>
-        <p>Full Name</p>
-        <p>……………………………………………………………</p>
-        <p>Position Held</p>
-        <p>……………………………………………………………</p>
-        <p>Date</p>
-        <p>Signed by the duly authorised signatory</p>
-        <p>of the Contractor:				……………………………………………………………</p>
-        <p>Signature</p>
-        <p>……………………………………………………………</p>
-        <p>Full Name</p>
-        <p>……………………………………………………………</p>
-        <p>Position Held</p>
-        <p>……………………………………………………………</p>
-        <p>Date</p>
-    </div>
-
-
-
-
-    <div class="letter-size">
-        <p>SECTION 2</p>
-        <p>TERMS AND CONDITIONS</p>
-
-    <ol class="govuk-list ifs-list--number">
-        <li>Definitions and Interpretation
+        <p><strong>IT IS AGREED</strong> as follows:</p>
         <ol class="govuk-list ifs-list--number">
-        <li class="regular">As used in this Agreement the following terms and expressions shall have the meaning ascribed to them below:
-        "Agreement" 	means this Agreement concluded between the Parties including all sections to it;
-        “Approved Cost" 	means the total cost agreed between the Parties for the Project as set out in Section 4
-        "Authority's Representative"	means a person authorised to represent the Authority in respect of this Agreement;
-
-
-
-        "Background IP"	means Intellectual Property owned or controlled by either of the Parties at the date of this Agreement or which shall at any time thereafter become so owned or controlled otherwise than as a result of the Project under this Agreement;
-
-
-
-        “Confidential Information”	means information that falls within the types of information which has been designated as confidential by either Party or that ought to be considered as confidential (however it is conveyed or on whatever media it is stored) including information which relates to the business, affairs, properties, assets, trading practices, goods, Services, developments, trade secrets, Intellectual Property rights, know-how, personnel, customers and suppliers of either Party, all personal data and sensitive personal data within the meaning of the Data Protection Act 2018, the Project and  commercially sensitive information.
-
-
-
-        “Controller”	has the meaning as defined in the Data Protection Legislation
-
-
-
-        "Commencement Date"	means the date referred to as being the commencement date as set out in Section 3 [Date];
-
-
-
-        “Competition”	The specific SBRI competition under which this contract is awarded;
-
-
-
-        "Completion Date"	means the date as referred to as being the completion date as set out in Section 3;
-
-
-
-        "Contractor’s Representative" 	means a person authorised to represent the Contractor in respect of this Agreement and who shall have authority to bind the Contractor in all matters under this Agreement;
-
-
-
-        “Contractor’s Staff”	means the Contractor’s Representative and all employees consultants agents and subcontractors which the Contractor engages in relation to the Project;
-
-
-
-        “Copyright" 	has the meaning ascribed to it by the Copyright, Designs and Patent Act 1988;
-
-
-
-        “Crown”	means the government of the United Kingdom (including the Northern Ireland Assembly and Executive Committee, the Scottish Executive and the National Assembly for Wales) including but not limited to government ministers, government departments and their agents, executive agencies and non-departmental public bodies;
-
-
-
-        "Data" 	means information collected and/or used for the purposes of the Research, which can be processed manually, electronically or by other means;
-
-
-
-        “Data Protection Legislation” 	 means the UK Data Protection Legislation and any other European
-
-
-
-        Union legislation relating to personal data and all other legislation and regulatory requirements in force from time to time which apply to a party relating to the use of Personal Data (including, without limitation, the privacy of electronic communications) and the guidance and codes of practice issued by the relevant data protection or supervisory authority and applicable to a party.
-
-
-
-        “Data Subject”	 has meaning defined in the Data Protection Legislation.
-
-
-
-        “Default" 	means any breach by a Party to this Agreement of its obligations under this Agreement (including a fundamental breach or breach of a fundamental term) or any default, act, omission, negligence or statement of a Party to this Agreement or its employees, agents or sub-contractors in connection with or in relation to the subject matter of this Agreement and in respect of which such Party is liable to the other;
-
-
-
-        "FOIA"	means the Freedom of Information Act 2000 and any subordinate and/or amending, legislation made under this Act from time to time together with any guidance and/or codes of practice issued by the Information Commissioner in relation to such legislation;
-
-
-
-        “Foreground IP” 	means the Intellectual Property developed during the Project;
-
-
-
-        "Information"	has the meaning given under section 84 of the FOIA;
-
-
-
-        “Insolvency Event" 	means where the Contractor passes a resolution, or the court makes an order that:
-
-
-
-        (i) the Contractor be wound up (otherwise than for the purpose of a bona fide and solvent reconstruction or amalgamation); or
-
-
-
-        (ii) a receiver, manager or administrator on behalf of a creditor is appointed in respect of all or part of the business of the Contractor; or
-
-
-
-        (iii) circumstances arise which entitle a court or creditor to appoint a receiver, manager or administrator or which entitle the court (otherwise than for the purpose of a solvent and bona fide reconstruction or amalgamation) to make a winding up order; or
-
-
-
-        (iv) the Contractor ceases to trade or is unable to pay its debts within the meaning of the Insolvency Act 1986 or any similar event occurs under the law of any other jurisdiction.
-
-
-
-        "Intellectual Property (IP)"	means patents, inventions (whether or not patentable or capable of registration), trade marks, service marks, copyrights, topography rights, design rights and database rights, (whether or not any of them are registered or registerable and including applications for registration, renewal or extension of any of them), trade secrets and rights of confidence, trade or business names and domain names and all rights or forms of protection of a similar nature which have an equivalent effect to any of them which may now or in the future exist anywhere in the world;
-
-
-
-        “Key Staff”	means the persons named in Section 5.
-
-
-
-        “Language”	means the English Language unless otherwise agreed;
-
-
-
-        “Material”	means any report, executive summary, paper, abstract or other document provided by the Contractor under Clauses 15 and 16;
-
-
-
-
-
-        “Milestones”  	means the milestones described in Section 4 of this Agreement.
-
-
-
-        “Milestone Dates” 	means the milestones date set out in Section 4 of this Agreement.
-
-
-
-        “Milestone Payments” 	 means the milestone payments set out in Section 4 of this Agreement.
-
-
-
-        "Personal Data" 	has the meaning as defined in the Data Protection Act 2018 or successor legislation;
-
-
-
-        “Pre-Commercial Procurement”	means the public procurement of research and development services where the contracting authority or contracting entity does not reserve all the results and benefits of the contract exclusively for itself for use in the conduct of its own affairs, but shares them with the providers under market conditions.
-
-
-
-        "Project" 	means the Research together with the Results;
-
-
-
-        "Project Period" 	means the period commencing on the Commencement Date and ending on the Completion Date or such later date as may be agreed between the Parties unless otherwise determined in accordance with the terms of the Agreement;
-
-
-
-        “R&D&I Framework” 	means the European Commission’s Framework for State Aid for Research and Development and Innovation (2014C 198/01)
-
-
-
-        "Research"	means the scope of work specified in Section 3;
-
-
-
-        "Results" 	means any Data, or information or other material generated by the Project;
-
-
-
-        “Retention”  	means the sum determined in accordance with Clause 4.2 of this Agreement.
-
-
-
-        “Services” 	means the services being provided by the Contractor to enable fulfillment of the Project ;
-
-
-
-        “Sub-Contract”	any contract or agreement or proposed contract or agreement between the Contractor and any third party whereby that third party agrees to provide to the Contractor the Services or any part thereof or facilities or services necessary for the provision of the Services or any part thereof or necessary for the management, direction or control of the Services or any part thereof. Sub-Contractor shall be construed accordingly;
-
-
-
-        “UK Data Protection Legislation” 	means all applicable data protection and privacy legislation in force from time to time in the UK including the General Data Protection Regulation ((EU) 2016/679), the Data Protection Act 2018, the Privacy and Electronic Communications Directive 2002/58/EC (as updated by Directive 2009/136/EC) and the Privacy and Electronic Communications Regulations 2003 (SI 2003/2426) as amended.
-
-
-
-        "Variation" 	means a variation to the Agreement executed through the completion of a Variation to  Agreement Form signed on behalf of the Parties in accordance with Clause 6.
-
-
-
-        </li>
-
-
-       <li class="regular">The interpretation and construction of the Agreement shall be subject to the following provisions:
-
-
-           <ol class="govuk-list ifs-list--number">
-
-               <li>a reference to any statute, enactment, order, regulation or other similar instrument shall be construed as a reference to the statute, enactment, order, regulation or instrument as subsequently amended or re-enacted;</li>
-
-
-
-               <li>the headings to Clauses are for ease of reference only and shall not affect the interpretation or construction of the Clauses;</li>
-
-
-
-
-
-               <li>references to Clauses are references to Clauses in the Section of the Agreement in which they appear, unless otherwise stated;</li>
-
-
-
-               <li>Clauses 2 to 32 in section 2 shall be treated as conditions or fundamental terms of this Agreement, breach of which shall entitle the innocent party to claim damages as well as affirm or terminate the contract in accordance with Clause 20;</li>
-
-
-
-               <li>where the context allows, references to male gender include the female gender and the neuter, and the singular includes the plural and vice versa.</li>
-           </ol>
-       </li>
-    </ol>
-    </li>
-    <li>Administration and Direction of the Project
-        <ol class="govuk-list ifs-list--number">
-
-
-            <li>The Authority may publish details of the Project for any non-commercial purpose, subject to the provisions of the Agreement.  Such publication shall require the consent of the Contractor, and such consent shall not be unreasonably withheld or delayed.</li>
-
-
-
-       <li>The Contractor shall ensure that each member of the Contractor’s Staff engaged on the Project  observes the Conditions of this Agreement and any Variation entered into between the Parties hereto and that the Contractor’s Staff are advised of any consequent changes in the scope of the Agreement or the Project.</li>
-
-
-
-       <li>Notwithstanding the provisions of Clause 20, the Authority may terminate the Agreement if any of the Contractor’s Key Staff are not available for the entire period needed to fulfil their duties in the Project, subject to prior discussion having first been held with the Contractor to attempt to identify and agree a mutually acceptable replacement and where the lack of availability of one or more of the Key Staff causes a material risk to the fulfilment of the delivery objective of the Project.</li>
-
-
-
-       <li>The objectives of the Project are set out in Section 3.  Within such objectives, details of the exact programme to be followed and the day-to-day responsibility for carrying out this programme will be under the control of the Contractor, in consultation, where appropriate, with the Authority’s Representative.</li>
-
-
-
-       <li>The Contractor shall ensure that it communicates in a full, frank and prompt manner with the Authority and such other third parties as may be notified to the Contractor by the Authority. The Contractor shall advise the Authority as required on the Project. In particular, the Contractor must notify the Authority of any proposed deviation from the agreed protocol or if significant developments occur as a study progresses, whether in relation to the safety of individuals or to scientific direction.</li>
-
-
-
-       <li>The Authority reserves the right to terminate this Agreement forthwith should the Contractor be unwilling or unable for any reason to continue with the Project or if, in the reasonable opinion of the Authority, the Contractor is consistently failing to achieve an acceptable standard in relation to the Project. If this occurs, the Authority shall not be obliged to make any further financial payment to the Contractor.</li>
-
-
-        </ol>
-    </li>
-    <li>Obligations of the Contractor and the Authority
-        <ol class="govuk-list ifs-list--number">
-
-
-
-       <li>The Contractor shall manage and complete the Project in accordance with the specification as set out in Section 3 and shall allocate sufficient resources to the Project to enable it to comply with this obligation.</li>
-
-
-
-       <li>The Contractor shall meet, any performance dates specified in Section 3 or elsewhere in the Agreement and the obligations of this Clause 3. If the Contractor fails to do so, the Authority may, after giving the Contractor not less than 14 days notice of its intention to do the same, (without prejudice to any other rights it may have):
-
-
-            <ol class="govuk-list ifs-list--number">
-
-                <li>	terminate this agreement in whole or in part without liability to the Contractor;</li>
-
-
-
-                <li>	refuse to accept any subsequent performance of the Project which the Contractor attempts to make;</li>
-
-
-
-                <li>	hold the Contractor accountable for any loss and additional costs incurred; and</li>
-            </ol>
-        </li>
-        <li>The Contractor shall:
-
-            <ol class="govuk-list ifs-list--number">
-                <li>co-operate with the Authority in all matters relating to the Project;</li>
-
-            <li>subject to the prior written approval of the Authority, appoint or, at the written request of the Authority, replace on the Project without delay:
-
-
+            <li class="regular">The Contractor will undertake an innovation and development project entitled '<th:block th:text="${model.projectName}"/>' in accordance with the specification as detailed in Section 3 (“the Project") as part of a competitive research and development in phases project carried out by the Authority under the Pre-Commercial Procurement principles.
+            </li>
+            <li class="regular">The Authority will pay the Contractor the Approved Cost as set out in Section 4 for:
                 <ol class="govuk-list ifs-list--number">
-
-                    <li>	the Contractor's Representative; and</li>
-
-
-
-                    <li>Key Staff or any member of the Contractor's Staff, who shall be suitably skilled, experienced and qualified to carry out the Project.</li>
+                    <li>undertaking the Project; and</li>
+                    <li>in respect of any assignment of any Intellectual Property rights in the Material to the Authority on behalf of the Crown made pursuant to Clauses 17 and 18 of Section 2.</li>
                 </ol>
             </li>
-
-
-
-                <li>subject to clause 3.3.2, ensure that the same person acts as the Contractor's Representative throughout the term of this Project;</li>
-
-
-
-            <li>procure the availability of the Contractor's Representative and Key Staff for the purposes of the Project;</li>
-
-
-
-
-                <li>promptly inform the Authority of the absence of the Contractor’s Representative and/or Key Staff. If the Authority so requires, the Contractor shall provide a suitably qualified replacement;</li>
-
-
-
-
-                <li>not make any changes to the Contractor's Representative or the Key Staff without the prior written approval of the Authority, such approval not to be unreasonably withheld or delayed; and</li>
-
-
-
-
-                <li>ensure that the Contractor's Team uses reasonable skill and care during the Project.</li>
-
-
-
-
-                <li>observe, and ensure that the Contractor's Team observe, all rules and regulations and any other reasonable requirements of the Authority; this shall include and not be limited to ensuring that the Approved Cost shall be utilised in accordance with the Project cost breakdown submitted by the Contractor  at Project tender stage covering  all Project materials, equipment and any applicable sub-contractor costs;</li>
-
-
-
-            <li>notify the Authority as soon as it becomes aware of any issues which arise in relation to the Project; and</li>
-
-
-
-
-                <li>before the Commencement Date obtain, and at all times maintain, all necessary licences and consents and comply with all relevant legislation in relation to the Project.</li>
-
-
-
-
-                <li>immediately disclose to the Authority any potential conflict of interest, including where the Contractor may benefit from external advisors who were or have been involved in planning or undertaking the Project or the associated call for tenders.</li>
-
-
-
-
-                <li>ensure, as far as reasonably possible, the adoption of open standards and interoperability in the innovative solutions which are achieved as a result of the research services in order to promote early adoption.</li>
-
-
-
-
-                <li>ensure that in relation to the Project and all Project related activities, it acts in accordance with all applicable provisions of the R&D&I Framework and in  any event that there has been a breach of the R&D&I Framework as reasonably determined by the Authority; the Authority shall be entitled to such recourse as may be reasonable to enable the Contractor and the Authority to comply with the R&D&I Framework. Such rescourse for the avoidance of doubt shall include and not be limited to a termination of this Agreement and any other remedy legally available to the Authority  .</li>
-
-            </ol>
-        </li>
-
-        <li>The Contractor acknowledges and agrees that the Authority is entering into this agreement on the basis that the details of the Project are accurate and complete in all material respects, and is not misleading.</li>
-
-
-
-        <li>The Authority shall:
-
-            <ol class="govuk-list ifs-list--number">
-
-
-                <li>co-operate with the Contractor in all matters relating to the Project and appoint (and, as it thinks fit, replace) the Authority’s Representative in relation to the Project, who shall have the authority contractually to bind the Authority on matters relating to the Project;</li>
-
-
-                <li>provide such access to the Authority’s premises and data, and such office accommodation and other facilities as may reasonably be requested by the Contractor and agreed with the Contractor in writing in advance, for the purposes of the Project;</li>
-
-
-
-                <li>provide such information as the Contractor may reasonably request and the Contractor considers reasonably necessary, in order to carry out the  Project, in a timely manner, and ensure that it is accurate in all material respects; and</li>
-
-
-
-                <li>inform the Contractor of all health and safety rules and regulations and any other reasonable security requirements that apply at any of the Authority’s premises.</li>
-            </ol>
-        </li>
-
+            <li class="regular">No payments will be made until the approvals sought pursuant to Clause 3.3 of Section 2 are obtained unconditionally.</li>
+            <li class="regular">Payments made under this agreement are inclusive of VAT and any other taxes and duties which shall (if applicable) be payable by a party at the rate and in the manner from time to time prescribed by law.</li>
+            <li class="regular">This Form of Agreement (Section 1) together with the attached Sections 2 to 6 inclusive are the documents which collectively form “the Agreement". If there is any inconsistency between Sections 3 to 6 of the Agreement and this Section 1 or the Terms and Conditions set out in Section 2, the provisions of Section 1 and 2 shall prevail.</li>
+            <li class="regular">The contract effected by the signing of this Form of Agreement constitutes the whole agreement between the Parties and supersedes all prior negotiations, agreements, representations or understandings between them relating to the subject matter of this Agreement.</li>
+            <li class="regular">Each party acknowledges that, in entering into the Agreement, it does not rely on any statement, representation, assurance or warranty (“Representation") of any person (whether a party to this Agreement or not) other than as expressly set out in the Agreement. Each party agrees that the only remedies available to it arising out of or in connection with a Representation shall be for breach of contract.</li>
+            <li class="regular">Nothing in this Agreement shall limit or exclude any liability for fraud.</li>
         </ol>
-    </li>
-
-
-
-    <li>Accounting and Payments
-
-
+        <p>Signed by the duly authorised signatory</p>
+        <p>of the Authority: ……………………………………………………………</p>
+        <p>Signature</p>
+        <p>……………………………………………………………</p>
+        <p>Full Name</p>
+        <p>……………………………………………………………</p>
+        <p>Position Held</p>
+        <p>……………………………………………………………</p>
+        <p>Date</p>
+        <p>Signed by the duly authorised signatory</p>
+        <p>of the Contractor: ……………………………………………………………</p>
+        <p>Signature</p>
+        <p>……………………………………………………………</p>
+        <p>Full Name</p>
+        <p>……………………………………………………………</p>
+        <p>Position Held</p>
+        <p>……………………………………………………………</p>
+        <p>Date</p>
+    </div>
+    <div class="letter-size">
+        <p><strong>SECTION 2</strong></p>
+        <p><strong>TERMS AND CONDITIONS</strong></p>
         <ol class="govuk-list ifs-list--number">
-            <li>The total amount to be paid by the Authority to the Contractor shall not exceed the amount detailed in Section 4 and shall be paid to the Contractor by Milestone Payments, with the payment of each Milestone Payment being conditional on the Contractor having achieved the appropriate Milestone to the reasonable satisfaction of the Authority. Subject to these limits the Contractor is free to administer the funds within the terms of this Agreement without further reference to the Authority.</li>
-
-
-
-            <li>If the Contractor only partially achieves a Milestone by the corresponding Milestone Date, the Authority may, without prejudice to any other right or remedy that the Authority may have, deduct and retain an amount not more than 20% of that total Milestone Payment. The Retention shall become due and payable to the Contractor upon full achievement of the requisite criteria applicable to the relevant Milestone  to the reasonable satisfaction of the Authority, not to be unreasonably withheld or delayed.</li>
-
-
-
-            <li>Payments to third parties shall remain the responsibility of the Contractor who shall ensure that such payments are made promptly.</li>
-
-
-
-            <li>During the Project Period, payments will be made by the Authority in accordance with dates and amounts specified in Section 4. The Authority may suspend this payment schedule at any time if in the view of the Authority, acting reasonably,  satisfactory progress on the Project has not been maintained, or reports have not been submitted as required under Clauses 15 and 16.</li>
-
-
-
-            <li>The Contractor shall provide supporting  evidence as may be reasonably required to prove that the Contractor has used the amounts paid in accordance with Section 4 in connection with the Project. The supporting evidence shall clearly identify all Project and associated overhead costs.The Contractor shall maintain proper financial records relating to the Project at all times during the Project Period and for a period of six years after the end of the Project Period.</li>
-
-
-
-            <li>The Contractor shall not make any material changes to the work detailed in Section 3, or the total amount payable under the Contract, without prior written approval of the Authority.</li>
-
-
-
-            <li>The Contractor grants to the Authority and to any statutory or regulatory auditors of the Authority and to authorised agents the right of reasonable access to (and if necessary to copy) the relevant financial records during normal business hours.</li>
-
-
-
-            <li>The Contractor shall provide all reasonable assistance at all times during the term of the Agreement and during the period of two years after termination or expiry of this Agreement for the purposes of allowing the Authority to obtain such information as is necessary to fulfil the Authority's obligations to supply information for Parliamentary, Governmental, Judicial or other administrative purposes and/or to carry out an audit of the Contractor's compliance with this Agreement including all activities, performance, security and integrity in connection therewith.</li>
-
-
-
-            <li>On completion of the Project Period, the final payment in respect of costs properly incurred under the Agreement will be paid by the Authority to the Contractor within 30 (thirty) days, provided that:
-
-
-            <ol class="govuk-list ifs-list--number">
-                <li> the Project has been completed to the reasonable satisfaction of the Authority;</li>
-
-
-
-                <li>the reports required under Clauses 15 and 16 have been submitted by the Contractor; and</li>
-
-
-
-                <li>an agreement has been reached in respect of any items remaining for disposal.</li>
-            </ol>
-        </li>
-
-            <li>If at any time an overpayment has been made to the Contractor for any reason whatsoever, the amount of such overpayment shall be taken into account in the assessing of any further payments, or shall be recoverable from the Contractor at the Authority's discretion.</li>
-
-
-
-        <li>The Contractor shall keep and maintain until six years after this Agreement has been completed, or as long a period as may be agreed between the parties, full and accurate records of the Project including:
-
-            <ol class="govuk-list ifs-list--number">
-                <li> all aspects of the Project;</li>
-
-                <li>	all expenditure reimbursed by the Authority; and</li>
-
-                <li>	all payments made by the Authority.</li>
-            </ol>
-
-        and the Contractor shall on request afford the Authority or the Authority's representatives such access to those records as may be required in connection with the Agreement. The Authority shall be entitled to share such records with [project funder].
-        </li>
-
-        <li>Where the Contractor enters into a Sub-Contract with a supplier or contractor for the purpose of performing the Agreement, it shall cause a term to be included in such a Sub-Contract that requires payment to be made of undisputed sums by the Contractor to the Sub-Contractor within a specified period not exceeding 30 days from the receipt of a valid invoice, as defined by the Sub-Contract requirements.</li>
-        <li>Wherever, under the Agreement, any sum of money is recoverable from or payable by the Contractor (including any sum that the Contractor is liable to pay to the Authority in respect of any breach of the Agreement), the Authority may unilaterally deduct that sum from any sum then due, or which at any later time may become due to the Contractor under the Agreement or under any other agreement or contract with the Authority.</li>
-        <li>The Contractor shall make any payments due to the Authority without any deduction whether by way of set-off, counterclaim, discount, abatement or otherwise, unless the Contractor has a valid court order requiring an amount equal to such deduction to be paid by the Authority to the Contractor.</li>
-
-        </ol>
-    </li>
-
-        <li>Set Off
-            <ol class="govuk-list ifs-list--number">
-                <li>If any sum of money shall be due from the Contractor to the Authority or any other Government Department, the same may be deducted from any sum then due or which at any time thereafter may become due to the Contractor under this Agreement or any other agreement with the Authority or with any other department, office or agency of the Crown.</li>
-            </ol>
-        </li>
-
-        <li>Variation
-            <ol class="govuk-list ifs-list--number">
-                <li>If at any time it appears likely that any provision of the Agreement, in particular the Project, needs to be varied, the Contractor shall immediately inform the Authority in writing requesting a Variation to the Contract, giving full details of the justification for the request and giving proposals for the Variation to the Agreement. Upon receipt of such a request the Authority may:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>agree to vary the Agreement;</li>
-                        <li>vary the Project in a manner which the Contractor agrees can be carried out within the Project Period and Approved Cost;</li>
-                        <li>refuse the request and require the continuation of the Project in accordance with the Agreement; or</li>
-                        <li>give notice of termination in accordance with Clause 20.</li>
-                    </ol>
-                </li>
-
-
-                <li>Any Variation to the Agreement shall be set out in a Variation to Agreement Form as set out at Schedule A to this Section 2 and signed by both Parties.</li>
-            </ol>
-        </li>
-
-        <li>Staff Appointments
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall ensure that the terms and conditions of staff employed to provide services in connection with this Agreement contain provisions in respect of  Intellectual Property which are compatible with the terms of this Agreement.</li>
-                <li>The Contractor shall ensure that any individuals employed by or having a contract for services with the Contractor relating to this Agreement shall comply with any of the Authority’s rules and regulations.</li>
-            </ol>
-        </li>
-        <li>Publicity
-            <ol class="govuk-list ifs-list--number">
-                <li>During the Project Period, and prior to the publication of the  Results or Data or of matters arising from such Results or Data in accordance with Clause 19, the Contractor shall not without the prior written consent of the Authority release, or otherwise make available to third parties, information relating to the Agreement or the Project by means of any public statement in particular any press announcement or displays or oral presentations to meetings.</li>
-                <li>In the event that the Contractor fails to comply with Clause 8.1 the Authority reserves the right to terminate the Agreement for Default by notice in writing in accordance with Clause 20.4.</li>
-            </ol>
-        </li>
-        <li>Confidentiality
-            <ol class="govuk-list ifs-list--number">
-                <li>In respect of any Confidential Information that it may receive from the other Party and subject always to the remainder of this Clause 9, the receiving Party undertakes to keep secret and strictly confidential and shall not disclose any such Confidential Information to any third party, without the disclosing Party's prior written consent provided that:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>the receiving Party shall not be prevented from using any general knowledge, experience or skills which were in its possession prior to the commencement of the contract concerned;</li>
-                        <li>the Authority shall not be prevented from sharing Confidential Information with [project funder] to the extent required for the Project subject to the [project funder] being obligated to comply with terms equivalent to this Clause 9; and</li>
-                        <li>nothing in this Agreement shall be construed as to prevent either party from using data processing techniques, ideas, know-how and the like gained during the performance of the contract concerned in the furtherance of its normal business, to the extent that this does not result in a disclosure of confidential information or infringement of any valid Intellectual Property Rights of either Party or the unauthorised processing or release of any Personal Data.</li>
-                    </ol>
-                </li>
-                <li>Clause 9.1 shall not apply to any Confidential Information received by one Party from the other:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>which is or becomes public knowledge (otherwise than by breach of this Clause);</li>
-                        <li>which was in the possession of the receiving Party, without restriction as to its disclosure, before receiving it from the disclosing Party;</li>
-                        <li>which is received from a third party who lawfully acquired it and who is under no obligation restricting its disclosure;</li>
-                        <li>is independently developed without access to the Confidential Information as evidenced by receiving Party’s written notes; or</li>
-                        <li>which must be disclosed pursuant to a statutory, legal, governmentary or parliamentary obligation placed upon the Party making the disclosure, including any requirements for disclosure under the FOIA, or the Environmental Information Regulations 2004.</li>
-                    </ol>
-                </li>
-                <li>The obligations of each of the Parties contained in Clause 9.1 above shall continue without limit in point of time. In the event that the Contractor fails to comply with this Clause 9.3 the Authority reserves the right to terminate the Agreement by notice in writing for Default in accordance with Clause 20.4.</li>
-            </ol>
-        </li>
-        <li>DATA PROCESSING
-            <ol class="govuk-list ifs-list--number">
-                <li>Both parties will comply with all applicable requirements of the Data Protection Legislation, which shall  mean the UK Data Protection Legislation and any other law that applies in the UK.</li>
-                <li>The parties acknowledge that for the purposes of the Data Protection Legislation, the Authority is the
-                    Controller and the Contractor is the Processor. Schedule B (where attached) sets out the scope, nature and purpose of processing by the Contractor, the duration of the processing and the types of Personal Data and categories of Data Subject.</li>
-                <li>Without prejudice to the generality of Clause 10.1, the Authority will ensure that it has all necessary appropriate consents and notices in place to enable lawful transfer of any Personal Data to the Contractor for the duration and purposes of this agreement.</li>
-                <li>Without prejudice to the generality of Clause 10.1, the Contractor shall, in relation to any Personal Data processed in connection with the performance by the Contractor of its obligations under this agreement:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>process that Personal Data only on the documented written instructions of the Authority which are set out in Schedule B, unless the Contractor is required by applicable laws to otherwise process that Personal Data. Where the Contractor is relying on laws of a member of the European Union or European Union law as the basis for processing Personal Data, the Contractor shall promptly notify the Authority of this before performing the processing required by the applicable laws unless those applicable laws prohibit the Contractor from doing so;</li>
-                        <li>ensure that it has in place appropriate technical and organisational measures (as defined in the Data Protection Legislation), reviewed and approved by the Authority, to protect against unauthorised or unlawful processing of Personal Data and against accidental loss or destruction of, or damage to, Personal Data, appropriate to the harm that might result from the unauthorised or unlawful processing or accidental loss, destruction or damage and the nature of the data to be protected, having regard to the state of technological development and the cost of implementing any measures (those measures may include, where appropriate, pseudonymising and encrypting Personal Data, ensuring confidentiality, integrity, availability and resilience of its systems and services, ensuring that availability of and access to Personal Data can be restored in a timely manner after an incident, and regularly assessing and evaluating the effectiveness of the technical and organisational measures adopted by it);</li>
-                        <li>not transfer any Personal Data outside of the European Economic Area unless the prior written consent of the Authority has been obtained and the following conditions are fulfilled:
-                            <ol class="govuk-list ifs-list--number">
-                                <li>the Authority or the Contractor has provided appropriate safeguards in relation to the transfer;</li>
-                                <li>the Data Subject has enforceable rights and effective remedies;</li>
-                                <li>the Contractor complies with its obligations under the Data Protection Legislation by providing an adequate level of protection to any Personal Data that is transferred; and</li>
-                                <li>the Contractor complies with the reasonable instructions notified to it in advance by the Authority with respect to the processing of the Personal Data;</li>
-                            </ol>
-                        </li>
-                        <li>notify the Authority immediately if it receives:
-                            <ol class="govuk-list ifs-list--number">
-                                <li>a request from a Data Subject to have access to that person's Personal Data;</li>
-                                <li>a request to rectify, block or erase any Personal Data;</li>
-                                <li>receives any other request, complaint or communication relating to either Party's obligations under the Data Protection Legislation including any communication from the Information Commissioner;</li>
-                            </ol>
-                        </li>
-                        <li>assist the Authority in responding to any request from a Data Subject and in ensuring compliance with the Authority's obligations under the Data Protection Legislation with respect to security, breach notifications, impact assessments and consultations with supervisory authorities or regulators;</li>
-                        <li>notify the Authority without undue delay on becoming aware of a Personal Data breach including without limitation any event that results, or may result, in unauthorised access, loss, destruction, or alteration of Personal Data in breach of this agreement;</li>
-                        <li>at the written direction of the Authority, delete or return Personal Data and copies thereof to the Authority on termination or expiry of the agreement unless required by the applicable laws to store the Personal Data;</li>
-                        <li>maintain complete and accurate records and information to demonstrate its compliance with this Clause 10 and allow for audits by the Authority or the Authority's designated auditor pursuant to Clause 4.6 -4.7  and immediately inform the Authority if, in the opinion of the Contractor, an instruction infringes the Data Protection Legislation.</li>
-                    </ol>
-                </li>
-                <li>The Contractor shall indemnify the Authority against any losses, damages, cost or expenses incurred by the Authority arising from, or in connection with, any breach of the Contractor's obligations under this Clause 10.</li>
-                <li>Where the Contractor intends to engage a Sub-Contractor pursuant to Clause 4.11 and intends for that Sub-Contractor to process any Personal Data relating to this agreement, it shall:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>notify the Authority in writing of the intended processing by the Sub-Contractor;</li>
-                        <li>obtain prior written consent from the Authority to the processing;</li>
-                        <li>enter into a written agreement incorporating terms which are substantially similar to those set out in this Clause 10.</li>
-                    </ol>
-                </li>
-                <li>Either party may, at any time on not less than 30 working days' written notice to the other party, revise this Clause  10  by replacing it with any applicable controller to processor standard clauses or similar terms forming part of an applicable certification scheme (which shall apply when replaced by attachment to this agreement).</li>
-                <li>The provisions of this clause shall apply during the continuance of the agreement and indefinitely after its expiry or termination.</li>
-            </ol>
-        </li>
-        <li>Confidentiality of Personal Data
-            <ol class="govuk-list ifs-list--number">
-                <li>The collection, handling, processing and use of Personal Data shall be treated as confidential at all times.</li>
-                <li>The Contractor shall at all times be responsible for ensuring that all Personal Data (including Personal Data in any electronic format) is stored securely.  The Contractor shall take appropriate measures to ensure the security of such Personal Data and guard against unauthorised access thereto or disclosure thereof or loss or destruction while in its custody.</li>
-                <li>Personal Data shall not be made available to anyone other than those employed directly on the Project by the Contractor, to the extent that they need access to such information for the performance of their duties.</li>
-                <li>The Contractor shall fully indemnify and hold harmless the Authority, its employees and agents against all liabilities, losses, costs, charges and expenses incurred as a result of any claims, demands, actions and proceedings made or brought against the Authority by any person arising from the loss, unauthorised disclosure of Personal Data by the Contractor, or any Sub-Contractor, servant or agent of the Contractor or any person within the control of the Contractor.</li>
-                <li>Subject to Clause 11.4, the Contractor shall at its own expense conduct any litigation arising from any such claims, demands, actions or proceedings and all the negotiations for the settlement of the same and the Authority hereby agrees to grant the Contractor exclusive control of any such litigation or the negotiations for the settlement of the same.</li>
-                <li>No information which would lead to the identification of an individual shall be included in any publications without the prior agreement in writing of the individual concerned.  No mention shall be made of individual officers of the Authority, nor shall information be included which might lead to their identification, without the prior agreement in writing of the Authority.</li>
-                <li>The Contractor shall, at all times, comply with the provisions of the Data Protection Act 2018.</li>
-                <li>The Project may be jointly operated by the Authority and [ project funder].  Regardless of whether[ the project funder] is actively involved in the Project, any Personal Data which the Contractor submits as part of the application process for participation in the Project, or is otherwise necessary for the Project, shall be stored, processed and used by the Authority and shall be shared with [project funder] which shall likewise store process and use that Personal Data in accordance with the Data Protection Act 2018.</li>
-                <li>Any relevant information, including Confidential Information, produced by the Contractor and transferred to the Authority during the Project which is not Personal Data may also be shared by the Authority with the Crown, for their individual storage, processing and use in accordance with their information management and data sharing policies.  For the avoidance of doubt, the Crown shall not release such Confidential Information to third parties without the Contractor’s prior written permission.</li>
-            </ol>
-        </li>
-
-        <li>Anonymising of Personal Data
-            <ol class="govuk-list ifs-list--number">
-                <li>Without prejudice to Clause 11.8, the Authority shall not be entitled to inspect, take or be supplied with copies of  any Personal Data relating to third parties obtained in connection with the Project other than in an anonymised form. The Contractor shall ensure that all such Personal Data is anonymised as and when it is obtained and that the key to personal identities of all persons to whom the Personal Data relates is kept in a separate and secure place.</li>
-            </ol>
-        </li>
-
-        <li>Rights to Data
-            <ol class="govuk-list ifs-list--number">
-                <li>Subject to the provisions of Clause 12, the Authority reserves the right to have access to and to use Data compiled during the course of the work and will respect existing guidance on confidentiality of any Data which it obtains.</li>
-            </ol>
-        </li>
-
-
-        <li>Ethics
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor will ensure that work in any way connected with this Project is conducted in accordance with the Authorities’ guidelines. as may be issued, or referred to, from time to time by the Authority, copies of which are to be made available to the Contractor as appropriate or on reasonable request.</li>
-            </ol>
-        </li>
-
-        <li>Monitoring and Reporting
-            <ol class="govuk-list ifs-list--number">
-                <li>Progress of the Project will be reviewed periodically by the Authority’s Representative against the specifications detailed in Section 3.</li>
-                <li>The Contractor shall provide an interim report when reasonably required to do so by the Authority.  The interim report shall be in a form and otherwise in compliance with the guidance notes issued by the Authority’s Representative as amended from time to time and shall detail all Data, methods, Results and provisional conclusions together with management information and any other information relating to the Project.</li>
-                <li>During the Project Period the Contractor shall provide verbal or written reports as reasonably required by the Authority on any aspect of the Project.</li>
-                <li>The Contractor will allow its facilities, procedures and documentation to be submitted for scrutiny by the Authority or its auditors in order to ascertain compliance with the relevant laws of the United Kingdom and the terms of this Agreement.</li>
-                <li>The Contractor shall retain and maintain all assets necessary to ensure continued compliance with the FOIA and all other primary legislation that may apply from time to time.</li>
-            </ol>
-        </li>
-
-        <li>Final Report and Evaluation
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall provide a draft final report on the Project, in the approved language, within 14 days of the end of the Project Period or the date of termination of this Agreement. The draft final report shall be in a form which is in compliance with the guidance notes issued by the Authority’s Representative as amended from time to time or as otherwise required by the Authority’s Representative and shall include the Data, methods, Results and final conclusions together with management information and any other information relating to the Project up to the Completion Date.</li>
-                <li>Notwithstanding the provisions of Clauses 15 and 16.1, the Authority’s representative is entitled to carry out a visit to the Contractor’s premises at any time for the purpose of due diligence and evaluation in respect of the Project.</li>
-            </ol>
-        </li>
-
-
-        <li>Intellectual Property Rights
-            <ol class="govuk-list ifs-list--number">
-                <li>All Background Intellectual Property used or supplied under this Agreement in connection with the Project shall remain the property of the Party introducing the same and nothing contained in this Agreement or any licence agreement pursuant to the Project shall affect the rights of either Party in its Background Intellectual Property.</li>
-                <li>Subject to Clauses 17.3 and 18.5, the Intellectual Property rights arising out of the Project (“Foreground IP”) shall belong to the Contractor.  The Contractor hereby agrees with the Authority to grant to the Authority and HS2 Ltd a UK wide irrevocable, royalty-free non-exclusive licence to use the Foreground IP, together with any Background IP supplied by the Contractor during the Project that is required to use the Foreground IP. Grant by the Contractor to the Authority and HS2 Ltd of the licence to use Background IP shall be at a fair and reasonable market price.  The Contractor hereby agrees with the Authority that the Authority and HS2 Ltd shall have the right to grant a non-exclusive non-sub-licensable UK wide sub-licence to use the Foreground IP to any third party within the UK and EU at a fair and reasonable market price.  The Contractor shall upon written request by HS2 Ltd and/or the Authority provide a non-exclusive non sub-licensable UK wide licence to any third party within the UK and EU at a fair and reasonable market price.</li>
-                <li>The Contractor hereby agrees with the Authority to grant to the Authority and HS2 Ltd a UK wide irrevocable, royalty-free non-exclusive licence, together with the right to grant sub-licences, to use or publish any Data and  Results arising from the Project.</li>
-                <li>Notwithstanding its ownership of the Foreground IP, the Contractor shall not assign or transfer the Foreground IP to any third party without the prior written approval of the Authority, not to be unreasonably delayed or withheld.  If the Contractor assigns or transfers the Foreground IP, it shall procure that the assignee or transferee shall enter into such instrument as necessary to comply with the Contractor’s obligations set out in this Agreement, and particularly those at Clauses 17.2, 17.3, 18 and 19.</li>
-            </ol>
-        </li>
-
-        <li>Exploitation of Foreground IP and Results
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall promptly inform the Authority of any Results which are capable of exploitation whether patentable or not.</li>
-                <li>The Contractor shall, as appropriate, devise, publish, implement and maintain procedures for the management of Intellectual Property in the Results and in particular, but without limitation, shall use all reasonable endeavours to ensure that:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>the Results of the Project are identified, recorded and carefully distinguished from the outputs of other research;</li>
-                        <li>prior to any publication of the Results of the Project, patentable inventions arising from the Results are identified, duly considered for patentability and, where it is reasonable so to do, patent applications in respect thereof are filed at the British or European Patent Office; and</li>
-                        <li>all such patent applications are diligently executed having regard to all relevant circumstances.</li>
-                    </ol>
-                </li>
-                <li>The Contractor shall permit the Authority to monitor the operation and effectiveness of the Contractor's procedures for the management of Intellectual Property in such a way as the Authority considers reasonably necessary.</li>
-                <li>Consistent with the good management of Intellectual Property and the agreement of the Authority, the Contractor shall use its best endeavours to:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>promote the dissemination of the Results of the Project; and</li>
-                        <li>where reasonable and practicable, exploit commercially such Results to generate either capital or revenue or both.</li>
-                    </ol>
-                </li>
-                <li>The Contractor may exploit commercially any publications arising from the Project.</li>
-                <li>If within three years of its creation, any Intellectual Property in the Results or Foreground IP has not been commercially exploited by the Contractor, and the Contractor is not using its best endeavours to do so, the Contractor shall on written request by the Authority promptly assign the Intellectual Property Rights in the Results or Foreground IP to the Authority.  Each party shall bear its own costs in such assignment.</li>
-            </ol>
-        </li>
-
-
-        <li>Publication
-            <ol class="govuk-list ifs-list--number">
-                <li>The Authority’s Representative must be notified prior to any publication (whether in oral, written or other form) in particular any press announcement of the Research, Results or Data or of matters arising from such Results or Data. One draft copy of the proposed publication shall be sent to the Authority’s Representative at the same time as submission for publication or at least 28 days before the date intended for publication whichever is earlier.</li>
-                <li>In the event that the Contractor fails to comply with Clause 19.1 the Authority reserves the right to terminate the Agreement by notice in writing with immediate effect.</li>
-                <li>Subject to the provisions of Clause 9 and notwithstanding the provisions of Clause 17 the Authority’s Representative may, at any time after consultation with the Contractor, publish public summaries of the Material, Research and/or Results for any non-commercial purpose, including information about key Results attained and lessons learnt on the feasibility of the explored solution approaches and the potential for future deployment of solutions. Specific details shall not be disclosed; that are deemed by the Contractor to be against the legitimate commercial interest of the Contractor, that are contrary to the public interest, that would hinder application of the law or which could distort fair competition between Contractor and the other contractors in the Competition. The timing of any such publication will be subject as far as possible to prior consultation with the Contractor.</li>
-                <li>Any publication resulting from work carried out under this Agreement shall acknowledge the Authority’s financial support and carry a disclaimer as the Authority may require or in the absence of direction from the Authority a notice as follows:
-                    <br>
-                    “This report is work commissioned by the Authority. The views expressed in this publication are those of the author(s) and not necessarily those of the Authority”.</li>
-            </ol>
-        </li>
-
-
-
-        <li>Termination Upon Occurrence of Events
-            <ol class="govuk-list ifs-list--number">
-                <li>Without prejudice to any other provision of the Agreement, this Agreement may be terminated by either Party giving three months notice in writing to the other, unless the time remaining to the end of the contract phase is less than three months, in which case the notification time shall be all remaining time to the end of the contract phase. Should the option to terminate be exercised by the Authority, it shall indemnify the Contractor from and against all and any actual loss unavoidably incurred by reason or in consequence of the termination provided that the Contractor takes all immediate and reasonable steps to minimise the loss.</li>
-                <li>With regards to Clause 20.1 the Authority will not pay any sum which, when taken together with any sums paid or due or becoming due to the Contractor under this Agreement, will exceed such total sums as would have been payable under this Agreement if the Contractor had fulfilled its obligations under this Agreement.</li>
-                <li>The Authority may at any time and from time to time by notice in writing terminate this Agreement without liability for any damage, loss or expenses arising as a result of or in connection with such termination if there is a change of control (as defined by section 416 of the Income and Corporation Taxes Act 1988) in the Contractor. The Authority shall only be permitted to exercise its rights pursuant to this Clause 20.3 for 6 (six) months after any such change of control and shall not be permitted to exercise such rights where the Authority has agreed in advance in writing to the particular change of control and such change of control takes place as proposed. The Contractor shall notify the Authority within 2 (two) weeks of any change of control taking place.</li>
-                <li>The Authority may at any time by notice in writing terminate this Agreement without liability for any damage, loss or expenses arising as a result of or in connection with such termination if:</li>
+            <li>Definitions and Interpretation
                 <ol class="govuk-list ifs-list--number">
-                    <li>any approvals consent or licences required under this Agreement are not given unconditionally within 6 (six) months of the commencement of the Project Period;</li>
-                    <li>the Contractor is subject to an Insolvency Event;</li>
-                    <li>the Contractor is in Default under this Agreement and if:
+                    <li class="regular">As used in this Agreement the following terms and expressions shall have the meaning ascribed to them below:<br/>
+                        "Agreement"&nbsp;&nbsp;&nbsp;&nbsp; means this Agreement concluded between the Parties including all sections to it;<br/>
+                        "Approved Cost"&nbsp;&nbsp;&nbsp;&nbsp; means the total cost agreed between the Parties for the Project as set out in Section 4<br/>
+                        "Authority's Representative"&nbsp;&nbsp;&nbsp;&nbsp; means a person authorised to represent the Authority in respect of this Agreement;<br/>
+                        "Background IP"&nbsp;&nbsp;&nbsp;&nbsp; means Intellectual Property owned or controlled by either of the Parties at the date of this Agreement or which shall at any time thereafter become so owned or controlled otherwise than as a result of the Project under this Agreement;<br/>
+                        “Confidential Information"&nbsp;&nbsp;&nbsp;&nbsp; means information that falls within the types of information which has been designated as confidential by either Party or that ought to be considered as confidential (however it is conveyed or on whatever media it is stored) including information which relates to the business, affairs, properties, assets, trading practices, goods, Services, developments, trade secrets, Intellectual Property rights, know-how, personnel, customers and suppliers of either Party, all personal data and sensitive personal data within the meaning of the Data Protection Act 2018, the Project and commercially sensitive information.<br/>
+                        “Controller"&nbsp;&nbsp;&nbsp;&nbsp; has the meaning as defined in the Data Protection Legislation<br/>
+                        "Commencement Date"&nbsp;&nbsp;&nbsp;&nbsp; means the date referred to as being the commencement date as set out in Section 3 [Date];<br/>
+                        “Competition"&nbsp;&nbsp;&nbsp;&nbsp; The specific SBRI competition under which this contract is awarded;<br/>
+                        "Completion Date"&nbsp;&nbsp;&nbsp;&nbsp; means the date as referred to as being the completion date as set out in Section 3;<br/>
+                        "Contractor’s Representative"&nbsp;&nbsp;&nbsp;&nbsp; means a person authorised to represent the Contractor in respect of this Agreement and who shall have authority to bind the Contractor in all matters under this Agreement;<br/>
+                        “Contractor’s Staff"&nbsp;&nbsp;&nbsp;&nbsp; means the Contractor’s Representative and all employees consultants agents and subcontractors which the Contractor engages in relation to the Project;<br/>
+                        “Copyright"&nbsp;&nbsp;&nbsp;&nbsp; has the meaning ascribed to it by the Copyright, Designs and Patent Act 1988;<br/>
+                        “Crown"&nbsp;&nbsp;&nbsp;&nbsp; means the government of the United Kingdom (including the Northern Ireland Assembly and Executive Committee, the Scottish Executive and the National Assembly for Wales) including but not limited to government ministers, government departments and their agents, executive agencies and non-departmental public bodies;<br/>
+                        "Data"&nbsp;&nbsp;&nbsp;&nbsp; means information collected and/or used for the purposes of the Research, which can be processed manually, electronically or by other means;<br/>
+                        “Data Protection Legislation"&nbsp;&nbsp;&nbsp;&nbsp; means the UK Data Protection Legislation and any other European Union legislation relating to personal data and all other legislation and regulatory requirements in force from time to time which apply to a party relating to the use of Personal Data (including, without limitation, the privacy of electronic communications) and the guidance and codes of practice issued by the relevant data protection or supervisory authority and applicable to a party.<br/>
+                        “Data Subject"&nbsp;&nbsp;&nbsp;&nbsp; has meaning defined in the Data Protection Legislation.<br/>
+                        “Default"&nbsp;&nbsp;&nbsp;&nbsp; means any breach by a Party to this Agreement of its obligations under this Agreement (including a fundamental breach or breach of a fundamental term) or any default, act, omission, negligence or statement of a Party to this Agreement or its employees, agents or sub-contractors in connection with or in relation to the subject matter of this Agreement and in respect of which such Party is liable to the other;<br/>
+                        "FOIA"&nbsp;&nbsp;&nbsp;&nbsp; means the Freedom of Information Act 2000 and any subordinate and/or amending, legislation made under this Act from time to time together with any guidance and/or codes of practice issued by the Information Commissioner in relation to such legislation;<br/>
+                        “Foreground IP"&nbsp;&nbsp;&nbsp;&nbsp; means the Intellectual Property developed during the Project;<br/>
+                        "Information"&nbsp;&nbsp;&nbsp;&nbsp; has the meaning given under section 84 of the FOIA;<br/>
+                        “Insolvency Event"&nbsp;&nbsp;&nbsp;&nbsp; means where the Contractor passes a resolution, or the court makes an order that:<br/>
+                        (i) the Contractor be wound up (otherwise than for the purpose of a bona fide and solvent reconstruction or amalgamation); or
+                        (ii) a receiver, manager or administrator on behalf of a creditor is appointed in respect of all or part of the business of the Contractor; or<br/>
+                        (iii) circumstances arise which entitle a court or creditor to appoint a receiver, manager or administrator or which entitle the court (otherwise than for the purpose of a solvent and bona fide reconstruction or amalgamation) to make a winding up order; or<br/>
+                        (iv) the Contractor ceases to trade or is unable to pay its debts within the meaning of the Insolvency Act 1986 or any similar event occurs under the law of any other jurisdiction.<br/>
+                        "Intellectual Property (IP)"&nbsp;&nbsp;&nbsp;&nbsp; means patents, inventions (whether or not patentable or capable of registration), trade marks, service marks, copyrights, topography rights, design rights and database rights, (whether or not any of them are registered or registerable and including applications for registration, renewal or extension of any of them), trade secrets and rights of confidence, trade or business names and domain names and all rights or forms of protection of a similar nature which have an equivalent effect to any of them which may now or in the future exist anywhere in the world;<br/>
+                        “Key Staff"&nbsp;&nbsp;&nbsp;&nbsp; means the persons named in Section 5.<br/>
+                        “Language"&nbsp;&nbsp;&nbsp;&nbsp; means the English Language unless otherwise agreed;<br/>
+                        “Material"&nbsp;&nbsp;&nbsp;&nbsp; means any report, executive summary, paper, abstract or other document provided by the Contractor under Clauses 15 and 16;<br/>
+                        “Milestones"&nbsp;&nbsp;&nbsp;&nbsp; means the milestones described in Section 4 of this Agreement.<br/>
+                        “Milestone Dates"&nbsp;&nbsp;&nbsp;&nbsp; means the milestones date set out in Section 4 of this Agreement.<br/>
+                        “Milestone Payments"&nbsp;&nbsp;&nbsp;&nbsp; means the milestone payments set out in Section 4 of this Agreement.<br/>
+                        "Personal Data"&nbsp;&nbsp;&nbsp;&nbsp; has the meaning as defined in the Data Protection Act 2018 or successor legislation;<br/>
+                        “Pre-Commercial Procurement"&nbsp;&nbsp;&nbsp;&nbsp; means the public procurement of research and development services where the contracting authority or contracting entity does not reserve all the results and benefits of the contract exclusively for itself for use in the conduct of its own affairs, but shares them with the providers under market conditions.<br/>
+                        "Project"&nbsp;&nbsp;&nbsp;&nbsp; means the Research together with the Results;<br/>
+                        "Project Period"&nbsp;&nbsp;&nbsp;&nbsp; means the period commencing on the Commencement Date and ending on the Completion Date or such later date as may be agreed between the Parties unless otherwise determined in accordance with the terms of the Agreement;<br/>
+                        “R&D&I Framework"&nbsp;&nbsp;&nbsp;&nbsp; means the European Commission’s Framework for State Aid for Research and Development and Innovation (2014C 198/01)<br/>
+                        "Research"&nbsp;&nbsp;&nbsp;&nbsp; means the scope of work specified in Section 3;<br/>
+                        "Results"&nbsp;&nbsp;&nbsp;&nbsp; means any Data, or information or other material generated by the Project;<br/>
+                        “Retention"&nbsp;&nbsp;&nbsp;&nbsp; means the sum determined in accordance with Clause 4.2 of this Agreement.<br/>
+                        “Services"&nbsp;&nbsp;&nbsp;&nbsp; means the services being provided by the Contractor to enable fulfillment of the Project ;<br/>
+                        “Sub-Contract"&nbsp;&nbsp;&nbsp;&nbsp; any contract or agreement or proposed contract or agreement between the Contractor and any third party whereby that third party agrees to provide to the Contractor the Services or any part thereof or facilities or services necessary for the provision of the Services or any part thereof or necessary for the management, direction or control of the Services or any part thereof. Sub-Contractor shall be construed accordingly;<br/>
+                        “UK Data Protection Legislation"&nbsp;&nbsp;&nbsp;&nbsp; means all applicable data protection and privacy legislation in force from time to time in the UK including the General Data Protection Regulation ((EU) 2016/679), the Data Protection Act 2018, the Privacy and Electronic Communications Directive 2002/58/EC (as updated by Directive 2009/136/EC) and the Privacy and Electronic Communications Regulations 2003 (SI 2003/2426) as amended.<br/>
+                        "Variation"&nbsp;&nbsp;&nbsp;&nbsp; means a variation to the Agreement executed through the completion of a Variation to Agreement Form signed on behalf of the Parties in accordance with Clause 6.<br/>
+                    </li>
+                    <li class="regular">The interpretation and construction of the Agreement shall be subject to the following provisions:
                         <ol class="govuk-list ifs-list--number">
-                            <li>the Default is capable of remedy and the Contractor shall have failed to remedy the Default within 30 (thirty) days of written notice being sent to the Contractor specifying the Default and requiring its remedy; or</li>
-                            <li>the Default is not capable of remedy;</li>
+                            <li>a reference to any statute, enactment, order, regulation or other similar instrument shall be construed as a reference to the statute, enactment, order, regulation or instrument as subsequently amended or re-enacted;</li>
+                            <li>the headings to Clauses are for ease of reference only and shall not affect the interpretation or construction of the Clauses;</li>
+                            <li>references to Clauses are references to Clauses in the Section of the Agreement in which they appear, unless otherwise stated;</li>
+                            <li>Clauses 2 to 32 in section 2 shall be treated as conditions or fundamental terms of this Agreement, breach of which shall entitle the innocent party to claim damages as well as affirm or terminate the contract in accordance with Clause 20;</li>
+                            <li>where the context allows, references to male gender include the female gender and the neuter, and the singular includes the plural and vice versa.</li>
                         </ol>
                     </li>
-                    <li>where any provision of this Agreement other than as previously specified in the preceding provisions of this Clause 20 expressly entitles the Authority to terminate this Agreement.</li>
                 </ol>
-                <li>Termination of this Agreement by the Authority under the preceding provisions of this Clause 20 shall (at the option of the Authority) terminate this Agreement with immediate effect as from the date of service of the notice of that termination or from the expiry of a period (not exceeding 6 (six) months) specified in that notice.</li>
-            </ol>
-        </li>
-
-
-
-        <li>Consequence of Termination
-            <ol class="govuk-list ifs-list--number">
-                <li>Termination of this Agreement, however caused, shall not:
+            </li>
+            <li>Administration and Direction of the Project
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Authority may publish details of the Project for any non-commercial purpose, subject to the provisions of the Agreement. Such publication shall require the consent of the Contractor, and such consent shall not be unreasonably withheld or delayed.</li>
+                    <li>The Contractor shall ensure that each member of the Contractor’s Staff engaged on the Project observes the Conditions of this Agreement and any Variation entered into between the Parties hereto and that the Contractor’s Staff are advised of any consequent changes in the scope of the Agreement or the Project.</li>
+                    <li>Notwithstanding the provisions of Clause 20, the Authority may terminate the Agreement if any of the Contractor’s Key Staff are not available for the entire period needed to fulfil their duties in the Project, subject to prior discussion having first been held with the Contractor to attempt to identify and agree a mutually acceptable replacement and where the lack of availability of one or more of the Key Staff causes a material risk to the fulfilment of the delivery objective of the Project.</li>
+                    <li>The objectives of the Project are set out in Section 3. Within such objectives, details of the exact programme to be followed and the day-to-day responsibility for carrying out this programme will be under the control of the Contractor, in consultation, where appropriate, with the Authority’s Representative.</li>
+                    <li>The Contractor shall ensure that it communicates in a full, frank and prompt manner with the Authority and such other third parties as may be notified to the Contractor by the Authority. The Contractor shall advise the Authority as required on the Project. In particular, the Contractor must notify the Authority of any proposed deviation from the agreed protocol or if significant developments occur as a study progresses, whether in relation to the safety of individuals or to scientific direction.</li>
+                    <li>The Authority reserves the right to terminate this Agreement forthwith should the Contractor be unwilling or unable for any reason to continue with the Project or if, in the reasonable opinion of the Authority, the Contractor is consistently failing to achieve an acceptable standard in relation to the Project. If this occurs, the Authority shall not be obliged to make any further financial payment to the Contractor.</li>
+                </ol>
+            </li>
+            <li>Obligations of the Contractor and the Authority
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall manage and complete the Project in accordance with the specification as set out in Section 3 and shall allocate sufficient resources to the Project to enable it to comply with this obligation.</li>
+                    <li>The Contractor shall meet, any performance dates specified in Section 3 or elsewhere in the Agreement and the obligations of this Clause 3. If the Contractor fails to do so, the Authority may, after giving the Contractor not less than 14 days notice of its intention to do the same, (without prejudice to any other rights it may have):
+                        <ol class="govuk-list ifs-list--number">
+                            <li> terminate this agreement in whole or in part without liability to the Contractor;</li>
+                            <li> refuse to accept any subsequent performance of the Project which the Contractor attempts to make;</li>
+                            <li> hold the Contractor accountable for any loss and additional costs incurred; and</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor shall:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>co-operate with the Authority in all matters relating to the Project;</li>
+                            <li>subject to the prior written approval of the Authority, appoint or, at the written request of the Authority, replace on the Project without delay:
+                                <ol class="govuk-list ifs-list--number">
+                                    <li> the Contractor's Representative; and</li>
+                                    <li>Key Staff or any member of the Contractor's Staff, who shall be suitably skilled, experienced and qualified to carry out the Project.</li>
+                                </ol>
+                            </li>
+                            <li>subject to clause 3.3.2, ensure that the same person acts as the Contractor's Representative throughout the term of this Project;</li>
+                            <li>procure the availability of the Contractor's Representative and Key Staff for the purposes of the Project;</li>
+                            <li>promptly inform the Authority of the absence of the Contractor’s Representative and/or Key Staff. If the Authority so requires, the Contractor shall provide a suitably qualified replacement;</li>
+                            <li>not make any changes to the Contractor's Representative or the Key Staff without the prior written approval of the Authority, such approval not to be unreasonably withheld or delayed; and</li>
+                            <li>ensure that the Contractor's Team uses reasonable skill and care during the Project.</li>
+                            <li>observe, and ensure that the Contractor's Team observe, all rules and regulations and any other reasonable requirements of the Authority; this shall include and not be limited to ensuring that the Approved Cost shall be utilised in accordance with the Project cost breakdown submitted by the Contractor at Project tender stage covering all Project materials, equipment and any applicable sub-contractor costs;</li>
+                            <li>notify the Authority as soon as it becomes aware of any issues which arise in relation to the Project; and</li>
+                            <li>before the Commencement Date obtain, and at all times maintain, all necessary licences and consents and comply with all relevant legislation in relation to the Project.</li>
+                            <li>immediately disclose to the Authority any potential conflict of interest, including where the Contractor may benefit from external advisors who were or have been involved in planning or undertaking the Project or the associated call for tenders.</li>
+                            <li>ensure, as far as reasonably possible, the adoption of open standards and interoperability in the innovative solutions which are achieved as a result of the research services in order to promote early adoption.</li>
+                            <li>ensure that in relation to the Project and all Project related activities, it acts in accordance with all applicable provisions of the R&D&I Framework and in any event that there has been a breach of the R&D&I Framework as reasonably determined by the Authority; the Authority shall be entitled to such recourse as may be reasonable to enable the Contractor and the Authority to comply with the R&D&I Framework. Such rescourse for the avoidance of doubt shall include and not be limited to a termination of this Agreement and any other remedy legally available to the Authority .</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor acknowledges and agrees that the Authority is entering into this agreement on the basis that the details of the Project are accurate and complete in all material respects, and is not misleading.</li>
+                    <li>The Authority shall:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>co-operate with the Contractor in all matters relating to the Project and appoint (and, as it thinks fit, replace) the Authority’s Representative in relation to the Project, who shall have the authority contractually to bind the Authority on matters relating to the Project;</li>
+                            <li>provide such access to the Authority’s premises and data, and such office accommodation and other facilities as may reasonably be requested by the Contractor and agreed with the Contractor in writing in advance, for the purposes of the Project;</li>
+                            <li>provide such information as the Contractor may reasonably request and the Contractor considers reasonably necessary, in order to carry out the Project, in a timely manner, and ensure that it is accurate in all material respects; and</li>
+                            <li>inform the Contractor of all health and safety rules and regulations and any other reasonable security requirements that apply at any of the Authority’s premises.</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>Accounting and Payments
+                <ol class="govuk-list ifs-list--number">
+                    <li>The total amount to be paid by the Authority to the Contractor shall not exceed the amount detailed in Section 4 and shall be paid to the Contractor by Milestone Payments, with the payment of each Milestone Payment being conditional on the Contractor having achieved the appropriate Milestone to the reasonable satisfaction of the Authority. Subject to these limits the Contractor is free to administer the funds within the terms of this Agreement without further reference to the Authority.</li>
+                    <li>If the Contractor only partially achieves a Milestone by the corresponding Milestone Date, the Authority may, without prejudice to any other right or remedy that the Authority may have, deduct and retain an amount not more than 20% of that total Milestone Payment. The Retention shall become due and payable to the Contractor upon full achievement of the requisite criteria applicable to the relevant Milestone to the reasonable satisfaction of the Authority, not to be unreasonably withheld or delayed.</li>
+                    <li>Payments to third parties shall remain the responsibility of the Contractor who shall ensure that such payments are made promptly.</li>
+                    <li>During the Project Period, payments will be made by the Authority in accordance with dates and amounts specified in Section 4. The Authority may suspend this payment schedule at any time if in the view of the Authority, acting reasonably, satisfactory progress on the Project has not been maintained, or reports have not been submitted as required under Clauses 15 and 16.</li>
+                    <li>The Contractor shall provide supporting evidence as may be reasonably required to prove that the Contractor has used the amounts paid in accordance with Section 4 in connection with the Project. The supporting evidence shall clearly identify all Project and associated overhead costs.The Contractor shall maintain proper financial records relating to the Project at all times during the Project Period and for a period of six years after the end of the Project Period.</li>
+                    <li>The Contractor shall not make any material changes to the work detailed in Section 3, or the total amount payable under the Contract, without prior written approval of the Authority.</li>
+                    <li>The Contractor grants to the Authority and to any statutory or regulatory auditors of the Authority and to authorised agents the right of reasonable access to (and if necessary to copy) the relevant financial records during normal business hours.</li>
+                    <li>The Contractor shall provide all reasonable assistance at all times during the term of the Agreement and during the period of two years after termination or expiry of this Agreement for the purposes of allowing the Authority to obtain such information as is necessary to fulfil the Authority's obligations to supply information for Parliamentary, Governmental, Judicial or other administrative purposes and/or to carry out an audit of the Contractor's compliance with this Agreement including all activities, performance, security and integrity in connection therewith.</li>
+                    <li>On completion of the Project Period, the final payment in respect of costs properly incurred under the Agreement will be paid by the Authority to the Contractor within 30 (thirty) days, provided that:
+                        <ol class="govuk-list ifs-list--number">
+                            <li> the Project has been completed to the reasonable satisfaction of the Authority;</li>
+                            <li>the reports required under Clauses 15 and 16 have been submitted by the Contractor; and</li>
+                            <li>an agreement has been reached in respect of any items remaining for disposal.</li>
+                        </ol>
+                    </li>
+                    <li>If at any time an overpayment has been made to the Contractor for any reason whatsoever, the amount of such overpayment shall be taken into account in the assessing of any further payments, or shall be recoverable from the Contractor at the Authority's discretion.</li>
+                    <li>The Contractor shall keep and maintain until six years after this Agreement has been completed, or as long a period as may be agreed between the parties, full and accurate records of the Project including:
+                        <ol class="govuk-list ifs-list--number">
+                            <li> all aspects of the Project;</li>
+                            <li> all expenditure reimbursed by the Authority; and</li>
+                            <li> all payments made by the Authority.</li>
+                        </ol>
+                        and the Contractor shall on request afford the Authority or the Authority's representatives such access to those records as may be required in connection with the Agreement. The Authority shall be entitled to share such records with [project funder].
+                    </li>
+                    <li>Where the Contractor enters into a Sub-Contract with a supplier or contractor for the purpose of performing the Agreement, it shall cause a term to be included in such a Sub-Contract that requires payment to be made of undisputed sums by the Contractor to the Sub-Contractor within a specified period not exceeding 30 days from the receipt of a valid invoice, as defined by the Sub-Contract requirements.</li>
+                    <li>Wherever, under the Agreement, any sum of money is recoverable from or payable by the Contractor (including any sum that the Contractor is liable to pay to the Authority in respect of any breach of the Agreement), the Authority may unilaterally deduct that sum from any sum then due, or which at any later time may become due to the Contractor under the Agreement or under any other agreement or contract with the Authority.</li>
+                    <li>The Contractor shall make any payments due to the Authority without any deduction whether by way of set-off, counterclaim, discount, abatement or otherwise, unless the Contractor has a valid court order requiring an amount equal to such deduction to be paid by the Authority to the Contractor.</li>
+                </ol>
+            </li>
+            <li>Set Off
+                <ol class="govuk-list ifs-list--number">
+                    <li>If any sum of money shall be due from the Contractor to the Authority or any other Government Department, the same may be deducted from any sum then due or which at any time thereafter may become due to the Contractor under this Agreement or any other agreement with the Authority or with any other department, office or agency of the Crown.</li>
+                </ol>
+            </li>
+            <li>Variation
+                <ol class="govuk-list ifs-list--number">
+                    <li>If at any time it appears likely that any provision of the Agreement, in particular the Project, needs to be varied, the Contractor shall immediately inform the Authority in writing requesting a Variation to the Contract, giving full details of the justification for the request and giving proposals for the Variation to the Agreement. Upon receipt of such a request the Authority may:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>agree to vary the Agreement;</li>
+                            <li>vary the Project in a manner which the Contractor agrees can be carried out within the Project Period and Approved Cost;</li>
+                            <li>refuse the request and require the continuation of the Project in accordance with the Agreement; or</li>
+                            <li>give notice of termination in accordance with Clause 20.</li>
+                        </ol>
+                    </li>
+                    <li>Any Variation to the Agreement shall be set out in a Variation to Agreement Form as set out at Schedule A to this Section 2 and signed by both Parties.</li>
+                </ol>
+            </li>
+            <li>Staff Appointments
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall ensure that the terms and conditions of staff employed to provide services in connection with this Agreement contain provisions in respect of Intellectual Property which are compatible with the terms of this Agreement.</li>
+                    <li>The Contractor shall ensure that any individuals employed by or having a contract for services with the Contractor relating to this Agreement shall comply with any of the Authority’s rules and regulations.</li>
+                </ol>
+            </li>
+            <li>Publicity
+                <ol class="govuk-list ifs-list--number">
+                    <li>During the Project Period, and prior to the publication of the Results or Data or of matters arising from such Results or Data in accordance with Clause 19, the Contractor shall not without the prior written consent of the Authority release, or otherwise make available to third parties, information relating to the Agreement or the Project by means of any public statement in particular any press announcement or displays or oral presentations to meetings.</li>
+                    <li>In the event that the Contractor fails to comply with Clause 8.1 the Authority reserves the right to terminate the Agreement for Default by notice in writing in accordance with Clause 20.4.</li>
+                </ol>
+            </li>
+            <li>Confidentiality
+                <ol class="govuk-list ifs-list--number">
+                    <li>In respect of any Confidential Information that it may receive from the other Party and subject always to the remainder of this Clause 9, the receiving Party undertakes to keep secret and strictly confidential and shall not disclose any such Confidential Information to any third party, without the disclosing Party's prior written consent provided that:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>the receiving Party shall not be prevented from using any general knowledge, experience or skills which were in its possession prior to the commencement of the contract concerned;</li>
+                            <li>the Authority shall not be prevented from sharing Confidential Information with [project funder] to the extent required for the Project subject to the [project funder] being obligated to comply with terms equivalent to this Clause 9; and</li>
+                            <li>nothing in this Agreement shall be construed as to prevent either party from using data processing techniques, ideas, know-how and the like gained during the performance of the contract concerned in the furtherance of its normal business, to the extent that this does not result in a disclosure of confidential information or infringement of any valid Intellectual Property Rights of either Party or the unauthorised processing or release of any Personal Data.</li>
+                        </ol>
+                    </li>
+                    <li>Clause 9.1 shall not apply to any Confidential Information received by one Party from the other:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>which is or becomes public knowledge (otherwise than by breach of this Clause);</li>
+                            <li>which was in the possession of the receiving Party, without restriction as to its disclosure, before receiving it from the disclosing Party;</li>
+                            <li>which is received from a third party who lawfully acquired it and who is under no obligation restricting its disclosure;</li>
+                            <li>is independently developed without access to the Confidential Information as evidenced by receiving Party’s written notes; or</li>
+                            <li>which must be disclosed pursuant to a statutory, legal, governmentary or parliamentary obligation placed upon the Party making the disclosure, including any requirements for disclosure under the FOIA, or the Environmental Information Regulations 2004.</li>
+                        </ol>
+                    </li>
+                    <li>The obligations of each of the Parties contained in Clause 9.1 above shall continue without limit in point of time. In the event that the Contractor fails to comply with this Clause 9.3 the Authority reserves the right to terminate the Agreement by notice in writing for Default in accordance with Clause 20.4.</li>
+                </ol>
+            </li>
+            <li>DATA PROCESSING
+                <ol class="govuk-list ifs-list--number">
+                    <li>Both parties will comply with all applicable requirements of the Data Protection Legislation, which shall mean the UK Data Protection Legislation and any other law that applies in the UK.</li>
+                    <li>The parties acknowledge that for the purposes of the Data Protection Legislation, the Authority is the
+                        Controller and the Contractor is the Processor. Schedule B (where attached) sets out the scope, nature and purpose of processing by the Contractor, the duration of the processing and the types of Personal Data and categories of Data Subject.
+                    </li>
+                    <li>Without prejudice to the generality of Clause 10.1, the Authority will ensure that it has all necessary appropriate consents and notices in place to enable lawful transfer of any Personal Data to the Contractor for the duration and purposes of this agreement.</li>
+                    <li>Without prejudice to the generality of Clause 10.1, the Contractor shall, in relation to any Personal Data processed in connection with the performance by the Contractor of its obligations under this agreement:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>process that Personal Data only on the documented written instructions of the Authority which are set out in Schedule B, unless the Contractor is required by applicable laws to otherwise process that Personal Data. Where the Contractor is relying on laws of a member of the European Union or European Union law as the basis for processing Personal Data, the Contractor shall promptly notify the Authority of this before performing the processing required by the applicable laws unless those applicable laws prohibit the Contractor from doing so;</li>
+                            <li>ensure that it has in place appropriate technical and organisational measures (as defined in the Data Protection Legislation), reviewed and approved by the Authority, to protect against unauthorised or unlawful processing of Personal Data and against accidental loss or destruction of, or damage to, Personal Data, appropriate to the harm that might result from the unauthorised or unlawful processing or accidental loss, destruction or damage and the nature of the data to be protected, having regard to the state of technological development and the cost of implementing any measures (those measures may include, where appropriate, pseudonymising and encrypting Personal Data, ensuring confidentiality, integrity, availability and resilience of its systems and services, ensuring that availability of and access to Personal Data can be restored in a timely manner after an incident, and regularly assessing and evaluating the effectiveness of the technical and organisational measures adopted by it);
+                            </li>
+                            <li>not transfer any Personal Data outside of the European Economic Area unless the prior written consent of the Authority has been obtained and the following conditions are fulfilled:
+                                <ol class="govuk-list ifs-list--number">
+                                    <li>the Authority or the Contractor has provided appropriate safeguards in relation to the transfer;</li>
+                                    <li>the Data Subject has enforceable rights and effective remedies;</li>
+                                    <li>the Contractor complies with its obligations under the Data Protection Legislation by providing an adequate level of protection to any Personal Data that is transferred; and</li>
+                                    <li>the Contractor complies with the reasonable instructions notified to it in advance by the Authority with respect to the processing of the Personal Data;</li>
+                                </ol>
+                            </li>
+                            <li>notify the Authority immediately if it receives:
+                                <ol class="govuk-list ifs-list--number">
+                                    <li>a request from a Data Subject to have access to that person's Personal Data;</li>
+                                    <li>a request to rectify, block or erase any Personal Data;</li>
+                                    <li>receives any other request, complaint or communication relating to either Party's obligations under the Data Protection Legislation including any communication from the Information Commissioner;</li>
+                                </ol>
+                            </li>
+                            <li>assist the Authority in responding to any request from a Data Subject and in ensuring compliance with the Authority's obligations under the Data Protection Legislation with respect to security, breach notifications, impact assessments and consultations with supervisory authorities or regulators;</li>
+                            <li>notify the Authority without undue delay on becoming aware of a Personal Data breach including without limitation any event that results, or may result, in unauthorised access, loss, destruction, or alteration of Personal Data in breach of this agreement;</li>
+                            <li>at the written direction of the Authority, delete or return Personal Data and copies thereof to the Authority on termination or expiry of the agreement unless required by the applicable laws to store the Personal Data;</li>
+                            <li>maintain complete and accurate records and information to demonstrate its compliance with this Clause 10 and allow for audits by the Authority or the Authority's designated auditor pursuant to Clause 4.6 -4.7 and immediately inform the Authority if, in the opinion of the Contractor, an instruction infringes the Data Protection Legislation.</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor shall indemnify the Authority against any losses, damages, cost or expenses incurred by the Authority arising from, or in connection with, any breach of the Contractor's obligations under this Clause 10.</li>
+                    <li>Where the Contractor intends to engage a Sub-Contractor pursuant to Clause 4.11 and intends for that Sub-Contractor to process any Personal Data relating to this agreement, it shall:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>notify the Authority in writing of the intended processing by the Sub-Contractor;</li>
+                            <li>obtain prior written consent from the Authority to the processing;</li>
+                            <li>enter into a written agreement incorporating terms which are substantially similar to those set out in this Clause 10.</li>
+                        </ol>
+                    </li>
+                    <li>Either party may, at any time on not less than 30 working days' written notice to the other party, revise this Clause 10 by replacing it with any applicable controller to processor standard clauses or similar terms forming part of an applicable certification scheme (which shall apply when replaced by attachment to this agreement).</li>
+                    <li>The provisions of this clause shall apply during the continuance of the agreement and indefinitely after its expiry or termination.</li>
+                </ol>
+            </li>
+            <li>Confidentiality of Personal Data
+                <ol class="govuk-list ifs-list--number">
+                    <li>The collection, handling, processing and use of Personal Data shall be treated as confidential at all times.</li>
+                    <li>The Contractor shall at all times be responsible for ensuring that all Personal Data (including Personal Data in any electronic format) is stored securely. The Contractor shall take appropriate measures to ensure the security of such Personal Data and guard against unauthorised access thereto or disclosure thereof or loss or destruction while in its custody.</li>
+                    <li>Personal Data shall not be made available to anyone other than those employed directly on the Project by the Contractor, to the extent that they need access to such information for the performance of their duties.</li>
+                    <li>The Contractor shall fully indemnify and hold harmless the Authority, its employees and agents against all liabilities, losses, costs, charges and expenses incurred as a result of any claims, demands, actions and proceedings made or brought against the Authority by any person arising from the loss, unauthorised disclosure of Personal Data by the Contractor, or any Sub-Contractor, servant or agent of the Contractor or any person within the control of the Contractor.</li>
+                    <li>Subject to Clause 11.4, the Contractor shall at its own expense conduct any litigation arising from any such claims, demands, actions or proceedings and all the negotiations for the settlement of the same and the Authority hereby agrees to grant the Contractor exclusive control of any such litigation or the negotiations for the settlement of the same.</li>
+                    <li>No information which would lead to the identification of an individual shall be included in any publications without the prior agreement in writing of the individual concerned. No mention shall be made of individual officers of the Authority, nor shall information be included which might lead to their identification, without the prior agreement in writing of the Authority.</li>
+                    <li>The Contractor shall, at all times, comply with the provisions of the Data Protection Act 2018.</li>
+                    <li>The Project may be jointly operated by the Authority and [ project funder]. Regardless of whether[ the project funder] is actively involved in the Project, any Personal Data which the Contractor submits as part of the application process for participation in the Project, or is otherwise necessary for the Project, shall be stored, processed and used by the Authority and shall be shared with [project funder] which shall likewise store process and use that Personal Data in accordance with the Data Protection Act 2018.</li>
+                    <li>Any relevant information, including Confidential Information, produced by the Contractor and transferred to the Authority during the Project which is not Personal Data may also be shared by the Authority with the Crown, for their individual storage, processing and use in accordance with their information management and data sharing policies. For the avoidance of doubt, the Crown shall not release such Confidential Information to third parties without the Contractor’s prior written permission.</li>
+                </ol>
+            </li>
+            <li>Anonymising of Personal Data
+                <ol class="govuk-list ifs-list--number">
+                    <li>Without prejudice to Clause 11.8, the Authority shall not be entitled to inspect, take or be supplied with copies of any Personal Data relating to third parties obtained in connection with the Project other than in an anonymised form. The Contractor shall ensure that all such Personal Data is anonymised as and when it is obtained and that the key to personal identities of all persons to whom the Personal Data relates is kept in a separate and secure place.</li>
+                </ol>
+            </li>
+            <li>Rights to Data
+                <ol class="govuk-list ifs-list--number">
+                    <li>Subject to the provisions of Clause 12, the Authority reserves the right to have access to and to use Data compiled during the course of the work and will respect existing guidance on confidentiality of any Data which it obtains.</li>
+                </ol>
+            </li>
+            <li>Ethics
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor will ensure that work in any way connected with this Project is conducted in accordance with the Authorities’ guidelines. as may be issued, or referred to, from time to time by the Authority, copies of which are to be made available to the Contractor as appropriate or on reasonable request.</li>
+                </ol>
+            </li>
+            <li>Monitoring and Reporting
+                <ol class="govuk-list ifs-list--number">
+                    <li>Progress of the Project will be reviewed periodically by the Authority’s Representative against the specifications detailed in Section 3.</li>
+                    <li>The Contractor shall provide an interim report when reasonably required to do so by the Authority. The interim report shall be in a form and otherwise in compliance with the guidance notes issued by the Authority’s Representative as amended from time to time and shall detail all Data, methods, Results and provisional conclusions together with management information and any other information relating to the Project.</li>
+                    <li>During the Project Period the Contractor shall provide verbal or written reports as reasonably required by the Authority on any aspect of the Project.</li>
+                    <li>The Contractor will allow its facilities, procedures and documentation to be submitted for scrutiny by the Authority or its auditors in order to ascertain compliance with the relevant laws of the United Kingdom and the terms of this Agreement.</li>
+                    <li>The Contractor shall retain and maintain all assets necessary to ensure continued compliance with the FOIA and all other primary legislation that may apply from time to time.</li>
+                </ol>
+            </li>
+            <li>Final Report and Evaluation
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall provide a draft final report on the Project, in the approved language, within 14 days of the end of the Project Period or the date of termination of this Agreement. The draft final report shall be in a form which is in compliance with the guidance notes issued by the Authority’s Representative as amended from time to time or as otherwise required by the Authority’s Representative and shall include the Data, methods, Results and final conclusions together with management information and any other information relating to the Project up to the Completion Date.</li>
+                    <li>Notwithstanding the provisions of Clauses 15 and 16.1, the Authority’s representative is entitled to carry out a visit to the Contractor’s premises at any time for the purpose of due diligence and evaluation in respect of the Project.</li>
+                </ol>
+            </li>
+            <li>Intellectual Property Rights
+                <ol class="govuk-list ifs-list--number">
+                    <li>All Background Intellectual Property used or supplied under this Agreement in connection with the Project shall remain the property of the Party introducing the same and nothing contained in this Agreement or any licence agreement pursuant to the Project shall affect the rights of either Party in its Background Intellectual Property.</li>
+                    <li>Subject to Clauses 17.3 and 18.5, the Intellectual Property rights arising out of the Project (“Foreground IP") shall belong to the Contractor. The Contractor hereby agrees with the Authority to grant to the Authority and HS2 Ltd a UK wide irrevocable, royalty-free non-exclusive licence to use the Foreground IP, together with any Background IP supplied by the Contractor during the Project that is required to use the Foreground IP. Grant by the Contractor to the Authority and HS2 Ltd of the licence to use Background IP shall be at a fair and reasonable market price. The Contractor hereby agrees with the Authority that the Authority and HS2 Ltd shall have the right to grant a non-exclusive non-sub-licensable UK wide sub-licence to use the Foreground IP to any third party within the UK and EU at a fair and reasonable market price. The Contractor shall upon written request by HS2 Ltd and/or the Authority provide a non-exclusive non sub-licensable UK wide licence to any third party within the UK and EU at a fair and reasonable market price.
+                    </li>
+                    <li>The Contractor hereby agrees with the Authority to grant to the Authority and HS2 Ltd a UK wide irrevocable, royalty-free non-exclusive licence, together with the right to grant sub-licences, to use or publish any Data and Results arising from the Project.</li>
+                    <li>Notwithstanding its ownership of the Foreground IP, the Contractor shall not assign or transfer the Foreground IP to any third party without the prior written approval of the Authority, not to be unreasonably delayed or withheld. If the Contractor assigns or transfers the Foreground IP, it shall procure that the assignee or transferee shall enter into such instrument as necessary to comply with the Contractor’s obligations set out in this Agreement, and particularly those at Clauses 17.2, 17.3, 18 and 19.</li>
+                </ol>
+            </li>
+            <li>Exploitation of Foreground IP and Results
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall promptly inform the Authority of any Results which are capable of exploitation whether patentable or not.</li>
+                    <li>The Contractor shall, as appropriate, devise, publish, implement and maintain procedures for the management of Intellectual Property in the Results and in particular, but without limitation, shall use all reasonable endeavours to ensure that:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>the Results of the Project are identified, recorded and carefully distinguished from the outputs of other research;</li>
+                            <li>prior to any publication of the Results of the Project, patentable inventions arising from the Results are identified, duly considered for patentability and, where it is reasonable so to do, patent applications in respect thereof are filed at the British or European Patent Office; and</li>
+                            <li>all such patent applications are diligently executed having regard to all relevant circumstances.</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor shall permit the Authority to monitor the operation and effectiveness of the Contractor's procedures for the management of Intellectual Property in such a way as the Authority considers reasonably necessary.</li>
+                    <li>Consistent with the good management of Intellectual Property and the agreement of the Authority, the Contractor shall use its best endeavours to:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>promote the dissemination of the Results of the Project; and</li>
+                            <li>where reasonable and practicable, exploit commercially such Results to generate either capital or revenue or both.</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor may exploit commercially any publications arising from the Project.</li>
+                    <li>If within three years of its creation, any Intellectual Property in the Results or Foreground IP has not been commercially exploited by the Contractor, and the Contractor is not using its best endeavours to do so, the Contractor shall on written request by the Authority promptly assign the Intellectual Property Rights in the Results or Foreground IP to the Authority. Each party shall bear its own costs in such assignment.</li>
+                </ol>
+            </li>
+            <li>Publication
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Authority’s Representative must be notified prior to any publication (whether in oral, written or other form) in particular any press announcement of the Research, Results or Data or of matters arising from such Results or Data. One draft copy of the proposed publication shall be sent to the Authority’s Representative at the same time as submission for publication or at least 28 days before the date intended for publication whichever is earlier.</li>
+                    <li>In the event that the Contractor fails to comply with Clause 19.1 the Authority reserves the right to terminate the Agreement by notice in writing with immediate effect.</li>
+                    <li>Subject to the provisions of Clause 9 and notwithstanding the provisions of Clause 17 the Authority’s Representative may, at any time after consultation with the Contractor, publish public summaries of the Material, Research and/or Results for any non-commercial purpose, including information about key Results attained and lessons learnt on the feasibility of the explored solution approaches and the potential for future deployment of solutions. Specific details shall not be disclosed; that are deemed by the Contractor to be against the legitimate commercial interest of the Contractor, that are contrary to the public interest, that would hinder application of the law or which could distort fair competition between Contractor and the other contractors in the Competition. The timing of any such publication will be subject as far as possible to prior consultation with the Contractor.</li>
+                    <li>Any publication resulting from work carried out under this Agreement shall acknowledge the Authority’s financial support and carry a disclaimer as the Authority may require or in the absence of direction from the Authority a notice as follows:
+                        <br>
+                        “This report is work commissioned by the Authority. The views expressed in this publication are those of the author(s) and not necessarily those of the Authority".
+                    </li>
+                </ol>
+            </li>
+            <li>Termination Upon Occurrence of Events
+                <ol class="govuk-list ifs-list--number">
+                    <li>Without prejudice to any other provision of the Agreement, this Agreement may be terminated by either Party giving three months notice in writing to the other, unless the time remaining to the end of the contract phase is less than three months, in which case the notification time shall be all remaining time to the end of the contract phase. Should the option to terminate be exercised by the Authority, it shall indemnify the Contractor from and against all and any actual loss unavoidably incurred by reason or in consequence of the termination provided that the Contractor takes all immediate and reasonable steps to minimise the loss.</li>
+                    <li>With regards to Clause 20.1 the Authority will not pay any sum which, when taken together with any sums paid or due or becoming due to the Contractor under this Agreement, will exceed such total sums as would have been payable under this Agreement if the Contractor had fulfilled its obligations under this Agreement.</li>
+                    <li>The Authority may at any time and from time to time by notice in writing terminate this Agreement without liability for any damage, loss or expenses arising as a result of or in connection with such termination if there is a change of control (as defined by section 416 of the Income and Corporation Taxes Act 1988) in the Contractor. The Authority shall only be permitted to exercise its rights pursuant to this Clause 20.3 for 6 (six) months after any such change of control and shall not be permitted to exercise such rights where the Authority has agreed in advance in writing to the particular change of control and such change of control takes place as proposed. The Contractor shall notify the Authority within 2 (two) weeks of any change of control taking place.</li>
+                    <li>The Authority may at any time by notice in writing terminate this Agreement without liability for any damage, loss or expenses arising as a result of or in connection with such termination if:</li>
                     <ol class="govuk-list ifs-list--number">
-                        <li>release the Contractor from any duty or obligation of confidence which falls on it, its servants, agents, employees or former employees under this Agreement or under the general law governing confidential information;</li>
-                        <li>prejudice or affect any rights, action or remedy which shall have accrued before termination or shall accrue thereafter to any Party;</li>
-                        <li>affect the continuing obligations of the parties under this Agreement.</li>
-
+                        <li>any approvals consent or licences required under this Agreement are not given unconditionally within 6 (six) months of the commencement of the Project Period;</li>
+                        <li>the Contractor is subject to an Insolvency Event;</li>
+                        <li>the Contractor is in Default under this Agreement and if:
+                            <ol class="govuk-list ifs-list--number">
+                                <li>the Default is capable of remedy and the Contractor shall have failed to remedy the Default within 30 (thirty) days of written notice being sent to the Contractor specifying the Default and requiring its remedy; or</li>
+                                <li>the Default is not capable of remedy;</li>
+                            </ol>
+                        </li>
+                        <li>where any provision of this Agreement other than as previously specified in the preceding provisions of this Clause 20 expressly entitles the Authority to terminate this Agreement.</li>
                     </ol>
-                </li>
-            </ol>
-        </li>
-
-        <li>Equipment
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall take all practical steps to purchase all materials and equipment at a fair and reasonable price. The Authority may inspect the original quotations and invoices issued to the Contractor for equipment purchased in connection with the Project and recover any funds provided for the purchase if the Contractor does not provide this documentation on request.</li>
-                <li>At the end of the Project Period, and after the final presentation of the Results of the Project, all equipment purchased for use on the Project with funds provided by the Authority shall become the property of the Contractor.</li>
-            </ol>
-        </li>
-
-        <li>Warranties and Indemnities
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor warrants and represents that:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>the Contractor has full capacity and authority and all necessary licences, permits and consents to enter into and perform this Agreement;</li>
-                        <li>this Agreement is executed by a duly authorised representative of the Contractor;</li>
-                        <li>there are no actions, suits or proceedings pending or, to the Contractor's knowledge, threatened against or affecting the Contractor before any court or administrative body or tribunal that might affect the ability of the Contractor to meet and carry out its obligations under this Agreement;</li>
-                        <li>the Project will be carried out by appropriately experienced, qualified and trained personnel with all due skill, care and diligence;</li>
-                        <li>the Contractor will discharge its obligations hereunder with all due skill, care and diligence including, but not limited to, good industry practice and (without limiting the generality of the foregoing) in accordance with its own established internal procedures;</li>
-                        <li>the provision of the Project and the Authority's use thereof shall not infringe any Intellectual Property Rights of any third party.</li>
-                    </ol>
-                </li>
-            </ol>
-        </li>
-
-
-
-        <li>Indemnity and Insurance
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall indemnify the Authority, their officers, servants and agents fully against any liability, loss, claim or proceedings whatsoever arising under any statute or at common law in respect of:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>any damage to property, real or personal, including any infringement of third party Intellectual Property rights whether patents, copyright,  registered designs or otherwise;</li>
-                        <li>any injury to persons, including injury resulting in death; and</li>
-                        <li>arising out of or in the course of or in connection with the Project except in so far as such damages or injury shall be due to any act or neglect of the Authority.</li>
-                    </ol>
-                </li>
-                <li>The Contractor shall promptly notify the Authority if any claim or demand is made or action brought against the Contractor for infringement or alleged infringement of Intellectual Property which might affect the Project.</li>
-                <li>The Contractor shall effect and maintain with a reputable insurance company a policy or policies of insurance providing an adequate level of cover in respect of all risks which may be incurred by the Contractor, arising out of the Contractor's performance of the Agreement.</li>
-                <li>The Contractor shall hold employer's liability insurance in respect of staff in accordance with any legal requirement for the time being in force.</li>
-                <li>The Contractor shall produce to the Authority's Representative, on request, copies of all insurance policies referred to in this Clause or other evidence confirming the existence and extent of the cover given by those policies, together with receipts or other evidence of payment of the latest premiums due under those policies.</li>
-                <li>The terms of any insurance or the amount of cover shall not relieve the Contractor of any liabilities under the Agreement. It shall be the responsibility of the Contractor to determine the amount of insurance cover that will be adequate to enable the Contractor to satisfy any liability referred to in Clause 24.3.</li>
-                <li>Save as expressly stated elsewhere in this Agreement neither party shall be liable to the other for consequential loss or damage.</li>
-            </ol>
-        </li>
-
-        <li>Assignability
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall not subcontract, transfer or assign the whole or any part of this Agreement without the prior written consent of the Authority whose consent may be subject to such terms and conditions as the Authority may see fit to impose.</li>
-                <li>The Contractor shall be responsible for the acts and omissions of his sub-contractors as though they were his own.</li>
-            </ol>
-        </li>
-
-
-        <li>Severability
-            <ol class="govuk-list ifs-list--number">
-                <li>If any provision of this Agreement is held invalid, illegal or unenforceable for any reason by any court of competent jurisdiction, such provision shall be severed and the remainder of the provisions hereof shall continue in full force and effect as if this Agreement had been executed with the invalid provisions eliminated.</li>
-                <li>In the event of a holding of invalidity so fundamental as to prevent the accomplishment of the purpose of this Agreement, the Parties shall immediately commence good faith negotiations to remedy such invalidity.</li>
-            </ol>
-        </li>
-
-
-        <li>Waiver
-            <ol class="govuk-list ifs-list--number">
-                <li>The waiver by the Authority of any right or remedy in respect of any breach of any term or condition or requirement of this Agreement shall not prevent the subsequent enforcement thereof and shall not be deemed to be a waiver of any right or remedy in respect of any subsequent breach.</li>
-            </ol>
-        </li>
-
-        <li>Corrupt Gifts or Payments
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall at all times comply with all of its obligations under the Bribery Act 2010.</li>
-                <li>Any breach of this Clause, by the Contractor or by anyone acting on his behalf or employed by him, whether with or without his knowledge, or the commission of any offence by the Contractor or by anyone acting for him or employed by him in relation to this Agreement or any other contract shall entitle the Authority to terminate the Agreement and recover from the Contractor the amount of any loss resulting from such a termination and/or recover from the Contractor the amount or value of such gift, consideration or commission.</li>
-            </ol>
-        </li>
-
-        <li>Dispute Resolution
-            <ol class="govuk-list ifs-list--number">
-                <li>Any dispute between the parties arising out of or in connection with this Agreement (other than in relation to the payment of any money) shall in the first instance be referred to the Contractor’s Project Manager (as defined in Section 3) and the Authority’s Contract Manager (as defined in Section 3) for resolution. The parties agree to work together in good faith to resolve any such dispute.</li>
-                <li>If within 14 days of the meeting of the Contractor’s Project Manager and the Authority Contract Manager the dispute has not been resolved, the parties agree to escalate the dispute to a Director of the Contractor and the appropriate Officer of the Authority or such other person as the Authority sees fit and who shall have responsibility to settle such dispute on behalf of the Authority.  The Director of the Contrator and the Officer of the Authority shall meet within 7 days of the reference to them of any dispute and shall work together in good faith to resolve the dispute.</li>
-                <li>If within 14 days after such meeting the dispute has not been resolved, the dispute may be referred, by either party, to mediation.  The parties shall agree the Mediator within 14 days. The fee for the appointed Mediator shall be shared equally between the parties.</li>
-                <li>Nothing in Clauses 29.1, 29.2 or 29.3 shall preclude either party from commencing proceedings.  .</li>
-                <li>If the matter cannot be resolved through mediation, the Parties will, at the request of either of them, attempt in good faith to resolve the dispute through an alternative Alternative Dispute Resolution (“ADR”) procedure agreed in advance between the Parties.</li>
-                <li>In accordance with Clause 29.5 above, the dispute may be referred to a single arbitrator to be agreed upon by the Parties or in default of agreement within 14 days to be nominated by the President for the time being of the Chartered Institute of Arbitrators in accordance with the Arbitration Act 1996.  The arbitration shall take place in London and shall be in accordance with the Arbitration Act 1996 and such arbitration rules as the Parties may agree or, in default of agreement, in accordance with the Rules of the London Court of International Arbitration which Rules are deemed to be incorporated by reference into this clause.</li>
-                <li>The decision of the Arbitrator shall be final and binding on the Parties, although nothing in this Agreement shall prevent either Party from seeking statutory remedies under the Arbitration Act 1996.</li>
-            </ol>
-        </li>
-
-
-
-        <li>Notices
-            <ol class="govuk-list ifs-list--number">
-                <li>All notices to be given hereunder shall be in writing and may be served either personally at or by registered post to the address of the relevant Party as set out in Section 5, or at another address as it may from time to time be notified in writing to the other Party. In the case of postal service notice shall be deemed to have been given 3 working days after the day on which the notice was posted.</li>
-            </ol>
-        </li>
-
-
-        <li>Relationships
-            <ol class="govuk-list ifs-list--number">
-                <li>Nothing in this Agreement shall be construed as to make any Party the employee, agent, partner or legal representative of the other Party for any purpose whatsoever.  No Party is granted any right or authority to assume or create any obligation or responsibility, expressed or implied, on behalf of or in the name of the other Party.  In fulfilling obligations pursuant to this Agreement the Contractor shall be acting as an independent contractor at arm’s length from the Authority.</li>
-            </ol>
-        </li>
-
-
-
-
-        <li>Freedom of Information Act 2000
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor acknowledges and agrees that the Authority and [project funder] is subject to the requirements of the FOIA and the Environmental Information Regulations 2004. The Contractor shall provide all necessary assistance to and fully cooperate with the Authority to enable the Authority to comply with its obligations under that legislation.</li>
-                <li>The Contractor shall and shall procure that its sub-contractors shall:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>transfer any request for Information from any third party to the Authority as soon as practicable after receipt and in any event within five working days of receiving a request for Information;</li>
-                        <li>provide the Authority with a copy of all Information in its possession or power in the form that the Authority requires within five working days (or such other period as the Authority may specify) of the Authority requesting that Information;</li>
-                        <li>provide all necessary assistance as reasonably requested by the Authority to enable the Authority to respond to a request for Information within the time for compliance set out in section 10 of the FOIA or regulation 5 of the Environmental Information Regulations 2004; and</li>
-                        <li>not oppose the disclosure of this Agreement or information relating to this Agreement if the Authority in its absolute discretion determines it is necessary to do so in order to comply with its obligations, save that the Authority shall have due regard for the concerns of the Contractor and may therefore redact some parts of the Agreement as the Authority deems necessary.</li>
-                    </ol>
-                </li>
-                <li>The Authority and [project funder] shall be responsible for determining at its absolute discretion whether any commercially sensitive Information and/or any other Information:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>is exempt from disclosure in accordance with the provisions of the FOIA or the Environmental Information Regulations 2004;</li>
-                        <li>is to be disclosed in response to a request for Information, and in no event shall the Contractor respond directly to a request for Information unless expressly authorised to do so by the Authority.</li>
-                    </ol>
-                </li>
-                <li>Notwithstanding the provisions of Clause 8, the Contractor acknowledges that the Authority and/or [project funder] may be obliged under the FOIA, or the Environmental Information Regulations 2004 to disclose confidential Information:
-                    <ol class="govuk-list ifs-list--number">
-                        <li>without consulting with the Contractor, or</li>
-                        <li>following consultation with the Contractor and having taken its views into account.</li>
-                    </ol>
-                </li>
-                <li>The Contractor shall ensure that all information produced in the course of the Agreement or relating to the Agreement is retained for disclosure for a reasonable amount of time and shall permit the Authority to inspect such records as requested from time to time.</li>
-            </ol>
-        </li>
-
-        <li>Unlawful Discrimination and Human Rights
-            <ol class="govuk-list ifs-list--number">
-                <li>The Contractor shall comply with all of its obligations under the Equality Act 2000 (“EA”) and the Human Rights Act 1998. (“HRA”).</li>
-                <li>The Contractor shall notify the Authority immediately of any investigation of or proceedings against the Contractor under the EA.</li>
-                <li>The Contractor shall indemnify the Authority against all costs, claims, charges, demands, liabilities, damages, losses and expenses incurred or suffered by the Authority arising out of or in connection with any investigation conducted or any proceedings brought under the EA due directly or indirectly to any act or omission by the Contractor, its agents, employees or sub-contractors.</li>
-                <li>The Contractor shall (and shall use all reasonable endeavours to procure that its staff shall) at all times comply with the provisions of the HRA in the performance of this Agreement.</li>
-                <li>The Contractor shall undertake, or refrain from undertaking, such acts as the Authority requests so as to enable the Authority to comply with its obligations under the HRA.</li>
-                <li>The Contractor agrees to indemnify and keep indemnified the Authority against all loss, costs, proceedings or damages whatsoever arising out of or in connection with any breach by the Contractor of its obligations under Clause 33.</li>
-            </ol>
-        </li>
-
-        <li>Contracts (Rights of Third Parties) Act 1999
-            <ol class="govuk-list ifs-list--number">
-                <li>A person who is not a Party to this Agreement shall have no right to enforce any terms of it which confer a benefit on him.</li>
-            </ol>
-        </li>
-
-
-        <li>Entire agreement
-            <ol class="govuk-list ifs-list--number">
-                <li>This Agreement constitutes the entire agreement between the parties relating to its subject matter.  Each party acknowledges that it has not entered into this Agreement on the basis of any warranty, representation, statement, agreement or undertaking except those expressly set out in this Agreement.  Each party waives any claim for breach of this Agreement, or any right to rescind this Agreement in respect of, any representation which is not an express provision of this Agreement.  However, this clause does not exclude any liability which either party may have to the other (or any right which either party may have to rescind this Agreement) in respect of any fraudulent misrepresentation or fraudulent concealment prior to the execution of this Agreement.</li>
-            </ol>
-        </li>
-
-
-        <li>Law
-            <ol class="govuk-list ifs-list--number">
-                <li>This Agreement shall be considered as a Contract made in England & Wales and be construed in accordance with the Law of England & Wales. The Courts of England & Wales shall have exclusive jurisdiction to deal with any dispute which has arisen or may arise out of or in connection with this Agreement,</li>
-            </ol>
-        </li>
-    </ol>
+                    <li>Termination of this Agreement by the Authority under the preceding provisions of this Clause 20 shall (at the option of the Authority) terminate this Agreement with immediate effect as from the date of service of the notice of that termination or from the expiry of a period (not exceeding 6 (six) months) specified in that notice.</li>
+                </ol>
+            </li>
+            <li>Consequence of Termination
+                <ol class="govuk-list ifs-list--number">
+                    <li>Termination of this Agreement, however caused, shall not:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>release the Contractor from any duty or obligation of confidence which falls on it, its servants, agents, employees or former employees under this Agreement or under the general law governing confidential information;</li>
+                            <li>prejudice or affect any rights, action or remedy which shall have accrued before termination or shall accrue thereafter to any Party;</li>
+                            <li>affect the continuing obligations of the parties under this Agreement.</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>Equipment
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall take all practical steps to purchase all materials and equipment at a fair and reasonable price. The Authority may inspect the original quotations and invoices issued to the Contractor for equipment purchased in connection with the Project and recover any funds provided for the purchase if the Contractor does not provide this documentation on request.</li>
+                    <li>At the end of the Project Period, and after the final presentation of the Results of the Project, all equipment purchased for use on the Project with funds provided by the Authority shall become the property of the Contractor.</li>
+                </ol>
+            </li>
+            <li>Warranties and Indemnities
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor warrants and represents that:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>the Contractor has full capacity and authority and all necessary licences, permits and consents to enter into and perform this Agreement;</li>
+                            <li>this Agreement is executed by a duly authorised representative of the Contractor;</li>
+                            <li>there are no actions, suits or proceedings pending or, to the Contractor's knowledge, threatened against or affecting the Contractor before any court or administrative body or tribunal that might affect the ability of the Contractor to meet and carry out its obligations under this Agreement;</li>
+                            <li>the Project will be carried out by appropriately experienced, qualified and trained personnel with all due skill, care and diligence;</li>
+                            <li>the Contractor will discharge its obligations hereunder with all due skill, care and diligence including, but not limited to, good industry practice and (without limiting the generality of the foregoing) in accordance with its own established internal procedures;</li>
+                            <li>the provision of the Project and the Authority's use thereof shall not infringe any Intellectual Property Rights of any third party.</li>
+                        </ol>
+                    </li>
+                </ol>
+            </li>
+            <li>Indemnity and Insurance
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall indemnify the Authority, their officers, servants and agents fully against any liability, loss, claim or proceedings whatsoever arising under any statute or at common law in respect of:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>any damage to property, real or personal, including any infringement of third party Intellectual Property rights whether patents, copyright, registered designs or otherwise;</li>
+                            <li>any injury to persons, including injury resulting in death; and</li>
+                            <li>arising out of or in the course of or in connection with the Project except in so far as such damages or injury shall be due to any act or neglect of the Authority.</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor shall promptly notify the Authority if any claim or demand is made or action brought against the Contractor for infringement or alleged infringement of Intellectual Property which might affect the Project.</li>
+                    <li>The Contractor shall effect and maintain with a reputable insurance company a policy or policies of insurance providing an adequate level of cover in respect of all risks which may be incurred by the Contractor, arising out of the Contractor's performance of the Agreement.</li>
+                    <li>The Contractor shall hold employer's liability insurance in respect of staff in accordance with any legal requirement for the time being in force.</li>
+                    <li>The Contractor shall produce to the Authority's Representative, on request, copies of all insurance policies referred to in this Clause or other evidence confirming the existence and extent of the cover given by those policies, together with receipts or other evidence of payment of the latest premiums due under those policies.</li>
+                    <li>The terms of any insurance or the amount of cover shall not relieve the Contractor of any liabilities under the Agreement. It shall be the responsibility of the Contractor to determine the amount of insurance cover that will be adequate to enable the Contractor to satisfy any liability referred to in Clause 24.3.</li>
+                    <li>Save as expressly stated elsewhere in this Agreement neither party shall be liable to the other for consequential loss or damage.</li>
+                </ol>
+            </li>
+            <li>Assignability
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall not subcontract, transfer or assign the whole or any part of this Agreement without the prior written consent of the Authority whose consent may be subject to such terms and conditions as the Authority may see fit to impose.</li>
+                    <li>The Contractor shall be responsible for the acts and omissions of his sub-contractors as though they were his own.</li>
+                </ol>
+            </li>
+            <li>Severability
+                <ol class="govuk-list ifs-list--number">
+                    <li>If any provision of this Agreement is held invalid, illegal or unenforceable for any reason by any court of competent jurisdiction, such provision shall be severed and the remainder of the provisions hereof shall continue in full force and effect as if this Agreement had been executed with the invalid provisions eliminated.</li>
+                    <li>In the event of a holding of invalidity so fundamental as to prevent the accomplishment of the purpose of this Agreement, the Parties shall immediately commence good faith negotiations to remedy such invalidity.</li>
+                </ol>
+            </li>
+            <li>Waiver
+                <ol class="govuk-list ifs-list--number">
+                    <li>The waiver by the Authority of any right or remedy in respect of any breach of any term or condition or requirement of this Agreement shall not prevent the subsequent enforcement thereof and shall not be deemed to be a waiver of any right or remedy in respect of any subsequent breach.</li>
+                </ol>
+            </li>
+            <li>Corrupt Gifts or Payments
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall at all times comply with all of its obligations under the Bribery Act 2010.</li>
+                    <li>Any breach of this Clause, by the Contractor or by anyone acting on his behalf or employed by him, whether with or without his knowledge, or the commission of any offence by the Contractor or by anyone acting for him or employed by him in relation to this Agreement or any other contract shall entitle the Authority to terminate the Agreement and recover from the Contractor the amount of any loss resulting from such a termination and/or recover from the Contractor the amount or value of such gift, consideration or commission.</li>
+                </ol>
+            </li>
+            <li>Dispute Resolution
+                <ol class="govuk-list ifs-list--number">
+                    <li>Any dispute between the parties arising out of or in connection with this Agreement (other than in relation to the payment of any money) shall in the first instance be referred to the Contractor’s Project Manager (as defined in Section 3) and the Authority’s Contract Manager (as defined in Section 3) for resolution. The parties agree to work together in good faith to resolve any such dispute.</li>
+                    <li>If within 14 days of the meeting of the Contractor’s Project Manager and the Authority Contract Manager the dispute has not been resolved, the parties agree to escalate the dispute to a Director of the Contractor and the appropriate Officer of the Authority or such other person as the Authority sees fit and who shall have responsibility to settle such dispute on behalf of the Authority. The Director of the Contrator and the Officer of the Authority shall meet within 7 days of the reference to them of any dispute and shall work together in good faith to resolve the dispute.</li>
+                    <li>If within 14 days after such meeting the dispute has not been resolved, the dispute may be referred, by either party, to mediation. The parties shall agree the Mediator within 14 days. The fee for the appointed Mediator shall be shared equally between the parties.</li>
+                    <li>Nothing in Clauses 29.1, 29.2 or 29.3 shall preclude either party from commencing proceedings. .</li>
+                    <li>If the matter cannot be resolved through mediation, the Parties will, at the request of either of them, attempt in good faith to resolve the dispute through an alternative Alternative Dispute Resolution (“ADR") procedure agreed in advance between the Parties.</li>
+                    <li>In accordance with Clause 29.5 above, the dispute may be referred to a single arbitrator to be agreed upon by the Parties or in default of agreement within 14 days to be nominated by the President for the time being of the Chartered Institute of Arbitrators in accordance with the Arbitration Act 1996. The arbitration shall take place in London and shall be in accordance with the Arbitration Act 1996 and such arbitration rules as the Parties may agree or, in default of agreement, in accordance with the Rules of the London Court of International Arbitration which Rules are deemed to be incorporated by reference into this clause.</li>
+                    <li>The decision of the Arbitrator shall be final and binding on the Parties, although nothing in this Agreement shall prevent either Party from seeking statutory remedies under the Arbitration Act 1996.</li>
+                </ol>
+            </li>
+            <li>Notices
+                <ol class="govuk-list ifs-list--number">
+                    <li>All notices to be given hereunder shall be in writing and may be served either personally at or by registered post to the address of the relevant Party as set out in Section 5, or at another address as it may from time to time be notified in writing to the other Party. In the case of postal service notice shall be deemed to have been given 3 working days after the day on which the notice was posted.</li>
+                </ol>
+            </li>
+            <li>Relationships
+                <ol class="govuk-list ifs-list--number">
+                    <li>Nothing in this Agreement shall be construed as to make any Party the employee, agent, partner or legal representative of the other Party for any purpose whatsoever. No Party is granted any right or authority to assume or create any obligation or responsibility, expressed or implied, on behalf of or in the name of the other Party. In fulfilling obligations pursuant to this Agreement the Contractor shall be acting as an independent contractor at arm’s length from the Authority.</li>
+                </ol>
+            </li>
+            <li>Freedom of Information Act 2000
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor acknowledges and agrees that the Authority and [project funder] is subject to the requirements of the FOIA and the Environmental Information Regulations 2004. The Contractor shall provide all necessary assistance to and fully cooperate with the Authority to enable the Authority to comply with its obligations under that legislation.</li>
+                    <li>The Contractor shall and shall procure that its sub-contractors shall:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>transfer any request for Information from any third party to the Authority as soon as practicable after receipt and in any event within five working days of receiving a request for Information;</li>
+                            <li>provide the Authority with a copy of all Information in its possession or power in the form that the Authority requires within five working days (or such other period as the Authority may specify) of the Authority requesting that Information;</li>
+                            <li>provide all necessary assistance as reasonably requested by the Authority to enable the Authority to respond to a request for Information within the time for compliance set out in section 10 of the FOIA or regulation 5 of the Environmental Information Regulations 2004; and</li>
+                            <li>not oppose the disclosure of this Agreement or information relating to this Agreement if the Authority in its absolute discretion determines it is necessary to do so in order to comply with its obligations, save that the Authority shall have due regard for the concerns of the Contractor and may therefore redact some parts of the Agreement as the Authority deems necessary.</li>
+                        </ol>
+                    </li>
+                    <li>The Authority and [project funder] shall be responsible for determining at its absolute discretion whether any commercially sensitive Information and/or any other Information:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>is exempt from disclosure in accordance with the provisions of the FOIA or the Environmental Information Regulations 2004;</li>
+                            <li>is to be disclosed in response to a request for Information, and in no event shall the Contractor respond directly to a request for Information unless expressly authorised to do so by the Authority.</li>
+                        </ol>
+                    </li>
+                    <li>Notwithstanding the provisions of Clause 8, the Contractor acknowledges that the Authority and/or [project funder] may be obliged under the FOIA, or the Environmental Information Regulations 2004 to disclose confidential Information:
+                        <ol class="govuk-list ifs-list--number">
+                            <li>without consulting with the Contractor, or</li>
+                            <li>following consultation with the Contractor and having taken its views into account.</li>
+                        </ol>
+                    </li>
+                    <li>The Contractor shall ensure that all information produced in the course of the Agreement or relating to the Agreement is retained for disclosure for a reasonable amount of time and shall permit the Authority to inspect such records as requested from time to time.</li>
+                </ol>
+            </li>
+            <li>Unlawful Discrimination and Human Rights
+                <ol class="govuk-list ifs-list--number">
+                    <li>The Contractor shall comply with all of its obligations under the Equality Act 2000 (“EA") and the Human Rights Act 1998. (“HRA").</li>
+                    <li>The Contractor shall notify the Authority immediately of any investigation of or proceedings against the Contractor under the EA.</li>
+                    <li>The Contractor shall indemnify the Authority against all costs, claims, charges, demands, liabilities, damages, losses and expenses incurred or suffered by the Authority arising out of or in connection with any investigation conducted or any proceedings brought under the EA due directly or indirectly to any act or omission by the Contractor, its agents, employees or sub-contractors.</li>
+                    <li>The Contractor shall (and shall use all reasonable endeavours to procure that its staff shall) at all times comply with the provisions of the HRA in the performance of this Agreement.</li>
+                    <li>The Contractor shall undertake, or refrain from undertaking, such acts as the Authority requests so as to enable the Authority to comply with its obligations under the HRA.</li>
+                    <li>The Contractor agrees to indemnify and keep indemnified the Authority against all loss, costs, proceedings or damages whatsoever arising out of or in connection with any breach by the Contractor of its obligations under Clause 33.</li>
+                </ol>
+            </li>
+            <li>Contracts (Rights of Third Parties) Act 1999
+                <ol class="govuk-list ifs-list--number">
+                    <li>A person who is not a Party to this Agreement shall have no right to enforce any terms of it which confer a benefit on him.</li>
+                </ol>
+            </li>
+            <li>Entire agreement
+                <ol class="govuk-list ifs-list--number">
+                    <li>This Agreement constitutes the entire agreement between the parties relating to its subject matter. Each party acknowledges that it has not entered into this Agreement on the basis of any warranty, representation, statement, agreement or undertaking except those expressly set out in this Agreement. Each party waives any claim for breach of this Agreement, or any right to rescind this Agreement in respect of, any representation which is not an express provision of this Agreement. However, this clause does not exclude any liability which either party may have to the other (or any right which either party may have to rescind this Agreement) in respect of any fraudulent misrepresentation or fraudulent concealment prior to the execution of this Agreement.</li>
+                </ol>
+            </li>
+            <li>Law
+                <ol class="govuk-list ifs-list--number">
+                    <li>This Agreement shall be considered as a Contract made in England & Wales and be construed in accordance with the Law of England & Wales. The Courts of England & Wales shall have exclusive jurisdiction to deal with any dispute which has arisen or may arise out of or in connection with this Agreement,</li>
+                </ol>
+            </li>
+        </ol>
     </div>
-
     <div class="letter-size">
-    <p>SCHEDULE A</p>
-    <p>VARIATION TO CONTRACT FORM</p>
-    <p>Project Title :	…………………………………………………………………………….</p>
-    <p>Project Application No: ……………………………………………………………………….</p>
-    <p>Contract between the                                  [                                 ] (“the Authority”) and</p>
-
-    <p>[                                 ]	 (“the Contractor”)</p>
-
-    <p>dated                                                 (“the Contract”)</p>
-
-
-
-    <p>Variation No:		_____________________________</p>
-
-
-
-    <p>Date:			_____________________________</p>
-
-
-
-    <p>1.	The Contract is varied as follows:</p>
-
-
-
-    <p>2.	Words and expressions in this Variation shall have the meanings given to them in the Contract.</p>
-
-
-
-    <p>3.	The Contract, including any previous Variations, shall remain effective and unaltered except as amended by this Variation.</p>
-
-
-
-    <p>SIGNED:</p>
-
-
-
-
-
-    <p>For:	The Authority</p>
-
-
-
-
-
-
-
-    <p>By:</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
-
-
-
-
-
-    <p>Full Name:</p>
-
-
-
-
-
-    <p> …………………………………………………………………………….</p>
-
-
-
-
-
-    <p>Position:</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
-
-
-
-
-
-    <p>Date</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
-
-
-
-
-
-    <p>For:	The Contractor</p>
-
-
-
-
-
-
-
-
-
-    <p>By:</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
-
-
-
-
-
-    <p>Full Name:</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
-
-
-
-
-
-    <p>Position:</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
-
-
-
-
-
-    <p>Date</p>
-
-
-
-
-
-    <p>…………………………………………………………………………….</p>
+        <p><strong>SCHEDULE A</strong></p>
+        <p><strong>VARIATION TO CONTRACT FORM</strong></p>
+        <p>Project Title : <th:block th:text="${model.projectName}"></th:block>.</p>
+        <p>Project Application No:  <th:block th:text="${model.applicationId}"></th:block>.</p>
+        <p>Contract between the [ ] (“the Authority") and</p>
+        <p>[<th:block th:text="${model.organisationName}"></th:block>] (“the Contractor")</p>
+        <p>dated (“the Contract")</p>
+        <p>Variation No: _____________________________</p>
+        <p>Date: _____________________________</p>
+        <p>1. The Contract is varied as follows:</p>
+        <p>2. Words and expressions in this Variation shall have the meanings given to them in the Contract.</p>
+        <p>3. The Contract, including any previous Variations, shall remain effective and unaltered except as amended by this Variation.</p>
+        <p>SIGNED:</p>
+        <p>For: The Authority</p>
+        <p>By:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Full Name:</p>
+        <p> …………………………………………………………………………….</p>
+        <p>Position:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Date</p>
+        <p>…………………………………………………………………………….</p>
+        <p>For: The Contractor</p>
+        <p>By:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Full Name:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Position:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Date</p>
+        <p>…………………………………………………………………………….</p>
     </div>
-
-
-
-
     <div class="letter-size">
-    <p>SECTION 3</p>
-
-
-
-    <p>PROJECT</p>
-
-
-
-    <p>The Contractor shall undertake the activity proposed in their application and submitted on Innovate UK’s Innovation Funding Service Platform for the SBRI competition:</p>
-
-
-
-    <p>Any corrections, adjustments, or new additions to the timing, cost or activity required by the contracting authority and set out in this contract (including at section 4) shall supersede the original proposal.</p>
-
-
-
-    <p>Commencement Date:</p>
-
-    <p>Completion Date:</p>
-
-
-
-    <p>Authority’s Contract Manager:</p>
-
-
-
-    <p>Contractor’s Project Manager:</p>
-
-
-
-    <p>Approved Project Milestones:</p>
+        <p>SECTION 3</p>
+        <p>PROJECT</p>
+        <p>The Contractor shall undertake the activity proposed in their application and submitted on Innovate UK’s Innovation Funding Service Platform for the SBRI competition:<th:block th:text="${model.competitionName}"></th:block></p>
+        <p>Any corrections, adjustments, or new additions to the timing, cost or activity required by the contracting authority and set out in this contract (including at section 4) shall supersede the original proposal.</p>
+        <p>Commencement Date:</p>
+        <p>Completion Date:</p>
+        <p>Authority’s Contract Manager:</p>
+        <p>Contractor’s Project Manager:<th:block th:text="${model.projectManagerName}"></th:block></p>
+        <p>Approved Project Milestones:</p>
     </div>
 
     <table class="letter-table">
@@ -1244,33 +767,45 @@
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <th>Invoice net</th>
-                <td th:each="milestone : ${model.milestoneMonths}">
-                    £<th:block th:text="${milestone.invoiceNet}" />
-                </td>
-            </tr>
-            <tr>
-                <th>VAT</th>
-                <td th:each="milestone : ${model.milestoneMonths}">
-                    £<th:block th:text="${milestone.vat}" />
-                </td>
-            </tr>
-            <tr>
-                <th>Total</th>
-                <td th:each="milestone : ${model.milestoneMonths}">
-                    £<th:block th:text="${milestone.total}" />
-                </td>
-            </tr>
-            <tr>
-                <th>Milestone Nos.</th>
-                <td th:each="milestone : ${model.milestoneMonths}">
-                    <th:block th:text="${milestone.numbers}" />
-                </td>
-            </tr>
+        <tr>
+            <th>Invoice net</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.invoiceNet}" />
+            </td>
+        </tr>
+        <tr>
+            <th>VAT</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.vat}" />
+            </td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.total}" />
+            </td>
+        </tr>
+        <tr>
+            <th>Milestone Nos.</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                <th:block th:text="${milestone.numbers}" />
+            </td>
+        </tr>
         </tbody>
     </table>
 
+    <div class="letter-size">
+        <p>SECTION 5</p>
+        <p>KEY STAFF</p>
+        <p>[The Contractor's representative]</p>
+        <p>[The Authority's representative]</p>
+    </div>
+    <div class="letter-size">
+        <p>SECTION 6</p>
+        <p>DOCUMENTS</p>
+        <p>DOCUMENT TYPE: REFERENCES TO QUOTE</p>
+        <p>Documents not included above are intentionally excluded from this Agreement</p>
+    </div>
 </main>
 </body>
 </html>

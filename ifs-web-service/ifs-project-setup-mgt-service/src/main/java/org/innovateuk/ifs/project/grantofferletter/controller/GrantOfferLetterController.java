@@ -280,6 +280,7 @@ public class GrantOfferLetterController {
                 competition.isProcurement() ? "Contract" : "Grant offer letter",
                 competition.isProcurement() ? "Contract" : "Letter",
                 competition.getId(),
+                competition.isProcurement(),
                 competition.isH2020(),
                 competition.isKtp(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),

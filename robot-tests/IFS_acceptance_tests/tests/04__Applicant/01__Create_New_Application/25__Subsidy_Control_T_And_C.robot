@@ -9,6 +9,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9233 Applicant can view and accept the correct T&Cs based on their determined Funding Rules
 ...
+...               IFS-9120 View Subsidy Basis answers and funding rules for each Partner Organisation in Application & Assessor Overviews
+...
 ...               IFS-9200 View Correct T&Cs for each Organisation (Internal and External Users)
 ...
 Suite Setup       Custom Suite Setup
@@ -25,13 +27,12 @@ ${atiStateAid}                       Aerospace Technology Institute (ATI) (opens
 ${innovateUKSubsidyControl}          Innovate UK - Subsidy control (opens in a new window)
 ${innovateUKStateAid}                Innovate UK (opens in a new window)
 ${subsidyControlFundingComp}         Subsidy control competition
+${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
 ${leadStateAidApplication}           State aid application
-&{scLeadApplicantCredentials}        email=janet.howard@example.com     password=${short_password}
-${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
+${assessor1_email}                   addison.shannon@gmail.com
 ${assessor1_to_add}                  Addison Shannon
 ${assessor2_to_add}                  Alexis Colon
-${assessor1_email}                   addison.shannon@gmail.com
 ${assessor2_email}                   alexis.colon@gmail.com
 
 *** Test Cases ***
@@ -39,7 +40,7 @@ Creating a new comp to confirm ATI subsidy control T&C's
     [Documentation]  IFS-8994  IFS-9137  IFS-9124
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  45
+    And the user clicks the button twice        jQuery = label:contains("Aerospace Technology Institute (ATI) - Subsidy control")
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user selects the radio button       termsAndConditionsId  35
     And the user clicks the button/link         jQuery = button:contains("Done")
@@ -54,7 +55,7 @@ ATI subsidy control t&c's are correct
     When the user clicks the button/link                 link = ${atiSubsidyControl}
     And select window                                    title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
     Then the user should see the element                 jQuery = h1:contains("Terms and conditions of an ATI Programme grant")
-    And the user should see the element                  jQuery = li:contains("State Aid/Subsidy Control obligations")
+    And the user should see the element                  jQuery = li:contains("State Aid and Subsidy Control obligations")
     [Teardown]   the user closes the last opened tab
 
 ATI State aid t&c's are correct
@@ -141,7 +142,7 @@ Lead applicant declares subsidy basis as Northern Ireland Protocol when activite
     [Documentation]  IFS-9116
     Given the user selects the subsidy basis option       Yes
     When the user completes subsidy basis declaration
-    Then the user should see the element                  jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    Then the user should see the element                  jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
     And the user should see the element                   jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("Yes")
 
 Lead applicant declares subsidy basis as Northern Ireland Protocol when trading goods through Northern Ireland
@@ -150,9 +151,7 @@ Lead applicant declares subsidy basis as Northern Ireland Protocol when trading 
     When the user selects the subsidy basis option       No
     And the user selects the subsidy basis option        Yes
     And the user completes subsidy basis declaration
-    Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
-    And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
-    And the user should see the element                  jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("Yes")
+    Then the user should see state aid answers
 
 Partner applicant can not accept the terms and conditions without determining subsidy basis type
     [Documentation]  IFS-9116
@@ -178,9 +177,7 @@ Partner applicant declares subsidy basis as EU-UK Trade and Cooperation Agreemen
     When the user selects the subsidy basis option       No
     And the user selects the subsidy basis option        No
     And the user completes subsidy basis declaration
-    Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under the") span:contains("EU-UK Trade and Cooperation Agreement")
-    And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
-    And the user should see the element                  jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("No")
+    Then the user should see subsidy control answers
 
 Lead applicant completes state aid subsidy basis application
     [Documentation]  IFS-9116
@@ -201,7 +198,7 @@ Lead applicant accepts state aid terms and conditions based on NI declaration
 
 Partner completes project finances and terms and conditions of state aid application
     [Documentation]  IFS-9116
-    Given log in as a different user                                jessica.doe@ludlow.co.uk  ${short_password}
+    Given log in as a different user                                &{collaborator1_credentials}
     When the user navigates to Your-finances page                   ${leadStateAidApplication}
     Then the user marks the subsidy contol finances as complete     ${leadStateAidApplication}  labour costs  54,000  yes
 
@@ -230,9 +227,7 @@ Lead applicant creates subsidy control subsidy basis application and declares su
     When the user selects the subsidy basis option       No
     And the user selects the subsidy basis option        No
     And the user completes subsidy basis declaration
-    Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under the") span:contains("EU-UK Trade and Cooperation Agreement")
-    And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
-    And the user should see the element                  jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("No")
+    Then the user should see subsidy control answers
 
 Partner applicant declares subsidy basis as Northern Ireland Protocol when activites have a direct link to Northern Ireland
     [Documentation]  IFS-9116
@@ -244,7 +239,7 @@ Partner applicant declares subsidy basis as Northern Ireland Protocol when activ
     And the user clicks the button/link                   jQuery = button:contains("Next")
     And the user selects the subsidy basis option         Yes
     And the user completes subsidy basis declaration
-    Then the user should see the element                  jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    Then the user should see the element                  jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
     And the user should see the element                   jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("Yes")
 
 Partner applicant declares subsidy basis as Northern Ireland Protocol when trading goods through Northern Ireland
@@ -253,9 +248,7 @@ Partner applicant declares subsidy basis as Northern Ireland Protocol when tradi
     When the user selects the subsidy basis option       No
     And the user selects the subsidy basis option        Yes
     And the user completes subsidy basis declaration
-    Then the user should see the element                 jQuery = p:contains("Based on your answers, your subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
-    And the user should see the element                  jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
-    And the user should see the element                  jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("Yes")
+    Then the user should see state aid answers
 
 Lead applicant completes subsidy control subsidy basis application
     [Documentation]  IFS-9116
@@ -277,7 +270,7 @@ Lead applicant can accept subsidy control terms and conditions based on NI decla
 
 Partner completes project finances and terms and conditions of subsidy control application
     [Documentation]  IFS-9116
-    Given log in as a different user                  jessica.doe@ludlow.co.uk  ${short_password}
+    Given log in as a different user                  &{collaborator1_credentials}
     When the user navigates to Your-finances page     ${leadSubsidyControlApplication}
     Then the user marks the finances as complete      ${leadSubsidyControlApplication}  labour costs  54,000  yes
 
@@ -288,37 +281,46 @@ Partner applicant can accept state aid terms and conditions based on NI declarat
     And the user should not see the element       jQuery = ul li:contains("shall continue after the project term for a period of 6 years.")
     And the user accepts terms and conditions
 
+Lead applicant gets validation message when submiting the application without all partners subsidy basis not determined
+    [Documentation]  IFS-9120
+    Given partner edits the subsidy basis section
+    When lead review and submits the application
+    And the user clicks the button/link               id = accordion-questions-heading-1-1
+    Then the user should see the element              jQuery = td:contains("Ludlow") + td:contains("Not determined")
+    And the user should see the element               jQuery = .section-incomplete + button:contains("Subsidy basis")
+
 Lead applicant submits subsidy control subsidy basis application
     [Documentation]  IFS-9116
-    Given log in as a different user             &{scLeadApplicantCredentials}
-    When the user clicks the button/link         link = ${leadSubsidyControlApplication}
-    And the user clicks the button/link          link = Review and submit
-    Then the user should not see the element     jQuery = .task-status-incomplete
-    And the user clicks the button/link          jQuery = .govuk-button:contains("Submit application")
+    Given log in as a different user                      &{collaborator1_credentials}
+    And the user clicks the button/link                   link = ${leadSubsidyControlApplication}
+    And the user clicks the button/link                   link = Subsidy basis
+    When the user completes subsidy basis declaration
+    And lead review and submits the application
+    Then the user clicks the button/link                  jQuery = .govuk-button:contains("Submit application")
 
-IFS admin can view the terms and conditions accepted by both the applicants
-    [Documentation]  IFS-9200
-    [Setup]  Requesting Application ID of this application
-    Given log in as a different user                                                      &{ifs_admin_user_credentials}
-    When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${subsidycontrolApplicationID}
-    And the user clicks the button/link                                                   id = accordion-questions-heading-4-1
-    Then the user can see the terms and conditions for the lead and partner applicant
+Lead applicant can see organisations subsidy basis funding rules in application overview
+    [Documentation]  IFS-9120
+    When the user clicks the button/link                  link = View application
+    Then the user can see valid subsidy control answers
+    And the user can see valid state aid answers
 
-Internal users can view the terms and conditions accepted by the applicants
-    [Documentation]  IFS-9200
-    [Setup]  Requesting Application ID of this application
-    Given log in as a different user                                                      &{innovation_lead_one}
-    When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${subsidycontrolApplicationID}
-    Then the user can see the terms and conditions for the lead and partner applicant
+Partner applicant can see organisations subsidy basis funding rules in application overview
+    [Documentation]  IFS-9120
+    Given log in as a different user                       &{collaborator1_credentials}
+    And the user clicks the button/link                    link = ${leadSubsidyControlApplication}
+    When the user clicks the button/link                   link = View application
+    Then the user can see valid subsidy control answers
+    And the user can see valid state aid answers
 
 Comp admin assigns assessors to the competition and assigns the application to an assessor
     [Documentation]  IFS-9200
-    [Setup]  update milestone to yesterday                                                ${subsidyControlCompetitionId}  SUBMISSION_DATE
-    Given log in as a different user                                                      &{ifs_admin_user_credentials}
-    And the user navigates to the page                                                    ${server}/management/competition/${subsidyControlCompetitionId}/assessors/find
+    [Setup]  update milestone to yesterday                                              ${subsidyControlCompetitionId}  SUBMISSION_DATE
+    Given requesting application ID of this application
+    And log in as a different user                                                      &{ifs_admin_user_credentials}
+    And the user navigates to the page                                                  ${server}/management/competition/${subsidyControlCompetitionId}/assessors/find
     When the user invites assessors to assess the subsidy control competition
     And the assessors accept the invitation to assess the subsidy control competition
-    Then the application is assigned to a assessor
+    Then the application is assigned to be an assessor
 
 Assessor can view the correct T&Cs have been accepted by the lead and partner applicants
     [Documentation]  IFS-9200
@@ -326,20 +328,63 @@ Assessor can view the correct T&Cs have been accepted by the lead and partner ap
     When the user clicks the button/link                                                  link = ${leadSubsidyControlApplication}
     Then the user can see the terms and conditions for the lead and partner applicant
 
-Internal user marks subsidy control application to successful
+Assessor can see organisations subsidy basis funding rules in assessment overview
     [Documentation]  IFS-9200
-    Given log in as a different user                                        &{internal_finance_credentials}
-    When the user navigates to the page                                     ${server}/management/competition/${subsidyControlCompetitionId}
-    And the user clicks the button/link                                     jQuery = button:contains("Close assessment")
-    Then making the application a successful project from correct state     ${subsidyControlCompetitionId}  ${leadSubsidyControlApplication}
+    When the user clicks the button/link                    link = Subsidy basis
+    And the user should see the element                     jQuery = td:contains("Big Riffs And Insane Solos Ltd") + td:contains("Subsidy control")+ td:contains("View answers")
+    Then assessor should see valid subsidy basis answers
+
+Internal user can see organisations subsidy basis funding rules in application overview
+    [Documentation]  IFS-9120
+    Given Log in as a different user                        &{internal_finance_credentials}
+    And making the application a successful project         ${subsidyControlCompetitionId}   ${leadSubsidyControlApplication}
+    When the user navigates to the page                     ${server}/management/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}
+    Then the user can see valid subsidy control answers
+    And the user can see valid state aid answers
+
+Monitoring officer can see organisations subsidy basis funding rules in application feedback
+    [Documentation]  IFS-9120
+    Given Internal user assigns MO to application               ${leadSubsidyControlApplicationID}   ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
+    And log in as a different user                              &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When the user clicks the button/link                        link = ${leadSubsidyControlApplication}
+    And the user clicks the button/link                         link = view application feedback
+    Then the user can see valid subsidy control answers
+    And the user can see valid state aid answers
 
 MO can see T&Cs for the subsidy control application in project setup for both the applicants
     [Documentation]  IFS-9200
-    [Setup]  Requesting Application ID of this application
-    Given internal user assigns MO to application                                        ${subsidycontrolApplicationID}  ${leadSubsidyControlApplication}  Orvill  Orville Gibbs
-    When log in as a different user                                                      &{monitoring_officer_one_credentials}
-    And the user navigates to the page                                                   ${server}/application/${subsidycontrolApplicationID}/summary
-    And the user should see the element                                                  jQuery = h1:contains("Application overview")
+    Given the user navigates to the page                                                 ${server}/application/${leadSubsidyControlApplicationID}/summary
+    When the user clicks the button/link                                                 id = accordion-questions-heading-4-1
+    Then the user should see the element                                                 jQuery = h1:contains("Application overview")
+    And the user can see the terms and conditions for the lead and partner applicant
+
+Lead applicant can see organisations subsidy basis funding rules in application feedback
+    [Documentation]  IFS-9120
+    Given log in as a different user                        &{scLeadApplicantCredentials}
+    When the user clicks the button/link                    link = ${leadSubsidyControlApplication}
+    And the user clicks the button/link                     link = view application feedback
+    Then the user can see valid subsidy control answers
+    And the user can see valid state aid answers
+
+Partner can see organisations subsidy basis funding rules in application feedback
+    [Documentation]  IFS-9120
+    Given log in as a different user                        &{collaborator1_credentials}
+    When the user clicks the button/link                    link = ${leadSubsidyControlApplication}
+    And the user clicks the button/link                     link = view application feedback
+    Then the user can see valid subsidy control answers
+    And the user can see valid state aid answers
+
+IFS admin can view the terms and conditions accepted by both the applicants
+    [Documentation]  IFS-9200
+    Given log in as a different user                                                      &{ifs_admin_user_credentials}
+    When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
+    Then the user can see the terms and conditions for the lead and partner applicant
+
+Innovation lead can view the terms and conditions accepted by the applicants
+    [Documentation]  IFS-9200
+    Given log in as a different user                                                      &{innovation_lead_one}
+    When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
     Then the user can see the terms and conditions for the lead and partner applicant
 
 *** Keywords ***
@@ -393,9 +438,41 @@ the user marks the subsidy contol finances as complete
     the user clicks the button/link                                       link = Back to application overview
     the user should see the element                                       jQuery = li:contains("Your project finances") > .task-status-complete
 
-Requesting Application ID of this application
-    ${subsidycontrolApplicationID} =  get application id by name  ${leadSubsidyControlApplication}
-    Set suite variable    ${subsidycontrolApplicationID}
+partner edits the subsidy basis section
+    log in as a different user          &{collaborator1_credentials}
+    the user clicks the button/link     link = ${leadSubsidyControlApplication}
+    the user clicks the button/link     link = Subsidy basis
+    the user clicks the button/link     id = edit-application-details-button
+
+lead review and submits the application
+    log in as a different user          &{scLeadApplicantCredentials}
+    the user clicks the button/link     link = ${leadSubsidyControlApplication}
+    the user clicks the button/link     link = Review and submit
+
+the user should see subsidy control answers
+    the user should see the element     jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("EU-UK Trade and Cooperation Agreement")
+    the user should see the element     jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
+    the user should see the element     jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("No")
+
+the user should see state aid answers
+    the user should see the element     jQuery = p:contains("Based on the answers, the subsidy basis has been determined as falling under the") span:contains("Northern Ireland Protocol")
+    the user should see the element     jQuery = td:contains("Will the activities that you want Innovate UK to support, have a direct link to Northern Ireland?")+ td:contains("No")
+    the user should see the element     jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("Yes")
+
+the user can see valid subsidy control answers
+    the user should see the element                 jQuery = td:contains("Big Riffs And Insane Solos Ltd") + td:contains("Subsidy control")+ td:contains("View answers")
+    the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
+    the user should see subsidy control answers
+    the user clicks the button/link                 link = Back to application overview
+
+the user can see valid state aid answers
+    the user should see the element             jQuery = td:contains("Ludlow") + td:contains("State aid")+ td:contains("View answers")
+    the user clicks the button/link             jQuery = tr:nth-child(2) a:contains("View answers")
+    the user should see state aid answers
+
+requesting application ID of this application
+    ${leadSubsidyControlApplicationID} =  get application id by name   ${leadSubsidyControlApplication}
+    Set suite variable    ${leadSubsidyControlApplicationID}
 
 the user invites assessors to assess the subsidy control competition
     the user selects the checkbox       assessor-row-1
@@ -418,9 +495,9 @@ the assessors accept the invitation to assess the subsidy control competition
     the user selects the radio button                     acceptInvitation   true
     the user clicks the button/link                       jQuery = button:contains("Confirm")
 
-the application is assigned to a assessor
+the application is assigned to be an assessor
     log in as a different user            &{Comp_admin1_credentials}
-    the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${subsidycontrolApplicationID}/assessors
+    the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/assessors
     the user selects the checkbox         assessor-row-1
     the user clicks the button/link       jQuery = button:contains("Add to application")
     the user navigates to the page        ${server}/management/competition/${subsidyControlCompetitionId}
@@ -430,6 +507,14 @@ the application is assigned to a assessor
     the user clicks the button/link       link = ${leadSubsidyControlApplication}
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
+
+assessor should see valid subsidy basis answers
+    the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
+    the user should see subsidy control answers
+    the user clicks the button/link                 link = Back to subsidy basis
+    the user should see the element                 jQuery = td:contains("Ludlow") + td:contains("State aid")+ td:contains("View answers")
+    the user clicks the button/link                 jQuery = tr:nth-child(2) a:contains("View answers")
+    the user should see state aid answers
 
 the user can see the terms and conditions for the lead and partner applicant
     the user should see the element      jQuery = td:contains("Big Riffs And Insane Solos Ltd")+ td:contains("Subsidy control")
