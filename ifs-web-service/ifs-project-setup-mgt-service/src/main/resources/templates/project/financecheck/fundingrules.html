@@ -33,7 +33,7 @@
         <th:block th:if="${model.editMode}">
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data">
 
-                <h3 class="govuk-heading-s">Override funding rules</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-top-6">Override funding rules</h3>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
@@ -49,11 +49,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="message-alert" th:if="${model.showUpdatedMessage}">
+                    <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
+                </div>
                 <button name="save-and-return" class="govuk-button">Save and return</button>
             </form>
         </th:block>
 
-        <div class="message-alert" th:if="${model.showUpdatedMessage}">
+        <div class="message-alert" th:if="${model.showUpdatedMessage and !model.editMode}">
             <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
         </div>
 
@@ -78,12 +81,10 @@
                 </div>
             </div>
 
-            <button type="button"
-                    data-js-modal="modal-confirm-funding-rules"
+            <button type="submit"
                     class="govuk-button"
+                    name="confirm-funding-rules"
                     id="confirm-button">Approve funding rules</button>
-            <th:block th:insert="fragments/modals :: modal-confirm-funding-rules (${model})" />
-
         </form>
 
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
