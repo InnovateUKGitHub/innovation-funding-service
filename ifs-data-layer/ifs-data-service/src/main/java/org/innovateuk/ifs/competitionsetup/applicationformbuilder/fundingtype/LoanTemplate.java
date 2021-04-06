@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,6 +29,9 @@ public class LoanTemplate implements FundingTypeTemplate {
 
     @Autowired
     private CommonBuilders commonBuilders;
+
+    @Value("${ifs.loan.survey.question.enabled}")
+    private boolean ifsLoanSurveyQuestionEnabled;
 
     @Override
     public FundingType type() {
@@ -77,7 +81,9 @@ public class LoanTemplate implements FundingTypeTemplate {
     }
 
     private void addLoanBusinessAndFinanceInformationQuestion(SectionBuilder projectDetailSection){
-        projectDetailSection.getQuestions().add(loanBusinessAndFinancialInformation());
+        if (ifsLoanSurveyQuestionEnabled){
+            projectDetailSection.getQuestions().add(loanBusinessAndFinancialInformation());
+        }
     }
 
     private static QuestionBuilder loanBusinessAndFinancialInformation() {
