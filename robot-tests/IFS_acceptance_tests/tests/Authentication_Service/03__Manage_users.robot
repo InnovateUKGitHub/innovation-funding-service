@@ -91,10 +91,11 @@ Admin cannot change email to an email which is a pending invitation to an organi
 Admin cannot change email to an email when there is a pending team member invitation to an organisation in project setup
     [Documentation]   IFS-7160
     [Setup]  log in as a different user                                                         &{lead_applicant_credentials}
-    Given the user adds a pending partner to the organisation                                   ${server}/project-setup/project/1/team  Add team member
+    ${projectId} =  get project id by name  Mobile Phone Data for Logistics Analytics
+    Given the user adds a pending partner to the organisation                                   ${server}/project-setup/project/${projectId}/team  Add team member
     When log in as a different user                                                             &{ifs_admin_user_credentials}
     Then the internal user isnt able to update an existing users email with a pending email     ${emailToChange}
-    And the external user removes the pending parter invitation                                 ${server}/project-setup/project/1/team
+    And the external user removes the pending parter invitation                                 ${server}/project-setup/project/${projectId}/team
 
 Support can change email address
     [Documentation]  IFS-6380  IFS-6928

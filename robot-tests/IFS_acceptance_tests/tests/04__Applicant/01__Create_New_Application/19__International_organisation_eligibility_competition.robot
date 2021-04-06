@@ -17,6 +17,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -433,7 +435,7 @@ Internal user is able to add a new international partner organisation
     Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
-    [Documentation]  IFS-7197
+    [Documentation]  IFS-7197  IFS-9289
     [Tags]  HappyPath
     When partner user provide organisation detail and create account     ${international_invite_email}
     And the user clicks the button/link                                  link = ${internationalApplicationTitle}
@@ -541,7 +543,7 @@ non-uk based partner applicant can see the read only view of the corresponding a
     Then the user should see read only view of completed correspondence address details
 
 External dashboard - lead applicant - view status of partners - bank details not required message should display for international lead applicant organisation
-    [Documentation]    IFS - 7163
+    [Documentation]    IFS - 7163  IFS-9289
     [Tags]
     Given lead applicant invites new partner and accepts invitation
     And partner organisation sets funding level to zero
@@ -940,6 +942,9 @@ lead applicant invites new partner and accepts invitation
 partner organisation sets funding level to zero
     The new partner can complete Your organisation
     the user clicks the button/link                          link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords      the user completes subsidy basis as subsidy control
+    ...                                    AND               the user clicks the button/link                  link = Your funding
     the user selects the radio button                        requestingFunding   false
     the user selects the radio button                        otherFunding  false
     the user clicks the button/link                          jQuery = button:contains("Mark as complete")
@@ -947,6 +952,7 @@ partner organisation sets funding level to zero
     the user clicks the button/link                          id = submit-join-project-button
 
 partner completes all sections to join the project
+    the user completes subsidy basis as subsidy control
     The new partner can complete Your organisation
     the user clicks the button/link                          link = Your funding
     the user selects the radio button                        requestingFunding   true

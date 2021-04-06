@@ -308,11 +308,19 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         BigDecimal totalAssociateSalaryCost = Optional.of(form.getTotalAssociateSalaryCosts())
                 .orElse(BigDecimal.ZERO);
 
+        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
+                .multiply(form.getGrantClaimPercentage())
+                .divide(new BigDecimal(100));
+
         BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(form.getTotalAcademicAndSecretarialSupportCosts())
                 .orElse(BigDecimal.ZERO);
 
-        return totalAssociateSalaryCost
-                .add(totalAcademicAndSecretarialSupportCost)
+        BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
+                .multiply(form.getGrantClaimPercentage())
+                .divide(new BigDecimal(100));
+
+        return totalGrantAssociateSalaryCost
+                .add(totalGrantAcademicAndSecretarialSupportCost)
                 .multiply(form.INDIRECT_COST_PERCENTAGE)
                 .divide(new BigDecimal(100))
                 .setScale(0, RoundingMode.HALF_UP);
