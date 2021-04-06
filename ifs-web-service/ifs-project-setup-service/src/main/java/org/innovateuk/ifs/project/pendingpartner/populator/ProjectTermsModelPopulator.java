@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectTermsViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -34,6 +36,9 @@ public class ProjectTermsModelPopulator {
     @Autowired
     private QuestionRestService questionRestService;
 
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
+
     public ProjectTermsViewModel populate(long projectId,
                                           long organisationId) {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
@@ -50,11 +55,24 @@ public class ProjectTermsModelPopulator {
                 projectId,
                 project.getName(),
                 organisation.getId(),
-                competition.getTermsAndConditions().getTemplate(),
+                getTermsAndConditionsTemplate(competition, projectId, organisationId),
                 pendingPartnerProgressResource.isTermsAndConditionsComplete(),
                 pendingPartnerProgressResource.getTermsAndConditionsCompletedOn(),
                 subsidyBasisRequired && !progress.isSubsidyBasisComplete(),
                 subsidyQuestionId
         );
+    }
+
+    private String getTermsAndConditionsTemplate(CompetitionResource competition, long projectId, long organisationId) {
+        ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
+        if (projectFinanceResource != null && isNorthernIrelandDeclaration(projectFinanceResource)
+                && competition.getOtherFundingRulesTermsAndConditions() != null) {
+            return competition.getOtherFundingRulesTermsAndConditions().getTemplate();
+        }
+        return competition.getTermsAndConditions().getTemplate();
+    }
+
+    private boolean isNorthernIrelandDeclaration(ProjectFinanceResource projectFinanceResource) {
+        return projectFinanceResource.getNorthernIrelandDeclaration() != null && projectFinanceResource.getNorthernIrelandDeclaration();
     }
 }
