@@ -57,7 +57,7 @@
                                 <tbody class="govuk-table__body">
                                 <tr th:each="applicantResponse : ${model.applicantResponses}" class="govuk-table__row">
                                     <td class="govuk-table__cell">
-                                        <th:block th:text="${applicantResponse.orgName}">Org</th:block><th:block th:if="${applicantResponse.lead}"> (lead)</th:block>
+                                        <th:block th:text="${applicantResponse.orgName}">Org</th:block><th:block th:if="${applicantResponse.lead}"> <span class="hint">(Lead)</span></th:block>
                                     </td>
                                     <td class="govuk-table__cell">
                                         <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${applicantResponse.answer}"></p>

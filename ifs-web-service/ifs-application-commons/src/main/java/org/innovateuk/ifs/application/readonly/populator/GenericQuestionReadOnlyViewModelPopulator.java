@@ -7,8 +7,10 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionAnswerRowReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionFileViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -40,6 +42,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    @Autowired
+    private QuestionStatusRestService questionStatusRestService;
+
     @Override
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
@@ -60,7 +65,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         if (multipleStatuses) {
             answer = null;
-            answers = answerMapForMultipleStatuses(answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles());
+            answers = answerMapForMultipleStatuses(question, answerInput, formInputIdToFormInputResponses, data.getApplicationProcessRoles(), data.getApplication());
         } else {
             answers = null;
             answer = answerForNotMultipleStatuses(answerInput, formInputIdToFormInputResponses);
@@ -89,9 +94,11 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             );
     }
 
-    private List<GenericQuestionAnswerRowReadOnlyViewModel> answerMapForMultipleStatuses(Optional<FormInputResource> answerInput,
+    private List<GenericQuestionAnswerRowReadOnlyViewModel> answerMapForMultipleStatuses(QuestionResource question,
+                                                                                         Optional<FormInputResource> answerInput,
                                                                                          Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses,
-                                                                                         List<ProcessRoleResource> applicationProcessRoles) {
+                                                                                         List<ProcessRoleResource> applicationProcessRoles,
+                                                                                         ApplicationResource application) {
 
         Optional<List<FormInputResponseResource>> textResponses = answerInput.map(input -> formInputIdToFormInputResponses.get(input.getId()));
 
@@ -110,16 +117,24 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 );
 
         return processRoleResourcesGroupedByOrgId.entrySet().stream()
-                .map(entry -> rowViewModel(entry.getKey(), entry.getValue(), answerInput, textResponses))
+                .map(entry -> rowViewModel(question, application, entry.getKey(), entry.getValue(), answerInput, textResponses))
                 .sorted((a, b) -> BooleanComparator.TRUE_LOW.compare(a.isLead(), b.isLead()))
                 .collect(Collectors.toList());
     }
 
-    private GenericQuestionAnswerRowReadOnlyViewModel rowViewModel(Long organisationId, List<ProcessRoleResource> processRoles,
-                                                                   Optional<FormInputResource> answerInput, Optional<List<FormInputResponseResource>> textResponses) {
+    private GenericQuestionAnswerRowReadOnlyViewModel rowViewModel(QuestionResource question,
+                                                                   ApplicationResource application,
+                                                                   Long organisationId,
+                                                                   List<ProcessRoleResource> processRoles,
+                                                                   Optional<FormInputResource> answerInput,
+                                                                   Optional<List<FormInputResponseResource>> textResponses) {
         OrganisationResource org = organisationRestService.getOrganisationById(organisationId).getSuccess();
         String partnerName = org.getName();
         boolean lead = processRoles.stream().anyMatch(ProcessRoleResource::isLeadApplicant);
+
+        List<QuestionStatusResource> questionStatusesForOrg = questionStatusRestService.findByQuestionAndApplicationAndOrganisation(question.getId(), application.getId(), organisationId).getSuccess();
+
+        boolean markedAsComplete = questionStatusesForOrg != null && questionStatusesForOrg.stream().anyMatch(status -> Boolean.TRUE.equals(status.getMarkedAsComplete()));
 
         String answer = null;
 
@@ -133,7 +148,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             }
         }
 
-        return new GenericQuestionAnswerRowReadOnlyViewModel(partnerName, lead, answer);
+        return new GenericQuestionAnswerRowReadOnlyViewModel(partnerName, lead, answer, markedAsComplete);
     }
 
     private Predicate<ProcessRoleResource> distinctByOrgId() {

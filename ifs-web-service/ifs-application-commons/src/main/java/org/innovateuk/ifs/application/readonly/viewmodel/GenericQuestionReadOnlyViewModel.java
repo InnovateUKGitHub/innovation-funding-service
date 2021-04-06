@@ -88,6 +88,14 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return answers;
     }
 
+    public boolean hasAnswerNotMarkedAsComplete() {
+        return answers.stream().anyMatch(a -> !a.isMarkedAsComplete());
+    }
+
+    public List<GenericQuestionAnswerRowReadOnlyViewModel> getNonMarkedAsCompletePartners() {
+        return answers.stream().filter(a -> !a.isMarkedAsComplete()).collect(Collectors.toList());
+    }
+
     public boolean isStatusDetailPresent() {
         return statusDetailPresent;
     }

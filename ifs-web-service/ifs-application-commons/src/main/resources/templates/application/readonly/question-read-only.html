@@ -15,6 +15,18 @@
 
             <th:block th:if="${model.multipleStatuses}">
 
+                <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
+                    <div class="warning-alert">
+                        <p class="govuk-body">The following organisations have not yet marked this question as complete:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <th:block th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
+                                <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete partner organisation</li>
+                            </th:block>
+                        </ul>
+                        <p class="govuk-body">This application cannot be submitted until all partners mark this question as complete.</p>
+                    </div>
+                </th:block>
+
                 <table class="govuk-table">
 
                     <thead class="govuk-table__head">
@@ -26,7 +38,7 @@
                     <tbody class="govuk-table__body">
                     <tr th:each="answerRow : ${model.answers}" class="govuk-table__row">
                         <td class="govuk-table__cell">
-                            <th:block th:text="${answerRow.partnerName}">Org</th:block><th:block th:if="${answerRow.lead}"> (lead)</th:block>
+                            <th:block th:text="${answerRow.partnerName}">Org</th:block><th:block th:if="${answerRow.lead}"> <span class="hint">(Lead)</span></th:block>
                         </td>
                         <td class="govuk-table__cell">
                             <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${answerRow.answer}"></p>
