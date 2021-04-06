@@ -58,11 +58,9 @@ public interface OrganisationService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") long searchOrganisationId);
 
-    @PreAuthorize("hasAuthority('system_maintainer')")
-    @SecuredBySpring(value = "READ", description = "Only the system maintainer can search by companies house Id.")
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
     ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseId);
 
-    @PreAuthorize("hasAuthority('system_maintainer')")
-    @SecuredBySpring(value = "READ", description = "Only the system maintainer can search by company name.")
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
     ServiceResult<List<OrganisationResource>> findOrganisationsByName(String organisationName);
 }
