@@ -1,3 +1,7 @@
+FROM owasp/zap2docker-stable:latest
+USER zap
+RUN pip3 install RoboZap
+
 FROM ubuntu:18.04
 
 RUN apt-get update && \
@@ -49,7 +53,7 @@ USER gluster
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
 
-FROM owasp/zap2docker-stable:latest
+
 
 
 
