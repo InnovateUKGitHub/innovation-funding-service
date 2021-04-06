@@ -206,7 +206,6 @@ KTA user assigned to application can view the read-only view for 'No' selected f
     [Setup]  knowledge based applicant invites KTA user to the application
     Given the user clicks the button/link                               jQuery = a:contains("Applications")
     When the user clicks the button/link                                link = ${KTPapplication}
-    And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
     Then the user should see read only view for non-fec declaration
 
 KTA assessor assigned to application can view the read-only view for 'No' selected fEC declaration
