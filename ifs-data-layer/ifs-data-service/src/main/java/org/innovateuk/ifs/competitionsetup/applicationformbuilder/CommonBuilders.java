@@ -416,12 +416,7 @@ public class CommonBuilders {
     }
 
     public Competition getGolTemplate(Competition competition) {
-        String templateName;
-        if (competition.isKtp()) {
-            templateName = "KTP GOL Template";
-        } else {
-            templateName = "Default GOL Template";
-        }
+        String templateName = competition.getFundingType().getGolType();
         GolTemplate golTemplate =
                 golTemplateRepository.findFirstByNameOrderByVersionDesc(templateName);
         competition.setGolTemplate(golTemplate);
