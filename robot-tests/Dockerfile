@@ -25,7 +25,6 @@ RUN echo "http://dl-3.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
     chown -R zap:zap /zap && \
     chown -R zap:zap /home/zap/.ZAP/
 
-RUN pip3 install RoboZap
 
 #Change to the zap user so things get done as the right person (apart from copy)
 USER zap
