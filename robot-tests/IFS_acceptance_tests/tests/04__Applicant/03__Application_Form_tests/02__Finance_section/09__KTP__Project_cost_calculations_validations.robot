@@ -29,9 +29,9 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	                      KTP application
+${KTPapplication}  	                      KTP application duplicate
 ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                          KTP new competition
+${KTPcompetiton}                          KTP new competition duplicate
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
 ${ktp_KTA_name}                           Hermen Mermen
