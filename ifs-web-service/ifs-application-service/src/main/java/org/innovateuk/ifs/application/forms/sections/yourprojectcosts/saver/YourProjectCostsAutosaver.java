@@ -323,14 +323,22 @@ public class YourProjectCostsAutosaver {
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
 
+        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
+                .multiply(organisationFinance.getGrantClaimPercentage())
+                .divide(new BigDecimal(100));
+
         BigDecimal totalAcademicAndSecretarialSupportCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getCosts().stream()
                 .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
                 .map(FinanceRowItem::getTotal)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
 
-        return totalAssociateSalaryCost
-                .add(totalAcademicAndSecretarialSupportCost)
+        BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
+                .multiply(organisationFinance.getGrantClaimPercentage())
+                .divide(new BigDecimal(100));
+
+        return totalGrantAssociateSalaryCost
+                .add(totalGrantAcademicAndSecretarialSupportCost)
                 .multiply(YourProjectCostsForm.INDIRECT_COST_PERCENTAGE)
                 .divide(BigDecimal.valueOf(100))
                 .setScale(0, RoundingMode.HALF_UP);

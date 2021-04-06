@@ -72,6 +72,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
 
         form.setFecModelEnabled(finance.getFecModelEnabled());
+        form.setGrantClaimPercentage(finance.getGrantClaimPercentage());
         form.setAcademicAndSecretarialSupportForm(academicAndSecretarialSupportCostRowForm(finance));
 
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();

@@ -2250,6 +2250,16 @@
                        id="section-total-associate-salary-costs"
                        th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"/>
+                <th:block th:if="${#bools.isFalse(model.fecModelEnabled)}">
+                    <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
+                    <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
+                    <input type="hidden"
+                           data-calculation-operations="*,/"
+                           id="total-grant-associate-salary-costs"
+                           th:attr="data-calculation-rawvalue=${form.totalGrantAssociateSalaryCosts},
+                                    data-calculation-fields=${'#section-total-associate-salary-costs, ' + form.grantClaimPercentage + ', 100'}"
+                           th:value="'£' + ${#numbers.formatInteger(form.totalGrantAssociateSalaryCosts, 0,'DEFAULT')}"/>
+                </th:block>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
@@ -3935,6 +3945,12 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                        id="section-total-academic-and-secretarial-support"
                        th:attr="data-calculation-rawvalue=${form.totalAcademicAndSecretarialSupportCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalAcademicAndSecretarialSupportCosts, 0,'DEFAULT')}"/>
+                <input type="hidden"
+                       data-calculation-operations="*,/"
+                       id="total-grant-academic-and-secretarial-support"
+                       th:attr="data-calculation-rawvalue=${form.totalGrantAcademicAndSecretarialSupportCosts},
+                                data-calculation-fields=${'#section-total-academic-and-secretarial-support, ' + form.grantClaimPercentage + ', 100'}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalGrantAcademicAndSecretarialSupportCosts, 0,'DEFAULT')}"/>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
@@ -4001,7 +4017,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
                        data-calculation-operations="+,*,/"
                        id="section-total-indirect-costs"
                        th:attr="data-calculation-rawvalue=${form.totalIndirectCosts},
-                       data-calculation-fields=${'#section-total-associate-salary-costs, #section-total-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
+                                data-calculation-fields=${'#total-grant-associate-salary-costs, #total-grant-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>
             </th:block>
             <th:block th:if="${model.internal}"

@@ -17,22 +17,12 @@ import static org.innovateuk.ifs.project.core.ProjectParticipantRole.FINANCE_REV
 @DiscriminatorValue("FINANCE_REVIEWER")
 public class FinanceReviewer extends ProjectParticipant {
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "projectId", referencedColumnName = "id")
-    private Project project;
-
     public FinanceReviewer() {
-        super(null, FINANCE_REVIEWER);
+        super(null, FINANCE_REVIEWER, null);
     }
 
     public FinanceReviewer(User user, Project project) {
-        super(user, FINANCE_REVIEWER);
-        this.project = project;
-    }
-
-    @Override
-    public Project getProcess() {
-        return project;
+        super(user, FINANCE_REVIEWER, project);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -16,6 +17,12 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 
 @Component
 public class ProjectYourFundingViewModelPopulator {
@@ -41,6 +48,9 @@ public class ProjectYourFundingViewModelPopulator {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
+    @Autowired
+    private QuestionRestService questionRestService;
+
     public ProjectYourFundingViewModel populate(long projectId, long organisationId) {
         PendingPartnerProgressResource progress = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
@@ -48,17 +58,27 @@ public class ProjectYourFundingViewModelPopulator {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
-        boolean locked = organisationSectionRequired && !progress.isYourOrganisationComplete();
+        boolean organisationRequiredAndNotCompleted = organisationSectionRequired && !progress.isYourOrganisationComplete();
         boolean fundingLevelConstant = grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess();
         PartnerOrganisationResource partnerOrganisationResource = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
+        boolean subsidyBasisRequired = competition.isSubsidyControl();
+        Optional<Long> subsidyQuestionId = subsidyBasisRequired
+                ? of(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), SUBSIDY_BASIS).getSuccess().getId())
+                : empty();
 
-        return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),
+        return new ProjectYourFundingViewModel(project,
+                organisationId,
+                progress.isYourFundingComplete(),
                 projectFinance.getMaximumFundingLevel(),
-                locked,
                 competition.getId(),
                 fundingLevelConstant,
                 competition.getFundingType(),
                 organisation.getOrganisationTypeEnum(),
-                partnerOrganisationResource.isLeadOrganisation());
+                partnerOrganisationResource.isLeadOrganisation(),
+                subsidyBasisRequired && !progress.isSubsidyBasisComplete(),
+                organisationRequiredAndNotCompleted,
+                subsidyQuestionId);
     }
+
+
 }
