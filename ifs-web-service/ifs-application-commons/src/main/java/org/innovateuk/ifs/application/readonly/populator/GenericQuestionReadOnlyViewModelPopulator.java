@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.comparator.BooleanComparator;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -110,6 +111,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         return processRoleResourcesGroupedByOrgId.entrySet().stream()
                 .map(entry -> rowViewModel(entry.getKey(), entry.getValue(), answerInput, textResponses))
+                .sorted((a, b) -> BooleanComparator.TRUE_LOW.compare(a.isLead(), b.isLead()))
                 .collect(Collectors.toList());
     }
 

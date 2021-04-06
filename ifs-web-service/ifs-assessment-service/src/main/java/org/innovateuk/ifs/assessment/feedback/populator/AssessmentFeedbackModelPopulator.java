@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewMo
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -16,18 +15,19 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.comparator.BooleanComparator;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
@@ -82,13 +82,13 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
         boolean multipleStatuses = Boolean.TRUE.equals(question.hasMultipleStatuses());
         String applicantResponseValue;
-        Map<String, String> applicantResponseValues;
+        List<AssessmentFeedbackViewModel.ApplicantResponseViewModel> applicantResponseValues;
         if (multipleStatuses) {
             applicantResponseValue = null;
             applicantResponseValues = getApplicantResponseValues(applicationProcessRoles, applicationFormInputs, applicantResponses);
         } else {
             applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
-            applicantResponseValues = new HashMap<>();
+            applicantResponseValues = Collections.emptyList();
         }
         List<FileDetailsViewModel> appendixDetails = getAppendixDetails(applicationFormInputs, applicantResponses);
         FileDetailsViewModel templateDocumentDetails = getTemplateDocumentDetails(applicationFormInputs, applicantResponses);
@@ -166,9 +166,9 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
         return applicantResponseValue;
     }
 
-    private Map<String, String> getApplicantResponseValues(List<ProcessRoleResource> applicationProcessRoles,
-                                                           List<FormInputResource> applicationFormInputs,
-                                                           Map<Long, List<FormInputResponseResource>> applicantResponses) {
+    private List<AssessmentFeedbackViewModel.ApplicantResponseViewModel> getApplicantResponseValues(List<ProcessRoleResource> applicationProcessRoles,
+                                                                                                    List<FormInputResource> applicationFormInputs,
+                                                                                                    Map<Long, List<FormInputResponseResource>> applicantResponses) {
         List<ProcessRoleResource> applicantProcessRoles = applicationProcessRoles.stream()
                 .filter(pr -> pr.getRole().isCollaborator() || pr.getRole().isLeadApplicant())
                 .collect(Collectors.toList());
@@ -184,8 +184,15 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 );
 
         return processRoleResourcesGroupedByOrgId.entrySet().stream()
-                .collect(Collectors.toMap(entry -> organisationRestService.getOrganisationById(entry.getKey()).getSuccess().getName(),
-                        entry -> answerForOrg(entry.getValue(), applicationFormInputs, applicantResponses)));
+                .map(entry -> {
+                    Long orgId = entry.getKey();
+                    List<ProcessRoleResource> orgProcessRoles = entry.getValue();
+                    OrganisationResource organisation = organisationRestService.getOrganisationById(orgId).getSuccess();
+                    boolean lead = orgProcessRoles.stream().anyMatch(pr -> pr.isLeadApplicant());
+                    String answer = answerForOrg(orgProcessRoles, applicationFormInputs, applicantResponses);
+                    return new AssessmentFeedbackViewModel.ApplicantResponseViewModel(organisation.getName(), lead, answer);
+                }).sorted((a, b) -> BooleanComparator.TRUE_LOW.compare(a.isLead(), b.isLead()))
+                .collect(Collectors.toList());
     }
 
     private String answerForOrg(List<ProcessRoleResource> orgProcessRoles,

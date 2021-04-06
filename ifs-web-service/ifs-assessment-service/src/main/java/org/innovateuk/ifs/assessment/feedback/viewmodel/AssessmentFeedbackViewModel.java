@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -34,7 +33,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final Integer maximumScore;
     private final boolean multipleStatuses;
     private final String applicantResponse;
-    private final Map<String, String> applicantResponses;
+    private final List<ApplicantResponseViewModel> applicantResponses;
     private final List<FormInputResource> assessmentFormInputs;
     private final boolean scoreFormInputExists;
     private final boolean scopeFormInputExists;
@@ -56,7 +55,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         Integer maximumScore,
                                         boolean multipleStatuses,
                                         String applicantResponse,
-                                        Map<String, String> applicantResponses,
+                                        List<ApplicantResponseViewModel> applicantResponses,
                                         List<FormInputResource> assessmentFormInputs,
                                         boolean scoreFormInputExists,
                                         boolean scopeFormInputExists,
@@ -93,7 +92,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                        QuestionResource question,
                                        boolean multipleStatuses,
                                        String applicantResponse,
-                                       Map<String, String> applicantResponses,
+                                       List<ApplicantResponseViewModel> applicantResponses,
                                        List<FormInputResource> assessmentFormInputs,
                                        boolean scoreFormInputExists,
                                        boolean scopeFormInputExists,
@@ -176,7 +175,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return applicantResponse;
     }
 
-    public Map<String, String> getApplicantResponses() {
+    public List<ApplicantResponseViewModel> getApplicantResponses() {
         return applicantResponses;
     }
 
@@ -304,5 +303,29 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append("researchCategories", researchCategories)
                 .append("fundingType", fundingType)
                 .toString();
+    }
+
+    public static class ApplicantResponseViewModel {
+        private String orgName;
+        private boolean lead;
+        private String answer;
+
+        public ApplicantResponseViewModel(String orgName, boolean lead, String answer) {
+            this.orgName = orgName;
+            this.lead = lead;
+            this.answer = answer;
+        }
+
+        public String getOrgName() {
+            return orgName;
+        }
+
+        public boolean isLead() {
+            return lead;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
     }
 }
