@@ -2,7 +2,7 @@ version: '3'
 services:
   zap:
     build: 
-      context: .
+      context: zap
       dockerfile: ${DOCKERFILE_NAME}
     ports:
       - 8090:8090
@@ -12,6 +12,6 @@ services:
 
   test:
     build: 
-      context: .
+      context: zap
       dockerfile: Dockerfile-zapcli
     command:  zap-cli --zap-url http://zap --port 8090 status -t 60  
