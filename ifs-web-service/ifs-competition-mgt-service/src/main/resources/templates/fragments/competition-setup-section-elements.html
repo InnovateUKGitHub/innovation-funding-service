@@ -247,15 +247,15 @@
                         </th:block>
 
                         <div class="textarea-wrapped short">
-                        <textarea data-max_words="500"
-                                  data-editor="html"
-                                  id="question.subTitle2"
-                                  class="govuk-textarea"
-                                  th:classappend="${#fields.hasErrors('question.subTitle2')} ? 'govuk-textarea--error'"
-                                  th:name="question.subTitle2"
-                                  th:required="${question.subTitle2Required ? 'required' : null}"
-                                  ifs:utext="${question.subTitle2}">
-                        </textarea>
+                            <textarea data-max_words="500"
+                                      data-editor="html"
+                                      id="question.subTitle2"
+                                      class="govuk-textarea"
+                                      th:classappend="${#fields.hasErrors('question.subTitle2')} ? 'govuk-textarea--error'"
+                                      th:name="question.subTitle2"
+                                      th:required="${question.subTitle2Required ? 'required' : null}"
+                                      ifs:utext="${question.subTitle2}">
+                            </textarea>
                         </div>
                     </div>
                 </th:block>

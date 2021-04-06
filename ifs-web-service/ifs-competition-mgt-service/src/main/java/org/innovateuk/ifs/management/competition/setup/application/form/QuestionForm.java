@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.application.form;
 
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

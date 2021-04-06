@@ -26,19 +26,6 @@ public class ProjectDetailsSectionUpdater extends AbstractApplicationSectionUpda
     }
 
     @Override
-    protected void mapAppendix(ProjectForm form) {
-        form.getQuestion().setNumberOfUploads(form.getNumberOfUploads());
-        if (form.getNumberOfUploads() != null) {
-            // TODO commonise
-            if (form.getNumberOfUploads() == 0) {
-                form.getQuestion().setAppendix(false);
-            } else {
-                form.getQuestion().setAppendix(true);
-            }
-        }
-    }
-
-    @Override
     protected void mapGuidanceRows(ProjectForm form) {
         //nothing to do here. Project details don't have assessor guidance rows
     }
