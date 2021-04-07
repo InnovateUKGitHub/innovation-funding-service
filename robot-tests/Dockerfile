@@ -23,6 +23,9 @@ RUN apt-get update && apt-get install -q -y --fix-missing \
 	firefox \
 	xvfb \
 	x11vnc && \
+	mysql-client && \
+    rsync && \
+    telnet && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
@@ -87,14 +90,6 @@ HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
 
 
-
-RUN apt-get update && \
-    apt-get install -y mysql-client && \
-    apt-get install -y curl && \
-    apt-get install -y python3-pip && \
-    apt-get install -y xvfb && \
-    apt-get install -y rsync && \
-    apt-get install -y telnet
 
 ARG BAMBOO_CREDS_ARG
 ARG BAMBOO_URL_ARG
