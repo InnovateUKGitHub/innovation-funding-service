@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.competition.setup.application.sectionupdat
 
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.application.form.ProjectForm;
-import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
 import org.springframework.stereotype.Service;

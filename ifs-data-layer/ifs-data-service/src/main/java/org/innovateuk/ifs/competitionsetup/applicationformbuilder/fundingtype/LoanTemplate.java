@@ -102,6 +102,7 @@ public class LoanTemplate implements FundingTypeTemplate {
                         "<p><strong>Financial information</strong></p>" +
                         "<p>You must submit financial information to us about your business. This is done through completion of a spreadsheet template. Please download the financial spreadsheet template and fill this in offline. At the end of the survey you will be asked to upload the financial spreadsheet.</p>"
                         )
+                .withAssignEnabled(true)
                 .withFormInputs(asList(aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.APPLICATION)
