@@ -67,8 +67,9 @@ public class ProcurementGrantOfferLetterTemplatePopulator {
     private ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel entryForMilestone(ProjectResource project, ProjectProcurementMilestoneResource milestone) {
         String description = milestone.getTaskOrActivity() + " " + milestone.getDescription() + " " + milestone.getDeliverable();
         String successCriteria = milestone.getSuccessCriteria();
-        LocalDate completionDate = project.getTargetStartDate().plusMonths(milestone.getMonth());
-        return new ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(description, successCriteria, completionDate);
+        Integer milestoneMonth = milestone.getMonth();
+        LocalDate completionDate = project.getTargetStartDate().plusMonths(milestoneMonth);
+        return new ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(description, successCriteria, milestoneMonth, completionDate);
     }
 
     private List<ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel> milestoneMonths(ProjectResource project,

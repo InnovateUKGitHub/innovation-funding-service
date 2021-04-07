@@ -268,6 +268,7 @@
             <th>Milestone and/or deliverable</th>
             <th>Completion date</th>
             <th>Success criteria</th>
+            <th>Required payment month</th>
         </tr>
         </thead>
         <tbody>
@@ -276,6 +277,7 @@
             <td th:text="${milestone.description}">Evidence identified</td>
             <td th:text="${#temporals.format(milestone.completionDate)}"></td>
             <td th:text="${milestone.successCriteria}">Evidence sources clearly identified</td>
+            <td th:text="${milestone.month}">1</td>
         </tr>
         </tbody>
     </table>
