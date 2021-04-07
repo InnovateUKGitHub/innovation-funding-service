@@ -82,7 +82,7 @@ public class LoanTemplate implements FundingTypeTemplate {
 
     private void addLoanBusinessAndFinanceInformationQuestion(SectionBuilder projectDetailSection){
         if (ifsLoanSurveyQuestionEnabled){
-            projectDetailSection.getQuestions().add(loanBusinessAndFinancialInformation());
+            projectDetailSection.getQuestions().add(0, loanBusinessAndFinancialInformation());
         }
     }
 
