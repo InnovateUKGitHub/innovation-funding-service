@@ -68,6 +68,7 @@ public class GenericQuestionApplicationModelPopulator {
                 .withQuestionName(question.getShortName())
                 .withQuestionSubtitle(question.getName())
                 .withQuestionDescription(question.getDescription())
+                .withQuestionDescription2(question.getDescription2())
                 .withQuestionNumber(question.getQuestionNumber())
                 .withQuestionType(question.getQuestionSetupType())
                 .withComplete(applicantQuestion.isCompleteByApplicant(applicantQuestion.getCurrentApplicant()))

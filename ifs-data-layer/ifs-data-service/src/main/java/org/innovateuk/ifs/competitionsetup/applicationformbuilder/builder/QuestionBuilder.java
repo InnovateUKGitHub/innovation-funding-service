@@ -14,6 +14,7 @@ public final class QuestionBuilder {
     private String name;
     private String shortName;
     private String description;
+    private String description2;
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
@@ -67,6 +68,11 @@ public final class QuestionBuilder {
 
     public QuestionBuilder withDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public QuestionBuilder withDescription2(String description2) {
+        this.description2 = description2;
         return this;
     }
 
@@ -129,6 +135,7 @@ public final class QuestionBuilder {
         question.setName(name);
         question.setShortName(shortName);
         question.setDescription(description);
+        question.setDescription2(description2);
         question.setMarkAsCompletedEnabled(markAsCompletedEnabled);
         question.setAssignEnabled(assignEnabled);
         question.setMultipleStatuses(multipleStatuses);

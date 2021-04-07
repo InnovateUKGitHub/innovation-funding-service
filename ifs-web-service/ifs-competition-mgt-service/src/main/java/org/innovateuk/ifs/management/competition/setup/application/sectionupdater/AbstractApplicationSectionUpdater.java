@@ -39,7 +39,16 @@ public abstract class AbstractApplicationSectionUpdater<T extends AbstractQuesti
         return questionSetupCompetitionRestService.save(form.getQuestion()).toServiceResult();
     }
 
-    protected abstract void mapAppendix(T form);
+    protected void mapAppendix(T form) {
+        form.getQuestion().setNumberOfUploads(form.getNumberOfUploads());
+        if (form.getNumberOfUploads() != null) {
+            if (form.getNumberOfUploads() == 0) {
+                form.getQuestion().setAppendix(false);
+            } else {
+                form.getQuestion().setAppendix(true);
+            }
+        }
+    }
 
     protected abstract void mapGuidanceRows(T form);
 

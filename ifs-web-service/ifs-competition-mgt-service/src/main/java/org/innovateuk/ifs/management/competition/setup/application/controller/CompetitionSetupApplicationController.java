@@ -249,7 +249,7 @@ public class CompetitionSetupApplicationController {
                 Optional.ofNullable(questionId));
     }
 
-    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
+    @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile", "question.type=ASSESSED_QUESTION"})
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
@@ -271,7 +271,7 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
-    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=KTP_ASSESSMENT")
+    @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile","question.type=KTP_ASSESSMENT"})
     public String submitKtpAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) KtpAssessmentForm competitionSetupForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
@@ -294,7 +294,7 @@ public class CompetitionSetupApplicationController {
     }
 
 
-    @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "uploadTemplateDocumentFile"})
+    @PostMapping(value = "/question/{questionId}/edit", params = {"uploadTemplateDocumentFile"})
     public String uploadTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                              BindingResult bindingResult,
                                              ValidationHandler validationHandler,
@@ -312,7 +312,7 @@ public class CompetitionSetupApplicationController {
                         file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file)));
     }
 
-    @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "removeTemplateDocumentFile"})
+    @PostMapping(value = "/question/{questionId}/edit", params = {"removeTemplateDocumentFile"})
     public String removeTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
                                              BindingResult bindingResult,
                                              ValidationHandler validationHandler,
@@ -336,14 +336,15 @@ public class CompetitionSetupApplicationController {
                 formInputRestService.findFile(question.getTemplateFormInput()).getSuccess());
     }
 
-    @PostMapping("/question/{questionId}/edit")
+    @PostMapping(value = "/question/{questionId}/edit", params = {"!uploadTemplateDocumentFile", "!removeTemplateDocumentFile"})
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
                                                @PathVariable long competitionId,
+                                               @PathVariable long questionId,
                                                UserResource loggedInUser,
                                                Model model) {
-        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult);
+        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult, questionId);
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
