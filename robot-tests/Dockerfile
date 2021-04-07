@@ -1,43 +1,95 @@
-FROM alpine as builder
+# This dockerfile builds the zap stable release
+FROM ubuntu:20.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG WEBSWING_TOKEN=""
+
+RUN apt-get update && apt-get install -q -y --fix-missing \
+	make \
+	automake \
+	autoconf \
+	gcc g++ \
+	openjdk-11-jdk \
+	wget \
+	curl \
+	xmlstarlet \
+	unzip \
+	git \
+	openbox \
+	xterm \
+	net-tools \
+	python3-pip \
+	python-is-python3 \
+	firefox \
+	xvfb \
+	x11vnc && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --upgrade pip zapcli python-owasp-zap-v2.4
+
+RUN useradd -d /home/zap -m -s /bin/bash zap
+RUN echo zap:zap | chpasswd
+RUN mkdir /zap && chown zap:zap /zap
 
 WORKDIR /zap
-
-RUN apk add --no-cache curl wget xmlstarlet unzip
-
-# Download and expand the latest stable release
-RUN curl -s https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersions.xml | xmlstarlet sel -t -v //url |grep -i Linux | wget --content-disposition -i - -O - | tar zxv && \
-    mv ZAP*/* . &&  \
-    rm -R ZAP*
-
-FROM openjdk:8-jdk-alpine
-LABEL maintainer="psiinon@gmail.com"
-
-WORKDIR /zap
-COPY --from=builder /zap .
-COPY policies /home/zap/.ZAP/policies/
-
-RUN echo "http://dl-3.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
-    apk add --update --no-cache bash netcat-openbsd && \
-    adduser -h /home/zap -s /bin/bash zap -D zap && \
-    rm -rf /var/cache/apk/* && \
-    chown zap /zap && \
-    chgrp zap /zap && \
-    chown -R zap:zap /zap && \
-    chown -R zap:zap /home/zap/.ZAP/
-
 
 #Change to the zap user so things get done as the right person (apart from copy)
 USER zap
 
+RUN mkdir /home/zap/.vnc
+
+# Download and expand the latest stable release
+RUN curl -s https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersions.xml | xmlstarlet sel -t -v //url |grep -i Linux | wget -nv --content-disposition -i - -O - | tar zxv && \
+	cp -R ZAP*/* . &&  \
+	rm -R ZAP* && \
+	# Setup Webswing
+	if [ -z "$WEBSWING_TOKEN" ] ; \
+	then curl -s -L  "https://storage.googleapis.com/builds.webswing.org/releases/webswing-20.2.1.zip" > webswing.zip; \
+	else curl -s -L  "https://dev.webswing.org/${WEBSWING_TOKEN}/nexus/repository/Webswing-Public/webswing-agpl-dist/webswing-20.2.1-distribution.zip" > webswing.zip; fi && \
+	unzip webswing.zip && \
+	rm webswing.zip && \
+	mv webswing-* webswing && \
+	# Remove Webswing bundled examples
+	rm -Rf webswing/apps/
+
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
 ENV PATH $JAVA_HOME/bin:/zap/:$PATH
 ENV ZAP_PATH /zap/zap.sh
-ENV HOME /home/zap/
+
+# Default port for use with zapcli
 ENV ZAP_PORT 8080
+ENV IS_CONTAINERIZED true
+ENV HOME /home/zap/
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
-HEALTHCHECK --retries=15 --interval=5s CMD nc -vz 127.0.0.1 $ZAP_PORT
+COPY zap* CHANGELOG.md /zap/
+COPY webswing.config /zap/webswing/
+COPY webswing.properties /zap/webswing/
+COPY policies /home/zap/.ZAP/policies/
+COPY policies /root/.ZAP/policies/
+# The scan script loads the scripts from dev home dir.
+COPY scripts /home/zap/.ZAP_D/scripts/
+COPY .xinitrc /home/zap/
+
+#Copy doesn't respect USER directives so we need to chown and to do that we need to be root
+USER root
+
+RUN chown zap:zap /zap/* && \
+	chown zap:zap /zap/webswing/webswing.config && \
+	chown zap:zap /zap/webswing/webswing.properties && \
+	chown zap:zap -R /home/zap/.ZAP/ && \
+	chown zap:zap /home/zap/.xinitrc && \
+	chmod a+x /home/zap/.xinitrc
+
+#Change back to zap at the end
+USER zap
+
+HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
 
-FROM ubuntu:18.04
+
 
 RUN apt-get update && \
     apt-get install -y mysql-client && \
