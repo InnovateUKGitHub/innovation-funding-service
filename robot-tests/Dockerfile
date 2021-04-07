@@ -94,8 +94,7 @@ RUN apt-get update && \
     apt-get install -y python3-pip && \
     apt-get install -y xvfb && \
     apt-get install -y rsync && \
-    apt-get install -y telnet && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y telnet
 
 ARG BAMBOO_CREDS_ARG
 ARG BAMBOO_URL_ARG
