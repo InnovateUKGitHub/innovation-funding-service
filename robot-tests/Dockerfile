@@ -71,7 +71,6 @@ COPY policies /home/zap/.ZAP/policies/
 COPY policies /root/.ZAP/policies/
 # The scan script loads the scripts from dev home dir.
 COPY scripts /home/zap/.ZAP_D/scripts/
-COPY .xinitrc /home/zap/
 
 #Copy doesn't respect USER directives so we need to chown and to do that we need to be root
 USER root
@@ -79,9 +78,7 @@ USER root
 RUN chown zap:zap /zap/* && \
 	chown zap:zap /zap/webswing/webswing.config && \
 	chown zap:zap /zap/webswing/webswing.properties && \
-	chown zap:zap -R /home/zap/.ZAP/ && \
-	chown zap:zap /home/zap/.xinitrc && \
-	chmod a+x /home/zap/.xinitrc
+	chown zap:zap -R /home/zap/.ZAP/
 
 #Change back to zap at the end
 USER zap
