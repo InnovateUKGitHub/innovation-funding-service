@@ -57,12 +57,14 @@ public class ProcurementGrantOfferLetterTemplateViewModel {
 
     public static class ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel {
         private String description;
+        private String deliverable;
         private String successCriteria;
         private Integer month;
         private LocalDate completionDate;
 
-        public ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(String description, String successCriteria, Integer month, LocalDate completionDate) {
+        public ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(String description, String deliverable, String successCriteria, Integer month, LocalDate completionDate) {
             this.description = description;
+            this.deliverable = deliverable;
             this.successCriteria = successCriteria;
             this.month = month;
             this.completionDate = completionDate;
@@ -70,6 +72,10 @@ public class ProcurementGrantOfferLetterTemplateViewModel {
 
         public String getDescription() {
             return description;
+        }
+
+        public String getDeliverable() {
+            return deliverable;
         }
 
         public String getSuccessCriteria() {
