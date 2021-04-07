@@ -56,14 +56,17 @@ public class ProcurementGrantOfferLetterTemplateViewModel {
     }
 
     public static class ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel {
-        private String description;
-        private String deliverable;
-        private String successCriteria;
-        private Integer month;
-        private LocalDate completionDate;
+        private final String description;
+        private final String task;
+        private final String deliverable;
+        private final String successCriteria;
+        private final Integer month;
+        private final LocalDate completionDate;
 
-        public ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(String description, String deliverable, String successCriteria, Integer month, LocalDate completionDate) {
+        public ProcurementGrantOfferLetterTemplateMilestoneEntryViewModel(String description, String task, String deliverable,
+                                                                          String successCriteria, Integer month, LocalDate completionDate) {
             this.description = description;
+            this.task = task;
             this.deliverable = deliverable;
             this.successCriteria = successCriteria;
             this.month = month;
@@ -72,6 +75,10 @@ public class ProcurementGrantOfferLetterTemplateViewModel {
 
         public String getDescription() {
             return description;
+        }
+
+        public String getTask() {
+            return task;
         }
 
         public String getDeliverable() {
@@ -92,10 +99,10 @@ public class ProcurementGrantOfferLetterTemplateViewModel {
     }
 
     public static class ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel {
-        private long month;
-        private BigInteger invoiceNet;
-        private BigInteger vat;
-        private List<Integer> milestoneNumbers;
+        private final long month;
+        private final BigInteger invoiceNet;
+        private final BigInteger vat;
+        private final List<Integer> milestoneNumbers;
 
         public ProcurementGrantOfferLetterTemplateMilestoneMonthEntryViewModel(long month, BigInteger invoiceNet, BigInteger vat, List<Integer> milestoneNumbers){
             this.month = month;
