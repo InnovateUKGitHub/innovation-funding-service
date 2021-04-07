@@ -33,9 +33,9 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	                      KTP application
+${KTPapplication}  	                      KTP application duplicate
 ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                          KTP new competition
+${KTPcompetiton}                          KTP new competition duplicate
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=bob@knowledge.base    password=${short_password}
 ${ktp_KTA_name}                           Hermen Mermen
@@ -227,7 +227,6 @@ KTA user assigned to application can view the read-only view for 'No' selected f
     [Setup]  knowledge based applicant invites KTA user to the application
     Given the user clicks the button/link                               jQuery = a:contains("Applications")
     When the user clicks the button/link                                link = ${KTPapplication}
-    And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
     Then the user should see read only view for non-fec declaration
 
 KTA user can view read-only view of the project cost table in finance summary section
@@ -308,7 +307,7 @@ the user should see read only view for non-fec declaration
     the user should see the element                         jQuery = p:contains(No)
 
 knowledge based applicant invites KTA user to the application
-    the user logs-in in new browser                  &{KTPLead}
+    log in as a different user                       &{KTPLead}
     the user clicks the button/link                  link = ${KTPapplication}
     the user clicks the button/link                  link = Application team
     the user enters text to a text field             id = ktaEmail   ${ktp_KTA_email}
