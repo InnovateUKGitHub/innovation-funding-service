@@ -374,7 +374,10 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Subsidy control t and c competition")
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
-               ktpCompetition()
+               grantCompetition()
+                        .withName("Subsidy control tactical competition")
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
+                ktpCompetition()
                         .withName("KTP new competition duplicate")
         )
                 .stream()
