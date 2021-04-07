@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
@@ -12,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -34,6 +37,9 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ProcessRoleRestService processRoleRestService;
 
+    @Mock
+    private ApplicationUrlHelper applicationUrlHelper;
+
     @Override
     protected ApplicationQuestionController supplyControllerUnderTest() {
         return new ApplicationQuestionController();
@@ -51,9 +57,10 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(questionRestService.findById(question.getId())).thenReturn(restSuccess(question));
         when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(1L).build()));
+        when(applicationUrlHelper.getQuestionUrl(QuestionSetupType.ASSESSED_QUESTION, question.getId(), applicant.getId(), 1L)).thenReturn(Optional.of("/question-url"));
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}", application.getId(), question.getId()))
-                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", application.getId(), question.getId())));
+                .andExpect(redirectedUrl("/question-url"));
 
     }
 }
