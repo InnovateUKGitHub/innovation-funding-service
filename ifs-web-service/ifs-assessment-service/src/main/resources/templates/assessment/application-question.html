@@ -36,7 +36,7 @@
                       data-autosave="assessorFeedback">
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                    <th:block th:if="${model.applicantResponse != null}">
+                    <th:block th:if="${model.hasResponse()}">
                         <p class="govuk-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
                         <p class="govuk-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
 
@@ -46,7 +46,25 @@
                                 <th:block th:text="${model.questionName}" />
                             </h2>
 
-                            <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response.</p>
+                            <p th:unless="${model.multipleStatuses}" th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response.</p>
+                            <table th:if="${model.multipleStatuses}" class="govuk-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th scope="col" class="govuk-table__header">Partner</th>
+                                    <th scope="col" class="govuk-table__header">Answer</th>
+                                </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
+                                <tr th:each="applicantResponse : ${model.applicantResponses}" class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <th:block th:text="${applicantResponse.orgName}">Org</th:block><th:block th:if="${applicantResponse.lead}"> <span class="hint">(Lead)</span></th:block>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${applicantResponse.answer}"></p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </th:block>
 

@@ -374,7 +374,10 @@ public class CompetitionWebTestData {
                 grantCompetition()
                         .withName("Subsidy control t and c competition")
                         .withFundingRules(FundingRules.SUBSIDY_CONTROL),
-               ktpCompetition()
+               grantCompetition()
+                        .withName("Subsidy control tactical competition")
+                        .withFundingRules(FundingRules.SUBSIDY_CONTROL),
+                ktpCompetition()
                         .withName("KTP new competition duplicate")
         )
                 .stream()
@@ -433,49 +436,48 @@ public class CompetitionWebTestData {
     }
 
     private static CompetitionLineBuilder grantCompetition() {
-        return aCompetitionLine()
-                .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
-                .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
-                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantTypes(asSet(BUSINESS))
-                .withAssessorCount(5)
-                .withResearchRatio(30)
-                .withResubmission(false)
-                .withMultiStream(false)
-                .withHasAssessmentPanel(false)
-                .withHasInterviewStage(false)
-                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
-                .withCompExecutive(EXECUTIVE_ID)
-                .withSetupComplete(true)
-                .withPafCode("875")
-                .withBudgetCode("DET1536/1537")
-                .withActivityCode("16014")
-                .withCode("2/1/1506")
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-                .withFundingType(FundingType.GRANT)
-                .withNonIfs(false)
-                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
-                .withIncludeJesForm(true)
-                .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowth(true)
-                .withIncludeYourOrganisation(true)
-                .withFundingRules(FundingRules.STATE_AID)
-                .withPublished(true)
-                .withAlwaysOpen(false);
+        return anIfsCompetition()
+                .withFundingType(FundingType.GRANT);
     }
 
     private static CompetitionLineBuilder procurementCompetition() {
-        return aCompetitionLine()
-                .withCompetitionType(PROGRAMME)
-                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
-                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
+        return anIfsCompetition()
+                .withFundingType(FundingType.PROCUREMENT)
                 .withInnovationSector("None")
                 .withInnovationAreas(asSet(67L))
+                .withIncludeYourOrganisation(false)
+                .withResearchRatio(100);
+    }
+
+    private static CompetitionLineBuilder investorPartnershipCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.INVESTOR_PARTNERSHIPS)
+                .withResearchRatio(100)
+                .withResubmission(true);
+    }
+
+    private static CompetitionLineBuilder loanCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.LOAN)
+                .withResubmission(true);
+    }
+
+    private static CompetitionLineBuilder ktpCompetition() {
+        return anIfsCompetition()
+                .withFundingType(FundingType.KTP)
+                .withResubmission(true);
+    }
+
+    private static CompetitionLineBuilder anIfsCompetition() {
+        return aCompetitionLine()
+                .withCompetitionType(PROGRAMME)
+                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
+                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
                 .withLeadApplicantTypes(asSet(BUSINESS))
                 .withAssessorCount(5)
-                .withResearchRatio(100)
+                .withResearchRatio(30)
                 .withResubmission(false)
                 .withMultiStream(false)
                 .withHasAssessmentPanel(false)
@@ -488,40 +490,6 @@ public class CompetitionWebTestData {
                 .withActivityCode("16014")
                 .withCode("2/1/1506")
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-                .withFundingType(FundingType.PROCUREMENT)
-                .withNonIfs(false)
-                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
-                .withIncludeJesForm(true)
-                .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeYourOrganisation(false)
-                .withFundingRules(FundingRules.STATE_AID)
-                .withPublished(true)
-                .withAlwaysOpen(false);
-    }
-
-    private static CompetitionLineBuilder investorPartnershipCompetition() {
-        return aCompetitionLine()
-                .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
-                .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
-                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantTypes(asSet(BUSINESS))
-                .withHasInterviewStage(false)
-                .withHasAssessmentPanel(false)
-                .withResearchRatio(100)
-                .withResubmission(true)
-                .withAssessorCount(5)
-                .withMultiStream(false)
-                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
-                .withCompExecutive(EXECUTIVE_ID)
-                .withSetupComplete(true)
-                .withPafCode("875")
-                .withBudgetCode("DET1536/1537")
-                .withActivityCode("16014")
-                .withCode("2/1/1506")
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-                .withFundingType(FundingType.INVESTOR_PARTNERSHIPS)
                 .withNonIfs(false)
                 .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .withIncludeJesForm(true)
@@ -531,74 +499,7 @@ public class CompetitionWebTestData {
                 .withFundingRules(FundingRules.STATE_AID)
                 .withPublished(true)
                 .withAlwaysOpen(false);
-    }
 
-    private static CompetitionLineBuilder loanCompetition() {
-        return aCompetitionLine()
-                .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
-                .withInnovationSector("Materials and manufacturing")
-                .withAssessorCount(5)
-                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
-                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantTypes(asSet(BUSINESS))
-                .withResearchRatio(30)
-                .withResubmission(true)
-                .withMultiStream(false)
-                .withHasAssessmentPanel(false)
-                .withHasInterviewStage(false)
-                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
-                .withCompExecutive(EXECUTIVE_ID)
-                .withSetupComplete(true)
-                .withPafCode("875")
-                .withBudgetCode("DET1536/1537")
-                .withActivityCode("16014")
-                .withCode("2/1/1506")
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-                .withFundingType(FundingType.LOAN)
-                .withNonIfs(false)
-                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
-                .withIncludeJesForm(true)
-                .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowth(true)
-                .withIncludeYourOrganisation(true)
-                .withFundingRules(FundingRules.STATE_AID)
-                .withPublished(true)
-                .withAlwaysOpen(false);
-    }
-
-    private static CompetitionLineBuilder ktpCompetition() {
-        return aCompetitionLine()
-                .withCompetitionType(PROGRAMME)
-                .withInnovationAreas(asSet(DIGITAL_MANUFACTORING_ID))
-                .withInnovationSector("Materials and manufacturing")
-                .withResearchCategory(asSet(FEASIBILITY_STUDIES_ID))
-                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
-                .withLeadApplicantTypes(asSet(BUSINESS))
-                .withResearchRatio(30)
-                .withAssessorCount(5)
-                .withResubmission(true)
-                .withMultiStream(false)
-                .withHasAssessmentPanel(false)
-                .withHasInterviewStage(false)
-                .withLeadTechnologist(LEAD_TECHNOLOGIST_ID)
-                .withCompExecutive(EXECUTIVE_ID)
-                .withSetupComplete(true)
-                .withPafCode("875")
-                .withBudgetCode("DET1536/1537")
-                .withActivityCode("16014")
-                .withCode("2/1/1506")
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
-                .withFundingType(FundingType.KTP)
-                .withNonIfs(false)
-                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
-                .withIncludeJesForm(true)
-                .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
-                .withIncludeProjectGrowth(true)
-                .withIncludeYourOrganisation(true)
-                .withFundingRules(FundingRules.STATE_AID)
-                .withPublished(true)
-                .withAlwaysOpen(false);
     }
 
     private static CompetitionLineBuilder nonIfsCompetition() {
@@ -607,6 +508,7 @@ public class CompetitionWebTestData {
                 .withInnovationSector("Emerging and enabling")
                 .withCompetitionStatus(CompetitionStatus.OPEN)
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withFundingType(FundingType.GRANT)
                 .withPublished(true)
                 .withNonIfs(true)
                 .withNonIfsUrl("https://www.gov.uk/government/organisations/innovate-uk")
