@@ -200,9 +200,9 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP in panel"),
                 ktpCompetition()
-                        .withName("KTP notifications"),
+                        .withName("NON-FEC KTP project competition"),
                 ktpCompetition()
-                        .withName("FEC KTP project competition")
+                        .withName("KTP notifications")
                         .withBuilderOrder(BuilderOrder.LAST),
                 grantCompetition()
                         .withName("Living models for the future world")
