@@ -85,6 +85,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return markQuestionComplete(markAsComplete, EQUALITY_DIVERSITY_INCLUSION);
     }
 
+    public ApplicationDataBuilder markNorthernIrelandDeclarationComplete(boolean markAsComplete) {
+        return markQuestionComplete(markAsComplete, NORTHERN_IRELAND_DECLARATION);
+    }
+
     public ApplicationDataBuilder markApplicationTeamComplete(boolean markAsComplete) {
         return markQuestionComplete(markAsComplete, APPLICATION_TEAM);
     }

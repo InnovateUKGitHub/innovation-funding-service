@@ -95,6 +95,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9240 KTP fEC/Non-fEC: certificate upload if using fEC
 ...
+...            IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -384,7 +386,7 @@ New lead applicant uploads a document for the organisation's fEC model and save 
 New lead applicant view the read-only page once marked as complete
      [Documentation]  IFS-9240
      When the user clicks the button/link          link = Your fEC model
-     Then the user checks the read-only page
+     Then the user checks the read-only page       ${lead_ktp_email}
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
@@ -475,6 +477,11 @@ New lead applicant invites a new partner organisation user and fills in project 
     When the lead invites a partner and accepted the invitation
     Then the user completes partner project finances                ${ktpApplicationTitle}  yes
 
+Business user can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    When the user clicks the button/link                            link = Finances overview
+    Then the user should see read only view for FEC declaration     ${new_partner_ktp_email}
+
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
@@ -501,6 +508,21 @@ Partner organisation can see lead organisation funding level information
     When the user clicks the button/link      link = Your funding
     Then the user should see the element      jQuery = h1:contains("Your funding")
     And the user should see the element       jQuery = dt:contains("Funding level") ~ dd:contains("10.00%")
+
+Customer support user can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]  Requesting IDs of this application
+    Given log in as a different user                                &{support_user_credentials}
+    And Get competitions id and set it as suite variable            ${ktpCompetitionName}
+    When the user navigates to the page                             ${server}/management/competition/${competitionId}/application/${ApplicationID}
+    And The user clicks the button/link                             jQuery = button:contains("Finances summary")
+    Then the user should see read only view for FEC declaration     support@innovateuk.test
+
+IFS admin can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given log in as a different user                                &{ifs_admin_user_credentials}
+    When the user navigates to the page                             ${server}/management/competition/${competitionId}/application/${ApplicationID}
+    Then the user should see read only view for FEC declaration     arden.pimenta@innovateuk.test
 
 Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
     [Documentation]  IFS-7958
@@ -615,14 +637,17 @@ The KTA cannot edit any application section
 
 The KTA is able to see lead and non lead applicant's project finances
     [Documentation]  IFS-7983  IFS-7958
-    Given the user clicks the button/link                                    id = accordion-questions-heading-3-1
-    When the user clicks the button/link                                     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    When the user clicks the button/link                                     jQuery = div:contains("Middlesex University Higher Education Corporation") ~ a:contains("View finances")
     Then the user can view lead and partner finance summary calculations
 
 The KTA is able to see lead applicant's project costs summary
     [Documentation]  IFS-7983  IFS-7958
     Given the user clicks the button/link                                 link = Back to application overview
     Then the user can see project cost breakdown of lead organisation
+
+The KTA is able view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    Then the user should see read only view for FEC declaration     ${ktaEmail}
 
 Lead applicant verifies the KTA inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
@@ -1431,8 +1456,8 @@ the user should see the changes in the finance table in Overview screen
     the user should see the element     jQuery = th:contains("Other funding (£)")
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") + td:contains("2,369")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") + td:contains("2,369")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
     the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("90.00%")
     the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("2,132")
 
@@ -1524,9 +1549,10 @@ the user marks the project costs complete after editing
     the user fills in ktp project costs
 
 the user checks the read-only page
+    [Arguments]   ${email}
     the user should see the element               jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
     the user should see the element               jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
-    the user downloads the file                   ${lead_ktp_email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
+    the user downloads the file                   ${email}   ${server}/application/${ApplicationID}/form/598/view-fec-certificate   ${DOWNLOAD_FOLDER}/${uploadedPdf}
     Download should be done
     remove the file from the operating system     ${uploadedPdf}
 
@@ -1536,5 +1562,15 @@ the user should see the right values
     the user should see the element     jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="${total}"]
 
 the user marks the project costs as complete
-    the user clicks the button/link     css = label[for="stateAidAgreed"]
-    the user clicks the button/link     jQuery = button:contains("Mark as complete")
+   the user clicks the button/link     css = label[for="stateAidAgreed"]
+   the user clicks the button/link     jQuery = button:contains("Mark as complete")
+
+non-applicant user navigates to your FEC model page
+    the user clicks the button/link     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    the user clicks the button/link     link = Your fEC model
+
+the user should see read only view for FEC declaration
+    [Arguments]   ${email}
+    non-applicant user navigates to your FEC model page
+    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
+    the user checks the read-only page                      ${email}

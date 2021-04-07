@@ -143,7 +143,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
                 .build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
-        List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
+        List<FormInputResponseResource> responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
@@ -240,7 +240,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
                 .build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
-        List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
+        List<FormInputResponseResource> responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);

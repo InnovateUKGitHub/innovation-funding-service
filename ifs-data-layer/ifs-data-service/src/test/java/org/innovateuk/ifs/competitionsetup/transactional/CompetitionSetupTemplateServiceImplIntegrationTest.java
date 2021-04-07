@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -39,6 +40,7 @@ public class CompetitionSetupTemplateServiceImplIntegrationTest extends BaseAuth
             Competition competition = competitionRepository.save(newCompetition()
                     .withId(null)
                     .withFundingType(FundingType.GRANT)
+                    .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                     .build());
 
             CompetitionType competitionType = competitionTypeRepository.findByName(type.getText());
@@ -57,6 +59,27 @@ public class CompetitionSetupTemplateServiceImplIntegrationTest extends BaseAuth
             Competition competition = competitionRepository.save(newCompetition()
                     .withId(null)
                     .withFundingType(type)
+                    .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                    .build());
+
+            CompetitionType competitionType = competitionTypeRepository.findByName(GENERIC.getText());
+
+            ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
+
+            assertFalse(result.getSuccess().getProjectSetupStages().isEmpty());
+            assertFalse(result.getSuccess().getFinanceRowTypes().isEmpty());
+        });
+    }
+
+    @Test
+    public void allFundingRules() {
+        setLoggedInUser(getIfsAdmin());
+
+        stream(FundingRules.values()).forEach(fundingRules -> {
+            Competition competition = competitionRepository.save(newCompetition()
+                    .withId(null)
+                    .withFundingType(FundingType.GRANT)
+                    .withFundingRules(fundingRules)
                     .build());
 
             CompetitionType competitionType = competitionTypeRepository.findByName(GENERIC.getText());
