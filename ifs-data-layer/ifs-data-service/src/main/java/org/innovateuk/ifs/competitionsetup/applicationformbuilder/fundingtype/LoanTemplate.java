@@ -66,13 +66,10 @@ public class LoanTemplate implements FundingTypeTemplate {
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
         competitionTypeSections.stream().filter(section -> SectionType.PROJECT_DETAILS == section.getType())
                 .findAny()
-                .ifPresent(section -> {
-                    section.withName("Applicant details");
-                    section.getQuestions().stream().filter(question -> EQUALITY_DIVERSITY_INCLUSION.equals(question.getQuestionSetupType()))
-                            .findAny()
-                            .ifPresent(ediQuestion ->
-                                    ediQuestion.withDescription(String.format(EDI_QUESTION_PATTERN, "https://bit.ly/EDIForm"))
-                            );
+                .ifPresent(projectDetailsSection -> {
+                    projectDetailsSection.withName("Applicant details");
+                    setEdiQuestionDescription(projectDetailsSection);
+                    addLoanBusinessAndFinanceInformationQuestion(projectDetailsSection);
                 });
         competitionTypeSections.stream().filter(section -> SectionType.TERMS_AND_CONDITIONS == section.getType())
                 .findAny()
