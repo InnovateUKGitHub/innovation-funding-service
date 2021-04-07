@@ -274,7 +274,7 @@
         <tbody>
         <tr th:each="milestone, iStat : ${model.milestones}">
             <th th:text="${iStat.index + 1}">1</th>
-            <td><th:block th:text="${milestone.description}" /><br/><th:block th:text="${milestone.task}" /><br/><th:block th:text="${milestone.deliverable}" /></td>
+            <td><p th:text="${milestone.description}">desc</p><p th:text="${milestone.task}">task</p><p th:text="${milestone.deliverable}">deliverable</p></td>
             <td th:text="${#temporals.format(milestone.completionDate)}"></td>
             <td th:text="${milestone.successCriteria}">Evidence sources clearly identified</td>
             <td th:text="${milestone.month}">1</td>
