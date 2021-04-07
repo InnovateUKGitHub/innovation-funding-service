@@ -32,12 +32,13 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
     private final CompetitionResource competition;
     private final ApplicationResource application;
     private final UserResource user;
+    private final List<ProcessRoleResource> applicationProcessRoles;
     private final Optional<ProcessRoleResource> usersProcessRole;
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
     private final Multimap<Long, FormInputResource> questionIdToApplicationFormInputs;
     private final Map<Long, FormInputResource> formInputIdToAssessorFormInput;
-    private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
+    private final Map<Long, List<FormInputResponseResource>> formInputIdToFormInputResponses;
     /* only included if ApplicationReadOnlySettings for isIncludeStatuses is set. */
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
     /* only included if ApplicationReadOnlySettings.includeAssessment is set. */
@@ -55,6 +56,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         this.application = application;
         this.competition = competition;
         this.user = user;
+        this.applicationProcessRoles = processRoles;
         this.usersProcessRole = processRoles.stream().
                 filter(pr -> pr.getUser().equals(user.getId()))
                 .findAny();
@@ -68,7 +70,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .filter(input -> ASSESSMENT.equals(input.getScope()))
                 .collect(toMap(FormInputResource::getId, Function.identity()));
         this.formInputIdToFormInputResponses = formInputResponses.stream()
-                .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
+                .collect(Collectors.groupingBy(FormInputResponseResource::getFormInput));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
         this.assessmentToApplicationAssessment = assessments.stream()
                 .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
@@ -119,7 +121,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return questionIdToApplicationFormInputs;
     }
 
-    public Map<Long, FormInputResponseResource> getFormInputIdToFormInputResponses() {
+    public Map<Long, List<FormInputResponseResource>> getFormInputIdToFormInputResponses() {
         return formInputIdToFormInputResponses;
     }
 
@@ -129,6 +131,10 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
 
     public Multimap<Long, QuestionStatusResource> getQuestionToQuestionStatus() {
         return questionToQuestionStatus;
+    }
+
+    public List<ProcessRoleResource> getApplicationProcessRoles() {
+        return applicationProcessRoles;
     }
 
     public Optional<ProcessRoleResource> getUsersProcessRole() {
@@ -155,6 +161,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(competition, that.competition)
                 .append(application, that.application)
                 .append(user, that.user)
+                .append(applicationProcessRoles, that.applicationProcessRoles)
                 .append(usersProcessRole, that.usersProcessRole)
                 .append(questionIdToQuestion, that.questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
@@ -171,6 +178,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(competition)
                 .append(application)
                 .append(user)
+                .append(applicationProcessRoles)
                 .append(usersProcessRole)
                 .append(questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs)

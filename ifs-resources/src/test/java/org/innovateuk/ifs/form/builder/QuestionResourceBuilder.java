@@ -86,6 +86,10 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((type, object) -> setField("questionSetupType", type, object), types);
     }
 
+    public QuestionResourceBuilder withMultipleStatuses(Boolean... multipleStatuses) {
+        return withArray((s, object) -> setField("multipleStatuses", s, object), multipleStatuses);
+    }
+
 
     public QuestionResourceBuilder withCompetitionAndSectionAndPriority(CompetitionResource competition, SectionResource section, Integer priority) {
         return with(question -> {
@@ -98,4 +102,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
     protected QuestionResource createInitial() {
         return new QuestionResource();
     }
+
+
 }

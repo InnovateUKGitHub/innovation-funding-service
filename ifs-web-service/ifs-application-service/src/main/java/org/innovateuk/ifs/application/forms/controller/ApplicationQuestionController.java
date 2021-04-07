@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.controller;
 
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 
 /**
@@ -40,6 +40,9 @@ public class ApplicationQuestionController {
     @Autowired
     private ProcessRoleRestService processRoleRestService;
 
+    @Autowired
+    private ApplicationUrlHelper applicationUrlHelper;
+
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String showQuestion(
             @PathVariable long applicationId,
@@ -50,7 +53,7 @@ public class ApplicationQuestionController {
         QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
         QuestionSetupType questionType = questionResource.getQuestionSetupType();
         ProcessRoleResource processRoleResource = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-        Optional<String> questionUrl = getQuestionUrl(questionType, questionId, applicationId, processRoleResource.getOrganisationId());
+        Optional<String> questionUrl = applicationUrlHelper.getQuestionUrl(questionType, questionId, applicationId, processRoleResource.getOrganisationId());
         if (questionUrl.isPresent()) {
             return "redirect:" + questionUrl.get() + (showErrors.isPresent() ? "?show-errors=true" : "");
         }
