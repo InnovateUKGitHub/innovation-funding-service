@@ -680,6 +680,14 @@ the applicant marks EDI question as complete
     the user can mark the question as complete
     the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
 
+the applicant fills in the Subsidy Basis question
+    the user clicks the button/link                link = Subsidy basis
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+    the user clicks the button/link                jQuery = label:contains("Yes")
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Subsidy basis") > .task-status-complete
+
 the user uploads an appendix
     [Arguments]  ${question_link}  ${appendix_file}
     the user clicks the button/link                link = ${question_link}
@@ -882,3 +890,42 @@ the user completes subsidy basis as subsidy control
     the user selects the checkbox                 agreement
     the user clicks the button/link               id = mark-questionnaire-complete
     the user should see the element               jQuery = li:contains("Subsidy basis") > .task-status-complete
+
+the user completes funding level in application
+    the user clicks the button/link          link = Your project finances
+    the user clicks the button/link          link = Your funding
+    the user selects the radio button        requestingFunding   true
+    the user enters text to a text field     css = [name^="grantClaimPercentage"]  100
+    the user selects the radio button        otherFunding   false
+    the user clicks the button/link          jQuery = button:contains("Mark as complete")
+    the user clicks the button/link          link = Your funding
+
+the lead user completes project details, application questions and finances sections
+    the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    the applicant completes Application Team
+    the applicant marks EDI question as complete
+    the user completes the research category
+    the lead applicant fills all the questions and marks as complete(programme)
+    the user clicks the button/link                                                 link = Your project finances
+    the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
+
+the user checks the status of the application before completion
+    the user should see the element         jQuery = dt:contains("Application deadline:") ~ dd:contains("Decision pending")
+    the user clicks the button/link         link = Back to applications
+    the user should see the element         jQuery = li:contains("${applicationName}") .status:contains("% complete")
+    the user should not see the element     jQuery = li:contains("${applicationName}") .status:contains("days left")
+
+the user completes the application details section
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
+    the user clicks the button/link             link = Application details
+    the user should see the element             jQuery = h1:contains("Application details")
+    the user enters text to a text field        id = name  ${appTitle}
+    the user enters text to a text field        id = startDate  ${tomorrowday}
+    the user enters text to a text field        css = #application_details-startdate_month  ${month}
+    the user enters text to a text field        css = #application_details-startdate_year  ${nextyear}
+    the user should see the element             jQuery = label:contains("Project duration in months")
+    the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
+    the user clicks the button twice            css = label[for="resubmission-no"]
+    the user clicks the button/link             id = application-question-complete
+    the user clicks the button/link             link = Back to application overview
+    the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
