@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.generic.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
+import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Component
 public class GenericQuestionApplicationFormPopulator {
 
-    public GenericQuestionApplicationForm populate(GenericQuestionApplicationForm form, ApplicantQuestionResource applicantQuestion) {
+    public GenericQuestionApplicationForm populate(GenericQuestionApplicationForm form, Optional<Long> organisationId, ApplicantQuestionResource applicantQuestion) {
 
         Optional<ApplicantFormInputResource> applicantFormInput = applicantQuestion.getApplicantFormInputs().stream()
                 .filter(input -> input.getFormInput().getType().equals(FormInputType.TEXTAREA)
@@ -20,7 +21,9 @@ public class GenericQuestionApplicationFormPopulator {
 
         String value = applicantFormInput
                 .filter(input -> input.getFormInput().getType().equals(FormInputType.TEXTAREA))
-                .map(input -> input.getApplicantResponses().stream().findAny()
+                .map(input -> input.getApplicantResponses().stream()
+                        .filter(resp -> filterByOrgIfPresent(resp, organisationId))
+                        .findAny()
                         .map(response -> {
                             form.setTextAreaActive(true);
                             return response.getResponse().getValue();
@@ -30,7 +33,9 @@ public class GenericQuestionApplicationFormPopulator {
 
         Long multipleChoiceOptionId = applicantFormInput
                 .filter(input -> input.getFormInput().getType().equals(FormInputType.MULTIPLE_CHOICE))
-                .map(input -> input.getApplicantResponses().stream().findAny()
+                .map(input -> input.getApplicantResponses().stream()
+                        .filter(resp -> filterByOrgIfPresent(resp, organisationId))
+                        .findAny()
                         .map((response) -> {
                             form.setMultipleChoiceOptionsActive(true);
                             return response.getResponse().getMultipleChoiceOptionId();
@@ -39,5 +44,9 @@ public class GenericQuestionApplicationFormPopulator {
         form.setMultipleChoiceOptionId(multipleChoiceOptionId);
 
         return form;
+    }
+
+    private static boolean filterByOrgIfPresent(ApplicantFormInputResponseResource resp, Optional<Long> organisationId) {
+        return organisationId.isPresent() ? organisationId.get().equals(resp.getApplicant().getOrganisation().getId()) : true;
     }
 }

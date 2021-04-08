@@ -247,12 +247,12 @@
             <div class="form-footer govuk-!-margin-top-8">
                 <div th:if="${model.open}" class="form-footer__actions">
                     <th:block th:unless="${model.complete or !model.assignButtonsViewModel.assignedToCurrentUser}">
-                        <button th:if="${model.leadApplicant}"
+                        <button th:if="${model.leadApplicant OR model.questionHasMultipleStatuses}"
                                 id="application-question-complete" type="submit"
                                 name="complete"
                                 class="button-clear">Mark as complete
                         </button>
-                        <button th:unless="${model.leadApplicant}"
+                        <button th:unless="${model.leadApplicant OR model.questionHasMultipleStatuses}"
                                 type="submit"
                                 name="assign"
                                 class="button-clear">Assign to lead for review

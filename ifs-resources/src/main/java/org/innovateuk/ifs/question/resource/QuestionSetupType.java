@@ -15,13 +15,14 @@ public enum QuestionSetupType {
     TERMS_AND_CONDITIONS("T&C"),
     EQUALITY_DIVERSITY_INCLUSION("Equality, diversity & inclusion", FORM_INPUTS),
     SUBSIDY_BASIS("Subsidy basis", QUESTIONNAIRE),
+    NORTHERN_IRELAND_DECLARATION("Northern Ireland declaration", FORM_INPUTS),
     /* h2020 */
     GRANT_TRANSFER_DETAILS("Application details"),
     GRANT_AGREEMENT("Horizon 2020 grant agreement"),
     /* KTP */
     KTP_ASSESSMENT("Ktp Assessment", FORM_INPUTS),
     /* Loan */
-    LOAN_BUSINESS_AND_FINANCIAL_INFORMATION("Equality, diversity & inclusion", FORM_INPUTS);
+    LOAN_BUSINESS_AND_FINANCIAL_INFORMATION("Business and financial information", FORM_INPUTS);
 
 
     private String shortName;
