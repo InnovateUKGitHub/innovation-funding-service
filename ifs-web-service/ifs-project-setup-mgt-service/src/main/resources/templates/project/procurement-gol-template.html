@@ -260,7 +260,72 @@
         <p>Contractor’s Project Manager:<th:block th:text="${model.projectManagerName}"></th:block></p>
         <p>Approved Project Milestones:</p>
     </div>
-    <!-- finances go here -->
+
+    <table class="letter-table">
+        <thead>
+        <tr>
+            <th>Milestone number</th>
+            <th>Milestone and/or deliverable</th>
+            <th>Completion date</th>
+            <th>Success criteria</th>
+            <th>Required payment month</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="milestone, iStat : ${model.milestones}">
+            <th th:text="${iStat.index + 1}">1</th>
+            <td><p th:text="${milestone.description}">desc</p><p th:text="${milestone.task}">task</p><p th:text="${milestone.deliverable}">deliverable</p></td>
+            <td th:text="${#temporals.format(milestone.completionDate)}"></td>
+            <td th:text="${milestone.successCriteria}">Evidence sources clearly identified</td>
+            <td th:text="${milestone.month}">1</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="letter-size">
+        <p>SECTION 4</p>
+        <p>FINANCIAL ARRANGEMENTS</p>
+    </div>
+    <div class="letter-size">
+        <p>It is intended that the indicated amounts will be paid by the Authority to the Contractor within 30 days subject to contract conditions being met.</p>
+        <p>Maximum Total Contract Value (inclusive of VAT):</p>
+    </div>
+
+    <table class="letter-table">
+        <thead>
+        <tr>
+            <th>Project month</th>
+            <th th:each="milestone : ${model.milestoneMonths}" th:text="${milestone.month}">1</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Invoice net</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.invoiceNet}" />
+            </td>
+        </tr>
+        <tr>
+            <th>VAT</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.vat}" />
+            </td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.total}" />
+            </td>
+        </tr>
+        <tr>
+            <th>Milestone Nos.</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                <th:block th:text="${milestone.numbers}" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
     <div class="letter-size">
         <p>SECTION 5</p>
         <p>KEY STAFF</p>
