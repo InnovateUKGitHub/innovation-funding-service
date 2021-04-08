@@ -74,13 +74,13 @@ RUN pip3 install RoboZap
 
 
 RUN echo zap:zap | chpasswd
-USER zap
-RUN mkdir /zap && chown zap:zap /zap
+
+RUN mkdir /zap && chown -R zap:zap /zap
 
 WORKDIR /zap
 
 #Change to the zap user so things get done as the right person (apart from copy)
-
+USER zap
 
 RUN mkdir /home/zap/.vnc
 
@@ -120,10 +120,10 @@ COPY scripts /home/zap/.ZAP_D/scripts/
 #Copy doesn't respect USER directives so we need to chown and to do that we need to be root
 USER root
 
-RUN chown zap:zap /zap/* && \
-	chown zap:zap /zap/webswing/webswing.config && \
-	chown zap:zap /zap/webswing/webswing.properties && \
-	chown zap:zap -R /home/zap/.ZAP/
+RUN chown -R zap:zap /zap/* && \
+	chown -R zap:zap /zap/webswing/webswing.config && \
+	chown -R zap:zap /zap/webswing/webswing.properties && \
+	chown -R zap:zap /home/zap/.ZAP/
 
 #Change back to zap at the end
 USER zap
