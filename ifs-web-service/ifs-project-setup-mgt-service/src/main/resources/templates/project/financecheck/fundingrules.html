@@ -21,10 +21,10 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Funding rules check for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
-        <p class="govuk-body">All potential changes must be agreed with the organisation before they are implemented. You can do this in the finance query form.</p>
-        <p class="govuk-body">All saved changes will be visible to the organisation.</p>
+        <p class="govuk-body">All potential changes must be agreed with the organisation before they are implemented. You can do this in the finance query form.<br/>
+            All saved changes will be visible to the organisation.</p>
 
-        <dl class="standard-definition-list govuk-!-margin-bottom-0">
+        <dl class="standard-definition-list govuk-!-margin-top-6 govuk-!-margin-bottom-6">
             <dt>Funding rules selected:</dt>
             <dd th:text="${model.fundingRules.displayName}">funding rules</dd>
         </dl>
@@ -87,7 +87,6 @@
                     id="confirm-button">Approve funding rules</button>
         </form>
 
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <a class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
         <div class="govuk-!-margin-top-6">
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
