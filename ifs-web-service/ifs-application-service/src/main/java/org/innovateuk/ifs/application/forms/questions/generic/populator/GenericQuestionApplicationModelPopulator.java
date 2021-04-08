@@ -44,7 +44,7 @@ public class GenericQuestionApplicationModelPopulator {
         QuestionResource question = applicantQuestion.getQuestion();
         ApplicationResource application = applicantQuestion.getApplication();
         CompetitionResource competition = applicantQuestion.getCompetition();
-        OrganisationResource organisation = applicantQuestion.getLeadOrganisation();
+        OrganisationResource leadOrganisation = applicantQuestion.getLeadOrganisation();
 
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
@@ -80,8 +80,8 @@ public class GenericQuestionApplicationModelPopulator {
                 .withOpen(application.isOpen() && competition.isOpen())
                 .withLeadApplicant(applicantQuestion.getCurrentApplicant().isLead())
                 .withAssignButtonsViewModel(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, hideAssignButtons))
-                .withLeadOrganisationCompaniesHouseNumber(organisation.getName())
-                .withLeadOrganisationCompaniesHouseNumber(organisation.getCompaniesHouseNumber())
+                .withLeadOrganisationName(leadOrganisation.getName())
+                .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
                 .build();
     }
 
