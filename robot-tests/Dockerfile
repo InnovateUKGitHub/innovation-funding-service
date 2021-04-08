@@ -64,9 +64,9 @@ COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 WORKDIR robot-tests
 COPY ./ ./
 RUN chown -R zap:zap . && \
-  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
+  find . \( -type d -o -type f \) -exec chmod 777 {} + && \
   chown -R zap:zap /tmp && \
-  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
+  find /tmp \( -type d -o -type f \) -exec chmod 777 {} +
 
 RUN pip3 install RoboZap
 
@@ -105,7 +105,7 @@ ENV ZAP_PATH /zap/zap.sh
 # Default port for use with zapcli
 ENV ZAP_PORT 8080
 ENV IS_CONTAINERIZED true
-ENV HOME /home/zap/.ZAP
+ENV HOME /home/zap/
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
@@ -123,7 +123,9 @@ USER root
 RUN chown -R zap:zap /zap/* && \
 	chown -R zap:zap /zap/webswing/webswing.config && \
 	chown -R zap:zap /zap/webswing/webswing.properties && \
-	chown -R zap:zap /home/zap/.ZAP/
+	chown -R zap:zap /home/zap/.ZAP/ && \
+	chmod 777 -R /zap && \
+    chmod 777 -R /home/zap/.ZAP/
 
 #Change back to zap at the end
 USER zap
