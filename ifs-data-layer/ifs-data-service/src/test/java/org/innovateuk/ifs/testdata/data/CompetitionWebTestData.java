@@ -383,6 +383,8 @@ public class CompetitionWebTestData {
                         .withName("KTP new competition duplicate"),
                 ktpCompetition()
                         .withName("FEC KTP project competition")
+                ktpCompetition()
+                        .withName("FEC KTP competition duplicate")
         )
                 .stream()
                 .map(competitionLineBuilder -> competitionLineBuilder.withCompetitionStatus(CompetitionStatus.OPEN))

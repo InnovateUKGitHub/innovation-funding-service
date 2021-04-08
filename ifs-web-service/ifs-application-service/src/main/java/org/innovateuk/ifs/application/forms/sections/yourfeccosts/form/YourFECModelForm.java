@@ -16,6 +16,7 @@ public class YourFECModelForm {
     private Long fecFileEntryId;
     private String fecCertificateFileName;
     private MultipartFile fecCertificateFile;
+    private boolean displayBanner;
 
     public YourFECModelForm() {
     }
@@ -52,6 +53,14 @@ public class YourFECModelForm {
         this.fecCertificateFile = fecCertificateFile;
     }
 
+    public boolean isDisplayBanner() {
+        return displayBanner;
+    }
+
+    public void setDisplayBanner(boolean displayBanner) {
+        this.displayBanner = displayBanner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,6 +71,7 @@ public class YourFECModelForm {
                 .append(fecFileEntryId, that.fecFileEntryId)
                 .append(fecCertificateFileName, that.fecCertificateFileName)
                 .append(fecCertificateFile, that.fecCertificateFile)
+                .append(displayBanner, that.displayBanner)
                 .isEquals();
     }
 
@@ -72,6 +82,7 @@ public class YourFECModelForm {
                 .append(fecFileEntryId)
                 .append(fecCertificateFileName)
                 .append(fecCertificateFile)
+                .append(displayBanner)
                 .toHashCode();
     }
 }
