@@ -106,6 +106,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
 ...
+...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -201,13 +203,17 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
 
 The user must select the Terms and Conditions they want Applicants to accept
-    [Documentation]  IFS-3086  IFS-6205
+    [Documentation]  IFS-3086  IFS-6205  IFS-9214
     [Tags]  HappyPath
-    Given the user clicks the button/link    link = Terms and conditions
-    When the user should see the element     link = Loans (opens in a new window)
-    And the user clicks the button/link      jQuery = button:contains("Done")
-    And the user clicks the button/link      link = Back to competition details
-    And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
+    Given the user clicks the button/link     link = Terms and conditions
+    When the user should see the element      link = Loans (opens in a new window)
+    And the user clicks the button/link       jQuery = button:contains("Done")
+    And the user selects the radio button     termsAndConditionsId  23
+    And the user clicks the button/link       jQuery = button:contains("Done")
+    And the user should see the element       jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Loans")
+    And the user should see the element       jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Loans")
+    And the user clicks the button/link       link = Return to setup overview
+    And the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
@@ -997,26 +1003,26 @@ the comp admin creates competition with all sections details
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
-    ...  ELSE  the user selects the Terms and Conditions
+    ...  ELSE  the user selects the Terms and Conditions    ${compType}  ${fundingRule}
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS funding eligibility            ${researchCategory}   ${compType}
-    the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
+    the user fills in the CS Project eligibility                                     ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility                                     ${researchCategory}   ${compType}   ${fundingRule}
+    the user selects the organisational eligibility to no                            false
+    the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
-    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
-    the user fills in the CS Assessors                      ${fundingType}
+    ...  ELSE  the user marks the application as done                                ${projectGrowth}  ${compType}  ${competition}
+    the user fills in the CS Assessors                                               ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         link = Innovation leads
-    the user clicks the button/link                         jQuery = td:contains("Peter Freeman") button:contains("Add")
-    the user clicks the button/link                         link = Competition details
-    the user clicks the button/link                         link = Stakeholders
+    the user clicks the button/link                                                  link = Public content
+    the user fills in the Public content and publishes                               ${extraKeyword}
+    the user clicks the button/link                                                  link = Return to setup overview
+    the user clicks the button/link                                                  link = Innovation leads
+    the user clicks the button/link                                                  jQuery = td:contains("Peter Freeman") button:contains("Add")
+    the user clicks the button/link                                                  link = Competition details
+    the user clicks the button/link                                                  link = Stakeholders
     the user select stakeholder and add to competition
-    the user clicks the button/link                         link = Competition setup
-    the user clicks the button/link                         link = Documents
-    the user clicks the button/link                         id = doneButton
+    the user clicks the button/link                                                  link = Competition setup
+    the user clicks the button/link                                                  link = Documents
+    the user clicks the button/link                                                  id = doneButton

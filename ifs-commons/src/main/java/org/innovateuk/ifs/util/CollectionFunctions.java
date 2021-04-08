@@ -23,6 +23,8 @@ import static java.util.stream.IntStream.range;
  */
 public final class CollectionFunctions {
 
+    private static final String SO_CANNOT_RETURN_ONLY_ELEMENT = ", so cannot return only element";
+
     private CollectionFunctions() {
     }
 
@@ -221,11 +223,11 @@ public final class CollectionFunctions {
      */
     public static <T> T getOnlyElement(List<T> list) {
         if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("No elements were available in list " + list + ", so cannot return only element");
+            throw new IllegalArgumentException("No elements were available in list " + list + SO_CANNOT_RETURN_ONLY_ELEMENT);
         }
 
         if (list.size() > 1) {
-            throw new IllegalArgumentException("More than one element was available in list " + list + ", so cannot return only element");
+            throw new IllegalArgumentException("More than one element was available in list " + list + SO_CANNOT_RETURN_ONLY_ELEMENT);
         }
 
         return list.get(0);
@@ -240,7 +242,7 @@ public final class CollectionFunctions {
         }
 
         if (list.size() > 1) {
-            throw new IllegalArgumentException("More than one element was available in list " + list + ", so cannot return only element");
+            throw new IllegalArgumentException("More than one element was available in list " + list + SO_CANNOT_RETURN_ONLY_ELEMENT);
         }
 
         return Optional.of(list.get(0));

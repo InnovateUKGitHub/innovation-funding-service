@@ -74,4 +74,9 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
         }
         return postWithRestResult(ORGANISATION_BASE_URL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class);
     }
+
+    @Override
+    public RestResult<OrganisationResource> syncCompaniesHouseDetails(OrganisationResource organisation) {
+        return putWithRestResult(ORGANISATION_BASE_URL + "/sync-companies-house-details", organisation, OrganisationResource.class);
+    }
 }

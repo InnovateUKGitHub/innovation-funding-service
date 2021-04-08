@@ -47,6 +47,8 @@ public enum ActivityType {
     GRANTS_PROJECT_MANAGER_INVITED,
     GRANTS_FINANCE_CONTACT_INVITED,
     GRANTS_MONITORING_OFFICER_INVITED,
+    PAYMENT_MILESTONES_RESET,
+    PAYMENT_MILESTONES_APPROVED,
 
     NONE //Will not be persisted to database. Only gives default value to annotation.
 

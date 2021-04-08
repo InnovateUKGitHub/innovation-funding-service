@@ -2,8 +2,12 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -22,8 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.util.ExceptionFunctions.getOrRethrow;
 import static org.springframework.web.util.UriUtils.encodeQueryParam;
 
@@ -49,6 +55,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final String MODEL = "model";
     private static final String SEARCH_ORGANISATION = "search-organisation";
     private static final String DEFAULT_PAGE_NUMBER = "1";
+    private static final String SELECTED_ORGANISATION_MANUAL = "selected-organisation-manual";
     @Autowired
     private MessageSource messageSource;
 
@@ -59,26 +66,16 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
         registrationCookieService.deleteOrganisationIdCookie(response);
-
         organisationForm.setOrganisationSearching(false);
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
-
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         return addAttributesAndRedirect(organisationForm, model, user, request);
     }
 
     private String addAttributesAndRedirect(OrganisationCreationForm organisationForm, Model model, UserResource user, HttpServletRequest request) {
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
-        model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
-        model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
-        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
-
+        populateViewModelForSearch(organisationForm, model, request, 1);
         addPageSubtitleToModel(request, user, model);
-
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -91,7 +88,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
-           return displayImprovedSearchOrganisationResults(organisationForm, request, bindingResult);
+            return displayImprovedSearchOrganisationResults(organisationForm, request, bindingResult);
         }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
@@ -129,7 +126,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return addAttributesAndRedirect(organisationForm, model, user, request);
     }
 
-    @GetMapping(value = {"/" + SEARCH_RESULT_ORGANISATION + "/**" })
+    @GetMapping(value = {"/" + SEARCH_RESULT_ORGANISATION + "/**"})
     public String searchOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
                                      UserResource user,
@@ -141,12 +138,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, pageNumber, true);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
-        model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
-        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-
+        populateViewModelForSearch(organisationForm, model, request, pageNumber);
         addPageSubtitleToModel(request, user, model);
         addPageResourceToModel(organisationForm, model, pageNumber);
         return TEMPLATE_PATH + "/" + SEARCH_RESULT_ORGANISATION;
@@ -154,29 +146,76 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
     public String selectOrganisationForConfiramtion(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
-                                           Model model,
-                                           @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response,
-                                           UserResource user) {
+                                                    Model model,
+                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
+                                                    HttpServletRequest request,
+                                                    HttpServletResponse response,
+                                                    UserResource user) {
 
-        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
+        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm.setSearchOrganisationId(searchOrganisationId);
-
+        addOrganisationSearchName(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+        populateViewModelForSelectedOrgConfirmation(organisationForm, model, request);
+        addPageSubtitleToModel(request, user, model);
+        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
+    }
 
+    @PostMapping("/" + SELECTED_ORGANISATION_MANUAL)
+    public String selectManualOrganisationForConfirmation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                          BindingResult bindingResult,
+                                                          ValidationHandler validationHandler,
+                                                          Model model,
+                                                          HttpServletRequest request,
+                                                          HttpServletResponse response,
+                                                          UserResource user) {
+        removeEmptyJsFormFields(organisationForm);
+
+        if (bindingResult.hasFieldErrors()) {
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
+
+        OrganisationCreationForm organisationFormFromCookie = getFormDataForManualEntryFromCookie(request);
+        addManualOrganisation(organisationForm, model, request, organisationFormFromCookie);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
-        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
-        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
-        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
+        populateViewModelForSelectedOrgConfirmation(organisationForm, model, request);
+        addPageSubtitleToModel(request, user, model);
+        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
+    }
+
+    @GetMapping("/" + SELECTED_ORGANISATION_MANUAL)
+    public String displayMauallyEnteredOrgForConfirmation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                          BindingResult bindingResult,
+                                                          Model model,
+                                                          HttpServletRequest request,
+                                                          UserResource user) {
+        OrganisationCreationForm organisationFormFromCookie = getFormDataOfSavedManualEntryFromCookie(organisationForm, request);
+        populateManualEntryFormData(organisationFormFromCookie, model, request);
+        populateViewModelForSelectedOrgConfirmation(organisationFormFromCookie, model, request);
         addPageSubtitleToModel(request, user, model);
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
+    }
+
+    @PostMapping(value = {"organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, "/" + SELECTED_ORGANISATION_MANUAL}, params = FORM_ACTION_PARAMETER)
+    public String addressFormAction(Model model,
+                                    @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                    BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    UserResource loggedInUser) {
+        removeEmptyJsFormFields(organisationForm);
+
+        organisationForm.getAddressForm().validateAction(bindingResult);
+        if (validationHandler.hasErrors()) {
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
+
+        AddressForm addressForm = organisationForm.getAddressForm();
+        addressForm.handleAction(this::searchPostcode);
+
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
@@ -185,6 +224,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                          Model model,
                                          HttpServletRequest request, HttpServletResponse response,
                                          @RequestHeader(value = REFERER, required = false) final String referer) {
+        removeEmptyJsFormFields(organisationForm);
+
         OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationCreationForm.setOrganisationName(organisationForm.getOrganisationName());
         organisationCreationForm.setSearchOrganisationId(organisationForm.getSearchOrganisationId());
@@ -206,6 +247,45 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
             registrationCookieService.saveToOrganisationCreationCookie(organisationCreationForm, response);
             return getRedirectUrlInvalidSave(organisationForm, referer);
         }
+    }
+
+    private void removeEmptyJsFormFields(OrganisationCreationForm organisationForm) {
+        organisationForm.setExecutiveOfficers(organisationForm.getExecutiveOfficers()
+                .stream().filter(execOfficer -> execOfficer.getName() != null)
+                .collect(Collectors.toList()));
+        organisationForm.setSicCodes(organisationForm.getSicCodes()
+                .stream().filter(sicCode -> sicCode.getSicCode() != null)
+                .collect(Collectors.toList()));
+    }
+
+    private void populateViewModelForSearch(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, int pageNumber) {
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
+        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
+        model.addAttribute("currentPage", pageNumber);
+    }
+
+    private void populateViewModelForSelectedOrgConfirmation(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
+    }
+
+    private void populateViewModel(@ModelAttribute(ORGANISATION_FORM) @Valid OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
     }
 
     private String getRedirectUrlInvalidSave(OrganisationCreationForm organisationForm, String referer) {
@@ -251,5 +331,65 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
     private boolean checkOrganisationIsLead(HttpServletRequest request) {
         return registrationCookieService.isLeadJourney(request);
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-sic-code")
+    public String addSicCode(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                             BindingResult bindingResult,
+                             Model model,
+                             HttpServletRequest request, HttpServletResponse response,
+                             @RequestHeader(value = REFERER, required = false) final String referer) {
+        if (organisationForm.getSicCodes().size() > 3) {
+            return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+        }
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getSicCodes().add(new OrganisationSicCodeResource());
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-sic-code")
+    public String removeSicCode(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                BindingResult bindingResult,
+                                Model model,
+                                HttpServletRequest request, HttpServletResponse response,
+                                @RequestParam("remove-sic-code") int index,
+                                @RequestHeader(value = REFERER, required = false) final String referer) {
+
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getSicCodes().remove(index);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "add-exec-officer")
+    public String addExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      HttpServletRequest request, HttpServletResponse response,
+                                      @RequestHeader(value = REFERER, required = false) final String referer) {
+
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getExecutiveOfficers().add(new OrganisationExecutiveOfficerResource());
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
+    }
+
+    @PostMapping(value = "/organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS, params = "remove-exec-officer")
+    public String removeExecutiveOfficer(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                         BindingResult bindingResult,
+                                         Model model,
+                                         HttpServletRequest request, HttpServletResponse response,
+                                         @RequestParam("remove-exec-officer") int index,
+                                         @RequestHeader(value = REFERER, required = false) final String referer) {
+
+        populateViewModel(organisationForm, model, request);
+
+        organisationForm.getExecutiveOfficers().remove(index);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 }

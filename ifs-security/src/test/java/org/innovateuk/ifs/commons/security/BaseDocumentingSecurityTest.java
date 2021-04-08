@@ -310,11 +310,18 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
 
     protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, Role... roles){
         EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(newArrayList(roles));
-        if (rolesThatShouldSucceed.contains(Role.ASSESSOR)) {
-            rolesThatShouldSucceed.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        }
-        if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE) || rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+        if (rolesThatShouldSucceed.contains(Role.COMP_ADMIN)) {
+            rolesThatShouldSucceed.add(Role.PROJECT_FINANCE);
+            rolesThatShouldSucceed.add(Role.IFS_ADMINISTRATOR);
             rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        } else if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE)) {
+            rolesThatShouldSucceed.add(Role.IFS_ADMINISTRATOR);
+            rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        } else if (rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+            rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        }
+        if (rolesThatShouldSucceed.contains(Role.ASSESSOR) || rolesThatShouldSucceed.contains(Role.MONITORING_OFFICER)) {
+            rolesThatShouldSucceed.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
         }
         EnumSet<Role> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
@@ -335,7 +342,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
             // expected behaviour
         }
         rolesThatShouldSucceed.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRoleGlobal(role).build());
             try {
                 functionToCall.run();
                 // Should not throw

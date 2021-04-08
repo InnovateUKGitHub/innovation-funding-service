@@ -34,6 +34,10 @@ import static org.innovateuk.ifs.file.util.FileFunctions.pathElementsToPath;
 abstract class BaseFileStorageStrategy implements FileStorageStrategy {
 
     private static final Log LOG = LogFactory.getLog(BaseFileStorageStrategy.class);
+    private static final String FOR_FILE_ENTRY_WITH_ID = " for fileEntry with id ";
+    private static final String AND_FILE = " and file ";
+    private static final String TO_TARGET_FOLDER = " to target folder ";
+    private static final String UNABLE_TO_MOVE_TEMPORARY_FILE = "Unable to move temporary file ";
 
     protected String pathToStorageBase;
     protected String containingFolder;
@@ -100,13 +104,13 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         String filename = absoluteFilePathAndName.getRight();
         File filePath = pathElementsToFile(combineLists(pathElements, filename));
 
-        LOG.info("[FileLogging] Deleting file " + filePath.getAbsolutePath()  + " for fileEntry with id " + fileEntry.getId());
+        LOG.info("[FileLogging] Deleting file " + filePath.getAbsolutePath()  + FOR_FILE_ENTRY_WITH_ID + fileEntry.getId());
 
         if (filePath.delete()) {
-            LOG.info("[FileLogging] File " + filename + " for fileEntry with id " + fileEntry.getId() + " deleted successfully");
+            LOG.info("[FileLogging] File " + filename + FOR_FILE_ENTRY_WITH_ID + fileEntry.getId() + " deleted successfully");
             return serviceSuccess();
         } else {
-            LOG.info("[FileLogging] Cannot delete file " + filePath.getAbsolutePath() + " for fileEntry with id " + fileEntry.getId());
+            LOG.info("[FileLogging] Cannot delete file " + filePath.getAbsolutePath() + FOR_FILE_ENTRY_WITH_ID + fileEntry.getId());
             return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntry.getId()));
         }
     }
@@ -156,7 +160,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             LOG.info("[FileLogging] Path of file created: " + targetFile.toAbsolutePath());
             return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
-            LOG.error("[FileLogging] Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            LOG.error("[FileLogging] Unable to copy temporary file " + tempFile + TO_TARGET_FOLDER + targetFolder + AND_FILE + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
@@ -174,7 +178,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
                 // Move might already have happened as we do not have file to copy and the target already exists
                 return serviceFailure(new Error(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));
             }
-            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + " file already exists");
+            LOG.error(UNABLE_TO_MOVE_TEMPORARY_FILE + tempFile + TO_TARGET_FOLDER + targetFolder + AND_FILE + targetFilename + " file already exists");
             return serviceFailure(new Error(FILES_DUPLICATE_FILE_MOVED));
         } catch (final NoSuchFileException e) {
             LOG.trace("no such file", e);
@@ -182,10 +186,10 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
                 // Move might already have happened as we do not have file to copy and the target already exists
                 return serviceFailure(new Error(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));
             }
-            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + "file does not exist");
+            LOG.error(UNABLE_TO_MOVE_TEMPORARY_FILE + tempFile + TO_TARGET_FOLDER + targetFolder + AND_FILE + targetFilename + "file does not exist");
             return serviceFailure(new Error(FILES_NO_SUCH_FILE));
         } catch (final IOException e) {
-            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            LOG.error(UNABLE_TO_MOVE_TEMPORARY_FILE + tempFile + TO_TARGET_FOLDER + targetFolder + AND_FILE + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_MOVE_FILE));
         }
     }
@@ -210,7 +214,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
             return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
-            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            LOG.error("Unable to copy temporary file " + tempFile + TO_TARGET_FOLDER + targetFolder + AND_FILE + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_UPDATE_FILE));
         }
     }

@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.competition.resource;
 
+<<<<<<< HEAD
 import java.util.List;
 import java.util.stream.Collectors;
+=======
+import java.util.EnumSet;
+>>>>>>> a24824502dcbd387010f3b941fc671c812333bee
 import java.util.stream.Stream;
 
 /**
@@ -80,12 +84,8 @@ public enum MilestoneType {
                 .toArray(length -> new MilestoneType[length]);
     }
 
-    public static List<MilestoneType> assessmentPeriodValues() {
-        return Stream.of(values())
-                .filter(MilestoneType -> (MilestoneType == ASSESSOR_BRIEFING
-                        || MilestoneType == ASSESSOR_ACCEPTS
-                        || MilestoneType == ASSESSOR_DEADLINE))
-                .collect(Collectors.toList());
+    public static EnumSet<MilestoneType> assessmentPeriodValues() {
+        return EnumSet.of(ASSESSOR_BRIEFING, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE);
     }
 }
 

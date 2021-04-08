@@ -104,4 +104,51 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
 
         return fileEntryMapper.mapToResource(fileEntry);
     }
+
+    @Override
+    @Transactional
+    public ServiceResult<FileEntryResource> createFECFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findById(applicationFinanceId).get();
+        return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
+                fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileResults -> linkFECFileEntryToApplicationFinance(applicationFinance, fileResults))
+        );
+    }
+
+    private FileEntryResource linkFECFileEntryToApplicationFinance(ApplicationFinance applicationFinance, Pair<File, FileEntry> fileResults) {
+        FileEntry fileEntry = fileResults.getValue();
+        ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+        if (applicationFinanceResource != null) {
+             applicationFinanceResource.setFecFileEntry(fileEntry.getId());
+            financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
+        }
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteFECCertificateFileEntry(long applicationFinanceId) {
+        Application application = applicationFinanceRepository.findById(applicationFinanceId).get().getApplication();
+        return getOpenApplication(application.getId()).andOnSuccess(app ->
+                financeService.getApplicationFinanceById(applicationFinanceId).
+                        andOnSuccess(finance -> fileService.deleteFileIgnoreNotFound(finance.getFecFileEntry()).
+                                andOnSuccess(() -> removeFECFileEntryFromApplicationFinance(finance))).
+                        andOnSuccessReturnVoid()
+        );
+    }
+
+    private ServiceResult<ApplicationFinanceResource> removeFECFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
+        Application application = applicationFinanceRepository.findById(applicationFinanceResource.getId()).get().getApplication();
+        return getOpenApplication(application.getId()).andOnSuccess(app -> {
+            applicationFinanceResource.setFecFileEntry(null);
+            return financeService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
+        });
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getFECCertificateFileContents(long applicationFinanceId) {
+        return fileEntryService.getFECCertificateFileEntryByApplicationFinanceId(applicationFinanceId)
+                .andOnSuccess(fileEntry -> fileService.getFileByFileEntryId(fileEntry.getId())
+                        .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream)));
+    }
 }

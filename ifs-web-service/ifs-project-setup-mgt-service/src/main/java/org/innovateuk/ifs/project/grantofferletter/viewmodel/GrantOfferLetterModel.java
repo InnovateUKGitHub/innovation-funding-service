@@ -16,6 +16,7 @@ public class GrantOfferLetterModel {
     private final String title;
     private final String shortTitle;
     private final long competitionId;
+    private final boolean procurement;
     private final boolean h2020;
     private final boolean ktp;
     private final FileDetailsViewModel grantOfferLetterFile;
@@ -35,6 +36,7 @@ public class GrantOfferLetterModel {
     public GrantOfferLetterModel(String title,
                                  String shortTitle,
                                  long competitionId,
+                                 boolean procurement,
                                  boolean h2020,
                                  boolean ktp,
                                  FileDetailsViewModel grantOfferLetterFile,
@@ -53,6 +55,7 @@ public class GrantOfferLetterModel {
         this.title = title;
         this.shortTitle = shortTitle;
         this.competitionId = competitionId;
+        this.procurement = procurement;
         this.h2020 = h2020;
         this.ktp = ktp;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -80,6 +83,10 @@ public class GrantOfferLetterModel {
 
     public long getCompetitionId() {
         return competitionId;
+    }
+
+    public boolean isProcurement() {
+        return procurement;
     }
 
     public boolean isH2020() {

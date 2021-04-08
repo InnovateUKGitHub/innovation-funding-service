@@ -11,7 +11,9 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -43,30 +45,20 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
 
-    private AssessmentRepository assessmentRepository;
-    private AssessmentMapper assessmentMapper;
-    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
-    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
-    private AssessmentWorkflowHandler assessmentWorkflowHandler;
-    private CompetitionParticipantService competitionParticipantService;
-
-    public AssessmentServiceImpl() {
-    }
-
     @Autowired
-    public AssessmentServiceImpl(AssessmentRepository assessmentRepository,
-                                 AssessmentMapper assessmentMapper,
-                                 AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
-                                 AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
-                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
-                                 CompetitionParticipantService competitionParticipantService) {
-        this.assessmentRepository = assessmentRepository;
-        this.assessmentMapper = assessmentMapper;
-        this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
-        this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
-        this.assessmentWorkflowHandler = assessmentWorkflowHandler;
-        this.competitionParticipantService = competitionParticipantService;
-    }
+    private AssessmentRepository assessmentRepository;
+    @Autowired
+    private AssessmentMapper assessmentMapper;
+    @Autowired
+    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
+    @Autowired
+    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
+    @Autowired
+    private AssessmentWorkflowHandler assessmentWorkflowHandler;
+    @Autowired
+    private CompetitionParticipantService competitionParticipantService;
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -237,7 +229,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return getUser(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR))
+                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR, assessmentCreateResource.getAssessmentPeriod()))
                 );
     }
 
@@ -250,14 +242,32 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
 
-    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role) {
+    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role, Long assessmentPeriodId) {
+
+        AssessmentPeriod assessmentPeriod = getAssessmentPeriodFromIdOrDefault(assessmentPeriodId);
+        if (assessmentPeriod != null) {
+            application.setAssessmentPeriod(assessmentPeriod);
+            applicationRepository.save(application);
+        }
 
         ProcessRole processRole = getExistingOrCreateNewProcessRole(assessor, application, role);
-
         Assessment assessment = new Assessment(application, processRole);
 
         return serviceSuccess(assessmentRepository.save(assessment))
-                .andOnSuccessReturn(assessmentMapper::mapToResource);
+                     .andOnSuccessReturn(assessmentMapper::mapToResource);
+    }
+
+    private AssessmentPeriod getAssessmentPeriodFromIdOrDefault(Long assessmentPeriodId) {
+        AssessmentPeriod assessmentPeriod;
+        if (assessmentPeriodId != null) {
+            assessmentPeriod = assessmentPeriodRepository.findById(assessmentPeriodId).orElse(null);
+        } else {
+            assessmentPeriod = assessmentPeriodRepository.findByCompetitionId(assessmentPeriodId)
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
+        }
+        return assessmentPeriod;
     }
 
     private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, ProcessRoleType role) {

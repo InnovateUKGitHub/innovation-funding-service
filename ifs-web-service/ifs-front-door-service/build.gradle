@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
@@ -45,11 +45,13 @@ createContainer.hostName="front-door-svc"
 createContainer.containerName="front-door-svc"
 createContainer.containerId="front-door-svc"
 createContainer.portBindings = ['9008:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 pullImageAndCreateContainer.hostName="front-door-svc"
 pullImageAndCreateContainer.containerName="front-door-svc"
 pullImageAndCreateContainer.containerId="front-door-svc"
 pullImageAndCreateContainer.portBindings = ['9008:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 
 prepareDockerBaseInput {

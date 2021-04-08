@@ -23,6 +23,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     private static final String milestonesRestURL = "/milestone";
     private static final Long competitionId = 1L;
     private static final Long newCompetitionId = 2L;
+    private static final Long newAssessmentPeriodId = 3L;
 
     @Override
     protected MilestoneRestServiceImpl registerRestServiceUnderTest() {
@@ -75,7 +76,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
         setupPostWithRestResultExpectations(url, MilestoneResource.class, null, milestoneResource, CREATED);
 
-        MilestoneResource response = service.create(MilestoneType.OPEN_DATE, newCompetitionId).getSuccess();
+        MilestoneResource response = service.create(new MilestoneResource(MilestoneType.OPEN_DATE, newCompetitionId)).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(milestoneResource, response);
     }

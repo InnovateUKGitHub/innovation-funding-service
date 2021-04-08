@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.nonifs.saver;
 
 import com.google.common.collect.ImmutableSet;
-import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -62,7 +61,7 @@ public class NonIfsDetailsFormSaver {
     }
 
     private void createPublicMilestones(Long competitionId) {
-        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(type, competitionId).getSuccess());
+        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(new MilestoneResource(type, competitionId)).getSuccess());
     }
 
     private void mapFormFields(NonIfsDetailsForm form, CompetitionResource competitionResource) {

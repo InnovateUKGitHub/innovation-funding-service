@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -371,9 +372,26 @@ public class CommonBuilders {
     }
 
     public Competition overrideTermsAndConditions(Competition competition) {
-        GrantTermsAndConditions grantTermsAndConditions =
+        GrantTermsAndConditions termsAndConditions =
                 grantTermsAndConditionsRepository.getLatestForFundingType(competition.getFundingType());
-        competition.setTermsAndConditions(grantTermsAndConditions);
+
+        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+            String subsidyControlTemplateName = competition.getFundingType().getDefaultTermsName() + " - Subsidy control";
+            GrantTermsAndConditions subsidyControlTermsAndConditions =
+                    grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc(subsidyControlTemplateName);
+
+            if (subsidyControlTermsAndConditions != null) {
+                competition.setTermsAndConditions(subsidyControlTermsAndConditions);
+            } else {
+                competition.setTermsAndConditions(termsAndConditions);
+            }
+
+            competition.setOtherFundingRulesTermsAndConditions(termsAndConditions);
+
+        } else {
+            competition.setTermsAndConditions(termsAndConditions);
+        }
+
         return competition;
     }
 
@@ -398,12 +416,7 @@ public class CommonBuilders {
     }
 
     public Competition getGolTemplate(Competition competition) {
-        String templateName;
-        if (competition.isKtp()) {
-            templateName = "KTP GOL Template";
-        } else {
-            templateName = "Default GOL Template";
-        }
+        String templateName = competition.getFundingType().getGolType();
         GolTemplate golTemplate =
                 golTemplateRepository.findFirstByNameOrderByVersionDesc(templateName);
         competition.setGolTemplate(golTemplate);

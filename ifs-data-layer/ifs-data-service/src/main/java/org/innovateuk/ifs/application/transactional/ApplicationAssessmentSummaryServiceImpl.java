@@ -85,15 +85,15 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private Sort getSort(ApplicationAvailableAssessorResource.Sort sort) {
         switch(sort) {
             case ASSESSOR:
-                return new Sort(ASC, "user.firstName", "user.lastName");
+                return Sort.by(ASC, "user.firstName", "user.lastName");
             case SKILL_AREAS:
-                return new Sort(ASC, "profile.skillsAreas");
+                return Sort.by(ASC, "profile.skillsAreas");
             case TOTAL_APPLICATIONS:
-                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.totalApplications);
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.TOTAL_APPLICATIONS);
             case ASSIGNED:
-                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.assigned);
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.ASSIGNED);
             case SUBMITTED:
-                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.submitted);
+                return JpaSort.unsafe(ASC, AssessmentParticipantRepository.SUBMITTED);
         }
         throw new IFSRuntimeException("Unknown sort type " + sort.name());
     }

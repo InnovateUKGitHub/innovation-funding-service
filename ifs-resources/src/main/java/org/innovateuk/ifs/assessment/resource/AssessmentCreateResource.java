@@ -14,6 +14,7 @@ public class AssessmentCreateResource {
     private Long applicationId;
     @NotNull(message = "{validation.assessmentCreate.assessorId.required")
     private Long assessorId;
+    private Long assessmentPeriod;
 
     public AssessmentCreateResource() {
     }
@@ -37,6 +38,15 @@ public class AssessmentCreateResource {
 
     public void setAssessorId(Long assessorId) {
         this.assessorId = assessorId;
+    }
+
+    public Long getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public AssessmentCreateResource setAssessmentPeriod(Long assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
+        return this;
     }
 
     @Override

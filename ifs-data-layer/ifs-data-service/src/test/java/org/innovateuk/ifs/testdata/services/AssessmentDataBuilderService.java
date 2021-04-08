@@ -11,6 +11,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
@@ -68,8 +69,8 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
     public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines, List<CompetitionLine> competitionLines) {
 
-        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT));
-        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.name);
+        List<CompetitionLine> competitionsPastAssessment = simpleFilter(competitionLines, l -> l.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT));
+        List<String> competitionsPastAssessmentNames = simpleMap(competitionsPastAssessment, l -> l.getName());
 
         applications.forEach(application -> {
 
@@ -120,7 +121,8 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
         List<AssessorResponseLine> assessorResponsesForAssessment = simpleFilter(assessorResponseLines, l ->
                 Objects.equals(l.applicationName, applicationName) &&
-                l.assessorEmail.equals(assessorEmail));
+                l.assessorEmail.equals(assessorEmail) &&
+                l.competitionName.equals(competition.getName()));
 
         if (!assessorResponsesForAssessment.isEmpty()) {
 

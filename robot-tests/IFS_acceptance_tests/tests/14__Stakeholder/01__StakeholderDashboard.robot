@@ -162,7 +162,7 @@ The stakeholder is able to view finances
 The Stakeholder is able to view application T&C's
     [Documentation]  IFS-6632
     Given the user expands the section            Award terms and conditions
-    When the user clicks the button/link          link = View terms and conditions
+    When the user clicks the button/link          jQuery = a:contains("Innovate UK")
     Then the user should see the element          jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user clicks the button/link           jQuery = a:contains("Back to application overview")
     [Teardown]  The user clicks the button/link   link = Dashboard
@@ -172,7 +172,7 @@ The Stakeholder cannot search for unassigned applications
     [Tags]
     Given the user enters text to a text field    searchQuery  ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     When the user clicks the button/link          id = searchsubmit
-    Then the user should see the element          jQuery = p:contains("0") strong:contains("${OPEN_COMPETITION_APPLICATION_1_NUMBER}")
+    Then the user should not see the element      link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 The internal user removes a Stakeholder from the competition

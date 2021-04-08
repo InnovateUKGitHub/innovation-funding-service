@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -32,12 +33,16 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
         return with(finance -> finance.setOrganisation(organisation));
     }
 
-    public ApplicationFinanceBuilder withWorkPostcode(String workPostcode) {
-        return with(finance -> finance.setWorkPostcode(workPostcode));
+    public ApplicationFinanceBuilder withFecModelEnabled(Boolean fecModelEnabled) {
+        return with(finance -> finance.setFecModelEnabled(fecModelEnabled));
     }
 
     public ApplicationFinanceBuilder withEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
         return with(finance -> finance.setEmployeesAndTurnover(employeesAndTurnover));
+    }
+
+    public ApplicationFinanceBuilder withWorkPostcode(String workPostcode) {
+        return with(finance -> finance.setWorkPostcode(workPostcode));
     }
 
     private ApplicationFinanceBuilder(List<BiConsumer<Integer, ApplicationFinance>> newMultiActions) {
@@ -60,5 +65,13 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
 
     public ApplicationFinanceBuilder withMilestones(List<ApplicationProcurementMilestone>... applicationProcurementMilestones) {
         return withArraySetFieldByReflection("milestones", applicationProcurementMilestones);
+    }
+
+    public ApplicationFinanceBuilder withFecFileEntry(FileEntry fileEntry) {
+        return with(finance -> finance.setFecFileEntry(fileEntry));
+    }
+
+    public ApplicationFinanceBuilder withFecEnabled(Boolean enabled) {
+        return with(finance -> finance.setFecModelEnabled(enabled));
     }
 }

@@ -37,7 +37,7 @@ public final class AsyncFuturesHolder {
 
     private static final Log LOG = LogFactory.getLog(AsyncFuturesGenerator.class);
 
-    private static final ThreadLocal<Queue<RegisteredAsyncFutureDetails<?>>> ASYNC_FUTURES = new ThreadLocal<>();
+    private static final ThreadLocal<Queue<RegisteredAsyncFutureDetails>> ASYNC_FUTURES = new ThreadLocal<>();
     private static final ThreadLocal<AsyncFutureDetails> CURRENTLY_EXECUTING_ASYNC_FUTURE = new ThreadLocal<>();
 
     private AsyncFuturesHolder() {
@@ -92,7 +92,7 @@ public final class AsyncFuturesHolder {
     /**
      * @return the current set of ongoing Futures registered against this Thread
      */
-    public static Queue<RegisteredAsyncFutureDetails<?>> getFuturesOrInitialise() {
+    public static Queue<RegisteredAsyncFutureDetails> getFuturesOrInitialise() {
         if (ASYNC_FUTURES.get() == null) {
             ASYNC_FUTURES.set(new LinkedBlockingQueue<>());
         }
@@ -101,7 +101,7 @@ public final class AsyncFuturesHolder {
 
     public static void cancelAndClearFutures() {
 
-        Queue<RegisteredAsyncFutureDetails<?>> currentlyRegisteredFutures = ASYNC_FUTURES.get();
+        Queue<RegisteredAsyncFutureDetails> currentlyRegisteredFutures = ASYNC_FUTURES.get();
 
         if (currentlyRegisteredFutures == null) {
             return;
@@ -121,7 +121,7 @@ public final class AsyncFuturesHolder {
     /**
      * @param futures - a set of ongoing Futures to set on this Thread
      */
-    public static void setFutures(Queue<RegisteredAsyncFutureDetails<?>> futures) {
+    public static void setFutures(Queue<RegisteredAsyncFutureDetails> futures) {
         ASYNC_FUTURES.set(futures);
     }
 
@@ -156,7 +156,7 @@ public final class AsyncFuturesHolder {
      */
     public static void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futuresToBlockOn, long timeoutValue) {
 
-        Queue<RegisteredAsyncFutureDetails<?>> futures = ASYNC_FUTURES.get();
+        Queue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
 
         // if we're not currently allowing async execution then there is nothing to wait on, so simply return
         // immediately
@@ -165,7 +165,7 @@ public final class AsyncFuturesHolder {
             return;
         }
 
-        List<RegisteredAsyncFutureDetails<?>> futureDetails = simpleFilter(futures, f -> futuresToBlockOn.contains(f.getFuture()));
+        List<RegisteredAsyncFutureDetails> futureDetails = simpleFilter(futures, f -> futuresToBlockOn.contains(f.getFuture()));
 
         if (futureDetails.size() != futuresToBlockOn.size()) {
 
@@ -183,14 +183,14 @@ public final class AsyncFuturesHolder {
      */
     private static void waitForFuturesAndChildFuturesToCompleteByFutureName(List<String> futureNames, long timeoutValue) {
 
-        Queue<RegisteredAsyncFutureDetails<?>> futures = ASYNC_FUTURES.get();
+        Queue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
 
         if (futures == null || futures.isEmpty()) {
             return;
         }
 
-        List<RegisteredAsyncFutureDetails<?>> completedFutures = new ArrayList<>();
-        List<RegisteredAsyncFutureDetails<?>> futuresSpawnedFromTheseProcesses;
+        List<RegisteredAsyncFutureDetails> completedFutures = new ArrayList<>();
+        List<RegisteredAsyncFutureDetails> futuresSpawnedFromTheseProcesses;
 
         do {
 

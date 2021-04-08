@@ -23,9 +23,12 @@ public abstract class BaseFinanceResource {
     protected String organisationName;
     protected Long target;
     protected int maximumFundingLevel;
+    private Boolean northernIrelandDeclaration;
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
     private FinancialYearAccountsResource financialYearAccounts;
+    private Boolean fecModelEnabled;
+    private Long fecFileEntry;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -33,11 +36,19 @@ public abstract class BaseFinanceResource {
             this.organisation = originalFinance.getOrganisation();
             this.target = originalFinance.getTarget();
             this.organisationSize = originalFinance.getOrganisationSize();
+            this.fecFileEntry = originalFinance.getFecFileEntry();
+            this.fecModelEnabled = originalFinance.getFecModelEnabled();
         }
     }
 
     public BaseFinanceResource() {
         // no-arg constructor
+    }
+
+    public BaseFinanceResource(Boolean fecModelEnabled,
+                               Long fecFileEntry) {
+        this.fecModelEnabled = fecModelEnabled;
+        this.fecFileEntry = fecFileEntry;
     }
 
     public BaseFinanceResource(long id,
@@ -112,6 +123,14 @@ public abstract class BaseFinanceResource {
         return financialYearAccounts;
     }
 
+    public Boolean getNorthernIrelandDeclaration() {
+        return northernIrelandDeclaration;
+    }
+
+    public void setNorthernIrelandDeclaration(Boolean northernIrelandDeclaration) {
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
+    }
+
     public void setFinancialYearAccounts(FinancialYearAccountsResource financialYearAccounts) {
         this.financialYearAccounts = financialYearAccounts;
     }
@@ -122,6 +141,22 @@ public abstract class BaseFinanceResource {
         } else {
             return null;
         }
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
+    }
+
+    public Long getFecFileEntry() {
+        return fecFileEntry;
+    }
+
+    public void setFecFileEntry(Long fecFileEntry) {
+        this.fecFileEntry = fecFileEntry;
     }
 
     @JsonIgnore

@@ -1,6 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
-apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
@@ -47,6 +47,7 @@ createContainer.networkAliases = ["ifs-survey-data-service"]
 
 pullImageAndCreateContainer.portBindings = ['9013:8000', '8087:8080']
 pullImageAndCreateContainer.networkAliases = ["ifs-survey-data-service"]
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 if (enabled) {
     deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
@@ -88,7 +89,6 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.mariadb.jdbc:mariadb-java-client"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
@@ -97,7 +97,6 @@ dependencies {
     compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile 'com.h2database:h2'
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')

@@ -143,7 +143,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM)
                 .build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
-        List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
+        List<FormInputResponseResource> responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
@@ -187,7 +187,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
 
-        when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
@@ -206,7 +206,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         assertFalse(viewModel.isKtpCompetition());
 
-        verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
+        verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 
     @Test
@@ -240,7 +240,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
                 .build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
-        List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
+        List<FormInputResponseResource> responses = newFormInputResponseResource().withFormInputs(formInputs.get(0).getId()).build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
                 .withQuestion(questions.get(0).getId())
                 .build(1);
@@ -297,7 +297,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
 
-        when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+        when(mockPopulator.populate(questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
@@ -352,7 +352,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         assertTrue(viewModel.isKtpCompetition());
 
-        verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
+        verify(mockPopulator).populate(questions.get(0), expectedData, settings);
     }
 
 }

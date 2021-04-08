@@ -35,6 +35,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-7723 Improvement to company search results
 ...
+...             IFS-7724 Input organisation details manually
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/common/PS_Common.robot
@@ -42,32 +44,47 @@ Resource          ../../resources/common/Applicant_Commons.robot
 
 
 *** Variables ***
-${newProjecTeamPage}         ${server}/project-setup/project/${PS_PD_Project_Id}/team
-${moProjectID}               ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
-${addPartnerOrgCompId}       ${competition_ids["Project Setup Comp 7"]}
-${addNewPartnerOrgProjID}    ${project_ids["PSC application 7"]}
-${addNewPartnerOrgAppID}     ${application_ids["PSC application 7"]}
-${addNewPartnerOrgAppID6}    ${application_ids["PSC application 6"]}
-${addPartnerOrgCompId6}      ${competition_ids["Project Setup Comp 6"]}
-${addNewPartnerOrgProjID6}   ${project_ids["PSC application 6"]}
-${addNewPartnerOrgAppID6}    ${application_ids["PSC application 6"]}
-${leadApplicantEmail}        troy.ward@gmail.com
-${partnerApplicantEmail}     belle.smith@gmail.com
-${reserachApplicantEmail}    nicole.brown@gmail.com
-${addNewPartnerOrgProjPage}  ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team/partner
-${steakHolderCompId}         ${competition_ids["Rolling stock future developments"]}
-${steakHolderProjectId}      ${project_ids["High-speed rail and its effects on water quality"]}
-${leadNewMemberEmail}        test@test.nom
-${nonLeadNewMemberEmail}     testerina@test.nom
-${removeInviteEmail}         remove@test.nom
-${internalViewTeamPage}      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
-${internalInviteeEmail}      internal@invitee.com
-${ifsAdminAddOrgEmail}       admin@addorg.com
-${ifsPendingAddOrgEmail}     pending@pending.com
-${intFinanceAddOrgEmail}     finance@addorg.com
-${applicationName}           PSC application 7
-${orgInviterName}            Ward Ltd
-${PSCapplicationTeamPage}    ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 5"]}/project/${project_ids["PSC application 5"]}/team
+${newProjecTeamPage}                ${server}/project-setup/project/${PS_PD_Project_Id}/team
+${moProjectID}                      ${project_ids["Super-EFFY - Super Efficient Forecasting of Freight Yields"]}
+${addPartnerOrgCompId}              ${competition_ids["Project Setup Comp 7"]}
+${addNewPartnerOrgProjID}           ${project_ids["PSC application 7"]}
+${addNewPartnerOrgAppID}            ${application_ids["PSC application 7"]}
+${addNewPartnerOrgAppID6}           ${application_ids["PSC application 6"]}
+${addPartnerOrgCompId6}             ${competition_ids["Project Setup Comp 6"]}
+${addNewPartnerOrgProjID6}          ${project_ids["PSC application 6"]}
+${addNewPartnerOrgAppID6}           ${application_ids["PSC application 6"]}
+${magicMaterialAppId}               ${application_ids["Magic material"]}
+${leadApplicantEmail}               troy.ward@gmail.com
+${partnerApplicantEmail}            belle.smith@gmail.com
+${reserachApplicantEmail}           nicole.brown@gmail.com
+${addNewPartnerOrgProjPage}         ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/team/partner
+${steakHolderCompId}                ${competition_ids["Rolling stock future developments"]}
+${steakHolderProjectId}             ${project_ids["High-speed rail and its effects on water quality"]}
+${leadNewMemberEmail}               test@test.nom
+${nonLeadNewMemberEmail}            testerina@test.nom
+${removeInviteEmail}                remove@test.nom
+${internalViewTeamPage}             ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/team
+${internalInviteeEmail}             internal@invitee.com
+${ifsAdminAddOrgEmail}              admin@addorg.com
+${ifsPendingAddOrgEmail}            pending@pending.com
+${intFinanceAddOrgEmail}            finance@addorg.com
+${applicationName}                  PSC application 7
+${orgInviterName}                   Ward Ltd
+${PSCapplicationTeamPage}           ${server}/project-setup-management/competition/${competition_ids["Project Setup Comp 5"]}/project/${project_ids["PSC application 5"]}/team
+${business_type}                    Partnership
+${organisation_name}                Terrific Test Company
+${organisation_number}              0987656789
+${sic_code}                         33300
+${executive_officer}                Marshall Mathers
+${address_line_1}                   123
+${address_line_2}                   Excellent Test Street
+${address_line_3}                   Tranquil
+${address_town}                     London
+${address_county}                   Middlesex
+${address_postcode}                 NW11 8AJ
+${applicant_first_name}             Roy
+${applicant_last_name}              Keane
+${applicant_email}                  roy@keane.com
 
 *** Test Cases ***
 Monitoring Officers has a read only view of the Project team page
@@ -124,7 +141,7 @@ The lead partner is able to add a new team member
 
 A new team member is able to accept the invitation from lead partner and see project set up
     [Documentation]  IFS-5719
-    Given the user reads his email and clicks the link   ${leadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
+    Given the user reads his email and clicks the link   ${leadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project ${magicMaterialAppId}.  You have been invited to join the project Magic material by Empire Ltd.  1
     When the user creates a new account                  Tester   Testington   ${leadNewMemberEmail}
     Then the user is able to access the project          ${leadNewMemberEmail}
 
@@ -139,7 +156,7 @@ Non Lead partner is able to add a new team member
 
 A new team member is able to accept the invitation from non lead partner and see projec set up
     [Documentation]  IFS-5719
-    Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Ludlow.  1
+    Given the user reads his email and clicks the link      ${nonLeadNewMemberEmail}  New designs for a circular economy: Magic material: Invitation for project ${magicMaterialAppId}.  You have been invited to join the project Magic material by Ludlow.  1
     When the user creates a new account                     Testerina   Testington   ${nonLeadNewMemberEmail}
     Then the user is able to access the project             ${nonLeadNewMemberEmail}
 
@@ -163,7 +180,7 @@ A user is able to re-send an invitation
     And the user clicks the button/link                    jQuery = button:contains("Add team member")
     When The user adds a new team member                   Removed   ${removeInviteEmail}
     Then the user is able to re-send an invitation
-    And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.
+    And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project ${magicMaterialAppId}.  You have been invited to join the project Magic material by Empire Ltd.
 
 A partner is able to remove a pending invitation
     [Documentation]  IFS-5723
@@ -202,6 +219,21 @@ Project finance is able to remove a partner organisation
     When the user removes a partner organisation           Red Planet
     Then the relevant users recieve an email notification  Red Planet
 
+Ifs Admin is able to add a new partner organisation by entering details manually
+    [Documentation]  IFS-7724
+    [Setup]  log in as a different user                                                 &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                                ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                                       ${organisation_name}  ${applicant_first_name} ${applicant_last_name}  ${applicant_email}
+    Then a new organisation not in companies house is able to accept project invite     ${applicant_email}
+
+Two organisations with the same name are able to join by entering details manually
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723  IFS-7724
+    [Setup]  log in as a different user                                                 &{ifs_admin_user_credentials}
+    Given the user navigates to the page                                                ${addNewPartnerOrgProjPage}
+    When the user adds a new partner organisation                                       Amazing Test Org Name  ${applicant_first_name} ${applicant_last_name}  amazing@test.com
+    Then a new organisation not in companies house is able to accept project invite     amazing@test.com
+    [Teardown]  the user navigates to the page                                          ${LOGIN_URL}
+
 Ifs Admin is able to add a new partner organisation
     [Documentation]  IFS-6485  IFS-6505  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
@@ -239,7 +271,7 @@ Ifs Admin is able to remove a pending partner organisation
     Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505  IFS-7723
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723  IFS-7724
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
@@ -258,11 +290,11 @@ The new partner cannot complete funding without organisation
     Given log in as a different user         ${intFinanceAddOrgEmail}  ${short_password}
     And the user clicks the button/link      link = ${applicationName}
     When the user clicks the button/link     link = Your funding
-    Then the user should see the element     link = your organisation
+    Then the user should see the element     link = Your organisation
 
 The new partner can complete Your organisation
     [Documentation]  IFS-6491
-    Given the user clicks the button/link    link = your organisation
+    Given the user clicks the button/link    link = Your organisation
     And the user should see the element      jQuery = p:contains("You must tell us the size of your organisation to determine the level of funding you are eligible for.")
     When the user completes your organisation
     Then the user should see the element     jQuery = li div:contains("Your organisation") ~ .task-status-complete
@@ -293,7 +325,8 @@ New partner can join project
 New partner can provide bank details
     [Documentation]  IFS-6871  IFS-7723
     ${organisationId} =  get organisation id by name  FIRSTGROUP PLC
-    Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
+    ${projectId} =  get project id by name  PSC application 7
+    Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  ${projectId}
     When the applicant fills in bank details
     Then internal and external users see correct status
 
@@ -335,6 +368,19 @@ the same organisation isnt able to join the project
     the user clicks the button/link                               jQuery = button:contains("Create account")
     the user should see the element                               jQuery = h1:contains("Contact our Customer Support team")
 
+a new organisation not in companies house is able to accept project invite
+    [Arguments]  ${email}
+    logout as user
+    the user reads his email and clicks the link                                         ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
+    the user accepts invitation and selects organisation type not in companies house
+    the user fills in account details                                                    ${applicant_first_name}  ${applicant_last_name}
+    the user clicks the button/link                                                      jQuery = button:contains("Create account")
+    the user verifies their account                                                      ${email}
+    a new organisation logs in and sees the project                                      ${email}
+    the user should see the element                                                      jQuery = ul:contains("PSC application 7") .status:contains("Ready to join project")
+    the user clicks the button/link                                                      link = PSC application 7
+    the user should see the element                                                      jQuery = h1:contains("Join project")
+
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
@@ -355,10 +401,23 @@ A new organisation logs in and sees the project
 
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
-    the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationTypeId    1
-    the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House  ${orgId}  ${orgName}
+    the user selects organisation type
+    the user selects his organisation in Companies House     ${orgId}  ${orgName}
+
+the user accepts invitation and selects organisation type not in companies house
+    the user selects organisation type
+    the user searches for organisation                     Not exist
+    the user clicks link to find out what to do
+    the user clicks link to enter its details manually
+    the user manually adds company details                 ${organisation_name}  ${organisation_number}  ${business_type}  ${sic_code}  ${executive_officer}
+    the user enters address manually                       ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}
+    the user clicks the button/link                        jQuery = button:contains("Save and continue")
+    the user confirms and saves company details            Business  ${business_type}  ${organisation_name}  ${organisation_number}  ${sic_code}  ${executive_officer}  ${address_line_1}  ${address_line_2}  ${address_line_3}  ${address_town}  ${address_county}  ${address_postcode}  false
+
+the user selects organisation type
+    the user clicks the button/link       jQuery = .govuk-button:contains("Yes, create an account")
+    the user selects the radio button     organisationTypeId    1
+    the user clicks the button/link       jQuery = .govuk-button:contains("Save and continue")
 
 the relevant users recieve an email notification
     [Arguments]  ${orgName}
@@ -455,7 +514,7 @@ The user is able to re-send an invitation
 
 Removed invitee is not able to accept the invite
     [Arguments]    ${email}
-    the user reads his email and clicks the link   ${email}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.  1
+    the user reads his email and clicks the link   ${email}  New designs for a circular economy: Magic material: Invitation for project ${magicMaterialAppId}.  You have been invited to join the project Magic material by Empire Ltd.  1
     the user should see the element                jQuery = h1:contains("Sorry, you are unable to accept this invitation.")
 
 The user is abe to remove the pending invitation
@@ -547,7 +606,7 @@ the internal partner does not see link for added partner
 the internal patner does see link for existing partner
     the user clicks the button/link       link = Back to finance checks
     the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
-    the user should see the element       link = Review all changes to project finances
+    the user should see the element       link = View changes to finances
 
 the user can join the project
     the user should see the element   css = .message-alert

@@ -48,6 +48,9 @@ public class ApplicationProcurementMilestoneViewModelPopulator {
     @Autowired
     private QuestionRestService questionRestService;
 
+    @Autowired
+    private ApplicationUrlHelper applicationUrlHelper;
+
     public ApplicationProcurementMilestonesViewModel populate(UserResource user, long applicationId, long organisationId, long sectionId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -67,7 +70,7 @@ public class ApplicationProcurementMilestoneViewModelPopulator {
                 String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId),
                 complete,
                 open,
-                ApplicationUrlHelper.getQuestionUrl(QuestionSetupType.APPLICATION_DETAILS, applicationDetails.getId(), applicationId).orElseThrow(ObjectNotFoundException::new),
+                applicationUrlHelper.getQuestionUrl(QuestionSetupType.APPLICATION_DETAILS, applicationDetails.getId(), applicationId, organisationId).orElseThrow(ObjectNotFoundException::new),
                 completedSectionIds.contains(projectCostsSection.getId()));
     }
 }

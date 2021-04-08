@@ -31,6 +31,8 @@ public class AssessmentFeedbackViewModelTest {
                 assessmentResource,
                 competitionResource,
                 questionResource,
+                false,
+                null,
                 null,
                 formInputResources,
                 false,

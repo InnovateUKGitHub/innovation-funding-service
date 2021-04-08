@@ -57,7 +57,7 @@ Comp Admin starts a new Competition
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS funding eligibility            true   ${compType_Programme}
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
@@ -139,7 +139,7 @@ Once the project growth table is selected
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS funding eligibility            true   ${compType_Programme}
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
@@ -559,12 +559,18 @@ the user selects temporary framework terms and conditions
     the user clicks the button/link       link = Terms and conditions
     the user selects the radio button     termsAndConditionsId  37
     the user clicks the button/link       jQuery = button:contains("Done")
-    the user should see the element       link = New projects temporary framework (opens in a new window)
+    the user selects the radio button     termsAndConditionsId  37
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user should see the element       jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("New projects temporary framework")
+    the user should see the element       jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("New projects temporary framework")
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user accept the temporary framework terms and conditions
     the user clicks the button/link     link = Award terms and conditions
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords    the user completes subsidy basis as subsidy control
+    ...                                    AND             the user clicks the button/link     link = Award terms and conditions
     the user should see the element     jQuery = h1:contains("New projects temporary framework terms and conditions")
     the user selects the checkbox       agreed
     the user clicks the button/link     jQuery = button:contains("Agree and continue")
