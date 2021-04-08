@@ -35,6 +35,43 @@ RUN apt-get install -q -y --fix-missing \
 
 RUN pip3 install --upgrade pip zapcli python-owasp-zap-v2.4
 
+ARG BAMBOO_CREDS_ARG
+ARG BAMBOO_URL_ARG
+ARG BAMBOO_PLAN_PROJ_ARG
+ARG BAMBOO_BUILD_NO_ARG
+ARG GID=993
+ARG UID=996
+ARG PW=default
+
+ENV BAMBOO_CREDS=$BAMBOO_CREDS_ARG
+ENV BAMBOO_URL=$BAMBOO_URL_ARG
+ENV BAMBOO_PLAN_PROJ=$BAMBOO_PLAN_PROJ_ARG
+ENV BAMBOO_BUILD_NO=$BAMBOO_BUILD_NO_ARG
+ENV GID=993
+ENV UID=996
+ENV PW=default
+
+RUN groupadd -g ${GID} gluster && \
+  useradd -p ${PW} -u ${UID} -g ${GID} gluster
+
+VOLUME /mnt/ifs_storage
+
+COPY robotPythonLibs-requirements.txt /tmp/
+RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
+COPY . /tmp/
+COPY set-umask0002.sh /robot-tests/set-umask0002.sh
+
+WORKDIR robot-tests
+COPY ./ ./
+RUN chown -R gluster:gluster . && \
+  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
+  chown -R gluster:gluster /tmp && \
+  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
+
+RUN pip3 install RoboZap
+
+
+
 RUN useradd -d /home/zap -m -s /bin/bash zap
 RUN echo zap:zap | chpasswd
 RUN mkdir /zap && chown zap:zap /zap
@@ -93,46 +130,7 @@ USER zap
 HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
 
-
-USER root
-
-ARG BAMBOO_CREDS_ARG
-ARG BAMBOO_URL_ARG
-ARG BAMBOO_PLAN_PROJ_ARG
-ARG BAMBOO_BUILD_NO_ARG
-ARG GID=993
-ARG UID=996
-ARG PW=default
-
-ENV BAMBOO_CREDS=$BAMBOO_CREDS_ARG
-ENV BAMBOO_URL=$BAMBOO_URL_ARG
-ENV BAMBOO_PLAN_PROJ=$BAMBOO_PLAN_PROJ_ARG
-ENV BAMBOO_BUILD_NO=$BAMBOO_BUILD_NO_ARG
-ENV GID=993
-ENV UID=996
-ENV PW=default
-
-RUN groupadd -g ${GID} gluster && \
-  useradd -p ${PW} -u ${UID} -g ${GID} gluster
-
-VOLUME /mnt/ifs_storage
-
-COPY robotPythonLibs-requirements.txt /tmp/
-RUN pip3 install -r /tmp/robotPythonLibs-requirements.txt
-COPY . /tmp/
-COPY set-umask0002.sh /robot-tests/set-umask0002.sh
-
-WORKDIR robot-tests
-COPY ./ ./
-RUN chown -R gluster:gluster . && \
-  find . \( -type d -o -type f \) -exec chmod 775 {} + && \
-  chown -R gluster:gluster /tmp && \
-  find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
-
-RUN pip3 install RoboZap
-
 USER gluster
 
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
-
