@@ -18,7 +18,9 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
@@ -179,6 +181,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return ImmutableSet.of(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT, LOAN_BUSINESS_AND_FINANCIAL_INFORMATION);
+        return stream(QuestionSetupType.values()).filter(QuestionSetupType::hasFormInputResponses).collect(toSet());
     }
 }
