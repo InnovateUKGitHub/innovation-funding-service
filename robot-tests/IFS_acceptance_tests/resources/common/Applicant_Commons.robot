@@ -882,3 +882,37 @@ the user completes subsidy basis as subsidy control
     the user selects the checkbox                 agreement
     the user clicks the button/link               id = mark-questionnaire-complete
     the user should see the element               jQuery = li:contains("Subsidy basis") > .task-status-complete
+
+the user edits the KTP fec model
+    [Arguments]   ${fecModelID}
+    the user clicks the button/link        link = Your fEC model
+    the user clicks the button/link        link = mark_as_incomplete
+    the user selects the radio button      fecModelEnabled  ${fecModelID}
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+
+the user completes the your funding section
+    [Arguments]   ${requestingFundingID}  ${value}   ${otherFundingID}
+    the user clicks the button/link        link = Your funding
+    the user selects the radio button      requestingFunding   ${requestingFundingID}
+    the user enters text to a text field   css = input[id^="grantClaimPercentage"]  ${value}
+    the user selects the radio button      otherFunding  ${otherFundingID}
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+
+the user completes project costs table for non-fec model
+    [Arguments]  ${employmentDuration}  ${cost}  ${costType}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${text}  ${quantity}
+    the user enters text to a text field                    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${employmentDuration}
+    the user enters text to a text field                    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
+    the user enters text to a text field                    id = academicAndSecretarialSupportForm   ${cost}
+    the user selects the option from the drop-down menu     ${costType}  jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) select[name^="ktp"][name$="type"]
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) textarea[name^="ktp"][name$="description"]  ${travelCostDescription}
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="times"]  ${numberOfTrips}
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${cost}
+#    the user enters text to a text field      Supervisor  1  Knowledge Base biweekly travel  30  185
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="item"]  ${text}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="quantity"]      ${quantity}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="cost"]       ${cost}
+    the user enters text to a text field                    css = textarea[id^="otherRows"][id$="description"]    ${text}
+    the user enters text to a text field                    css = input[id^="otherRows"][id$="estimate"]       ${cost}
+    the user clicks the button/link                         exceed-limit-no
+    the user clicks the button/link                         css = label[for="stateAidAgreed"]
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
