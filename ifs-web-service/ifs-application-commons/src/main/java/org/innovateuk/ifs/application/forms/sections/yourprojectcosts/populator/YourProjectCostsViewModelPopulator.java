@@ -119,7 +119,7 @@ public class YourProjectCostsViewModelPopulator {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
-        boolean yourFecCostRequired = !completedSectionIds.contains(yourFecCostSectionId);
+        boolean yourFecCostRequired = fecFinanceModelEnabled ? !completedSectionIds.contains(yourFecCostSectionId) : false;
         boolean projectCostSectionLocked = isProjectCostSectionLocked(yourFundingRequired, yourFecCostRequired);
 
         return new YourProjectCostsViewModel(application.getId(),
@@ -173,8 +173,9 @@ public class YourProjectCostsViewModelPopulator {
     }
 
     private Long getYourFecCostSectionId(ApplicantSectionResource section) {
-        SectionResource yourFecCostSection = sectionService.getFecCostFinanceSection(section.getCompetition().getId());
-        return yourFecCostSection.getId();
+        return Optional.ofNullable(sectionService.getFecCostFinanceSection(section.getCompetition().getId()))
+                .map(SectionResource::getId)
+                .orElse(null);
     }
 
     private boolean isOrganisationTypeKnowledgeBase(ApplicantSectionResource section) {
