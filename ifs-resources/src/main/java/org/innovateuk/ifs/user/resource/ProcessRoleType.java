@@ -44,10 +44,6 @@ public enum ProcessRoleType implements Identifiable {
         return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
-    public static Set<ProcessRoleType> externalApplicantRoles() {
-        return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
-    }
-
     @Override
     public long getId() {
         return id;

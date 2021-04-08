@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator;
 
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.ApplicationProcurementMilestonesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -25,6 +26,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -67,6 +69,9 @@ public class ApplicationProcurementMilestonesSummaryViewModelPopulatorTest {
     @Mock
     private SectionRestService sectionRestService;
 
+    @Mock
+    private ApplicationUrlHelper applicationUrlHelper;
+
     @Test
     public void populate() {
         UserResource user = newUserResource()
@@ -98,6 +103,8 @@ public class ApplicationProcurementMilestonesSummaryViewModelPopulatorTest {
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), QuestionSetupType.APPLICATION_DETAILS)).thenReturn(restSuccess(applicationDetails));
         when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(restSuccess(newArrayList(projectCosts)));
 
+        when(applicationUrlHelper.getQuestionUrl(QuestionSetupType.APPLICATION_DETAILS, applicationDetails.getId(), applicationId, organisationId)).thenReturn(Optional.of("question-url"));
+
         ApplicationProcurementMilestonesViewModel viewModel = populator.populate(user, applicationId, organisationId, sectionId);
 
         assertThat(viewModel.getApplicationId(), is(equalTo(application.getId())));
@@ -108,7 +115,7 @@ public class ApplicationProcurementMilestonesSummaryViewModelPopulatorTest {
         assertThat(viewModel.isComplete(), is(true));
         assertThat(viewModel.isOpen(), is(false));
         assertThat(viewModel.isReadOnly(), is(true));
-        assertThat(viewModel.getApplicationDetailsUrl(), is(equalTo(String.format("/application/%d/form/question/%d/application-details", applicationId, applicationDetails.getId()))));
+        assertThat(viewModel.getApplicationDetailsUrl(), is(equalTo("question-url")));
         assertThat(viewModel.isProjectCostsComplete(), is(false));
         assertThat(viewModel.isHasDurations(), is(true));
         assertThat(viewModel.isDisplayProjectCostsBanner(), is(false));

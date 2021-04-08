@@ -18,6 +18,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,9 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     private ApplicationResource application;
 
