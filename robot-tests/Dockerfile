@@ -70,10 +70,11 @@ RUN chown -R zap:zap . && \
 
 RUN pip3 install RoboZap
 
-USER zap
+
 
 
 RUN echo zap:zap | chpasswd
+USER zap
 RUN mkdir /zap && chown zap:zap /zap
 
 WORKDIR /zap
