@@ -18,6 +18,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final long currentUser;
     private final long applicationId;
     private final String competitionName;
+    private final String leadOrganisationName;
+    private final String leadOrganisationCompaniesHouseNumber;
 
     private final String applicationName;
     private final String questionName;
@@ -69,7 +71,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                String templateDocumentFilename, String templateDocumentResponseFilename, Long templateDocumentResponseFileEntryId,
                                                ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open,
                                                boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel,
-                                               Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption) {
+                                               Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption,
+                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -106,6 +109,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.multipleChoiceFormInputId = multipleChoiceFormInputId;
         this.multipleChoiceOptions = multipleChoiceOptions;
         this.selectedMultipleChoiceOption = selectedMultipleChoiceOption;
+        this.leadOrganisationName = leadOrganisationName;
+        this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
     }
 
     @Override
@@ -296,6 +301,14 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return multipleChoiceFormInputId != null;
     }
 
+    public String getLeadOrganisationName() {
+        return leadOrganisationName;
+    }
+
+    public String getLeadOrganisationCompaniesHouseNumber() {
+        return leadOrganisationCompaniesHouseNumber;
+    }
+
     public static final class GenericQuestionApplicationViewModelBuilder {
         private long questionId;
         private long currentUser;
@@ -333,6 +346,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private Long multipleChoiceFormInputId;
         private List<MultipleChoiceOptionResource> multipleChoiceOptions;
         private MultipleChoiceOptionResource selectedMultipleChoiceOption;
+        private String leadOrganisationName;
+        private String leadOrganisationCompaniesHouseNumber;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -521,13 +536,24 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationName(String leadOrganisationName){
+            this.leadOrganisationName = leadOrganisationName;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationCompaniesHouseNumber(String leadOrganisationCompaniesHouseNumber){
+            this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
                     questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
                     questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
                     appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
-                    open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption);
+                    open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
+                    leadOrganisationName, leadOrganisationCompaniesHouseNumber);
         }
     }
 }
