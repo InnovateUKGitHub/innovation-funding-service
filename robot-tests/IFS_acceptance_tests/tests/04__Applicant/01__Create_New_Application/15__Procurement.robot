@@ -33,6 +33,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-9359 Create new project IDs for successful applications to avoid duplication in IFS PA
 ...
+...             IFS-8945 SBRI milestones - Map milestones to IFS PA
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -203,10 +205,10 @@ Project finance completes finance checks then reverts them
     And the user reverts the milestones eligibility and viability
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6368  IFS-8947
+    [Documentation]  IFS-6368  IFS-8947  IFS-8945
     Given internal user assign MO to loan project
     And internal user approve bank details
-    And internal user generate SP
+    And internal user approves the finance checks
 
 Internal user generate the contract
     [Documentation]  IFS-6368
@@ -447,7 +449,7 @@ internal user approve bank details
     the user clicks the button/link     jQuery = button:contains("Approve bank account details")
     the user clicks the button/link     id = submit-approve-bank-details
 
-internal user generate SP
+internal user approves the finance checks
     the user navigates to the page                        ${server}/project-setup-management/project/${ProjectID}/finance-check
     the user clicks the button/link                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
     the user selects the checkbox                         project-viable
@@ -462,11 +464,10 @@ internal user generate SP
     the user clicks the button/link                       css = [name="confirm-eligibility"]
     the user clicks the button/link                       link = Return to finance checks
     the user should see the element                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
-    And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
-    And the internal user approves payment milestone
+    the user clicks the button/link                       jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    the internal user approves payment milestone
     the user clicks the button/link                       link = Return to finance checks
-    the user clicks the button/link                       css = .generate-spend-profile-main-button
-    the user clicks the button/link                       css = #generate-spend-profile-modal-button
+    the user clicks the button/link                       jQuery = button:contains("Approve finance checks")
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}
