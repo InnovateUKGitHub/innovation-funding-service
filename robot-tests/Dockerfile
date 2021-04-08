@@ -131,7 +131,7 @@ HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
 
 USER gluster
-WORKDIR robot-tests
+WORKDIR /robot-tests
 
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
