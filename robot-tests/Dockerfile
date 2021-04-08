@@ -4,7 +4,10 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG WEBSWING_TOKEN=""
 
-RUN apt-get update && apt-get install -q -y --fix-missing \
+RUN apt-get update
+RUN apt-get install -y mysql-client
+
+RUN apt-get install -q -y --fix-missing \
 	make \
 	automake \
 	autoconf \
@@ -26,8 +29,7 @@ RUN apt-get update && apt-get install -q -y --fix-missing \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y mysql-client && \
-    apt-get install -y rsync && \
+RUN apt-get install -y rsync && \
     apt-get install -y telnet
 
 RUN pip3 install --upgrade pip zapcli python-owasp-zap-v2.4
