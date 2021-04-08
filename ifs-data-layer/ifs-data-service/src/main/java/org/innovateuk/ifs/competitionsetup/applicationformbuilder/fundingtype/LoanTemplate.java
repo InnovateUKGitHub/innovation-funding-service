@@ -96,7 +96,7 @@ public class LoanTemplate implements FundingTypeTemplate {
                         "<p><strong>Business &amp; financial details</strong></p>" +
                         "<p>For us to consider the suitability of your business for a loan, we need detailed information about your business as well as financial information and forecasts</p>" +
                         "<p><strong>Business information</strong></p>" +
-                        "<p>You must submit information to us about your business. This is done through answering questions in the format of an online survey. If you would like to see the business questions before filling out the online survey.</a></p>"
+                        "<p>You must submit information to us about your business. This is done through answering questions in the format of an online survey.</a></p>"
                 )
                 .withDescription2(
                         "<p><strong>Financial information</strong></p>" +
