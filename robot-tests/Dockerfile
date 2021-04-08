@@ -51,8 +51,8 @@ ENV GID=993
 ENV UID=996
 ENV PW=default
 
-RUN groupadd -g ${GID} gluster && \
-  useradd -p ${PW} -u ${UID} -g ${GID} -d /home/zap -m -s /bin/bash gluster
+RUN groupadd -g ${GID} zap && \
+  useradd -p ${PW} -u ${UID} -g ${GID} -d /home/zap -m -s /bin/bash zap
 
 VOLUME /mnt/ifs_storage
 
@@ -63,9 +63,9 @@ COPY set-umask0002.sh /robot-tests/set-umask0002.sh
 
 WORKDIR robot-tests
 COPY ./ ./
-RUN chown -R gluster:gluster . && \
+RUN chown -R zap:zap . && \
   find . \( -type d -o -type f \) -exec chmod 775 {} + && \
-  chown -R gluster:gluster /tmp && \
+  chown -R zap:zap /tmp && \
   find /tmp \( -type d -o -type f \) -exec chmod 775 {} +
 
 RUN pip3 install RoboZap
@@ -73,13 +73,13 @@ RUN pip3 install RoboZap
 
 
 
-RUN echo gluster:gluster | chpasswd
-RUN mkdir /zap && chown gluster:gluster /zap
+RUN echo zap:zap | chpasswd
+RUN mkdir /zap && chown zap:zap /zap
 
 WORKDIR /zap
 
 #Change to the zap user so things get done as the right person (apart from copy)
-USER gluster
+USER zap
 
 RUN mkdir /home/zap/.vnc
 
@@ -119,13 +119,13 @@ COPY scripts /home/zap/.ZAP_D/scripts/
 #Copy doesn't respect USER directives so we need to chown and to do that we need to be root
 USER root
 
-RUN chown gluster:gluster /zap/* && \
-	chown gluster:gluster /zap/webswing/webswing.config && \
-	chown gluster:gluster /zap/webswing/webswing.properties && \
-	chown gluster:gluster -R /home/zap/.ZAP/
+RUN chown zap:zap /zap/* && \
+	chown zap:zap /zap/webswing/webswing.config && \
+	chown zap:zap /zap/webswing/webswing.properties && \
+	chown zap:zap -R /home/zap/.ZAP/
 
 #Change back to zap at the end
-USER gluster
+USER zap
 
 HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
