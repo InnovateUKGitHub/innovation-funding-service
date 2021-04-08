@@ -105,7 +105,7 @@ ENV ZAP_PATH /zap/zap.sh
 # Default port for use with zapcli
 ENV ZAP_PORT 8080
 ENV IS_CONTAINERIZED true
-ENV HOME /home/zap/
+ENV HOME /home/zap/.ZAP
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
