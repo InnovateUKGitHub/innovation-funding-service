@@ -70,7 +70,7 @@ RUN chown -R zap:zap . && \
 
 RUN pip3 install RoboZap
 
-
+USER zap
 
 
 RUN echo zap:zap | chpasswd
@@ -79,7 +79,7 @@ RUN mkdir /zap && chown zap:zap /zap
 WORKDIR /zap
 
 #Change to the zap user so things get done as the right person (apart from copy)
-USER zap
+
 
 RUN mkdir /home/zap/.vnc
 
