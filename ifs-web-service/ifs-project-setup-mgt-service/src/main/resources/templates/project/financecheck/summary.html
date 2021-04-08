@@ -126,6 +126,7 @@
                     </th>
                     <td th:if="${model.subsidyControlCompetition}" class="govuk-table__cell aligncentre">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                           th:text="${#messages.msg('ifs.project.setup.fundingrules.' + orgDetails.fundingRulesState)}"
                            class="govuk-link">Review</a>
                     </td>
                     <td th:if="${model.subsidyControlCompetition}" class="govuk-table__cell aligncentre cell-border-right">

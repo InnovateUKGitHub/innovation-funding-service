@@ -15,6 +15,7 @@ public class FinanceCheckPartnerStatusResource {
     private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
     private PaymentMilestoneState paymentMilestoneState;
+    private FundingRulesState fundingRulesState;
     private FundingRules fundingRules;
     private boolean awaitingResponse;
     private boolean financeContactProvided;
@@ -26,6 +27,7 @@ public class FinanceCheckPartnerStatusResource {
                                              ViabilityRagStatus viabilityRagStatus, EligibilityState eligibility,
                                              EligibilityRagStatus eligibilityRagStatus,
                                              PaymentMilestoneState paymentMilestoneState,
+                                             FundingRulesState fundingRulesState,
                                              FundingRules fundingRules,
                                              boolean awaitingResponse,
                                              boolean financeContactProvided) {
@@ -37,6 +39,7 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
         this.eligibilityRagStatus = eligibilityRagStatus;
         this.paymentMilestoneState = paymentMilestoneState;
+        this.fundingRulesState = fundingRulesState;
         this.fundingRules = fundingRules;
         this.awaitingResponse = awaitingResponse;
         this.financeContactProvided = financeContactProvided;
@@ -112,6 +115,10 @@ public class FinanceCheckPartnerStatusResource {
 
     public void setFinanceContactProvided(boolean financeContactProvided) {
         this.financeContactProvided = financeContactProvided;
+    }
+
+    public FundingRulesState getFundingRulesState() {
+        return fundingRulesState;
     }
 
     public FundingRules getFundingRules() {

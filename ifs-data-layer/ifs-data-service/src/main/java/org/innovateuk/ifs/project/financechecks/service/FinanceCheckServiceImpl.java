@@ -249,7 +249,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
-                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project), fundingRules.getSuccess().getFundingRules(),
+                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org), project),
+                    fundingRules.getSuccess().getFundingRulesState(), fundingRules.getSuccess().getFundingRules(),
                     anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
         });
     }
