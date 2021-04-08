@@ -42,7 +42,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/Applications/OWASP_ZAP.app/Contents/Java/" + "zap.sh -daemon -config api.disablekey=true -port {0}".format(
+            cmd = "/zap/" + "zap.sh -daemon -config api.disablekey=true -port {0}".format(
                 self.port
             )
             print(cmd)
@@ -61,7 +61,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/Applications/OWASP_ZAP.app/Contents/Java/" + "zap.sh -config api.disablekey=true -port {0}".format(
+            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port {0}".format(
                 self.port
             )
             print(cmd)
@@ -265,7 +265,7 @@ class RoboZap(object):
         url = "http://localhost:{0}/JSON/exportreport/action/generate/".format(
             self.port
         )
-        export_path = "/Users/abirajdar/Downloads/zapreport.json"
+        export_path = "/zap/zapreport.json"
         extension = json
         report_time = datetime.now().strftime("%I:%M%p on %B %d, %Y")
         source_info = "{0};{1};ZAP Team;{2};{3};v1;v1;{4}".format(
