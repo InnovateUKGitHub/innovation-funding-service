@@ -14,9 +14,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflow
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
@@ -76,9 +74,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
-
-    @Autowired
-    private AssessmentPeriodMapper assessmentPeriodMapper;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -371,17 +366,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 }
             }
         });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<ApplicationResource> updateAssessmentPeriod(long applicationId, AssessmentPeriodResource assessmentPeriod) {
-        return find(application(applicationId))
-                .andOnSuccess((application) -> {
-                    application.setAssessmentPeriod(assessmentPeriodMapper.mapToDomain(assessmentPeriod));
-                    applicationRepository.save(application);
-                    return serviceSuccess(applicationMapper.mapToResource(application));
-                });
     }
 
     private OrganisationAddress copyNewOrganisationAddress(OrganisationAddress organisationAddress) {

@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.period.transactional.AssessmentPeriodServiceImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
-import org.innovateuk.ifs.competition.mapper.AssessmentPeriodMapper;
-import org.innovateuk.ifs.competition.repository.AssessmentPeriodRepository;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.junit.Test;

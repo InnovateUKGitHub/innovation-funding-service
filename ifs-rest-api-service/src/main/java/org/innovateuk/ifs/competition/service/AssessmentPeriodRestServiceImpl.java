@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
+import org.innovateuk.ifs.crud.AbstractIfsCrudRestServiceImpl;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,9 @@ import java.util.List;
  * through a REST call.
  */
 @Service
-public class AssessmentPeriodRestServiceImpl extends BaseRestService implements AssessmentPeriodRestService {
+public class AssessmentPeriodRestServiceImpl
+        extends AbstractIfsCrudRestServiceImpl<AssessmentPeriodResource, Long>
+        implements AssessmentPeriodRestService {
 
     private String assessmentPeriodRestURL = "/assessment-period";
 
@@ -24,7 +27,17 @@ public class AssessmentPeriodRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
-    public RestResult<AssessmentPeriodResource> create(Integer index, Long competitionId) {
-        return postWithRestResult(assessmentPeriodRestURL + "/" + competitionId + "?index=" + index, AssessmentPeriodResource.class);
+    protected String getBaseUrl() {
+        return assessmentPeriodRestURL;
+    }
+
+    @Override
+    protected Class<AssessmentPeriodResource> getResourceClass() {
+        return AssessmentPeriodResource.class;
+    }
+
+    @Override
+    protected ParameterizedTypeReference<List<AssessmentPeriodResource>> getListTypeReference() {
+        return new ParameterizedTypeReference<List<AssessmentPeriodResource>>() {};
     }
 }

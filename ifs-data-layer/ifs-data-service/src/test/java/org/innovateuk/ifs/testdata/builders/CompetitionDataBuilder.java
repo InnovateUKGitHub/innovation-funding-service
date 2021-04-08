@@ -343,7 +343,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                         .forEach(type ->
                                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                                         .handleSuccessOrFailure(
-                                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccess(),
+                                                failure -> milestoneService.create(new MilestoneResource(type, data.getCompetition().getId())).getSuccess(),
                                                 success -> success
                                         )
                         )
@@ -432,7 +432,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId())
                     .handleSuccessOrFailure(
-                            failure -> milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccess(),
+                            failure -> milestoneService.create(new MilestoneResource(milestoneType, data.getCompetition().getId())).getSuccess(),
                             success -> success
                     );
 

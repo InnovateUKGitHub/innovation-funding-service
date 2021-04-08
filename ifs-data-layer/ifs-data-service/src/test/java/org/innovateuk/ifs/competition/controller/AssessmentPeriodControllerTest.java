@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.period.controller.AssessmentPeriodController;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
-import org.innovateuk.ifs.competition.transactional.AssessmentPeriodService;
+import org.innovateuk.ifs.assessment.period.transactional.AssessmentPeriodService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;

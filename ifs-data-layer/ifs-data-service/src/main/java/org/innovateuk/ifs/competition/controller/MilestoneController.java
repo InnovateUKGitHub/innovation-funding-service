@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -38,17 +39,19 @@ public class MilestoneController {
         return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();
     }
 
-    @PostMapping("/{competitionId}")
+    @PostMapping(value = "/{competitionId}")
+    @ZeroDowntime(reference = "todo", description = "REMOVE THIS ENDPOINT.")
     public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
                                                 @PathVariable("competitionId") final Long competitionId) {
-        return milestoneService.create(type, competitionId).toPostCreateResponse();
+        MilestoneResource milestone = new MilestoneResource();
+        milestone.setCompetitionId(competitionId);
+        milestone.setType(type);
+        return milestoneService.create(milestone).toPostCreateResponse();
     }
 
-    @PostMapping("/{competitionId}/with-assessment-period")
-    public RestResult<MilestoneResource> create(@RequestParam final MilestoneType type,
-                                                @RequestParam final long assessmentPeriodId,
-                                                @PathVariable("competitionId") final long competitionId) {
-        return milestoneService.create(type, competitionId, assessmentPeriodId).toPostCreateResponse();
+    @PostMapping
+    public RestResult<MilestoneResource> create(@RequestBody final MilestoneResource milestone) {
+        return milestoneService.create(milestone).toPostCreateResponse();
     }
 
     @PutMapping("/many")

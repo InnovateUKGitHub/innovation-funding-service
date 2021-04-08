@@ -1,10 +1,15 @@
-package org.innovateuk.ifs.competition.controller;
+package org.innovateuk.ifs.assessment.period.controller;
 
+import org.innovateuk.ifs.assessment.period.transactional.AssessmentPeriodService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
-import org.innovateuk.ifs.competition.transactional.AssessmentPeriodService;
+import org.innovateuk.ifs.crud.AbstractCrudController;
+import org.innovateuk.ifs.crud.IfsCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -13,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/assessment-period")
-public class AssessmentPeriodController {
+public class AssessmentPeriodController extends AbstractCrudController<AssessmentPeriodResource, Long> {
 
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
@@ -24,9 +29,8 @@ public class AssessmentPeriodController {
         return assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId).toGetResponse();
     }
 
-    @PostMapping("/{competitionId}")
-    public RestResult<AssessmentPeriodResource> create(@RequestParam final int index,
-                                                       @PathVariable("competitionId") final long competitionId) {
-        return assessmentPeriodService.create(competitionId, index).toPostCreateResponse();
+    @Override
+    protected IfsCrudService<AssessmentPeriodResource, Long> crudService() {
+        return assessmentPeriodService;
     }
 }

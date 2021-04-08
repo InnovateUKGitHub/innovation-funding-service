@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.domain;
 
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;

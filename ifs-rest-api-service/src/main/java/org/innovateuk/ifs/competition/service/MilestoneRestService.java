@@ -22,9 +22,7 @@ public interface MilestoneRestService {
 
     RestResult<Void> updateMilestone(MilestoneResource milestone);
 
-    RestResult<MilestoneResource> create(MilestoneType type, Long competitionId);
-
-    RestResult<MilestoneResource> create(MilestoneType type, Long competitionId, Long assessmentPeriodId);
+    RestResult<MilestoneResource> create(MilestoneResource milestoneResource);
 
     RestResult<Void> resetMilestone(MilestoneResource milestone);
 
