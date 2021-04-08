@@ -7,12 +7,16 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.collect.Lists.asList;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
@@ -46,11 +50,43 @@ public class KtpTemplateTest {
     }
 
     @Test
-    public void initialiseFinanceTypesForKTP() {
+    public void initialiseFinanceTypesForKTPWhenFecFinanceModelEnabled() {
         Competition competition = CompetitionBuilder
                 .newCompetition()
                 .build();
         List<FinanceRowType> expectedKtpFinanceRows = FinanceRowType.getKtpFinanceRowTypes();
+
+        when(commonBuilders.saveFinanceRows(any(Competition.class), Mockito.anyList()))
+                .thenReturn(competition);
+
+        template.initialiseFinanceTypes(competition);
+
+        verify(commonBuilders).saveFinanceRows(eq(competition), financeRowTypesCaptor.capture());
+
+        List<FinanceRowType> ktpFinanceRows = financeRowTypesCaptor.getValue();
+
+        assertNotNull(ktpFinanceRows);
+        assertThat(ktpFinanceRows, containsInAnyOrder(expectedKtpFinanceRows.toArray()));
+    }
+
+    @Test
+    public void initialiseFinanceTypesForKTPFecFinanceModelDisabled() {
+        ReflectionTestUtils.setField(template, "fecFinanceModel", false);
+
+        Competition competition = CompetitionBuilder
+                .newCompetition()
+                .build();
+        List<FinanceRowType> expectedKtpFinanceRows = Arrays.asList(FinanceRowType.OTHER_COSTS,
+                FinanceRowType.FINANCE,
+                FinanceRowType.ASSOCIATE_SALARY_COSTS,
+                FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
+                FinanceRowType.CONSUMABLES,
+                FinanceRowType.ASSOCIATE_SUPPORT,
+                FinanceRowType.KNOWLEDGE_BASE,
+                FinanceRowType.ESTATE_COSTS,
+                FinanceRowType.KTP_TRAVEL,
+                FinanceRowType.ADDITIONAL_COMPANY_COSTS,
+                FinanceRowType.PREVIOUS_FUNDING);
 
         when(commonBuilders.saveFinanceRows(any(Competition.class), Mockito.anyList()))
                 .thenReturn(competition);
