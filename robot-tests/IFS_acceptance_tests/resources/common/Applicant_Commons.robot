@@ -886,7 +886,7 @@ the user completes subsidy basis as subsidy control
 the user edits the KTP fec model
     [Arguments]   ${fecModelID}
     the user clicks the button/link        link = Your fEC model
-    the user clicks the button/link        link = mark_as_incomplete
+    the user clicks the button/link        jQuery = button:contains("Edit your fEC Model")
     the user selects the radio button      fecModelEnabled  ${fecModelID}
     the user clicks the button/link        jQuery = button:contains("Mark as complete")
 
@@ -907,7 +907,6 @@ the user completes project costs table for non-fec model
     the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) textarea[name^="ktp"][name$="description"]  ${travelCostDescription}
     the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="times"]  ${numberOfTrips}
     the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${cost}
-#    the user enters text to a text field      Supervisor  1  Knowledge Base biweekly travel  30  185
     the user enters text to a text field                    css = input[id^="consumableCost"][id$="item"]  ${text}
     the user enters text to a text field                    css = input[id^="consumableCost"][id$="quantity"]      ${quantity}
     the user enters text to a text field                    css = input[id^="consumableCost"][id$="cost"]       ${cost}
