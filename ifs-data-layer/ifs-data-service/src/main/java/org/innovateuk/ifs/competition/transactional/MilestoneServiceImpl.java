@@ -197,7 +197,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 List<Milestone> currentMilestones = milestoneRepository.findAllByCompetitionId(competitionId);
                 Set<MilestoneType> targetMilestoneTypes = EnumSet.allOf(MilestoneType.class)
                         .stream()
-                        .filter(milestoneType -> milestoneTypeShouldBeCreatedAtCompSetup(milestoneType, competition))
+                        .filter(milestoneType -> milestoneTypeShouldBeCreatedAtCompletionStageChange(milestoneType, competition))
                         .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
                         .collect(Collectors.toSet());
 
@@ -226,7 +226,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         });
     }
 
-    private boolean milestoneTypeShouldBeCreatedAtCompSetup(MilestoneType milestoneType, Competition competition) {
+    private boolean milestoneTypeShouldBeCreatedAtCompletionStageChange(MilestoneType milestoneType, Competition competition) {
         if (milestoneType.isOnlyNonIfs()) {
             return false;
         }
