@@ -94,6 +94,7 @@ HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
 
 
+USER root
 
 ARG BAMBOO_CREDS_ARG
 ARG BAMBOO_URL_ARG
@@ -134,8 +135,4 @@ USER gluster
 
 ENTRYPOINT ["./set-umask0002.sh"]
 CMD ["sh", "-c", "./os_run_tests.sh -q"]
-
-
-
-
 
