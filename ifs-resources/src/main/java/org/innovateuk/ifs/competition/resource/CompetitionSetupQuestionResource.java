@@ -355,7 +355,9 @@ public class CompetitionSetupQuestionResource {
 
     @JsonIgnore
     public boolean isGuidanceRequired() {
-        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type && QuestionSetupType.KTP_ASSESSMENT != type;
+        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type
+                && QuestionSetupType.KTP_ASSESSMENT != type
+                && QuestionSetupType.NORTHERN_IRELAND_DECLARATION != type;
     }
 
     @JsonIgnore

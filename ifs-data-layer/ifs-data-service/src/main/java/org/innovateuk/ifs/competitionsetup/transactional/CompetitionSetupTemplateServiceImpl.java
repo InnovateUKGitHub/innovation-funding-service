@@ -114,6 +114,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         setDefaultProjectDocuments(competition);
 
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
+
         FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
         Optional<FundingRulesTemplate> fundingRulesTemplate = Optional.ofNullable(fundingRulesTemplates.get(competition.getFundingRules()));
 
@@ -127,7 +128,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
         competition = fundingTypeTemplate.setGolTemplate(competition);
         if (fundingRulesTemplate.isPresent()) {
-            sectionBuilders = fundingRulesTemplate.get().sections(sectionBuilders);
+            sectionBuilders = fundingRulesTemplate.get().sections(competition, sectionBuilders);
         }
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
