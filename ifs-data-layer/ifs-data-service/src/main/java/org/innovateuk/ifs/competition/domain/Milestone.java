@@ -54,7 +54,6 @@ public class Milestone {
     public Milestone(MilestoneType type, Competition competition, AssessmentPeriod assessmentPeriod) {
         if (type == null) { throw new IllegalArgumentException("type cannot be null"); }
         if (competition == null) { throw new IllegalArgumentException("competition cannot be null"); }
-        if (assessmentPeriod == null) { throw new IllegalArgumentException("assessment period cannot be null"); }
 
         this.type = type;
         this.competition = competition;

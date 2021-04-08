@@ -1,6 +1,7 @@
-INSERT INTO assessment_period (rank, competition_id)
+ALTER TABLE assessment_period DROP COLUMN rank;
+
+INSERT INTO assessment_period (competition_id)
 SELECT
-1 as rank,
 c.id as competition_id
 FROM competition c
 INNER JOIN milestone m ON c.id = m.competition_id
