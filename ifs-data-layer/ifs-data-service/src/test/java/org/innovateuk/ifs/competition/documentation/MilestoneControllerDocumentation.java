@@ -96,7 +96,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
     @Test
     public void create() throws Exception {
         Long competitionId = 2L;
-        when(milestoneService.create(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build()));
+        when(milestoneService.create(new MilestoneResource(MilestoneType.OPEN_DATE, competitionId))).thenReturn(serviceSuccess(newMilestoneResource().build()));
 
         mockMvc.perform(post("/milestone/{competitionId}?type=" + MilestoneType.OPEN_DATE, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))

@@ -403,7 +403,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         when(milestoneRepository.save(any(Milestone.class))).thenReturn(newMilestone().build());
         when(milestoneMapper.mapToResource(any(Milestone.class))).thenReturn(newMilestoneResource().build());
 
-        ServiceResult<MilestoneResource> result = service.create(ASSESSOR_ACCEPTS, competitionId, assessmentPeriodId);
+        ServiceResult<MilestoneResource> result = service.create(new MilestoneResource(ASSESSOR_ACCEPTS, null, competitionId, assessmentPeriodId));
 
         assertTrue(result.isSuccess());
 

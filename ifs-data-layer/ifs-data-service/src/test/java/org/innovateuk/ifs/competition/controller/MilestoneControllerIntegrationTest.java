@@ -251,7 +251,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     private MilestoneResource createNewMilestoneWithAssessmentPeriod(MilestoneType name, Long competitionId, Long assessmentPeriodId) {
-        RestResult<MilestoneResource> milestoneResult = controller.create(name, assessmentPeriodId, competitionId);
+        RestResult<MilestoneResource> milestoneResult = controller.create(new MilestoneResource(name, null, competitionId, assessmentPeriodId));
         assertTrue(milestoneResult.isSuccess());
         return milestoneResult.getSuccess();
     }

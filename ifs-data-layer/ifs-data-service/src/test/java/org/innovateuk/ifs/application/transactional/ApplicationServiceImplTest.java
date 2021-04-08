@@ -19,12 +19,9 @@ import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -49,13 +46,11 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -83,8 +78,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
-import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
@@ -100,7 +93,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
@@ -148,9 +140,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Mock
     private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
-
-    @Mock
-    private AssessmentPeriodMapper assessmentPeriodMapper;
 
     private FormInput formInput;
     private FormInputType formInputType;
@@ -675,52 +664,5 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertNotSame(applicationOrganisationAddress.getOrganisationAddress(), organisationAddress);
             assertNotSame(applicationOrganisationAddress.getOrganisationAddress().getAddress(), organisationAddress.getAddress());
         }));
-    }
-
-    @Test
-    public void updateAssessmentPeriod_ApplicationExists() {
-        ArgumentCaptor<Application> captor = ArgumentCaptor.forClass(Application.class);
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().build();
-
-        AssessmentPeriod assessmentPeriod = newAssessmentPeriod().build();
-        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource().build();
-
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(assessmentPeriodMapper.mapToDomain(assessmentPeriodResource)).thenReturn(assessmentPeriod);
-        when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
-        when(applicationMapperMock.mapToResource(application)).thenReturn(applicationResource);
-
-        ServiceResult<ApplicationResource> result = service.updateAssessmentPeriod(application.getId(), assessmentPeriodResource);
-
-        assertTrue(result.isSuccess());
-
-        verify(applicationRepositoryMock).findById(application.getId());
-        verify(applicationMapperMock).mapToResource(application);
-        verify(applicationRepositoryMock).save(captor.capture());
-
-        Application applicationToSave = captor.getValue();
-        assertEquals(assessmentPeriod, applicationToSave.getAssessmentPeriod());
-    }
-
-    @Test
-    public void updateAssessmentPeriod_ApplicationNotExists() {
-        Application application = newApplication().build();
-        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource().build();
-
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.empty());
-
-        ServiceResult<ApplicationResource> result = service.updateAssessmentPeriod(application.getId(), assessmentPeriodResource);
-
-        assertTrue(result.isFailure());
-
-        assertNotNull(result.getErrors());
-        assertEquals(1, result.getErrors().size());
-        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
-        assertNotNull(result.getErrors().get(0).getArguments());
-        assertEquals("Application not found", result.getErrors().get(0).getArguments().get(0));
-
-        verify(applicationRepositoryMock).findById(application.getId());
     }
 }
