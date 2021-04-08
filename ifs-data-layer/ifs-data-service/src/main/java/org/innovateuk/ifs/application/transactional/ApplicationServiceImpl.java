@@ -6,7 +6,9 @@ import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -82,8 +84,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     static {
         Map<String, Sort> applicationSortFieldMap = new HashMap<>();
-        applicationSortFieldMap.put("id", new Sort(ASC, "id"));
-        applicationSortFieldMap.put("name", new Sort(ASC, "name", "id"));
+        applicationSortFieldMap.put("id", Sort.by(ASC, "id"));
+        applicationSortFieldMap.put("name", Sort.by(ASC, "name", "id"));
 
         APPLICATION_SORT_FIELD_MAP = Collections.unmodifiableMap(applicationSortFieldMap);
     }

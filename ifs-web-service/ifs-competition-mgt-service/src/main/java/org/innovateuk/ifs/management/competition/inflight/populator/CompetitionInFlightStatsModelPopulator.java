@@ -86,7 +86,8 @@ public class CompetitionInFlightStatsModelPopulator {
                         competitionKeyApplicationStatisticsRestService.getFundedKeyStatisticsByCompetition(
                                 competitionResource.getId()).getSuccess(), status,
                         completionStage);
+            default:
+                return new CompetitionInFlightStatsViewModel();
         }
-        return new CompetitionInFlightStatsViewModel();
     }
 }

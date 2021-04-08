@@ -3,7 +3,6 @@ package org.innovateuk.ifs.config.audit;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -20,11 +19,8 @@ import java.util.Optional;
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 public class AuditConfig {
 
-    @Autowired
-    private UserMapper userMapper;
-
     @Bean
-    public AuditorAware<User> auditorProvider() {
+    public AuditorAware<User> auditorProvider(UserMapper userMapper) {
         return () -> {
             UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
 

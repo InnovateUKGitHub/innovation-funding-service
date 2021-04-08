@@ -5,6 +5,8 @@ Documentation     IFS-7213  Investor Partnerships Funding type & T&Cs
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -51,10 +53,14 @@ The Investor partnership t&c's are correct
     And select window                        title = Competition terms and conditions - Innovation Funding Service
 
 T&c's can be confirmed
-    [Documentation]  IFS-7213
-    Given the user clicks the button/link    jQuery = button:contains("Done")
-    When the user clicks the button/link     link = Back to competition details
-    Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
+    [Documentation]  IFS-7213  IFS-9214
+    Given the user clicks the button/link      jQuery = button:contains("Done")
+    When the user selects the radio button     termsAndConditionsId  31
+    And the user clicks the button/link        jQuery = button:contains("Done")
+    And the user should see the element        jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Investor Partnerships")
+    And the user should see the element        jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Investor Partnerships")
+    Then the user clicks the button/link       link = Back to competition details
+    And the user should see the element        jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Applicant is able to see correct T&C's
     [Documentation]  IFS-7213
@@ -79,9 +85,9 @@ Internal user sees correct label for T&C's
 Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-7235  IFS-8066
     Given Log in as a different user         &{troy_ward_crendentials}
-    When The user navigates to the page      ${investorFeedbackLink}
+    When the user navigates to the page      ${investorFeedbackLink}
     And the user clicks the button/link      jQuery = button:contains("Investor Partnerships terms and conditions")
-    Then the user should see the element     link = View ${tandcLink}
+    Then the user should see the element     jQuery = a:contains("Investor Partnerships")
 
 *** Keywords ***
 Custom suite setup

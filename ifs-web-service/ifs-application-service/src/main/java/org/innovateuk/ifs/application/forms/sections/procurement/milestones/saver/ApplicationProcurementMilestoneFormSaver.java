@@ -46,15 +46,19 @@ public class ApplicationProcurementMilestoneFormSaver extends AbstractProcuremen
             case "successCriteria":
                 milestone.setSuccessCriteria(value);
                 break;
+            default:
+                // do nothing
         }
         service.update(milestone);
         return Optional.of(milestone.getId());
     }
 
-    private ApplicationProcurementMilestoneResource getResource(String id, long applicationId, long organisationId) {
+
+    @Override
+    protected ApplicationProcurementMilestoneResource getResource(String id, long targetId, long organisationId) {
         if (id.startsWith(ProcurementMilestonesForm.UNSAVED_ROW_PREFIX)) {
             ApplicationProcurementMilestoneResource toCreate = new ApplicationProcurementMilestoneResource();
-            toCreate.setApplicationId(applicationId);
+            toCreate.setApplicationId(targetId);
             toCreate.setOrganisationId(organisationId);
             return service.create(toCreate).getSuccess();
         } else {
@@ -62,11 +66,4 @@ public class ApplicationProcurementMilestoneFormSaver extends AbstractProcuremen
         }
     }
 
-    private String idFromRowPath(String field) {
-        return field.substring(field.indexOf('[') + 1, field.indexOf(']'));
-    }
-
-    private String fieldFromRowPath(String field) {
-        return field.substring(field.indexOf("].") + 2);
-    }
 }

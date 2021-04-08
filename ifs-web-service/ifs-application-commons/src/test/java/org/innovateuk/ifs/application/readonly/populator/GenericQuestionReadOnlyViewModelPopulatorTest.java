@@ -18,6 +18,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,9 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     private ApplicationResource application;
 
@@ -149,7 +153,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
                 templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture), emptyList());
 
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
 
         assertEquals("Some text", viewModel.getAnswer());
@@ -212,7 +216,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList(), emptyList());
 
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
 
         assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
@@ -239,7 +243,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList(), emptyList());
 
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
 
         assertEquals("Some text", viewModel.getAnswer());
@@ -272,7 +276,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
         ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(true);
 
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data, settings);
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, settings);
 
         assertNotNull(viewModel);
         assertTrue(viewModel.isKtpAssessmentQuestion());

@@ -17,10 +17,6 @@ public class MonitoringOfficerSearchByEmailForm extends BaseBindingResultTarget 
     @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String emailAddress;
 
-    // for spring form binding
-    public MonitoringOfficerSearchByEmailForm() {
-    }
-
     public String getEmailAddress() {
         return emailAddress;
     }

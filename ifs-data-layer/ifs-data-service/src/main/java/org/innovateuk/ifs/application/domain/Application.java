@@ -50,6 +50,7 @@ public class Application implements ProcessActivity {
     private String previousApplicationNumber;
     private String previousApplicationTitle;
     private ZonedDateTime manageFundingEmailDate;
+    private Long previousApplicationId;
 
     @Min(0)
     private Long durationInMonths; // in months
@@ -110,6 +111,7 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
+
     public Application() {
     }
 
@@ -123,6 +125,29 @@ public class Application implements ProcessActivity {
         this.name = name;
         this.processRoles = processRoles;
         this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
+    }
+
+    public Application(Application application) {
+        this.name = application.getName();
+        this.startDate = application.getStartDate();
+        this.submittedDate = application.getSubmittedDate();
+        this.resubmission = application.getResubmission();
+        this.previousApplicationNumber = application.getPreviousApplicationNumber();
+        this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.manageFundingEmailDate = application.getManageFundingEmailDate();
+        this.previousApplicationId = application.getId();
+        this.durationInMonths = application.getDurationInMonths();
+        this.completion = application.getCompletion();
+        setNoInnovationAreaApplicable(application.getNoInnovationAreaApplicable());
+        this.inAssessmentReviewPanel = application.isInAssessmentReviewPanel();
+        this.competition = application.getCompetition();
+        this.fundingDecision = application.getFundingDecision();
+        setResearchCategory(application.getResearchCategory());
+        setInnovationArea(application.getInnovationArea());
+        this.assessmentPeriod = application.getAssessmentPeriod();
+        this.competitionReferralSource = application.getCompetitionReferralSource();
+        this.companyAge = application.getCompanyAge();
+        this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
     }
 
     protected boolean canEqual(Object other) {
@@ -310,6 +335,14 @@ public class Application implements ProcessActivity {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Long getPreviousApplicationId() {
+        return previousApplicationId;
+    }
+
+    public void setPreviousApplicationId(Long previousApplicationId) {
+        this.previousApplicationId = previousApplicationId;
     }
 
     public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {

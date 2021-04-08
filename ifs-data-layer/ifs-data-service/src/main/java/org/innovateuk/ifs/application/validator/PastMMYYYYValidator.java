@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
  */
 @Component
 public class PastMMYYYYValidator extends BaseValidator {
-    private static final Log LOG = LogFactory.getLog(PastMMYYYYValidator.class);
+    private static final String VALUE = "value";
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-uuuu").withResolverStyle(STRICT);
 
     @Override
@@ -31,7 +31,7 @@ public class PastMMYYYYValidator extends BaseValidator {
         FormInputResponse response = (FormInputResponse) target;
         String responseValue = response.getValue();
         if (responseValue == null) {
-            rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
+            rejectValue(errors, VALUE, "validation.standard.mm.yyyy.format");
         } else {
             try {
                 TemporalAccessor date = formatter.parse(responseValue); // This does not throw parse exceptions for invalid months.
@@ -40,15 +40,15 @@ public class PastMMYYYYValidator extends BaseValidator {
                 TemporalAccessor now = TimeZoneUtil.toUkTimeZone(ZonedDateTime.now());
                 if (date.get(YEAR) > now.get(YEAR) ||
                         (date.get(YEAR) == now.get(YEAR) && date.get(MONTH_OF_YEAR) > now.get(MONTH_OF_YEAR))) {
-                    rejectValue(errors, "value", "validation.standard.past.mm.yyyy.not.past.format");
+                    rejectValue(errors, VALUE, "validation.standard.past.mm.yyyy.not.past.format");
                 }
 
                 if (date.get(YEAR) < 0) {
-                    rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
+                    rejectValue(errors, VALUE, "validation.standard.mm.yyyy.format");
                 }
             }
             catch (DateTimeException e) {
-                rejectValue(errors, "value", "validation.standard.mm.yyyy.format");
+                rejectValue(errors, VALUE, "validation.standard.mm.yyyy.format");
             }
         }
     }

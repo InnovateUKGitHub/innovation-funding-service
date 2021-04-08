@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -15,10 +17,8 @@ import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
@@ -90,6 +90,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
+    private GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions;
     private GolTemplateResource golTemplate;
     private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
@@ -110,6 +111,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean procurementMilestones;
     private CovidType covidType;
     private boolean alwaysOpen;
+    private boolean subsidyControl;
 
     public CompetitionResource() {
     }
@@ -205,6 +207,21 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     public List<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<BaseFinanceResource> finance) {
+        List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
+
+        if (this.isKtp() && finance.isPresent()) {
+            BaseFinanceResource orgFinance = finance.get();
+            financeRowTypes = financeRowTypes.stream()
+                    .filter(financeRowType -> BooleanUtils.isFalse(orgFinance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .collect(Collectors.toList());
+        }
+
         return financeRowTypes;
     }
 
@@ -660,6 +677,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
+    public GrantTermsAndConditionsResource getOtherFundingRulesTermsAndConditions() {
+        return otherFundingRulesTermsAndConditions;
+    }
+
+    public void setOtherFundingRulesTermsAndConditions(GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions) {
+        this.otherFundingRulesTermsAndConditions = otherFundingRulesTermsAndConditions;
+    }
+
     public Integer getMinProjectDuration() {
         return minProjectDuration;
     }
@@ -805,6 +830,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.procurementMilestones = procurementMilestones;
     }
 
+    public boolean isSubsidyControl() {
+        return subsidyControl;
+    }
+
+    public void setSubsidyControl(boolean subsidyControl) {
+        this.subsidyControl = subsidyControl;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -869,6 +902,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
+                .append(otherFundingRulesTermsAndConditions, that.otherFundingRulesTermsAndConditions)
                 .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
@@ -881,6 +915,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
                 .append(alwaysOpen, that.alwaysOpen)
+                .append(subsidyControl, that.subsidyControl)
                 .isEquals();
     }
 
@@ -933,6 +968,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
+                .append(otherFundingRulesTermsAndConditions)
                 .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
@@ -945,6 +981,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(modifiedBy)
                 .append(modifiedOn)
                 .append(alwaysOpen)
+                .append(subsidyControl)
                 .toHashCode();
     }
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -22,7 +23,10 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId) {
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    public Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId, long organisationId) {
         if (questionType != null) {
             switch (questionType) {
                 case APPLICATION_DETAILS:
@@ -34,12 +38,24 @@ public class ApplicationUrlHelper {
                 case APPLICATION_TEAM:
                     return Optional.of(format("/application/%d/form/question/%d/team", applicationId, questionId));
                 case TERMS_AND_CONDITIONS:
-                    return Optional.of(format("/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId));
+                    return Optional.of(format("/application/%d/form/terms-and-conditions/organisation/%d/question/%d", applicationId, organisationId, questionId));
                 case RESEARCH_CATEGORY:
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
+                default:
+                    // do nothing
+            }
+            if (questionType.isQuestionnaire()) {
+                return Optional.of(format("/application/%d/form/organisation/%d/question/%d/questionnaire", applicationId, organisationId, questionId));
             }
             if (questionType.hasFormInputResponses()) {
-                return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
+
+                Boolean hasMultipleStatuses = questionRestService.findById(questionId).getSuccess().hasMultipleStatuses();
+
+                if (Boolean.TRUE.equals(hasMultipleStatuses)) {
+                    return Optional.of(format("/application/%d/form/organisation/%d/question/%d/generic", applicationId, organisationId, questionId));
+                } else {
+                    return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
+                }
             }
         }
         return Optional.empty();
@@ -49,6 +65,8 @@ public class ApplicationUrlHelper {
         switch (sectionType) {
             case FUNDING_FINANCES:
                 return Optional.of(String.format("/application/%d/form/your-funding/organisation/%d/section/%d", applicationId, organisationId, sectionId));
+            case FEC_COSTS_FINANCES:
+                return Optional.of(String.format("/application/%d/form/your-fec-model/organisation/%d/section/%d", applicationId, organisationId, sectionId));
             case PROJECT_COST_FINANCES:
                 CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
                 OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
@@ -77,8 +95,9 @@ public class ApplicationUrlHelper {
             case GENERAL:
             case TERMS_AND_CONDITIONS:
                 return Optional.of(String.format("/application/%d", applicationId));
+            default:
+                return Optional.empty();
         }
-        return Optional.empty();
     }
 
 }

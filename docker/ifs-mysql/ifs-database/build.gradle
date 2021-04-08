@@ -9,7 +9,11 @@ ext.testSchema = "ifs_test"
 
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/"}
+        mavenCentral()
+    }
 }
 
 task updateIfsWebUser(type: Exec) {

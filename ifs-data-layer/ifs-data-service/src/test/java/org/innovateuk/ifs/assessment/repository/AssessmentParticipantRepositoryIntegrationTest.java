@@ -601,7 +601,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndAssessorNameLike(
                 competition.getId(),
@@ -698,7 +698,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),
@@ -797,7 +797,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),
@@ -849,7 +849,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),
@@ -925,7 +925,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),
@@ -1002,7 +1002,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),
@@ -1073,7 +1073,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),
@@ -1174,7 +1174,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         assertEquals(4, repository.count());
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<AssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContainsAndCompliantAndAssessorNameLike(
                 competition.getId(),

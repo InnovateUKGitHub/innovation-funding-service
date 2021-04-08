@@ -3,8 +3,10 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -79,4 +81,6 @@ public interface QuestionStatusService {
             "'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(long applicationId, long assigneeId);
 
+    @NotSecured(value = "This Service is to be used within other secured services")
+    ServiceResult<Void> resetDependentQuestions(QuestionSetupType subsidyBasis, long application, long organisation);
 }

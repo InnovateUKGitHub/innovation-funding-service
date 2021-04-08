@@ -215,6 +215,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
+    public CompetitionResourceBuilder withOtherFundingRulesTermsAndConditions(GrantTermsAndConditionsResource... value) {
+        return withArray((template, competition) -> competition.setOtherFundingRulesTermsAndConditions(template), value);
+    }
+
     public CompetitionResourceBuilder withFundingRules(FundingRules... fundingRules) {
         return withArraySetFieldByReflection("fundingRules", fundingRules);
     }
@@ -297,6 +301,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withCompetitionApplicationConfig(CompetitionApplicationConfigResource... competitionApplicationConfigResources) {
         return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfigResources);
+    }
+
+    public CompetitionResourceBuilder withSubsidyControl(Boolean... subsidyControls) {
+        return withArraySetFieldByReflection("subsidyControl", subsidyControls);
+    }
+
+    public CompetitionResourceBuilder withProcurementMilestones(boolean... procurementMilestones) {
+        return withArray((procurementMilestone, competitionResource) -> competitionResource.setProcurementMilestones(procurementMilestone), procurementMilestones);
     }
 
     @Override

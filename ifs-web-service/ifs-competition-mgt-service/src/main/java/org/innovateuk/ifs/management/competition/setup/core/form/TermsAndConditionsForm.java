@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 public class TermsAndConditionsForm extends CompetitionSetupForm {
 
-    @NotNull(message = "validation.termsandconditionsform.field.required")
+    @NotNull(message = "{validation.termsandconditionsform.field.required}")
     private Long termsAndConditionsId;
 
     private MultipartFile termsAndConditionsDoc;

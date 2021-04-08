@@ -75,14 +75,14 @@ ${projectSetupCompMgtDetailsPage}  ${server}/project-setup-management/competitio
 Internal finance can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
-    Given the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}   ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award
-    Then the user navigates to the page           ${Internal_Competition_Status}
+    Given the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}   ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award   Innovate UK
+    Then the user navigates to the page                                         ${Internal_Competition_Status}
 
 Competition admin can see competition terms and conditions
     [Documentation]  IFS-5920
     [Tags]
-    Given Log in as a different user            &{Comp_admin1_credentials}
-    Then the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}  ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award
+    Given Log in as a different user                                           &{Comp_admin1_credentials}
+    Then the internal user should see read only view of terms and conditions   ${Internal_Competition_Status}  ${PS_PD_Application_Id}  Terms and conditions of an Innovate UK grant award   Innovate UK
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 INFUND-5507 INFUND-5543
@@ -324,10 +324,12 @@ Internal user can view project details via the clickable 'hour glass' for Projec
     the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td.waiting:nth-child(2)  # Project details
 
 the user should see the grant award terms and conditions
-    the user clicks the button/link        link = ${PS_PD_Application_Title}
-    the user clicks the button/link        link = view the award terms and conditions
-    the user should see the element        jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
+    the user clicks the button/link            link = ${PS_PD_Application_Title}
+    the user clicks the button/link            link = view the award terms and conditions
+    the user clicks the button/link            jQuery = a:contains("Innovate UK")
+    the user should see the element            jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user goes back to the previous page
+    the user clicks the button/link            jQuery = a:contains("Back to set up your project")
 
 the user checks for project detail status on team status page
     [Arguments]  ${partner}
@@ -361,7 +363,7 @@ the user logs in and navigates to project details
 
 the user checks for target start date validation
     the user clicks the button/link                 link = Target start date
-    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("10 months")
+    the user should see the element                 jQuery = h2:contains("Project duration") ~ p:contains("3 months")
     the user enters text to a text field            id = projectStartDate-date_year    2019
     the user clicks the button/link                 jQuery = .govuk-button:contains("Save")
     the user should see a field and summary error   Please enter a future date.

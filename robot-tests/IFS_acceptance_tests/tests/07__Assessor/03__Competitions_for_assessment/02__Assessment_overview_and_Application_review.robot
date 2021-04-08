@@ -350,13 +350,13 @@ the users should see detailed finance overview
     the academic finances are correct
 
 the terms and condition question should not be scorable
-    the user should see the element         jQuery = ul li:contains("Award terms and conditions") .task-status:contains("No score required")
-    the user clicks the button/link         link = Award terms and conditions
+    the user should see the element         jQuery = ul li:contains("Award terms and conditions")
     the user should not see the element     jQuery = label:contains("Question score")
 
 the user should see read only view of terms and conditions
+    the user clicks the button/link         jQuery = a:contains("Innovate UK")
     the user should see the element         jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     the user should not see the element     jQuery = button:contains("Agree and continue")
     the user should not see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
     the user should not see the element     link = Return to application overview
-    the user clicks the button/link         link = Back to your assessment overview
+    the user clicks the button/link         jQuery = a:contains("Back to assessment overview")

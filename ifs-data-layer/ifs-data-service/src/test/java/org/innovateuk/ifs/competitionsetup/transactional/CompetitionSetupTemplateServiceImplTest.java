@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.SubsidyControlTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.KtpTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.LoanTemplate;
@@ -74,6 +76,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private KtpTemplate ktpTemplate;
 
     @Mock
+    private SubsidyControlTemplate subsidyControlTemplate;
+    @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Before
@@ -82,8 +86,10 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(loanTemplate.type()).thenReturn(FundingType.LOAN);
         when(grantTemplate.type()).thenReturn(FundingType.GRANT);
         when(ktpTemplate.type()).thenReturn(FundingType.KTP);
+        when(subsidyControlTemplate.type()).thenReturn(FundingRules.SUBSIDY_CONTROL);
         service.setCompetitionTemplates(newArrayList(programmeTemplate));
         service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate));
+        service.setFundingRulesTemplates(newArrayList(subsidyControlTemplate));
     }
 
     @Test
@@ -142,6 +148,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFundingType(FundingType.GRANT)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .build();
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
@@ -160,6 +167,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+        verify(subsidyControlTemplate).sections(any(), any());
     }
 
     @Test
