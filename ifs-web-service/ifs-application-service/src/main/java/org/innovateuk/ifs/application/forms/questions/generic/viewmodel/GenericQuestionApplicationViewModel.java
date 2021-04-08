@@ -28,6 +28,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final String questionGuidanceTitle;
     private final String questionGuidance;
     private final QuestionSetupType questionType;
+    private final boolean questionHasMultipleStatuses;
 
     private final Long textAreaFormInputId;
     private final Integer wordCount;
@@ -62,7 +63,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser,
                                                String applicationName, String questionName, String questionNumber, String questionSubtitle,
                                                String questionDescription, String questionDescription2, String questionGuidanceTitle, String questionGuidance,
-                                               QuestionSetupType questionType, Long textAreaFormInputId,
+                                               QuestionSetupType questionType, boolean questionHasMultipleStatuses, Long textAreaFormInputId,
                                                Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance,
                                                Set<FileTypeCategory> appendixAllowedFileTypes, List<GenericQuestionAppendix> appendices,
                                                Integer maximumAppendices, Long templateDocumentFormInputId, String templateDocumentTitle,
@@ -83,6 +84,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.questionGuidanceTitle = questionGuidanceTitle;
         this.questionGuidance = questionGuidance;
         this.questionType = questionType;
+        this.questionHasMultipleStatuses = questionHasMultipleStatuses;
         this.textAreaFormInputId = textAreaFormInputId;
         this.wordCount = wordCount;
         this.wordsLeft = wordsLeft;
@@ -160,6 +162,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     public QuestionSetupType getQuestionType() {
         return questionType;
+    }
+
+    public boolean isQuestionHasMultipleStatuses() {
+        return questionHasMultipleStatuses;
     }
 
     public Long getTextAreaFormInputId() {
@@ -310,6 +316,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private String questionGuidanceTitle;
         private String questionGuidance;
         private QuestionSetupType questionType;
+        private boolean questionHasMultipleStatuses;
         private Long textAreaFormInputId;
         private Integer wordCount;
         private Integer wordsLeft;
@@ -403,6 +410,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
         public GenericQuestionApplicationViewModelBuilder withQuestionType(QuestionSetupType questionType) {
             this.questionType = questionType;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withQuestionHasMultipleStatus(boolean questionHasMultipleStatuses) {
+            this.questionHasMultipleStatuses = questionHasMultipleStatuses;
             return this;
         }
 
@@ -524,7 +536,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
                     questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
-                    questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
+                    questionType, questionHasMultipleStatuses, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
                     appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
                     open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption);
