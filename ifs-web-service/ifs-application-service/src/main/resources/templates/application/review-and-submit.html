@@ -50,7 +50,7 @@
 
         <th:block th:insert="application/readonly/application-read-only :: accordion  (${model.applicationReadOnlyViewModel})" />
 
-        <th:block th:if="${model.competition.isOpen() and model.application.isOpen() and model.userIsLeadApplicant}">
+        <th:block th:if="${model.competition.isOpen() and model.application.isOpen() and model.userIsLeadApplicant and model.hasBusinessAndFinancalInformationQuestion()}">
             <div class="message-alert">
                 <p class="govuk-body">You must ensure that the business information and financial spreadsheet have been completed before you click submit below. Your loan application will not be considered without these.</p>
             </div>

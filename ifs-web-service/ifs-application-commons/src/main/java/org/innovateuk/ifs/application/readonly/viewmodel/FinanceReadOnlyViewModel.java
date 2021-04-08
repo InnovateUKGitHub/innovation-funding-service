@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummar
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
 
@@ -97,6 +98,11 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     @Override
     public String getFragment() {
         return "finance-summary";
+    }
+
+    @Override
+    public QuestionSetupType getQuestionSetupType() {
+        return null;
     }
 
     @Override
