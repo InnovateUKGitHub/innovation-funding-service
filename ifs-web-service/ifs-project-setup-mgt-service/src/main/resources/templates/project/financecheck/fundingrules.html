@@ -41,7 +41,7 @@
                                     class="govuk-checkboxes__input"
                                     type="checkbox"
                                     th:field="*{overrideFundingRules}"
-                                    data-switches-button-status="#confirm-button" />
+                                    data-switches-button-status="#save-and-return" />
                             <label for="override-funding-rules"
                                    class="govuk-label govuk-checkboxes__label">
                                 Change funding rules to <b th:text="${model.otherFundingRules.displayName}">something</b>.
@@ -52,7 +52,7 @@
                 <div class="message-alert" th:if="${model.showUpdatedMessage}">
                     <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
                 </div>
-                <button name="save-and-return" class="govuk-button">Save and return</button>
+                <button id="save-and-return" name="save-and-return" class="govuk-button">Save and return</button>
             </form>
         </th:block>
 
