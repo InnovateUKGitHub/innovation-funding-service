@@ -52,7 +52,7 @@ ENV UID=996
 ENV PW=default
 
 RUN groupadd -g ${GID} zap && \
-  useradd -p ${PW} -u ${UID} -g ${GID} -d /home/zap -m -s /bin/bash zap
+  useradd -p ${PW} -u ${UID} -g ${GID} -d /home/zap -s /bin/bash -m zap
 
 VOLUME /mnt/ifs_storage
 
@@ -103,7 +103,7 @@ ENV PATH $JAVA_HOME/bin:/zap/:$PATH
 ENV ZAP_PATH /zap/zap.sh
 
 # Default port for use with zapcli
-ENV ZAP_PORT 8080
+ENV ZAP_PORT 8090
 ENV IS_CONTAINERIZED true
 ENV HOME /home/zap/
 ENV LC_ALL=C.UTF-8
@@ -128,7 +128,7 @@ RUN chown -R zap:zap /zap/* && \
     chmod 777 -R /home/zap/.ZAP/
 
 #Change back to zap at the end
-USER zap
+USER 996:993
 
 HEALTHCHECK --retries=5 --interval=5s CMD zap-cli status
 
