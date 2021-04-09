@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
@@ -118,6 +119,7 @@ public class ApplicationOverviewModelPopulatorTest {
         List<SectionResource> sections = newSectionResource()
                 .withPriority(1, 2, 3, 4)
                 .withName("Section with questions", "Finances", "Project details", "Terms and conditions")
+                .withType(SectionType.GENERAL, SectionType.FINANCES, SectionType.PROJECT_DETAILS, SectionType.TERMS_AND_CONDITIONS)
                 .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList())
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList())
                 .build(4);

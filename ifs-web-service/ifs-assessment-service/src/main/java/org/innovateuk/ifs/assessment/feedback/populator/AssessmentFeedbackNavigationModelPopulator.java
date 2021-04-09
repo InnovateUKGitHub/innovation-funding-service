@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.form.resource.SectionType.KTP_ASSESSMENT;
+import static org.innovateuk.ifs.form.resource.SectionType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
 
 /**
  * Build the model for Assessment Feedback navigation view.
@@ -67,7 +66,7 @@ public class AssessmentFeedbackNavigationModelPopulator extends AssessmentModelP
 
     private boolean isAssessmentQuestion(QuestionResource question) {
         SectionResource section = sectionService.getById(question.getSection());
-        return newArrayList(GENERAL, KTP_ASSESSMENT).contains(section.getType())
+        return newArrayList(GENERAL, APPLICATION_QUESTIONS, PROJECT_DETAILS, KTP_ASSESSMENT).contains(section.getType())
                 && (question.getQuestionSetupType() != APPLICATION_TEAM)
                 && (question.getQuestionSetupType() != RESEARCH_CATEGORY);
     }
