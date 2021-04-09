@@ -142,11 +142,10 @@ class RoboZap(object):
 
         """
         print("print context Id, scan_id start")
-        print(context_id)
 
         try:
             scan_id = self.zap.ascan.scan(
-                contextid=context_id, url="https://ifs.local-dev", scanpolicyname=policy
+                contextid=1, url="https://ifs.local-dev", scanpolicyname=policy
             )
             time.sleep(2)
             print(scan_id)
