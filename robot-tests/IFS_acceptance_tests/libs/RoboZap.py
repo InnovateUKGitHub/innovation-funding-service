@@ -42,7 +42,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -daemon -config api.disablekey=true -port {0}".format(
+            cmd = "/zap/" + "zap.sh -daemon -config api.disablekey=true -port 8090".format(
                 self.port
             )
             print(cmd)
@@ -61,7 +61,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port {0}".format(
+            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port 8090".format(
                 self.port
             )
             print(cmd)
@@ -262,7 +262,7 @@ class RoboZap(object):
 
         """
 
-        url = "http://localhost:{0}/JSON/exportreport/action/generate/".format(
+        url = "http://localhost:8090/JSON/exportreport/action/generate/".format(
             self.port
         )
         export_path = "/zap/zapreport.json"
