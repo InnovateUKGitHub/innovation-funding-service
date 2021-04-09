@@ -42,7 +42,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -daemon -config api.disablekey=true -port 8090".format(
+            cmd = "/zap/" + "zap.sh -daemon -dir /home/zap/.ZAP/ -config api.disablekey=true -port 8090".format(
                 self.port
             )
             print(cmd)
