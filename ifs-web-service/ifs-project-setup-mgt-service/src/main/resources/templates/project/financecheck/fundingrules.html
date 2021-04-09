@@ -50,14 +50,14 @@
                     </div>
                 </div>
                 <div class="message-alert" th:if="${model.showUpdatedMessage}">
-                    <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
+                    <p class="govuk-body">The funding rules have changed, this may affect the eligible funding levels. You must review the project to make sure it is still eligible for funding.</p>
                 </div>
                 <button id="save-and-return" name="save-and-return" class="govuk-button">Save and return</button>
             </form>
         </th:block>
 
         <div class="message-alert" th:if="${model.showUpdatedMessage and !model.editMode}">
-            <p class="govuk-body">The funding rules have changed, this may affect the funding levels. You must review the project to make sure it is still eligible for funding.</p>
+            <p class="govuk-body">The funding rules have changed, this may affect the eligible funding levels. You must review the project to make sure it is still eligible for funding.</p>
         </div>
 
         <th:block th:insert="questionnaire/fragments :: answer-table(${model.questionsAndAnswers})" />
