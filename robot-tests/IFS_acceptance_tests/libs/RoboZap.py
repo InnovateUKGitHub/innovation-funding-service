@@ -92,7 +92,7 @@ class RoboZap(object):
         | zap define context  | contextname  | target |
 
         """
-        regex = "{0}.*".format("https://ifs.local-dev")
+        regex = "{0}.*".format("https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org")
         print("logging context start")
         context_id = self.zap.context.new_context(contextname="test")
         time.sleep(1)
@@ -114,7 +114,7 @@ class RoboZap(object):
         """
         try:
 
-            spider_id = self.zap.spider.scan(url="https://ifs.local-dev", contextname="test")
+            spider_id = self.zap.spider.scan(url="https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org", contextname="test")
             time.sleep(2)
             return spider_id
         except Exception as e:
@@ -145,7 +145,7 @@ class RoboZap(object):
 
         try:
             scan_id = self.zap.ascan.scan(
-                contextid=1, url="https://ifs.local-dev", scanpolicyname=policy
+                contextid=1, url="https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org", scanpolicyname=policy
             )
             time.sleep(2)
             print(scan_id)
