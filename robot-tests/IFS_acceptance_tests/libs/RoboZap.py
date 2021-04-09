@@ -145,7 +145,7 @@ class RoboZap(object):
         except Exception as e:
             print(e.message)
 
-    def zap_scan_status(self, scan_id):
+    def zap_scan_status(self):
         """
         Fetches the status for the spider id provided by the user
 
