@@ -51,6 +51,8 @@ public class KtpTemplateTest {
 
     @Test
     public void initialiseFinanceTypesForKTPWhenFecFinanceModelEnabled() {
+        ReflectionTestUtils.setField(template, "fecFinanceModel", true);
+
         Competition competition = CompetitionBuilder
                 .newCompetition()
                 .build();
