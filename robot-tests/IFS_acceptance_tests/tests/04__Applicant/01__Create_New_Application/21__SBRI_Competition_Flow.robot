@@ -80,7 +80,6 @@ Comp admin saves the completition stage with competition close option
     When the user navigates to completition stage
     And the user saves the completion stage with competition close     COMPETITION_CLOSE
     Then the user should see competition close in read only page       Competition close
-    zap scan status
     Zap Write To Json File
 
 Comp admin edits the completition stage with competition close option
