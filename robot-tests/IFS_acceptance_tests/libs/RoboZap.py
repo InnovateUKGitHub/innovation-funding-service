@@ -211,7 +211,7 @@ class RoboZap(object):
         print("json string is ")
 
         filename = "{0}.json".format(str(uuid.uuid4()))
-        with open(filename, "wb") as json_file:
+        with open(filename, "w") as json_file:
             json_file.write(json.dumps(all_vuls))
 
         return filename
