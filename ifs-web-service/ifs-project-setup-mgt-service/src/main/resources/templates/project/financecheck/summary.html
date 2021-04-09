@@ -125,7 +125,11 @@
                         <th:block th:if="${orgDetails.lead && model.collaborativeProject}"> (Lead)</th:block>
                     </th>
                     <td th:if="${model.subsidyControlCompetition}" class="govuk-table__cell aligncentre">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                        <a th:if="${orgDetails.fundingRulesState == null}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                           class="govuk-link">Review</a>
+                        <a th:unless="${orgDetails.fundingRulesState == null}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.fundingrules.' + orgDetails.fundingRulesState)}"
                            class="govuk-link">Review</a>
                     </td>
