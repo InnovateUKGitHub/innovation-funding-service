@@ -39,7 +39,7 @@ public class ProcurementTemplate implements FundingTypeTemplate {
         }
 
         competitionTypeSections.stream()
-                .filter(section -> section.getName().equals("Finances"))
+                .filter(section -> section.getType() == SectionType.FINANCES)
                 .flatMap(section -> section.getChildSections().stream())
                 .filter(section -> section.getType() == SectionType.FINANCE)
                 .findAny()
