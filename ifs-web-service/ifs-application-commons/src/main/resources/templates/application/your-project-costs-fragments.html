@@ -4050,7 +4050,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 <!--/*</editor-fold>*/-->
 
 <th:block th:fragment="internal_view_buttons (financeType)">
-    <div class="alignright-button" th:if="${model.open}">
+    <div class="alignright-button" th:if="${model.open and model.showEditButton(financeType)}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}"
            th:if="${model.isReadOnly(financeType)}"
            class="govuk-button govuk-button--secondary">Edit</a>
