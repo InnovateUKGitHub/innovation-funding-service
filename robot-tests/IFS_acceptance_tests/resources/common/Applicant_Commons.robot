@@ -915,3 +915,17 @@ the user completes project costs table for non-fec model
     the user clicks the button/link                         exceed-limit-no
     the user clicks the button/link                         css = label[for="stateAidAgreed"]
     the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
+the partner applicant marks Your project finances information as complete
+    [Arguments]   ${otherFundingID}  ${org_size}  ${month}   ${Year}
+    the user clicks the button/link                link = Other funding
+    the user selects the radio button              otherFunding  ${otherFundingID}
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user enters the project location
+    the user clicks the button/link                link = Your organisation
+    the user selects the radio button              organisationSize  ${org_size}
+    the user enters text to a text field           financialYearEndMonthValue    ${month}
+    the user enters text to a text field           financialYearEndYearValue    ${Year}
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                link = Back to application overview
+

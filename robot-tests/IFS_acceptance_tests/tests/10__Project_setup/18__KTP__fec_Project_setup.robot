@@ -26,22 +26,45 @@ Lead applicant can view the project finances section is complete
     When the user completes your project finances section
     Then the user should see the element                       jQuery = li:contains("Your project finances") span:contains("Complete")
 
+Lead applicant can view the correct project costs fields are displayed for the fec model
+    [Documentation]  IFS-9305
+   Given the user clicks the button/link    link = Your project finances
+   When the user clicks the button/link     link = Your project costs
+   Then the user should see the element     jQuery = h3:contains("Knowledge base supervisor")
+   And the user should see the element      jQuery = h3:contains("Associates estates costs")
+   And the user should see the element      jQuery = h3:contains("Additional associate support")
+   And the user clicks the button/link      link = Your project finances
+
 Lead applicant edits the fec model to NO
     [Documentation]  IFS-9305
-    Given the user clicks the button/link       link = Your project finances
-    And the user edits the KTP fec model        fecModelEnabled-no
+    Given the user edits the KTP fec model      fecModelEnabled-no
     Then The user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
     And the user should see the element         jQuery = li:contains("Your project costs") span:contains("Incomplete")
 
 Lead applicant should view the correct project costs are displayed for non-fec selection
     [Documentation]  IFS-9305
-    Given the user clicks the button/link       link = Your project costs
+    Given the user clicks the button/link                                   link = Your project costs
     Then the user views the project finance details for non-fec selection
 
 Lead applicant completes the project finances section for non-fec model
     [Documentation]  IFS-9305
-    Given the user clicks the button/link     jQuery = button:contains("Open all")
+    Given the user clicks the button/link                             jQuery = button:contains("Open all")
     Then the user completes project costs table for non-fec model     1  100  Supervisor  1  test  3  test  5
+
+Partner applicant completes the application
+    [Documentation]  IFS-9305
+    Given Log in as a different user                                                   &{collaborator1_credentials}
+    When The user navigates to the page                                                ${server}/application/${KTPapplicationId}
+    And the user clicks the button/link                                                link = Your project finances
+    Then the partner applicant marks Your project finances information as complete     other-funding-no   ${SMALL_ORGANISATION_SIZE}  12  2020
+    And the user accept the competition terms and conditions                           Return to application overview
+
+Lead applicant submits the application
+    [Documentation]  IFS-9305
+    Given log in as a different user                              &{KTPLead}
+    When The user navigates to the page                           ${server}/application/${KTPapplicationId}
+    Then the user accept the competition terms and conditions     Return to application overview
+    And the applicant submits the application
 
 *** Keywords ***
 Custom Suite Setup
@@ -69,20 +92,3 @@ the user views the project finance details for non-fec selection
     the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
     the user should not see the element     jQuery = button:contains("Additional associate support")
     the user should not see the element     jQuery = button:contains("Associates estates costs")
-
-
-#the user completes the project cost table and marks as complete
-#    the user enters text to a text field                    id = academicAndSecretarialSupportForm  100
-#    the user selects the option from the drop-down menu     Supervisor  jQuery = div:contains(Travel and subsistence) tr:nth-of-type(1) select[name^="ktp"][name$="type"]
-#    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(1) textarea[name^="ktp"][name$="description"]  Knowledge Base biweekly travel
-#    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(1) input[name^="ktp"][name$="times"]  30
-#    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(1) input[name^="ktp"][name$="eachCost"]  185
-#    the user enters text to a text field      Supervisor  1  Knowledge Base biweekly travel  30  185
-#    the user enters text to a text field                    css = input[id^="consumableCost"][id$="item"]  consumable
-#    the user enters text to a text field                    css = input[id^="consumableCost"][id$="quantity"]       2
-#    the user enters text to a text field                    css = input[id^="consumableCost"][id$="cost"]       1000
-#    the user enters text to a text field                    css = textarea[id^="otherRows"][id$="description"]    Other costs
-#    the user enters text to a text field                    css = input[id^="otherRows"][id$="estimate"]       1000
-#    the user clicks the button/link                         exceed-limit-no
-#    the user clicks the button/link                         css = label[for="stateAidAgreed"]
-#    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
