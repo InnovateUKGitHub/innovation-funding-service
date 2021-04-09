@@ -14,6 +14,7 @@ import boto3
 class RoboZap(object):
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
     scan_id = ""
+    context_id = ""
     def __init__(self):
         """
         ZAP Library can be imported with one argument
@@ -138,7 +139,7 @@ class RoboZap(object):
         """
         try:
             scan_id = self.zap.ascan.scan(
-                contextid="test", url="https://ifs.local-dev", scanpolicyname=policy
+                contextid=context_id, url="https://ifs.local-dev", scanpolicyname=policy
             )
             time.sleep(2)
             return scan_id
