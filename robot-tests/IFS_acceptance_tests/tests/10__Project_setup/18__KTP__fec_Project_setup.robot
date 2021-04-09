@@ -21,6 +21,7 @@ ${associateDevelopmentTable}              associate-development-costs-table
 ${limitFieldValidationMessage}            You must provide justifications for exceeding allowable cost limits.
 ${academic_secretarial_support_table}     academic-secretarial-costs-table
 ${academicSecretarialCost}                academic-secretarial-costs
+${cost_value}                             100
 
 *** Test Cases ***
 Lead applicant can view the project finances section is complete
@@ -31,28 +32,28 @@ Lead applicant can view the project finances section is complete
 
 Lead applicant can view the correct project costs fields are displayed for the fec model
     [Documentation]  IFS-9305
-   Given the user clicks the button/link    link = Your project finances
-   When the user clicks the button/link     link = Your project costs
-   Then the user should see the element     jQuery = h3:contains("Knowledge base supervisor")
-   And the user should see the element      jQuery = h3:contains("Associates estates costs")
-   And the user should see the element      jQuery = h3:contains("Additional associate support")
-   And the user clicks the button/link      link = Your project finances
+    Given the user clicks the button/link     link = Your project finances
+    When the user clicks the button/link      link = Your project costs
+    Then the user should see the element      jQuery = h3:contains("Knowledge base supervisor")
+    And the user should see the element       jQuery = h3:contains("Associates estates costs")
+    And the user should see the element       jQuery = h3:contains("Additional associate support")
+    And the user clicks the button/link       link = Your project finances
 
 Lead applicant edits the fec model to NO
     [Documentation]  IFS-9305
-    Given the user edits the KTP fec model      fecModelEnabled-no
-    Then the user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
-    And the user should see the element         jQuery = li:contains("Your project costs") span:contains("Incomplete")
+    Given the user edits the KTP fec model     fecModelEnabled-no
+    Then the user should see the element       jQuery = li:contains("Your fEC model") span:contains("Complete")
+    And the user should see the element        jQuery = li:contains("Your project costs") span:contains("Incomplete")
 
 Lead applicant should view the correct project costs are displayed for non-fec selection
     [Documentation]  IFS-9305
-    Given the user clicks the button/link                                   link = Your project costs
+    Given the user clicks the button/link                                     link = Your project costs
     Then the user views the project finance details for non-fec selection
 
 Lead applicant completes the project finances section for non-fec model
     [Documentation]  IFS-9305
     Given the user clicks the button/link                             jQuery = button:contains("Open all")
-    Then the user completes project costs table for non-fec model     1  100  Supervisor  1  test  3  test  5
+    Then the user completes project costs table for non-fec model     1  ${cost_value}  Supervisor  1  test  3  test  5
 
 Partner applicant completes the application
     [Documentation]  IFS-9305
@@ -112,7 +113,7 @@ internal user moves competition to project setup
     log in as a different user                            &{internal_finance_credentials}
     the user closed ktp assesment                         ${KTPcompetitonId}
     the user navigates to the page                        ${server}/project-setup-management/competition/${KTPcompetitonId}/status/all
-    the user refreshes until element appears on page     jQuery = tr div:contains("${KTPapplication}")
+    the user refreshes until element appears on page      jQuery = tr div:contains("${KTPapplication}")
 
 the user navigates to finance checks
     the user clicks the button/link     jQuery = li:contains("Project in setup") a:contains("${KTPapplication}")
@@ -122,11 +123,11 @@ the user should view their non-fec project finances
     the user should see the element         jQuery = h2:contains("Detailed finances")
     the user should see the element         jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") p:contains("No")
     the user should see the element         jQuery = button:contains("Open all")
-    the user should see the element         jQuery = span:contains("${xxxxx}") ~ button:contains("Academic and secretarial support")
-    the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${xxxxx}")
-    the user should see the element         jQuery = span:contains("${xxxxx}") ~ button:contains("Indirect costs")
-    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("${xxxxx}")
-    the user should see the element         jQuery = div:contains("Total project costs") input[value=£${xxxxx}]
+    the user should see the element         jQuery = span:contains("${cost_value}") ~ button:contains("Academic and secretarial support")
+    the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${cost_value}")
+    the user should see the element         jQuery = span:contains("${cost_value}") ~ button:contains("Indirect costs")
+    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("${cost_value}")
+    the user should see the element         jQuery = div:contains("Total project costs") input[value=£999]
     the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
     the user should not see the element     jQuery = button:contains("Associates estates costs")
     the user should not see the element     jQuery = button:contains("Additional associate support")
