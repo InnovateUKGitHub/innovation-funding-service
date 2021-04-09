@@ -93,10 +93,14 @@ class RoboZap(object):
 
         """
         regex = "{0}.*".format("https://ifs.local-dev")
+        print("logging context start")
         context_id = self.zap.context.new_context(contextname="test")
         time.sleep(1)
         self.zap.context.include_in_context("test", regex=regex)
         time.sleep(5)
+        print(context_id)
+        print(regex)
+        print("logging context end")
         return context_id
 
     def zap_start_spider(self):
