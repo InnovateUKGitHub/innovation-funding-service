@@ -141,11 +141,16 @@ class RoboZap(object):
         | zap start ascan  | context  | url |
 
         """
+        print("print context Id, scan_id start")
+        print(context_id)
+
         try:
             scan_id = self.zap.ascan.scan(
                 contextid=context_id, url="https://ifs.local-dev", scanpolicyname=policy
             )
             time.sleep(2)
+            print(scan_id)
+            print("print context Id, scan_id end")
             return scan_id
         except Exception as e:
             print(e.message)
