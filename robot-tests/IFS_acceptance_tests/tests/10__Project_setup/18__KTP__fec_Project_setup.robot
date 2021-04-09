@@ -1,7 +1,10 @@
 *** Settings ***
 Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fEC option changes
 ...
+...               IFS-9248  KTP fEC/Non-fEC: view non-fEC costs in project setup
+...
 Suite Setup       Custom Suite Setup
+Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 Resource          ../../resources/common/Competition_Commons.robot
@@ -42,6 +45,17 @@ Lead applicant completes the project finances section for non-fec model
     [Documentation]  IFS-9305
     Given the user clicks the button/link     jQuery = button:contains("Open all")
     Then the user completes project costs table for non-fec model     1  100  Supervisor  1  test  3  test  5
+
+#-------------- Seb's
+Lead applicant can view their non-FEC project finances in the Eligibility section
+    [Documentation]  IFS-9248
+    [Setup]  internal user moves competition to project setup
+    Given log in as a different user                             &{KTPLead}
+    When the user navigates to finance checks
+    And the user clicks the button/link                          link = your project finances
+    Then the user should view their non-fec project finances
+
+#-------------- Seb's
 
 *** Keywords ***
 Custom Suite Setup
@@ -86,3 +100,31 @@ the user views the project finance details for non-fec selection
 #    the user clicks the button/link                         exceed-limit-no
 #    the user clicks the button/link                         css = label[for="stateAidAgreed"]
 #    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
+internal user moves competition to project setup
+    moving competition to Closed                          ${KTPcompetitonId}
+    log in as a different user                            &{internal_finance_credentials}
+    the user closed ktp assesment                         ${KTPcompetitonId}
+    the user navigates to the page                        ${server}/project-setup-management/competition/${KTPcompetitonId}/status/all
+    the user refreshes until element appears on page     jQuery = tr div:contains("${KTPapplication}")
+
+the user navigates to finance checks
+    the user clicks the button/link     jQuery = li:contains("Project in setup") a:contains("${KTPapplication}")
+    the user clicks the button/link     link = Finance checks
+
+the user should view their non-fec project finances
+    the user should see the element         jQuery = h2:contains("Detailed finances")
+    the user should see the element         jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") p:contains("No")
+    the user should see the element         jQuery = button:contains("Open all")
+    the user should see the element         jQuery = span:contains("${xxxxx}") ~ button:contains("Academic and secretarial support")
+    the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${xxxxx}")
+    the user should see the element         jQuery = span:contains("${xxxxx}") ~ button:contains("Indirect costs")
+    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("${xxxxx}")
+    the user should see the element         jQuery = div:contains("Total project costs") input[value=£${xxxxx}]
+    the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
+    the user should not see the element     jQuery = button:contains("Associates estates costs")
+    the user should not see the element     jQuery = button:contains("Additional associate support")
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
