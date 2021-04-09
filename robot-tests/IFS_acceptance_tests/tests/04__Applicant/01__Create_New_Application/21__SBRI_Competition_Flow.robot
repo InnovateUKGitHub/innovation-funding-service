@@ -75,6 +75,7 @@ Comp admin saves the completition stage with competition close option
     [Documentation]  IFS-7313
     start headless zap
     zap define context
+    zap start spider
     zap start ascan
     Given the user completes initial details of the competition        ${sbriType1CompetitionName}  PROCUREMENT
     When the user navigates to completition stage

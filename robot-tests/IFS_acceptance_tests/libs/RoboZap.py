@@ -116,6 +116,7 @@ class RoboZap(object):
 
             spider_id = self.zap.spider.scan(url="https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org", contextname="test")
             time.sleep(2)
+            print("spider id ",spider_id)
             return spider_id
         except Exception as e:
             print((e.message))
