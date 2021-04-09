@@ -172,10 +172,10 @@ class RoboZap(object):
         """
         print("writing json to a file")
         core = self.zap.core
-        print("zap core" + core)
+
         all_vuls = []
         for i, na in enumerate(core.alerts(baseurl="http://localhost:8090")):
-            print("current iteration " + na)
+            print("current iteration ")
             vul = {}
             vul["name"] = na["alert"]
             vul["confidence"] = na.get("confidence", "")
@@ -205,12 +205,11 @@ class RoboZap(object):
                 vul["request"] = request
                 vul["response"] = response
                 vul["rtt"] = int(message["rtt"])
-                print("current value is " + vul)
-                logger.info("log current value is " + vul)
+
             all_vuls.append(vul)
 
-        print("json string is "+ all_vuls)
-        logger.info("logging value " + all_vuls)
+        print("json string is ")
+
         filename = "{0}.json".format(str(uuid.uuid4()))
         with open(filename, "wb") as json_file:
             json_file.write(json.dumps(all_vuls))
