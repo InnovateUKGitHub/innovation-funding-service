@@ -33,8 +33,8 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'assessor', 'monitoring_officer', 'supporter')")
+@SecuredBySpring(value = "Controller", description = "ApplicationDownloadController")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'assessor', 'monitoring_officer', 'supporter', 'support', 'innovation_lead')")
 public class ApplicationDownloadController {
 
     @Autowired
@@ -69,11 +69,11 @@ public class ApplicationDownloadController {
     }
 
     private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
-        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER)) {
-                return processRoles.stream()
-                        .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
-                        .findFirst()
-                        .orElseThrow(this::roleNotFound);
+        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER) || user.hasRole(Role.INNOVATION_LEAD)) {
+            return processRoles.stream()
+                    .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
+                    .findFirst()
+                    .orElseThrow(this::roleNotFound);
         } else {
             throw roleNotFound();
         }

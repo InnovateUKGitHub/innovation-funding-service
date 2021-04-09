@@ -31,6 +31,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -171,6 +172,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
 
+        setupApplicationProcessRoles(assessmentResource.getApplication());
+
         QuestionResource previousQuestionResource = newQuestionResource()
                 .withShortName("Previous question")
                 .withSection(sectionResource.getId())
@@ -201,7 +204,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentResource,
                 competitionResource,
                 questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 true,
                 false,
@@ -239,6 +244,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         SectionResource sectionResource = setupSection(SectionType.GENERAL);
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
+
+        setupApplicationProcessRoles(assessmentResource.getApplication());
 
         QuestionResource previousQuestionResource = newQuestionResource()
                 .withShortName("Previous question")
@@ -286,7 +293,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource,
                 questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 true,
                 false,
@@ -325,6 +334,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         SectionResource financeSectionResource = setupSection(SectionType.FINANCE);
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
+
+        setupApplicationProcessRoles(assessmentResource.getApplication());
 
         QuestionResource previousQuestionResource = newQuestionResource()
                 .withShortName("Previous question")
@@ -518,6 +529,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
 
+        setupApplicationProcessRoles(assessmentResource.getApplication());
+
         QuestionResource previousQuestionResource = newQuestionResource()
                 .withShortName("Previous question")
                 .withSection(sectionResource.getId())
@@ -546,7 +559,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         List<ResearchCategoryResource> researchCategoryResources = setupResearchCategories();
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource, questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 false,
                 true,
@@ -587,6 +602,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
 
+        setupApplicationProcessRoles(assessmentResource.getApplication());
+
         QuestionResource previousQuestionResource = newQuestionResource()
                 .withShortName("Previous question")
                 .withSection(sectionResource.getId())
@@ -616,7 +633,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         List<ResearchCategoryResource> researchCategoryResources = null;
 
         AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource, competitionResource, questionResource,
+                false,
                 "Applicant response",
+                null,
                 assessmentFormInputs,
                 false,
                 true,
@@ -769,6 +788,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
 
+        setupApplicationProcessRoles(assessmentResource.getApplication());
+
         setupQuestionNavigation(questionResource.getId(), empty(), empty());
 
         List<FormInputResource> formInputs = setupAssessmentFormInputs(questionResource.getId(), ASSESSOR_SCORE, TEXTAREA);
@@ -830,6 +851,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
 
+        setupApplicationProcessRoles(assessmentResource.getApplication());
+
         setupQuestionNavigation(questionResource.getId(), empty(), empty());
 
         List<FormInputResource> formInputs = setupAssessmentFormInputs(questionResource.getId(), ASSESSOR_APPLICATION_IN_SCOPE);
@@ -884,6 +907,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         AssessmentResource assessmentResource = setupAssessment(competitionResource.getId(), applicationId);
 
         QuestionResource questionResource = setupQuestion(assessmentResource.getId());
+
+        setupApplicationProcessRoles(assessmentResource.getApplication());
 
         setupQuestionNavigation(questionResource.getId(), empty(), empty());
 
@@ -1064,5 +1089,11 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(categories));
         return categories;
+    }
+
+    private List<ProcessRoleResource> setupApplicationProcessRoles(Long applicationId) {
+        List<ProcessRoleResource> applicationProcessRoles = newProcessRoleResource().build(2);
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(applicationProcessRoles));
+        return applicationProcessRoles;
     }
 }

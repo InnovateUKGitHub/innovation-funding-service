@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -135,7 +136,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         when(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, false)).thenReturn(assignButtonsViewModel);
         when(assignButtonsViewModel.getAssignableApplicants()).thenReturn(newProcessRoleResource().build(1));
 
-        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion);
+        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion, Optional.empty());
 
         assertEquals((Long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
         assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());
@@ -252,7 +253,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         when(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, false)).thenReturn(assignButtonsViewModel);
         when(assignButtonsViewModel.getAssignableApplicants()).thenReturn(newProcessRoleResource().build(1));
 
-        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion);
+        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion, Optional.empty());
 
         assertEquals((Long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
         assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());
