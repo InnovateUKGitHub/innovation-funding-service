@@ -382,7 +382,7 @@ public class CompetitionWebTestData {
                 ktpCompetition()
                         .withName("KTP new competition duplicate"),
                 ktpCompetition()
-                        .withName("FEC KTP project competition")
+                        .withName("FEC KTP project competition"),
                 ktpCompetition()
                         .withName("FEC KTP competition duplicate")
         )
