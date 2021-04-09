@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewRowViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
@@ -45,6 +46,8 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QU
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +77,8 @@ public class ApplicationOverviewModelPopulatorTest {
     private QuestionService questionService;
     @Mock
     private AsyncFuturesGenerator asyncFuturesGenerator;
+    @Mock
+    private ApplicationUrlHelper applicationUrlHelper;
 
     @Before
     public void setupExpectations() {
@@ -132,7 +137,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
         when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
         when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
-
+        when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
@@ -157,7 +162,7 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewRowViewModel questionRow = sectionWithQuestions.getRows().iterator().next();
         assertEquals("4. A question", questionRow.getTitle());
-        assertEquals(String.format("/application/%d/form/question/%d/generic", application.getId(), questions.get(0).getId()), questionRow.getUrl());
+        assertEquals("/the-question-url", questionRow.getUrl());
         assertEquals(false, questionRow.isComplete());
         assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
         assertEquals(processRoles, questionRow.getAssignButtonsViewModel().get().getAssignableApplicants());
