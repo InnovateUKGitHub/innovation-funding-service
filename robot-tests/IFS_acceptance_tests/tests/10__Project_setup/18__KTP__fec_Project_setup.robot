@@ -22,9 +22,9 @@ ${academicSecretarialCost}                academic-secretarial-costs
 *** Test Cases ***
 Lead applicant can view the project finances section is complete
     [Documentation]  IFS-9305
-    Given the user clicks the button/link                      link = Your project finances
+    Given the user clicks the button/link                     link = Your project finances
     When the user completes your project finances section
-    Then the user should see the element                       jQuery = li:contains("Your project finances") span:contains("Complete")
+    Then the user should see the element                      jQuery = li:contains("Your project finances") span:contains("Complete")
 
 Lead applicant can view the correct project costs fields are displayed for the fec model
     [Documentation]  IFS-9305
@@ -38,7 +38,7 @@ Lead applicant can view the correct project costs fields are displayed for the f
 Lead applicant edits the fec model to NO
     [Documentation]  IFS-9305
     Given the user edits the KTP fec model      fecModelEnabled-no
-    Then The user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
+    Then the user should see the element        jQuery = li:contains("Your fEC model") span:contains("Complete")
     And the user should see the element         jQuery = li:contains("Your project costs") span:contains("Incomplete")
 
 Lead applicant should view the correct project costs are displayed for non-fec selection
@@ -54,7 +54,7 @@ Lead applicant completes the project finances section for non-fec model
 Partner applicant completes the application
     [Documentation]  IFS-9305
     Given Log in as a different user                                                   &{collaborator1_credentials}
-    When The user navigates to the page                                                ${server}/application/${KTPapplicationId}
+    When the user navigates to the page                                                ${server}/application/${KTPapplicationId}
     And the user clicks the button/link                                                link = Your project finances
     Then the partner applicant marks Your project finances information as complete     other-funding-no   ${SMALL_ORGANISATION_SIZE}  12  2020
     And the user accept the competition terms and conditions                           Return to application overview
@@ -62,7 +62,7 @@ Partner applicant completes the application
 Lead applicant submits the application
     [Documentation]  IFS-9305
     Given log in as a different user                              &{KTPLead}
-    When The user navigates to the page                           ${server}/application/${KTPapplicationId}
+    When the user navigates to the page                           ${server}/application/${KTPapplicationId}
     Then the user accept the competition terms and conditions     Return to application overview
     And the applicant submits the application
 
