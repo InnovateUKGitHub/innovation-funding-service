@@ -6,8 +6,7 @@ public enum FundingRulesEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
     FUNDING_RULES_UPDATED("funding-rules-updated"),
-    FUNDING_RULES_APPROVED("funding-rules-approved"),
-    FUNDING_RULES_RESET("funding-rules-reset");
+    FUNDING_RULES_APPROVED("funding-rules-approved");
 
     String event;
 

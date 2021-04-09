@@ -56,7 +56,7 @@ public class FundingRulesWorkflow extends StateMachineConfigurerAdapter<FundingR
                 .and()
                 .withExternal()
                 .source(APPROVED)
-                .event(FUNDING_RULES_RESET)
+                .event(FUNDING_RULES_UPDATED)
                 .target(REVIEW);
     }
 }
