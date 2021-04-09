@@ -5,13 +5,10 @@ import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsR
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
-import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
-import org.innovateuk.ifs.management.assessmentperiod.service.AssessmentPeriodService;
-import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
+import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
+import org.innovateuk.ifs.management.assessmentperiod.populator.AssessmentPeriodFormPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Populates the model for the 'Manage assessments' page.
@@ -26,7 +23,7 @@ public class ManageAssessmentsModelPopulator {
     private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
 
     @Autowired
-    private AssessmentPeriodService assessmentPeriodService;
+    private AssessmentPeriodFormPopulator assessmentPeriodFormPopulator;
 
     public ManageAssessmentsViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -34,9 +31,9 @@ public class ManageAssessmentsModelPopulator {
                 competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition
                         (competitionId).getSuccess();
 
-        List<AssessmentPeriodForm> milestonesForms = assessmentPeriodService.getAssessmentPeriodMilestonesForms(competitionId);
+        ManageAssessmentPeriodsForm assessmentPeriodForm = assessmentPeriodFormPopulator.populate(competitionId);
 
-        return new ManageAssessmentsViewModel(competition, keyStatistics, milestonesForms);
+        return new ManageAssessmentsViewModel(competition, keyStatistics, assessmentPeriodForm.getAssessmentPeriods());
     }
 
 }

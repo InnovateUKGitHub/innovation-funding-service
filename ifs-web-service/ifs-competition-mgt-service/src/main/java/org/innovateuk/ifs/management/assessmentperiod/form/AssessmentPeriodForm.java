@@ -9,7 +9,7 @@ import java.util.Map;
 public class AssessmentPeriodForm extends BaseBindingResultTarget {
 
     private Long assessmentPeriodId;
-    LinkedMap<String, MilestoneRowForm> milestoneEntries;
+    private LinkedMap<String, MilestoneRowForm> milestoneEntries;
 
     public void setMilestoneEntries(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
         this.milestoneEntries = milestoneEntries;

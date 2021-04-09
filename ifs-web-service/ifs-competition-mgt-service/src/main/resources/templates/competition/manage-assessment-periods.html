@@ -29,11 +29,11 @@
               data-section="milestones"
               novalidate="novalidate"
               method="post">
-            <th:block th:each="assessmentPeriod, pStat: ${form.formList}">
+            <th:block th:each="assessmentPeriod, pStat: ${form.assessmentPeriods}">
                 <input type="hidden"
                        required="required"
                        id="assessmentPeriodId"
-                       th:field="${form.formList[__${pStat.index}__].assessmentPeriodId}"
+                       th:field="${form.assessmentPeriods[__${pStat.index}__].assessmentPeriodId}"
                 />
                 <table class="govuk-table milestones-table">
                     <thead class="govuk-table__head">
@@ -73,7 +73,7 @@
                             <input type="hidden"
                                    required="required"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
-                                   th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].milestoneType}"
+                                   th:field="${form.assessmentPeriods[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].milestoneType}"
                                    th:value="${milestoneEntry.key}"/>
                             <input type="hidden"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
@@ -105,7 +105,7 @@
                                    th:attr="aria-labelledby=|day milestone-${milestoneEntry.key}|,
                                  data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|"
                                    th:value="${milestoneEntry.value.day}"
-                                   th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].day}"
+                                   th:field="${form.assessmentPeriods[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].day}"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
                                    th:readonly="${milestoneEntry.value.readonly}"
                             />
@@ -124,7 +124,7 @@
                                    th:attr="aria-labelledby=|day milestone-${milestoneEntry.key}|,
                                 data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|"
                                    th:value="${milestoneEntry.value.month}"
-                                   th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].month}"
+                                   th:field="${form.assessmentPeriods[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].month}"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
                                    th:readonly="${milestoneEntry.value.readonly}"
                             />
@@ -142,7 +142,7 @@
                                    required="required"
                                    class="govuk-input govuk-input--width-4"
                                    th:value="${milestoneEntry.value.year}"
-                                   th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].year}"
+                                   th:field="${form.assessmentPeriods[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].year}"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
                                    th:readonly="${milestoneEntry.value.readonly}"
                             />

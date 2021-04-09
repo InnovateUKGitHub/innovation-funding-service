@@ -6,8 +6,7 @@ public class ManageAssessmentPeriodsViewModel {
 
     private long competitionId;
 
-    public ManageAssessmentPeriodsViewModel(CompetitionResource competitionResource
-                                            ) {
+    public ManageAssessmentPeriodsViewModel(CompetitionResource competitionResource) {
         this.competitionId = competitionResource.getId();
     }
 

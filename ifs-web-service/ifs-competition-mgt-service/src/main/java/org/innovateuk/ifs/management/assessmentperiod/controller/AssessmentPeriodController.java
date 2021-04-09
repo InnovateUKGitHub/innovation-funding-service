@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.management.assessmentperiod.controller;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
-import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
+import org.innovateuk.ifs.management.assessmentperiod.populator.AssessmentPeriodFormPopulator;
 import org.innovateuk.ifs.management.assessmentperiod.populator.ManageAssessmentPeriodsPopulator;
-import org.innovateuk.ifs.management.assessmentperiod.service.AssessmentPeriodService;
+import org.innovateuk.ifs.management.assessmentperiod.saver.AssessmentPeriodSaver;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -42,18 +41,21 @@ public class AssessmentPeriodController {
     private AssessmentPeriodRestService assessmentPeriodRestService;
 
     @Autowired
-    private AssessmentPeriodService assessmentPeriodService;
+    private AssessmentPeriodSaver saver;
+
+    @Autowired
+    private AssessmentPeriodFormPopulator formPopulator;
 
     @GetMapping
-    public String manageAssessmentPeriods(@ModelAttribute(value = "form") ManageAssessmentPeriodsForm form,
-                                          @PathVariable long competitionId, Model model) {
+    public String manageAssessmentPeriods(@PathVariable long competitionId, Model model) {
+        model.addAttribute("form", formPopulator.populate(competitionId));
+        return view(competitionId, model);
+    }
 
-        List<AssessmentPeriodForm> milestonesForms = assessmentPeriodService.getAssessmentPeriodMilestonesForms(competitionId);
-        form.addExistingAssessmentPeriods(milestonesForms);
+    private String view(long competitionId, Model model) {
         model.addAttribute("model", assessmentPeriodsPopulator.populateModel(competitionId));
         return "competition/manage-assessment-periods";
     }
-
     @PostMapping
     public String submitAssessmentPeriods(@Valid @ModelAttribute(value = "form", binding = true) ManageAssessmentPeriodsForm form,
                                           BindingResult bindingResult,
@@ -63,22 +65,13 @@ public class AssessmentPeriodController {
                                           UserResource loggedInUser
     ) {
 
-        if (bindingResult.hasErrors()) {
-            LOG.error(bindingResult.getAllErrors().toString());
-        }
-
-        List<MilestoneResource> updatedMilestones = assessmentPeriodService.extractMilestoneResourcesFromForm(form, competitionId);
-
         Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
-        Supplier<String> failureView = () -> {
-            model.addAttribute("model", assessmentPeriodsPopulator.populateModel(competitionId));
-            return "competition/manage-assessment-periods";
-        };
+        Supplier<String> failureView = () -> view(competitionId, model);
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> saveResult = assessmentPeriodRestService.updateAssessmentPeriodMilestones(updatedMilestones);
-            String s = validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+            ServiceResult<Void> saveResult = saver.save(competitionId, form);
+            return  validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, successView);
-            return s;
         });
     }
 
@@ -89,7 +82,7 @@ public class AssessmentPeriodController {
                                       Model model,
                                       @PathVariable long competitionId
     ) {
-        assessmentPeriodRestService.addNewAssessmentPeriod(competitionId);
+        saver.createNewAssessmentPeriod(competitionId);
         return redirectToManageAssessmentPeriods(competitionId);
     }
 

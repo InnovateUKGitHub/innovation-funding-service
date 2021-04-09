@@ -1,11 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
-<<<<<<< HEAD
-import java.util.List;
-import java.util.stream.Collectors;
-=======
 import java.util.EnumSet;
->>>>>>> a24824502dcbd387010f3b941fc671c812333bee
 import java.util.stream.Stream;
 
 /**
