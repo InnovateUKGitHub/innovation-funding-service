@@ -112,6 +112,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private CovidType covidType;
     private boolean alwaysOpen;
     private boolean subsidyControl;
+    private boolean hasBusinessAndFinancialInformationQuestion;
 
     public CompetitionResource() {
     }
@@ -1008,5 +1009,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @Override
     public boolean isSbriPilot() {
         return SBRI_PILOT.equals(name);
+    }
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return hasBusinessAndFinancialInformationQuestion;
+    }
+
+    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
+        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
+        return this;
     }
 }

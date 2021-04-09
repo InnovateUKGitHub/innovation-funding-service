@@ -58,6 +58,11 @@
         <div th:if="${model.competition.isOpen() and model.application.isOpen()}" class="govuk-!-margin-top-9">
             <th:block th:if="${model.userIsLeadApplicant}">
 
+                <div th:if="${model.competition.hasBusinessAndFinancialInformationQuestion}" class="message-alert">
+                    <p class="govuk-body">You must ensure that the business information and financial spreadsheet have been completed before you click submit below.
+                    Your loan application cannot be considered without these.</p>
+                </div>
+
                  <form id="submit-application-form" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{/application/{id}/confirm-submit(id=${applicationId})}" novalidate="novalidate" method="post">
                     <button id="submit-application-button"
                             th:disabled="${!model.applicationReadyForSubmit}"
