@@ -72,11 +72,9 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         milestoneResource.setType(MilestoneType.OPEN_DATE);
         milestoneResource.setCompetitionId(newCompetitionId);
 
-        String url = milestonesRestURL + "/" + newCompetitionId + "?type=" + MilestoneType.OPEN_DATE;
+        setupPostWithRestResultExpectations(milestonesRestURL, MilestoneResource.class, milestoneResource, milestoneResource, CREATED);
 
-        setupPostWithRestResultExpectations(url, MilestoneResource.class, null, milestoneResource, CREATED);
-
-        MilestoneResource response = service.create(new MilestoneResource(MilestoneType.OPEN_DATE, newCompetitionId)).getSuccess();
+        MilestoneResource response = service.create(milestoneResource).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(milestoneResource, response);
     }
@@ -104,22 +102,10 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
     @Test
     public void updateMilestone() {
-
-        MilestoneResource returnedResponse = getBriefingEventMilestone();
-        MilestoneType type = MilestoneType.BRIEFING_EVENT;
-
-        setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/get-by-type?type=" + type, MilestoneResource.class, returnedResponse);
-        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccess();
-
-        assertNotNull(response);
-        Assert.assertEquals(returnedResponse, response);
-
-        ZonedDateTime date = ZonedDateTime.now();
-        response.setDate(date);
-
-        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, response, null, HttpStatus.OK);
-        service.updateMilestone(response);
-        setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, response);
+        MilestoneResource milestone = new MilestoneResource();
+        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, milestone, null, HttpStatus.OK);
+        service.updateMilestone(milestone);
+        setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, milestone);
     }
 
     @Test

@@ -14,22 +14,32 @@ import java.util.List;
 public interface AssessmentPeriodService extends IfsCrudService<AssessmentPeriodResource, Long> {
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
+            description = "Only comp admins can perform actions on assessment periods")
     ServiceResult<AssessmentPeriodResource> get(Long aLong);
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
+            description = "Only comp admins can perform actions on assessment periods")
     ServiceResult<List<AssessmentPeriodResource>> get(List<Long> longs);
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
+            description = "Only comp admins can perform actions on assessment periods")
     ServiceResult<AssessmentPeriodResource> update(Long aLong, AssessmentPeriodResource assessmentPeriodResource);
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
+            description = "Only comp admins can perform actions on assessment periods")
     ServiceResult<Void> delete(Long aLong);
 
     @Override
     @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
+            description = "Only comp admins can perform actions on assessment periods")
     ServiceResult<AssessmentPeriodResource> create(AssessmentPeriodResource assessmentPeriodResource);
 
     @PreAuthorize("hasAuthority('comp_admin')")

@@ -379,7 +379,6 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         when(assessmentPeriodRepository.findByCompetitionId(competition.getId()))
                 .thenReturn(Collections.singletonList(newAssessmentPeriod()
                         .withCompetition(competition)
-                        .withIndex(1)
                         .build()));
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
@@ -394,6 +393,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         Competition competition = newCompetition()
                 .withStartDate(ZonedDateTime.now())
+                .withAlwaysOpen(true)
                 .build();
 
         AssessmentPeriod assessmentPeriod = newAssessmentPeriod().build();
@@ -411,6 +411,29 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         verify(assessmentPeriodRepository).findById(assessmentPeriodId);
         verify(milestoneRepository).save(any(Milestone.class));
         verify(milestoneMapper).mapToResource(any(Milestone.class));
+    }
+
+    @Test
+    public void createMilestone_alwaysOpenFailsWithoutPeriod() {
+        Long competitionId = 1L;
+        Long assessmentPeriodId = 2L;
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .withAlwaysOpen(true)
+                .build();
+
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod().build();
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(assessmentPeriodId)).thenReturn(Optional.of(assessmentPeriod));
+        when(milestoneRepository.save(any(Milestone.class))).thenReturn(newMilestone().build());
+        when(milestoneMapper.mapToResource(any(Milestone.class))).thenReturn(newMilestoneResource().build());
+
+        ServiceResult<MilestoneResource> result = service.create(new MilestoneResource(ASSESSOR_ACCEPTS, null, competitionId, null));
+
+        assertTrue(result.isFailure());
+
     }
 
     @Test

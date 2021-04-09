@@ -127,7 +127,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         Competition newCompetition = competitionRepository.save(
                 newCompetition().withId((Long) null).withCreatedBy(compAdminUser).build());
         AssessmentPeriod newAssessmentPeriod = assessmentPeriodRepository.save(
-                newAssessmentPeriod().withCompetition(newCompetition).withIndex(1).build());
+                newAssessmentPeriod().withCompetition(newCompetition).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
         assertNotNull(milestones);
@@ -147,7 +147,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         Competition newCompetition = competitionRepository.save(
                 newCompetition().withId((Long) null).withCreatedBy(compAdminUser).build());
         AssessmentPeriod newAssessmentPeriod = assessmentPeriodRepository.save(
-                newAssessmentPeriod().withId((Long) null).withCompetition(newCompetition).withIndex(1).build());
+                newAssessmentPeriod().withId((Long) null).withCompetition(newCompetition).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
 
@@ -161,7 +161,9 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         newMilestones.forEach(m -> {
             assertNotNull(m.getId());
             assertNull(m.getDate());
-            assertEquals(newAssessmentPeriod.getId(), m.getAssessmentPeriodId());
+            if (MilestoneType.assessmentPeriodValues().contains(m.getType())) {
+                assertEquals(newAssessmentPeriod.getId(), m.getAssessmentPeriodId());
+            }
         });
     }
 
