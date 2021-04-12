@@ -84,7 +84,7 @@ Partner can view the non-FEC project finance overview
     [Documentation]  IFS-9248
     Given log in as a different user                                   &{collaborator1_credentials}
     When the user navigates to finance checks
-    And The user clicks the button/link                                link = view the project finance overview
+    And the user clicks the button/link                                link = view the project finance overview
     Then the user should view the non-fec project finance overview
 
 Lead applicant can view their non-FEC project finances in the Eligibility section when approved
@@ -92,7 +92,7 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     [Setup]  internal user approves finances
     Given log in as a different user                             &{KTPLead}
     When the user navigates to finance checks
-    And The user clicks the button/link                          link = review your project finances
+    And the user clicks the button/link                          link = review your project finances
     Then the user should view their non-fec project finances
     And the user should see the element                          jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
