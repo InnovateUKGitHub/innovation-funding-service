@@ -74,6 +74,12 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     And the user clicks the button/link                          link = your project finances
     Then the user should view their non-fec project finances
 
+Lead applicant can view their non-FEC project finance overview
+    [Documentation]  IFS-9248
+    Given the user clicks the button/link                              link = Back to finance checks
+    When the user clicks the button/link                               link = view the project finance overview
+    Then the user should view the non-fec project finance overview
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
@@ -123,6 +129,15 @@ the user should view their non-fec project finances
     the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
     the user should not see the element     jQuery = button:contains("Associates estates costs")
     the user should not see the element     jQuery = button:contains("Additional associate support")
+
+the user should view the non-fec project finance overview
+    the user should see the element         jQuery = h3:contains("Project cost summary")
+    the user should see the element         jQuery = tr:contains("Academic and secretarial support") td:contains("${cost_value}")
+    the user should see the element         jQuery = tr:contains("Indirect costs") td:contains("${indirect_cost_total}")
+    the user should see the element         jQuery = tr:contains("Total") td:contains("1,135")
+    the user should not see the element     jQuery = tr:contains("Knowledge base supervisor")
+    the user should not see the element     jQuery = tr:contains("Associates estates costs")
+    the user should not see the element     jQuery = tr:contains("Additional associate support")
 
 the user closed ktp assesment
     [Arguments]  ${compID}
