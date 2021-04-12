@@ -16,9 +16,13 @@ import org.innovateuk.ifs.questionnaire.link.service.QuestionnaireResponseLinkRe
 import org.innovateuk.ifs.questionnaire.response.populator.AnsweredQuestionViewModelPopulator;
 import org.innovateuk.ifs.questionnaire.response.viewmodel.AnswerTableViewModel;
 import org.innovateuk.ifs.string.resource.StringResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class FinanceChecksFundingRulesViewModelPopulator {
@@ -40,6 +44,9 @@ public class FinanceChecksFundingRulesViewModelPopulator {
 
     @Autowired
     private QuestionRestService questionRestService;
+
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private QuestionnaireResponseLinkRestService questionnaireResponseLinkRestService;
@@ -73,6 +80,7 @@ public class FinanceChecksFundingRulesViewModelPopulator {
         if (questionnaireResponseId == null) {
             return null;
         }
+
         return answeredQuestionViewModelPopulator.allAnswers(questionnaireResponseId, null, true);
     }
 
@@ -84,13 +92,32 @@ public class FinanceChecksFundingRulesViewModelPopulator {
             return null;
         }
 
-        return questionnaireResponseId(subsidyBasisQuestion.getQuestionnaireId(), project.getApplication(), organisationId);
+        List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(project.getApplication()).getSuccess();
+        boolean orgPresentOnApplication = applicationProcessRoles.stream().anyMatch(apr ->
+                apr.getOrganisationId() != null && apr.getOrganisationId().equals(organisationId)
+        );
+
+        if (orgPresentOnApplication) {
+            return questionnaireResponseIdFromApplication(subsidyBasisQuestion.getQuestionnaireId(), project.getApplication(), organisationId);
+        }
+        return questionnaireResponseIdFromProject(subsidyBasisQuestion.getQuestionnaireId(), project.getId(), organisationId);
     }
 
-    private String questionnaireResponseId(long questionnaireId, long applicationId, long organisationId) {
+    private String questionnaireResponseIdFromApplication(long questionnaireId, long applicationId, long organisationId) {
         StringResource response;
         try {
             response = questionnaireResponseLinkRestService.getResponseIdByApplicationIdAndOrganisationIdAndQuestionnaireId(questionnaireId, applicationId, organisationId).getSuccess();
+        } catch (ObjectNotFoundException e) {
+            // questionnaire does not exist
+            return null;
+        }
+        return response.getContent();
+    }
+
+    private String questionnaireResponseIdFromProject(long questionnaireId, long projectId, long organisationId) {
+        StringResource response;
+        try {
+            response = questionnaireResponseLinkRestService.getResponseIdByProjectIdAndQuestionnaireIdAndOrganisationId(projectId, questionnaireId, organisationId).getSuccess();
         } catch (ObjectNotFoundException e) {
             // questionnaire does not exist
             return null;
