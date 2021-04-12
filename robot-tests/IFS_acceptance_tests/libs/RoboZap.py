@@ -30,8 +30,8 @@ class RoboZap(object):
 
         | Library `|` RoboZap  | proxy | port |
         """
-        self.zap = ZAP(proxies={"http": "http://127.0.0.1:8090/", "https": "http://127.0.0.1:8090/"})
-        self.port = 8090
+        self.zap = ZAP(proxies={"http": "http://127.0.0.1:8080/", "https": "http://127.0.0.1:8080/"})
+        self.port = 8080
 
     def start_headless_zap(self):
         """
@@ -43,7 +43,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -daemon -dir /home/zap/.ZAP/ -config api.disablekey=true -port 8090".format(
+            cmd = "/zap/" + "zap.sh -daemon -dir /home/zap/.ZAP/ -config api.disablekey=true -port 8080".format(
                 self.port
             )
             print(cmd)
@@ -62,7 +62,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port 8090".format(
+            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port 8080".format(
                 self.port
             )
             print(cmd)
@@ -184,7 +184,7 @@ class RoboZap(object):
         core = self.zap.core
 
         all_vuls = []
-        for i, na in enumerate(core.alerts(baseurl="http://localhost:8090")):
+        for i, na in enumerate(core.alerts(baseurl="http://localhost:8080")):
             print("current iteration ")
             vul = {}
             vul["name"] = na["alert"]
@@ -271,7 +271,7 @@ class RoboZap(object):
 
         """
 
-        url = "http://localhost:8090/JSON/exportreport/action/generate/".format(
+        url = "http://localhost:8080/JSON/exportreport/action/generate/".format(
             self.port
         )
         export_path = "/zap/zapreport.json"
