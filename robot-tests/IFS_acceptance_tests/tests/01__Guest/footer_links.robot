@@ -14,6 +14,7 @@ Guest user can click on the footer links
     [Documentation]    IFS-362
     start headless zap
     zap define context
+    zap start spider
     zap start ascan
     Given the user tries the footer links    ${frontDoor}
     And the user tries the footer links      ${LOGIN_URL}
@@ -22,7 +23,7 @@ Guest user can click on the footer links
     Then the user tries the footer links     ${APPLICANT_DASHBOARD_URL}
 #    Zap Write To Json File
  #   zap export report
-    zap shutdown
+   #  zap shutdown
 *** Keywords ***
 the user tries the footer links
     [Arguments]    ${page}
