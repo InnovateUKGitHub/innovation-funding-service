@@ -235,6 +235,11 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> isFundingRulesApprovedOrNotApplicable(Project project) {
+
+        if (!project.getApplication().getCompetition().isSubsidyControl()) {
+            return serviceSuccess();
+        }
+
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
