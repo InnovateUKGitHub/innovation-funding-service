@@ -11,13 +11,13 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}                         FEC application duplicate
-${KTPapplicationId}                       ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                          FEC KTP competition duplicate
-${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                                email=joseph.vijay@master.64    password=${short_password}
-${cost_value}                             100
-${indirect_cost_total}                    28
+${KTPapplication}          FEC application duplicate
+${KTPapplicationId}        ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}           FEC KTP competition duplicate
+${KTPcompetitonId}         ${competition_ids["${KTPcompetiton}"]}
+&{KTPLead}                 email=joseph.vijay@master.64    password=${short_password}
+${cost_value}              100
+${indirect_cost_total}     28
 
 *** Test Cases ***
 Lead applicant can view the project finances section is complete
@@ -87,6 +87,15 @@ Partner can view the non-FEC project finance overview
     And The user clicks the button/link                                link = view the project finance overview
     Then the user should view the non-fec project finance overview
 
+Lead applicant can view their non-FEC project finances in the Eligibility section when approved
+    [Documentation]  IFS-9248
+    [Setup]  internal user approves finances
+    Given log in as a different user                             &{KTPLead}
+    When the user navigates to finance checks
+    And The user clicks the button/link                          link = review your project finances
+    Then the user should view their non-fec project finances
+    And the user should see the element                          jQuery = p:contains("The partner's finance eligibility has been approved by ")
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
@@ -154,6 +163,24 @@ the user closed ktp assesment
     Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css = button[type="submit"][formaction$="notify-assessors"]
     ...    AND  the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
     run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
+
+internal user approves finances
+    log in as a different user                              &{internal_finance_credentials}
+    requesting IDs of this project
+    requesting organisation IDs
+    the user navigates to the page                          ${server}/project-setup-management/project/${project_id}/finance-check/organisation/${lead_org_id}/eligibility
+    the user selects the checkbox                           project-eligible
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Approve eligible costs")
+    the user clicks the button/link                         name = confirm-eligibility
+
+requesting IDs of this project
+    ${project_id} =  get project id by name    ${KTPapplication}
+    Set suite variable    ${project_id}
+
+requesting organisation IDs
+    ${lead_org_id} =    get organisation id by name     Master 64
+    Set suite variable      ${lead_org_id}
 
 Custom suite teardown
     Close browser and delete emails
