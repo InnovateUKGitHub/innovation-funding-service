@@ -8,6 +8,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
+import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -69,6 +71,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -83,6 +86,7 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -392,6 +396,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
         Project project = generateSpendProfileData.getProject();
+        project.getApplication().getCompetition().setFundingRules(FundingRules.SUBSIDY_CONTROL);
+        Question question = newQuestion().withQuestionSetupType(SUBSIDY_BASIS).build();
+        project.getApplication().getCompetition().getQuestions().add(question);
+
         Organisation organisation1 = generateSpendProfileData.getOrganisation1();
         Organisation organisation2 = generateSpendProfileData.getOrganisation2();
         PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
