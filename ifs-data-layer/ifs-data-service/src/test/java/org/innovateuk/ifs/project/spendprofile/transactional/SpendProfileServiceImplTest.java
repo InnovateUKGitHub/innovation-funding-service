@@ -22,12 +22,14 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -106,6 +108,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
     @Mock
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+    @Mock
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
     @Mock
@@ -377,6 +381,34 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
+
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
+    }
+
+    @Test
+    public void generateSpendProfileWhenNotAllFundingRulesApproved() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
+        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
+
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(fundingRulesWorkflowHandler.getState(partnerOrganisation1)).thenReturn(FundingRulesState.APPROVED);
+        when(fundingRulesWorkflowHandler.getState(partnerOrganisation2)).thenReturn(FundingRulesState.REVIEW);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FUNDING_RULES_APPROVED));
 
         verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
         verifyNoMoreInteractions(spendProfileRepository);
