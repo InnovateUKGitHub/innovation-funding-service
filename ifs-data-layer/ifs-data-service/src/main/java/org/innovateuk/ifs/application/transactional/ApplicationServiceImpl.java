@@ -209,22 +209,28 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> reopenApplication(long applicationId) {
-        return find(application(applicationId)).andOnSuccess((application) -> {
-            return validateCompetitionIsOpen(application).andOnSuccess(() -> {
-                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
-                    validateApplicationIsSubmitted(application).andOnSuccess(() -> {
-                        applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
-                        application.setSubmittedDate(null);
-                        applicationRepository.save(application);
-                        return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
-                    });
-                });
-            });
-        });
+        return find(application(applicationId)).andOnSuccess(application ->
+                validateCompetitionIsNotAlwaysOpen(application).andOnSuccess(() ->
+                        validateCompetitionIsOpen(application).andOnSuccess(() -> {
+                            validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
+                                validateApplicationIsSubmitted(application).andOnSuccess(() -> {
+                                            applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
+                                            application.setSubmittedDate(null);
+                                            applicationRepository.save(application);
+                                            return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
+                                        });
+                                    });
+                                })
+                )
+        );
     }
 
     private ServiceResult<Void> validateCompetitionIsOpen(Application application) {
         return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) ? serviceSuccess() : serviceFailure(COMPETITION_NOT_OPEN);
+    }
+
+    private ServiceResult<Void> validateCompetitionIsNotAlwaysOpen(Application application) {
+        return !application.getCompetition().isAlwaysOpen() ? serviceSuccess() : serviceFailure(COMPETITION_NOT_OPEN);
     }
 
     private ServiceResult<Void> validateApplicationIsSubmitted(Application application) {
