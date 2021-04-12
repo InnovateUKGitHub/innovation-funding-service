@@ -11,13 +11,14 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ktpApplication}          FEC application duplicate
-${ktpApplicationId}        ${application_ids["${ktpApplication}"]}
-${ktpCompetiton}           FEC KTP competition duplicate
-${ktpCompetitonId}         ${competition_ids["${ktpCompetiton}"]}
-&{KTPLead}                 email=joseph.vijay@master.64    password=${short_password}
-${cost_value}              100
-${indirect_cost_total}     28
+${ktpApplication}        FEC application duplicate
+${ktpApplicationId}      ${application_ids["${ktpApplication}"]}
+${ktpCompetiton}         FEC KTP competition duplicate
+${ktpCompetitonId}       ${competition_ids["${ktpCompetiton}"]}
+&{ktpLead}               email=joseph.vijay@master.64    password=${short_password}
+${costValue}             100
+${indirectCostTotal}     28
+${totalProjectCosts}     1,135
 
 *** Test Cases ***
 Lead applicant can view the project finances section is complete
@@ -49,7 +50,7 @@ Lead applicant should view the correct project costs are displayed for non-fec s
 Lead applicant completes the project finances section for non-fec model
     [Documentation]  IFS-9305
     Given the user clicks the button/link                             jQuery = button:contains("Open all")
-    Then the user completes project costs table for non-fec model     1  ${cost_value}  Supervisor  1  test  3  test  5
+    Then the user completes project costs table for non-fec model     1  ${costValue}  Supervisor  1  test  3  test  5
 
 Partner applicant completes the application
     [Documentation]  IFS-9305
@@ -61,7 +62,7 @@ Partner applicant completes the application
 
 Lead applicant submits the application
     [Documentation]  IFS-9305
-    Given log in as a different user                              &{KTPLead}
+    Given log in as a different user                              &{ktpLead}
     When the user navigates to the page                           ${server}/application/${ktpApplicationId}
     Then the user accept the competition terms and conditions     Return to application overview
     And the applicant submits the application
@@ -69,7 +70,7 @@ Lead applicant submits the application
 Lead applicant can view their non-FEC project finances in the Eligibility section
     [Documentation]  IFS-9248
     [Setup]  internal user moves competition to project setup
-    Given log in as a different user                             &{KTPLead}
+    Given log in as a different user                             &{ktpLead}
     When the user navigates to finance checks
     And the user clicks the button/link                          link = your project finances
     Then the user should view their non-fec project finances
@@ -90,7 +91,7 @@ Partner can view the non-FEC project finance overview
 Lead applicant can view their non-FEC project finances in the Eligibility section when approved
     [Documentation]  IFS-9248
     [Setup]  internal user approves finances
-    Given log in as a different user                             &{KTPLead}
+    Given log in as a different user                             &{ktpLead}
     When the user navigates to finance checks
     And the user clicks the button/link                          link = review your project finances
     Then the user should view their non-fec project finances
@@ -99,7 +100,7 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
-    The user logs-in in new browser        &{KTPLead}
+    The user logs-in in new browser        &{ktpLead}
     the user clicks the button/link        link = ${ktpApplication}
 
 the user completes your project finances section
@@ -137,20 +138,20 @@ the user navigates to finance checks
 the user should view their non-fec project finances
     the user should see the element         jQuery = h2:contains("Detailed finances")
     the user should see the element         jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") p:contains("No")
-    the user should see the element         jQuery = span:contains("${cost_value}") ~ button:contains("Academic and secretarial support")
-    the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${cost_value}")
-    the user should see the element         jQuery = span:contains("${indirect_cost_total}") ~ button:contains("Indirect costs")
-    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("${indirect_cost_total}")
-    the user should see the element         jQuery = div:contains("Total project costs") input[value="£1,135"]
+    the user should see the element         jQuery = span:contains("${costValue}") ~ button:contains("Academic and secretarial support")
+    the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${costValue}")
+    the user should see the element         jQuery = span:contains("${indirectCostTotal}") ~ button:contains("Indirect costs")
+    the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("${indirectCostTotal}")
+    the user should see the element         jQuery = div:contains("Total project costs") input[value="£${totalProjectCosts}"]
     the user should not see the element     jQuery = button:contains("Knowledge base supervisor")
     the user should not see the element     jQuery = button:contains("Associates estates costs")
     the user should not see the element     jQuery = button:contains("Additional associate support")
 
 the user should view the non-fec project finance overview
     the user should see the element         jQuery = h3:contains("Project cost summary")
-    the user should see the element         jQuery = tr:contains("Academic and secretarial support") td:contains("${cost_value}")
-    the user should see the element         jQuery = tr:contains("Indirect costs") td:contains("${indirect_cost_total}")
-    the user should see the element         jQuery = tr:contains("Total") td:contains("1,135")
+    the user should see the element         jQuery = tr:contains("Academic and secretarial support") td:contains("${costValue}")
+    the user should see the element         jQuery = tr:contains("Indirect costs") td:contains("${indirectCostTotal}")
+    the user should see the element         jQuery = tr:contains("Total") td:contains("${totalProjectCosts}")
     the user should not see the element     jQuery = tr:contains("Knowledge base supervisor")
     the user should not see the element     jQuery = tr:contains("Associates estates costs")
     the user should not see the element     jQuery = tr:contains("Additional associate support")
