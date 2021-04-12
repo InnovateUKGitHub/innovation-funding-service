@@ -11,10 +11,10 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}          FEC application duplicate
-${KTPapplicationId}        ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}           FEC KTP competition duplicate
-${KTPcompetitonId}         ${competition_ids["${KTPcompetiton}"]}
+${ktpApplication}          FEC application duplicate
+${ktpApplicationId}        ${application_ids["${ktpApplication}"]}
+${ktpCompetiton}           FEC KTP competition duplicate
+${ktpCompetitonId}         ${competition_ids["${ktpCompetiton}"]}
 &{KTPLead}                 email=joseph.vijay@master.64    password=${short_password}
 ${cost_value}              100
 ${indirect_cost_total}     28
@@ -54,7 +54,7 @@ Lead applicant completes the project finances section for non-fec model
 Partner applicant completes the application
     [Documentation]  IFS-9305
     Given Log in as a different user                                                   &{collaborator1_credentials}
-    When the user navigates to the page                                                ${server}/application/${KTPapplicationId}
+    When the user navigates to the page                                                ${server}/application/${ktpApplicationId}
     And the user clicks the button/link                                                link = Your project finances
     Then the partner applicant marks Your project finances information as complete     other-funding-no   ${SMALL_ORGANISATION_SIZE}  12  2020
     And the user accept the competition terms and conditions                           Return to application overview
@@ -62,7 +62,7 @@ Partner applicant completes the application
 Lead applicant submits the application
     [Documentation]  IFS-9305
     Given log in as a different user                              &{KTPLead}
-    When the user navigates to the page                           ${server}/application/${KTPapplicationId}
+    When the user navigates to the page                           ${server}/application/${ktpApplicationId}
     Then the user accept the competition terms and conditions     Return to application overview
     And the applicant submits the application
 
@@ -100,7 +100,7 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
 Custom Suite Setup
     Connect to Database                    @{database}
     The user logs-in in new browser        &{KTPLead}
-    the user clicks the button/link        link = ${KTPapplication}
+    the user clicks the button/link        link = ${ktpApplication}
 
 the user completes your project finances section
     the user clicks the button/link        link = Your fEC model
@@ -124,14 +124,14 @@ the user views the project finance details for non-fec selection
     the user should not see the element     jQuery = button:contains("Associates estates costs")
 
 internal user moves competition to project setup
-    moving competition to Closed                         ${KTPcompetitonId}
+    moving competition to Closed                         ${ktpCompetitonId}
     log in as a different user                           &{internal_finance_credentials}
-    the user closed ktp assesment                        ${KTPcompetitonId}
-    the user navigates to the page                       ${server}/project-setup-management/competition/${KTPcompetitonId}/status/all
-    the user refreshes until element appears on page     jQuery = tr div:contains("${KTPapplication}")
+    the user closed ktp assesment                        ${ktpCompetitonId}
+    the user navigates to the page                       ${server}/project-setup-management/competition/${ktpCompetitonId}/status/all
+    the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplication}")
 
 the user navigates to finance checks
-    the user clicks the button/link     jQuery = li:contains("Project in setup") a:contains("${KTPapplication}")
+    the user clicks the button/link     jQuery = li:contains("Project in setup") a:contains("${ktpApplication}")
     the user clicks the button/link     link = Finance checks
 
 the user should view their non-fec project finances
@@ -175,7 +175,7 @@ internal user approves finances
     the user clicks the button/link                         name = confirm-eligibility
 
 requesting IDs of this project
-    ${project_id} =  get project id by name    ${KTPapplication}
+    ${project_id} =  get project id by name    ${ktpApplication}
     Set suite variable    ${project_id}
 
 requesting organisation IDs
