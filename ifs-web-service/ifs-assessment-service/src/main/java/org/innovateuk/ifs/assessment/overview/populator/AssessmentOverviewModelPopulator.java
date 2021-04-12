@@ -47,6 +47,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCES;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
@@ -136,7 +137,7 @@ public class AssessmentOverviewModelPopulator {
                     sectionResource.getName(),
                     sectionResource.getAssessorGuidanceDescription(),
                     getQuestions(sectionQuestions, formInputs, responses),
-                    "Finances".equals(sectionResource.getName()),
+                    sectionResource.getType() == FINANCES,
                     sectionResource.getType() == TERMS_AND_CONDITIONS
             );
         });
