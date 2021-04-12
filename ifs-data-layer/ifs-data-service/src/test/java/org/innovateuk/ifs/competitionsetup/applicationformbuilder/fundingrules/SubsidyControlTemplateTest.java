@@ -59,7 +59,7 @@ public class SubsidyControlTemplateTest {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", true);
         long questionnaireId = 1L;
         Questionnaire questionnaireEntity = new Questionnaire();
-        SectionBuilder projectDetails = aSection().withName("Project details");
+        SectionBuilder projectDetails = aSection().withName("Project details").withType(SectionType.PROJECT_DETAILS);
 
         when(environment.getActiveProfiles()).thenReturn(new String[0]);
         when(questionnaireService.create(any())).thenAnswer((inv) -> {
@@ -75,7 +75,11 @@ public class SubsidyControlTemplateTest {
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
+<<<<<<< HEAD
                 aSection().withType(SectionType.FINANCES)
+=======
+                aSection().withName("Finances").withType(SectionType.FINANCES)
+>>>>>>> 4c28269eb4f1ef4db9846565fa90b4a75e54ca73
         ));
 
         assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("Subsidy basis");
