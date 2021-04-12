@@ -73,7 +73,6 @@ ${payment_query_title}                Payment Milestone Query
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
     [Documentation]  IFS-7313
-    zap define context
     zap start spider
     zap start ascan
     Given the user completes initial details of the competition        ${sbriType1CompetitionName}  PROCUREMENT
