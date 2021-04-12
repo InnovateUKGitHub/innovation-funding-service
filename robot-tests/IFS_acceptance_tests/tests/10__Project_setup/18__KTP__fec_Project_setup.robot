@@ -15,10 +15,15 @@ ${ktpApplication}        FEC application duplicate
 ${ktpApplicationId}      ${application_ids["${ktpApplication}"]}
 ${ktpCompetiton}         FEC KTP competition duplicate
 ${ktpCompetitonId}       ${competition_ids["${ktpCompetiton}"]}
+${KTPProjectID}          ${project_ids["${ktpApplication}"]}
 &{ktpLead}               email=joseph.vijay@master.64    password=${short_password}
+${ktpLeadOrgName}        Master 64
+${ktpLeadOrgID}          ${organisation_ids["${ktpLeadOrgName}"]}
 ${costValue}             100
 ${indirectCostTotal}     28
 ${totalProjectCosts}     1,135
+${Academic_cost_value}       1000
+${indirect_cost_updated}     328
 
 *** Test Cases ***
 Lead applicant can view the project finances section is complete
@@ -97,6 +102,20 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     Then the user should view their non-fec project finances
     And the user should see the element                          jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
+IFS admin can view the correct fields in project finance overview table for non-fEC application
+    [Documentation]  IFS-9249
+    Given Log in as a different user                           &{ifs_admin_user_credentials}
+    When the user navigates to the page                        ${server}/project-setup-management/project/${KTPProjectID}/finance-check/organisation/${ktpLeadOrgID}/eligibility
+    Then the user should view their non-fec project finances
+
+IFS admin can edit the project finances in project setup
+    [Documentation]  IFS-9249
+    Given the user edits the Academic and secretarial support costs in project setup
+    Then the user should see the element         jQuery = th:contains("Total indirect costs") ~ td:contains("${indirect_cost_updated}")
+    And the user should see the element          css = [id = 'total-cost'][value='£4,368']
+
+
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
@@ -174,6 +193,9 @@ internal user approves finances
     the user selects the option from the drop-down menu     Green  id = rag-rating
     the user clicks the button/link                         jQuery = .govuk-button:contains("Approve eligible costs")
     the user clicks the button/link                         name = confirm-eligibility
+
+the user edits the Academic and secretarial support costs in project setup
+
 
 requesting IDs of this project
     ${project_id} =  get project id by name    ${ktpApplication}

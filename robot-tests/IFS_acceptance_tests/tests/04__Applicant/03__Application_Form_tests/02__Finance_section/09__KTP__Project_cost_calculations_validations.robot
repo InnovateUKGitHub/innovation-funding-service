@@ -224,6 +224,9 @@ Supporter can view the read-only view for 'No' selected fEC declaration
     When the user navigates to the page                                 ${server}/application/${KTPapplicationId}/summary
     Then the user should see read only view for non-fec declaration
 
+
+
+
 *** Keywords ***
 the user enters T&S costs
     [Arguments]  ${typeOfCost}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
