@@ -73,7 +73,6 @@ ${payment_query_title}                Payment Milestone Query
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
     [Documentation]  IFS-7313
-    start headless zap
     zap define context
     zap start spider
     zap start ascan
@@ -432,7 +431,12 @@ External user can upload the contract
 *** Keywords ***
 Custom Suite Setup
     Connect to Database  @{database}
-    The user logs-in in new browser     &{Comp_admin1_credentials}
+    start headless zap
+    The guest user opens the browser
+    zap define context
+    zap start spider
+    zap start ascan
+    Logging in and Error Checking    john.doe@innovateuk.test   Passw0rd1357
     Set predefined date variables
 
 Custom suite teardown
