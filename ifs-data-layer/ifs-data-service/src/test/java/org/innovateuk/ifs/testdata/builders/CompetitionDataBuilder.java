@@ -13,6 +13,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
@@ -172,7 +173,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
-                List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
                 Question question = questions.get(0);
                 question.setName("Generic question heading");
                 question.setShortName("Generic question title");
@@ -261,14 +262,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccess();
 
         // no application section or project details for h2020
-        competitionSections.stream().filter(section -> section.getName().equals("Application questions"))
+        competitionSections.stream().filter(section -> section.getType() == SectionType.APPLICATION_QUESTIONS)
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
-        competitionSections.stream().filter(section -> section.getName().equals("Project details"))
+        competitionSections.stream().filter(section -> section.getType() == SectionType.PROJECT_DETAILS)
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
         // only for ktp competitions
-        competitionSections.stream().filter(section -> section.getName().equals("Score Guidance"))
+        competitionSections.stream().filter(section -> section.getType() == SectionType.KTP_ASSESSMENT)
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
     }
