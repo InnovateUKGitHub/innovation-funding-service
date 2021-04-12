@@ -195,7 +195,10 @@ internal user approves finances
     the user clicks the button/link                         name = confirm-eligibility
 
 the user edits the Academic and secretarial support costs in project setup
-
+    the user clicks the button/link          jQuery = button:contains("Academic and secretarial support")
+    the user clicks the button/link          jQuery = .govuk-button:contains("Edit")
+    the user enters text to a text field     id = academicAndSecretarialSupportForm   ${Academic_cost_value}
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
 
 requesting IDs of this project
     ${project_id} =  get project id by name    ${ktpApplication}
