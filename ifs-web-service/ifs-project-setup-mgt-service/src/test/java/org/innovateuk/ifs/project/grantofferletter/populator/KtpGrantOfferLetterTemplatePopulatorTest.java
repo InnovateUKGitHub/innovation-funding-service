@@ -120,7 +120,7 @@ public class KtpGrantOfferLetterTemplatePopulatorTest {
         when(ktpFinanceModelPopulator.populate(project, projectFinances.get(0))).thenReturn(ktpFinanceModel);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId())).thenReturn(restSuccess(partnerOrganisations));
 
-        KtpGrantOfferLetterTemplateViewModel model = populator.populate(project, competition);
+        KtpGrantOfferLetterTemplateViewModel model = populator.populate(project);
 
         assertEquals(123L, model.getApplicationId());
         assertEquals(projectManager.getFirstName(), model.getProjectManagerFirstName());

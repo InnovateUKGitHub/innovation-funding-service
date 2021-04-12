@@ -16,11 +16,6 @@ ${KTPapplicationId}                       ${application_ids["${KTPapplication}"]
 ${KTPcompetiton}                          FEC KTP competition duplicate
 ${KTPcompetitonId}                        ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}                                email=joseph.vijay@master.64    password=${short_password}
-${associateSalaryTable}                   associate-salary-costs-table
-${associateDevelopmentTable}              associate-development-costs-table
-${limitFieldValidationMessage}            You must provide justifications for exceeding allowable cost limits.
-${academic_secretarial_support_table}     academic-secretarial-costs-table
-${academicSecretarialCost}                academic-secretarial-costs
 ${cost_value}                             100
 ${indirect_cost_total}                    28
 

@@ -975,4 +975,3 @@ the partner applicant marks Your project finances information as complete
     the user enters text to a text field           financialYearEndYearValue    ${Year}
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
     the user clicks the button/link                link = Back to application overview
-
