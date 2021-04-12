@@ -119,7 +119,7 @@ public class YourProjectCostsViewModelPopulator {
         Long yourFundingSectionId = getYourFundingSectionId(section);
         boolean yourFundingRequired = !completedSectionIds.contains(yourFundingSectionId);
         Long yourFecCostSectionId = getYourFecCostSectionId(section);
-        boolean yourFecCostRequired = fecFinanceModelEnabled ? !completedSectionIds.contains(yourFecCostSectionId) : false;
+        boolean yourFecCostRequired = fecFinanceModelEnabled ? isYourFecCostRequired(completedSectionIds, yourFecCostSectionId) : false;
         boolean projectCostSectionLocked = isProjectCostSectionLocked(yourFundingRequired, yourFecCostRequired);
 
         return new YourProjectCostsViewModel(application.getId(),
@@ -146,6 +146,11 @@ public class YourProjectCostsViewModelPopulator {
                 yourFecCostSectionId,
                 finance.getFecModelEnabled(),
                 getGrantClaimPercentage(application.getId(), organisation.getId()));
+    }
+
+    private boolean isYourFecCostRequired(List<Long> completedSectionIds, Long yourFecCostSectionId) {
+        return yourFecCostSectionId != null
+                && !completedSectionIds.contains(yourFecCostSectionId);
     }
 
     private List<FinanceRowType> getFinanceRowTypes(CompetitionResource competition, BaseFinanceResource finance) {
