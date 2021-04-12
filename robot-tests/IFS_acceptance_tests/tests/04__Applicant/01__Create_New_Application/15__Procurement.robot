@@ -211,11 +211,10 @@ Project finance completes all project setup steps
     And internal user approves the finance checks
 
 Internal user generate the contract
-    [Documentation]  IFS-6368
-    Given applicant send project spend profile
-    When the internal user approve SP and issue contract
-    Then Lead applicant upload the contract
-    And the internal user approve the contract               ${ProjectID}
+    [Documentation]  IFS-6368  IFS-8945
+    Given the internal user approve SP and issue contract
+    When Lead applicant upload the contract
+    Then the internal user approve the contract               ${ProjectID}
 
 Internal user makes changes to the finance payment milestones
     [Documentation]   IFS-8944
@@ -481,10 +480,6 @@ applicant send project spend profile
 
 the internal user approve SP and issue contract
     log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the checkbox       approvedByLeadTechnologist
-    the user clicks the button/link     id = accept-profile
-    the user clicks the button/link     jQuery = button:contains("Approve")
     the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
     the user uploads the file           grantOfferLetter  ${valid_pdf}
     the user selects the checkbox       confirmation
