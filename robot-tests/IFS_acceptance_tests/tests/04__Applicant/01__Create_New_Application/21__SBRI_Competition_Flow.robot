@@ -79,6 +79,7 @@ Comp admin saves the completition stage with competition close option
     When the user navigates to completition stage
     And the user saves the completion stage with competition close     COMPETITION_CLOSE
     Then the user should see competition close in read only page       Competition close
+    Zap Write To Json File
 
 Comp admin edits the completition stage with competition close option
     [Documentation]  IFS-7313
@@ -434,7 +435,6 @@ Custom Suite Setup
     The guest user opens the browser
     zap define context
     zap start spider
-    zap start ascan
     Logging in and Error Checking    john.doe@innovateuk.test   Passw0rd1357
     Set predefined date variables
 
@@ -621,4 +621,3 @@ generate spend profile
     the user clicks the button/link     link = Return to finance checks
     the user clicks the button/link     css = .generate-spend-profile-main-button
     the user should see the element     css = .success-alert
-    Zap Write To Json File
