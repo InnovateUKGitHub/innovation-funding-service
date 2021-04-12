@@ -645,9 +645,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         FundingRules fundingRules;
         if (Boolean.TRUE == projectFinance.getNorthernIrelandDeclaration()) {
-            fundingRules = FundingRules.SUBSIDY_CONTROL;
-        } else {
             fundingRules = FundingRules.STATE_AID;
+        } else {
+            fundingRules = FundingRules.SUBSIDY_CONTROL;
         }
 
         fundingRulesResource.setFundingRules(fundingRules);
@@ -811,7 +811,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> saveFundingRules(ProjectFinance projectFinance, FundingRules fundingRules) {
 
-        Boolean niDeclaration = FundingRules.SUBSIDY_CONTROL == fundingRules;
+        Boolean niDeclaration = FundingRules.STATE_AID == fundingRules;
         projectFinance.setNorthernIrelandDeclaration(niDeclaration);
         projectFinanceRepository.save(projectFinance);
 

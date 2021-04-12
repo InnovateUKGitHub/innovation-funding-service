@@ -26,10 +26,10 @@ public class FundingRulesChangeViewModel {
 
     private static String basis(Boolean niDeclaration) {
         if (Boolean.TRUE.equals(niDeclaration)) {
-            return FundingRules.SUBSIDY_CONTROL.getDisplayName();
+            return FundingRules.STATE_AID.getDisplayName();
         }
         if (Boolean.FALSE.equals(niDeclaration)) {
-            return FundingRules.STATE_AID.getDisplayName();
+            return FundingRules.SUBSIDY_CONTROL.getDisplayName();
         }
         return null;
     }
