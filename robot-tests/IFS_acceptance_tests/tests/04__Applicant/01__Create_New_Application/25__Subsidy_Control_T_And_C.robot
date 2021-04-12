@@ -576,10 +576,3 @@ the user can see the terms and conditions for the lead and partner applicant
     the user should see the element      link = Innovate UK - Subsidy control
     the user should see the element      jQuery = td:contains("${partnerOrganisationName}")+ td:contains("State aid")
     the user should see the element      link = Innovate UK
-
-the user approves funding rules
-    [Arguments]  ${reviewLinkElement}
-    the user clicks the button/link     jQuery = ${reviewLinkElement}
-    the user selects the checkbox       project-funding-rules
-    the user clicks the button/link     id = confirm-button
-    the user clicks the button/link     jQuery = a:contains("Return to finance checks")

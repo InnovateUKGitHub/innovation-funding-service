@@ -1211,6 +1211,7 @@ Uk lead completes project setup details and generated GOL
     project finance approves Viability for                                              ${organistaionNewEmpireID}    ${ukLeadApplicationProjectID}
     project finance approves Eligibility for uk based lead and international partner    ${organistaionOrg2}   ${organistaionNewEmpireID}   ${ukLeadApplicationProjectID}
     the user clicks the button/link                                                     link = Return to finance checks
+    the user approves funding rules of lead and partner
     the user clicks the button/link                                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
