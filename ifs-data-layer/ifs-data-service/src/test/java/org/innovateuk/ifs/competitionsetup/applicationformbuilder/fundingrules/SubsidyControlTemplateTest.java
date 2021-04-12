@@ -75,11 +75,7 @@ public class SubsidyControlTemplateTest {
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
-<<<<<<< HEAD
                 aSection().withType(SectionType.FINANCES)
-=======
-                aSection().withName("Finances").withType(SectionType.FINANCES)
->>>>>>> 4c28269eb4f1ef4db9846565fa90b4a75e54ca73
         ));
 
         assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("Subsidy basis");
