@@ -8,13 +8,15 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -66,7 +68,7 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
     @Test
     public void deleteAssessedQuestionInCompetition_questionSectionTotalQuestionIsOneOrLessShouldResultInFailure() {
         Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
-        Section section = newSection().withName(APPLICATION_QUESTIONS.getName()).build();
+        Section section = newSection().withSectionType(SectionType.APPLICATION_QUESTIONS).build();
         Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
@@ -107,7 +109,7 @@ public class QuestionSetupAddAndRemoveServiceImplTest extends BaseServiceUnitTes
     public void addDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
 
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competitionInWrongState.getId(), APPLICATION_QUESTIONS.getName())).thenReturn(null);
+        when(sectionRepositoryMock.findByTypeAndCompetitionId(SectionType.APPLICATION_QUESTIONS, competitionInWrongState.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
 
