@@ -156,7 +156,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .param("name", name)
                 .param("registration", registration))
-                .andExpect(status().isCreated())
+                .andExpect(status().is2xxSuccessful())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(
                                 parameterWithName("organisationId").description("The identifier of the organisation being updated")

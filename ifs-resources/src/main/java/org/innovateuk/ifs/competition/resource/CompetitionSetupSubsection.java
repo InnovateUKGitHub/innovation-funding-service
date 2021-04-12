@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
+import org.innovateuk.ifs.form.resource.SectionType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,15 +10,15 @@ import java.util.Map;
  * It is used when recording which sections are marked as complete during the competition setup process.
  */
 public enum CompetitionSetupSubsection {
-	PROJECT_DETAILS(1L, "project", "Project Details"),
-	QUESTIONS(2L, "question", "Questions"),
-	FINANCES(3L, "finance", "Finances"),
-	APPLICATION_DETAILS(4L, "detail", "Application Details"),
-	KTP_ASSESSMENT(5L, "ktp_assessment", "Score Guidance");
+	PROJECT_DETAILS(1L, "project", SectionType.PROJECT_DETAILS),
+	QUESTIONS(2L, "question", SectionType.APPLICATION_QUESTIONS),
+	FINANCES(3L, "finance", SectionType.FINANCES),
+	APPLICATION_DETAILS(4L, "detail", SectionType.APPLICATION_QUESTIONS),
+	KTP_ASSESSMENT(5L, "ktp_assessment", SectionType.KTP_ASSESSMENT);
 
 	private Long id;
 	private String path;
-	private String name;
+	private SectionType sectionType;
 
 	private static Map<String, CompetitionSetupSubsection> PATH_MAP;
 
@@ -27,18 +29,18 @@ public enum CompetitionSetupSubsection {
 		}
 	}
 
-	CompetitionSetupSubsection(Long id, String path, String name) {
+	CompetitionSetupSubsection(Long id, String path, SectionType sectionType) {
 		this.id = id;
 		this.path = path;
-		this.name = name;
+		this.sectionType = sectionType;
 	}
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-		return name;
+    public SectionType getName() {
+		return sectionType;
 	}
 	
 	public String getPath() {

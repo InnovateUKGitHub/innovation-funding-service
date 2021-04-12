@@ -1047,7 +1047,7 @@ IFS.core.formValidation = (function () {
       section.find('.govuk-error-message').each(function () {
         var errorMessage = jQuery(this)
         var content = errorMessage.text()
-        summaryList.find('li:contains(' + content + ')').first().remove()
+        summaryList.find('li:contains(\'' + content + '\')').first().remove()
         errorMessage.remove()
       })
 

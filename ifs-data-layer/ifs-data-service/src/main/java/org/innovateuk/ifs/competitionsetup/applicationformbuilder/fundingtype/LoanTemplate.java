@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -62,7 +63,7 @@ public class LoanTemplate implements FundingTypeTemplate {
 
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-        competitionTypeSections.stream().filter(section -> "Project details".equals(section.getName()))
+        competitionTypeSections.stream().filter(section -> SectionType.PROJECT_DETAILS == section.getType())
                 .findAny()
                 .ifPresent(projectDetailsSection -> {
                         setEdiQuestionDescription(projectDetailsSection);

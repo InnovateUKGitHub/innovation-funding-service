@@ -7,6 +7,7 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.genericQuestion;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 
@@ -53,9 +52,9 @@ public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAnd
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        return find(sectionRepository.findFirstByCompetitionIdAndName(
-                competition.getId(),
-                APPLICATION_QUESTIONS.getName()),
+        return find(sectionRepository.findByTypeAndCompetitionId(
+                SectionType.APPLICATION_QUESTIONS,
+                competition.getId()),
                 notFoundError(Section.class)
         ).andOnSuccess(section -> initializeAndPersistQuestion(section, competition));
     }
@@ -72,7 +71,7 @@ public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAnd
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if (sectionIsInValidForDeletion(question.getSection().getName())) {
+        if (!sectionIsValidForDeletion(question.getSection().getType())) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
@@ -100,7 +99,7 @@ public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAnd
                 || competition.getCompetitionStatus().equals(READY_TO_OPEN));
     }
 
-    private boolean sectionIsInValidForDeletion(String sectionName) {
-        return !sectionName.equals(APPLICATION_QUESTIONS.getName()) && !sectionName.equals(PROJECT_DETAILS.getName());
+    private boolean sectionIsValidForDeletion(SectionType sectionType) {
+        return sectionType == SectionType.PROJECT_DETAILS || sectionType == SectionType.APPLICATION_QUESTIONS;
     }
 }
