@@ -45,13 +45,13 @@ public enum MilestoneType {
         return milestoneDescription;
     }
 
-    public String getAlwaysOpenDescription(){
+    public String getAlwaysOpenDescription() {
         String milestoneDescription = getMilestoneDescription();
-        if(milestoneDescription.contains("5.")){
+        if (this == ASSESSOR_BRIEFING) {
             return "1. Assessor Briefing";
-        } else if (milestoneDescription.contains("6.")){
+        } else if (this == ASSESSOR_ACCEPTS) {
             return "2. Acceptance deadline";
-        } else if (milestoneDescription.contains("7.")){
+        } else if (this == ASSESSOR_DEADLINE) {
             return "3. Assessment deadline";
         }
         return milestoneDescription;
