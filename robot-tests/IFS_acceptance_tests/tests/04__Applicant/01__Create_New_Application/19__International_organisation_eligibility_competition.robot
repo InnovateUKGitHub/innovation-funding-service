@@ -1091,12 +1091,19 @@ the user complete all sections of the project setup and generates GOL
     project finance approves Eligibility                                ${organisationTestEmpireOneID}        ${organistaionTestEmpireID}    ${organistaionInnovateID}   ${ProjectID}
     project finance approves Eligibility for Innovate uk organisation   ${organisationUiveristyOfLiverPoolId}
     the user clicks the button/link                                     link = Return to finance checks
+    the user approves funding rules of lead and partner organisations
     the user clicks the button/link                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                     css = #generate-spend-profile-modal-button
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
     proj finance approves the spend profiles                            ${ProjectID}
+
+the user approves funding rules of lead and partner organisations
+    the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(4) td:nth-child(2) a:contains("Review")
 
 a new organisation is able to accept project invite in project setup
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}  ${applicationID}  ${appTitle}  ${organisationBase}
