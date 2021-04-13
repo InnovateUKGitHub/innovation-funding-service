@@ -4,7 +4,6 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
@@ -21,7 +20,6 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean displayActions;
     private final boolean lead;
     private final boolean ktpCompetition;
-    private final QuestionSetupType questionSetupType;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.competitionName = data.getCompetition().getName();
@@ -45,7 +43,6 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
                 .orElse(false);
         this.displayActions = lead || assignedToUser;
         this.ktpCompetition = data.getCompetition().isKtp();
-        this.questionSetupType = question.getQuestionSetupType();
     }
 
     private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
@@ -99,8 +96,4 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         return ktpCompetition;
     }
 
-    @Override
-    public QuestionSetupType getQuestionSetupType() {
-        return questionSetupType;
-    }
 }
