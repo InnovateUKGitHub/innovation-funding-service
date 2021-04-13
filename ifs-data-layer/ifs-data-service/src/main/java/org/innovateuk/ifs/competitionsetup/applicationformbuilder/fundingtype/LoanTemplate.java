@@ -84,7 +84,7 @@ public class LoanTemplate implements FundingTypeTemplate {
         competitionTypeSections.stream().filter(section -> SectionType.FINANCES == section.getType())
                 .findAny()
                 .ifPresent(section ->
-                        section.withName("Project Finance")
+                        section.withName("Project finance")
                 );
         return competitionTypeSections;
     }

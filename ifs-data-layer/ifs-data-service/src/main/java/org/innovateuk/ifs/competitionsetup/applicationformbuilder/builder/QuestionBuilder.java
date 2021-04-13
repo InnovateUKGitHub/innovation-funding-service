@@ -66,9 +66,17 @@ public final class QuestionBuilder {
         return this;
     }
 
+    public String getShortName() {
+        return shortName;
+    }
+
     public QuestionBuilder withDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public QuestionBuilder withDescription2(String description2) {
