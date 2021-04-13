@@ -219,7 +219,7 @@ public class ReviewAndSubmitController {
     }
 
     private boolean canReopenApplication(ApplicationResource application, UserResource user, boolean alwaysOpen) {
-        return alwaysOpen ? false : CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
+        return !alwaysOpen && CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
                 && application.canBeReopened()
                 && userService.isLeadApplicant(user.getId(), application);
     }

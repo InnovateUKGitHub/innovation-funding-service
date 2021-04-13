@@ -203,8 +203,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        return application.getCompetition().isAlwaysOpen() ?
-                false :
+        return !application.getCompetition().isAlwaysOpen() &&
                 application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                 application.getFundingDecision() == null &&
