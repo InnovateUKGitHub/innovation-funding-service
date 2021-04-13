@@ -210,7 +210,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return financeRowTypes;
     }
 
-    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<BaseFinanceResource> finance) {
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<? extends BaseFinanceResource> finance) {
         List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
 
         if (this.isKtp() && finance.isPresent()) {

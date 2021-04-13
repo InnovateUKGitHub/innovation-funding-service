@@ -4032,10 +4032,16 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="row">Total indirect costs</th>
-                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-indirect-costs"
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-0" id="section-total-indirect-costs"
                     th:attr="data-calculation-rawvalue=${form.totalIndirectCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalIndirectCosts, 0, 'DEFAULT')}"/>
                 </td>
+                <input type="hidden"
+                       data-calculation-operations="+,*,/"
+                       id="section-total-indirect-costs"
+                       th:attr="data-calculation-rawvalue=${form.totalIndirectCosts},
+                                data-calculation-fields=${'#total-grant-associate-salary-costs, #total-grant-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>
             </tr>
             </tfoot>
         </table>
@@ -4044,7 +4050,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 <!--/*</editor-fold>*/-->
 
 <th:block th:fragment="internal_view_buttons (financeType)">
-    <div class="alignright-button" th:if="${model.open}">
+    <div class="alignright-button" th:if="${model.open and model.showEditButton(financeType)}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}"
            th:if="${model.isReadOnly(financeType)}"
            class="govuk-button govuk-button--secondary">Edit</a>

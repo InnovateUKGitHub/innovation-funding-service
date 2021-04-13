@@ -245,6 +245,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return isReadOnly();
     }
 
+    public boolean showEditButton(FinanceRowType type) {
+        return !type.equals(FinanceRowType.INDIRECT_COSTS);
+    }
+
     public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
         return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
     }

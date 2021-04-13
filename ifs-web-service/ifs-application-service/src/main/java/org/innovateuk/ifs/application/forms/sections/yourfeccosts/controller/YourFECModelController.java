@@ -2,20 +2,24 @@ package org.innovateuk.ifs.application.forms.sections.yourfeccosts.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelForm;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
+import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -29,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -54,7 +59,14 @@ public class YourFECModelController {
     private SectionService sectionService;
     @Autowired
     private ProcessRoleRestService processRoleRestService;
-
+    @Autowired
+    private YourProjectCostsAutosaver yourProjectCostsAutosaver;
+    @Autowired
+    private SectionStatusRestService sectionStatusRestService;
+    @Autowired
+    private SectionRestService sectionRestService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
@@ -66,11 +78,12 @@ public class YourFECModelController {
             UserResource loggedInUser,
             Model model,
             @ModelAttribute("form") YourFECModelForm form) {
+
         formPopulator.populate(form, applicationId, organisationId);
-        YourFECViewModel YourFECViewModel =
+        YourFECViewModel yourFECViewModel =
                 getViewModel(applicationId, sectionId, organisationId, loggedInUser);
 
-        model.addAttribute("model", YourFECViewModel);
+        model.addAttribute("model", yourFECViewModel);
         return VIEW_PAGE;
     }
 
@@ -83,6 +96,7 @@ public class YourFECModelController {
             @ModelAttribute YourFECModelForm form) {
 
         updateFECModelEnabled(applicationId, organisationId, form);
+        yourProjectCostsAutosaver.resetNonFECCostRowEntries(applicationId, organisationId);
         return redirectToYourFinances(applicationId);
     }
 
@@ -131,11 +145,15 @@ public class YourFECModelController {
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId,
-            UserResource loggedInUser) {
+            UserResource loggedInUser,
+            Model model,
+            @ModelAttribute("form") YourFECModelForm form)  {
 
         ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
-        return redirectToViewPage(applicationId, organisationId, sectionId);
+        markYourProjectCostsAsIncomplete(applicationId,processRole.getId());
+        form.setDisplayBanner(true);
+        return viewPage(applicationId, organisationId,sectionId,loggedInUser,model,form);
     }
 
     private void updateFECModelEnabled(long applicationId,
@@ -208,4 +226,14 @@ public class YourFECModelController {
     private ProcessRoleResource getProcessRole(long applicationId, long userId) {
         return processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
     }
+
+    private long getCompetitionId(long applicationId) {
+        return competitionRestService.getCompetitionForApplication(applicationId).getSuccess().getId();
+    }
+
+    private void  markYourProjectCostsAsIncomplete(long applicationId, long processRoleId) {
+        List<SectionResource> sections = sectionRestService.getSectionsByCompetitionIdAndType(getCompetitionId(applicationId), SectionType.PROJECT_COST_FINANCES).getSuccess();
+        sectionStatusRestService.markAsInComplete(sections.get(0).getId(), applicationId, processRoleId).getSuccess();
+    }
+
 }
