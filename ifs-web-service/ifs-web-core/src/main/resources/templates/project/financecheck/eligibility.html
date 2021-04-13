@@ -218,6 +218,10 @@
                             application stage. They include all changes made during the eligibility checks.</p>
                     </th:block>
                 </th:block>
+                <th:block th:if="${summaryModel.ktp}">
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Is the knowledge base partner using the fEC funding model?</h3>
+                    <p class="govuk-body" th:text="${summaryModel.fecModelEnabled} ? 'Yes' : 'No'"></p>
+                </th:block>
                 <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
                     th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                     class="govuk-link">View changes to finances</a></p>
