@@ -211,16 +211,16 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> reopenApplication(long applicationId) {
         return find(application(applicationId)).andOnSuccess(application ->
                 validateCompetitionIsNotAlwaysOpen(application).andOnSuccess(() ->
-                        validateCompetitionIsOpen(application).andOnSuccess(() -> {
-                            validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
-                                validateApplicationIsSubmitted(application).andOnSuccess(() -> {
+                        validateCompetitionIsOpen(application).andOnSuccess(() ->
+                                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() ->
+                                        validateApplicationIsSubmitted(application).andOnSuccess(() -> {
                                             applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
                                             application.setSubmittedDate(null);
                                             applicationRepository.save(application);
                                             return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
-                                        });
-                                    });
-                                })
+                                        })
+                                )
+                        )
                 )
         );
     }
@@ -230,7 +230,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> validateCompetitionIsNotAlwaysOpen(Application application) {
-        return !application.getCompetition().isAlwaysOpen() ? serviceSuccess() : serviceFailure(COMPETITION_NOT_OPEN);
+        return !application.getCompetition().isAlwaysOpen() ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_REOPENED);
     }
 
     private ServiceResult<Void> validateApplicationIsSubmitted(Application application) {
