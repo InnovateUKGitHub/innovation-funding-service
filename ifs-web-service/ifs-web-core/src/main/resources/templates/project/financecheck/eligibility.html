@@ -128,8 +128,13 @@
                     <td class="govuk-table__cell"
                         th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                    <td th:unless="${summaryModel.ktp and !summaryModel.fecModelEnabled}" class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
                         th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">
+                        200,123
+                    </th:block>
+                    </td>
+                    <td th:if="${summaryModel.ktp and !summaryModel.fecModelEnabled}" class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                            th:text="${#numbers.formatInteger(form.organisationFinanceTotal,1,'DEFAULT')}">
                         200,123
                     </th:block>
                     </td>
