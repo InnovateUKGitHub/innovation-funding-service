@@ -5,19 +5,18 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.mockito.ArgumentMatchers.refEq;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.*;
 
 
@@ -38,7 +37,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
         Competition competition = newCompetition().build();
 
         Section section = newSection()
-                .withName(PROJECT_DETAILS.getName())
+                .withSectionType(SectionType.PROJECT_DETAILS)
                 .build();
 
         Question newlyCreatedQuestion = newQuestion()
@@ -57,8 +56,8 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
 
         when(questionRepositoryMock.findFirstByCompetitionIdAndQuestionSetupType(competition.getId(),
                 APPLICATION_DETAILS)).thenReturn(applicationDetailsQuestion);
-        when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
-                competition.getId(), PROJECT_DETAILS.getName(), applicationDetailsQuestion.getPriority())).thenReturn(
+        when(questionRepositoryMock.findByCompetitionIdAndSectionTypeAndPriorityGreaterThanOrderByPriorityAsc(
+                competition.getId(), SectionType.PROJECT_DETAILS, applicationDetailsQuestion.getPriority())).thenReturn(
                 questions);
 
         service.prioritiseResearchCategoryQuestionAfterCreation(newlyCreatedQuestion);
@@ -88,8 +87,8 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
         Question newlyCreatedQuestion = existingQuestions.get(3);
 
 
-        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(lastPrioritizedQuestion.getCompetition().getId(),
-                APPLICATION_QUESTIONS.getName())).thenReturn(lastPrioritizedQuestion);
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionTypeOrderByPriorityDesc(lastPrioritizedQuestion.getCompetition().getId(),
+                SectionType.APPLICATION_QUESTIONS)).thenReturn(lastPrioritizedQuestion);
 
         service.prioritiseAssessedQuestionAfterCreation(newlyCreatedQuestion);
 
@@ -111,7 +110,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .build(3);
 
         Section section = newSection()
-                .withName(APPLICATION_QUESTIONS.getName())
+                .withSectionType(SectionType.APPLICATION_QUESTIONS)
                 .build();
 
         Question deletedQuestion = newQuestion()
@@ -121,9 +120,9 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withSection(section)
                 .build();
 
-        when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
+        when(questionRepositoryMock.findByCompetitionIdAndSectionTypeAndPriorityGreaterThanOrderByPriorityAsc(
                 deletedQuestion.getCompetition().getId(),
-                APPLICATION_QUESTIONS.getName(),
+                SectionType.APPLICATION_QUESTIONS,
                 deletedQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
@@ -149,7 +148,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .build(3);
 
         Section section = newSection()
-                .withName(APPLICATION_QUESTIONS.getName())
+                .withSectionType(SectionType.APPLICATION_QUESTIONS)
                 .build();
 
         Question deletedQuestion = newQuestion()
@@ -159,9 +158,9 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withSection(section)
                 .build();
 
-        when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
+        when(questionRepositoryMock.findByCompetitionIdAndSectionTypeAndPriorityGreaterThanOrderByPriorityAsc(
                 deletedQuestion.getCompetition().getId(),
-                APPLICATION_QUESTIONS.getName(),
+                SectionType.APPLICATION_QUESTIONS,
                 deletedQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
@@ -187,7 +186,7 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .build(3);
 
         Section section = newSection()
-                .withName(APPLICATION_QUESTIONS.getName())
+                .withSectionType(SectionType.APPLICATION_QUESTIONS)
                 .build();
 
         Question lastQuestion = newQuestion()
@@ -197,9 +196,9 @@ public class QuestionPriorityOrderServiceTest extends BaseServiceUnitTest<Questi
                 .withSection(section)
                 .build();
 
-        when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
+        when(questionRepositoryMock.findByCompetitionIdAndSectionTypeAndPriorityGreaterThanOrderByPriorityAsc(
                 lastQuestion.getCompetition().getId(),
-                APPLICATION_QUESTIONS.getName(),
+                SectionType.APPLICATION_QUESTIONS,
                 lastQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 

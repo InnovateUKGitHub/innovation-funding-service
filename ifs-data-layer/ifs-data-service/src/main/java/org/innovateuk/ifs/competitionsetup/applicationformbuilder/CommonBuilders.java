@@ -59,7 +59,7 @@ public class CommonBuilders {
     public static SectionBuilder projectDetails() {
         return aSection()
                 .withName("Project details")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.PROJECT_DETAILS)
                 .withDescription("Please provide information about your project. This section is not scored but will provide background to the project.")
                 .withAssessorGuidanceDescription("These sections give important background information on the project. They do not need scoring however you do need to mark the scope.");
     }
@@ -67,7 +67,7 @@ public class CommonBuilders {
     public static SectionBuilder applicationQuestions() {
         return aSection()
                 .withName("Application questions")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.APPLICATION_QUESTIONS)
                 .withDescription("These are the questions which will be marked by the assessors.")
                 .withAssessorGuidanceDescription("Each question should be given a score out of 10. Written feedback should also be given.");
     }
@@ -75,7 +75,7 @@ public class CommonBuilders {
     public static SectionBuilder finances() {
         return aSection()
                 .withName("Finances")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.FINANCES)
                 .withAssessorGuidanceDescription("Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the Finances overview section")
                 .withChildSections(newArrayList(
                         aSubSection()

@@ -215,7 +215,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         sections = newSectionResource()
                 .withName("Project details", "Application questions", "Finances", "Terms and conditions")
                 .withQuestions(questionIds)
-                .withType(SectionType.GENERAL, SectionType.GENERAL, SectionType.GENERAL, SectionType.TERMS_AND_CONDITIONS)
+                .withType(SectionType.PROJECT_DETAILS, SectionType.APPLICATION_QUESTIONS, SectionType.FINANCES, SectionType.TERMS_AND_CONDITIONS)
                 .withAssessorGuidanceDescription("These do not need scoring.",
                         "Each question should be given a score.",
                         "Each partner is required to submit their own finances.",
