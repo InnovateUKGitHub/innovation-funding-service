@@ -50,12 +50,6 @@
 
         <th:block th:insert="application/readonly/application-read-only :: accordion  (${model.applicationReadOnlyViewModel})" />
 
-        <th:block th:if="${model.competition.isOpen() and model.application.isOpen() and model.userIsLeadApplicant and model.hasBusinessAndFinancalInformationQuestion()}">
-            <div class="message-alert">
-                <p class="govuk-body">You must ensure that the business information and financial spreadsheet have been completed before you click submit below. Your loan application will not be considered without these.</p>
-            </div>
-        </th:block>
-
         <div th:if="${!model.competition.isOpen() and !model.application.isSubmitted()}">
             <div class="warning-alert">
                 <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>
@@ -71,6 +65,7 @@
                             name="submit-application">Submit application</button>
                 </form>
             </th:block>
+
             <th:block th:unless="${model.userIsLeadApplicant}">
                 <div class="message-alert">
                     <p class="govuk-body">All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</p>
