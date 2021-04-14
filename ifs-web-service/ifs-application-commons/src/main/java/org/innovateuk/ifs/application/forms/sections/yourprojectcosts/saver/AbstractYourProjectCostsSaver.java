@@ -16,8 +16,10 @@ import org.innovateuk.ifs.util.JsonUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -25,6 +27,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
+import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.calculateIndirectCostFromForm;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -67,12 +70,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case ASSOCIATE_SALARY_COSTS:
                     messages.addAll(saveRowsAndDeleteBlank(form.getAssociateSalaryCostRows(), finance).get());
                     if (ktp && !finance.getFecModelEnabled()) {
-                        BigInteger totalAssociateSalaryCosts = form.getAssociateSalaryCostRows().values().stream()
-                                .map(AssociateSalaryCostRowForm::getCost)
-                                .filter(Objects::nonNull)
-                                .reduce(BigInteger::add)
-                                .orElse(new BigInteger("0"));
-
+                        BigInteger totalAssociateSalaryCosts = getTotalAssociateSalaryCosts(form);
                         messages.addAll(saveIndirectCostAfterAssociateSalaryUpdate(form, finance, new BigDecimal(totalAssociateSalaryCosts)).get());
                     }
 
@@ -210,7 +208,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                         .findFirst()
                         .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
 
-                BigDecimal calculateIndirectCost = calculateIndirectCostWithNewAcademicAndSecretarialSupportCost(form, finance, academicAndSecretarialSupport.getTotal());
+                BigDecimal calculateIndirectCost = IndirectCostsUtil.calculateIndirectCostWithNewAcademicAndSecretarialSupportCost(form, finance, academicAndSecretarialSupport.getTotal());
 
                 indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
                 messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
@@ -230,7 +228,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     .findFirst()
                     .orElseGet(() -> getFinanceRowService().create(new IndirectCost(finance.getId())).getSuccess());
 
-            BigDecimal calculateIndirectCost = calculateIndirectCostWithNewAssociateSalaryCost(form, finance, value);
+            BigDecimal calculateIndirectCost = IndirectCostsUtil.calculateIndirectCostWithNewAssociateSalaryCost(form, finance, value);
 
             indirectCost.setCost(calculateIndirectCost.toBigIntegerExact());
             messages.addAll(getFinanceRowService().update(indirectCost).getSuccess());
@@ -238,6 +236,13 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
+    private BigInteger getTotalAssociateSalaryCosts(YourProjectCostsForm form) {
+        return form.getAssociateSalaryCostRows().values().stream()
+                .map(AssociateSalaryCostRowForm::getCost)
+                .filter(Objects::nonNull)
+                .reduce(BigInteger::add)
+                .orElse(new BigInteger("0"));
+    }
 
     private CompletableFuture<ValidationMessages> saveLabourCosts(LabourForm labourForm, BaseFinanceResource finance) {
         return async(() -> {
@@ -343,71 +348,6 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
-    private BigDecimal calculateIndirectCostWithNewAssociateSalaryCost(YourProjectCostsForm form,
-                                                                       BaseFinanceResource finance,
-                                                                       BigDecimal updatedValue) {
-//        form.recalculateTotals();
-
-        BigDecimal totalAssociateSalaryCost = updatedValue;
-
-        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
-                .multiply(finance.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(finance.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getTotal())
-                .orElse(BigDecimal.ZERO);
-
-        BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
-                .multiply(finance.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        return getTotalIndirectCosts(form, totalGrantAssociateSalaryCost, totalGrantAcademicAndSecretarialSupportCost);
-    }
-
-    private BigDecimal getTotalIndirectCosts(YourProjectCostsForm form, BigDecimal totalGrantAssociateSalaryCost, BigDecimal totalGrantAcademicAndSecretarialSupportCost) {
-        return totalGrantAssociateSalaryCost
-                .add(totalGrantAcademicAndSecretarialSupportCost)
-                .multiply(form.INDIRECT_COST_PERCENTAGE)
-                .divide(new BigDecimal(100))
-                .setScale(0, RoundingMode.HALF_UP);
-    }
-
-    private BigDecimal calculateIndirectCostWithNewAcademicAndSecretarialSupportCost(YourProjectCostsForm form,
-                                                                                     BaseFinanceResource finance,
-                                                                                     BigDecimal updatedValue) {
-
-        BigDecimal totalAssociateSalaryCost = finance.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SALARY_COSTS).getTotal();
-
-        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
-                .multiply(finance.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        BigDecimal totalGrantAcademicAndSecretarialSupportCost = updatedValue
-                .multiply(finance.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        return getTotalIndirectCosts(form, totalGrantAssociateSalaryCost, totalGrantAcademicAndSecretarialSupportCost);
-    }
-
-    private BigDecimal calculateIndirectCostFromForm(YourProjectCostsForm form) {
-        form.recalculateTotals();
-
-        BigDecimal totalAssociateSalaryCost = Optional.of(form.getTotalAssociateSalaryCosts())
-                .orElse(BigDecimal.ZERO);
-
-        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
-                .multiply(form.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(form.getTotalAcademicAndSecretarialSupportCosts())
-                .orElse(BigDecimal.ZERO);
-
-        BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
-                .multiply(form.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        return getTotalIndirectCosts(form, totalGrantAssociateSalaryCost, totalGrantAcademicAndSecretarialSupportCost);
-    }
 
     private <R extends AbstractCostRowForm> CompletableFuture<ValidationMessages> saveRows(Map<String, R> rows, BaseFinanceResource finance) {
         return async(() -> {
