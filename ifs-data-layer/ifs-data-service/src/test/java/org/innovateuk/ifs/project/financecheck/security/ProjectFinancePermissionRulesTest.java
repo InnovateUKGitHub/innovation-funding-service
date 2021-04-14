@@ -196,6 +196,42 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void competitionFinanceUserCanSaveFundingRules() {
+
+        Long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(projectProcessRepository.findOneByTargetId(competitionFinanceProject.getId())).thenReturn(projectProcess);
+
+        assertTrue(rules.competitionFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, userResource));
+        assertFalse(rules.competitionFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, userResourceNotInCompetition));
+    }
+
+    @Test
+    public void projectFinanceUserCanSaveFundingRules() {
+
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
+                assertTrue(rules.projectFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
     public void projectFinanceUserCanSaveCreditReport() {
 
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);

@@ -5,7 +5,7 @@
     <th:block th:fragment="answer-table(model)">
         <table class="govuk-table govuk-!-margin-top-3" th:unless="${model == null or model.questions.isEmpty()}">
             <caption class="govuk-table__caption ">
-                <h2 class="govuk-heading-m" th:text="${model.title}">Previous answers</h2>
+                <h2 class="govuk-heading-m" th:unless="${model.title == null}" th:text="${model.title}">Previous answers</h2>
                 <p class="govuk-body" th:unless="${model.readonly}"><a class="govuk-link" th:href="${model.getLink()}">Start again</a></p>
             </caption>
             <thead class="govuk-table__head">
