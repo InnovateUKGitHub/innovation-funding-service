@@ -108,6 +108,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+...               IFS-9484 Loans: Applicant journey
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -489,6 +491,17 @@ Application: Scope Assessment questions
     And the user clicks the button/link              link = Test heading
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link = Back to application
+
+Application: Business and financial information
+    [Documentation]  INFUND-5634 INFUND-5635  IFS-9484
+    [Tags]  HappyPath
+    Given the user clicks the button/link          link = Business and financial information
+    And the user should see the element            jQuery = h1:contains("Business and financial information")
+    And the user should see the element            jQuery = h2:contains("Application question")
+    When the user enters text to a text field      id=question.guidanceTitle    Test guidance title
+    And the user enters text to a text field       jQuery = label:contains("Question guidance") + div .editor    Guidance text test
+    And the user clicks the button/link            jQuery = button:contains('Done')
+    Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
 
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
