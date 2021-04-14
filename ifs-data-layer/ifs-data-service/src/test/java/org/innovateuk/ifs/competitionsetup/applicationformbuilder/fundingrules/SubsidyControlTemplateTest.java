@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
@@ -58,7 +59,7 @@ public class SubsidyControlTemplateTest {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", true);
         long questionnaireId = 1L;
         Questionnaire questionnaireEntity = new Questionnaire();
-        SectionBuilder projectDetails = aSection().withName("Project details");
+        SectionBuilder projectDetails = aSection().withName("Project details").withType(SectionType.PROJECT_DETAILS);
 
         when(environment.getActiveProfiles()).thenReturn(new String[0]);
         when(questionnaireService.create(any())).thenAnswer((inv) -> {
@@ -74,7 +75,7 @@ public class SubsidyControlTemplateTest {
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
-                aSection().withName("Finances")
+                aSection().withName("Finances").withType(SectionType.FINANCES)
         ));
 
         assertThat(projectDetails.getQuestions().get(0).getName()).isEqualTo("Subsidy basis");
@@ -89,13 +90,13 @@ public class SubsidyControlTemplateTest {
     @Test
     public void shouldInjectQuestionToProjectDetails() {
         ReflectionTestUtils.setField(subsidyControlTemplate, "northernIrelandSubsidyControlToggle", false);
-        SectionBuilder projectDetails = aSection().withName("Project details")
+        SectionBuilder projectDetails = aSection().withName("Project details").withType(SectionType.PROJECT_DETAILS)
                 .withQuestions(newArrayList(aQuestion().withName("question1")));
         Competition competition = newCompetition().build();
 
         subsidyControlTemplate.sections(competition, newArrayList(
                 projectDetails,
-                aSection().withName("Finances")
+                aSection().withName("Finances").withType(SectionType.FINANCES)
         ));
 
         assertThat(projectDetails.getQuestions()).hasSize(2);

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.runner.RunWith;
@@ -41,7 +42,7 @@ public class KtpTemplateTest {
     public void assessorGuidanceOverriddenForKTP() {
         SectionBuilder sectionBuilder = aSection()
                 .withAssessorGuidanceDescription("This should be overridden")
-                .withName("Application questions");
+                .withType(SectionType.APPLICATION_QUESTIONS);
 
         List<SectionBuilder> sections = template.sections(newArrayList(sectionBuilder));
 

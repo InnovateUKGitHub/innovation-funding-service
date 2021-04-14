@@ -189,7 +189,10 @@ public class FinanceCheckSummaryResource {
 
     @JsonIgnore
     public boolean isFinanceChecksAllApproved() {
-        return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired() && isPaymentMilestoneAllApprovedOrNotRequired();
+        return isViabilityAllApprovedOrNotRequired()
+                && isEligibilityAllApprovedOrNotRequired()
+                && isPaymentMilestoneAllApprovedOrNotRequired()
+                && isFundingRulesAllApprovedOrNotRequired();
     }
 
     private boolean isViabilityAllApprovedOrNotRequired() {
@@ -214,6 +217,12 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources.stream()
                 .filter(status -> status.getPaymentMilestoneState() != null)
                 .allMatch(org -> PaymentMilestoneState.APPROVED == org.getPaymentMilestoneState());
+    }
+
+    private boolean isFundingRulesAllApprovedOrNotRequired() {
+        return partnerStatusResources.stream()
+                .filter(status -> status.getFundingRulesState() != null)
+                .allMatch(org -> FundingRulesState.APPROVED == org.getFundingRulesState());
     }
 
     public boolean isAllEligibilityAndViabilityInReview() {
