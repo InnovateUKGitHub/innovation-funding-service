@@ -29,10 +29,9 @@ public enum CompetitionCompletionStage {
         return lastMilestone;
     }
 
-    public static List<CompetitionCompletionStage> assessmentValues() {
+    public static List<CompetitionCompletionStage> alwaysOpenValues() {
         return Stream.of(values())
-                .filter(competitionCompletionStage -> (competitionCompletionStage == CompetitionCompletionStage.PROJECT_SETUP
-                        || competitionCompletionStage == CompetitionCompletionStage.RELEASE_FEEDBACK))
+                .filter(completionStage -> (completionStage == RELEASE_FEEDBACK || completionStage == PROJECT_SETUP))
                 .collect(Collectors.toList());
     }
 }
