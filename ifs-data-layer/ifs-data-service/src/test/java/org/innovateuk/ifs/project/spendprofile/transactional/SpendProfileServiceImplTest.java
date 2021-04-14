@@ -8,6 +8,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
+import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -22,12 +24,14 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -67,6 +71,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -81,6 +86,7 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -106,6 +112,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
     @Mock
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+    @Mock
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
     @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
     @Mock
@@ -377,6 +385,38 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
+
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
+    }
+
+    @Test
+    public void generateSpendProfileWhenNotAllFundingRulesApproved() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+        project.getApplication().getCompetition().setFundingRules(FundingRules.SUBSIDY_CONTROL);
+        Question question = newQuestion().withQuestionSetupType(SUBSIDY_BASIS).build();
+        project.getApplication().getCompetition().getQuestions().add(question);
+
+        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
+        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
+
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(fundingRulesWorkflowHandler.getState(partnerOrganisation1)).thenReturn(FundingRulesState.APPROVED);
+        when(fundingRulesWorkflowHandler.getState(partnerOrganisation2)).thenReturn(FundingRulesState.REVIEW);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FUNDING_RULES_APPROVED));
 
         verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
         verifyNoMoreInteractions(spendProfileRepository);

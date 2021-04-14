@@ -76,17 +76,28 @@ public class ProjectFinanceChangesViewModelPopulator {
         ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
+        FundingRulesChangeViewModel fundingRuleChange = getFundingRuleChange(appFinanceResource, projectFinanceResource);
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(competition, organisation, appFinanceResource, projectFinanceResource);
         ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, appFinanceResource, eligibilityOverview, isLead,
-                projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
+                projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts(), fundingRuleChange);
         ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, organisation, competition);
 
-        return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(),
+        return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(),
+                project.getName(), project.getApplication(), project.getId(),
                 competition.isProcurement(),
                 orgPresentOnApplication,
                 projectFinanceChangesFinanceSummaryViewModel,
                 projectFinanceChangesProjectFinancesViewModel,
                 projectFinanceChangesMilestoneDifferencesViewModel);
+    }
+
+    private FundingRulesChangeViewModel getFundingRuleChange(ApplicationFinanceResource appFinanceResource, ProjectFinanceResource projectFinanceResource) {
+        Boolean appNiDec = appFinanceResource.getNorthernIrelandDeclaration();
+        Boolean projNiDec = projectFinanceResource.getNorthernIrelandDeclaration();
+        if (appNiDec == null || projNiDec == null) {
+            return null;
+        }
+        return new FundingRulesChangeViewModel(appNiDec, projNiDec);
     }
 
     private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(CompetitionResource competition, OrganisationResource organisation, ApplicationFinanceResource appFinance, ProjectFinanceResource projectFinance) {
@@ -156,12 +167,13 @@ public class ProjectFinanceChangesViewModelPopulator {
         return rowType.getDisplayName();
     }
 
-    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource, FinanceCheckEligibilityResource eligibilityOverview, boolean isLead, CostChangeViewModel totalProjectCosts) {
+    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource,
+                                                                                    FinanceCheckEligibilityResource eligibilityOverview, boolean isLead,
+                                                                                    CostChangeViewModel totalProjectCosts, FundingRulesChangeViewModel fundingRuleChange) {
         if (competition.isProcurement()) {
             return null;
         }
         List<CostChangeViewModel> entries = new ArrayList<>();
-        entries.add(totalProjectCosts);
 
         entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
         entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
@@ -178,7 +190,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         } else {
             entries.add(new CostChangeViewModel("Contribution to project (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
         }
-        return new ProjectFinanceChangesFinanceSummaryViewModel(entries);
+        return new ProjectFinanceChangesFinanceSummaryViewModel(totalProjectCosts, fundingRuleChange, entries);
     }
 
     private BigDecimal contributionPercentage(ApplicationFinanceResource applicationFinanceResource) {
