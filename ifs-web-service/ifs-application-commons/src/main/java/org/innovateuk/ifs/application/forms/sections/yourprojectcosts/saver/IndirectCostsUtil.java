@@ -39,7 +39,7 @@ public class IndirectCostsUtil {
                 .orElse(BigDecimal.ZERO);
     }
 
-    public static BigDecimal calculateIndirectCost(ApplicationFinanceResource organisationFinance) {
+    public static BigDecimal calculateIndirectCost(BaseFinanceResource organisationFinance) {
         return calculateIndirectCostPercentage.apply(
                 calculateGrantPercentageAmount.apply(
                         getCostTotalFromFinances(FinanceRowType.ASSOCIATE_SALARY_COSTS, organisationFinance),
