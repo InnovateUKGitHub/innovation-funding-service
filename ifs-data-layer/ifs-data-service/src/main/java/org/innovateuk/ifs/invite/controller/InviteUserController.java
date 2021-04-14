@@ -26,7 +26,7 @@ public class InviteUserController {
 
     private static final String DEFAULT_PAGE_SIZE = "40";
 
-    private static final Sort DEFAULT_INVITE_SORT = new Sort(new Sort.Order(Sort.Direction.ASC, "name"));
+    private static final Sort DEFAULT_INVITE_SORT = Sort.by(new Sort.Order(Sort.Direction.ASC, "name"));
 
     @Autowired
     private InviteUserService inviteUserService;

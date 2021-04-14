@@ -1,7 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules;
 
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
@@ -12,10 +18,15 @@ import org.innovateuk.ifs.questionnaire.config.service.QuestionnaireTextOutcomeS
 import org.innovateuk.ifs.questionnaire.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 
 @Component
@@ -39,14 +50,24 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     @Value("${ifs.subsidy.control.northern.ireland.enabled}")
     private boolean northernIrelandSubsidyControlToggle;
 
+    @Autowired
+    private Environment environment;
+
     @Override
     public FundingRules type() {
         return FundingRules.SUBSIDY_CONTROL;
     }
 
     @Override
-    public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-        if (northernIrelandSubsidyControlToggle && competitionTypeSections.stream().anyMatch(section -> section.getName().equals("Finances"))) {
+    public List<SectionBuilder> sections(Competition competition, List<SectionBuilder> competitionTypeSections) {
+
+        if (competitionTypeSections.stream().noneMatch(section -> section.getType() == SectionType.FINANCES)) {
+            return competitionTypeSections;
+        }
+
+        if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
+            insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
+        } else if (northernIrelandSubsidyControlToggle) {
             competitionTypeSections.get(0)
                     .getQuestions().add(0,
                     aQuestion()
@@ -60,6 +81,45 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                             .withQuestionnaire(northernIrelandDeclaration()));
         }
         return competitionTypeSections;
+    }
+
+    private boolean generatingWebtestDataForComp(Competition competition) {
+        return Arrays.stream(environment.getActiveProfiles()).anyMatch(profile -> "integration-test".equals(profile))
+                && competition.getName().contains("Subsidy control tactical");
+    }
+
+    private boolean northernIrelandSubsidyControlModeDisabled() {
+        return !northernIrelandSubsidyControlToggle;
+    }
+
+    private static void insertNorthernIrelandTacticalDeclaration(List<SectionBuilder> sectionBuilders) {
+        sectionBuilders.stream()
+                .filter(section -> "Project details".equals(section.getName()))
+                .findAny()
+                .ifPresent(section -> section.getQuestions().add(0, northernIrelandTacticalDeclaration()));
+    }
+
+    private static QuestionBuilder northernIrelandTacticalDeclaration() {
+        return aQuestion()
+                .withShortName("Subsidy basis")
+                .withName("Is your company based in Northern Ireland and/or are you planning to undertake any work for which you are seeking Innovate UK funding in Northern Ireland?")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(true)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.NORTHERN_IRELAND_DECLARATION)
+                .withFormInputs(newArrayList(
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withActive(true)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withMultipleChoiceOptions(newArrayList(
+                                        aMultipleChoiceOption()
+                                                .withText("Yes"),
+                                        aMultipleChoiceOption()
+                                                .withText("No")
+                                ))
+                ));
     }
 
     private Questionnaire northernIrelandDeclaration() {
@@ -105,28 +165,28 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
         activitiesYes.setDecisionType(DecisionType.TEXT_OUTCOME);
         activitiesYes.setDecision(activitiesStateAidOutcome.getId());
         activitiesYes.setText("Yes");
-        activitiesYes = questionnaireOptionService.create(activitiesYes).getSuccess();
+        questionnaireOptionService.create(activitiesYes).getSuccess();
 
         QuestionnaireOptionResource activitiesNo = new QuestionnaireOptionResource();
         activitiesNo.setQuestion(activitiesQuestion.getId());
         activitiesNo.setDecisionType(DecisionType.QUESTION);
         activitiesNo.setDecision(tradeQuestion.getId());
         activitiesNo.setText("No");
-        activitiesNo = questionnaireOptionService.create(activitiesNo).getSuccess();
+        questionnaireOptionService.create(activitiesNo).getSuccess();
 
         QuestionnaireOptionResource tradeYes = new QuestionnaireOptionResource();
         tradeYes.setQuestion(tradeQuestion.getId());
         tradeYes.setDecisionType(DecisionType.TEXT_OUTCOME);
         tradeYes.setDecision(tradeStateAidOutcome.getId());
         tradeYes.setText("Yes");
-        tradeYes = questionnaireOptionService.create(tradeYes).getSuccess();
+        questionnaireOptionService.create(tradeYes).getSuccess();
 
         QuestionnaireOptionResource tradeNo = new QuestionnaireOptionResource();
         tradeNo.setQuestion(tradeQuestion.getId());
         tradeNo.setDecisionType(DecisionType.TEXT_OUTCOME);
         tradeNo.setDecision(tradeSubsidyControlOutcome.getId());
         tradeNo.setText("No");
-        tradeNo = questionnaireOptionService.create(tradeNo).getSuccess();
+        questionnaireOptionService.create(tradeNo).getSuccess();
 
         return questionnaireRepository.findById(questionnaire.getId()).get();
     }

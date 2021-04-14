@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * View model backing the internal users' view of the Grant Offer Letter template page
@@ -18,7 +20,7 @@ public class GrantOfferLetterTemplateViewModel {
     private final String projectName;
     private final String leadOrgName;
     private final List<NoteResource> notes;
-    private final String termsAndConditionsTemplate;
+    private final Map<String, String> termsAndConditionsTemplates;
     private final IndustrialFinanceTableModel industrialFinanceTable;
     private final AcademicFinanceTableModel academicFinanceTable;
     private final SummaryFinanceTableModel summaryFinanceTable;
@@ -32,7 +34,7 @@ public class GrantOfferLetterTemplateViewModel {
                                              String projectName,
                                              String leadOrgName,
                                              List<NoteResource> notes,
-                                             String termsAndConditionsTemplate,
+                                             Map<String, String> termsAndConditionsTemplates,
                                              IndustrialFinanceTableModel industrialFinanceTable,
                                              AcademicFinanceTableModel academicFinanceTable,
                                              SummaryFinanceTableModel summaryFinanceTable,
@@ -45,7 +47,7 @@ public class GrantOfferLetterTemplateViewModel {
         this.projectName = projectName;
         this.leadOrgName = leadOrgName;
         this.notes = notes;
-        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
+        this.termsAndConditionsTemplates = termsAndConditionsTemplates;
         this.industrialFinanceTable = industrialFinanceTable;
         this.academicFinanceTable = academicFinanceTable;
         this.summaryFinanceTable = summaryFinanceTable;
@@ -88,8 +90,16 @@ public class GrantOfferLetterTemplateViewModel {
         return notes;
     }
 
-    public String getTermsAndConditionsTemplate() {
-        return termsAndConditionsTemplate;
+    public Map<String, String> getTermsAndConditionsTemplates() {
+        return termsAndConditionsTemplates;
+    }
+
+    public boolean isSingleTermsAndConditionsTemplatePresent() {
+        return termsAndConditionsTemplates.size() == 1;
+    }
+
+    public String getSingleTermsAndConditionsTemplate() {
+        return termsAndConditionsTemplates.entrySet().stream().findAny().get().getValue();
     }
 
     public IndustrialFinanceTableModel getIndustrialFinanceTable() {

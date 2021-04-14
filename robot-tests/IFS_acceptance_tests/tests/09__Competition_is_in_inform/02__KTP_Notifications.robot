@@ -28,6 +28,8 @@ ${ktp_Partner_email}                jessica.doe@ludlow.co.uk
 ${MemberName}                       Member
 ${MemberEmail}                      member_email@gmail.com
 &{MemberCredentials}                email=${MemberEmail}    password=${short_password}
+${ktp_notification_application_id}      ${application_ids["KTP notifications application"]}
+
 
 *** Test Cases ***
 Lead invites a new team member to the project
@@ -46,10 +48,10 @@ Internal user marks the KTP application as unsuccessful
 
 Internal user checks the status of the application
     [Documentation]  IFS-8549
-    Given the user navigates to the page                          ${server}/management/dashboard/previous
-    When the user clicks the button/link                          link = ${KTP_competiton}
-    And the user clicks the button/link                           jQuery = button:contains("Projects")
-    Then the user should see the element                          jQuery = tbody div:contains("${KTP_application}") ~ div:contains("Unsuccessful")
+    Given the user navigates to the page                                            ${server}/management/dashboard/previous
+    And the user clicks the button/link in the paginated list with selector         jQuery = button:contains('Next')     link = ${KTP_competiton}
+    And the user clicks the button/link                                             jQuery = button:contains("Projects")
+    Then the user should see the element                                            jQuery = tbody div:contains("${KTP_application}") ~ div:contains("Unsuccessful")
     And the user cannot make any changes in the project setup
 
 The lead checks the status of the application
@@ -105,7 +107,7 @@ the user makes the application unsuccessful and sends notification
      the user should see the element    jQuery = td:contains("${KTP_application}") ~ td:contains("Unsuccessful")
      the user clicks the button/link    link = Competition
      the user clicks the button/link    link = Manage funding notifications
-     the user selects the checkbox      app-row-301
+     the user selects the checkbox      app-row-${ktp_notification_application_id}
      the user clicks the button/link    jQuery = button:contains("Write and send email")
      the user clicks the button/link    jQuery = button:contains("Send email to all applicants")
      the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
