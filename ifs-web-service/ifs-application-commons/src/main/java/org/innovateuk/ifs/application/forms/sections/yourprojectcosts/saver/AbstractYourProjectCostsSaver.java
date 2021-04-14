@@ -354,7 +354,7 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 .multiply(finance.getGrantClaimPercentage())
                 .divide(new BigDecimal(100));
 
-        BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(form.getTotalAcademicAndSecretarialSupportCosts())
+        BigDecimal totalAcademicAndSecretarialSupportCost = Optional.of(finance.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getTotal())
                 .orElse(BigDecimal.ZERO);
 
         BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
