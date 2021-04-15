@@ -8,7 +8,7 @@ RUN apt-get update
 RUN apt-get install -y mysql-client
 RUN apt-get install -y rsync
 RUN apt-get install -y telnet
-
+RUN apt-get install fastjar
 
 RUN apt-get install -q -y --fix-missing \
 	make \
@@ -92,7 +92,7 @@ RUN curl -s https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersio
 	if [ -z "$WEBSWING_TOKEN" ] ; \
 	then curl -s -L  "https://storage.googleapis.com/builds.webswing.org/releases/webswing-20.2.1.zip" > webswing.zip; \
 	else curl -s -L  "https://dev.webswing.org/${WEBSWING_TOKEN}/nexus/repository/Webswing-Public/webswing-agpl-dist/webswing-20.2.1-distribution.zip" > webswing.zip; fi && \
-	unzip webswing.zip && \
+	jar xvf webswing.zip && \
 	rm webswing.zip && \
 	mv webswing-* webswing && \
 	# Remove Webswing bundled examples
