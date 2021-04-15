@@ -10,7 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -301,20 +301,20 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
 
-        SbriPilotCostCategoryGenerator[] spendProfileGenerators =
-                stream(SbriPilotCostCategoryGenerator.values())
-                        .filter(SbriPilotCostCategoryGenerator::isIncludedInSpendProfile)
-                        .toArray(SbriPilotCostCategoryGenerator[]::new);
+        ProcurementCostCategoryGenerator[] spendProfileGenerators =
+                stream(ProcurementCostCategoryGenerator.values())
+                        .filter(ProcurementCostCategoryGenerator::isIncludedInSpendProfile)
+                        .toArray(ProcurementCostCategoryGenerator[]::new);
 
         CostCategoryType expectedCct = newCostCategoryType().
-                withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(SbriPilotCostCategoryGenerator.values(),
-                        SbriPilotCostCategoryGenerator::isIncludedInSpendProfile),
-                        SbriPilotCostCategoryGenerator::getDisplayName,
+                withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(ProcurementCostCategoryGenerator.values(),
+                        ProcurementCostCategoryGenerator::isIncludedInSpendProfile),
+                        ProcurementCostCategoryGenerator::getDisplayName,
                         ", ")).
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().
-                                withName(simpleMapArray(spendProfileGenerators, SbriPilotCostCategoryGenerator::getDisplayName, String.class)).
-                                withLabel(simpleMapArray(spendProfileGenerators, SbriPilotCostCategoryGenerator::getLabel, String.class)).
+                                withName(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getDisplayName, String.class)).
+                                withLabel(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getLabel, String.class)).
                                 build(spendProfileGenerators.length)).
 
                         build()).
