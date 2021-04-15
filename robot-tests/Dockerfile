@@ -2,7 +2,7 @@
 FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG WEBSWING_TOKEN=""
+# ARG WEBSWING_TOKEN=""
 
 RUN apt-get update
 RUN apt-get install -y mysql-client
@@ -89,14 +89,14 @@ RUN curl -s https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersio
 	cp -R ZAP*/* . &&  \
 	rm -R ZAP* && \
 	# Setup Webswing
-	if [ -z "$WEBSWING_TOKEN" ] ; \
-	then curl -s -L  "https://storage.googleapis.com/builds.webswing.org/releases/webswing-20.2.1.zip" > webswing.zip; \
-	else curl -s -L  "https://dev.webswing.org/${WEBSWING_TOKEN}/nexus/repository/Webswing-Public/webswing-agpl-dist/webswing-20.2.1-distribution.zip" > webswing.zip; fi && \
-	unzip webswing.zip && \
-	rm webswing.zip && \
-	mv webswing-* webswing && \
+	# if [ -z "$WEBSWING_TOKEN" ] ; \
+	# then curl -s -L  "https://storage.googleapis.com/builds.webswing.org/releases/webswing-20.2.1.zip" > webswing.zip; \
+	# else curl -s -L  "https://dev.webswing.org/${WEBSWING_TOKEN}/nexus/repository/Webswing-Public/webswing-agpl-dist/webswing-20.2.1-distribution.zip" > webswing.zip; fi && \
+	# unzip webswing.zip && \
+	# rm webswing.zip && \
+	# mv webswing-* webswing && \
 	# Remove Webswing bundled examples
-	rm -Rf webswing/apps/
+	# rm -Rf webswing/apps/
 
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
 ENV PATH $JAVA_HOME/bin:/zap/:$PATH
@@ -110,8 +110,8 @@ ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 COPY zap* CHANGELOG.md /zap/
-COPY webswing.config /zap/webswing/
-COPY webswing.properties /zap/webswing/
+# COPY webswing.config /zap/webswing/
+# COPY webswing.properties /zap/webswing/
 COPY policies /home/zap/.ZAP/policies/
 COPY policies /root/.ZAP/policies/
 # The scan script loads the scripts from dev home dir.
@@ -121,8 +121,8 @@ COPY scripts /home/zap/.ZAP_D/scripts/
 USER root
 
 RUN chown -R zap:zap /zap/* && \
-	chown -R zap:zap /zap/webswing/webswing.config && \
-	chown -R zap:zap /zap/webswing/webswing.properties && \
+	# chown -R zap:zap /zap/webswing/webswing.config && \
+	# chown -R zap:zap /zap/webswing/webswing.properties && \
 	chown -R zap:zap /home/zap/.ZAP/ && \
 	chmod 777 -R /zap && \
     chmod 777 -R /home/zap/.ZAP/
