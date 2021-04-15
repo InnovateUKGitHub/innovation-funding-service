@@ -15,22 +15,22 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public enum Role implements Identifiable {
 
-    ASSESSOR(3, "Assessor", Authority.ASSESSOR),
-    APPLICANT(4, "Applicant", Authority.APPLICANT),
-    COMP_ADMIN(5, "Competition Administrator", Authority.COMP_ADMIN),
-    SYSTEM_REGISTRATION_USER(6, "System Registration User", Authority.SYSTEM_REGISTRAR),
-    SYSTEM_MAINTAINER(7, "System Maintainer", Authority.SYSTEM_MAINTAINER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
-    PROJECT_FINANCE(8, "Project Finance", Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
-    INNOVATION_LEAD(13, "Innovation Lead", Authority.INNOVATION_LEAD),
-    IFS_ADMINISTRATOR(14, "IFS Administrator", Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
-    SUPPORT(15, "IFS Support User", Authority.SUPPORT),
-    MONITORING_OFFICER(19, "Monitoring Officer", Authority.MONITORING_OFFICER),
-    STAKEHOLDER(20, "Stakeholder", Authority.STAKEHOLDER),
-    LIVE_PROJECTS_USER(21, "Live projects user", Authority.LIVE_PROJECTS_USER),
-    EXTERNAL_FINANCE(22, "External finance reviewer", Authority.EXTERNAL_FINANCE),
-    KNOWLEDGE_TRANSFER_ADVISER(23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
-    SUPPORTER(24, "Supporter", Authority.SUPPORTER),
-    SUPER_ADMIN_USER(25, "Super Admin User", Authority.IFS_ADMINISTRATOR);
+    ASSESSOR                    (3, "Assessor", Authority.ASSESSOR),
+    APPLICANT                   (4, "Applicant", Authority.APPLICANT),
+    COMP_ADMIN                  (5, "Competition Administrator", Authority.COMP_ADMIN),
+    SYSTEM_REGISTRATION_USER    (6, "System Registration User", Authority.SYSTEM_REGISTRAR),
+    SYSTEM_MAINTAINER           (7, "System Maintainer", Authority.SYSTEM_MAINTAINER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    PROJECT_FINANCE             (8, "Project Finance", Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    INNOVATION_LEAD             (13, "Innovation Lead", Authority.INNOVATION_LEAD),
+    IFS_ADMINISTRATOR           (14, "IFS Administrator", Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    SUPPORT                     (15, "IFS Support User", Authority.SUPPORT),
+    MONITORING_OFFICER          (19, "Monitoring Officer", Authority.MONITORING_OFFICER),
+    STAKEHOLDER                 (20, "Stakeholder", Authority.STAKEHOLDER),
+    LIVE_PROJECTS_USER          (21, "Live projects user", Authority.LIVE_PROJECTS_USER),
+    EXTERNAL_FINANCE            (22, "External finance reviewer", Authority.EXTERNAL_FINANCE),
+    KNOWLEDGE_TRANSFER_ADVISER  (23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
+    SUPPORTER                   (24, "Supporter", Authority.SUPPORTER),
+    SUPER_ADMIN_USER            (25, "Super Admin User", Authority.IFS_ADMINISTRATOR);
 
     final long id;
     final String displayName;
