@@ -127,7 +127,7 @@ IFS admin can view the correct updated values in the Finance overview
     Then the user should see the element      jQuery = th:contains("${ktpLeadOrgName}") ~ td:contains("${totalProjectCostsUpdated}")
     And the user should see the element       jQuery = td:contains("Academic and secretarial support") ~ td:contains("${academicCostValueFormatted}")
     And the user should see the element       jQuery = td:contains("Indirect costs") ~ td:contains("${indirectCostUpdated}")
-    And the user should see the element       jQuery = th:contains("Total") ~ td:contains("£${indirectCostUpdated}")
+    And the user should see the element       jQuery = th:contains("Total") ~ td:contains("£${totalProjectCostsUpdated}")
 
 Lead applicant can view their non-FEC project finances in the Eligibility section when approved
     [Documentation]  IFS-9248
@@ -177,7 +177,9 @@ the user navigates to finance checks
     the user clicks the button/link     link = Finance checks
 
 the user should view their non-fec project finances
-    the user should see the element         jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") p:contains("No")
+    ${leadApplicantCheck}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    jQuery=h2:contains("Detailed finances")
+    run keyword if    '${leadApplicantCheck}' == 'PASS'    the user should see the element         jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") p:contains("No")
+    run keyword if    '${leadApplicantCheck}' == 'FAIL'    the user should see the element         jQuery = h3:contains("Is the knowledge base partner using the fEC funding model?") ~ p:contains("No")
     the user should see the element         jQuery = span:contains("${costValue}") ~ button:contains("Academic and secretarial support")
     the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${costValue}")
     the user should see the element         jQuery = span:contains("${indirectCostTotal}") ~ button:contains("Indirect costs")
