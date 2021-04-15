@@ -30,14 +30,15 @@ public class ApplicationCountSummaryController {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionId(competitionId, pageIndex, pageSize, filter).toGetResponse();
     }
 
-    @GetMapping("/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}")
-    public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(@PathVariable long competitionId,
+    @GetMapping("/find-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}")
+    public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(@PathVariable long competitionId,
                                                                                                                     @PathVariable long assessorId,
+                                                                                                                    @PathVariable long assessmentPeriodId,
                                                                                                                     @RequestParam(value = "page", defaultValue = "0") int page,
                                                                                                                     @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
                                                                                                                     @RequestParam(value = "sort") Sort sort,
                                                                                                                     @RequestParam(value = "filter") String filter) {
-        return applicationCountSummaryService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, page, size, sort, filter).toGetResponse();
+        return applicationCountSummaryService.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId, page, size, sort, filter).toGetResponse();
     }
     @GetMapping("/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}")
     public RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(@PathVariable long competitionId,

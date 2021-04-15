@@ -23,6 +23,7 @@ public class AssessorAssessmentProgressViewModel {
     private final String businessType;
     private final long totalApplications;
     private final long assessorId;
+    private final Long assessmentPeriodId;
     private final String filter;
     private final boolean selectAllDisabled;
 
@@ -35,6 +36,7 @@ public class AssessorAssessmentProgressViewModel {
                                                String competitionName,
                                                CompetitionStatus competitionStatus,
                                                long assessorId,
+                                               Long assessmentPeriodId,
                                                String assessorName,
                                                List<String> innovationAreas,
                                                String filter,
@@ -54,6 +56,7 @@ public class AssessorAssessmentProgressViewModel {
         this.businessType = businessType;
         this.totalApplications = totalApplications;
         this.assessorId = assessorId;
+        this.assessmentPeriodId = assessmentPeriodId;
         this.assigned = assigned;
         this.rejected = rejected;
         this.filter = filter;
@@ -91,6 +94,10 @@ public class AssessorAssessmentProgressViewModel {
     }
 
     public long getAssessorId() { return assessorId; }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
 
     public List<AssessorAssessmentProgressAssignedRowViewModel> getAssigned() {
         return assigned;

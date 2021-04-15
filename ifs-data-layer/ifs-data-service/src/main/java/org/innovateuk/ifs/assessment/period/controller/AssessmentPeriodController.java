@@ -23,8 +23,8 @@ public class AssessmentPeriodController extends AbstractCrudController<Assessmen
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
 
-    @GetMapping("/{competitionId}")
-    public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionIdAndIndex(
+    @GetMapping("/competition/{competitionId}")
+    public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(
             @PathVariable("competitionId") final long competitionId) {
         return assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId).toGetResponse();
     }

@@ -31,6 +31,16 @@ public interface ApplicationCountSummaryService {
                                                                                     int size,
                                                                                     Sort sort,
                                                                                     String filter);
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins and project finance can see all Application Summary counts accros the whole system", securedType = ApplicationCountSummaryResource.class)
+    ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(
+            long competitionId,
+            long assessorId,
+            long assessmentPeriodId,
+            int page,
+            int size,
+            Sort sort,
+            String filter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins and project finance can see all Application Summary counts accros the whole system", securedType = ApplicationCountSummaryResource.class)

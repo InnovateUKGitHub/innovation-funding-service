@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -25,8 +26,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class AssessorAssessmentProgressModelPopulator {
-
-    private static final int PAGE_SIZE = 20;
 
     @Autowired
     private AssessorCompetitionSummaryRestService assessorCompetitionSummaryRestService;
@@ -39,6 +38,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     public AssessorAssessmentProgressViewModel populateModel(long competitionId,
                                                              long assessorId,
+                                                             Long assessmentPeriodId,
                                                              int page,
                                                              Sort sort,
                                                              String filter) {
@@ -52,25 +52,25 @@ public class AssessorAssessmentProgressModelPopulator {
         );
 
         List<AssessorAssessmentProgressAssignedRowViewModel> assigned =
-                getAssignedAssessments(summaryResource.getAssignedAssessments());
+                getAssignedAssessments(summaryResource.getAssignedAssessments(), assessmentPeriodId);
 
         List<AssessorAssessmentProgressRejectedRowViewModel> rejected =
-                getRejectedAssessments(summaryResource.getAssignedAssessments());
+                getRejectedAssessments(summaryResource.getAssignedAssessments(), assessmentPeriodId);
 
         List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned =
-                getPreviouslyAssignedAssessments(summaryResource.getAssignedAssessments());
+                getPreviouslyAssignedAssessments(summaryResource.getAssignedAssessments(), assessmentPeriodId);
 
         ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
                 competitionId,
                 assessorId,
+                assessmentPeriodId,
                 page,
                 filter,
                 sort);
         AssessorAssessmentProgressApplicationsViewModel applicationsViewModel = getApplicationsViewModel(
                 applicationCounts,
                 competitionId,
-                sort,
-                filter);
+                sort);
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
 
@@ -79,6 +79,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 summaryResource.getCompetitionName(),
                 summaryResource.getCompetitionStatus(),
                 assessorId,
+                assessmentPeriodId,
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
                 filter,
@@ -92,15 +93,16 @@ public class AssessorAssessmentProgressModelPopulator {
         );
     }
 
-    private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+    private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
+                .filter(assessmentPeriodFilter(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isAssigned)
                 .map(this::getAssessorAssessmentProgressAssignedRowViewModel)
                 .collect(toList());
     }
 
     private AssessorAssessmentProgressAssignedRowViewModel getAssessorAssessmentProgressAssignedRowViewModel(AssessorAssessmentResource assignedAssessment) {
-        return  new AssessorAssessmentProgressAssignedRowViewModel(
+        return new AssessorAssessmentProgressAssignedRowViewModel(
                 assignedAssessment.getApplicationId(),
                 assignedAssessment.getApplicationName(),
                 assignedAssessment.getLeadOrganisation(),
@@ -110,11 +112,20 @@ public class AssessorAssessmentProgressModelPopulator {
         );
     }
 
-    private List<AssessorAssessmentProgressRejectedRowViewModel> getRejectedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+    private List<AssessorAssessmentProgressRejectedRowViewModel> getRejectedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
+                .filter(assessmentPeriodFilter(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isRejected)
                 .map(this::getAssessorAssessmentProgressRejectedRowViewModel)
                 .collect(toList());
+    }
+
+    private Predicate<? super AssessorAssessmentResource> assessmentPeriodFilter(Long assessmentPeriodId) {
+        if (assessmentPeriodId == null) {
+            return it -> true;
+        } else {
+            return it -> assessmentPeriodId.equals(it.getAssessmentPeriodId());
+        }
     }
 
     private AssessorAssessmentProgressRejectedRowViewModel getAssessorAssessmentProgressRejectedRowViewModel(AssessorAssessmentResource assessment) {
@@ -129,8 +140,9 @@ public class AssessorAssessmentProgressModelPopulator {
         );
     }
 
-    private List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
+    private List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
+                .filter(assessmentPeriodFilter(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isWithdrawn)
                 .map(this::getAssessorAssessmentProgressPreviousAssignedRowViewModel)
                 .collect(toList());
@@ -148,13 +160,25 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId,
                                                                      long assessorId,
+                                                                     Long assessmentPeriodId,
                                                                      int page,
                                                                      String filter,
                                                                      Sort sort) {
+        if (assessmentPeriodId == null) {
+            return applicationCountSummaryRestService
+                    .getApplicationCountSummariesByCompetitionIdAndAssessorId(
+                            competitionId,
+                            assessorId,
+                            page,
+                            sort,
+                            filter)
+                    .getSuccess();
+        }
         return applicationCountSummaryRestService
-                .getApplicationCountSummariesByCompetitionIdAndAssessorId(
+                .getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(
                         competitionId,
                         assessorId,
+                        assessmentPeriodId,
                         page,
                         sort,
                         filter)
@@ -163,8 +187,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private AssessorAssessmentProgressApplicationsViewModel getApplicationsViewModel(ApplicationCountSummaryPageResource applicationCounts,
                                                                                      long competitionId,
-                                                                                     Sort sort,
-                                                                                     String filter) {
+                                                                                     Sort sort) {
         CompetitionResource competition  = getCompetition(competitionId);
 
         return new AssessorAssessmentProgressApplicationsViewModel(

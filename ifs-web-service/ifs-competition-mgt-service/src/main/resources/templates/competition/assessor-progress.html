@@ -11,9 +11,14 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub"
+    <th:block th:if="${model.assessmentPeriodId == null}"
+              th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Allocate assessors',
                 linkUrl=@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})}" />
+    <th:block th:unless="${model.assessmentPeriodId == null}"
+              th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Allocate assessors',
+                linkUrl=@{/assessment/competition/{competitionId}/assessors/period?assessmentPeriodId={assessmentPeriodId}(competitionId=${model.competitionId},assessmentPeriodId=${model.assessmentPeriodId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"

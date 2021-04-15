@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Choose an assessment period to manage assessors'" />
+</head>
+<body class="govuk-template__body competition-management">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Return to manage assessment',
+                linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Choose an assessment period to manage assessors',
+                    subTitle=|${model.competitionId} : ${model.competitionName}|,
+                    size='govuk-heading-xl'" />
+
+
+        <form method="GET"
+              th:action="@{/assessment/competition/{competitionId}/assessors/period(competitionId=${model.competitionId})}"
+              >
+
+            <div th:if="${model.assessmentPeriods.size() < 6}" class="govuk-radios">
+                <div th:each="assessmentPeriod, index : ${model.assessmentPeriods}" class="govuk-radios__item">
+                    <input th:id="${'assmessent-period-' + index.index}"
+                           class="govuk-radios__input"
+                           th:value="${assessmentPeriod.assessmentPeriodId}"
+                           type="radio"
+                           name="assessmentPeriodId"
+                           required="required">
+                    <label th:for="${'assessment-period-' + index.index}"
+                           class="govuk-label govuk-radios__label"><strong>Assessment period <th:block th:text="${index.index + 1}" /></strong><br/><th:block th:text="${assessmentPeriod.displayName}" /></label>
+                </div>
+            </div>
+            <select name="assessmentPeriodId" class="govuk-select" th:if="${model.assessmentPeriods.size() >= 6}">
+                <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
+                        th:value="${assessmentPeriod.assessmentPeriodId}"
+                        th:text="${assessmentPeriod.assessmentPeriodId}"/>
+            </select>
+            <button class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+        </form>
+
+        <p class="govuk-body">
+            <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
+               class="govuk-link">Return to manage assessment</a>
+        </p>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
