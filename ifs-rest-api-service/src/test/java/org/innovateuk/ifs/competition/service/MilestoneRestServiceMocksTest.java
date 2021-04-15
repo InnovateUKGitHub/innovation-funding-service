@@ -102,8 +102,6 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
     @Test
     public void updateMilestone() {
-//<<<<<<< HEAD
-
         MilestoneResource returnedResponse = getBriefingEventMilestone();
         MilestoneType type = MilestoneType.BRIEFING_EVENT;
 
