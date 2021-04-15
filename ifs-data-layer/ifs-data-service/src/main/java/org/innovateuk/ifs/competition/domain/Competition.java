@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -32,7 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -376,12 +377,20 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         setMilestoneDate(OPEN_DATE, startDate);
     }
 
+    public ZonedDateTime getAssessorAcceptsDate(AssessmentPeriod assessmentPeriod) {
+        return getMilestoneDate(ASSESSOR_ACCEPTS, assessmentPeriod).orElse(null);
+    }
+
     public ZonedDateTime getAssessorAcceptsDate() {
         return getMilestoneDate(ASSESSOR_ACCEPTS).orElse(null);
     }
 
     public void setAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         setMilestoneDate(ASSESSOR_ACCEPTS, assessorAcceptsDate);
+    }
+
+    public ZonedDateTime getAssessorDeadlineDate(AssessmentPeriod assessmentPeriod) {
+        return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
     public ZonedDateTime getAssessorDeadlineDate() {
@@ -471,7 +480,18 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
-        return milestones.stream().filter(m -> m.getType() == milestoneType).findAny();
+        List<Milestone> matching = milestones.stream().filter(m -> m.getType() == milestoneType).collect(toList());
+        if (matching.size() > 1){
+            throw new IllegalStateException("There is more than one milestone for competition: " + this.getId() + " with type : " + milestoneType);
+        }
+        return matching.size() == 0 ? empty() : of(matching.get(0));
+    }
+
+    private Optional<Milestone> getMilestone(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod) {
+        return milestones.stream()
+                .filter(m -> m.getType() == milestoneType)
+                .filter(m -> assessmentPeriod.equals(m.getAssessmentPeriod()))
+                .findFirst();
     }
 
     private boolean isMilestoneReached(MilestoneType milestoneType) {
@@ -482,6 +502,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
         return getMilestone(milestoneType).map(Milestone::getDate);
     }
+
+    private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod) {
+        return getMilestone(milestoneType, assessmentPeriod).map(Milestone::getDate);
+    }
+
 
     private long getDaysBetween(ZonedDateTime dateA, ZonedDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);

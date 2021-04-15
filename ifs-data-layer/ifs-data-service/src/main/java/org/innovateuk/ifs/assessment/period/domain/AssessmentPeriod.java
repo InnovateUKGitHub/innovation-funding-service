@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.assessment.period.domain;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Milestone;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * An Assessment Period.
@@ -17,6 +20,12 @@ public class AssessmentPeriod {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competition_id", referencedColumnName = "id")
     private Competition competition;
+
+    @OneToMany(mappedBy="assessmentPeriod")
+    public List<Milestone> milestones;
+
+    @OneToMany(mappedBy="assessmentPeriod")
+    public List<Application> applications;
 
     public AssessmentPeriod() {
         // default constructor
@@ -40,5 +49,21 @@ public class AssessmentPeriod {
 
     public void setCompetition(Competition competition) {
         this.competition = competition;
+    }
+
+    public List<Milestone> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones;
+    }
+
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
     }
 }
