@@ -74,7 +74,7 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         }
 
         Optional<ApplicationSectionReadOnlyViewModel> financeSection = applicationReadOnlyViewModel.getSections().stream()
-                .filter(section -> "Finances".equals(section.getName())).findFirst();
+                .filter(ApplicationSectionReadOnlyViewModel::isFinances).findFirst();
 
         if (!financeSection.isPresent()) {
             return null;

@@ -23,7 +23,7 @@ public class AssessmentPeriodRestServiceImpl
 
     @Override
     public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId) {
-        return getWithRestResult(assessmentPeriodRestURL + "/competition/" + competitionId, ParameterizedTypeReferences.assessmentPeriodResourceListType());
+        return getWithRestResult(assessmentPeriodRestURL + "?competitionId=" + competitionId, ParameterizedTypeReferences.assessmentPeriodResourceListType());
     }
 
     @Override

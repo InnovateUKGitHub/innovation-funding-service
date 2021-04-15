@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
+import static org.innovateuk.ifs.competition.resource.MilestoneType.assessmentPeriodValues;
+
 /**
  * Represents a {@link Competition} Milestone, with or without a preset date.
  * {@link Milestone}s may have an assessment period {@link AssessmentPeriod} attached to them.
@@ -54,6 +56,11 @@ public class Milestone {
     public Milestone(MilestoneType type, Competition competition, AssessmentPeriod assessmentPeriod) {
         if (type == null) { throw new IllegalArgumentException("type cannot be null"); }
         if (competition == null) { throw new IllegalArgumentException("competition cannot be null"); }
+        if (assessmentPeriod != null) {
+            if (!assessmentPeriodValues().contains(type)) {
+                throw new IllegalArgumentException("Only assessment period milestones can be linked to an assessment period");
+            }
+        }
 
         this.type = type;
         this.competition = competition;

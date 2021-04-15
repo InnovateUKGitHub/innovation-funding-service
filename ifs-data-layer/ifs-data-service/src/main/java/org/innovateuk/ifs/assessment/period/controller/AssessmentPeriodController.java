@@ -6,10 +6,7 @@ import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.crud.AbstractCrudController;
 import org.innovateuk.ifs.crud.IfsCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +20,9 @@ public class AssessmentPeriodController extends AbstractCrudController<Assessmen
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
 
-    @GetMapping("/competition/{competitionId}")
+    @GetMapping(params = "competitionId")
     public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(
-            @PathVariable("competitionId") final long competitionId) {
+            @RequestParam final long competitionId) {
         return assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId).toGetResponse();
     }
 

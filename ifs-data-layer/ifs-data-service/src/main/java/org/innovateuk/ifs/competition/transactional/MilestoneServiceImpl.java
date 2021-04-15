@@ -2,9 +2,9 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -180,14 +180,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Override
     @Transactional
     public ServiceResult<MilestoneResource> create(MilestoneResource milestoneResource) {
-        return getCompetition(milestoneResource.getCompetitionId()).andOnSuccessReturn(competition -> {
+        return getCompetition(milestoneResource.getCompetitionId()).andOnSuccess(competition -> {
             AssessmentPeriod assessmentPeriod = null;
             if (assessmentPeriodValues().contains(milestoneResource.getType())) {
                 if (competition.isAlwaysOpen()) {
                     if (milestoneResource.getAssessmentPeriodId() != null) {
                         assessmentPeriod = assessmentPeriodRepository.findById(milestoneResource.getAssessmentPeriodId()).orElse(null);
                     } else {
-                        throw new IFSRuntimeException("Always open competition can only create assessment milestones for given period"); //TODO Good idea?
+                        return serviceFailure(CommonFailureKeys.ASSESSMENT_PERIOD_MISSING_FROM_MILESTONE);
                     }
                 } else {
                     assessmentPeriod = assessmentPeriodRepository.findFirstByCompetitionId(competition.getId())
@@ -195,7 +195,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 }
             }
             Milestone milestone = new Milestone(milestoneResource.getType(), competition, assessmentPeriod);
-            return milestoneMapper.mapToResource(milestoneRepository.save(milestone));
+            return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
 
         });
     }

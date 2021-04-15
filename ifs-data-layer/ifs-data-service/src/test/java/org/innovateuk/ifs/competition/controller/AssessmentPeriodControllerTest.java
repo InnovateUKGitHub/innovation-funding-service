@@ -38,7 +38,7 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
         when(assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId))
                 .thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(assessmentPeriodResource)));
 
-        mockMvc.perform(get("/assessment-period/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessment-period?competitionId={competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(Collections.singletonList(assessmentPeriodResource))));
     }
@@ -52,7 +52,7 @@ public class AssessmentPeriodControllerTest extends BaseControllerMockMVCTest<As
         when(assessmentPeriodService.getAssessmentPeriodByCompetitionId(competitionId))
                 .thenReturn(ServiceResult.serviceFailure(notFoundError(AssessmentPeriodResource.class, competitionId, index)));
 
-        mockMvc.perform(get("/assessment-period/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessment-period?competitionId={competitionId}", competitionId))
                 .andExpect(status().isNotFound());
     }
 
