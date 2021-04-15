@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -90,6 +91,43 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
         setupPostWithRestResultExpectations(postUrl, OK);
 
         RestResult<Void> result = service.saveEligibility(123L, 456L, EligibilityState.APPROVED, EligibilityRagStatus.RED);
+
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
+    }
+
+    @Test
+    public void testGetFundingRules() {
+        FundingRulesResource fundingRulesResource = new FundingRulesResource();
+        setupGetWithRestResultExpectations("/project/123/partner-organisation/456/funding-rules", FundingRulesResource.class, fundingRulesResource);
+
+        Assert.assertEquals(fundingRulesResource, service.getFundingRules(123L, 456L).getSuccess());
+    }
+
+    @Test
+    public void saveFundingRules() {
+
+        String postUrl = "/project/123/partner-organisation/456/funding-rules/" +
+                FundingRules.SUBSIDY_CONTROL.name();
+
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.saveFundingRules(123L, 456L, FundingRules.SUBSIDY_CONTROL);
+
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
+    }
+
+    @Test
+    public void approveFundingRules() {
+
+        String postUrl = "/project/123/partner-organisation/456/funding-rules/approve";
+
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.approveFundingRules(123L, 456L);
 
         assertTrue(result.isSuccess());
 

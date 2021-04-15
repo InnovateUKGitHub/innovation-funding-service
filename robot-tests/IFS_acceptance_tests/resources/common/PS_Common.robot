@@ -914,3 +914,14 @@ organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
     logout as user
     the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
+
+the user approves funding rules
+    [Arguments]  ${reviewLinkElement}
+    the user clicks the button/link     jQuery = ${reviewLinkElement}
+    the user selects the checkbox       project-funding-rules
+    the user clicks the button/link     id = confirm-button
+    the user clicks the button/link     jQuery = a:contains("Return to finance checks")
+
+the user approves funding rules of lead and partner
+    the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
