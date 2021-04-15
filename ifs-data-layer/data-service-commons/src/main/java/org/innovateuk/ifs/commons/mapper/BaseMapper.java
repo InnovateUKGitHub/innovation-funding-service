@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class BaseMapper<D, R, I extends Serializable> {
     protected CrudRepository<D, I> repository;
@@ -29,6 +31,7 @@ public abstract class BaseMapper<D, R, I extends Serializable> {
     }
 
     public abstract R mapToResource(D domain);
+
     public abstract Iterable<R> mapToResource(Iterable<D> domain);
     public abstract D mapToDomain(R resource);
     public abstract Iterable<D> mapToDomain(Iterable<R> resource);

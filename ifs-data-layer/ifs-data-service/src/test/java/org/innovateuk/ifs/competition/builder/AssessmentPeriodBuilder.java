@@ -28,10 +28,6 @@ public class AssessmentPeriodBuilder extends BaseBuilder<AssessmentPeriod, Asses
         return withArraySetFieldByReflection("competition", competitions);
     }
 
-    public AssessmentPeriodBuilder withIndex(Integer... indexes) {
-        return withArraySetFieldByReflection("index", indexes);
-    }
-
     @Override
     protected AssessmentPeriodBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentPeriod>> actions) {
         return new AssessmentPeriodBuilder(actions);

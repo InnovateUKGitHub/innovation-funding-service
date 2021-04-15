@@ -516,7 +516,6 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
         return restSuccess(NO_CONTENT);
     }
 
-
     /**
      * Aggregate a {@link List} of {@link RestResult} into a {@link RestResult} containing a {@list List}
      *

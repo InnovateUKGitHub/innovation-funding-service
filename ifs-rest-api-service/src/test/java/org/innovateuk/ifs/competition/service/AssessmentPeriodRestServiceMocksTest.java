@@ -29,7 +29,7 @@ public class AssessmentPeriodRestServiceMocksTest extends BaseRestServiceUnitTes
         assessmentPeriod.setId(1L);
         assessmentPeriod.setCompetitionId(competitionId);
 
-        String url = assessmentPeriodRestURL + "/" + competitionId;
+        String url = assessmentPeriodRestURL + "?competitionId=" + competitionId;
 
         setupGetWithRestResultExpectations(url, ParameterizedTypeReferences.assessmentPeriodResourceListType(), Collections.singletonList(assessmentPeriod), OK);
 

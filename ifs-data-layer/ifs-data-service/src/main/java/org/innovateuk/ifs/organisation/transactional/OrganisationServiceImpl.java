@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
@@ -197,15 +198,17 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber) {
-        return find(organisation(organisationId)).andOnSuccess(organisation -> {
-            if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
-                organisation.setName(decodeOrganisationName(organisationName));
-                organisation.setCompaniesHouseNumber(registrationNumber);
-                return serviceSuccess(organisationMapper.mapToResource(organisation));
-            }
-            return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);
-        });
+    public ServiceResult<OrganisationResource>
+        updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber) {
+        return getOrganisation(organisationId)
+            .andOnSuccess(org -> {
+                if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
+                    org.setName(decodeOrganisationName(organisationName));
+                    org.setCompaniesHouseNumber(registrationNumber);
+                    return serviceSuccess(organisationMapper.mapToResource(org));
+                }
+                return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);
+            });
     }
 
     @Override
@@ -264,5 +267,15 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     private List<OrganisationResource> organisationsToResources(List<Organisation> organisations) {
         return simpleMap(organisations, organisation -> organisationMapper.mapToResource(organisation));
+    }
+
+    public ServiceResult<List<OrganisationResource>> findOrganisationsByName(String name) {
+        return find(organisationRepository.findByNameOrderById(name), notFoundError(Organisation.class, name))
+                .andOnSuccessReturn(organisationMapper::mapToResources);
+    }
+
+    public ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
+        return find(organisationRepository.findByCompaniesHouseNumberOrderById(companiesHouseNumber), notFoundError(Organisation.class, companiesHouseNumber))
+                .andOnSuccessReturn(organisationMapper::mapToResources);
     }
 }

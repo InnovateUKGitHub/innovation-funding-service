@@ -72,11 +72,9 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         milestoneResource.setType(MilestoneType.OPEN_DATE);
         milestoneResource.setCompetitionId(newCompetitionId);
 
-        String url = milestonesRestURL + "/" + newCompetitionId + "?type=" + MilestoneType.OPEN_DATE;
+        setupPostWithRestResultExpectations(milestonesRestURL, MilestoneResource.class, milestoneResource, milestoneResource, CREATED);
 
-        setupPostWithRestResultExpectations(url, MilestoneResource.class, null, milestoneResource, CREATED);
-
-        MilestoneResource response = service.create(new MilestoneResource(MilestoneType.OPEN_DATE, newCompetitionId)).getSuccess();
+        MilestoneResource response = service.create(milestoneResource).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(milestoneResource, response);
     }
@@ -104,6 +102,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
     @Test
     public void updateMilestone() {
+//<<<<<<< HEAD
 
         MilestoneResource returnedResponse = getBriefingEventMilestone();
         MilestoneType type = MilestoneType.BRIEFING_EVENT;

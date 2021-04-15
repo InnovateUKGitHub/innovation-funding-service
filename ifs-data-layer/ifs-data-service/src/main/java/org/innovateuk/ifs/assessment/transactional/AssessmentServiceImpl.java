@@ -229,7 +229,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return getUser(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR, assessmentCreateResource.getAssessmentPeriod()))
+                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR, assessmentCreateResource.getAssessmentPeriodId()))
                 );
     }
 
@@ -244,7 +244,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role, Long assessmentPeriodId) {
 
-        AssessmentPeriod assessmentPeriod = getAssessmentPeriodFromIdOrDefault(assessmentPeriodId);
+        AssessmentPeriod assessmentPeriod = getAssessmentPeriodFromIdOrDefault(application.getCompetition().getId(), assessmentPeriodId);
         if (assessmentPeriod != null) {
             application.setAssessmentPeriod(assessmentPeriod);
             applicationRepository.save(application);
@@ -257,14 +257,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                      .andOnSuccessReturn(assessmentMapper::mapToResource);
     }
 
-    private AssessmentPeriod getAssessmentPeriodFromIdOrDefault(Long assessmentPeriodId) {
+    private AssessmentPeriod getAssessmentPeriodFromIdOrDefault(long competitionId, Long assessmentPeriodId) {
         AssessmentPeriod assessmentPeriod;
         if (assessmentPeriodId != null) {
             assessmentPeriod = assessmentPeriodRepository.findById(assessmentPeriodId).orElse(null);
         } else {
-            assessmentPeriod = assessmentPeriodRepository.findByCompetitionId(assessmentPeriodId)
-                    .stream()
-                    .findFirst()
+            assessmentPeriod = assessmentPeriodRepository.findFirstByCompetitionId(competitionId)
                     .orElse(null);
         }
         return assessmentPeriod;
