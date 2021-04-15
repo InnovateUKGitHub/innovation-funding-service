@@ -30,8 +30,8 @@ class RoboZap(object):
 
         | Library `|` RoboZap  | proxy | port |
         """
-        self.zap = ZAP(proxies={"http": "http://127.0.0.1:8080/", "https": "http://127.0.0.1:8080/"})
-        self.port = 8080
+        self.zap = ZAP(proxies={"http": "http://127.0.0.1:8090/", "https": "http://127.0.0.1:8090/"})
+        self.port = 8090
 
     def start_headless_zap(self):
         """
@@ -43,7 +43,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -daemon -dir /home/zap/.ZAP/ -config api.disablekey=true -port 8080".format(
+            cmd = "/zap/" + "zap.sh -daemon -dir /home/zap/.ZAP/ -config api.disablekey=true -port 8090".format(
                 self.port
             )
             print(cmd)
@@ -62,7 +62,7 @@ class RoboZap(object):
 
         """
         try:
-            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port 8080".format(
+            cmd = "/zap/" + "zap.sh -config api.disablekey=true -port 8090".format(
                 self.port
             )
             print(cmd)
@@ -83,7 +83,7 @@ class RoboZap(object):
         self.zap.urlopen(url)
         time.sleep(4)
 
-    def zap_define_context(self):
+    def zap_define_context(self, url):
         """
         Add Target to a context and use the context to perform all scanning/spidering operations
 
@@ -92,7 +92,7 @@ class RoboZap(object):
         | zap define context  | contextname  | target |
 
         """
-        regex = "{0}.*".format("https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org/")
+        regex = "{0}.*".format(url)
         print("logging context start")
         context_id = self.zap.context.new_context(contextname="test")
         time.sleep(1)
@@ -103,7 +103,7 @@ class RoboZap(object):
         print("logging context end")
         return context_id
 
-    def zap_start_spider(self):
+    def zap_start_spider(self, url):
         """
         Start ZAP Spider with ZAP's inbuilt spider mode
 
@@ -114,7 +114,7 @@ class RoboZap(object):
         """
         try:
 
-            spider_id = self.zap.spider.scan(url="https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org/", contextname="test")
+            spider_id = self.zap.spider.scan(url=url, contextname="test")
             time.sleep(5)
             print("spider id ",spider_id)
             return spider_id
@@ -133,7 +133,7 @@ class RoboZap(object):
             )
             time.sleep(10)
 
-    def zap_start_ascan(self, policy="Default Policy"):
+    def zap_start_ascan(self, url, policy="Default Policy"):
         """
         Initiates ZAP Active Scan on the target url and context
 
@@ -146,9 +146,9 @@ class RoboZap(object):
 
         try:
             scan_id = self.zap.ascan.scan(
-                contextid=1, url="https://ifs-at-9451.apps.org-env-0.org.innovateuk.ukri.org/", scanpolicyname=policy
+                contextid=1, url=url, scanpolicyname=policy
             )
-            time.sleep(2)
+            time.sleep(5)
 
             print("print context Id, scan_id end")
             return scan_id
@@ -184,7 +184,7 @@ class RoboZap(object):
         core = self.zap.core
 
         all_vuls = []
-        for i, na in enumerate(core.alerts(baseurl="http://localhost:8080")):
+        for i, na in enumerate(core.alerts(baseurl="http://localhost:8090")):
             print("current iteration ")
             vul = {}
             vul["name"] = na["alert"]
@@ -271,7 +271,7 @@ class RoboZap(object):
 
         """
 
-        url = "http://localhost:8080/JSON/exportreport/action/generate/".format(
+        url = "http://localhost:8090/JSON/exportreport/action/generate/".format(
             self.port
         )
         export_path = "/zap/zapreport.json"

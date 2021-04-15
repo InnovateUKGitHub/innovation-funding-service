@@ -103,7 +103,7 @@ ENV PATH $JAVA_HOME/bin:/zap/:$PATH
 ENV ZAP_PATH /zap/zap.sh
 
 # Default port for use with zapcli
-ENV ZAP_PORT 8080
+ENV ZAP_PORT 8090
 ENV IS_CONTAINERIZED true
 ENV HOME /home/zap/
 ENV LC_ALL=C.UTF-8
