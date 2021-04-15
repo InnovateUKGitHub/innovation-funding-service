@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Funding rules check for ${model.organisationName} - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body competition-management project-management">
+<th:block th:insert="fragments/modals :: modal-overlay" />
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to update funding rules.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Funding rules check for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+
+        <p class="govuk-body">All potential changes must be agreed with the organisation before they are implemented. You can do this in the finance query form.<br/>
+            All saved changes will be visible to the organisation.</p>
+
+        <dl class="standard-definition-list govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+            <dt>Funding rules selected:</dt>
+            <dd th:text="${model.fundingRules.displayName}">funding rules</dd>
+        </dl>
+
+        <a th:unless="${model.editMode}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules/edit(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Edit</a>
+        <th:block th:if="${model.editMode}">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data">
+
+                <h3 class="govuk-heading-s govuk-!-margin-top-6">Override funding rules</h3>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="override-funding-rules"
+                                    class="govuk-checkboxes__input"
+                                    type="checkbox"
+                                    th:field="*{overrideFundingRules}"
+                                    data-switches-button-status="#save-and-return" />
+                            <label for="override-funding-rules"
+                                   class="govuk-label govuk-checkboxes__label">
+                                Change funding rules to <b th:text="${model.otherFundingRules.displayName}">something</b>.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="message-alert" th:if="${model.showUpdatedMessage}">
+                    <p class="govuk-body">The funding rules have changed, this may affect the eligible funding levels. You must review the project to make sure it is still eligible for funding.</p>
+                </div>
+                <button id="save-and-return" name="save-and-return" class="govuk-button">Save and return</button>
+            </form>
+        </th:block>
+
+        <div class="message-alert" th:if="${model.showUpdatedMessage and !model.editMode}">
+            <p class="govuk-body">The funding rules have changed, this may affect the eligible funding levels. You must review the project to make sure it is still eligible for funding.</p>
+        </div>
+
+        <th:block th:insert="questionnaire/fragments :: answer-table(${model.questionsAndAnswers})" />
+
+        <form th:if="${!model.editMode AND !model.readOnly}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
+
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve funding rules check</h2>
+            <div class="govuk-form-group">
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input  id="project-funding-rules"
+                                class="govuk-checkboxes__input"
+                                type="checkbox"
+                                th:field="*{confirmFundingRules}"
+                                data-switches-button-status="#confirm-button" />
+                        <label for="project-funding-rules"
+                               class="govuk-label govuk-checkboxes__label">
+                            I confirm that the funding rules are correct and that I have agreed all changes with the organisation.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="govuk-button"
+                    name="confirm-funding-rules"
+                    id="confirm-button">Approve funding rules</button>
+        </form>
+
+        <div th:if="${model.editMode}" class="govuk-!-margin-bottom-6">
+            <a
+               th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.projectId},organisationId=${model.organisationId})}"
+               id="cancel" type="submit" name="cancel" class="button-clear" value="true">
+                Cancel changes
+            </a>
+        </div>
+
+        <a class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+
+        <div th:unless="${model.editMode}">
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary">Notes</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
