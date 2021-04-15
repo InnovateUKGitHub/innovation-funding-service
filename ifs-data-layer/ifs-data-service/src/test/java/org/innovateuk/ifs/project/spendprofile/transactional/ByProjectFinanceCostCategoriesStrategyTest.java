@@ -188,7 +188,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
                 .withCosts(newAcademicAndSecretarialSupport().build(1))
                 .build();
         DefaultCostCategory IndirectCostFrcc = newDefaultCostCategory()
-                .withCosts(newAssociateSupportCost().build(1))
+                .withCosts(newIndirectCost().build(1))
                 .build();
         fod.put(ACADEMIC_AND_SECRETARIAL_SUPPORT, academicAndSecretarialSupportFrcc);
         fod.put(INDIRECT_COSTS, IndirectCostFrcc);
