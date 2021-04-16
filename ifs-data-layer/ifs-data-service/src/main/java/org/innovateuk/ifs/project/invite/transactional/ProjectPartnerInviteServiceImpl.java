@@ -23,6 +23,7 @@ import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressReposito
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
@@ -93,6 +94,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
 
     @Autowired
     private PendingPartnerProgressRepository pendingPartnerProgressRepository;
@@ -227,6 +231,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    if (project.getApplication().getCompetition().isSubsidyControl()) {
+                                        fundingRulesWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    }
 
                                     Competition competition = project.getApplication().getCompetition();
 

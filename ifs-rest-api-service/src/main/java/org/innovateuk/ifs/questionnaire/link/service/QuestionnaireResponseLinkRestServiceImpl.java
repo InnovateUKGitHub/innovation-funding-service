@@ -24,7 +24,7 @@ public class QuestionnaireResponseLinkRestServiceImpl extends BaseRestService im
     }
 
     @Override
-    public RestResult<StringResource> getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(long projectId, long questionnaireId, long organisationId) {
+    public RestResult<StringResource> getResponseIdByProjectIdAndQuestionnaireIdAndOrganisationId(long projectId, long questionnaireId, long organisationId) {
         return getWithRestResult(format("%s/%d/project/%d/organisation/%d", questionnaireResponseLink, questionnaireId, projectId, organisationId), StringResource.class);
     }
 }

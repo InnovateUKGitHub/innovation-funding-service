@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-public enum SbriPilotCostCategoryGenerator implements CostCategoryGenerator<SbriPilotCostCategoryGenerator> {
+public enum ProcurementCostCategoryGenerator implements CostCategoryGenerator<ProcurementCostCategoryGenerator> {
 
     OTHER_COSTS( "Other costs"),
     VAT( "VAT");
 
     private final String name;
 
-    SbriPilotCostCategoryGenerator(String name) {
+    ProcurementCostCategoryGenerator(String name) {
         this.name = name;
     }
 
-    public static SbriPilotCostCategoryGenerator fromFinanceRowType(FinanceRowType costType) {
+    public static ProcurementCostCategoryGenerator fromFinanceRowType(FinanceRowType costType) {
         if (costType == FinanceRowType.VAT) {
             return VAT;
         } else {
@@ -35,3 +35,5 @@ public enum SbriPilotCostCategoryGenerator implements CostCategoryGenerator<Sbri
     }
 
 }
+
+

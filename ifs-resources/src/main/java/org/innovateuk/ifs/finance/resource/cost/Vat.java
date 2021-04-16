@@ -67,4 +67,8 @@ public class Vat extends AbstractFinanceRowItem {
     public BigDecimal getRate() {
         return rate;
     }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
 }
