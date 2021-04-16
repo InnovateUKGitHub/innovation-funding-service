@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,8 +23,12 @@ public class KtpFinanceModel {
     private final KtpFinanceRowModel academicAndSecretarialSupport;
 
     private final BigDecimal claimPercentage;
+    private final Boolean fecModelEnabled;
 
-    public KtpFinanceModel(KtpFinanceRowModel associateEmployment, KtpFinanceRowModel associateDevelopment, KtpFinanceRowModel travelAndSubsistence, KtpFinanceRowModel consumables, KtpFinanceRowModel knowledgeBaseSupervisor, KtpFinanceRowModel associateEstateCosts, KtpFinanceRowModel otherCosts, KtpFinanceRowModel additionalSupportCosts, KtpFinanceRowModel academicAndSecretarialSupport, BigDecimal claimPercentage) {
+    public KtpFinanceModel(KtpFinanceRowModel associateEmployment, KtpFinanceRowModel associateDevelopment, KtpFinanceRowModel travelAndSubsistence,
+                           KtpFinanceRowModel consumables, KtpFinanceRowModel knowledgeBaseSupervisor, KtpFinanceRowModel associateEstateCosts,
+                           KtpFinanceRowModel otherCosts, KtpFinanceRowModel additionalSupportCosts, KtpFinanceRowModel academicAndSecretarialSupport,
+                           BigDecimal claimPercentage, Boolean fecModelEnabled) {
         this.associateEmployment = associateEmployment;
         this.associateDevelopment = associateDevelopment;
         this.travelAndSubsistence = travelAndSubsistence;
@@ -33,6 +39,7 @@ public class KtpFinanceModel {
         this.additionalSupportCosts = additionalSupportCosts;
         this.academicAndSecretarialSupport = academicAndSecretarialSupport;
         this.claimPercentage = claimPercentage;
+        this.fecModelEnabled = fecModelEnabled;
     }
 
     public KtpFinanceRowModel getAssociateEmployment() {
@@ -75,6 +82,10 @@ public class KtpFinanceModel {
         return claimPercentage;
     }
 
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
     public Integer getTable1TotalCost() {
         return table1Rows().stream().map(KtpFinanceRowModel::getCost).reduce(0, Integer::sum);
     }
@@ -100,13 +111,21 @@ public class KtpFinanceModel {
     }
 
     private List<KtpFinanceRowModel> table1Rows() {
-        return newArrayList(associateEmployment, associateDevelopment, travelAndSubsistence, consumables,
-                knowledgeBaseSupervisor, associateEstateCosts, otherCosts, additionalSupportCosts);
+        if (BooleanUtils.isFalse(fecModelEnabled)) {
+            return newArrayList(associateEmployment, associateDevelopment, travelAndSubsistence, consumables, otherCosts);
+        } else {
+            return newArrayList(associateEmployment, associateDevelopment, travelAndSubsistence, consumables,
+                    knowledgeBaseSupervisor, associateEstateCosts, otherCosts, additionalSupportCosts);
+        }
     }
 
     private List<KtpFinanceRowModel> table2Rows() {
-        return newArrayList(associateEmployment, academicAndSecretarialSupport, associateDevelopment, travelAndSubsistence,
-                consumables, otherCosts);
+        if (BooleanUtils.isFalse(fecModelEnabled)) {
+            return newArrayList(associateEmployment, academicAndSecretarialSupport, associateDevelopment, travelAndSubsistence,
+                    consumables, otherCosts);
+        } else {
+            return newArrayList(associateEmployment, associateDevelopment, travelAndSubsistence, consumables, otherCosts);
+        }
     }
 
     public int getContributionToKbPartnerOverheads() {
@@ -128,6 +147,7 @@ public class KtpFinanceModel {
         private KtpFinanceRowModel additionalSupportCosts;
         private KtpFinanceRowModel academicAndSecretarialSupport;
         private BigDecimal claimPercentage;
+        private Boolean fecModelEnabled;
 
         private KtpFinanceModelBuilder() {
         }
@@ -186,8 +206,15 @@ public class KtpFinanceModel {
             return this;
         }
 
+        public KtpFinanceModelBuilder withFecModelEnabled(Boolean fecModelEnabled) {
+            this.fecModelEnabled = fecModelEnabled;
+            return this;
+        }
+
         public KtpFinanceModel build() {
-            return new KtpFinanceModel(associateEmployment, associateDevelopment, travelAndSubsistence, consumables, knowledgeBaseSupervisor, associateEstateCosts, otherCosts, additionalSupportCosts, academicAndSecretarialSupport, claimPercentage);
+            return new KtpFinanceModel(associateEmployment, associateDevelopment, travelAndSubsistence, consumables, knowledgeBaseSupervisor,
+                    associateEstateCosts, otherCosts, additionalSupportCosts, academicAndSecretarialSupport, claimPercentage,
+                    fecModelEnabled);
         }
     }
 }
