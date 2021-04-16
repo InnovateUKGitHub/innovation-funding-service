@@ -87,7 +87,7 @@ RUN mkdir /home/zap/.vnc
 # Download and expand the latest stable release
 RUN curl -s https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersions.xml | xmlstarlet sel -t -v //url |grep -i Linux | wget -nv --content-disposition -i - -O - | tar zxv && \
 	cp -R ZAP*/* . &&  \
-	rm -R ZAP* && \
+	rm -R ZAP*
 	# Setup Webswing
 	# if [ -z "$WEBSWING_TOKEN" ] ; \
 	# then curl -s -L  "https://storage.googleapis.com/builds.webswing.org/releases/webswing-20.2.1.zip" > webswing.zip; \
