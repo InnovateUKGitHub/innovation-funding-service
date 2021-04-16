@@ -13,6 +13,8 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9200 View Correct T&Cs for each Organisation (Internal and External Users)
 ...
+...               IFS-9127 View and Change an Organisations NI Declaration determined Funding Rules after Application Submittal
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -30,6 +32,10 @@ ${subsidyControlFundingComp}         Subsidy control competition
 ${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
 ${leadSubsidyControlApplication}     Subsidy control application
 ${leadStateAidApplication}           State aid application
+&{scLeadApplicantCredentials}        email=janet.howard@example.com     password=${short_password}
+${subsidyControlCompetitionId}       ${competition_ids["${subsidyControlFundingComp}"]}
+${partnerOrganisationName}           Ludlow
+${subsidyOrgName}                    Big Riffs And Insane Solos Ltd
 ${assessor1_email}                   addison.shannon@gmail.com
 ${assessor1_to_add}                  Addison Shannon
 ${assessor2_to_add}                  Alexis Colon
@@ -286,7 +292,7 @@ Lead applicant gets validation message when submiting the application without al
     Given partner edits the subsidy basis section
     When lead review and submits the application
     And the user clicks the button/link               id = accordion-questions-heading-1-1
-    Then the user should see the element              jQuery = td:contains("Ludlow") + td:contains("Not determined")
+    Then the user should see the element              jQuery = td:contains("${partnerOrganisationName}") + td:contains("Not determined")
     And the user should see the element               jQuery = .section-incomplete + button:contains("Subsidy basis")
 
 Lead applicant submits subsidy control subsidy basis application
@@ -331,7 +337,7 @@ Assessor can view the correct T&Cs have been accepted by the lead and partner ap
 Assessor can see organisations subsidy basis funding rules in assessment overview
     [Documentation]  IFS-9200
     When the user clicks the button/link                    link = Subsidy basis
-    And the user should see the element                     jQuery = td:contains("Big Riffs And Insane Solos Ltd") + td:contains("Subsidy control")+ td:contains("View answers")
+    And the user should see the element                     jQuery = td:contains("${subsidyOrgName}") + td:contains("Subsidy control")+ td:contains("View answers")
     Then assessor should see valid subsidy basis answers
 
 Internal user can see organisations subsidy basis funding rules in application overview
@@ -386,6 +392,47 @@ Innovation lead can view the terms and conditions accepted by the applicants
     Given log in as a different user                                                      &{innovation_lead_one}
     When the user navigates to the page                                                   ${server}/management/competition/${competitionId}/application/${leadSubsidyControlApplicationID}
     Then the user can see the terms and conditions for the lead and partner applicant
+
+Internal user can view and change the project's funding rules
+    [Documentation]  IFS-9127
+    [Setup]  Requesting Organisation Id of this application
+    Given Requesting Project ID of this Project
+    And Log in as a different user                      &{ifs_admin_user_credentials}
+    When the user navigates to the page                 ${server}/project-setup-management/project/${subsidyProjectId}/finance-check/organisation/${subsidyOrgID}/funding-rules/edit
+    And the user selects the checkbox                   id = override-funding-rules
+    And the user clicks the button/link                 jQuery = button:contains("Save and return")
+    And the user clicks the button/link                 jQuery = a:contains("Return to finance checks")
+    And the user navigates to the page                  ${server}/project-setup-management/project/${subsidyProjectId}/finance-check/organisation/${subsidyOrgID}/eligibility/changes
+    Then the user should see the element                jQuery = th:contains("Funding rules") ~ td:contains("Subsidy control") ~ td:contains("State aid")
+
+Internal user can approve lead applicant funding rules
+    [Documentation]  IFS-9127
+    Given the user navigates to the page     ${server}/project-setup-management/project/${subsidyProjectId}/finance-check
+    When the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    Then the user should see the element     jQuery = th:contains("${subsidyOrgName}") + td:contains("Approved") + td:contains("State aid")
+
+Finance manager can approve partner applicant funding rules
+    [Documentation]  IFS-9127
+    Given Log in as a different user         &{internal_finance_credentials}
+    And the user navigates to the page       ${server}/project-setup-management/project/${subsidyProjectId}/finance-check
+    When the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    Then the user should see the element     jQuery = th:contains("${partnerOrganisationName}") + td:contains("Approved") + td:contains("State aid")
+
+Internal user can approve viability and eligibility of lead organisation
+    [Documentation]  IFS-9127
+    Given the user navigates to the page     ${server}/project-setup-management/project/${subsidyProjectId}/finance-check
+    When confirm viability                   0
+    And confirm eligibility                  0
+    Then the user should see the element     jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
+    And the user should see the element      jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Approved")
+
+Internal user can approve viability and eligibility of partner organisation
+    [Documentation]  IFS-9127
+    Given the user navigates to the page     ${server}/project-setup-management/project/${subsidyProjectId}/finance-check
+    When confirm viability                   1
+    And confirm eligibility                  1
+    Then the user should see the element     jQuery = table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
+    And the user should see the element      jQuery = table.table-progress tr:nth-child(2) td:nth-child(6) a:contains("Approved")
 
 *** Keywords ***
 Custom suite setup
@@ -460,19 +507,27 @@ the user should see state aid answers
     the user should see the element     jQuery = td:contains("Are you intending to trade any goods arising from the activities funded by Innovate UK with the European Union through Northern Ireland?")+ td:contains("Yes")
 
 the user can see valid subsidy control answers
-    the user should see the element                 jQuery = td:contains("Big Riffs And Insane Solos Ltd") + td:contains("Subsidy control")+ td:contains("View answers")
+    the user should see the element                 jQuery = td:contains("${subsidyOrgName}") + td:contains("Subsidy control")+ td:contains("View answers")
     the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
     the user should see subsidy control answers
     the user clicks the button/link                 link = Back to application overview
 
 the user can see valid state aid answers
-    the user should see the element             jQuery = td:contains("Ludlow") + td:contains("State aid")+ td:contains("View answers")
+    the user should see the element             jQuery = td:contains("${partnerOrganisationName}") + td:contains("State aid")+ td:contains("View answers")
     the user clicks the button/link             jQuery = tr:nth-child(2) a:contains("View answers")
     the user should see state aid answers
 
 requesting application ID of this application
     ${leadSubsidyControlApplicationID} =  get application id by name   ${leadSubsidyControlApplication}
     Set suite variable    ${leadSubsidyControlApplicationID}
+
+Requesting Project ID of this Project
+    ${subsidyProjectId} =  get project id by name    ${leadSubsidyControlApplication}
+    Set suite variable    ${subsidyProjectId}
+
+Requesting Organisation Id of this application
+    ${subsidyOrgId}=    get organisation id by name     ${subsidyOrgName}
+    Set suite variable      ${subsidyOrgId}
 
 the user invites assessors to assess the subsidy control competition
     the user selects the checkbox       assessor-row-1
@@ -512,12 +567,12 @@ assessor should see valid subsidy basis answers
     the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
     the user should see subsidy control answers
     the user clicks the button/link                 link = Back to subsidy basis
-    the user should see the element                 jQuery = td:contains("Ludlow") + td:contains("State aid")+ td:contains("View answers")
+    the user should see the element                 jQuery = td:contains("${partnerOrganisationName}") + td:contains("State aid")+ td:contains("View answers")
     the user clicks the button/link                 jQuery = tr:nth-child(2) a:contains("View answers")
     the user should see state aid answers
 
 the user can see the terms and conditions for the lead and partner applicant
-    the user should see the element      jQuery = td:contains("Big Riffs And Insane Solos Ltd")+ td:contains("Subsidy control")
+    the user should see the element      jQuery = td:contains("${subsidyOrgName}")+ td:contains("Subsidy control")
     the user should see the element      link = Innovate UK - Subsidy control
-    the user should see the element      jQuery = td:contains("Ludlow")+ td:contains("State aid")
+    the user should see the element      jQuery = td:contains("${partnerOrganisationName}")+ td:contains("State aid")
     the user should see the element      link = Innovate UK
