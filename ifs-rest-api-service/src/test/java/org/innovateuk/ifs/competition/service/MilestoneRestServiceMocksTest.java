@@ -120,21 +120,6 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     @Test
-    public void resetMilestone() {
-        MilestoneResource milestoneToReset = milestone(1L,
-                MilestoneType.NOTIFICATIONS,
-                null,
-                competitionId);
-
-        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, milestoneToReset, null, OK);
-        RestResult<Void> result = service.resetMilestone(milestoneToReset);
-
-        assertTrue(result.isSuccess());
-
-        setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, milestoneToReset);
-    }
-
-    @Test
     public void updateCompletionStage() {
 
         String url = milestonesRestURL + "/competition/" + competitionId + "/completion-stage?completionStage=" +
