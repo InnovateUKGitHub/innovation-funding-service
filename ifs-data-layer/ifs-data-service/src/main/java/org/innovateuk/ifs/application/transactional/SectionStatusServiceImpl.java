@@ -16,8 +16,6 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.transactional.SectionService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.procurement.milestone.transactional.ApplicationProcurementMilestoneService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -59,9 +57,6 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Autowired
     private ApplicationValidatorService applicationValidatorService;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final long applicationId) {
@@ -236,11 +231,10 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         }
 
         if (section.hasChildSections()) {
-            OrganisationResource organisation = organisationService.findById(organisationId).getSuccess();
             for (Section childSection : section.getChildSections()) {
                 boolean complete = isSectionComplete(childSection, completedQuestionsByOrganisations, application, organisationId, applicationOrganisations);
                 if (!complete) {
-                    return childSection.getType().isSectionTypeNotRequiredForOrganisationAndCompetition(section.getCompetition(), organisation.getOrganisationTypeEnum(), application.getLeadOrganisationId().equals(organisationId));
+                    return false;
                 }
             }
         }
