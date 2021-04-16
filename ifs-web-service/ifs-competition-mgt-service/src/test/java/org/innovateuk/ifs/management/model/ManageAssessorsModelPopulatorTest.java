@@ -63,6 +63,8 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
         ManageAssessorsViewModel expectedViewModel = new ManageAssessorsViewModel(
                 competition.getId(),
                 competition.getName(),
+                null,
+                null,
                 simpleMap(assessorCountSummaryResources, ManageAssessorsRowViewModel::new),
                 competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT,
                 innovationSectorResources,
