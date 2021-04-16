@@ -6,8 +6,7 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
-import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -21,6 +20,7 @@ import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -39,11 +39,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static org.innovateuk.ifs.testdata.builders.CompetitionLineBuilder.aCompetitionLine;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 
@@ -207,18 +207,42 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
         flushAndClearSession();
 
+        CompetitionLine competitionLine = aCompetitionLine()
+                .withName("APC Competition")
+                .withCompetitionType(CompetitionTypeEnum.ADVANCED_PROPULSION_CENTRE)
+                .withInnovationAreas(asSet(22L)) // Digital manufacturing
+                .withInnovationSector("Materials and manufacturing")
+                .withResearchCategory(asSet(33L)) // Feasibility studies
+                .withCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE)
+                .withLeadApplicantTypes(asSet(OrganisationTypeEnum.BUSINESS))
+                .withResearchRatio(30)
+                .withResubmission(false)
+                .withMultiStream(false)
+                .withLeadTechnologist(24L) // ian.cooper@innovateuk.test
+                .withCompExecutive(20L) // john.doe@innovateuk.test
+                .withSetupComplete(true)
+                .withPafCode("875")
+                .withBudgetCode("DET1536/1537")
+                .withActivityCode("16014")
+                .withCode("2/1/1506")
+                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withFundingType(FundingType.GRANT)
+                .withNonIfs(false)
+                .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .withIncludeJesForm(true)
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD)
+                .withIncludeProjectGrowth(true)
+                .withIncludeYourOrganisation(true)
+                .withFundingRules(FundingRules.STATE_AID)
+                .withPublished(true)
+                .withAlwaysOpen(false)
+                .build();
+
         CompetitionData competition = competitionDataBuilder.
                 withExistingCompetition(competitionCreation).
-                withBasicData("APC Competition", "Advanced Propulsion Centre",
-                        singletonList("Digital manufacturing"), "Materials and manufacturing", FundingRules.STATE_AID,
-                        researchCategory, "ian.cooper@innovateuk.test",
-                        "john.doe@innovateuk.test", "DET1536/1537", "875",
-                        "CCCC", "16014", false,
-                        "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
-                        true, STANDARD, true, true, false).
+                withBasicData(competitionLine).
                 withApplicationFormFromTemplate().
-                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP, false).
+                withNewMilestones(competitionLine).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
                 withBriefingDate(addDays(1)).
                 withSubmissionDate(addDays(2)).
@@ -235,8 +259,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                 withFundersPanelEndDate(addDays(13)).
                 withReleaseFeedbackDate(addDays(14)).
                 withFeedbackReleasedDate(addDays(15)).
-                withPublicContent(true, "blah", "blah", "blah",
-                        "blah", "blah", singletonList("blah"), false).
+                withDefaultPublicContent(competitionLine).
                 withSetupComplete().
                 build();
 

@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -51,7 +52,7 @@ public class ProjectTermsControllerTest extends BaseControllerMockMVCTest<Projec
 
     @Test
     public void getTerms() throws Exception {
-        ProjectTermsViewModel viewModel = new ProjectTermsViewModel(project.getId(), organisation.getId(), competitionTermsTemplate, termsAccepted, null);
+        ProjectTermsViewModel viewModel = new ProjectTermsViewModel(project.getId(), project.getName(), organisation.getId(), competitionTermsTemplate, termsAccepted, null, false, empty());
 
         when(projectTermsModelPopulator.populate(project.getId(), organisation.getId())).thenReturn(viewModel);
 

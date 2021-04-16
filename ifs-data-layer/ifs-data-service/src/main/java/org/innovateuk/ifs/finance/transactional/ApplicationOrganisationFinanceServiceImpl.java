@@ -36,8 +36,8 @@ public class ApplicationOrganisationFinanceServiceImpl extends AbstractOrganisat
     }
 
     @Override
-    protected ServiceResult<Void> updateFinance(ApplicationFinanceResource finance) {
-        return financeService.updateApplicationFinance(finance.getId(), finance).andOnSuccessReturnVoid();
+    protected ServiceResult<ApplicationFinanceResource> updateFinance(ApplicationFinanceResource finance) {
+        return financeService.updateApplicationFinance(finance.getId(), finance);
     }
 
     @Override
