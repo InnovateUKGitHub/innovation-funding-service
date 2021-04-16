@@ -143,7 +143,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         long partnerOrganisationId = 4L;
         long userId = 4L;
         String financeLinkUrl = "some url";
-        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+
+        List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> financeRowType.isCost()
                         && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -196,7 +197,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertNotNull(model);
 
-        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
 
         assertEquals(1, model.getRows().size());
 
@@ -209,7 +210,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertThat(leadOrganisationFinanceRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+        assertThat(leadOrganisationFinanceRowTypes, containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
 
         verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
     }
@@ -222,7 +223,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         long partnerOrganisationId = 4L;
         long userId = 4L;
         String financeLinkUrl = "some url";
-        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+
+        List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> financeRowType.isCost()
                         && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
                 .collect(Collectors.toList());
@@ -277,7 +279,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertNotNull(model);
 
-        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
 
         assertEquals(1, model.getRows().size());
 
@@ -290,7 +292,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        assertThat(leadOrganisationFinanceRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+        assertThat(leadOrganisationFinanceRowTypes, containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
 
         verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
     }
