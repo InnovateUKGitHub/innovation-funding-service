@@ -48,7 +48,7 @@ public class UsersManagementController extends AsyncAdaptor {
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
             description = "Only IFS administrators can view active internal users")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support', 'super_admin_user')")
     @GetMapping("/active")
     public String viewActiveUsers(Model model,
                              UserResource user,
@@ -61,7 +61,7 @@ public class UsersManagementController extends AsyncAdaptor {
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewInactive() method",
             description = "Only IFS administrators can view active internal users")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support', 'super_admin_user')")
     @GetMapping("/inactive")
     public String viewInactiveUsers(Model model,
                                UserResource user,
@@ -74,7 +74,7 @@ public class UsersManagementController extends AsyncAdaptor {
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewPending() method",
             description = "IFS administrators can view pending user invites")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'super_admin_user')")
     @GetMapping("/pending")
     public String viewPendingUsers(Model model,
                               HttpServletRequest request,

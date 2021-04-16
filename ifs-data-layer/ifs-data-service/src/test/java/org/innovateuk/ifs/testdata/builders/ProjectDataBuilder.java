@@ -275,7 +275,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findDistinctByRolesInAndStatusIn(newArrayList(Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR), EnumSet.allOf(UserStatus.class));
+        List<User> projectFinanceUsers = userRepository.findDistinctByRolesInAndStatusIn(newArrayList(Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR, Role.SUPER_ADMIN_USER), EnumSet.allOf(UserStatus.class));
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 

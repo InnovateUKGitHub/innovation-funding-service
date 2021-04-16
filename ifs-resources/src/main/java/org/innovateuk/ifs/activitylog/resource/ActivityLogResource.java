@@ -8,6 +8,7 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.SUPER_ADMIN_USER;
 
 public class ActivityLogResource {
 
@@ -106,4 +107,8 @@ public class ActivityLogResource {
         return getAuthoredByRoles().contains(IFS_ADMINISTRATOR);
     }
 
+    @JsonIgnore
+    public boolean isSuperAdmin() {
+        return getAuthoredByRoles().contains(SUPER_ADMIN_USER);
+    }
 }
