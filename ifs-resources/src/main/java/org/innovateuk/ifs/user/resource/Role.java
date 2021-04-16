@@ -66,6 +66,10 @@ public enum Role implements Identifiable {
         return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
+    public boolean isSuperAdminUser() {
+        return this == SUPER_ADMIN_USER;
+    }
+
     public static Set<Role> internalRoles() {
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER);
     }

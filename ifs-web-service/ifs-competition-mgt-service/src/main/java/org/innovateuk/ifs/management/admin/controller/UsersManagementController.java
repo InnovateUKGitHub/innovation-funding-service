@@ -9,7 +9,6 @@ import org.innovateuk.ifs.management.admin.form.UserManagementFilterForm;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.ManageUserPageResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class UsersManagementController extends AsyncAdaptor {
                              @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
                              @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", filterForm.getFilter(), page, size, user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "active", filterForm.getFilter(), page, size, user.hasAuthority(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod

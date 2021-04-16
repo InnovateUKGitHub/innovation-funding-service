@@ -89,25 +89,26 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     public IndustrialCostDataBuilder withLabourEntry(String role, Integer annualSalary, Integer daysToBeSpent) {
         return addCostItem("Labour", (finance) ->
-                newLabourCost().withId().
-                        withName().
-                        withRole(role).
-                        withGrossEmployeeCost(bd(annualSalary)).
-                        withLabourDays(daysToBeSpent).
-                        withDescription().
-                        withTargetId(finance.getId()).
-                        build());
+                newLabourCost()
+                        .withId()
+                        .withName()
+                        .withRole(role)
+                        .withGrossEmployeeCost(bd(annualSalary))
+                        .withLabourDays(daysToBeSpent)
+                        .withDescription()
+                        .withTargetId(finance.getId())
+                        .build());
     }
 
     public IndustrialCostDataBuilder withMaterials(String item, BigDecimal cost, Integer quantity) {
         return addCostItem("Materials", (finance) ->
-                newMaterials().
-                        withId().
-                        withItem(item).
-                        withCost(cost).
-                        withQuantity(quantity).
-                        withTargetId(finance.getId()).
-                        build());
+                newMaterials()
+                        .withId()
+                        .withItem(item)
+                        .withCost(cost)
+                        .withQuantity(quantity)
+                        .withTargetId(finance.getId())
+                        .build());
     }
 
     public IndustrialCostDataBuilder withCapitalUsage(Integer depreciation, String description, boolean existing,

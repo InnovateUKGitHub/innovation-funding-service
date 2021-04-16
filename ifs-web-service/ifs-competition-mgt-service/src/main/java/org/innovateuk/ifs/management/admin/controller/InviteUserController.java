@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.KTA_USER_ROLE_INVITE_INVALID_EMAIL;
@@ -83,7 +84,9 @@ public class InviteUserController {
     }
 
     private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
-        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles);
+        Set<Role> filteredRoles = roles.stream().filter(r -> !r.isSuperAdminUser()).collect(Collectors.toSet());
+
+        InviteUserViewModel viewModel = new InviteUserViewModel(type, filteredRoles);
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(MODEL_ATTR_NAME, viewModel);

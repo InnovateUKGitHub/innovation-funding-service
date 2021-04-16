@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.SUPER_ADMIN_USER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -85,11 +86,13 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void ifsAdministratorCanUpdateTheProjectStartDate() {
-        UserResource user = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+    public void ifsAdministratorsCanUpdateTheProjectStartDate() {
+        UserResource ifsAdmin = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+        UserResource superAdmin = newUserResource().withRoleGlobal(SUPER_ADMIN_USER).build();
 
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
-        assertTrue(rules.ifsAdministratorCanUpdateTheProjectStartDate(project, user));
+        assertTrue(rules.ifsAdministratorCanUpdateTheProjectStartDate(project, ifsAdmin));
+        assertTrue(rules.ifsAdministratorCanUpdateTheProjectStartDate(project, superAdmin));
     }
 
     @Test
