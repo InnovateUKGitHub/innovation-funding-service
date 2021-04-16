@@ -27,7 +27,6 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-
     protected List<Role> allRoles;
 
     protected List<UserResource> allGlobalRoleUsers;
