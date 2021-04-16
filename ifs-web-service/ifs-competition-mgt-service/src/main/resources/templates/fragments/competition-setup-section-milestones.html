@@ -33,12 +33,13 @@
                 <tbody class="govuk-table__body">
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
                       th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                      th:with="milestoneDescription=${model.general.competition.alwaysOpen ? milestoneEntry.value.milestoneType.alwaysOpenDescription : milestoneEntry.value.milestoneType.milestoneDescription}"
                       class="govuk-table__row date-group form-group-row"
                       data-future-date=""
-                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
+                      th:attr="data-date-invalid-errormessage=${milestoneDescription + ': Please enter a valid date.'},
+                               data-date-future-errormessage=${milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
                       <th class="govuk-table__header" scope="row">
-                          <legend th:id="${'milestone-' + milestoneEntry.key}" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
+                          <legend th:id="${'milestone-' + milestoneEntry.key}" th:text="${milestoneDescription}" />
                       </th>
                       <td class="govuk-table__cell time">
                         <input type="hidden"
@@ -138,10 +139,11 @@
                 </thead>
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
-                        th:if="${milestoneEntry.value.milestoneType.presetDate}">
-                        <td class="govuk-table__cell" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                        th:with="milestoneDescription=${model.general.competition.alwaysOpen ? milestoneEntry.value.milestoneType.alwaysOpenDescription : milestoneEntry.value.milestoneType.milestoneDescription}">
+                        <td class="govuk-table__cell" th:text="${milestoneDescription}"></td>
                         <td class="govuk-table__cell">
-                            <th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/>
+                            <th:block th:if="${milestoneEntry.value.timeOption and milestoneEntry.value.date != null}" th:text="${milestoneEntry.value.time.display}"/>
                             <th:block th:if="${milestoneEntry.value.middayTime}">12:00 pm</th:block>
                         </td>
                         <td class="govuk-table__cell" th:text="${milestoneEntry.value.dayOfWeek}"></td>

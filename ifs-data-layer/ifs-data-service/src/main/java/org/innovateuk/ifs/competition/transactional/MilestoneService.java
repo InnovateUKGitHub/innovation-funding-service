@@ -5,8 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -46,4 +46,6 @@ public interface MilestoneService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'UPDATE_COMPLETION_STAGE')")
     ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
+
+    ServiceResult<Void> rebuildMilestones(long competitionId);
 }

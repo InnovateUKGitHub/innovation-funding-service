@@ -17,6 +17,7 @@ public class PublicContentItemViewModel {
     private ZonedDateTime competitionCloseDate;
     private ZonedDateTime registrationCloseDate;
     private PublicContentStatusText publicContentStatusText;
+    private boolean alwaysOpen;
 
     public String getShortDescription() {
         return shortDescription;
@@ -80,5 +81,14 @@ public class PublicContentItemViewModel {
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public PublicContentItemViewModel setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+        return this;
     }
 }

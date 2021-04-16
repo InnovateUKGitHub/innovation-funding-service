@@ -156,7 +156,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         List<MilestoneResource> newMilestones = createNewMilestonesWithAssessmentPeriod(newCompetition.getId(), newAssessmentPeriod.getId());
 
-        assertEquals(MilestoneType.alwaysOpenValues().length, newMilestones.size());
+        assertEquals(MilestoneType.alwaysOpenCompSetupMilestones().length, newMilestones.size());
 
         newMilestones.forEach(m -> {
             assertNotNull(m.getId());
@@ -260,7 +260,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     private List<MilestoneResource> createNewMilestonesWithAssessmentPeriod(Long competitionId, Long assessmentPeriodId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.alwaysOpenValues()).forEach(name -> {
+        Stream.of(MilestoneType.alwaysOpenCompSetupMilestones()).forEach(name -> {
             MilestoneResource newMilestone = createNewMilestoneWithAssessmentPeriod(name, competitionId, assessmentPeriodId);
             newMilestone.setType(name);
             newMilestones.add(newMilestone);

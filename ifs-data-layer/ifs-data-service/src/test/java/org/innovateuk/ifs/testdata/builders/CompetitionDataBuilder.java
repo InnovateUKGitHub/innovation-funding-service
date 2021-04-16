@@ -338,7 +338,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withNewMilestones(CompetitionLine line) {
         return asCompAdmin(data ->
-                Stream.of(BooleanUtils.isTrue(line.getAlwaysOpen()) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
+                Stream.of(BooleanUtils.isTrue(line.getAlwaysOpen()) ? MilestoneType.alwaysOpenCompSetupMilestones() : MilestoneType.presetValues())
                         .filter(m -> !m.isOnlyNonIfs())
                         .filter(milestoneType -> milestoneType.getPriority() <= line.getCompetitionCompletionStage().getLastMilestone().getPriority())
                         .forEach(type ->

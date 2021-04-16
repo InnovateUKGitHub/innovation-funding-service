@@ -292,7 +292,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         ZonedDateTime earliestDate = startOfDay().minusYears(2).plusDays(5);
         ZonedDateTime firstFutureDate = startOfDay().plusYears(2).plusDays(5);
 
-        List<MilestoneType> presetMilestoneTypes = Arrays.stream(isAlwaysOpen ? MilestoneType.alwaysOpenValues() : MilestoneType.values())
+        List<MilestoneType> presetMilestoneTypes = Arrays.stream(isAlwaysOpen ? MilestoneType.alwaysOpenCompSetupMilestones() : MilestoneType.values())
                 .filter(type -> type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE))
                 .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                 .collect(Collectors.toList());
