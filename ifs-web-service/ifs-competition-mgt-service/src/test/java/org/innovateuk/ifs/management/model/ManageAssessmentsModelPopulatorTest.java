@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.assertj.core.util.Lists;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
@@ -8,12 +9,15 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
+import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
+import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
+import org.innovateuk.ifs.management.assessmentperiod.populator.AssessmentPeriodFormPopulator;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
-import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -32,6 +36,9 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
+
+    @Mock
+    private AssessmentPeriodFormPopulator assessmentPeriodFormPopulator;
 
     @Test
     public void populateModel() throws Exception {
@@ -57,10 +64,14 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
+        ManageAssessmentPeriodsForm form = new ManageAssessmentPeriodsForm();
+        AssessmentPeriodForm period = new AssessmentPeriodForm();
+        List<AssessmentPeriodForm> periods = Lists.newArrayList(period);
+        form.setAssessmentPeriods(periods);
         when(competitionRestService.getCompetitionById(expectedCompetitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
-
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList());
+        when(assessmentPeriodFormPopulator.populate(expectedCompetitionId)).thenReturn(form);
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, periods);
 
         ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(expectedCompetitionId);
 
