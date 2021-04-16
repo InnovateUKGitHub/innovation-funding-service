@@ -36,7 +36,6 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 
 *** Variables ***
 ${sbriMilestonesApplicationTitle}     SBRI payment milestones application
@@ -73,13 +72,10 @@ ${payment_query_title}                Payment Milestone Query
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
     [Documentation]  IFS-7313
-    zap start spider
-    zap start ascan
     Given the user completes initial details of the competition        ${sbriType1CompetitionName}  PROCUREMENT
     When the user navigates to completition stage
     And the user saves the completion stage with competition close     COMPETITION_CLOSE
     Then the user should see competition close in read only page       Competition close
-    Zap Write To Json File
 
 Comp admin edits the completition stage with competition close option
     [Documentation]  IFS-7313
@@ -431,11 +427,8 @@ External user can upload the contract
 *** Keywords ***
 Custom Suite Setup
     Connect to Database  @{database}
-    start headless zap
-    The guest user opens the browser
-    zap define context
-    zap start spider
-    Logging in and Error Checking    john.doe@innovateuk.test   Passw0rd1357
+    The user logs-in in new browser     &{Comp_admin1_credentials}
+    Logging in and Error Checking
     Set predefined date variables
 
 Custom suite teardown

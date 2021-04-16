@@ -12,18 +12,12 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Guest user can click on the footer links
     [Documentation]    IFS-362
-    start headless zap
-    zap define context
-    zap start spider
-    zap start ascan
     Given the user tries the footer links    ${frontDoor}
     And the user tries the footer links      ${LOGIN_URL}
     And the user navigates to the page       ${LOGIN_URL}
     When Logging in and Error Checking       &{lead_applicant_credentials}
     Then the user tries the footer links     ${APPLICANT_DASHBOARD_URL}
-#    Zap Write To Json File
- #   zap export report
-   #  zap shutdown
+
 *** Keywords ***
 the user tries the footer links
     [Arguments]    ${page}
