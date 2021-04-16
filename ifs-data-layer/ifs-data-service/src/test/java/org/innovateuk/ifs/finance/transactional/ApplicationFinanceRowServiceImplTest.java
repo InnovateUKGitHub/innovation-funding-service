@@ -247,12 +247,13 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
     }
 
     @Test
-    public void resetNonFECCostRowEntries() {
+    public void testResetNonFECCostRowEntries() {
 
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
         OrganisationType organisationType = newOrganisationType().withOrganisationType(RESEARCH).build();
         Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+       //When FEC model is Yes we need to reset non-FEC row entries
         ApplicationFinance applicationFinance = newApplicationFinance()
                 .withFecEnabled(true)
                 .withApplication(application).withOrganisation(organisation).build();
@@ -267,7 +268,41 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(Optional.of(applicationFinance));
         when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(nonFECRows);
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
-        ServiceResult<Void> result = service.resetNonFECCostRowEntries(application.getId(), organisation.getId());
+        ServiceResult<Void> result = service.resetCostRowEntriesBasedOnFecModelUpdate(application.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(applicationFinanceRowRepositoryMock, organisationFinanceDelegateMock);
+        inOrder.verify(applicationFinanceRowRepositoryMock).findByTargetId(applicationFinance.getId());
+
+    }
+
+    @Test
+    public void testResetFECCostRowEntries() {
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(RESEARCH).build();
+        Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+        //When FEC model is False we need to reset FEC row entries
+        ApplicationFinance applicationFinance = newApplicationFinance()
+                .withFecEnabled(false)
+                .withApplication(application).withOrganisation(organisation).build();
+        ApplicationFinanceRow fecKnowledgeBaseCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.KNOWLEDGE_BASE).withCost(BigDecimal.TEN).build();
+        ApplicationFinanceRow fecEstateCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.ESTATE_COSTS).withCost(BigDecimal.TEN).build();
+        ApplicationFinanceRow fecAssociateSupportCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.ASSOCIATE_SUPPORT).withCost(BigDecimal.TEN).build();
+
+        List<ApplicationFinanceRow> fecRows = new ArrayList<ApplicationFinanceRow>();
+        fecRows.add(fecKnowledgeBaseCostRow);
+        fecRows.add(fecEstateCostRow);
+        fecRows.add(fecAssociateSupportCostRow);
+
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(Optional.of(applicationFinance));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(fecRows);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        ServiceResult<Void> result = service.resetCostRowEntriesBasedOnFecModelUpdate(application.getId(), organisation.getId());
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(applicationFinanceRowRepositoryMock, organisationFinanceDelegateMock);

@@ -27,5 +27,5 @@ public interface ApplicationFinanceRowService {
     FinanceRowHandler getCostHandler(long costItemId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<Void> resetNonFECCostRowEntries(long applicationId,long organisationId);
+    ServiceResult<Void> resetCostRowEntriesBasedOnFecModelUpdate(long applicationId,long organisationId);
 }
