@@ -598,12 +598,10 @@
                 <td>a. Associate employment</td>
                 <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
             </tr>
-            <th:block th:if="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
-                <tr>
-                    <td>b. Academic and secretarial support</td>
-                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.academicAndSecretarialSupport')"></th:block>
-                </tr>
-            </th:block>
+            <tr>
+                <td>b. Academic and secretarial support</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.academicAndSecretarialSupport')"></th:block>
+            </tr>
             <tr>
                 <td>c. Associate development</td>
                 <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
@@ -744,12 +742,10 @@
                 <td>a. Associate(s) Employment Costs</td>
                 <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
             </tr>
-            <th:block th:if="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
-                <tr>
-                    <td>b. Academic and Secretarial Support</td>
-                    <td th:text="${model.ktpFinanceModel.academicAndSecretarialSupport.cost}"></td>
-                </tr>
-            </th:block>
+            <tr>
+                <td>b. Academic and Secretarial Support</td>
+                <td th:text="${model.ktpFinanceModel.academicAndSecretarialSupport.cost}"></td>
+            </tr>
             <tr>
                 <td>c. Associate(s) development</td>
                 <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
