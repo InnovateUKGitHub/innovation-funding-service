@@ -37,6 +37,10 @@ public final class SecurityRuleUtil {
         return user.hasAuthority(Authority.ASSESSOR);
     }
 
+    public static boolean hasIFSAdminAuthority(UserResource user) {
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
+    }
+
     public static boolean isSupport(UserResource user) {
         return user.hasRole(SUPPORT); }
 
@@ -53,14 +57,6 @@ public final class SecurityRuleUtil {
 
     public static boolean isMonitoringOfficer(UserResource user) {
         return user.hasRole(MONITORING_OFFICER);
-    }
-
-    public static boolean isIFSAdmin(UserResource user) {
-        return user.hasRole(IFS_ADMINISTRATOR);
-    }
-
-    public static boolean isSuperAdminUser(UserResource user) {
-        return user.hasRole(SUPER_ADMIN_USER);
     }
 
     public static boolean isKta(UserResource user) {

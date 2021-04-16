@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -48,7 +48,7 @@ public class UsersManagementController extends AsyncAdaptor {
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
             description = "Only IFS administrators can view active internal users")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support', 'super_admin_user')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @GetMapping("/active")
     public String viewActiveUsers(Model model,
                              UserResource user,
@@ -61,20 +61,20 @@ public class UsersManagementController extends AsyncAdaptor {
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewInactive() method",
             description = "Only IFS administrators can view active internal users")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support', 'super_admin_user')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @GetMapping("/inactive")
     public String viewInactiveUsers(Model model,
                                UserResource user,
                                @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
                                @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", filterForm.getFilter(), page, size, user.hasRole(IFS_ADMINISTRATOR));
+        return view(model, "inactive", filterForm.getFilter(), page, size, user.hasAuthority(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewPending() method",
             description = "IFS administrators can view pending user invites")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'super_admin_user')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/pending")
     public String viewPendingUsers(Model model,
                               HttpServletRequest request,

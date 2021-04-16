@@ -840,7 +840,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(IFS_ADMINISTRATOR)) {
+            if (user.hasAuthority(Authority.IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanUpdateAllEmailAddresses(userResource, user));
             } else {
                 assertFalse(rules.ifsAdminCanUpdateAllEmailAddresses(userResource, user));

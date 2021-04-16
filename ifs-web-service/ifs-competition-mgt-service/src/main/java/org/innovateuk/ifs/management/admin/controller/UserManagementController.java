@@ -112,7 +112,7 @@ public class UserManagementController extends AsyncAdaptor {
         return viewActiveUser(model, user, loggedInUser);
     }
 
-    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support', 'super_admin_user')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @SecuredBySpring(value = "UserManagementController.updateUser() method",
             description = "IFS admins and support users can edit users.")
     @PostMapping("/user/{userId}/active")

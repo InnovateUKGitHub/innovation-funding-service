@@ -38,7 +38,7 @@ public class CompetitionSetupPopulator {
         boolean editable = isSectionEditable(statusesAndValues, section, competitionResource);
         boolean isInitialComplete = competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId());
 
-        boolean isIfsAdmin = SecurityRuleUtil.isIFSAdmin(userResource);
+        boolean isIfsAdmin = SecurityRuleUtil.hasIFSAdminAuthority(userResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, firstTimeInForm, competitionResource, section, CompetitionSetupSection.values(),
                 isInitialComplete, isIfsAdmin);
