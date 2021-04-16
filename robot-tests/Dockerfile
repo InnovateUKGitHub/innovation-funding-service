@@ -109,7 +109,7 @@ ENV HOME /home/zap/
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-COPY zap* CHANGELOG.md /zap/
+COPY zap* /zap/
 # COPY webswing.config /zap/webswing/
 # COPY webswing.properties /zap/webswing/
 COPY policies /home/zap/.ZAP/policies/
