@@ -120,12 +120,8 @@ public class KtpFinanceModel {
     }
 
     private List<KtpFinanceRowModel> table2Rows() {
-        if (BooleanUtils.isFalse(fecModelEnabled)) {
-            return newArrayList(associateEmployment, academicAndSecretarialSupport, associateDevelopment, travelAndSubsistence,
-                    consumables, otherCosts);
-        } else {
-            return newArrayList(associateEmployment, associateDevelopment, travelAndSubsistence, consumables, otherCosts);
-        }
+        return newArrayList(associateEmployment, academicAndSecretarialSupport, associateDevelopment, travelAndSubsistence,
+                consumables, otherCosts);
     }
 
     public int getContributionToKbPartnerOverheads() {
