@@ -428,7 +428,6 @@ External user can upload the contract
 Custom Suite Setup
     Connect to Database  @{database}
     The user logs-in in new browser     &{Comp_admin1_credentials}
-    Logging in and Error Checking
     Set predefined date variables
 
 Custom suite teardown
