@@ -73,8 +73,8 @@ ${payment_query_title}                Payment Milestone Query
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
     [Documentation]  IFS-7313
-    zap start spider ${server}
-    zap start ascan ${server}
+    zap start spider
+    zap start ascan
     Given the user completes initial details of the competition        ${sbriType1CompetitionName}  PROCUREMENT
     When the user navigates to completition stage
     And the user saves the completion stage with competition close     COMPETITION_CLOSE
@@ -433,8 +433,8 @@ Custom Suite Setup
     Connect to Database  @{database}
     start headless zap
     The guest user opens the browser
-    zap define context ${server}
-    zap start spider ${server}
+    zap define context
+    zap start spider
     Logging in and Error Checking    john.doe@innovateuk.test   Passw0rd1357
     Set predefined date variables
 
