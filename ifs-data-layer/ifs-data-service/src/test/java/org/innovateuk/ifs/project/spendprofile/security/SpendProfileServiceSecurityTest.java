@@ -219,7 +219,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     private List<Role> getNonProjectFinanceUserRoles() {
-        return Arrays.stream(Role.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SYSTEM_MAINTAINER && type != IFS_ADMINISTRATOR)
+        return Arrays.stream(Role.values())
+                .filter(type -> type != PROJECT_FINANCE &&
+                        type != COMP_ADMIN &&
+                        type != SYSTEM_MAINTAINER &&
+                        type != IFS_ADMINISTRATOR &&
+                        type != SUPER_ADMIN_USER)
                 .collect(toList());
     }
 }
