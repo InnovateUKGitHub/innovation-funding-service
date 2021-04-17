@@ -739,7 +739,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanEditInternalUser(userToEdit, user));
             } else {
                 assertFalse(rules.ifsAdminCanEditInternalUser(userToEdit, user));
@@ -753,7 +753,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
             } else {
                 assertFalse(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
@@ -781,7 +781,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
             } else {
                 assertFalse(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
