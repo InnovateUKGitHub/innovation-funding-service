@@ -48,4 +48,9 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     public RestResult<Void> closeAssessment(long competitionId) {
         return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
+
+    @Override
+    public RestResult<Void> reopenAssessment(long competitionId) {
+        return putWithRestResult(String.format("%s/%s/reopen-assessment", competitionsRestURL, competitionId), Void.class);
+    }
 }

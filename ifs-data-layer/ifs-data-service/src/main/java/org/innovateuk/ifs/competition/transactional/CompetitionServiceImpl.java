@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationSt
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -124,6 +125,17 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         }
         competition.closeAssessment(ZonedDateTime.now());
         return result.andOnSuccessReturnVoid();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> reopenAssessment(long competitionId) {
+
+        // TODO: if can reopen assessment check
+        Competition competition = competitionRepository.findById(competitionId).get();
+
+        competition.reopenAssessment(ZonedDateTime.now());
+        return serviceSuccess();
     }
 
     @Override
