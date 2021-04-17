@@ -229,13 +229,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void reopenAssessmentPeriod() throws Exception {
         long competitionId = 1L;
 
-        when(competitionPostSubmissionRestService.reopenAssessment(competitionId)).thenReturn(restSuccess());
+        when(competitionPostSubmissionRestService.reopenAssessmentPeriod(competitionId)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/competition/{competitionId}/reopen-assessment", competitionId))
+        mockMvc.perform(post("/competition/{competitionId}/reopen-assessment-period", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionPostSubmissionRestService).reopenAssessment(competitionId);
+        verify(competitionPostSubmissionRestService).reopenAssessmentPeriod(competitionId);
         verifyNoMoreInteractions(competitionRestService);
     }
 

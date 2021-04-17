@@ -129,7 +129,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> reopenAssessment(long competitionId) {
+    public ServiceResult<Void> reopenAssessmentPeriod(long competitionId) {
         CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
                 competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();

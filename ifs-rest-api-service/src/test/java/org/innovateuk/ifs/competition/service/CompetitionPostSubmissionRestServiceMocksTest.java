@@ -92,9 +92,9 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
     @Test
     public void reopenAssessmentPeriod() {
         long competitionId = 1L;
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/reopen-assessment", HttpStatus.OK);
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/reopen-assessment-period", HttpStatus.OK);
 
-        RestResult<Void> result = service.reopenAssessment(competitionId);
+        RestResult<Void> result = service.reopenAssessmentPeriod(competitionId);
         assertTrue(result.isSuccess());
     }
 }

@@ -62,13 +62,13 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
     public void reopenAssessment() throws Exception {
         final long competitionId = 1L;
 
-        when(competitionService.reopenAssessment(competitionId)).thenReturn(serviceSuccess());
+        when(competitionService.reopenAssessmentPeriod(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment", competitionId))
+        mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment-period", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(competitionService, only()).reopenAssessment(competitionId);
+        verify(competitionService, only()).reopenAssessmentPeriod(competitionId);
     }
 
     @Test

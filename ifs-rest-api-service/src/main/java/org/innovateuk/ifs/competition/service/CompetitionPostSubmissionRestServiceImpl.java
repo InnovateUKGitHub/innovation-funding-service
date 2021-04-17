@@ -50,7 +50,7 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     }
 
     @Override
-    public RestResult<Void> reopenAssessment(long competitionId) {
-        return putWithRestResult(String.format("%s/%s/reopen-assessment", competitionsRestURL, competitionId), Void.class);
+    public RestResult<Void> reopenAssessmentPeriod(long competitionId) {
+        return putWithRestResult(String.format("%s/%s/reopen-assessment-period", competitionsRestURL, competitionId), Void.class);
     }
 }

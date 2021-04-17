@@ -35,9 +35,9 @@ public class CompetitionPostSubmissionController {
         return competitionService.closeAssessment(id).toPutResponse();
     }
 
-    @PutMapping("/{id}/reopen-assessment")
-    public RestResult<Void> reopenAssessment(@PathVariable("id") final Long id) {
-        return competitionService.reopenAssessment(id).toPutResponse();
+    @PutMapping("/{id}/reopen-assessment-period")
+    public RestResult<Void> reopenAssessmentPeriod(@PathVariable("id") final Long id) {
+        return competitionService.reopenAssessmentPeriod(id).toPutResponse();
     }
 
     @GetMapping("/{id}/queries/open")

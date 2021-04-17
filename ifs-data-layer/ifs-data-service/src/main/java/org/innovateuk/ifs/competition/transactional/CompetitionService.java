@@ -35,8 +35,8 @@ public interface CompetitionService {
     ServiceResult<Void> closeAssessment(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('super_admin_user')")
-    @SecuredBySpring(value = "REOPEN_ASSESSMENT", description = "Super Admins can reopen the assessment period")
-    ServiceResult<Void> reopenAssessment(long competitionId);
+    @SecuredBySpring(value = "REOPEN_ASSESSMENT_PERIOD", description = "Super Admins can reopen the assessment period")
+    ServiceResult<Void> reopenAssessmentPeriod(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")

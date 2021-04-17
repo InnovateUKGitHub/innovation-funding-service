@@ -23,5 +23,5 @@ public interface CompetitionPostSubmissionRestService {
 
     RestResult<Void> closeAssessment(long competitionId);
 
-    RestResult<Void> reopenAssessment(long competitionId);
+    RestResult<Void> reopenAssessmentPeriod(long competitionId);
 }

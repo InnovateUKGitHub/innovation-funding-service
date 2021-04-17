@@ -187,9 +187,9 @@
                                 </button>
                                 <button th:unless="${model.readOnly || model.keyStatistics.canManageFundingNotifications}"
                                         type="submit"
-                                        id="reopen-assessment-button"
+                                        id="reopen-assessment-period-button"
                                         th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).LINE_DRAW}"
-                                        th:formaction="@{/competition/{competitionId}/reopen-assessment(competitionId=${model.competitionId})}"
+                                        th:formaction="@{/competition/{competitionId}/reopen-assessment-period(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
                                         class="govuk-button">Reopen assessment period
                                 </button>

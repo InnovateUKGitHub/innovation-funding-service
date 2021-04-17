@@ -169,7 +169,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void reopenAssessmentPeriod() {
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
-                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED, ASSESSMENT_CLOSED).build(4);
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
+        milestones.addAll(newMilestone()
+                .withDate(ZonedDateTime.now().plusDays(1))
+                .withType(ASSESSMENT_CLOSED)
+                .build(1));
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .withId(competitionId)
@@ -183,7 +187,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
 
-        ServiceResult<Void> response = service.reopenAssessment(competitionId);
+        ServiceResult<Void> response = service.reopenAssessmentPeriod(competitionId);
 
         verify(milestoneRepository).deleteByTypeAndCompetitionId(ASSESSMENT_CLOSED, competitionId);
 
@@ -208,7 +212,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
 
-        ServiceResult<Void> response = service.reopenAssessment(competitionId);
+        ServiceResult<Void> response = service.reopenAssessmentPeriod(competitionId);
 
         assertTrue(response.isFailure());
         assertTrue(response.getFailure().is(new Error(COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD)));

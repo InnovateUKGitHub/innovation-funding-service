@@ -76,9 +76,9 @@ public class CompetitionManagementCompetitionController {
         return "redirect:/competition/" + competitionId;
     }
 
-    @PostMapping("/{competitionId}/reopen-assessment")
-    public String reopenAssessment(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.reopenAssessment(competitionId).getSuccess();
+    @PostMapping("/{competitionId}/reopen-assessment-period")
+    public String reopenAssessmentPeriod(@PathVariable("competitionId") Long competitionId) {
+        competitionPostSubmissionRestService.reopenAssessmentPeriod(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 
