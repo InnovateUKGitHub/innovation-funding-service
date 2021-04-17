@@ -288,12 +288,12 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only an IFS Administrator can edit an internal user")
     public boolean ifsAdminCanEditInternalUser(final UserResource userToEdit, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "IFS Administrator can deactivate Users")
     public boolean ifsAdminCanDeactivateUsers(UserResource userToDeactivate, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "A Support user can deactivate external Users")
@@ -308,7 +308,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToReactivate, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "ACTIVATE", description = "A Support user can reactivate external Users")
