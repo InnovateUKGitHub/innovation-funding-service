@@ -19,18 +19,19 @@ import org.mockito.Mock;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.SUPER_ADMIN_USER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -87,12 +88,10 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void ifsAdministratorsCanUpdateTheProjectStartDate() {
-        UserResource ifsAdmin = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
-        UserResource superAdmin = newUserResource().withRoleGlobal(SUPER_ADMIN_USER).build();
+        UserResource ifsAdmins = newUserResource().withRolesGlobal(asList(IFS_ADMINISTRATOR, SUPER_ADMIN_USER)).build();
 
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
-        assertTrue(rules.ifsAdministratorCanUpdateTheProjectStartDate(project, ifsAdmin));
-        assertTrue(rules.ifsAdministratorCanUpdateTheProjectStartDate(project, superAdmin));
+        assertTrue(rules.ifsAdministratorCanUpdateTheProjectStartDate(project, ifsAdmins));
     }
 
     @Test
