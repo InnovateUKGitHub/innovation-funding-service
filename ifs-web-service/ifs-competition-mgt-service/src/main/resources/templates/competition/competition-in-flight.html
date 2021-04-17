@@ -185,8 +185,7 @@
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
                                         class="govuk-button">Close assessment
                                 </button>
-
-                                <button th:unless="${model.readOnly}"
+                                <button th:unless="${model.readOnly || model.keyStatistics.canManageFundingNotifications}"
                                         type="submit"
                                         id="reopen-assessment-button"
                                         th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).LINE_DRAW}"
@@ -194,7 +193,6 @@
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
                                         class="govuk-button">Reopen assessment
                                 </button>
-
                                 <th:block th:unless="${model.readOnly}"
                                           th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
                                           th:if="${model.fundingNotificationDisplayed}">

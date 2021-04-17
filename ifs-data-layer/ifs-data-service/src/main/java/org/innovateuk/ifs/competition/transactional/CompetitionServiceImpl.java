@@ -8,11 +8,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -37,7 +34,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -51,6 +48,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
@@ -130,12 +130,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> reopenAssessment(long competitionId) {
-
-        // TODO: if can reopen assessment check
-        Competition competition = competitionRepository.findById(competitionId).get();
-
-        competition.reopenAssessment(ZonedDateTime.now());
-        return serviceSuccess();
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+                        .getSuccess();
+        if (!keyStatisticsResource.isCanManageFundingNotifications()) {
+            competitionRepository.findById(competitionId).get();
+            milestoneRepository.deleteByTypeAndCompetitionId(MilestoneType.ASSESSMENT_CLOSED, competitionId);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error(COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD));
+        }
     }
 
     @Override
