@@ -187,8 +187,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         verify(milestoneRepository).deleteByTypeAndCompetitionId(ASSESSMENT_CLOSED, competitionId);
 
-        List<Milestone> dkjskdjskdj = competition.getMilestones();
-
         assertTrue(response.isSuccess());
         assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
     }

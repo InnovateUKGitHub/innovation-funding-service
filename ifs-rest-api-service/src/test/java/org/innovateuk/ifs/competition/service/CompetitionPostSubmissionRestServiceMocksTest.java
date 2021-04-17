@@ -88,4 +88,13 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
         RestResult<Void> result = service.closeAssessment(competitionId);
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    public void reopenAssessmentPeriod() {
+        long competitionId = 1L;
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/reopen-assessment", HttpStatus.OK);
+
+        RestResult<Void> result = service.reopenAssessment(competitionId);
+        assertTrue(result.isSuccess());
+    }
 }
