@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -186,6 +187,19 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.withdraw(found)) {
                 return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
+            }
+            return serviceSuccess();
+        });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> unsubmitAssessment(long assessmentId) {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            found.setProcessEvent("feedback");
+            found.setProcessState(READY_TO_SUBMIT);
+            if (!assessmentWorkflowHandler.unsubmitAssessment(found)) {
+                return serviceFailure(ASSESSMENT_UNSUBMIT_FAILED);
             }
             return serviceSuccess();
         });

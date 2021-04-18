@@ -75,6 +75,14 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 
+    @PostMapping("/unsubmit-assessment/{assessmentId}")
+    public String UnsubmitAssessment(@PathVariable long competitionId,
+                                     @PathVariable long assessorId,
+                                     @PathVariable long assessmentId) {
+        assessmentRestService.unsubmitAssessment(assessmentId).getSuccess();
+        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
+    }
+
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
     public String withdrawAssessmentConfirm(
             Model model,
