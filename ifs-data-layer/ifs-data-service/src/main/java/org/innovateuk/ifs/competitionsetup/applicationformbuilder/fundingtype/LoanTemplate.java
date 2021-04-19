@@ -108,7 +108,7 @@ public class LoanTemplate implements FundingTypeTemplate {
         return aQuestion()
                 .withQuestionSetupType(LOAN_BUSINESS_AND_FINANCIAL_INFORMATION)
                 .withShortName("Business and financial information")
-                .withName("Have you completed the business information, including uploading your financial submission")
+                .withName("Have you completed the business information, including uploading your financial submission?")
                 .withMarkAsCompletedEnabled(true)
                 .withDescription(
                         "<p><strong>Business &amp; financial details</strong></p>" +
