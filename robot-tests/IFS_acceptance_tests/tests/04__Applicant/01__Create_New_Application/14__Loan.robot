@@ -31,6 +31,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-9483 Loans: Content changes and banner
 ...
+...             IFS-9484 Loans: Applicant journey
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -41,7 +43,9 @@ Resource        ../../../resources/common/PS_Common.robot
 ${loan_comp_PS}                            Project setup loan comp
 ${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
 ${loan_comp_application}                   Loan Competition
+${loanApplicationName}                     Loan Application
 ${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
+${loanApplicationID}                       ${application_ids["${loanApplicationName}"]}
 ${loan_PS_application1}                    Loan Project 1
 ${loan_PS_application2}                    Loan Project 2
 ${loan_PS_application_Id}                  ${application_ids["${loan_PS_application1}"]}
@@ -55,6 +59,34 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 
 *** Test Cases ***
+The user can see qualtrics survey fields in business and financial information application question
+    [Documentation]    IFS-9484
+    Given the user clicks the button/link                link = Business and financial information
+    And the user clicks the button/link                  id = edit
+    When the user clicks the button/link                 link = Complete the online business survey (opens in a new window)
+    And select window                                    Innovate UK - Innovation Continuity Loans
+    And the user clicks the button/link                  id = NextButton
+    Then the user should see the element                 xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
+    And the user should see the element                  xpath = //span[contains(text(),'60674010')]
+    And the user should see the element                  xpath = //span[contains(text(),'${loanApplicationID}')]
+    [Teardown]  the user closes the last opened tab
+
+The user will not be able to mark the application as complete without completing business and financial information
+    [Documentation]    IFS-9484
+    Given the user clicks the button/link                     link = Back to application overview
+    When the user clicks the button/link                      id = application-overview-submit-cta
+    Then the user should see that the element is disabled     id = submit-application-button
+    And the user should see the element                       jQuery = .section-incomplete + button:contains("Business and financial information")
+
+The user can complete the business and financial information application question
+    [Documentation]    IFS-9484
+    Given the user clicks the button/link          link = Application overview
+    And the user clicks the button/link            link = Business and financial information
+    And the user enters text to a text field       css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
+    When the user clicks the button/link           id = application-question-complete
+    And the user clicks the button/link            link = Back to application overview
+    Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
+
 Loan application shows correct T&C's
     [Documentation]    IFS-6205  IFS-9483
     Given the user clicks the button/link   link = Loan terms and conditions
