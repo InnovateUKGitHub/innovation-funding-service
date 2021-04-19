@@ -11,6 +11,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
     ServiceResult<Void> notifyAssessors(long competitionId);
+
+    @Transactional
+    ServiceResult<Void> notifyAssessorsForAssessmentPeriod(long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "RELEASE_FEEDBACK", description = "Comp Admins can change the competition state to Feedback Released")

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -69,6 +70,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
 
+    @Autowired
+    protected AssessmentPeriodRepository assessmentPeriodRepository;
+
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
         return findCompetitionById(id).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
@@ -130,8 +134,17 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> notifyAssessors(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId).get();
-        competition.notifyAssessors(ZonedDateTime.now());
-        return serviceSuccess();
+        return notifyAssessorsForAssessmentPeriod(competition.getAssessmentPeriods().get(0).getId());
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> notifyAssessorsForAssessmentPeriod(long id) {
+        return find(assessmentPeriodRepository.findById(id), notFoundError(Application.class, id))
+                .andOnSuccess(assessmentPeriod -> {
+                    assessmentPeriod.getCompetition().notifyAssessors(ZonedDateTime.now(), assessmentPeriod);
+                    return serviceSuccess();
+                });
     }
 
     @Override

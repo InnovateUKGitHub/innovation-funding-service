@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.period.domain;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -65,5 +66,13 @@ public class AssessmentPeriod {
 
     public void setApplications(List<Application> applications) {
         this.applications = applications;
+    }
+
+    public boolean isInAssessment(){
+        return !isAssessmentClosed() && milestones.stream().anyMatch(milestone -> MilestoneType.ASSESSORS_NOTIFIED.equals(milestone.getType()));
+    }
+
+    public boolean isAssessmentClosed(){
+        return milestones.stream().anyMatch(milestone -> MilestoneType.ASSESSMENT_CLOSED.equals(milestone.getType()));
     }
 }
