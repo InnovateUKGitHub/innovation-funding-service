@@ -128,7 +128,7 @@
                     <td class="govuk-table__cell"
                         th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                    <td  class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
                         th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">
                         200,123
                     </th:block>
@@ -217,6 +217,10 @@
                         <p class="govuk-body">These finances were submitted by the applicant during the
                             application stage. They include all changes made during the eligibility checks.</p>
                     </th:block>
+                </th:block>
+                <th:block th:if="${summaryModel.ktp}">
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Is the knowledge base partner using the fEC funding model?</h3>
+                    <p class="govuk-body" th:text="${summaryModel.fecModelEnabled} ? 'Yes' : 'No'"></p>
                 </th:block>
                 <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
                     th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"

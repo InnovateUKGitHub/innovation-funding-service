@@ -239,8 +239,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
         Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), form, null, type, false, user);
         yourProjectCostsFormValidator.validateType(form, type, validationHandler);
+        ProjectResource project = projectService.getById(projectId);
+        boolean ktp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId));
+            validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId, ktp));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
     }
