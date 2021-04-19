@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
@@ -39,6 +41,9 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private CategoryRestService categoryRestServiceMock;
+
+    @Mock
+    private AssessmentPeriodRestService assessmentPeriodRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -68,6 +73,8 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
                 .build(2);
 
         AssessorCountSummaryPageResource expectedPageResource = new AssessorCountSummaryPageResource(41, 3, summaryResources, pageNumber, pageSize);
+
+        when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(Collections.emptyList()));
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
 
