@@ -77,6 +77,9 @@ The user will not be able to mark the application as complete without completing
     When the user clicks the button/link                      id = application-overview-submit-cta
     Then the user should see that the element is disabled     id = submit-application-button
     And the user should see the element                       jQuery = .section-incomplete + button:contains("Business and financial information")
+    And the user should see the element                       jQuery = p:contains("You must ensure that the business information and financial spreadsheet have been completed before you click submit below.")
+    And the user should see the element                       jQuery = h2:contains("Applicant details")
+    And the user should see the element                       jQuery = h2:contains("Project finance")
 
 The user can complete the business and financial information application question
     [Documentation]    IFS-9484
@@ -110,7 +113,6 @@ Loan application Your funding
 Loan application finance overview
     [Documentation]  IFS-6208
     Given the user clicks the button/link  link = Back to application overview
-    #Banner tesxt here???
     When the user clicks the button/link   link = Finances overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
@@ -119,10 +121,10 @@ Loan application submission
     Given the user submits the loan application
     When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
-    And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  You have completed your application for Loan Competition. We will be in touch to let you know if your application has progressed to the next stage.
+    And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Applicant complete the project setup details
-    [Documentation]  IFS-6369  IFS-6285
+    [Documentation]  IFS-6369  IFS-6285  IFS-9483
     Given the user completes the project details
     And the user completes the project team details
     Then the user should not see the element    jQuery = h2:contains("Bank details")
@@ -162,9 +164,15 @@ Applicant checks the generated SP
     When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
     Then the user should not see the financial year table on SP
 
+Internal user can see application details in project setup
+    [Documentation]  IFS-9483
+    Given Log in as a different user         &{internal_finance_credentials}
+    When the user navigates to the page      ${server}/management/competition/${loan_comp_PS_Id}/application/${loan_PS_application_Id}
+    Then the user should see the element     jQuery = h2:contains("Applicant details")
+    And the user should see the element      jQuery = h2:contains("Project finance")
+
 Internal user can mark project as successful
     [Documentation]  IFS-6363
-    [Setup]  Log in as a different user     &{internal_finance_credentials}
     Given the user approves the spend profile
     When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
     And the user clicks the button/link     jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
@@ -208,7 +216,9 @@ the user completes the project details
     the user navigates to the page        ${loan_PS}
     the user should not see the element   css = .message-alert
     the user clicks the button/link       link = view application feedback
-    the user should see the element       jQuery = h2:Contains("Your application has progressed to project setup.") ~ .govuk-body:contains("Scores and written feedback")
+    the user should see the element       jQuery = h2:Contains("Your application has progressed to project setup.") ~ p:contains("Scores and written feedback from each assessor can be found below.")
+    the user should see the element       jQuery = h2:contains("Applicant details")
+    the user should see the element       jQuery = h2:contains("Project finance")
     the user clicks the button/link       link = Back to set up your project
     the user clicks the button/link       link = Project details
     the user clicks the button/link       link = Correspondence address
