@@ -143,9 +143,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         long partnerOrganisationId = 4L;
         long userId = 4L;
         String financeLinkUrl = "some url";
-        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
-                .filter(financeRowType -> financeRowType.isCost())
-                .collect(Collectors.toList());
+
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> financeRowType.isCost()
                         && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
@@ -199,7 +197,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertNotNull(model);
 
-        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
 
         assertEquals(1, model.getRows().size());
 
@@ -225,9 +223,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         long partnerOrganisationId = 4L;
         long userId = 4L;
         String financeLinkUrl = "some url";
-        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
-                .filter(financeRowType -> financeRowType.isCost())
-                .collect(Collectors.toList());
+
         List<FinanceRowType> expectedOrganisationFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
                 .filter(financeRowType -> financeRowType.isCost()
                         && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
@@ -283,7 +279,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertNotNull(model);
 
-        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+        assertThat(model.getFinanceRowTypes(), containsInAnyOrder(expectedOrganisationFinanceRowTypes.toArray()));
 
         assertEquals(1, model.getRows().size());
 

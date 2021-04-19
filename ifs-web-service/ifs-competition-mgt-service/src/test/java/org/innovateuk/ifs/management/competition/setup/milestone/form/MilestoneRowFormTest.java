@@ -10,10 +10,10 @@ import static org.junit.Assert.assertEquals;
 public class MilestoneRowFormTest {
 
     @Test
-    public void testGetMilestoneViewModel() throws Exception {
+    public void testGetMilestoneViewModel() {
         ZonedDateTime localDateTime = ZonedDateTime.now().plusDays(3);
         String dayOfWeek = localDateTime.getDayOfWeek().name().substring(0, 1)
-                + localDateTime.getDayOfWeek().name().substring(1, 3).toLowerCase();
+                + localDateTime.getDayOfWeek().name().substring(1).toLowerCase();
         MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.OPEN_DATE, localDateTime);
 
         assertEquals(MilestoneType.OPEN_DATE.name(), milestoneRowForm.getMilestoneNameType());
