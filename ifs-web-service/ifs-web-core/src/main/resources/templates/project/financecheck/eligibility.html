@@ -215,12 +215,12 @@
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
                   enctype="multipart/form-data"
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
-                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"
-                        th:if="${model.isInternal()}"
-                        th:attr="name=${model.editableRowType == null} ? 'save-and-continue' : 'save-eligibility'" ,
-                        th:value="${model.editableRowType}">
-                    Save form
-                </button>
+<!--                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"-->
+<!--                        th:if="${model.isInternal()}"-->
+<!--                        th:attr="name=${model.editableRowType == null} ? 'save-and-continue' : 'save-eligibility'" ,-->
+<!--                        th:value="${model.editableRowType}">-->
+<!--                    Save form-->
+<!--                </button>-->
 
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
                     <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
@@ -245,9 +245,21 @@
                 </div>
 
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
+
+                <div class="form-footer" th:if="${model.open && !model.isInEditPage}">
+                    <div class="form-footer__actions">
+                        <button id="edit" type="submit" name="edit-project-costs" class="button-clear" value="true">
+                            Edit your project costs
+                        </button>
+                    </div>
+                </div>
+                <div th:unless="${summaryModel.isExternalView()}">
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                </div>
             </form>
 
-            <div th:if="${!summaryModel.externalView && model.editableRowType != null}"
+<!--            <div th:if="${!summaryModel.externalView && model.editableRowType != null}"-->
+            <div th:if="${!summaryModel.externalView && model.isInEditPage}"
                  class="govuk-!-margin-bottom-4">
                 <a class="govuk-link govuk-body"
                    th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
@@ -305,17 +317,18 @@
         <input type="hidden" id="projectId" th:value="${summaryModel.projectId}"/>
         <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}"/>
 
-        <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
-               class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-               class="govuk-button govuk-button--secondary">Notes</a>
-        </div>
+<!--        <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">-->
+<!--            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"-->
+<!--               class="govuk-button govuk-button&#45;&#45;secondary govuk-!-margin-right-4">Queries</a>-->
+<!--            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"-->
+<!--               class="govuk-button govuk-button&#45;&#45;secondary">Notes</a>-->
+<!--        </div>-->
 
         <form th:if="${summaryModel.canReset}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${resetForm}"
               th:unless="${summaryModel.isExternalView()}"
-              th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
+                    th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances}">
+<!--              th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">-->
 
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
@@ -351,7 +364,8 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${eligibilityForm}"
               th:unless="${summaryModel.isExternalView()}"
-              th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
+                          th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances}">
+<!--            th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">-->
 
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>

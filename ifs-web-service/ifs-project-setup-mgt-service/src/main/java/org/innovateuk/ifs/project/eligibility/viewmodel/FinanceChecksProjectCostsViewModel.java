@@ -7,19 +7,27 @@ import java.util.List;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-    private final FinanceRowType editableRowType;
+//    private final FinanceRowType editableRowType;
+    private final boolean isInEditPage;
 
-    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, FinanceRowType editableRowType, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
+    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, boolean isInEditPage, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
         super(open, true, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
-        this.editableRowType = editableRowType;
+        this.isInEditPage = isInEditPage;
+//        this.editableRowType = editableRowType;
+    }
+
+    public boolean isInEditPage() {
+        return isInEditPage;
     }
 
     @Override
     public boolean isReadOnly(FinanceRowType type) {
-        return isReadOnly() || !type.equals(editableRowType);
+                return isReadOnly();
     }
-
-    public FinanceRowType getEditableRowType() {
-        return editableRowType;
-    }
+//        return isReadOnly() || !type.equals(editableRowType);
+//    }
+//
+//    public FinanceRowType getEditableRowType() {
+//        return editableRowType;
+//    }
 }
