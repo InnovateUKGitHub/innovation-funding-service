@@ -23,7 +23,6 @@ public class SpendProfileCostValidator implements Validator {
     private static final Log LOG = LogFactory.getLog(SpendProfileCostValidator.class);
 
 
-    private static final BigDecimal COST_UPPER_LIMIT = new BigDecimal("1000000");
     private static final int COMPARE_LESS_THAN = -1;
     private static final String FIELD_NAME_TEMPLATE = "table.monthlyCostsPerCategoryMap[%d][%d]";
 
@@ -67,10 +66,6 @@ public class SpendProfileCostValidator implements Validator {
 
         if (COMPARE_LESS_THAN == cost.compareTo(BigDecimal.ZERO)) {
             throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_NOT_BE_LESS_THAN_ZERO, category, index);
-        }
-
-        if (COMPARE_LESS_THAN != cost.compareTo(COST_UPPER_LIMIT)) {
-            throw new SpendProfileValidationException(SpendProfileValidationError.COST_SHOULD_BE_WITHIN_UPPER_LIMIT, category, index);
         }
     }
 
