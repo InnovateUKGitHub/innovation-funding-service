@@ -12,6 +12,7 @@ public class QuestionDocs {
             fieldWithPath("name").description("Question name").optional(),
             fieldWithPath("shortName").description("short version of the question name").optional(),
             fieldWithPath("description").description("question description").optional(),
+            fieldWithPath("description2").description("question description2").optional(),
             fieldWithPath("markAsCompletedEnabled").description("boolean to indicate if the question can be marked as complete").optional(),
             fieldWithPath("assignEnabled").description("boolean to indicate if the question can be assigned").optional(),
             fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses").optional(),
