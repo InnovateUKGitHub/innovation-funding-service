@@ -80,7 +80,7 @@ The user can complete the business and financial information application questio
     [Documentation]    IFS-9484
     Given the user clicks the button/link          link = Application overview
     And the user clicks the button/link            link = Business and financial information
-    Given the user enters text to a text field     css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
+    And the user enters text to a text field       css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
     When the user clicks the button/link           id = application-question-complete
     And the user clicks the button/link            link = Back to application overview
     Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete

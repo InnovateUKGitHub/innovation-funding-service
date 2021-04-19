@@ -493,7 +493,7 @@ Application: Scope Assessment questions
     [Teardown]    The user clicks the button/link    link = Back to application
 
 Application: Business and financial information
-    [Documentation]  INFUND-5634 INFUND-5635  IFS-9484
+    [Documentation]   IFS-9484
     [Tags]  HappyPath
     Given the user clicks the button/link          link = Business and financial information
     And the user should see the element            jQuery = h1:contains("Business and financial information")
