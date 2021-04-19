@@ -241,22 +241,22 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetNonFECCostRowEntries(long applicationId, long organisationId) {
+    public ServiceResult<Void> resetCostRowEntriesBasedOnFecModelUpdate(long applicationId, long organisationId) {
         Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationId, organisationId);
-        if (applicationFinance.isPresent() && BooleanUtils.isTrue(applicationFinance.get().getFecModelEnabled())) {
+        if (applicationFinance.isPresent()) {
             List<ApplicationFinanceRow> applicationFinanceRows = financeRowRepository.findByTargetId(applicationFinance.get().getId());
             OrganisationTypeFinanceHandler organisationFinanceHandler =
                     organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.get().getApplication().getCompetition().getId(), applicationFinance.get().getOrganisation().getOrganisationType().getId());
-
-            List<ApplicationFinanceRow> nonFECFinanceRows = applicationFinanceRows.stream()
-                    .filter(applicationFinanceRow ->
-                            (FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT == applicationFinanceRow.getType()
-                                    || FinanceRowType.INDIRECT_COSTS == applicationFinanceRow.getType()))
+            List<ApplicationFinanceRow> financeRows = applicationFinanceRows.stream()
+                    .filter(financeRow -> BooleanUtils.isFalse(applicationFinance.get().getFecModelEnabled())
+                            ? FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRow.getType())
+                            : FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRow.getType()))
                     .collect(Collectors.toList());
-            nonFECFinanceRows.forEach(nonFECFinanceRow -> {
-                nonFECFinanceRow.setCost(BigDecimal.ZERO);
-                organisationFinanceHandler.updateCost(nonFECFinanceRow);
+
+            financeRows.forEach(financeRow -> {
+                financeRow.setCost(BigDecimal.ZERO);
+                organisationFinanceHandler.updateCost(financeRow);
             });
         }
         return serviceSuccess();

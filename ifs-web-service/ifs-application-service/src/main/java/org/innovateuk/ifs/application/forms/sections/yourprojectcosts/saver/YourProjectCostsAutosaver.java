@@ -551,10 +551,7 @@ public class YourProjectCostsAutosaver {
         return field.substring(field.indexOf("].") + 2);
     }
 
-    public void resetNonFECCostRowEntries(long applicationId, long organisationId) {
-        ApplicationFinanceResource finance = applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
-        if (finance.getFecModelEnabled()) {
-            financeRowRestService.resetNonFECCostRowEntries(applicationId, organisationId);
-        }
+    public void resetCostRowEntriesBasedOnFecModelUpdate(long applicationId, long organisationId) {
+        financeRowRestService.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
     }
 }

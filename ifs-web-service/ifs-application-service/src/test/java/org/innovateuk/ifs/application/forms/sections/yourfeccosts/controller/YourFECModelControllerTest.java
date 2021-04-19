@@ -130,7 +130,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
-        yourProjectCostsAutosaverMock.resetNonFECCostRowEntries(applicationId, organisationId);
+        yourProjectCostsAutosaverMock.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
         ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
@@ -163,7 +163,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
-        yourProjectCostsAutosaverMock.resetNonFECCostRowEntries(applicationId, organisationId);
+        yourProjectCostsAutosaverMock.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
 
         ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
