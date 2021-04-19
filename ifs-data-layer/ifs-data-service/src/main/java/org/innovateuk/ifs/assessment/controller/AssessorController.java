@@ -41,6 +41,13 @@ public class AssessorController {
                 .toPutResponse();
     }
 
+    @PutMapping("/notify-assessors/assessment-period/{assessmentPeriodId}")
+    public RestResult<Void> notifyAssessorsByAssessmentPeriod(@PathVariable("assessmentPeriodId") long assessmentPeriodId) {
+        return competitionService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId)
+                .andOnSuccess(() -> assessorService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId))
+                .toPutResponse();
+    }
+
     @GetMapping("/has-applications-assigned/{assessorId}")
     public RestResult<Boolean> hasApplicationsAssigned(@PathVariable("assessorId") long assessorId) {
         return assessorService.hasApplicationsAssigned(assessorId).toGetResponse();

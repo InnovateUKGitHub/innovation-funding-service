@@ -144,7 +144,8 @@
 
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <button type="submit"
+                                    <button th:if="${milestoneEntry.value.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
+                                            type="submit"
                                             id="notify-assessors-button"
                                             th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/notify-assessors/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId})}"
                                             value="hello"

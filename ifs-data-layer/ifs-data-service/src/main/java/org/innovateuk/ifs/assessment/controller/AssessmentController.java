@@ -55,6 +55,14 @@ public class AssessmentController {
         return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
     }
 
+    @GetMapping("/state/{state}/assessment-period/{assessmentPeriodId}/count")
+    public RestResult<Integer> countByStateAndAssessmentPeriod(
+            @PathVariable("state") AssessmentState state,
+            @PathVariable("assessmentPeriodId") Long assessmentPeriodId) {
+        return assessmentService.countByStateAndAssessmentPeriod(state, assessmentPeriodId).toGetResponse();
+    }
+
+
     @GetMapping("/{id}/score")
     public RestResult<AssessmentTotalScoreResource> getTotalScore(@PathVariable("id") long id) {
         return assessmentService.getTotalScore(id).toGetResponse();

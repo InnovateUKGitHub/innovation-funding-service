@@ -134,12 +134,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> notifyAssessors(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId).get();
-        return notifyAssessorsForAssessmentPeriod(competition.getAssessmentPeriods().get(0).getId());
+        return notifyAssessorsByAssessmentPeriod(competition.getAssessmentPeriods().get(0).getId());
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> notifyAssessorsForAssessmentPeriod(long id) {
+    public ServiceResult<Void> notifyAssessorsByAssessmentPeriod(long id) {
         return find(assessmentPeriodRepository.findById(id), notFoundError(Application.class, id))
                 .andOnSuccess(assessmentPeriod -> {
                     assessmentPeriod.getCompetition().notifyAssessors(ZonedDateTime.now(), assessmentPeriod);

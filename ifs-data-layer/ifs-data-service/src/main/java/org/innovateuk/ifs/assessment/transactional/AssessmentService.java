@@ -45,6 +45,13 @@ public interface AssessmentService {
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")
     ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'innovation_lead', 'stakeholder')")
+    @SecuredBySpring(
+            value = "COUNT_BY_STATE_AND_ASSESSMENT_PERIOD",
+            description = "Comp admins and execs can see a count of assessments in a particular state per assessment period")
+    ServiceResult<Integer> countByStateAndAssessmentPeriod(AssessmentState state, long assessmentPeriod);
+
+
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ_SCORE')")
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId);
 

@@ -112,6 +112,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     int countByActivityStateInAndTargetCompetitionIdAndParticipantUserStatusIn(Collection<AssessmentState> state, Long competitionId, List<UserStatus> userStatus);
 
+    int countByActivityStateAndTargetAssessmentPeriodIdAndParticipantUserStatusIn(AssessmentState state, Long competitionId, List<UserStatus> userStatus);
+
     @Query(FEEDBACK_COMPLETE)
     boolean isFeedbackComplete(@Param("id") Long id);
 

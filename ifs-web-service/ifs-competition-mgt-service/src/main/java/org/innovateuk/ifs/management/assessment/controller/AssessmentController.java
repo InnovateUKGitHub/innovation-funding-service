@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +24,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AssessmentController {
 
     @Autowired
+    private AssessorRestService assessorRestService;
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    @Autowired
     private ManageAssessmentsModelPopulator manageAssessmentsModelPopulator;
 
     @GetMapping
     public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model) {
         model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
+
         return "competition/manage-assessments";
     }
 
     @PostMapping("/assessment-period/{assessmentPeriodId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
+        long qqRP = assessmentRestService.countByStateAndAssessmentPeriod(AssessmentState.CREATED, assessmentPeriodId).getSuccess();
+        assessorRestService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId).getSuccess();
         return String.format("redirect:/assessment/competition/%s", competitionId);
     }
 
