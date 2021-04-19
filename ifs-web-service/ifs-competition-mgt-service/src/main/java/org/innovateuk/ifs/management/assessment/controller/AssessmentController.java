@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -25,7 +26,12 @@ public class AssessmentController {
     @GetMapping
     public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model) {
         model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
-
         return "competition/manage-assessments";
     }
+
+    @PostMapping("/assessment-period/{assessmentPeriodId}/notify-assessors")
+    public String notifyAssessors(@PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
+        return String.format("redirect:/assessment/competition/%s", competitionId);
+    }
+
 }
