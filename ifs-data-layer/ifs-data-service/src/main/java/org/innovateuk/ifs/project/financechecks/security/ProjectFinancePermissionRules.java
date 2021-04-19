@@ -85,6 +85,20 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "SAVE_FUNDING_RULES",
+            description = "Project Finance Users can save Funding Rules")
+    public boolean projectFinanceUserCanSaveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "SAVE_FUNDING_RULES",
+            description = "Competition Finance Users can save Funding Rules")
+    public boolean competitionFinanceUserCanSaveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return userIsExternalFinanceOnCompetitionForProject(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
             value = "SAVE_MILESTONE_CHECK",
             description = "Project Finance Users can save Milestone Check")
     public boolean projectFinanceUserCanSaveMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
@@ -109,6 +123,20 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "VIEW_MILESTONE_STATUS",
             description = "Users can see their own Milestone Check status")
     public boolean userCanViewTheirOwnMilestoneStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Project Finance Users can view Funding Rules status")
+    public boolean projectFinanceUserCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Users can see their own Funding Rules status")
+    public boolean userCanViewTheirOwnFundingRulesStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 

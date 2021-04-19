@@ -33,6 +33,10 @@ public class AnsweredQuestionViewModelPopulator {
     private QuestionnaireResponseRestService questionnaireResponseRestService;
 
     public AnswerTableViewModel allAnswers(String questionnaireResponseId, boolean readonly) {
+        return allAnswers(questionnaireResponseId, "Provided answers", readonly);
+    }
+
+    public AnswerTableViewModel allAnswers(String questionnaireResponseId, String heading, boolean readonly) {
         QuestionnaireResponseResource response = questionnaireResponseRestService.get(questionnaireResponseId).getSuccess();
         final QuestionnaireOptionResource[] selectedOption = {null};
         List<AnsweredQuestionViewModel> answers = getAnswers(response, (q) -> true, o -> selectedOption[0] = o);
@@ -40,7 +44,7 @@ public class AnsweredQuestionViewModelPopulator {
             QuestionnaireQuestionResource unansweredQuestion = questionnaireQuestionRestService.get(selectedOption[0].getDecision()).getSuccess();
             answers.add(new AnsweredQuestionViewModel(unansweredQuestion.getId(), unansweredQuestion.getQuestion(), null));
         }
-        return new AnswerTableViewModel(questionnaireResponseId, "Provided answers", answers, readonly);
+        return new AnswerTableViewModel(questionnaireResponseId, heading, answers, readonly);
     }
 
     public AnswerTableViewModel answersBeforeQuestion(QuestionnaireResponseResource response, QuestionnaireQuestionResource question) {
