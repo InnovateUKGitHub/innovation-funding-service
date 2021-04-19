@@ -29,6 +29,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...
 ...             IFS-8944 SBRI milestones - Record changes to milestones
 ...
+...             IFS-9483 Loans: Content changes and banner
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -54,11 +56,11 @@ ${spend_profile}                           ${server}/project-setup-management/pr
 
 *** Test Cases ***
 Loan application shows correct T&C's
-    [Documentation]    IFS-6205
-    Given the user clicks the button/link   link = Award terms and conditions
+    [Documentation]    IFS-6205  IFS-9483
+    Given the user clicks the button/link   link = Loan terms and conditions
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
-    Then the user should see the element    jQuery = li:contains("Award terms and conditions") .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Loan terms and conditions") .task-status-complete
 
 Max funding sought validation
     [Documentation]  IFS-7866
@@ -76,16 +78,16 @@ Loan application Your funding
 Loan application finance overview
     [Documentation]  IFS-6208
     Given the user clicks the button/link  link = Back to application overview
+    #Banner tesxt here???
     When the user clicks the button/link   link = Finances overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483
     Given the user submits the loan application
-    And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
-    When the user clicks the button/link            link = View part A
+    When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
-    And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
+    And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  You have completed your application for Loan Competition. We will be in touch to let you know if your application has progressed to the next stage.
 
 Applicant complete the project setup details
     [Documentation]  IFS-6369  IFS-6285
