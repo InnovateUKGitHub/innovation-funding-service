@@ -357,7 +357,8 @@ public class CompetitionSetupQuestionResource {
     public boolean isGuidanceRequired() {
         return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type
                 && QuestionSetupType.KTP_ASSESSMENT != type
-                && QuestionSetupType.NORTHERN_IRELAND_DECLARATION != type;
+                && QuestionSetupType.NORTHERN_IRELAND_DECLARATION != type
+                && QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION != type;
     }
 
     @JsonIgnore
