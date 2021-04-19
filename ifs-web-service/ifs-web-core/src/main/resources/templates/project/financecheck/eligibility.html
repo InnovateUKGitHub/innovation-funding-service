@@ -246,7 +246,7 @@
 
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
-                <div class="form-footer" th:if="${model.open && !model.isInEditPage}">
+                <div class="form-footer" th:if="${model.open && !model.isEditable}">
                     <div class="form-footer__actions">
                         <button id="edit" type="submit" name="edit-project-costs" class="button-clear" value="true">
                             Edit your project costs
@@ -259,7 +259,7 @@
             </form>
 
 <!--            <div th:if="${!summaryModel.externalView && model.editableRowType != null}"-->
-            <div th:if="${!summaryModel.externalView && model.isInEditPage}"
+            <div th:if="${!summaryModel.externalView && model.isEditable}"
                  class="govuk-!-margin-bottom-4">
                 <a class="govuk-link govuk-body"
                    th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>

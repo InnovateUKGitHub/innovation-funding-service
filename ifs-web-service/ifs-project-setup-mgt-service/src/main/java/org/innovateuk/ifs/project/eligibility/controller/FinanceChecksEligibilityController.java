@@ -137,7 +137,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), null, null, null, editAcademicFinances, user, true);
     }
 
-    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ResetEligibilityForm resetEligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, FinanceRowType rowType, boolean editAcademicFinances, UserResource user, boolean isInEditPage) {
+    private String doViewEligibility(long projectId, long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ResetEligibilityForm resetEligibilityForm, YourProjectCostsForm form, AcademicCostForm academicCostForm, FinanceRowType rowType, boolean editAcademicFinances, UserResource user, boolean isEditable) {
         ProjectResource project = projectService.getById(projectId);
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(project.getCompetition()).getSuccess());
         Future<OrganisationResource> organisation = async(() -> organisationRestService.getOrganisationById(organisationId).getSuccess());
@@ -155,7 +155,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
                 boolean open = EligibilityState.APPROVED != eligibilityState && project.getProjectState().isActive();
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, isInEditPage, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, isEditable, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }

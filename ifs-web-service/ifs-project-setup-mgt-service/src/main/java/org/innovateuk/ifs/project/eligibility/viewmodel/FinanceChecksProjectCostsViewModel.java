@@ -8,16 +8,16 @@ import java.util.List;
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
 //    private final FinanceRowType editableRowType;
-    private final boolean isInEditPage;
+    private final boolean isEditable;
 
-    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, boolean isInEditPage, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
+    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, boolean isEditable, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
         super(open, true, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
-        this.isInEditPage = isInEditPage;
+        this.isEditable = isEditable;
 //        this.editableRowType = editableRowType;
     }
 
-    public boolean isInEditPage() {
-        return isInEditPage;
+    public boolean isEditable() {
+        return isEditable;
     }
 
     @Override
