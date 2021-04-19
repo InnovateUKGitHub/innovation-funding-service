@@ -456,7 +456,6 @@ Project details: Business and financial information
     [Documentation]  INF-9482
     Given the user clicks the button/link           link = Business and financial information
     And the user should see the element             jQuery = h1:contains("Business and financial information")
-    And the user checks the validation messages
     When the user enters text to a text field       id = question.guidanceTitle  Guidance title
     And the user enters text to a text field        css = label[for="question.guidance"] + * .editor  Guidance text
     And The user clicks the button/link             jQuery = button:contains('Done')
@@ -1037,6 +1036,7 @@ the comp admin creates competition with all sections details
     the user select stakeholder and add to competition
     the user clicks the button/link                                                  link = Competition setup
     the user clicks the button/link                                                  link = Documents
+<<<<<<< HEAD
     the user clicks the button/link                                                  id = doneButton
 
 the user checks the validation messages
@@ -1052,3 +1052,6 @@ the user checks the validation messages
     the user should see a field and summary error      This field cannot be left blank.
     the user clicks the button/link                    link = Back to application
     the user clicks the button/link                    link = Business and financial information
+=======
+    the user clicks the button/link                                                  id = doneButton
+>>>>>>> feature/IFS-9482-loans-comp-setup-new-question-in-project-details-section
