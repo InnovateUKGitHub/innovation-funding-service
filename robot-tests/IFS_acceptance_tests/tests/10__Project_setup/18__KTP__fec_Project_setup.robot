@@ -5,6 +5,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-9249  KTP fEC/Non-fEC: view and edit non-fEC costs in project setup
 ...
+...               IFS-9306  KTP fEC/non-fEC: 'academic and secretarial support' GOL value
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -138,6 +140,11 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     Then the user should view their non-fec project finances after editing
     And the user should see the element                                        jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
+#Lead applicant can see the approved non-FEC cost categories in the GOL
+#    [Documentation]  IFS-9306
+#    [Setup]  internal user approves finances
+#    Given log in as a different user             &{ktpLead}
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
@@ -219,11 +226,10 @@ the user closed ktp assesment
     run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
 
 internal user approves finances
-    the user navigates to the page                          ${server}/project-setup-management/project/${project_id}/finance-check/organisation/${lead_org_id}/eligibility
-    the user selects the checkbox                           project-eligible
-    the user selects the option from the drop-down menu     Green  id = rag-rating
-    the user clicks the button/link                         jQuery = .govuk-button:contains("Approve eligible costs")
-    the user clicks the button/link                         name = confirm-eligibility
+    the user navigates to the page      ${server}/project-setup-management/project/${project_id}/finance-check
+    confirm eligibility                 0
+    confirm viability                   1
+    the user clicks the button/link     jQuery = button:contains("Approve finance checks")
 
 the user edits the Academic and secretarial support costs in project setup
     the user clicks the button/link          css = a[href="?financeType=ACADEMIC_AND_SECRETARIAL_SUPPORT"]
