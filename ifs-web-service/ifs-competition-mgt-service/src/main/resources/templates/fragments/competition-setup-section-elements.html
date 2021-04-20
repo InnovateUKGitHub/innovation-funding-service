@@ -232,6 +232,33 @@
                         </textarea>
                     </div>
                 </div>
+                <th:block th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).LOAN_BUSINESS_AND_FINANCIAL_INFORMATION}">
+                    <div class="govuk-form-group">
+                        <p class="govuk-body">
+                            <a target="_blank" href="https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS" class="govuk-link">Complete the online business survey (opens in a new window)</a>
+                        </p>
+                    </div>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.subTitle2')} ? 'govuk-form-group--error'">
+
+                        <th:block th:if="${#fields.hasErrors('question.subTitle2')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.subTitle2')}"
+                              th:text="${err}"></span>
+                        </th:block>
+
+                        <div class="textarea-wrapped short">
+                            <textarea data-max_words="500"
+                                      data-editor="html"
+                                      id="question.subTitle2"
+                                      class="govuk-textarea"
+                                      th:classappend="${#fields.hasErrors('question.subTitle2')} ? 'govuk-textarea--error'"
+                                      th:name="question.subTitle2"
+                                      th:required="${question.subTitle2Required ? 'required' : null}"
+                                      ifs:utext="${question.subTitle2}">
+                            </textarea>
+                        </div>
+                    </div>
+                </th:block>
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="question.guidanceTitle">

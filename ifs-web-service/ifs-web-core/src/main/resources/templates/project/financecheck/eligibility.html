@@ -128,7 +128,7 @@
                     <td class="govuk-table__cell"
                         th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
+                    <td  class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block
                         th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">
                         200,123
                     </th:block>
@@ -164,6 +164,17 @@
                 <p class="govuk-body">These are your project finances. Changes that result from discussions with
                     Innovate UK will be reflected here. Substantial changes to your project costs should be
                     discussed with your Project Manager.</p>
+
+                <th:block th:if="${summaryModel.isKtp()}">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
+                        Will you be using the full economic costing (fEC) funding model?
+                        <p class="govuk-body" th:if="${summaryModel.fecModelEnabled == null}">
+                            Question not answered.</p>
+                        <p class="govuk-list readonly-data  govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+                           th:if="${summaryModel.fecModelEnabled != null}"
+                           th:text="${#bools.isFalse(summaryModel.fecModelEnabled)}? 'No' : 'Yes'"></p>
+                    </legend>
+                </th:block>
                 <p class="govuk-body"><a
                     th:if="${summaryModel.showChangesLink}"
                     th:href="@{/project/{projectId}/finance-check/eligibility/changes(projectId=${summaryModel.projectId})}"
@@ -206,6 +217,10 @@
                         <p class="govuk-body">These finances were submitted by the applicant during the
                             application stage. They include all changes made during the eligibility checks.</p>
                     </th:block>
+                </th:block>
+                <th:block th:if="${summaryModel.ktp}">
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Is the knowledge base partner using the fEC funding model?</h3>
+                    <p class="govuk-body" th:text="${summaryModel.fecModelEnabled} ? 'Yes' : 'No'"></p>
                 </th:block>
                 <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
                     th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
