@@ -23,6 +23,7 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 
 @Component
@@ -66,9 +67,25 @@ public class LoanTemplate implements FundingTypeTemplate {
         competitionTypeSections.stream().filter(section -> SectionType.PROJECT_DETAILS == section.getType())
                 .findAny()
                 .ifPresent(projectDetailsSection -> {
-                        setEdiQuestionDescription(projectDetailsSection);
-                        addLoanBusinessAndFinanceInformationQuestion(projectDetailsSection);
+                    projectDetailsSection.withName("Applicant details");
+                    setEdiQuestionDescription(projectDetailsSection);
+                    addLoanBusinessAndFinanceInformationQuestion(projectDetailsSection);
                 });
+        competitionTypeSections.stream().filter(section -> SectionType.TERMS_AND_CONDITIONS == section.getType())
+                .findAny()
+                .ifPresent(section ->
+                        section.getQuestions().stream().filter(question -> TERMS_AND_CONDITIONS.equals(question.getQuestionSetupType()))
+                                .findAny()
+                                .ifPresent(termsQuestion ->
+                                        termsQuestion.withName("Loan terms and conditions")
+                                                .withDescription("Loan terms and conditions")
+                                                .withShortName("Loan terms and conditions")
+                                ));
+        competitionTypeSections.stream().filter(section -> SectionType.FINANCES == section.getType())
+                .findAny()
+                .ifPresent(section ->
+                        section.withName("Project finance")
+                );
         return competitionTypeSections;
     }
 
