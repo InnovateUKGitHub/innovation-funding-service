@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -41,7 +40,6 @@ public class AssessmentController {
 
     @PostMapping("/assessment-period/{assessmentPeriodId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
-        long qqRP = assessmentRestService.countByStateAndAssessmentPeriod(AssessmentState.CREATED, assessmentPeriodId).getSuccess();
         assessorRestService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId).getSuccess();
         return String.format("redirect:/assessment/competition/%s", competitionId);
     }

@@ -2,10 +2,10 @@ package org.innovateuk.ifs.management.assessmentperiod.model;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime;
-import org.innovateuk.ifs.util.DateUtil;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm.WITH_MIDDAY_TIME;
+import static org.innovateuk.ifs.util.DateUtil.getNameOfDay;
 
 
 public class AssessmentMilestoneViewModel {
@@ -20,7 +20,7 @@ public class AssessmentMilestoneViewModel {
     }
 
     public String getDayOfWeek() {
-        return DateUtil.getNameOfDay(date.getDayOfMonth(), date.getMonth().getValue(), date.getYear());
+        return date == null ? "-" : getNameOfDay(date.getDayOfMonth(), date.getMonth().getValue(), date.getYear());
     }
 
     public MilestoneType getMilestoneType() {
@@ -45,6 +45,6 @@ public class AssessmentMilestoneViewModel {
     }
 
     public boolean isPast(){
-        return  date != null || date.isAfter(ZonedDateTime.now());
+        return date != null && !date.isAfter(ZonedDateTime.now());
     }
 }

@@ -23,7 +23,11 @@ public final class DateUtil {
     }
 
     public static String getNameOfDay(Integer day, Integer month, Integer year) {
-        return getDayOfWeek(day, month, year).map(DayOfWeek::name).map(StringUtils::capitalize).orElse("-");
+        return getDayOfWeek(day, month, year)
+                .map(DayOfWeek::name)
+                .map(String::toLowerCase)
+                .map(StringUtils::capitalize)
+                .orElse("-");
     }
 
     public static Optional<DayOfWeek> getDayOfWeek(Integer day, Integer month, Integer year) {

@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
-import org.apache.commons.collections4.map.LinkedMap;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -10,15 +11,11 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentMilestoneViewModel;
 import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentPeriodViewModel;
-import org.innovateuk.ifs.management.competition.inflight.viewmodel.MilestonesRowViewModel;
-import org.innovateuk.ifs.management.competition.setup.milestone.viewmodel.MilestonesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -36,7 +33,10 @@ public class ManageAssessmentsModelPopulator {
     private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
 
     @Autowired
-    MilestoneRestService milestoneRestService;
+    private MilestoneRestService milestoneRestService;
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
 
     public ManageAssessmentsViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -48,11 +48,10 @@ public class ManageAssessmentsModelPopulator {
 
     private Map<Long, List<MilestoneResource>> periodIdToMilestone(long competitionId){
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
-        Map<Long, List<MilestoneResource>> periodIdToMilestoneMap = milestones
+        return  milestones
                 .stream()
                 .filter(milestone -> milestone.getAssessmentPeriodId() != null)
                 .collect(groupingBy(MilestoneResource::getAssessmentPeriodId));
-        return  periodIdToMilestoneMap;
     }
 
     private List<AssessmentPeriodViewModel> assessmentPeriodViewModels(long competitionId){
@@ -61,14 +60,15 @@ public class ManageAssessmentsModelPopulator {
     }
 
     private AssessmentPeriodViewModel assessmentPeriodViewModel(List<MilestoneResource> milestones, long assessmentPeriodId){
-
+        long assessmentsToNofity = assessmentRestService.countByStateAndAssessmentPeriod(AssessmentState.CREATED, assessmentPeriodId).getSuccess();
         List<AssessmentMilestoneViewModel> assessmentMilestoneViewModel = milestones
                 .stream()
                 .map(milestone -> new AssessmentMilestoneViewModel(milestone.getType(), milestone.getDate()))
                 .collect(toList());
         AssessmentPeriodViewModel assessmentPeriodViewModel = new AssessmentPeriodViewModel();
-        assessmentPeriodViewModel.setMilestoneEntries(assessmentMilestoneViewModel);
-        assessmentPeriodViewModel.setHasAssessorsToNotify(true); // TODO
+        assessmentPeriodViewModel.setMilestones(assessmentMilestoneViewModel);
+        assessmentPeriodViewModel.setHasAssessorsToNotify(assessmentsToNofity > 0);
+        assessmentPeriodViewModel.setAssessmentPeriodId(assessmentPeriodId);
         return assessmentPeriodViewModel;
     }
 }
