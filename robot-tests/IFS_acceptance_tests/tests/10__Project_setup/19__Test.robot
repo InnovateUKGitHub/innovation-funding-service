@@ -138,6 +138,11 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     Then the user should view their non-fec project finances after editing
     And the user should see the element                                        jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
+Lead applicant can see the approved non-FEC cost categories in the GOL
+    [Documentation]  IFS-9306
+    [Setup]  internal user approves finances
+    Given log in as a different user             &{ktpLead}
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
