@@ -16,7 +16,7 @@ public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewMode
 
     @Override
     public boolean isReadOnly(FinanceRowType type) {
-        return isReadOnly();
+        return isReadOnly() || !canEditProjectCosts;
     }
 
     public boolean isCanEditProjectCosts() {
