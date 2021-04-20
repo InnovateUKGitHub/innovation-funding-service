@@ -22,8 +22,8 @@ public class GenericMilestoneRowForm {
 
     private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
 
-    protected static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
-    protected static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
+    public static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
+    public static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
     @Min(value = 2000, message = "{validation.standard.date.format}")
     @Max(value = 9999, message = "{validation.standard.date.format}")
@@ -145,6 +145,7 @@ public class GenericMilestoneRowForm {
         this.editable = editable;
     }
 
+    // TODO commonise
     protected String getNameOfDay() {
         String dayName =  getMilestoneDate(day, month, year);
         if(dayName == null) {
@@ -160,6 +161,7 @@ public class GenericMilestoneRowForm {
         return dayOfWeek;
     }
 
+    // TODO commonise
     protected String getMilestoneDate (Integer day, Integer month, Integer year) {
         if (day != null && month != null && year != null) {
             try {
@@ -172,6 +174,7 @@ public class GenericMilestoneRowForm {
         return null;
     }
 
+    // TODO commonise
     public ZonedDateTime getMilestoneAsZonedDateTime() {
 
         if (day != null && month != null && year != null){

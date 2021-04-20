@@ -113,42 +113,36 @@
                             </thead>
                             <tbody class="govuk-table__body">
                             <tr th:each="(milestoneEntry, rowIStat : ${assessmentPeriod.milestoneEntries})"
-                                th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                                th:if="${milestoneEntry.milestoneType.presetDate}"
                                 class="govuk-table__row date-group form-group-row"
                                 data-future-date="">
                                 <td class="govuk-table__header govuk-!-font-weight-regular" scope="row">
                                     <legend class="govuk-!-padding-left-3" th:id="${'milestone-' + (rowIStat.index + 1)}"
-                                            th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
+                                            th:text="${milestoneEntry.milestoneType.getAlwaysOpenDescription()}"/>
                                 </td>
                                 <td class="govuk-table__cell time">
-                                    <th:block th:if="${milestoneEntry.value.middayTime}" th:unless="${milestoneEntry.value.date} == null">
+                                    <th:block th:if="${milestoneEntry.middayTime}" th:unless="${milestoneEntry.date} == null">
                                        Midday
-                                        <input type="hidden"
-                                               data-time="12"
-                                               th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                               th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                               th:value="${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).TWELVE_PM}">
                                     </th:block>
                                 </td>
                                 <td class="govuk-table__cell js-addWeekDay"
-                                    th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}"
-                                    th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                                <td class="govuk-table__cell date" th:unless="${milestoneEntry.value.date} == null"
-                                    th:text="${#temporals.format(milestoneEntry.value.date, 'dd/MM/yyyy')}">
+                                    th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.milestoneType.milestoneDescription}"
+                                    th:text="${milestoneEntry.dayOfWeek}"></td>
+                                <td class="govuk-table__cell date" th:unless="${milestoneEntry.date} == null"
+                                    th:text="${#temporals.format(milestoneEntry.date, 'dd/MM/yyyy')}">
                                     01/01/2021
                                 </td>
-                                <td class="govuk-table__cell date" th:if="${milestoneEntry.value.date} == null">
+                                <td class="govuk-table__cell date" th:if="${milestoneEntry.date} == null">
                                     -
                                 </td>
-                                <td class="govuk-table__cell" th:classappend="${!milestoneEntry.value.editable} ? 'past-date'">
+                                <td class="govuk-table__cell" th:classappend="${!milestoneEntry.past} ? 'past-date'">
 
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <button th:if="${milestoneEntry.value.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
+                                    <button th:if="${milestoneEntry.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
                                             type="submit"
                                             id="notify-assessors-button"
                                             th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/notify-assessors/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId})}"
-                                            value="hello"
                                             class="govuk-button">Notify assessors
                                     </button>
                                 </td>
