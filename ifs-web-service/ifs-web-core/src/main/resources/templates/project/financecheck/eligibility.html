@@ -246,19 +246,21 @@
 
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
-                <div class="form-footer" th:if="${model.open && !model.isEditable}">
+                <div class="form-footer" th:if="${model.isInternal()}">
                     <div class="form-footer__actions">
-                        <button id="edit" type="submit" name="edit-project-costs" class="button-clear" value="true">
+                        <button th:unless="${model.open && !model.isEditable}" id="save-project-costs" type="submit" name="save-project-costs" class="button-clear" value="true">
+                            Save project costs
+                        </button>
+                        <button th:if="${model.open && !model.isEditable}" id="edit-project-costs" type="submit" name="edit-project-costs" class="button-clear" value="true">
                             Edit your project costs
                         </button>
                     </div>
                 </div>
-                <div th:unless="${summaryModel.isExternalView()}">
+                <div th:if="${model.isInternal()}">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
                 </div>
             </form>
 
-<!--            <div th:if="${!summaryModel.externalView && model.editableRowType != null}"-->
             <div th:if="${!summaryModel.externalView && model.isEditable}"
                  class="govuk-!-margin-bottom-4">
                 <a class="govuk-link govuk-body"
@@ -316,13 +318,6 @@
         <input type="hidden" id="cacheTest" value=""/>
         <input type="hidden" id="projectId" th:value="${summaryModel.projectId}"/>
         <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}"/>
-
-<!--        <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">-->
-<!--            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"-->
-<!--               class="govuk-button govuk-button&#45;&#45;secondary govuk-!-margin-right-4">Queries</a>-->
-<!--            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"-->
-<!--               class="govuk-button govuk-button&#45;&#45;secondary">Notes</a>-->
-<!--        </div>-->
 
         <form th:if="${summaryModel.canReset}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${resetForm}"

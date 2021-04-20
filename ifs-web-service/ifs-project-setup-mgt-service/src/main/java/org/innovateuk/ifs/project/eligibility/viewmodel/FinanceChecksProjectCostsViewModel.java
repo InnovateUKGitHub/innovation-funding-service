@@ -7,13 +7,11 @@ import java.util.List;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-//    private final FinanceRowType editableRowType;
     private final boolean isEditable;
 
     public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, boolean isEditable, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
         super(open, true, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
         this.isEditable = isEditable;
-//        this.editableRowType = editableRowType;
     }
 
     public boolean isEditable() {
@@ -24,10 +22,4 @@ public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewMode
     public boolean isReadOnly(FinanceRowType type) {
                 return isReadOnly();
     }
-//        return isReadOnly() || !type.equals(editableRowType);
-//    }
-//
-//    public FinanceRowType getEditableRowType() {
-//        return editableRowType;
-//    }
 }
