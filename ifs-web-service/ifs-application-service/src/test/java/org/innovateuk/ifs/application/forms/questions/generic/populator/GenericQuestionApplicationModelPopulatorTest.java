@@ -57,6 +57,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                         newQuestionResource()
                                 .withQuestionNumber("1")
                                 .withDescription("desc")
+                                .withDescription2("desc2")
                                 .withShortName("short")
                                 .withName("name")
                                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
@@ -147,6 +148,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals("1", viewModel.getQuestionNumber());
         assertEquals("name", viewModel.getQuestionSubtitle());
         assertEquals("desc", viewModel.getQuestionDescription());
+        assertEquals("desc2", viewModel.getQuestionDescription2());
         assertEquals("Title", viewModel.getQuestionGuidanceTitle());
         assertEquals("Guidance", viewModel.getQuestionGuidance());
         assertEquals(QuestionSetupType.ASSESSED_QUESTION, viewModel.getQuestionType());
