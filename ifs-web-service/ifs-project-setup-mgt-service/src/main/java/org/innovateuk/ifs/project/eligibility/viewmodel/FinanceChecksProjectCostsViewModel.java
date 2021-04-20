@@ -7,19 +7,19 @@ import java.util.List;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-    private final boolean isEditable;
+    private final boolean canEditProjectCosts;
 
-    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, boolean isEditable, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
+    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition, boolean canEditProjectCosts) {
         super(open, true, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
-        this.isEditable = isEditable;
-    }
-
-    public boolean isEditable() {
-        return isEditable;
+        this.canEditProjectCosts = canEditProjectCosts;
     }
 
     @Override
     public boolean isReadOnly(FinanceRowType type) {
-                return isReadOnly();
+        return isReadOnly();
+    }
+
+    public boolean isCanEditProjectCosts() {
+        return canEditProjectCosts;
     }
 }

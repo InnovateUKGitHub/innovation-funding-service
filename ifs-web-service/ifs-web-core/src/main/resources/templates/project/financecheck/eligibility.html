@@ -230,13 +230,6 @@
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
                   enctype="multipart/form-data"
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
-<!--                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"-->
-<!--                        th:if="${model.isInternal()}"-->
-<!--                        th:attr="name=${model.editableRowType == null} ? 'save-and-continue' : 'save-eligibility'" ,-->
-<!--                        th:value="${model.editableRowType}">-->
-<!--                    Save form-->
-<!--                </button>-->
-
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
                     <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
                         <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
@@ -261,27 +254,41 @@
 
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
-                <div class="form-footer" th:if="${model.isInternal()}">
-                    <div class="form-footer__actions">
-                        <button th:unless="${model.open && !model.isEditable}" id="save-project-costs" type="submit" name="save-project-costs" class="button-clear" value="true">
-                            Save project costs
-                        </button>
-                        <button th:if="${model.open && !model.isEditable}" id="edit-project-costs" type="submit" name="edit-project-costs" class="button-clear" value="true">
-                            Edit your project costs
-                        </button>
+                <th:block th:if="${model.isInternal() and model.open and !summaryModel.isApproved() and !model.canEditProjectCosts}">
+                    <div class="form-footer">
+                        <div class="form-footer__actions">
+                            <button class="button-clear"
+                                    name="edit-project-costs">
+                                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}">Edit
+                                    project costs</a>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div th:if="${model.isInternal()}">
-                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+                    <div th:if="${model.isInternal()}">
+                        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+                    </div>
+                </th:block>
+                <th:block th:if="${model.canEditProjectCosts}">
+                    <div class="form-footer">
+                        <div class="form-footer__actions">
+                            <button class="button-clear" id="cancel-project-cost-actions">
+                                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) }}">Cancel changes</a>
+                            </button>
+                        </div>
+                    </div>
+                </th:block>
+                <div th:if="${model.canEditProjectCosts}">
+                    <button id="save-project-costs"
+                            class="govuk-button govuk-!-margin-top-9"
+                            name="save-project-costs">
+                        <a th:ref="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
+                            Save and return to eligibility check
+                        </a>
+                    </button>
                 </div>
             </form>
-
-            <div th:if="${!summaryModel.externalView && model.isEditable}"
-                 class="govuk-!-margin-bottom-4">
-                <a class="govuk-link govuk-body"
-                   th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
-            </div>
         </th:block>
+
         <th:block th:if="${summaryModel.usingJesFinances}">
 
             <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
@@ -338,8 +345,6 @@
               th:object="${resetForm}"
               th:unless="${summaryModel.isExternalView()}"
                     th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances}">
-<!--              th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">-->
-
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
@@ -375,9 +380,7 @@
               th:object="${eligibilityForm}"
               th:unless="${summaryModel.isExternalView()}"
                           th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances}">
-<!--            th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">-->
-
-            <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
+            <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit or summaryModel.canEditProjectCosts}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <div class="govuk-form-group">
                     <div class="govuk-checkboxes">
@@ -424,7 +427,8 @@
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
             </th:block>
 
-            <a class="govuk-button govuk-button--secondary"
+            <a th:unless="${summaryModel.canEditProjectCosts}"
+               class="govuk-button govuk-button--secondary"
                th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}"
                th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>

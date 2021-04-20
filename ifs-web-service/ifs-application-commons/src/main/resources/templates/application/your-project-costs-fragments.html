@@ -29,11 +29,11 @@
         </div>
         <div id="accordion-finances-content-1" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-1">
-            <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: labour_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:unless="${model.internal}">
                     <p class="govuk-body">
                         Be specific and add each role separately.
@@ -319,11 +319,11 @@
         </div>
         <div id="accordion-finances-content-2" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-2">
-            <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: overheads_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <input type="hidden" th:field="*{overhead.costId}"/>
                 <th:block th:unless="${model.overheadAlwaysTwenty}">
                         <div class="govuk-form-group">
@@ -624,11 +624,11 @@
                             calculation to support your application.</p>
                     </div>
                 </details>
-                <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                     <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads_read_only"/>
                 </th:block>
                 <th:block
-                    th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                    th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                     <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the overheads you
                         expect to occur during the
                         project.
@@ -853,11 +853,11 @@
         </div>
         <div id="accordion-finances-content-3" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-3">
-            <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: materials_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the materials you
                     expect to use during the
                     project</p>
@@ -1107,11 +1107,11 @@
         <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-4">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: capital_usage_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the capital items
                     you
                     will buy and/or use for the
@@ -1419,11 +1419,11 @@
         <div id="accordion-finances-content-5" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-5">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:unless="${model.internal}">
                     <th:block th:if="${model.isKtpCompetition()}"
                               th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
@@ -1646,11 +1646,11 @@
         </div>
         <div id="accordion-finances-content-6" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-6">
-            <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: travel_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:unless="${model.internal}">
                     <p class="govuk-body">
                         Include all travel and subsistence costs that relate to this project. Be specific and add
@@ -1891,12 +1891,12 @@
         <div id="accordion-finances-content-7" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-7">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: other_costs_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal || model.isProcurementCompetition() || model.isKtpCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
+                <p class="govuk-body" th:unless="${model.internal or model.isProcurementCompetition() or model.isKtpCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
                     should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                     limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
                     within any other cost headings.</p>
@@ -2065,7 +2065,7 @@
             <legend id="vatForm.registered" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 Are you VAT registered?
             </legend>
-            <th:block th:unless="${model.isReadOnly(financeRowType)}">
+            <th:block th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <span class="govuk-hint">If you are VAT registered, VAT will be calculated at 20%</span>
 
                 <th:block th:if="${#fields.hasErrors('vatForm.registered')}">
@@ -2132,7 +2132,7 @@
                 </div>
             </th:block>
 
-            <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                             <span class="govuk-body"
                                   th:text="${form.vatForm.registered ? 'Yes' : 'No'}">No</span>
                 <div class="govuk-grid-row total-cost" th:if="${form.vatForm.registered}">
@@ -2189,11 +2189,11 @@
         <div id="accordion-finances-content-8" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-8">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: associate_salary_costs_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                     <p class="govuk-body">These are the associate's total employment costs for all projects listed in the partnership proposal, for example: salary, redundancy payments, NI and pension contributions.</p>
                     <p class="govuk-body">The business partner is solely responsible for any salary and additional employment costs that exceed the amounts recorded in this section.</p>
@@ -2374,11 +2374,11 @@
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: associate_development_costs_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                     <p class="govuk-body">These costs are for any development training the associate needs for this project and for their all-round development.</p>
                     <p class="govuk-body">You cannot exceed the allowable limit.</p>
@@ -2540,11 +2540,11 @@
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: associate_support_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                     <p class="govuk-body">These are the costs of managing the associate, such as computing, personnel admin, learning resources and secretariat support to the local management committee (LMC).</p>
                 </th:block>
@@ -2716,11 +2716,11 @@
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: estate_costs_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                     <p class="govuk-body">This is usually zero because the associate is normally located at the knowledge base partner’s premises.</p>
                     <p class="govuk-body">A knowledge base partner may request additional funding, which is capped at £10,000 per project.</p>
@@ -2898,11 +2898,11 @@
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: ktp_travel_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
 
                 <th:block th:unless="${model.internal}">
                 <p class="govuk-body">Please enter separate costs for the associate and the knowledge base supervisor.
@@ -3198,11 +3198,11 @@
         </div>
         <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-3">
-            <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: consumables_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                 <p class="govuk-body">Please provide a breakdown of the consumables you expect to use for the proposed projects.</p>
                 <details class="govuk-details" role="group">
@@ -3429,11 +3429,11 @@
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: knowledge_base_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                     <p class="govuk-body">This is the cost of the knowledge base supervisor in the partnership and their indirect cost element.</p>
                 </th:block>
@@ -3697,9 +3697,9 @@
                 </div>
                 <div id="accordion-finances-content-additional-company-costs" class="govuk-accordion__section-content">
 
-                    <th:block th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}" th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
+                    <th:block th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}" th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
 
-                    <table th:if="${!model.isEditable || model.isReadOnly(financeRowType)}" class="govuk-table">
+                    <table th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}" class="govuk-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">Additional company cost estimation</th>
@@ -3721,7 +3721,7 @@
                         </tr>
                         </tfoot>
                     </table>
-                    <th:block th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}" >
+                    <th:block th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}" >
                         <h4 class="govuk-heading-s alignright section-total-summary">
                             Total additional company cost estimates
                             <span class="govuk-heading-s"
@@ -3770,7 +3770,7 @@
 <!--/*@thymesVar id="fieldName" type="java.lang.String"*/-->
 <!--/*@thymesVar id="label" type="java.lang.String"*/-->
 <th:block th:fragment="additional_cost_field (fieldName, label, guidance)">
-    <th:block th:if="${!model.isEditable || model.isReadOnly(financeRowType)}"
+    <th:block th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}"
               th:with="value = *{__${fieldName}__.cost}">
         <tr class="govuk-table__row">
             <td class="govuk-table__cell" th:text="${label}"></td>
@@ -3778,7 +3778,7 @@
             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT')}"></td>
         </tr>
     </th:block>
-    <th:block th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+    <th:block th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
         <h2 class="govuk-heading-s" th:text="${label}"></h2>
         <th:block  th:unless="${model.internal}">
             <div th:unless="${#strings.isEmpty(guidance)}" class="govuk-body"
@@ -3862,12 +3862,12 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block
                     th:insert="application/your-project-costs-fragments :: academic_and_secretarial_support_read_only"/>
             </th:block>
 
-            <th:block th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+            <th:block th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:unless="${model.internal}">
                     <p class="govuk-body">You may enter up to £875 (or up to £1,000 for London weighting) multiplied by the number of months your project will run.
                     </p>
@@ -3966,11 +3966,11 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
              aria-labelledby="accordion-finances-heading-9">
             <th:block
-                th:if="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:if="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block th:insert="application/your-project-costs-fragments :: indirect_costs_read_only"/>
             </th:block>
             <th:block
-                th:unless="${!model.isEditable || model.isReadOnly(financeRowType)}">
+                th:unless="${!model.canEditProjectCosts or model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
                     <p class="govuk-body">These costs are calculated automatically and paid at 100%. The calculation is 46% of the sum of 2 grant amounts:'Associate employment costs' and the 'Academic and secretarial support costs'.</p>
                 </th:block>
