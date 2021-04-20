@@ -232,6 +232,69 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     @Test
+    public void createFinanceChecksWithKtpFec() {
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withOrganisation(
+                        OrganisationBuilder.newOrganisation()
+                                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build()).
+                        build();
+
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build());
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking(true);
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        competition.setFundingType(FundingType.KTP);
+
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
+
+        assertTrue(result.getSuccess().getFecModelEnabled());
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
+
+    @Test
+    public void createFinanceChecksWithKtpNonFec() {
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withOrganisation(
+                        OrganisationBuilder.newOrganisation()
+                                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build()).
+                        build();
+
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build());
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking(false);
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        competition.setFundingType(FundingType.KTP);
+
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
+
+        assertFalse(result.getSuccess().getFecModelEnabled());
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
+    @Test
     public void createFinanceChecksWithKtpKBWithNoViabilityChecks() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
                 .withOrganisation(
@@ -292,7 +355,15 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
-        ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(SMALL).withApplication(newApplication().withCompetition(newCompetition().build()).build()).build();
+        return setUpCreateFinanceChecksFiguresMocking(null);
+    }
+
+    private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking(Boolean fecEnabled) {
+        ApplicationFinance applicationFinance = newApplicationFinance()
+                .withOrganisationSize(SMALL)
+                .withFecEnabled(fecEnabled)
+                .withApplication(newApplication()
+                        .withCompetition(newCompetition().build()).build()).build();
         when(competitionService.getCompetitionById(applicationFinance.getApplication().getCompetition().getId())).thenReturn(serviceSuccess(competition));
         ProjectFinance newProjectFinance = new ProjectFinance(organisation, SMALL, newProject);
         newProjectFinance.setId(999L);
