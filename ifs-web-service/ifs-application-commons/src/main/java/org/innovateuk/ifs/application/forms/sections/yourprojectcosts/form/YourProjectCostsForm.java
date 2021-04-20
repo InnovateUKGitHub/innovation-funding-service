@@ -11,10 +11,11 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.INDIRECT_COST_PERCENTAGE;
+
 public class YourProjectCostsForm {
 
     public static final BigDecimal VAT_RATE = BigDecimal.valueOf(20);
-    public final static BigDecimal INDIRECT_COST_PERCENTAGE = BigDecimal.valueOf(46);
 
     private LabourForm labour = new LabourForm();
 

@@ -2,13 +2,14 @@ package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Set;
@@ -56,4 +57,10 @@ public interface OrganisationService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") long searchOrganisationId);
+
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
+    ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseId);
+
+    @PreAuthorize("hasPermission(#organisation, 'UPDATE')")
+    ServiceResult<List<OrganisationResource>> findOrganisationsByName(String organisationName);
 }

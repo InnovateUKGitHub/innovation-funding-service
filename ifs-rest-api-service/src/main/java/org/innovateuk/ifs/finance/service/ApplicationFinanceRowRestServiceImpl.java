@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.service;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,5 +12,11 @@ public class ApplicationFinanceRowRestServiceImpl extends BaseFinanceRowRestServ
 
     public ApplicationFinanceRowRestServiceImpl() {
         super("/application-finance-row");
+    }
+
+    @Override
+    public RestResult<Void> resetCostRowEntriesBasedOnFecModelUpdate(Long applicationId, Long organisationId) {
+        String url = "/application-finance-row" + "/reset-costRows/" + applicationId + "/" + organisationId;
+        return putWithRestResult(url);
     }
 }
