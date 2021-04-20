@@ -25,11 +25,6 @@ public class ProjectDetailsSectionUpdater extends AbstractApplicationSectionUpda
     }
 
     @Override
-    protected void mapAppendix(ProjectForm form) {
-        //nothing to do here. Project details don't have appendices
-    }
-
-    @Override
     protected void mapGuidanceRows(ProjectForm form) {
         //nothing to do here. Project details don't have assessor guidance rows
     }
