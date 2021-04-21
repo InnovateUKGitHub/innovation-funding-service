@@ -8,6 +8,7 @@ import org.innovateuk.ifs.management.admin.form.InviteUserForm;
 import org.innovateuk.ifs.management.admin.form.InviteUserView;
 import org.innovateuk.ifs.management.admin.form.SelectExternalRoleForm;
 import org.innovateuk.ifs.management.admin.form.validation.Primary;
+import org.innovateuk.ifs.management.admin.populator.InviteUserModelPopulator;
 import org.innovateuk.ifs.management.admin.viewmodel.InviteUserViewModel;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -24,7 +25,6 @@ import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.KTA_USER_ROLE_INVITE_INVALID_EMAIL;
@@ -45,6 +45,9 @@ public class InviteUserController {
 
     @Autowired
     private InviteUserService inviteUserService;
+
+    @Autowired
+    private InviteUserModelPopulator inviteUserModelPopulator;
 
     @GetMapping("/select-external-role")
     public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
@@ -83,10 +86,9 @@ public class InviteUserController {
         return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role));
     }
 
-    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
-        Set<Role> filteredRoles = roles.stream().filter(r -> !r.isSuperAdminUser()).collect(Collectors.toSet());
+    private String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
 
-        InviteUserViewModel viewModel = new InviteUserViewModel(type, filteredRoles);
+        InviteUserViewModel viewModel = inviteUserModelPopulator.populate(type, roles);
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(MODEL_ATTR_NAME, viewModel);
