@@ -3,6 +3,7 @@ package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check Eligibility page
@@ -46,6 +48,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean ktp;
     private final boolean resetableGolState;
     private final boolean showChangesLink;
+    private final Boolean fecModelEnabled;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -94,6 +97,7 @@ public class FinanceChecksEligibilityViewModel {
         this.ktp = competition.isKtp();
         this.resetableGolState = resetableGolState;
         this.showChangesLink = showChangesLink;
+        this.fecModelEnabled = hasFecModelEnabled(projectFinances, organisationId);
     }
 
     public boolean isApproved() {
@@ -269,5 +273,17 @@ public class FinanceChecksEligibilityViewModel {
 
     public LocalDate getResetDate() {
         return resetDate;
+    }
+
+    private Boolean hasFecModelEnabled(List<ProjectFinanceResource> finances, Long organisationId) {
+        return finances.stream()
+                .filter(projectFinance -> projectFinance.getOrganisation().equals(organisationId))
+                .findFirst()
+                .map(leadProjectFinance -> leadProjectFinance.getFecModelEnabled())
+                .orElse(null);
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
     }
 }
