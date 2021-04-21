@@ -241,10 +241,6 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return complete || !open;
     }
 
-    public boolean isReadOnly(FinanceRowType type) {
-        return isReadOnly();
-    }
-
     public boolean showEditButton(FinanceRowType type) {
         return !type.equals(FinanceRowType.INDIRECT_COSTS);
     }

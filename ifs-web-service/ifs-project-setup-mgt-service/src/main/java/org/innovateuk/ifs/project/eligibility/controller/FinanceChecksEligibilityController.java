@@ -6,9 +6,9 @@ import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesVie
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -92,6 +92,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
     @Autowired
     private FinanceChecksEligibilityProjectCostsFormPopulator formPopulator;
+
+    @Autowired
+    private YourProjectCostsFormValidator yourProjectCostsFormValidator;
 
     @Autowired
     private FinanceChecksEligibilityProjectCostsSaver yourProjectCostsSaver;
@@ -233,12 +236,23 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                            Model model,
                                            UserResource user) {
 
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
         Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), form, null, false, user, true);
 
+        List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
+
+        Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
+                .filter(projectFinance -> projectFinance.getOrganisation().longValue() == organisationId)
+                .findFirst();
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(organisationProjectFinance);
+
+        financeRowTypes.forEach(type -> yourProjectCostsFormValidator.validateType(form, type, validationHandler));
+        ProjectResource project = projectService.getById(projectId);
+        boolean ktp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(yourProjectCostsSaver.save(form, projectId,organisation, new ValidationMessages()));
+            financeRowTypes.forEach(financeRowType -> validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, financeRowType, projectId, organisationId, ktp)));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
     }
