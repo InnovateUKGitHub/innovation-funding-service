@@ -36,7 +36,7 @@ User can select H2020 Competition Template and complete Initial details
 
 User can populate the Completion Stage, Milestones and Public content
     [Documentation]  IFS-5158
-     Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}   Yes
+     Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}   No
      When the user clicks the button/link                                           link = Public content
      Then The user completes Public content for H2020 registration and publishes
      [Teardown]  the user clicks the button/link                                    link = Return to setup overview

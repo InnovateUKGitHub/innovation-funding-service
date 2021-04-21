@@ -216,7 +216,7 @@ the user fills in the CS Milestones
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage  ${completionStage}
     ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
-    Run Keyword If   "${completionStage}" == "RELEASE_FEEDBACK"  or   "${completionStage}" == "PROJECT_SETUP"  the user completes application submission page   ${isOpenComp}
+    Run Keyword If   "${completionStage}" == "RELEASE_FEEDBACK" or "${completionStage}" == "PROJECT_SETUP"  the user completes application submission page   ${isOpenComp}
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
@@ -749,7 +749,7 @@ the user select stakeholder and add to competition
 
 the user completes application submission page
     [Arguments]  ${isOpenComp}
-    the user selects the radio button     jQuery = label:contains("${isOpenComp}")
+    the user clicks the button twice      jQuery = label:contains("${isOpenComp}")
     the user clicks the button/link       jQuery = button:contains("Save and continue")
     the user clicks the button/link       jQuery = span:contains("Application submission")
     the user should see the element       jQuery = p:contains("Will this be an open-ended competition?") strong:contains("${isOpenComp}")
