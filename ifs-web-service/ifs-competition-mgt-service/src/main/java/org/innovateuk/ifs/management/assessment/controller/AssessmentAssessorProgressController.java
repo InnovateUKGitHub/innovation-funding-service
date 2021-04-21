@@ -83,6 +83,28 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return "competition/assessor-progress";
     }
 
+    @PostMapping("/period/{assessmentPeriodId}")
+    public String assessorAssignForPeriod(@PathVariable long competitionId,
+                                 @PathVariable long assessorId,
+                                 @PathVariable long assessmentPeriodId,
+                                 @ModelAttribute(SELECTION_FORM) ApplicationSelectionForm selectionForm,
+                                 HttpServletRequest request) {
+
+        ApplicationSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
+                .filter(form -> !form.getSelectedApplications().isEmpty())
+                .orElse(selectionForm);
+
+        List<AssessmentCreateResource> assessments = submittedSelectionForm.getSelectedApplications().stream()
+                .map(applicationId -> {
+                    AssessmentCreateResource a = new AssessmentCreateResource(applicationId, assessorId);
+                    a.setAssessmentPeriodId(assessmentPeriodId);
+                    return a;
+                })
+                .collect(Collectors.toList());
+        assessmentRestService.createAssessments(assessments).getSuccess();
+        return format("redirect:/assessment/competition/%s/assessors/%s/period/%s", competitionId, assessorId, assessmentPeriodId);
+    }
+
     @PostMapping("/withdraw/{assessmentId}")
     public String withdrawAssessment(@PathVariable long competitionId,
                                      @PathVariable long assessorId,
@@ -126,9 +148,9 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 
-    @PostMapping(params = {"selectionId"})
-    public @ResponseBody
-    JsonNode selectAssessorForResendList(
+    @PostMapping(value = "/period/{assessmentPeriodId}", params = {"selectionId"})
+    @ResponseBody
+    public JsonNode selectAssessorForResendListForPeriod(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
             @RequestParam("selectionId") long applicationId,
@@ -136,7 +158,47 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
             @RequestParam(value = "filterSearch", defaultValue = "") String filter,
             HttpServletRequest request,
             HttpServletResponse response) {
+        return selectAssessorForResendListJsonNode(
+                competitionId,
+                assessorId,
+                applicationId,
+                isSelected,
+                filter,
+                request,
+                response
+        );
+    }
 
+
+    @PostMapping(params = {"selectionId"})
+    @ResponseBody
+    public JsonNode selectAssessorForResendList(
+            @PathVariable long competitionId,
+            @PathVariable long assessorId,
+            @RequestParam("selectionId") long applicationId,
+            @RequestParam("isSelected") boolean isSelected,
+            @RequestParam(value = "filterSearch", defaultValue = "") String filter,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        return selectAssessorForResendListJsonNode(
+                competitionId,
+                assessorId,
+                applicationId,
+                isSelected,
+                filter,
+                request,
+                response
+        );
+    }
+
+    private JsonNode selectAssessorForResendListJsonNode(
+            long competitionId,
+            long assessorId,
+            long applicationId,
+            boolean isSelected,
+            String filter,
+            HttpServletRequest request,
+            HttpServletResponse response) {
         boolean limitExceeded = false;
         try {
             List<Long> InviteIds = getAllApplicationIds(competitionId, assessorId, filter);
