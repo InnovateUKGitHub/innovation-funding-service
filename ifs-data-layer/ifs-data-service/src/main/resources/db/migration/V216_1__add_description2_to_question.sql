@@ -1,0 +1,1 @@
+ALTER TABLE question ADD COLUMN description2 longtext DEFAULT NULL;
