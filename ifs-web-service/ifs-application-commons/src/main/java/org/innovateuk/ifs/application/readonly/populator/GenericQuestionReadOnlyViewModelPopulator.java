@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionAnswerRowReadOnlyViewModel;
@@ -31,7 +29,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
@@ -292,6 +292,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return ImmutableSet.of(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT, NORTHERN_IRELAND_DECLARATION);
+        return stream(QuestionSetupType.values()).filter(QuestionSetupType::hasFormInputResponses).collect(toSet());
     }
 }
