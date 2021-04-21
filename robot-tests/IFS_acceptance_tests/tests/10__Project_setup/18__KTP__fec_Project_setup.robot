@@ -148,6 +148,24 @@ IFS admin can see the approved non-FEC cost categories in the GOL
     Then the user should see the non-FEC cost categories in the GOL
     [Teardown]  the user closes the last opened tab
 
+Competition admin can see the approved non-FEC cost categories in the GOL
+    [Documentation]  IFS-9306
+    Given log in as a different user                                   &{Comp_admin1_credentials}
+    And The user clicks the button/link                                jQuery = a:contains("Project setup")
+    When the user views the grant offer letter page
+    And Select Window                                                  NEW
+    Then the user should see the non-FEC cost categories in the GOL
+    [Teardown]  the user closes the last opened tab
+
+Project finance user can see the approved non-FEC cost categories in the GOL
+    [Documentation]  IFS-9306
+    Given log in as a different user                                   &{internal_finance_credentials}
+    And The user clicks the button/link                                jQuery = a:contains("Project setup")
+    When the user views the grant offer letter page
+    And Select Window                                                  NEW
+    Then the user should see the non-FEC cost categories in the GOL
+    [Teardown]  the user closes the last opened tab
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database                    @{database}
