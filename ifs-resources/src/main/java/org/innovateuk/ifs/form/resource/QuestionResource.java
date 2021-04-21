@@ -18,6 +18,7 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     private String name;
     private String shortName;
     private String description;
+    private String description2;
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
@@ -177,6 +178,14 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public boolean requiresSetup() {
         return type != LEAD_ONLY && questionSetupType != QuestionSetupType.SUBSIDY_BASIS;
+    }
+
+    public String getDescription2() {
+        return description2;
+    }
+
+    public void setDescription2(String description2) {
+        this.description2 = description2;
     }
 
     @Override

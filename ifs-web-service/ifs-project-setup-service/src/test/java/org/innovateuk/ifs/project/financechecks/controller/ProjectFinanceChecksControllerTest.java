@@ -10,7 +10,9 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -39,21 +41,23 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES;
@@ -64,6 +68,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -102,6 +107,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     private OrganisationResource industrialOrganisation;
 
+    private OrganisationResource kbOrganisation;
+
     private ApplicationResource application = newApplicationResource().withId(123L).build();
 
     private ProjectResource project = newProjectResource()
@@ -139,6 +146,13 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
 
+        kbOrganisation = newOrganisationResource()
+                .withId(11L)
+                .withName("Kb Org")
+                .withOrganisationTypeName(OrganisationTypeEnum.KNOWLEDGE_BASE.name())
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
+                .build();
+
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -159,6 +173,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
+        when(organisationRestService.getOrganisationById(kbOrganisation.getId())).thenReturn(restSuccess(kbOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
@@ -255,6 +270,142 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 andReturn();
 
         assertReadOnlyViewEligibilityDetails(result);
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertNull(viewModel.getFecModelEnabled());
+    }
+
+    @Test
+    public void viewKtpFecExternalEligibilityPage() throws Exception {
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> financeRowType.isCost()
+                        && !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
+
+        project.setCompetition(competitionResource.getId());
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        setUpViewEligibilityMocking(eligibility);
+
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(true)
+                .withOrganisation(kbOrganisation.getId())
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.CONSUMABLES, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SUPPORT, newDefaultCostCategory().build(),
+                        FinanceRowType.KNOWLEDGE_BASE, newDefaultCostCategory().build(),
+                        FinanceRowType.ESTATE_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build()))
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getByApplicationId(application.getId())).thenReturn(project);
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(kbOrganisation);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
+        when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
+        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId())).thenReturn(new YourProjectCostsForm());
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
+
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/financecheck/eligibility")).
+                andExpect(model().attribute("model", instanceOf(FinanceChecksProjectCostsViewModel.class))).
+                andReturn();
+
+        assertReadOnlyViewEligibilityDetails(result);
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertTrue(viewModel.getFecModelEnabled());
+
+        FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
+
+        assertNotNull(projectCostViewModel);
+
+        assertThat(projectCostViewModel.getOrderedAccordionFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
+    public void viewKtpNonFecExternalEligibilityPage() throws Exception {
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> financeRowType.isCost()
+                        && !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .build();
+
+        project.setCompetition(competitionResource.getId());
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        setUpViewEligibilityMocking(eligibility);
+
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(false)
+                .withOrganisation(kbOrganisation.getId())
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.CONSUMABLES, newDefaultCostCategory().build(),
+                        FinanceRowType.ASSOCIATE_SUPPORT, newDefaultCostCategory().build(),
+                        FinanceRowType.KNOWLEDGE_BASE, newDefaultCostCategory().build(),
+                        FinanceRowType.ESTATE_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build(),
+                        FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT, newDefaultCostCategory().build(),
+                        FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().build()))
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getByApplicationId(application.getId())).thenReturn(project);
+        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), kbOrganisation.getId())).thenReturn(eligibilityOverview);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(kbOrganisation);
+        when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(kbOrganisation.getId());
+        when(projectFinanceRestService.getFinanceTotals(project.getId())).thenReturn(restSuccess(emptyList()));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
+        when(formPopulator.populateForm(project.getId(), kbOrganisation.getId())).thenReturn(new YourProjectCostsForm());
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
+
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/financecheck/eligibility")).
+                andExpect(model().attribute("model", instanceOf(FinanceChecksProjectCostsViewModel.class))).
+                andReturn();
+
+        assertReadOnlyViewEligibilityDetails(result);
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertFalse(viewModel.getFecModelEnabled());
+
+        FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
+
+        assertNotNull(projectCostViewModel);
+
+        assertThat(projectCostViewModel.getOrderedAccordionFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }
 
     private void assertReadOnlyViewEligibilityDetails(MvcResult result) {
@@ -274,6 +425,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         eligibility.setEligibilityApprovalUserLastName("Bowman");
 
         when(financeCheckRestService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(eligibility));
+        when(financeCheckRestService.getEligibility(project.getId(), kbOrganisation.getId())).thenReturn(restSuccess(eligibility));
     }
 
     @Test

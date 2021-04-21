@@ -23,7 +23,7 @@ ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplic
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
 ${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity loan from
-${continuityLoanT&C'sTitle}          Loans terms and conditions
+${continuityLoanT&C'sTitle}          Loan terms and conditions
 ${continuityLoanT&CLink}             Innovation Continuity Loan (opens in a new window)
 ${applicationT&CLink}                Award terms and conditions
 
@@ -55,7 +55,7 @@ Innovation continuity loan T&C's can be edited
 Internal user is able to see correct T&C's
     [Documentation]  IFS-8002
     Given the user clicks the button/link     link = ${continuityLoanT&CLink}
-    And select window                         title = Loans terms and conditions - Innovation Funding Service
+    And select window                         title = Loan terms and conditions - Innovation Funding Service
     Then the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
     And close window
     And select window                         title = Competition terms and conditions - Innovation Funding Service
