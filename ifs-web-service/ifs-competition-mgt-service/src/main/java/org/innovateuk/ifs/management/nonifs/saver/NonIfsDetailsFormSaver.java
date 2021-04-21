@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.nonifs.saver;
 
-import org.hibernate.validator.internal.util.CollectionHelper;
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -68,7 +68,7 @@ public class NonIfsDetailsFormSaver {
         competitionResource.setNonIfsUrl(form.getUrl());
         competitionResource.setName(form.getTitle());
         competitionResource.setInnovationSector(form.getInnovationSectorCategoryId());
-        competitionResource.setInnovationAreas(CollectionHelper.asSet(form.getInnovationAreaCategoryId()));
+        competitionResource.setInnovationAreas(ImmutableSet.of(form.getInnovationAreaCategoryId()));
         competitionResource.setFundingType(form.getFundingType());
     }
 

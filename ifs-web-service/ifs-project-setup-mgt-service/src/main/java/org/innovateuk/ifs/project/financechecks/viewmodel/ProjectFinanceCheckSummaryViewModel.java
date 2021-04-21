@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
@@ -15,19 +16,22 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean hasOrganisationSizeChanged;
     private boolean userHasExternalFinanceRole;
     private final boolean hasSpendProfileStage;
+    private final boolean subsidyControlCompetition;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
                                                boolean collaborativeProject,
                                                boolean hasOrganisationSizeChanged,
                                                boolean userHasExternalFinanceRole,
-                                               boolean hasSpendProfileStage) {
+                                               boolean hasSpendProfileStage,
+                                               boolean subsidyControlCompetition) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
         this.hasOrganisationSizeChanged = hasOrganisationSizeChanged;
         this.userHasExternalFinanceRole = userHasExternalFinanceRole;
         this.hasSpendProfileStage = hasSpendProfileStage;
+        this.subsidyControlCompetition = subsidyControlCompetition;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -87,4 +91,14 @@ public class ProjectFinanceCheckSummaryViewModel {
         return hasSpendProfileStage;
     }
 
+    public boolean displayMilestoneColumn() {
+        return this.financeCheckSummaryResource.getPartnerStatusResources().stream()
+                .filter(partner -> partner.getPaymentMilestoneState() != null)
+                .findAny()
+                .isPresent();
+    }
+
+    public boolean isSubsidyControlCompetition() {
+        return subsidyControlCompetition;
+    }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financecheck.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissionRules;
@@ -14,8 +15,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -32,12 +32,12 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testGetFinanceCheckByProjectAndOrganisation() {
-        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE);
+        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
     }
 
     @Test
     public void testGetFinanceCheckSummary(){
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, EXTERNAL_FINANCE);
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, EXTERNAL_FINANCE);
     }
 
     @Test
@@ -136,6 +136,57 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                             .projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules)
                             .competitionFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testGetFundingRules() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getFundingRules(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanViewFundingRules(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .userCanViewTheirOwnFundingRulesStatus(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSaveFundingRules() {
+        long projectId = 1;
+        long organisationId = 1;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.saveFundingRules(projectOrganisationCompositeId, FundingRules.SUBSIDY_CONTROL),
+                () -> {
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testApproveFundingRules() {
+        long projectId = 1;
+        long organisationId = 1;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.approveFundingRules(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }

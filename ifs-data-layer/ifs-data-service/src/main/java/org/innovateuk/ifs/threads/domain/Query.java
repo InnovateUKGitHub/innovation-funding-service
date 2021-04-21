@@ -34,7 +34,7 @@ public final class Query extends MessageThread {
 
     public boolean isAwaitingResponse() {
         return latestPost()
-                .map(Post::author).map(SecurityRuleUtil::isProjectFinanceUser)
+                .map(Post::author).map(SecurityRuleUtil::hasProjectFinanceAuthority)
                 .orElse(false);
     }
 

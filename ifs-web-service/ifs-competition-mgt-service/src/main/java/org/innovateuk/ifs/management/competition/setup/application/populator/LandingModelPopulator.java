@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+import static org.innovateuk.ifs.form.resource.SectionType.APPLICATION_QUESTIONS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
@@ -53,10 +53,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
         List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
         List<QuestionResource> questionResources = questionRestService.findByCompetition(competitionResource.getId()).getSuccess();
-        List<SectionResource> generalSections = sections.stream()
-                .filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL)
-                .collect(Collectors.toList());
-        List<SectionResource> parentSections = generalSections.stream()
+        List<SectionResource> parentSections = sections.stream()
                 .filter(sectionResource -> sectionResource.getParentSection() == null)
                 .collect(Collectors.toList());
 
@@ -100,16 +97,16 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
     }
 
     private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Application questions".equals(sectionResource.getName())).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> APPLICATION_QUESTIONS == sectionResource.getType()).findFirst();
         return section.isPresent() ? questionResources.stream().filter(questionResource -> section.get().getQuestions().contains(questionResource.getId())).collect(Collectors.toList())
                 : new ArrayList<>();
     }
 
     private List<QuestionResource> getSortedProjectDetails(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
-        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> "Project details".equals(sectionResource.getName())).findFirst();
+        Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> SectionType.PROJECT_DETAILS == sectionResource.getType()).findFirst();
         return section.isPresent() ? questionResources.stream()
                 .filter(questionResource -> section.get().getQuestions().contains(questionResource.getId()))
-                .filter(questionResource -> questionResource.getType() != LEAD_ONLY)
+                .filter(QuestionResource::requiresSetup)
                 .collect(Collectors.toList())
                 : new ArrayList<>();
     }

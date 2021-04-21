@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.overview.ApplicationOverviewData;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewRowViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
@@ -30,7 +31,6 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
-import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
@@ -51,13 +51,15 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final QuestionStatusRestService questionStatusRestService;
     private final SectionStatusRestService sectionStatusRestService;
     private final QuestionService questionService;
+    private final ApplicationUrlHelper applicationUrlHelper;
 
     public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
                                              SectionRestService sectionRestService, QuestionRestService questionRestService,
                                              ProcessRoleRestService processRoleRestService, MessageSource messageSource,
                                              OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
                                              SectionStatusRestService sectionStatusRestService,
-                                             QuestionService questionService) {
+                                             QuestionService questionService,
+                                             ApplicationUrlHelper applicationUrlHelper) {
         super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
         this.sectionRestService = sectionRestService;
@@ -68,6 +70,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         this.questionStatusRestService = questionStatusRestService;
         this.sectionStatusRestService = sectionStatusRestService;
         this.questionService = questionService;
+        this.applicationUrlHelper = applicationUrlHelper;
     }
 
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, UserResource user) {
@@ -134,29 +137,30 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         String messageCode;
 
-        switch (section.getName()) {
-            case "Finances":
+        switch (section.getType()) {
+            case FINANCES:
                 messageCode = getFinanceSectionSubTitle(competition);
                 break;
-            case "Project details":
+            case PROJECT_DETAILS:
                 if (competition.isKtp()) {
                     messageCode = "ifs.section.projectDetails.ktp.description";
                 } else {
                     messageCode = "ifs.section.projectDetails.description";
                 }
                 break;
-            case "Terms and conditions":
+            case TERMS_AND_CONDITIONS:
                 if (competition.isExpressionOfInterest()) {
                     messageCode = "ifs.section.termsAndConditionsEoi.description";
                 } else {
                     messageCode = "ifs.section.termsAndConditions.description";
                 }
                 break;
-            case "Application questions":
+            case APPLICATION_QUESTIONS:
                 if (!competition.isKtp()) {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;
                 }
+                return null;
             default:
                 return null;
         }
@@ -164,7 +168,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return messageSource.getMessage(messageCode, null, Locale.getDefault());
     }
 
-    private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
+    private ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
         boolean complete = section.isTermsAndConditions() ?
                 isTermsAndConditionsComplete(data, question, section) :
                 data.getStatuses().get(question.getId())
@@ -190,8 +194,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 );
     }
 
-    private static String getRowUrlFromQuestion(QuestionResource question, ApplicationOverviewData data) {
-        return getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId())
+    private String getRowUrlFromQuestion(QuestionResource question, ApplicationOverviewData data) {
+        return applicationUrlHelper.getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId(), data.getOrganisation().getId())
                 .orElse(format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()));
     }
 

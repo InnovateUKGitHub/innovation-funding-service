@@ -90,8 +90,7 @@ public class CompetitionSetupServiceImplTest {
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(INITIAL_DETAILS);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(INITIAL_DETAILS, competition),
-                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false,
-                        true));
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false));
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionSetupSection section = INITIAL_DETAILS;
@@ -160,11 +159,9 @@ public class CompetitionSetupServiceImplTest {
 
         service.setCompetitionSetupFormPopulators(asList(matchingPopulator, otherPopulator));
 
-        CompetitionSetupForm result = service.getSectionFormData(competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
+        CompetitionSetupFormPopulator result = service.getSectionFormPopulator(CompetitionSetupSection.ADDITIONAL_INFO);
 
-        assertEquals(matchingForm, result);
-        verify(matchingPopulator).populateForm(competitionResource);
-        verify(otherPopulator, never()).populateForm(competitionResource);
+        assertEquals(matchingPopulator, result);
     }
 
     @Test

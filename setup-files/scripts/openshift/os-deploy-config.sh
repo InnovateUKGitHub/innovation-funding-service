@@ -29,6 +29,7 @@ function applyConfigMaps {
     oc apply -f $(getBuildLocation)/config-maps/shibboleth-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/survey-db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/web-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/spring-config.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
 function applyRoutes {
@@ -54,4 +55,3 @@ function applyGlusterConfig {
 applyConfigMaps
 applyRoutes
 applyGlusterConfig
-

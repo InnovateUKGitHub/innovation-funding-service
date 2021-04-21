@@ -59,7 +59,7 @@ public interface ApplicationSummaryService {
                                                                                               Optional<Boolean> sendFilter,
                                                                                               Optional<FundingDecisionStatus> fundingFilter);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     @SecuredBySpring(value = "READ", description = "Internal users can see all Ineligable Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
     ServiceResult<ApplicationSummaryPageResource> getIneligibleApplicationSummariesByCompetitionId(long competitionId,
                                                                                                    String sortBy,

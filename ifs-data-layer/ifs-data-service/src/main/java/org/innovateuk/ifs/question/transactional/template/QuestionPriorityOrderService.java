@@ -11,16 +11,14 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.*;
 import org.innovateuk.ifs.form.repository.*;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.setup.resource.QuestionSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 
 /**
  * Service that can reorder questions by priority after creation or deletion.
@@ -57,9 +55,8 @@ public class QuestionPriorityOrderService {
         Question applicationDetailsQuestion = questionRepository.findFirstByCompetitionIdAndQuestionSetupType
                 (createdQuestion.getCompetition().getId(), QuestionSetupType.APPLICATION_DETAILS);
 
-        QuestionSection questionSection = QuestionSection.findByName(createdQuestion.getSection().getName());
         updateFollowingQuestionsPrioritiesByDelta(1, applicationDetailsQuestion.getPriority(), createdQuestion.getCompetition()
-                .getId(), questionSection);
+                .getId(), SectionType.PROJECT_DETAILS);
 
         createdQuestion.setPriority(applicationDetailsQuestion.getPriority() + 1);
         return questionRepository.save(createdQuestion);
@@ -70,8 +67,8 @@ public class QuestionPriorityOrderService {
     @NotSecured("Must be secured by other services.")
     public Question prioritiseAssessedQuestionAfterCreation(Question createdQuestion) {
         Question assessedQuestionWithHighestPriority = questionRepository
-                .findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(createdQuestion.getCompetition().getId(),
-                        APPLICATION_QUESTIONS.getName());
+                .findFirstByCompetitionIdAndSectionTypeOrderByPriorityDesc(createdQuestion.getCompetition().getId(),
+                        SectionType.APPLICATION_QUESTIONS);
         createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
 
         Question questionSaved = questionRepository.save(createdQuestion);
@@ -84,17 +81,16 @@ public class QuestionPriorityOrderService {
     @Transactional
     @NotSecured("Must be secured by other services.")
     public void reprioritiseQuestionsAfterDeletion(Question deletedQuestion) {
-        QuestionSection questionSection = QuestionSection.findByName(deletedQuestion.getSection().getName());
-        updateFollowingQuestionsPrioritiesByDelta(-1, deletedQuestion.getPriority(), deletedQuestion.getCompetition().getId(), questionSection);
+        updateFollowingQuestionsPrioritiesByDelta(-1, deletedQuestion.getPriority(), deletedQuestion.getCompetition().getId(), deletedQuestion.getSection().getType());
     }
 
     private void updateFollowingQuestionsPrioritiesByDelta(int delta,
                                                            Integer priority,
                                                            long competitionId,
-                                                           QuestionSection questionSection) {
+                                                           SectionType sectionType) {
         List<Question> subsequentQuestions = questionRepository
-                .findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(competitionId,
-                        questionSection.getName(), priority);
+                .findByCompetitionIdAndSectionTypeAndPriorityGreaterThanOrderByPriorityAsc(competitionId,
+                        sectionType, priority);
 
         subsequentQuestions.forEach(question -> question.setPriority(question.getPriority() + delta));
 
@@ -153,7 +149,7 @@ public class QuestionPriorityOrderService {
             question.setCompetition(competition);
             question.setPriority(qi);
             qi++;
-            if (parent.getName().equals("Application questions")) {
+            if (parent.getType() == SectionType.APPLICATION_QUESTIONS) {
                 question.setQuestionNumber(String.valueOf(qi));
             }
             Question savedQuestion = questionRepository.save(question);

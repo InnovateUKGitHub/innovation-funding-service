@@ -26,6 +26,13 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6368 Loans - Remove Documents
 ...
 ...             IFS-7244 - Loans should not have change funding percentage
+...
+...             IFS-8944 SBRI milestones - Record changes to milestones
+...
+...             IFS-9483 Loans: Content changes and banner
+...
+...             IFS-9484 Loans: Applicant journey
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -36,7 +43,9 @@ Resource        ../../../resources/common/PS_Common.robot
 ${loan_comp_PS}                            Project setup loan comp
 ${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
 ${loan_comp_application}                   Loan Competition
+${loanApplicationName}                     Loan Application
 ${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
+${loanApplicationID}                       ${application_ids["${loanApplicationName}"]}
 ${loan_PS_application1}                    Loan Project 1
 ${loan_PS_application2}                    Loan Project 2
 ${loan_PS_application_Id}                  ${application_ids["${loan_PS_application1}"]}
@@ -47,13 +56,46 @@ ${loan_PS_Url}                             ${loan_PS}/details
 ${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 ${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
+
+
 *** Test Cases ***
+The user can see qualtrics survey fields in business and financial information application question
+    [Documentation]    IFS-9484
+    Given the user clicks the button/link                link = Business and financial information
+    And the user clicks the button/link                  id = edit
+    When the user clicks the button/link                 link = Complete the online business survey (opens in a new window)
+    And select window                                    Innovate UK - Innovation Continuity Loans
+    And the user clicks the button/link                  id = NextButton
+    Then the user should see the element                 xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
+    And the user should see the element                  xpath = //span[contains(text(),'60674010')]
+    And the user should see the element                  xpath = //span[contains(text(),'${loanApplicationID}')]
+    [Teardown]  the user closes the last opened tab
+
+The user will not be able to mark the application as complete without completing business and financial information
+    [Documentation]    IFS-9484
+    Given the user clicks the button/link                     link = Back to application overview
+    When the user clicks the button/link                      id = application-overview-submit-cta
+    Then the user should see that the element is disabled     id = submit-application-button
+    And the user should see the element                       jQuery = .section-incomplete + button:contains("Business and financial information")
+    And the user should see the element                       jQuery = p:contains("You must ensure that the business information and financial spreadsheet have been completed before you click submit below.")
+    And the user should see the element                       jQuery = h2:contains("Applicant details")
+    And the user should see the element                       jQuery = h2:contains("Project finance")
+
+The user can complete the business and financial information application question
+    [Documentation]    IFS-9484
+    Given the user clicks the button/link          link = Application overview
+    And the user clicks the button/link            link = Business and financial information
+    And the user enters text to a text field       css = * .editor    This is the applicant response for have you completed the business information, including uploading your financial submission.
+    When the user clicks the button/link           id = application-question-complete
+    And the user clicks the button/link            link = Back to application overview
+    Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
+
 Loan application shows correct T&C's
-    [Documentation]    IFS-6205
-    Given the user clicks the button/link   link = Award terms and conditions
-    And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
+    [Documentation]    IFS-6205  IFS-9483
+    Given the user clicks the button/link   link = Loan terms and conditions
+    And the user should see the element     jQuery = h1:contains("Loan terms and conditions")
     When the user clicks the button/link    link = Back to application overview
-    Then the user should see the element    jQuery = li:contains("Award terms and conditions") .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Loan terms and conditions") .task-status-complete
 
 Max funding sought validation
     [Documentation]  IFS-7866
@@ -75,19 +117,14 @@ Loan application finance overview
     Then the user should see the element   jQuery = td:contains("200,903") ~ td:contains("57,803") ~ td:contains("30.00%") ~ td:contains("2,468") ~ td:contains("140,632")
 
 Loan application submission
-    [Documentation]  IFS-6237  IFS-6238
+    [Documentation]  IFS-6237  IFS-6238  IFS-9483
     Given the user submits the loan application
-    And the user should see the element            jQuery = h2:contains("Part A: Innovation Funding Service application")
-    #When the user clicks the button/link           link = startup high growth index survey
-    #TODO
-    #the user should be on the right page.  Update once we have this link
-    #And the user closes the last opened tab
-    When the user clicks the button/link            link = View part A
+    When the user clicks the button/link            link = View application
     Then the user should see the element            jQuery = h1:contains("Application overview")
-    And the user reads his email                    ${lead_applicant_credentials["email"]}  Complete your application for Loan Competition  To finish your application, you must complete part B
+    And the user reads his email                    ${lead_applicant_credentials["email"]}   Complete your application for Loan Competition   You have completed your application for Loan Competition.
 
 Applicant complete the project setup details
-    [Documentation]  IFS-6369  IFS-6285
+    [Documentation]  IFS-6369  IFS-6285  IFS-9483
     Given the user completes the project details
     And the user completes the project team details
     Then the user should not see the element    jQuery = h2:contains("Bank details")
@@ -107,20 +144,18 @@ Funding sought validations
     Then the user should see a field and summary error  Enter the amount of funding sought.
 
 Fund sought changes
-    [Documentation]  IFS-6293  IFS-6298
-    Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
-    When the user clicks the button/link         jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element         jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
-    And the internal user should see the funding changes
-    And the external user should see the funding changes
+    [Documentation]  IFS-6293  IFS-6298  IFS-8944
+    Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
+    When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
+    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
-    [Setup]  log in as a different user        &{internal_finance_credentials}
+    [Setup]  log in as a different user               &{internal_finance_credentials}
     Given internal user assign MO to loan project
     And internal user generate SP
-    When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    Then the user should not see the element    jQuery = th:contains("Bank details")
+    When the user navigates to the page               ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    Then the user should not see the element          jQuery = th:contains("Bank details")
 
 Applicant checks the generated SP
     [Documentation]  IFS-6369  IFS-6298
@@ -129,9 +164,15 @@ Applicant checks the generated SP
     When the user navigates to the page    ${loan_PS}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
     Then the user should not see the financial year table on SP
 
+Internal user can see application details in project setup
+    [Documentation]  IFS-9483
+    Given Log in as a different user         &{internal_finance_credentials}
+    When the user navigates to the page      ${server}/management/competition/${loan_comp_PS_Id}/application/${loan_PS_application_Id}
+    Then the user should see the element     jQuery = h2:contains("Applicant details")
+    And the user should see the element      jQuery = h2:contains("Project finance")
+
 Internal user can mark project as successful
     [Documentation]  IFS-6363
-    [Setup]  Log in as a different user     &{internal_finance_credentials}
     Given the user approves the spend profile
     When the user navigates to the page     ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
     And the user clicks the button/link     jQuery = tr:contains("${loan_PS_application1}") td:contains("Review") a
@@ -175,7 +216,9 @@ the user completes the project details
     the user navigates to the page        ${loan_PS}
     the user should not see the element   css = .message-alert
     the user clicks the button/link       link = view application feedback
-    the user should see the element       jQuery = h2:Contains("Your application has progressed to project setup.") ~ .govuk-body:contains("Scores and written feedback")
+    the user should see the element       jQuery = h2:Contains("Your application has progressed to project setup.") ~ p:contains("Scores and written feedback from each assessor can be found below.")
+    the user should see the element       jQuery = h2:contains("Applicant details")
+    the user should see the element       jQuery = h2:contains("Project finance")
     the user clicks the button/link       link = Back to set up your project
     the user clicks the button/link       link = Project details
     the user clicks the button/link       link = Correspondence address
@@ -224,40 +267,64 @@ internal user generate SP
     the user should see the element          jQuery = th:contains("Total % loan")
 
 the user should not see the financial year table on SP
-    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       link = Edit spend profile
-    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       jQuery = button:contains("Save and return to spend profile overview")
-    the user clicks the button/link       jQuery = button:contains("Mark as complete")
-    the user clicks the button/link       link = Empire Ltd
-    the user should not see the element   jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       link = Spend profile overview
-    the user clicks the button/link       jQuery = a:contains("Review and submit project spend profile")
-    the user should see the element       jQuery = h2:contains("Project - Spend profile")
-    the user should not see the element   jQuery = h2:contains("Project costs for financial year")
-    the user should not see the element   jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
-    the user clicks the button/link       jQuery = a:contains("Submit project spend profile")
-    the user clicks the button/link       id = submit-send-all-spend-profiles
+    the user should not see the element     jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         link = Edit spend profile
+    the user should not see the element     jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         jQuery = button:contains("Save and return to spend profile overview")
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+    the user clicks the button/link         link = Empire Ltd
+    the user should not see the element     jQuery = p:contains("Your submitted spend profile will be used as the base for your project spend over the following financial years.")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         link = Spend profile overview
+    the user clicks the button/link         jQuery = a:contains("Review and submit project spend profile")
+    the user should see the element         jQuery = h2:contains("Project - Spend profile")
+    the user should not see the element     jQuery = h2:contains("Project costs for financial year")
+    the user should not see the element     jQuery = th:contains("Financial year ") ~ th:contains("Project spend")
+    the user clicks the button/link         jQuery = a:contains("Submit project spend profile")
+    the user clicks the button/link         id = submit-send-all-spend-profiles
 
 the user selects to change funding sought
-    log in as a different user       &{internal_finance_credentials}
-    the user navigates to the page   ${loan_finance_checks}
-    the user clicks the button/link  link = View finances
-    the user clicks the button/link  link = Change funding sought
+    log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${loan_finance_checks}
+    the user clicks the button/link       link = View finances
+    the user clicks the button/link       link = Change funding sought
 
 the internal user should see the funding changes
-    the user navigates to the page    ${eligibility_changes}
-    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+    the user clicks the button/link     link = View changes to finances
+    the user should see the element     jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
+    the user should see the element     jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
+    the user should see the element     jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
+    the user should see the element     jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    the user should see the element     jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
+    the user should see the element     jQuery = th:contains("Labour") ~ td:contains("3,081")
+    the user should see the element     jQuery = th:contains("Overheads") ~ td:contains("0")
+    the user should see the element     jQuery = th:contains("Materials") ~ td:contains("100,200")
+    the user should see the element     jQuery = th:contains("Capital usage") ~ td:contains("552")
+    the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
+    the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
 the external user should see the funding changes
-    log in as a different user        &{lead_applicant_credentials}
-    the user navigates to the page    ${loan_PS}/finance-checks/eligibility
-    the user should see the element   jQuery = p:contains("All members of your organisation can access and edit your project")
-    the user clicks the button/link   link = View changes to finances
-    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+    log in as a different user          &{lead_applicant_credentials}
+    the user navigates to the page      ${loan_PS}/finance-check/eligibility
+    the user should see the element     jQuery = p:contains("All members of your organisation can access and edit your project")
+    the user clicks the button/link     link = View changes to finances
+    the user should see the element     jQuery = p:contains("Funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+    the user should see the element     jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
+    the user should see the element     jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
+    the user should see the element     jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
+    the user should see the element     jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
+    the user should see the element     jQuery = th:contains("Labour") ~ td:contains("3,081")
+    the user should see the element     jQuery = th:contains("Overheads") ~ td:contains("0")
+    the user should see the element     jQuery = th:contains("Materials") ~ td:contains("100,200")
+    the user should see the element     jQuery = th:contains("Capital usage") ~ td:contains("552")
+    the user should see the element     jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
+    the user should see the element     jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
+    the user should see the element     jQuery = th:contains("Total project costs") ~ td:contains("£203,371") ~ td:contains("£207,271") ~ td:contains("£3900")
 
 the user marks loan as complete
     [Arguments]  ${status}  ${appl_name}
@@ -297,7 +364,7 @@ the applicant checks for project status
     the user should see the element   jQuery = h2:contains("We have not approved your loan")
 
 the user should see the finished finance checks
-    the user navigates to the page    ${loan_PS}/finance-checks
+    the user navigates to the page    ${loan_PS}/finance-check
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
     the user clicks the button/link   link = finances.
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")

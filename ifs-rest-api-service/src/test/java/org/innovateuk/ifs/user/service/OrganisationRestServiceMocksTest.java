@@ -2,20 +2,33 @@ package org.innovateuk.ifs.user.service;
 
 import com.google.common.collect.ImmutableList;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
+import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOfficerResourceBuilder.newOrganisationExecutiveOfficerResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationSicCodeResourceBuilder.newOrganisationSicCodeResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -123,5 +136,46 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         assertEquals(1, results.size());
         assertEquals(results, organisationResources);
+    }
+
+    @Test
+    public void syncCompaniesHouseDetails() {
+        OrganisationResource organisation = newOrganisationResource().build();
+        OrganisationResource organisationDataResource = newOrganisationResource()
+                .withDateOfIncorporation(LocalDate.now())
+                .build();
+        List<OrganisationSicCodeResource> sicCodeResources = newOrganisationSicCodeResource()
+                .withSicCode("12345", "67890")
+                .withOrganisation(organisationDataResource.getId())
+                .build(2);
+        organisationDataResource.setSicCodes(sicCodeResources);
+        List<OrganisationExecutiveOfficerResource> executiveOfficerResources = newOrganisationExecutiveOfficerResource()
+                .withName("Name-1", "Name-2")
+                .withOrganisation(organisationDataResource.getId())
+                .build(2);
+        organisationDataResource.setExecutiveOfficers(executiveOfficerResources);
+        AddressResource addressResource = newAddressResource()
+                .withAddressLine1("address line 1")
+                .withAddressLine2("address line 2")
+                .withAddressLine3("address line 3")
+                .withTown("town")
+                .withCounty("county")
+                .withCountry("country")
+                .build();
+        AddressTypeResource addressTypeResource = newAddressTypeResource()
+                .withId(OrganisationAddressType.REGISTERED.getId())
+                .withName(OrganisationAddressType.REGISTERED.name())
+                .build();
+        OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource()
+                .withAddress(addressResource)
+                .withAddressType(addressTypeResource)
+                .withOrganisation(organisationDataResource.getId())
+                .build();
+        organisationDataResource.setAddresses(Collections.singletonList(organisationAddressResource));
+
+        setupPutWithRestResultExpectations(ORGANISATION_BASE_URL + "/sync-companies-house-details", OrganisationResource.class, organisation, organisationDataResource, OK);
+        OrganisationResource receivedResource = service.syncCompaniesHouseDetails(organisation).getSuccess();
+
+        Assert.assertEquals(organisationDataResource, receivedResource);
     }
 }

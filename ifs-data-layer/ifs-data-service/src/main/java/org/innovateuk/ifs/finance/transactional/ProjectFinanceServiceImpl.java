@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -14,9 +15,11 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -41,6 +45,12 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceMapper projectFinanceMapper;
+
+    @Autowired
+    private PendingPartnerProgressService pendingPartnerProgressService;
 
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId) {
@@ -65,11 +75,18 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     }
 
     @Override
-    public ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
+    @Transactional
+    public ServiceResult<ProjectFinanceResource> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
         long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
             updateFinancialYearData(dbFinance, projectFinanceResource);
-            return serviceSuccess();
+            if (projectFinanceResource.getNorthernIrelandDeclaration() != null) {
+                if (!projectFinanceResource.getNorthernIrelandDeclaration().equals(dbFinance.getNorthernIrelandDeclaration())){
+                    pendingPartnerProgressService.resetPendingPartnerProgress(SUBSIDY_BASIS, projectFinanceResource.getProject(), projectFinanceResource.getOrganisation());
+                }
+                dbFinance.setNorthernIrelandDeclaration(projectFinanceResource.getNorthernIrelandDeclaration());
+            }
+            return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
         });
     }
 

@@ -2,7 +2,6 @@ import org.ajoberstar.grgit.*
 
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
-apply from: "gradle-support/release.gradle"
 apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
 apply from: "gradle-support/gradle-versions.gradle"
@@ -46,14 +45,14 @@ apply from: "gradle-support/openshift-support.gradle"
 buildscript {
 
     ext {
-        springBootVersion = '2.0.9.RELEASE'
+        springBootVersion = '2.4.1'
     }
 
     repositories {
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
-
+        mavenCentral()
     }
 
     dependencies {
@@ -65,6 +64,8 @@ buildscript {
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
 
         classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
+        classpath "com.github.node-gradle:gradle-node-plugin:1.5.3"
+
     }
 
 }
@@ -87,11 +88,6 @@ dependencyUpdates.resolutionStrategy = {
 
 apply plugin: "com.github.hierynomus.license"
 
-
-wrapper {
-    gradleVersion = '5.5'
-}
-
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
 
 def nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository').toString() : ""
@@ -113,6 +109,7 @@ def osFileMap = [
         [name:'shibboleth-config', type: 'config-maps'],
         [name:'survey-db-config', type: 'config-maps'],
         [name:'web-config', type: 'config-maps'],
+        [name:'spring-config', type: 'config-maps'],
 
         [name:'67-db-anonymised-data', type: 'db-anonymised-data'],
 

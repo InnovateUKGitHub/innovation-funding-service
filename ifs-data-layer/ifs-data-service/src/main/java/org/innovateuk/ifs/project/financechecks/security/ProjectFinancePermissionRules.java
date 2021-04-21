@@ -24,7 +24,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "VIEW_VIABILITY",
             description = "Project Finance Users can view Viability")
     public boolean projectFinanceUserCanViewViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(
@@ -39,7 +39,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can save Viability")
     public boolean projectFinanceUserCanSaveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
-        return isProjectFinanceUser(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(
@@ -53,7 +53,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "VIEW_ELIGIBILITY",
             description = "Project Finance Users can view Eligibility")
     public boolean projectFinanceUserCanViewEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(
@@ -74,7 +74,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "SAVE_ELIGIBILITY",
             description = "Project Finance Users can save Eligibility")
     public boolean projectFinanceUserCanSaveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(
@@ -85,24 +85,80 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "SAVE_FUNDING_RULES",
+            description = "Project Finance Users can save Funding Rules")
+    public boolean projectFinanceUserCanSaveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "SAVE_FUNDING_RULES",
+            description = "Competition Finance Users can save Funding Rules")
+    public boolean competitionFinanceUserCanSaveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return userIsExternalFinanceOnCompetitionForProject(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "SAVE_MILESTONE_CHECK",
+            description = "Project Finance Users can save Milestone Check")
+    public boolean projectFinanceUserCanSaveMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "RESET_MILESTONE_CHECK",
+            description = "Project Finance Users can save Milestone Check")
+    public boolean projectFinanceUserCanResetMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_MILESTONE_STATUS",
+            description = "Project Finance Users can view Milestone Check")
+    public boolean projectFinanceUserCanViewMilestoneCheck(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_MILESTONE_STATUS",
+            description = "Users can see their own Milestone Check status")
+    public boolean userCanViewTheirOwnMilestoneStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Project Finance Users can view Funding Rules status")
+    public boolean projectFinanceUserCanViewFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return hasProjectFinanceAuthority(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_FUNDING_RULES",
+            description = "Users can see their own Funding Rules status")
+    public boolean userCanViewTheirOwnFundingRulesStatus(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "RESET_ELIGIBILITY",
             description = "Project finance user can reset Eligibility")
     public boolean projectFinanceUserCanResetEligibility(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "RESET_VIABILITY",
             description = "Project finance user can reset Viability")
     public boolean projectFinanceUserCanResetViability(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "RESET_FINANCE_CHECKS",
             description = "Project finance user can reset both Viability and Eligibility Checks")
     public boolean projectFinanceUserCanResetFinanceChecks(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
@@ -130,7 +186,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "VIEW_CREDIT_REPORT",
             description = "Project Finance Users can view the Credit Report flag")
     public boolean projectFinanceUserCanViewCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(
@@ -151,7 +207,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "SAVE_CREDIT_REPORT",
             description = "Project Finance Users can save Credit Report flag")
     public boolean projectFinanceUserCanSaveCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+        return hasProjectFinanceAuthority(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "Project partners can see the project finances of their own project")
@@ -181,7 +237,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project finance users users can update the project finances of a project")
     public boolean internalUsersCanUpdateProjectFinance(final ProjectFinanceResource financeResource, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")

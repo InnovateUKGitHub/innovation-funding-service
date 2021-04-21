@@ -41,6 +41,30 @@ public class CompetitionSetupQuestionResourceTest {
     }
 
     @Test
+    public void guidanceNotRequiredForKtpAssessmentType() {
+        // given
+        resource.setType(QuestionSetupType.KTP_ASSESSMENT);
+
+        // when
+        boolean result = resource.isGuidanceRequired();
+
+        // then
+        assertFalse(result);
+    }
+
+    @Test
+    public void guidanceNotRequiredForNorthernIrelandDeclarationType() {
+        // given
+        resource.setType(QuestionSetupType.NORTHERN_IRELAND_DECLARATION);
+
+        // when
+        boolean result = resource.isGuidanceRequired();
+
+        // then
+        assertFalse(result);
+    }
+
+    @Test
     public void guidanceRequiredForOtherQuestionType() {
         // given
         resource.setType(QuestionSetupType.APPLICATION_DETAILS);

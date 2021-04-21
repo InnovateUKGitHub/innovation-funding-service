@@ -23,6 +23,12 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-9133 Query a Partners NI declaration questions and determined funding rules in project setup
+...
+...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
+...
+...               IFS-9297 PCR - Applicant can view and accept the correct T&Cs (Project Setup)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -135,7 +141,7 @@ Lead can reopen application and gets an email notification including collaborato
     [Setup]  log in as a different user      &{lead_applicant_credentials}
     When the user clicks the button/link     link = Dashboard
     Then the user can reopen application     ${ATIapplicationTitle}
-    And the user reads his email             ${collaborator1_credentials["email"]}     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email             ${collaborator1_credentials["email"]}          An Innovation Funding Service funding application has been reopened   The application was reopened by
     And the user reads his email             ${lead_applicant_credentials["email"]}      An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes to the application and assign a question to collaborator
@@ -197,7 +203,7 @@ Internal user marks ATI application to successful
 MO can see application summary page for the ATI application in project setup before releasing the feedback
     [Documentation]  IFS-7647
     [Setup]  Requesting Application ID of this application
-    Given Internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
+    Given internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
     When Log in as a different user                            &{monitoring_officer_one_credentials}
     And the user navigates to the page                         ${server}/application/${atiApplicationID}/summary
     And the user should see the element                        jQuery = h1:contains("Application overview")
@@ -211,23 +217,76 @@ Internal user add new partner orgnisation after moving competition to project se
     And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
     Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  ROYAL  ROYAL MAIL PLC  ${atiApplicationID}  ${ATIapplicationTitle}
 
-New partner orgination checks for funding level guidance
+New partner orgination checks
     [Documentation]  IFS-6725
-    Given log in as a different user                                ${partnerEmail}   ${short_password}
-    When the user clicks the button/link                            link = ${ATIapplicationTitle}
-    And The new partner can complete Your organisation
-    Then the user checks for funding level guidance at PS level
+    Given log in as a different user                        ${partnerEmail}   ${short_password}
+    When the user clicks the button/link                    link = ${ATIapplicationTitle}
+    Then The new partner can complete Your organisation
 
-Applicant completes Project Details
-    [Documentation]  IFS-2332
-    When log in as a different user              &{lead_applicant_credentials}
-    Then project lead submits project address    ${ProjectID}
+PS partner applicant can not accept the terms and conditions without determining subsidy basis type
+    [Documentation]  IFS-9289
+    When the user clicks the button/link      link = Award terms and conditions
+    Then the user should see the element      link = Subsidy basis
+
+PS partner applicant can not complete funding details without determining subsidy basis type
+    [Documentation]  IFS-9289
+    Given the user clicks the button/link     link = Back to join project
+    When the user clicks the button/link      link = Your funding
+    Then the user should see the element      link = Subsidy basis
+
+PS partner checks funding level guidance after completing subsidy basis
+    [Documentation]  IFS-9289  IFS-6725
+    Given the user completes subsidy basis as subsidy control
+    When the user clicks the button/link                          link = Your funding
+    And the user selects the radio button                         requestingFunding   true
+    Then the user should see the element                          jQuery = .govuk-hint:contains("The maximum you can enter is")
+    And the user clicks the button/link                           link = Back to join project
+
+PS partner should see correct terms and conditions after completing subsidy basis
+    [Documentation]  IFS-9297
+     When the user clicks the button/link     link = Award terms and conditions
+     Then the user should see the element     jQuery = li:contains("Unless clause 11.5 applies")
+
+PS partner sucessfully joins the project after completing subsidy basis
+    [Documentation]  IFS-9289  IFS-6725
+    Given the user clicks the button/link                        link = Back to join project
+    And the user clicks the button/link                          link = Your funding
+    And the user marks your funding section as complete
+    And the user accept the competition terms and conditions     Back to join project
+    When the user clicks the button/link                         id = submit-join-project-button
+    Then the user should see the element                         jQuery = h1:contains("Set up your project") span:contains("${ATIapplicationTitle}")
+
+Lead Applicant completes Project Details
+    [Documentation]  IFS-2332  IFS-9133
+    When log in as a different user                                                    &{lead_applicant_credentials}
+    Then project lead submits project address                                          ${ProjectID}
+    And project lead submits project details and team                                  ${ProjectID}  projectManager1
+    And navigate to external finance contact page, choose finance contact and save     ${EMPIRE_LTD_ID}   financeContact1  ${ProjectID}
+
+Project finance user can submit funding rule query
+    [Documentation]  IFS-9133
+    Given log in as a different user                      &{internal_finance_credentials}
+    When the user navigates to the page                   ${server}/project-setup-management/project/${ProjectID}/finance-check
+    And the user posts a funding rule query
+    Then the user should not see an error in the page
+
+Applicant - finance contact can respond to the query
+    [Documentation]   IFS-9133
+    Given log in as a different user                    &{lead_applicant_credentials}
+    When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}/finance-check
+    Then the user responds to the funding rule query
+
+IFS admin can see applicant response for funding rule query and mark discussion as resolved
+    [Documentation]  IFS-9133
+    Given log in as a different user             &{ifs_admin_user_credentials}
+    When the user navigates to the page          ${server}/project-setup-management/project/${ProjectID}/finance-check
+    Then the user marks the query as resolved
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     Given Log in as a different user            &{internal_finance_credentials}
     When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(6) a:contains("Review")
     And the user expands the section            Overhead costs
     Then the user should see the element        jQuery = a:contains("${excel_file}")
     And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
@@ -268,7 +327,6 @@ the user completes the application
     the user clicks the button/link                                                          link = Your project finances
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
-    the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
 the partner selects new answer choice
@@ -388,3 +446,25 @@ the assessor checks the appendices
     the user clicks the button/link     link = ATI application
     the user clicks the button/link     jQuery = button:contains("5. Technical approach")
     open pdf link                       jQuery = a:contains("testing.pdf (opens in a new window)")
+
+the user posts a funding rule query
+    the user clicks the button/link                         css = table.table-progress tr:nth-child(1) td:nth-child(8)
+    the user clicks the button/link                         id = post-new-query
+    the user enters text to a text field                    id = queryTitle  A funding rule query title
+    the user selects the option from the drop-down menu     Funding rules    id = section
+    the user enters text to a text field                    css = .editor    Funding rule query
+    the user clicks the button/link                         id = post-query
+
+the user responds to the funding rule query
+    the user clicks the button/link          jQuery = .govuk-button:contains("Respond")
+    the user enters text to a text field     css = .editor    Response to funding query
+    the user clicks the button/link          jQuery = .govuk-button:contains("Post response")
+    the user should see the element          jQuery = .govuk-body:contains("Your response has been sent and will be reviewed by Innovate UK.")
+
+the user marks the query as resolved
+    the user clicks the button/link     css = table.table-progress tr:nth-child(1) td:nth-child(8)
+    the user expands the section        A funding rule query title
+    the user should see the element     jQuery = .govuk-body:contains("Response to funding query")
+    the user clicks the button/link     link = Mark as resolved
+    the user clicks the button/link     jQuery = .govuk-button:contains("Submit")
+    the user should see the element     jQuery = #accordion-queries-heading-1 .yes  # Resolved green check

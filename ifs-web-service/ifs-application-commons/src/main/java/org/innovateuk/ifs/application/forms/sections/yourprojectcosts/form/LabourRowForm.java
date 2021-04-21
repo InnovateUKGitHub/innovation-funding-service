@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
@@ -12,7 +11,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class LabourRowForm extends AbstractCostRowForm<LabourCost> {
 
-    @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
+    @Size(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     @NotBlank(message = NOT_BLANK_MESSAGE)
     private String role;
 

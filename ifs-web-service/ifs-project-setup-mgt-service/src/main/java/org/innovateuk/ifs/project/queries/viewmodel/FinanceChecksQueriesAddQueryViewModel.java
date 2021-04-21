@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.queries.viewmodel;
 
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
     private String baseUrl;
     private Long applicationId;
     private boolean procurementMilestones;
+    private boolean subsidyControlCompetition;
 
 
     public FinanceChecksQueriesAddQueryViewModel(String organisationName,
@@ -42,7 +44,8 @@ public class FinanceChecksQueriesAddQueryViewModel {
                                          Long organisationId,
                                          String baseUrl,
                                          Long applicationId,
-                                         boolean procurementMilestones) {
+                                         boolean procurementMilestones,
+                                         boolean subsidyControlCompetition) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;
@@ -59,6 +62,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
         this.baseUrl = baseUrl;
         this.applicationId = applicationId;
         this.procurementMilestones = procurementMilestones;
+        this.subsidyControlCompetition = subsidyControlCompetition;
     }
 
     public String getOrganisationName() {
@@ -179,13 +183,18 @@ public class FinanceChecksQueriesAddQueryViewModel {
     }
 
     public List<FinanceChecksSectionType> getSectionTypes() {
+        List<FinanceChecksSectionType> sectionTypes = new ArrayList<>();
+        sectionTypes.add(FinanceChecksSectionType.ELIGIBILITY);
+        sectionTypes.add(FinanceChecksSectionType.VIABILITY);
+
         if (procurementMilestones) {
-            return Arrays.asList(FinanceChecksSectionType.values());
+            sectionTypes.add(FinanceChecksSectionType.PAYMENT_MILESTONES);
+        }
+        if (subsidyControlCompetition) {
+            sectionTypes.add(FinanceChecksSectionType.FUNDING_RULES);
         }
 
-        return Stream.of(FinanceChecksSectionType.values())
-                .filter(it -> it != FinanceChecksSectionType.PAYMENT_MILESTONES)
-                .collect(Collectors.toList());
+        return sectionTypes;
     }
 
 }

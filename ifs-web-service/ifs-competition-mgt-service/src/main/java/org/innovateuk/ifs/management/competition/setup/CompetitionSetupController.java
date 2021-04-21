@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
@@ -16,9 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
 import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
@@ -27,14 +23,11 @@ import org.innovateuk.ifs.management.competition.setup.completionstage.form.Comp
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.fundingeligibility.form.FundingEligibilityResearchCategoryForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
-import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelPercentageForm;
-import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.validator.FundingLevelPercentageValidator;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
@@ -52,20 +45,16 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.rest.RestFailure.error;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
-import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static org.innovateuk.ifs.management.competition.setup.organisationaleligibility.controller.CompetitionSetupOrganisationalEligibilityController.ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT;
 import static org.innovateuk.ifs.management.competition.setup.projectdocument.controller.CompetitionSetupDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
@@ -76,7 +65,7 @@ import static org.innovateuk.ifs.management.competition.setup.projectdocument.co
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+@PreAuthorize("hasAnyAuthority('comp_admin')")
 public class CompetitionSetupController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
     public static final String COMPETITION_ID_KEY = "competitionId";
@@ -99,20 +88,13 @@ public class CompetitionSetupController {
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Autowired
-    private TermsAndConditionsRestService termsAndConditionsRestService;
-
-    @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
-
-    @Autowired
-    private FundingLevelPercentageValidator fundingLevelPercentageValidator;
 
     @Value("${ifs.subsidy.control.enabled:true}")
     private boolean fundingRuleEnabled;
 
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
-
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -199,7 +181,7 @@ public class CompetitionSetupController {
         }
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormPopulator(section).populateForm(competition));
 
         return "competition/setup";
     }
@@ -212,10 +194,6 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
-        if (competitionSetupForm.getFundingRule() == null) {
-            String errorKey = fundingRuleEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
-            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));
-        }
 
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);
     }
@@ -300,25 +278,6 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_ELIGIBILITY, loggedInUser, model);
     }
 
-    @PostMapping("/{competitionId}/section/funding-level-percentage")
-    public String submitFundingLevelPercentageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
-                                                  BindingResult bindingResult,
-                                                  ValidationHandler validationHandler,
-                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                  UserResource loggedInUser,
-                                                  Model model) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        fundingLevelPercentageValidator.validate(competitionSetupForm, validationHandler);
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, loggedInUser, model);
-    }
-
-    @PostMapping(value = "/{competitionId}/section/funding-level-percentage", params = "reset-maximum-funding-levels")
-    public String resetMaximumFundingLevels(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
-                                                             @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        grantClaimMaximumRestService.revertToDefaultForCompetitionType(competitionId).getSuccess();
-        return format("redirect:/competition/setup/%d/section/%s", competitionId, FUNDING_LEVEL_PERCENTAGE.getPath());
-    }
-
     @PostMapping("/{competitionId}/section/completion-stage")
     public String submitCompletionStageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
                                                       BindingResult bindingResult,
@@ -389,30 +348,6 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, loggedInUser, model);
     }
 
-    @PostMapping("/{competitionId}/section/terms-and-conditions")
-    public String submitTermsAndConditionsSectionDetails(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm competitionSetupForm,
-                                                         @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
-                                                         ValidationHandler validationHandler,
-                                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                         UserResource loggedInUser,
-                                                         Model model) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        if (isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
-            if (competition.getCompetitionTerms() == null) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "termsAndConditionsDoc", "Upload a terms and conditions document."));
-            }
-        } else {
-            competitionSetupRestService.deleteCompetitionTerms(competitionId);
-        }
-
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, loggedInUser, model);
-    }
-
-    private boolean isProcurement(long termsAndConditionsId) {
-        return termsAndConditionsRestService.getById(termsAndConditionsId).getSuccess().isProcurement();
-    }
-
-
     @PostMapping("/{competitionId}/ready-to-open")
     public String setAsReadyToOpen(Model model,
                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -441,43 +376,6 @@ public class CompetitionSetupController {
 
         return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
                 .failNowOrSucceedWith(failureView, () -> DASHBOARD_REDIRECT);
-    }
-
-    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
-    public String uploadTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
-                                           @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
-                                           ValidationHandler validationHandler,
-                                           @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                           UserResource loggedInUser,
-                                           Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
-        Supplier<String> failure = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, loggedInUser, model);
-
-        MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
-        RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
-                file.getOriginalFilename(), getMultipartFileBytes(file));
-
-        termsAndConditionsForm.setMarkAsCompleteAction(false);
-        competitionSetupService.saveCompetitionSetupSection(termsAndConditionsForm, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS);
-
-        return validationHandler.addAnyErrors(error(uploadResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
-                .failNowOrSucceedWith(failure, success);
-    }
-
-    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
-    public String deleteTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
-                                           @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
-                                           ValidationHandler validationHandler,
-                                           @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                           Model model) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
-
-        RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
-        return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
-                .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
     /* AJAX Function */

@@ -14,30 +14,30 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 @Service
 public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements GrantClaimMaximumRestService {
 
-    private static final String grantClaimMaximumRestURL = "/grant-claim-maximum";
+    private static final String GRANT_CLAIM_MAXIMUM_REST_URL = "/grant-claim-maximum";
 
     @Override
     public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
-        return getWithRestResult(grantClaimMaximumRestURL + "/" + id, GrantClaimMaximumResource.class);
+        return getWithRestResult(GRANT_CLAIM_MAXIMUM_REST_URL + "/" + id, GrantClaimMaximumResource.class);
     }
 
     @Override
     public RestResult<List<GrantClaimMaximumResource>> getGrantClaimMaximumByCompetitionId(long competitionId) {
-        return getWithRestResult(grantClaimMaximumRestURL + "/competition/" + competitionId, new ParameterizedTypeReference<List<GrantClaimMaximumResource>>() {});
+        return getWithRestResult(GRANT_CLAIM_MAXIMUM_REST_URL + "/competition/" + competitionId, new ParameterizedTypeReference<List<GrantClaimMaximumResource>>() {});
     }
 
     @Override
     public RestResult<Set<Long>> revertToDefaultForCompetitionType(long competitionId) {
-        return postWithRestResult(grantClaimMaximumRestURL + "/revert-to-default/" + competitionId, longsSetType());
+        return postWithRestResult(GRANT_CLAIM_MAXIMUM_REST_URL + "/revert-to-default/" + competitionId, longsSetType());
     }
 
     @Override
     public RestResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
-        return postWithRestResult(grantClaimMaximumRestURL + "/", grantClaimMaximumResource, GrantClaimMaximumResource.class);
+        return postWithRestResult(GRANT_CLAIM_MAXIMUM_REST_URL + "/", grantClaimMaximumResource, GrantClaimMaximumResource.class);
     }
 
     @Override
     public RestResult<Boolean> isMaximumFundingLevelConstant(long competitionId) {
-        return getWithRestResult(grantClaimMaximumRestURL + "/maximum-funding-level-overridden/" + competitionId, Boolean.class);
+        return getWithRestResult(GRANT_CLAIM_MAXIMUM_REST_URL + "/maximum-funding-level-overridden/" + competitionId, Boolean.class);
     }
 }

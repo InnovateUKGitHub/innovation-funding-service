@@ -34,10 +34,6 @@ Non registered users non companies house route
     And the user clicks the button/link                          link = Continue and create an account
     And the user selects the radio button                        organisationTypeId    radio-1
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
-#  TODO should uncomment on completing ifs-7724
-#    When the user clicks the Not on companies house link         org2
-#    Then the user clicks the button/link                         jQuery = .govuk-button:contains("Save and continue")
-#    And The user should see the element                          jQuery = h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -131,11 +127,3 @@ the user is redirected to overview page if he has been there already
     the user clicks the button/link      link = Application team
     logout as user
 
-the user completes funding level in application
-    the user clicks the button/link          link = Your project finances
-    the user clicks the button/link          link = Your funding
-    the user selects the radio button        requestingFunding   true
-    the user enters text to a text field     css = [name^="grantClaimPercentage"]  100
-    the user selects the radio button        otherFunding   false
-    the user clicks the button/link          jQuery = button:contains("Mark as complete")
-    the user clicks the button/link          link = Your funding

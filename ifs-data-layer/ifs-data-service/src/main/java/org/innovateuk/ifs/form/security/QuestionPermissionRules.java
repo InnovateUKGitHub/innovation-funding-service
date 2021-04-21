@@ -7,6 +7,8 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.NORTHERN_IRELAND_DECLARATION;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isAnonymous;
 
 @Component
@@ -29,6 +31,8 @@ public class QuestionPermissionRules {
 
     @PermissionRule(value = "ASSESS", description = "Only questions for the assessors can be assessed")
     public boolean onlyAssessableQuestionsCanBeAssessed(QuestionResource questionResource, UserResource user) {
-        return !questionResource.getMultipleStatuses();
+        return !questionResource.getMultipleStatuses() ||
+                SUBSIDY_BASIS.equals(questionResource.getQuestionSetupType()) ||
+                NORTHERN_IRELAND_DECLARATION.equals(questionResource.getQuestionSetupType());
     }
 }

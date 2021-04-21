@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form;
 
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -9,14 +10,16 @@ public class FundingLevelMaximumForm extends CompetitionSetupForm {
     private Long grantClaimMaximumId;
     private Long categoryId;
     private OrganisationSize organisationSize;
+    private FundingRules fundingRules;
     private Integer maximum;
 
     public FundingLevelMaximumForm() {}
 
-    public FundingLevelMaximumForm(Long grantClaimMaximumId, Long categoryId, OrganisationSize organisationSize, Integer maximum) {
+    public FundingLevelMaximumForm(Long grantClaimMaximumId, Long categoryId, OrganisationSize organisationSize, FundingRules fundingRules, Integer maximum) {
         this.grantClaimMaximumId = grantClaimMaximumId;
         this.categoryId = categoryId;
         this.organisationSize = organisationSize;
+        this.fundingRules = fundingRules;
         this.maximum = maximum;
     }
 
@@ -44,6 +47,14 @@ public class FundingLevelMaximumForm extends CompetitionSetupForm {
         this.organisationSize = organisationSize;
     }
 
+    public FundingRules getFundingRules() {
+        return fundingRules;
+    }
+
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
+    }
+
     public Integer getMaximum() {
         return maximum;
     }
@@ -53,10 +64,10 @@ public class FundingLevelMaximumForm extends CompetitionSetupForm {
     }
 
     public static FundingLevelMaximumForm fromGrantClaimMaximumResource(GrantClaimMaximumResource grantClaimMaximum) {
-        return new FundingLevelMaximumForm(grantClaimMaximum.getId(), grantClaimMaximum.getResearchCategory().getId(), grantClaimMaximum.getOrganisationSize(), grantClaimMaximum.getMaximum());
+        return new FundingLevelMaximumForm(grantClaimMaximum.getId(), grantClaimMaximum.getResearchCategory().getId(), grantClaimMaximum.getOrganisationSize(), grantClaimMaximum.getFundingRules(), grantClaimMaximum.getMaximum());
     }
 
-    public static FundingLevelMaximumForm singleValueForm(Integer maximum) {
-        return new FundingLevelMaximumForm(null, null, null, maximum);
+    public static FundingLevelMaximumForm singleValueForm(Integer maximum, FundingRules fundingRules) {
+        return new FundingLevelMaximumForm(null, null, null, fundingRules, maximum);
     }
 }

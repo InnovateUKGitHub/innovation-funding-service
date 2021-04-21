@@ -6,16 +6,17 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.testdata.builders.data.CompetitionLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,20 +25,19 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -52,11 +52,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            CompetitionResource newCompetition = competitionSetupService.
+            CompetitionResource competitionWithId = competitionSetupService.
                     create().
                     getSuccess();
 
-            updateCompetitionInCompetitionData(data, newCompetition.getId());
+            updateCompetitionInCompetitionData(data, competitionWithId.getId());
         });
     }
 
@@ -64,22 +64,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         return asCompAdmin(data -> {
 
-            CompetitionResource newCompetition = competitionSetupService.
+            CompetitionResource competitionWithId = competitionSetupService.
                     createNonIfs().
                     getSuccess();
 
-            updateCompetitionInCompetitionData(data, newCompetition.getId());
-        });
-    }
-
-    public CompetitionDataBuilder withExistingCompetition(Long competitionId) {
-
-        return asCompAdmin(data -> {
-            CompetitionResource existingCompetition = competitionService.getCompetitionById(competitionId).getSuccess();
-            updateCompetitionInCompetitionData(data, existingCompetition.getId());
-
-            publicContentService.findByCompetitionId(competitionId).andOnFailure(() ->
-                    publicContentService.initialiseByCompetitionId(competitionId).getSuccess());
+            updateCompetitionInCompetitionData(data, competitionWithId.getId());
         });
     }
 
@@ -91,90 +80,62 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name,
-                                                String competitionTypeName,
-                                                List<String> innovationAreaNames,
-                                                String innovationSectorName,
-                                                FundingRules fundingRules,
-                                                List<String> researchCategoryNames,
-                                                String leadTechnologist,
-                                                String compExecutive,
-                                                String budgetCode,
-                                                String pafCode,
-                                                String code,
-                                                String activityCode,
-                                                Boolean multiStream,
-                                                String collaborationLevelCode,
-                                                List<OrganisationTypeEnum> leadApplicantTypes,
-                                                Integer researchRatio,
-                                                Boolean resubmission,
-                                                String nonIfsUrl,
-                                                FundingType fundingType,
-                                                CompetitionCompletionStage completionStage,
-                                                Boolean includeJesForm,
-                                                ApplicationFinanceType applicationFinanceType,
-                                                Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation,
-                                                Boolean alwaysOpen) {
+    public CompetitionDataBuilder withBasicData(CompetitionLine line) {
 
         return asCompAdmin(data -> {
 
             doCompetitionDetailsUpdate(data, competition -> {
 
-                if (competitionTypeName != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName);
+                if (line.getCompetitionType() != null) {
+                    CompetitionType competitionType = competitionTypeRepository.findByName(line.getCompetitionType().getText());
                     competition.setCompetitionType(competitionType.getId());
                 }
 
-                List<Long> innovationAreas = simpleFilter(
-                        simpleMap(innovationAreaNames, this::getInnovationAreaIdOrNull),
-                        Objects::nonNull
-                );
+                Long innovationSector = getInnovationSectorIdOrNull(line.getInnovationSector());
 
-                List<Long> researchCategories = simpleFilter(
-                        simpleMap(researchCategoryNames, this::getResearchCategoryIdOrNull),
-                        Objects::nonNull
-                );
+                CollaborationLevel collaborationLevel = line.getCollaborationLevel();
 
-                Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
+                if (!isEmpty(line.getLeadApplicantTypes())) {
+                    List<Long> leadApplicantTypeIds = line.getLeadApplicantTypes()
+                            .stream()
+                            .map(OrganisationTypeEnum::getId)
+                            .collect(Collectors.toList());
 
-                CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
+                    competition.setLeadApplicantTypes(leadApplicantTypeIds);
+                }
 
-                List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
-
-                competition.setName(name);
-                competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
+                competition.setName(line.getName());
+                if (line.getInnovationAreas() != null) {
+                    competition.setInnovationAreas(line.getInnovationAreas());
+                }
                 competition.setInnovationSector(innovationSector);
-                competition.setResearchCategories(researchCategories.isEmpty() ? emptySet() : newHashSet(researchCategories));
-                competition.setFundingRules(fundingRules);
-                competition.setMaxResearchRatio(30);
+                competition.setResearchCategories(line.getResearchCategory());
+                competition.setFundingRules(line.getFundingRules());
+                competition.setMaxResearchRatio(line.getResearchRatio());
                 competition.setAcademicGrantPercentage(100);
-                competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
-                competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
-                competition.setPafCode(pafCode);
-                competition.setCode(code);
-                competition.setBudgetCode(budgetCode);
-                competition.setActivityCode(activityCode);
+                competition.setLeadTechnologist(line.getLeadTechnologist());
+                competition.setExecutive(line.getCompExecutive());
+                competition.setPafCode(line.getPafCode());
+                competition.setCode(line.getCode());
+                competition.setBudgetCode(line.getBudgetCode());
+                competition.setActivityCode(line.getActivityCode());
                 competition.setCollaborationLevel(collaborationLevel);
-                competition.setLeadApplicantTypes(leadApplicantTypeIds);
-                competition.setMaxResearchRatio(researchRatio);
-                competition.setResubmission(resubmission);
-                competition.setMultiStream(multiStream);
-                competition.setNonIfsUrl(nonIfsUrl);
-                competition.setIncludeJesForm(includeJesForm);
-                competition.setApplicationFinanceType(applicationFinanceType);
-                competition.setApplicationFinanceType(STANDARD);
-                competition.setIncludeProjectGrowthTable(includeProjectGrowth);
-                competition.setIncludeYourOrganisationSection(includeYourOrganisation);
-                competition.setFundingType(fundingType);
-                competition.setCompletionStage(completionStage);
-                competition.setAlwaysOpen(alwaysOpen);
+                competition.setResubmission(line.getResubmission());
+                competition.setMultiStream(line.getMultiStream());
+                competition.setNonIfsUrl(line.getNonIfsUrl());
+                competition.setIncludeJesForm(line.getIncludeJesForm());
+                competition.setApplicationFinanceType(line.getApplicationFinanceType());
+                competition.setIncludeProjectGrowthTable(line.getIncludeProjectGrowth());
+                competition.setIncludeYourOrganisationSection(line.getIncludeYourOrganisation());
+                competition.setFundingType(line.getFundingType());
+                competition.setCompletionStage(line.getCompetitionCompletionStage());
+                competition.setAlwaysOpen(isAlwaysOpen(line));
             });
         });
     }
 
-    private Long getInnovationAreaIdOrNull(String name) {
-        return !isBlank(name) ? innovationAreaRepository.findByName(name).getId() : null;
+    private boolean isAlwaysOpen(CompetitionLine line) {
+        return line.getAlwaysOpen() != null ? line.getAlwaysOpen() : false;
     }
 
     private Long getInnovationSectorIdOrNull(String name) {
@@ -208,11 +169,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
-            grantClaimMaximumService.revertToDefault(data.getCompetition().getId());
+            setGrantClaimMaximums(competition);
 
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
-                List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS);
                 Question question = questions.get(0);
                 question.setName("Generic question heading");
                 question.setShortName("Generic question title");
@@ -247,6 +208,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    private void setGrantClaimMaximums(CompetitionResource competition) {
+        grantClaimMaximumService.revertToDefault(competition.getId()).getSuccess();
+
+        List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).toOptionalIfNotFound().getSuccess()
+                .map(list ->
+                list.stream()
+                .filter(max -> max.getMaximum() == null)
+                .collect(Collectors.toList()))
+                .orElse(emptyList());
+        IntStream.range(0, maximumsNeedingALevel.size()).forEach(i -> {
+            GrantClaimMaximumResource maximum = maximumsNeedingALevel.get(i);
+            maximum.setMaximum(10 * i);
+            grantClaimMaximumService.save(maximum).getSuccess();
+        });
+    }
+
     private CompetitionSetupQuestionResource addMultipleChoiceQuestion(long competitionId) {
         CompetitionSetupQuestionResource question = questionSetupCompetitionService.createByCompetitionId(competitionId).getSuccess();
         question.setTextArea(false);
@@ -273,11 +250,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         Arrays.stream(CompetitionSetupSection.values())
                 .filter(section -> section != CompetitionSetupSection.PROJECT_DOCUMENT)
                 .forEach(competitionSetupSection -> {
-            competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
-            competitionSetupSection.getSubsections().forEach(subsection -> {
-                competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
-            });
-        });
+                    competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
+                    competitionSetupSection.getSubsections().forEach(subsection -> {
+                        competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
+                    });
+                });
     }
 
     private void markSetupApplicationQuestionsAsComplete(CompetitionData data) {
@@ -285,14 +262,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccess();
 
         // no application section or project details for h2020
-        competitionSections.stream().filter(section -> section.getName().equals("Application questions"))
+        competitionSections.stream().filter(section -> section.getType() == SectionType.APPLICATION_QUESTIONS)
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
-        competitionSections.stream().filter(section -> section.getName().equals("Project details"))
+        competitionSections.stream().filter(section -> section.getType() == SectionType.PROJECT_DETAILS)
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
         // only for ktp competitions
-        competitionSections.stream().filter(section -> section.getName().equals("Score Guidance"))
+        competitionSections.stream().filter(section -> section.getType() == SectionType.KTP_ASSESSMENT)
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
     }
@@ -359,34 +336,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder restoreOriginalMilestones() {
-        return asCompAdmin(data -> {
-
-            data.getOriginalMilestones().forEach(original -> {
-
-                MilestoneResource amendedMilestone =
-                        milestoneService.getMilestoneByTypeAndCompetitionId(original.getType(), data.getCompetition().getId()).
-                                getSuccess();
-
-                amendedMilestone.setDate(original.getDate());
-
-                milestoneService.updateMilestone(amendedMilestone).getSuccess();
-            });
-        });
-    }
-
-    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
+    public CompetitionDataBuilder withNewMilestones(CompetitionLine line) {
         return asCompAdmin(data ->
-            Stream.of(BooleanUtils.isTrue(alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
-                    .filter(m -> !m.isOnlyNonIfs())
-                    .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
-                    .forEach(type ->
-                milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
-                        .handleSuccessOrFailure(
-                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccess(),
-                                success -> success
+                Stream.of(BooleanUtils.isTrue(line.getAlwaysOpen()) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
+                        .filter(m -> !m.isOnlyNonIfs())
+                        .filter(milestoneType -> milestoneType.getPriority() <= line.getCompetitionCompletionStage().getLastMilestone().getPriority())
+                        .forEach(type ->
+                                milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
+                                        .handleSuccessOrFailure(
+                                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccess(),
+                                                success -> success
+                                        )
                         )
-            )
         );
     }
 
@@ -428,7 +389,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
         if (date.isBefore(now())) {
-            return asCompAdmin(data ->  competitionService.closeAssessment(data.getCompetition().getId()).getSuccess());
+            return asCompAdmin(data -> competitionService.closeAssessment(data.getCompetition().getId()).getSuccess());
         } else {
             return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
         }
@@ -453,9 +414,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withFundersPanelEndDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, NOTIFICATIONS);
     }
+
     public CompetitionDataBuilder withReleaseFeedbackDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, RELEASE_FEEDBACK);
     }
+
     public CompetitionDataBuilder withFeedbackReleasedDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, FEEDBACK_RELEASED);
     }
@@ -481,56 +444,53 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, String projectSize, List<String> keywords, boolean inviteOnly) {
+    public CompetitionDataBuilder withDefaultPublicContent(CompetitionLine line) {
         return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
 
-            if (published) {
-                publicContent.setShortDescription(shortDescription);
-                publicContent.setProjectFundingRange(fundingRange);
-                publicContent.setEligibilitySummary(eligibilitySummary);
-                publicContent.setSummary(competitionDescription);
-                publicContent.setProjectSize(projectSize);
-                publicContent.setKeywords(keywords);
-                publicContent.setInviteOnly(inviteOnly);
+            if (line.isPublished()) {
+                publicContent.setShortDescription("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow");
+                publicContent.setProjectFundingRange("Up to £35,000");
+                publicContent.setEligibilitySummary("UK based business of any size. Must involve at least one SME");
+                publicContent.setSummary("Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.\n" +
+                        "The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export opportunities for at least one UK small and medium-sized enterprise (SME).\n" +
+                        "We expect projects to range from total costs of £35,000 to £2 million. Projects should last between 6 months and 3 years.\n" +
+                        "There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.");
+                publicContent.setProjectSize("£15 million");
+                publicContent.setKeywords(asList(line.getName().split("\\s+"))); // keywords will now be competition name split
+                publicContent.setInviteOnly(line.isInviteOnly());
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
 
                 publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccess();
             }
-
         }));
     }
 
-    public CompetitionDataBuilder withApplicationFinances(Boolean includeJesForm,
-                                                          ApplicationFinanceType applicationFinanceType,
-                                                          Boolean includeProjectGrowth,
-                                                          Boolean includeYourOrganisation) {
+    public CompetitionDataBuilder withApplicationFinances(CompetitionLine line) {
 
         return asCompAdmin(data -> {
             CompetitionSetupFinanceResource competitionSetupFinanceResource
                     = new CompetitionSetupFinanceResource();
             competitionSetupFinanceResource.setCompetitionId(data.getCompetition().getId());
-            competitionSetupFinanceResource.setApplicationFinanceType(applicationFinanceType);
-            competitionSetupFinanceResource.setIncludeGrowthTable(includeProjectGrowth);
-            competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
-            competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
+            competitionSetupFinanceResource.setApplicationFinanceType(line.getApplicationFinanceType());
+            competitionSetupFinanceResource.setIncludeGrowthTable(line.getIncludeProjectGrowth());
+
+            competitionSetupFinanceResource.setIncludeYourOrganisationSection(line.getIncludeYourOrganisation());
+            competitionSetupFinanceResource.setIncludeJesForm(line.getIncludeJesForm());
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
         });
     }
 
-    public CompetitionDataBuilder withAssessmentConfig(Integer assessorCount,
-                                                       BigDecimal assessorPay,
-                                                       Boolean hasAssessmentPanel,
-                                                       Boolean hasInterviewStage,
-                                                       AssessorFinanceView assessorFinanceView) {
+    public CompetitionDataBuilder withAssessmentConfig(CompetitionLine line) {
         return asCompAdmin(data -> {
-        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
-        competitionAssessmentConfigResource.setAssessorCount(assessorCount);
-        competitionAssessmentConfigResource.setAssessorPay(assessorPay);
-        competitionAssessmentConfigResource.setHasAssessmentPanel(hasAssessmentPanel);
-        competitionAssessmentConfigResource.setHasInterviewStage(hasInterviewStage);
-        competitionAssessmentConfigResource.setAssessorFinanceView(assessorFinanceView);
-        competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
+            competitionAssessmentConfigResource.setAssessorCount(line.getAssessorCount());
+            competitionAssessmentConfigResource.setAssessorPay(BigDecimal.valueOf(100));
+            competitionAssessmentConfigResource.setHasAssessmentPanel(line.getHasAssessmentPanel());
+            competitionAssessmentConfigResource.setHasInterviewStage(line.getHasInterviewStage());
+            competitionAssessmentConfigResource.setAssessorFinanceView(line.getAssessorFinanceView());
+            competitionAssessmentConfigResource.setIncludeAverageAssessorScoreInNotifications(false);
+            competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }
 

@@ -8,10 +8,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,13 +81,13 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 .collect(Collectors.toSet());
 
         Set<Long> projectDetailsAndApplicationSections = parentSections.stream()
-                .filter(sectionResource -> "Project details".equals(sectionResource.getName()) || "Application questions".equals(sectionResource.getName()))
+                .filter(sectionResource -> SectionType.PROJECT_DETAILS == sectionResource.getType() || SectionType.APPLICATION_QUESTIONS == sectionResource.getType())
                 .map(SectionResource::getId)
                 .collect(Collectors.toSet());
 
         return questionResources.stream()
                 .filter(question -> projectDetailsAndApplicationSections.contains(question.getSection()))
-                .filter(question -> question.getType() != QuestionType.LEAD_ONLY)
+                .filter(QuestionResource::requiresSetup)
                 .map(QuestionResource::getId)
                 .collect(Collectors.toList());
     }

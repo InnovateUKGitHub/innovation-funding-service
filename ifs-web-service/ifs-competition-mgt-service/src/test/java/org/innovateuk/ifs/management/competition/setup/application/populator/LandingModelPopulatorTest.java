@@ -121,7 +121,7 @@ public class LandingModelPopulatorTest {
 
         List<SectionResource> sections = newSectionResource()
                 .withName("Application questions")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.APPLICATION_QUESTIONS)
                 .withQuestions(asList(questionId))
                 .build(1);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);

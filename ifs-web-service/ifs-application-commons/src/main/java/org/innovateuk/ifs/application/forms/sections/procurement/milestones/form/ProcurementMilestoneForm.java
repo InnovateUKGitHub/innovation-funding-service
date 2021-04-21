@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
-import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 
 import javax.validation.constraints.NotBlank;
@@ -109,7 +108,7 @@ public class ProcurementMilestoneForm {
                 .divide(new BigDecimal(totalCosts), 2, RoundingMode.HALF_UP);
     }
 
-    public void copyToResource(ApplicationProcurementMilestoneResource resource) {
+    public void copyToResource(ProcurementMilestoneResource resource) {
         resource.setId(id);
         resource.setMonth(month);
         resource.setDescription(description);

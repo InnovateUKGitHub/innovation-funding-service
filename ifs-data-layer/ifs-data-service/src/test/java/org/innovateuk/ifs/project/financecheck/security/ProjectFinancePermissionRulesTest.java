@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.financechecks.security.ProjectFinancePermissio
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -39,7 +40,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -64,7 +65,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewViability(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewViability(projectOrganisationCompositeId, user));
@@ -117,7 +118,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveViability(projectOrganisationCompositeId, user));
@@ -133,7 +134,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
@@ -186,10 +187,46 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void competitionFinanceUserCanSaveFundingRules() {
+
+        Long organisationId = 1L;
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        Competition competition = newCompetition().build();
+        Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(projectProcessRepository.findOneByTargetId(competitionFinanceProject.getId())).thenReturn(projectProcess);
+
+        assertTrue(rules.competitionFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, userResource));
+        assertFalse(rules.competitionFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, userResourceNotInCompetition));
+    }
+
+    @Test
+    public void projectFinanceUserCanSaveFundingRules() {
+
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
+                assertTrue(rules.projectFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveFundingRules(projectOrganisationCompositeId, user));
             }
         });
     }
@@ -202,7 +239,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanSaveCreditReport(projectId, user));
@@ -249,7 +286,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (user.hasAuthority(Authority.PROJECT_FINANCE)) {
                 assertTrue(rules.projectFinanceUserCanViewCreditReport(projectId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanViewCreditReport(projectId, user));
@@ -376,7 +413,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isProjectFinanceUser(user)) {
+            if (hasProjectFinanceAuthority(user)) {
                 assertTrue(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
             } else {
                 assertFalse(rules.internalUsersCanUpdateProjectFinance(projectFinanceResource, user));
@@ -391,7 +428,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         allGlobalRoleUsers.forEach(user -> {
-            if (isProjectFinanceUser(user)) {
+            if (hasProjectFinanceAuthority(user)) {
                 assertTrue(rules.projectFinanceUserCanResetFinanceChecks(projectId, user));
             } else {
                 assertFalse(rules.projectFinanceUserCanResetFinanceChecks(projectId, user));

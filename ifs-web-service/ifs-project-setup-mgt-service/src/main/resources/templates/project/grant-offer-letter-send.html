@@ -64,7 +64,7 @@
         </p>
 
         <ol class="govuk-list govuk-list--number">
-            <li><th:block th:text="|Copy the ${model.title.toLowerCase()} and paste it into the relevant section of the|"></th:block> <a href="/files/GOL_template.docx" class="govuk-link">template document</a>.</li>
+            <li><th:block th:text="|Copy the ${model.title.toLowerCase()} and paste it into the relevant section of the|"></th:block> <a th:href="${model.procurement} ? '/files/SBRI_contract_template.docx' : '/files/GOL_template.docx'" class="govuk-link">template document</a>.</li>
             <li>Edit it only if your changes have been fully approved.</li>
             <li>Use the additional information box to get details for your edits.</li>
             <li>Delete the additional information box.</li>

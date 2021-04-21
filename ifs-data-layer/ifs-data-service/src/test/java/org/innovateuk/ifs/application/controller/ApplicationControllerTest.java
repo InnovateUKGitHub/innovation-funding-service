@@ -6,10 +6,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
-import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
-import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.*;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.domain.User;
@@ -58,9 +56,37 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private ApplicationDeletionService applicationDeletionService;
 
+    @Mock
+    private AssessmentService assessmentServiceMock;
+
+    @Mock
+    private ApplicationMigrationService applicationMigrationService;
+
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
+    }
+
+    @Test
+    public void testApplicationNoAssessment() throws Exception {
+        long applicationId = 1L;
+
+        when(assessmentServiceMock.existsByTargetId(applicationId)).thenReturn(serviceSuccess(false));
+
+        mockMvc.perform(get("/application/{id}/has-assessment", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(Boolean.FALSE)));
+    }
+
+    @Test
+    public void testApplicationHasAssessment() throws Exception {
+        long applicationId = 1L;
+
+        when(assessmentServiceMock.existsByTargetId(applicationId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/application/{id}/has-assessment", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(Boolean.TRUE)));
     }
 
     @Test
@@ -235,5 +261,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         mockMvc.perform(post("/application/{applicationId}/hide-for-user/{userId}", applicationId, userId))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void migrateApplication() throws Exception {
+        long applicationId = 1L;
+        when(applicationMigrationService.migrateApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/application/migrate-application/{applicationId}", applicationId))
+                .andExpect(status().isOk());
     }
 }

@@ -2,8 +2,11 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import com.newrelic.api.agent.Trace;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationMigration;
+import org.innovateuk.ifs.application.domain.MigrationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.transactional.ApplicationMigrationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
@@ -40,6 +43,9 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Autowired
     private KtpProjectNotificationService ktpProjectNotificationService;
 
+    @Autowired
+    private ApplicationMigrationService applicationMigrationService;
+
     @Override
     public Optional<Long> findProjectToCreate(int index) {
         Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(index, 1, Direction.ASC, "application.id"));
@@ -55,14 +61,8 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Trace(dispatcher = true)
     public ServiceResult<ScheduleResponse> createProject(long applicationId) {
         return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
-                .andOnSuccess(projectToBeCreated -> {
-                    projectToBeCreated.setPending(false);
-                    return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
-                            .andOnSuccessReturn(() -> {
-                                projectToBeCreated.setMessage("Success");
-                                return new ScheduleResponse("Project created: " + applicationId);
-                            });
-                });
+                .andOnSuccess(this::createProject)
+                .andOnSuccess(this::migrateApplicationIfRequired);
     }
 
     @Override
@@ -76,6 +76,36 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
             return getApplication(applicationId)
                     .andOnSuccessReturnVoid(application -> projectToBeCreatedRepository.save(new ProjectToBeCreated(application, emailBody)));
         }
+    }
+
+    @Override
+    @Transactional
+    public void createAllPendingProjects() {
+        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, Integer.MAX_VALUE, Direction.ASC, "application.id"));
+        page.getContent().forEach(this::createProject);
+    }
+
+    private ServiceResult<ProjectToBeCreated> createProject(ProjectToBeCreated projectToBeCreated) {
+        projectToBeCreated.setPending(false);
+        return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
+                .andOnSuccessReturn(() -> {
+                    projectToBeCreated.setMessage("Success");
+                    return projectToBeCreated;
+                });
+    }
+
+    private ServiceResult<ScheduleResponse> migrateApplicationIfRequired(ProjectToBeCreated projectToBeCreated) {
+        Optional<ApplicationMigration> applicationMigration = applicationMigrationService.findByApplicationIdAndStatus(projectToBeCreated.getApplication().getId(), MigrationStatus.CREATED).getSuccess();
+        if (applicationMigration.isPresent()) {
+            applicationMigrationService.migrateApplication(projectToBeCreated.getApplication().getId())
+                    .andOnSuccess(() -> {
+                        ApplicationMigration migration = applicationMigration.get();
+                        migration.setStatus(MigrationStatus.MIGRATED);
+                        applicationMigrationService.updateApplicationMigrationStatus(migration);
+                    });
+        }
+
+        return serviceSuccess(new ScheduleResponse("Project created: " + projectToBeCreated.getApplication().getId()));
     }
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {

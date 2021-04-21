@@ -12,6 +12,9 @@ import org.innovateuk.ifs.finance.resource.cost.Vat;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * Application finance resource holds the organisation's finance resources for an target
@@ -23,9 +26,12 @@ public abstract class BaseFinanceResource {
     protected String organisationName;
     protected Long target;
     protected int maximumFundingLevel;
+    private Boolean northernIrelandDeclaration;
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
     private FinancialYearAccountsResource financialYearAccounts;
+    private Boolean fecModelEnabled;
+    private Long fecFileEntry;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -33,11 +39,19 @@ public abstract class BaseFinanceResource {
             this.organisation = originalFinance.getOrganisation();
             this.target = originalFinance.getTarget();
             this.organisationSize = originalFinance.getOrganisationSize();
+            this.fecFileEntry = originalFinance.getFecFileEntry();
+            this.fecModelEnabled = originalFinance.getFecModelEnabled();
         }
     }
 
     public BaseFinanceResource() {
         // no-arg constructor
+    }
+
+    public BaseFinanceResource(Boolean fecModelEnabled,
+                               Long fecFileEntry) {
+        this.fecModelEnabled = fecModelEnabled;
+        this.fecFileEntry = fecFileEntry;
     }
 
     public BaseFinanceResource(long id,
@@ -112,6 +126,14 @@ public abstract class BaseFinanceResource {
         return financialYearAccounts;
     }
 
+    public Boolean getNorthernIrelandDeclaration() {
+        return northernIrelandDeclaration;
+    }
+
+    public void setNorthernIrelandDeclaration(Boolean northernIrelandDeclaration) {
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
+    }
+
     public void setFinancialYearAccounts(FinancialYearAccountsResource financialYearAccounts) {
         this.financialYearAccounts = financialYearAccounts;
     }
@@ -122,6 +144,22 @@ public abstract class BaseFinanceResource {
         } else {
             return null;
         }
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
+    }
+
+    public Long getFecFileEntry() {
+        return fecFileEntry;
+    }
+
+    public void setFecFileEntry(Long fecFileEntry) {
+        this.fecFileEntry = fecFileEntry;
     }
 
     @JsonIgnore
@@ -207,18 +245,31 @@ public abstract class BaseFinanceResource {
         return total;
     }
 
-    @JsonIgnore
-    public boolean isVatRegistered() {
+    private Optional<Vat> vat(){
         if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(FinanceRowType.VAT)) {
             FinanceRowCostCategory financeRowCostCategory = financeOrganisationDetails.get(FinanceRowType.VAT);
-            Vat vat = financeRowCostCategory.getCosts().stream()
+            return financeRowCostCategory.getCosts().stream()
                     .findAny()
                     .filter(c -> c instanceof Vat)
-                    .map(c -> (Vat) c)
-                    .orElse(null);
-            return vat == null ? false : vat.getRegistered() == null ? false : vat.getRegistered();
+                    .map(c -> (Vat) c);
         } else {
-            return false;
+            return Optional.empty();
         }
+    }
+
+    @JsonIgnore
+    public boolean isVatRegistered() {
+        return vat()
+                .flatMap(vat -> ofNullable(vat.getRegistered()))
+                .orElse(false);
+    }
+
+    @JsonIgnore
+    public BigDecimal getVatRate() {
+        return vat()
+                .filter(vat -> vat.getRegistered() != null)
+                .filter(Vat::getRegistered)
+                .flatMap(vat -> ofNullable(vat.getRate()))
+                .orElse(BigDecimal.ZERO);
     }
 }

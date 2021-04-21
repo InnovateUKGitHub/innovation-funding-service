@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
@@ -56,11 +56,13 @@ createContainer.hostName = "survey-svc"
 createContainer.containerName = "survey-svc"
 createContainer.containerId = "survey-svc"
 createContainer.portBindings = ['9007:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 pullImageAndCreateContainer.hostName = "survey-svc"
 pullImageAndCreateContainer.containerName = "survey-svc"
 pullImageAndCreateContainer.containerId = "survey-svc"
 pullImageAndCreateContainer.portBindings = ['9007:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 prepareDockerBaseInput {
     inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")

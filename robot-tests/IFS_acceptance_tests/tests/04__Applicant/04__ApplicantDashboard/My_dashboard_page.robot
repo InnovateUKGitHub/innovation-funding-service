@@ -14,7 +14,7 @@ Resource          ../../../resources/defaultResources.robot
 ${applicationName}      Delete app invite test
 ${knowledgeBaseOrg}     Queen Mary University of London
 ${inviteEmail}          test@testing.com
-${compName}             No aid comp
+${compName}             KTP dashboard competition
 
 *** Test Cases ***
 Milestone date for application in progress is visible

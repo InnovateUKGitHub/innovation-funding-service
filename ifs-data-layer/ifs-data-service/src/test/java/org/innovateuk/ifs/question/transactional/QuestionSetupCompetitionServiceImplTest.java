@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.question.transactional;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.*;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
@@ -28,7 +30,6 @@ import java.util.Optional;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
@@ -46,7 +47,6 @@ import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionResourceBuilde
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -111,7 +111,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
-                                .withAllowedFileTypes(asSet(PDF, SPREADSHEET))
+                                .withAllowedFileTypes(ImmutableSet.of(PDF, SPREADSHEET))
                                 .withGuidanceAnswer(fileUploadGuidance)
                                 .withActive(true)
                                 .build(),
@@ -202,7 +202,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), QuestionSetupType.SCOPE);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
-        assertEquals(resource.getAllowedAppendixResponseFileTypes(), asSet(PDF, SPREADSHEET));
+        assertEquals(resource.getAllowedAppendixResponseFileTypes(), ImmutableSet.of(PDF, SPREADSHEET));
         assertEquals(resource.getTemplateDocument(), true);
         assertEquals(resource.getMultipleChoice(), true);
         assertEquals(resource.getChoices().size(), 2);
@@ -313,7 +313,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setNumberOfUploads(0);
-        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(ImmutableSet.of(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         boolean appendixEnabled = true;
@@ -324,7 +324,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withActive(appendixEnabled)
                 .withWordCount(1)
                 .withGuidanceAnswer(guidanceAnswer)
-                .withAllowedFileTypes(asSet(allowedFileTypes))
+                .withAllowedFileTypes(ImmutableSet.of(allowedFileTypes))
                 .build();
         //Override repository response set in prerequisites test prep function
         when(formInputRepository.findByQuestionIdAndScopeAndType(
@@ -337,7 +337,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(true, result.isSuccess());
         assertNotEquals(appendixEnabled, appendixFormInput.getActive());
-        assertNotEquals(allowedFileTypes, appendixFormInput.getAllowedFileTypes());
+        assertNull(appendixFormInput.getAllowedFileTypes());
         assertNotEquals(guidanceAnswer, appendixFormInput.getGuidanceAnswer());
     }
 
@@ -350,14 +350,14 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setNumberOfUploads(0);
-        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(ImmutableSet.of(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(true)
                 .withWordCount(1)
                 .withGuidanceAnswer("Only excel files with spaghetti VB macros allowed")
-                .withAllowedFileTypes(asSet(allowedFileTypes))
+                .withAllowedFileTypes(ImmutableSet.of(allowedFileTypes))
                 .build();
 
         //Override repository response set in prerequisites test prep function
@@ -382,7 +382,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setNumberOfUploads(1);
-        resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
+        resource.setAllowedAppendixResponseFileTypes(ImmutableSet.of(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -398,7 +398,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
         assertTrue(appendixFormInput.getActive());
         assertEquals(resource.getNumberOfUploads(), appendixFormInput.getWordCount());
-        assertEquals(asSet(PDF), appendixFormInput.getAllowedFileTypes());
+        assertEquals(ImmutableSet.of(PDF), appendixFormInput.getAllowedFileTypes());
         assertEquals(fileUploadGuidance, appendixFormInput.getGuidanceAnswer());
     }
 
@@ -411,7 +411,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setNumberOfUploads(1);
-        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
+        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(ImmutableSet.of(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -433,7 +433,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setNumberOfUploads(3);
-        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
+        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(ImmutableSet.of(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -587,8 +587,8 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Question createdQuestion = newQuestion().build();
 
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName()))
-                .thenReturn(section);
+        when(sectionRepository.findByTypeAndCompetitionId(SectionType.PROJECT_DETAILS, competition.getId()))
+                .thenReturn(Optional.of(section));
         when(questionRepository.save(createResearchCategoryQuestionExpectations(competition, section)))
                 .thenReturn(createdQuestion);
 
@@ -597,7 +597,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(competitionRepositoryMock).findById(competition.getId());
-        verify(sectionRepository).findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS.getName());
+        verify(sectionRepository).findByTypeAndCompetitionId(SectionType.PROJECT_DETAILS, competition.getId());
         verify(questionRepository).save(createResearchCategoryQuestionExpectations(competition, section));
         verify(questionPriorityOrderService).prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
     }

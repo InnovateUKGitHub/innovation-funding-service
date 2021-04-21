@@ -37,11 +37,11 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
     static {
         Map<String, Sort> sortFieldToDbSortFields = new HashMap<>();
-        sortFieldToDbSortFields.put("id", new Sort(ASC, "id"));
-        sortFieldToDbSortFields.put("appTitle", new Sort(ASC, "name", "id"));
-        sortFieldToDbSortFields.put("leadOrg", new Sort(ASC, "leadOrganisation", "id"));
-        sortFieldToDbSortFields.put("assignedApps", new Sort(ASC, "assessors", "id"));
-        sortFieldToDbSortFields.put("completedApps", new Sort(ASC, "submitted", "id"));
+        sortFieldToDbSortFields.put("id", Sort.by(ASC, "id"));
+        sortFieldToDbSortFields.put("appTitle", Sort.by(ASC, "name", "id"));
+        sortFieldToDbSortFields.put("leadOrg", Sort.by(ASC, "leadOrganisation", "id"));
+        sortFieldToDbSortFields.put("assignedApps", Sort.by(ASC, "assessors", "id"));
+        sortFieldToDbSortFields.put("completedApps", Sort.by(ASC, "submitted", "id"));
 
         SORT_FIELD_TO_DB_SORT_FIELDS = Collections.unmodifiableMap(sortFieldToDbSortFields);
     }

@@ -68,8 +68,7 @@
                     <dd th:unless="${model.financeCheckSummaryResource.procurement}" th:text="${#numbers.formatDecimal(model.financeCheckSummaryResource.totalPercentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}"></dd>
                 </dl>
                 <a th:unless="${model.financeCheckSummaryResource.procurement}"
-                   th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View
-                    finances</a>
+                   th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View finances</a>
             </div>
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Project details</h2>
@@ -108,10 +107,13 @@
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header govuk-!-font-weight-bold" scope="col">Organisation</th>
+                        <th th:if="${model.subsidyControlCompetition}" scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Funding rules</th>
+                        <th th:if="${model.subsidyControlCompetition}" scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold cell-border-right">Funding</th>
                         <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Viability</th>
                         <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold cell-border-right">RAG</th>
                         <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Eligibility</th>
                         <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold cell-border-right">RAG</th>
+                        <th th:if="${model.displayMilestoneColumn()}" scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold cell-border-right">Payment milestones</th>
                         <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Queries raised</th>
                         <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Notes</th>
                     </tr>
@@ -122,6 +124,18 @@
                         <th:block th:text="${orgDetails.name}">org name</th:block>
                         <th:block th:if="${orgDetails.lead && model.collaborativeProject}"> (Lead)</th:block>
                     </th>
+                    <td th:if="${model.subsidyControlCompetition}" class="govuk-table__cell aligncentre">
+                        <a th:if="${orgDetails.fundingRulesState == null}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                           class="govuk-link">Review</a>
+                        <a th:unless="${orgDetails.fundingRulesState == null}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/funding-rules(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                           th:text="${#messages.msg('ifs.project.setup.fundingrules.' + orgDetails.fundingRulesState)}"
+                           class="govuk-link">Review</a>
+                    </td>
+                    <td th:if="${model.subsidyControlCompetition}" class="govuk-table__cell aligncentre cell-border-right">
+                        <span th:text="${orgDetails.fundingRules.displayName}">Subsidy control</span>
+                    </td>
                     <td class="govuk-table__cell aligncentre">
                         <a th:if="${!orgDetails.viability.notApplicable}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
@@ -160,6 +174,11 @@
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
                               th:classappend="${'eligibility-rag-' + status.index}">Green</span>
                     </td>
+                    <td th:if="${model.displayMilestoneColumn()}" class="govuk-table__cell aligncentre cell-border-right">
+                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                           th:text="${orgDetails.paymentMilestoneApproved ? 'Approved' : 'Review'}"
+                           class="govuk-link"/>
+                    </td>
                     <td class="govuk-table__cell aligncentre">
                         <span th:if="${model.financeCheckSummaryResource.ktp && orgDetails.eligibility.notApplicable}">N/A</span>
                         <a th:unless="${model.financeCheckSummaryResource.ktp && orgDetails.eligibility.notApplicable }"
@@ -184,7 +203,7 @@
             <p class="govuk-body"
                th:text="${model.hasSpendProfileStage} ?
                  'To generate your spend profile, the viability and eligibility sections must be approved for all partners. This will create their individual flat spend profiles. These spend profiles can be edited during the project.' :
-            'You must approve the viability and eligibility sections before you can generate the grant offer letter.'"></p>
+            'Each section must be approved before you are able to progress to the final stages of project setup.'"></p>
             <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled"
                     th:text="${model.hasSpendProfileStage} ?
                     'Generate spend profile' : 'Approve finance checks'"

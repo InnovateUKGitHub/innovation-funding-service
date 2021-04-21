@@ -2,6 +2,8 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
@@ -194,6 +196,17 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
+    public IndustrialCostDataBuilder withNorthernIrelandDeclaration(boolean northernIrelandDeclaration) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setNorthernIrelandDeclaration(northernIrelandDeclaration);
+
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
 
     public IndustrialCostDataBuilder withLocation() {
         return with(data -> {
@@ -296,6 +309,16 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
+    public IndustrialCostDataBuilder withAcademicAndSecretarialSupport(BigInteger cost) {
+        return addCostItem("Academic And Secretarial Support", (finance) ->
+                new AcademicAndSecretarialSupport(finance.getId(), null, cost));
+    }
+
+    public IndustrialCostDataBuilder withIndirectCosts(BigInteger cost) {
+        return addCostItem("Indirect costs", (finance) ->
+                new IndirectCost(finance.getId(), null, cost));
+    }
+
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn, Predicate<IndustrialCostData> predicate) {
         return with(data -> {
             if (predicate.test(data)) {
@@ -329,6 +352,26 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                 financeRowCostsService.create(newCostItem.getTargetId(), newCostItem).
                         getSuccess();
             }
+        });
+    }
+
+    public IndustrialCostDataBuilder withFecEnabled(Boolean enabled) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+            applicationFinance.setFecModelEnabled(enabled);
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+    public IndustrialCostDataBuilder withUploadedFecFile() {
+        return with(data -> {
+            FileEntry fileEntry = fileEntryRepository.save(
+                    new FileEntry(null, "fec-file" + data.getApplicationFinance().getId() + ".pdf", "application/pdf", 7945));
+            ApplicationFinance finance = applicationFinanceRepository.findById(data.getApplicationFinance().getId()).get();
+            finance.setFecFileEntry(fileEntry);
+            applicationFinanceRepository.save(finance);
         });
     }
 

@@ -14,4 +14,5 @@ public interface GrantProcessRepository extends PagingAndSortingRepository<Grant
 
     List<GrantProcess> findByPendingIsTrue();
 
+    void deleteByApplicationId(long applicationId);
 }

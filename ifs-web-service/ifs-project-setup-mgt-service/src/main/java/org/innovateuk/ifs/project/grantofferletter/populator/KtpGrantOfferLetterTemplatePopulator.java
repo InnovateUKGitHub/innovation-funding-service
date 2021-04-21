@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
@@ -45,7 +44,7 @@ public class KtpGrantOfferLetterTemplatePopulator {
     @Autowired
     private KtpFinanceModelPopulator ktpFinanceModelPopulator;
 
-    public KtpGrantOfferLetterTemplateViewModel populate(ProjectResource project, CompetitionResource competition) {
+    public KtpGrantOfferLetterTemplateViewModel populate(ProjectResource project) {
         String projectName = project.getName();
         long applicationId = project.getApplication();
         ProjectUserResource projectUserResource = projectRestService.getProjectManager(project.getId()).getSuccess();

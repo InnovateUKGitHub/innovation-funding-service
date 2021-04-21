@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.repository;
 
+import com.google.common.collect.ImmutableSet;
 import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -38,7 +39,7 @@ public class MilestoneRepositoryIntegrationTest extends BaseRepositoryIntegratio
         flushAndClearSession();
 
         //Assert that the dates are read out of the database in the same timezone and are all equal.
-        Set<ZonedDateTime> uniqueSet = CollectionHelper.asSet(repository.findById(utcId).get().getDate(),
+        Set<ZonedDateTime> uniqueSet = ImmutableSet.of(repository.findById(utcId).get().getDate(),
                 repository.findById(actId).get().getDate(),
                 repository.findById(ectId).get().getDate(),
                 repository.findById(betId).get().getDate());
