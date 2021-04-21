@@ -236,7 +236,6 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
         verify(competitionPostSubmissionRestService).reopenAssessmentPeriod(competitionId);
-        verifyNoMoreInteractions(competitionRestService);
     }
 
     @Test

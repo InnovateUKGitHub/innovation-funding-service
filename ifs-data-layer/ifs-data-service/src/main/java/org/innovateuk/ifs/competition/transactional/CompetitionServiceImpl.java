@@ -135,7 +135,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccess();
         if (!keyStatisticsResource.isCanManageFundingNotifications()) {
-            competitionRepository.findById(competitionId).get();
             milestoneRepository.deleteByTypeAndCompetitionId(MilestoneType.ASSESSMENT_CLOSED, competitionId);
             return serviceSuccess();
         } else {
