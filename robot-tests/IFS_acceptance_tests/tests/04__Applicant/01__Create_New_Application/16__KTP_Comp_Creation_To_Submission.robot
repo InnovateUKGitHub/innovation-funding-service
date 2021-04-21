@@ -186,7 +186,7 @@ The applicants should not see knowledge based organisations when joining a non-k
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779
     Given log in as a different user                    &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative  Yes
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148

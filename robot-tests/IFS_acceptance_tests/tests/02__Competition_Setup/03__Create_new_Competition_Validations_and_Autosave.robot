@@ -164,7 +164,7 @@ Milestones: Server side validations, submission time is default
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]
-    Given the user fills in the CS Milestones   PROJECT_SETUP   ${month}   ${nextyear}
+    Given the user fills in the CS Milestones   PROJECT_SETUP   ${month}   ${nextyear}   Yes
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632

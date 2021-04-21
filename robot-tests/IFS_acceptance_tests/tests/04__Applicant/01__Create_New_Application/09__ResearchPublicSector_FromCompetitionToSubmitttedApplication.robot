@@ -103,7 +103,7 @@ The competition admin creates a competition for
     the user fills in the CS Project eligibility              ${orgType}  1  true  collaborative     # 1 means 30%
     the user fills in the CS funding eligibility              true   ${compType_Generic}  SUBSIDY_CONTROL
     the user selects the organisational eligibility to no     false
-    the user fills in the CS Milestones                       PROJECT_SETUP   ${month}   ${nextyear}
+    the user fills in the CS Milestones                       PROJECT_SETUP   ${month}   ${nextyear}   Yes
     the internal user can see that the Generic competition has only one Application Question
     the user removes the Project details questions and marks the Application section as done  yes  Generic  ${competition}
     the user fills in the CS Assessors                        GRANT

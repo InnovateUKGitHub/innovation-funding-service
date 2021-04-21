@@ -9,7 +9,7 @@ ${Non_Ifs_Comp}      Webtest Non IFS Comp 20
 
 *** Keywords ***
 The competition admin creates competition
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}  ${isOpenComp}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
@@ -19,7 +19,7 @@ The competition admin creates competition
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility            ${researchCategory}  ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
+    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}  ${isOpenComp}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
@@ -210,12 +210,13 @@ the user selects Research Participation if required
     Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id = researchParticipation
 
 the user fills in the CS Milestones
-    [Arguments]  ${completionStage}  ${month}  ${nextyear}
+    [Arguments]  ${completionStage}  ${month}  ${nextyear}  ${isOpenComp}
     the user clicks the button/link    link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  ${completionStage}
-    Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
+    Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage  ${completionStage}
+    ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
+    Run Keyword If   "${completionStage}" == "RELEASE_FEEDBACK"  or   "${completionStage}" == "PROJECT_SETUP"  the user completes application submission page   ${isOpenComp}
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
@@ -745,3 +746,15 @@ the user select stakeholder and add to competition
     the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
     the user clicks the button/link     jQuery = a:contains("Added to competition")
     the user should see the element     jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+
+the user completes application submission page
+    [Arguments]  ${isOpenComp}
+    the user selects the radio button     jQuery = label:contains("${isOpenComp}")
+    the user clicks the button/link       jQuery = button:contains("Save and continue")
+    the user clicks the button/link       jQuery = span:contains("Application submission")
+    the user should see the element       jQuery = p:contains("Will this be an open-ended competition?") strong:contains("${isOpenComp}")
+    the user should see the element       jQuery = button:contains("Edit")
+    the user clicks the button/link       jQuery = span:contains("Milestones")
+
+
+

@@ -768,7 +768,7 @@ User deletes the competition
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
-    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative
+    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative  Yes
     When the user clicks the button/link                                  link = Delete competition
     And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
     And the user navigates to the page                                    ${CA_UpcomingComp}
@@ -1009,7 +1009,7 @@ the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
 
 the comp admin creates competition with all sections details
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}   ${isOpenComp}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
@@ -1019,7 +1019,7 @@ the comp admin creates competition with all sections details
     the user fills in the CS Project eligibility                                     ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility                                     ${researchCategory}   ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no                            false
-    the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}
+    the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}   ${isOpenComp}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done                                ${projectGrowth}  ${compType}  ${competition}
