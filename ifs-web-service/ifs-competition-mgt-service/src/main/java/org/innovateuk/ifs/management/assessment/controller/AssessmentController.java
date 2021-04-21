@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static java.lang.String.format;
+
 /**
  * Controller for the Manage Assessments dashboard.
  */
@@ -38,13 +40,13 @@ public class AssessmentController {
     @PostMapping("/assessment-period/{assessmentPeriodId}/notify-assessors")
     public String notifyAssessors(@RequestParam(defaultValue = DEFAULT_PAGE) int page, @PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
         assessorRestService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId).getSuccess();
-        return String.format("redirect:/assessment/competition/%s", competitionId);
+        return format("redirect:/assessment/competition/%s?page=%s", competitionId, page);
     }
 
     @PostMapping("/assessment-period/{assessmentPeriodId}/close-assessment")
     public String closeAssessment(@RequestParam(defaultValue = DEFAULT_PAGE) int page, @PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
         assessorRestService.closeAssessmentByAssessmentPeriod(assessmentPeriodId).getSuccess();
-        return String.format("redirect:/assessment/competition/%s", competitionId);
+        return format("redirect:/assessment/competition/%s?page=%s", competitionId, page);
     }
 
 }
