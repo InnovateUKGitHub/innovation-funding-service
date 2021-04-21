@@ -44,4 +44,10 @@ public class AssessmentController {
         return String.format("redirect:/assessment/competition/%s", competitionId);
     }
 
+    @PostMapping("/assessment-period/{assessmentPeriodId}/close-assessment")
+    public String closeAssessment(@PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
+        assessorRestService.closeAssessmentByAssessmentPeriod(assessmentPeriodId).getSuccess();
+        return String.format("redirect:/assessment/competition/%s", competitionId);
+    }
+
 }

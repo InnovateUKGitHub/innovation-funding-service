@@ -48,6 +48,11 @@ public class AssessorController {
                 .toPutResponse();
     }
 
+    @PutMapping("/close-assessment/assessment-period/{assessmentPeriodId}")
+    public RestResult<Void> closeAssessmentByAssessmentPeriod(@PathVariable("assessmentPeriodId") long assessmentPeriodId) {
+        return competitionService.closeAssessmentByAssessmentPeriod(assessmentPeriodId).toPutResponse();
+    }
+
     @GetMapping("/has-applications-assigned/{assessorId}")
     public RestResult<Boolean> hasApplicationsAssigned(@PathVariable("assessorId") long assessorId) {
         return assessorService.hasApplicationsAssigned(assessorId).toGetResponse();

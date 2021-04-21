@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -34,6 +35,10 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can change the competition state to Assessment Closed")
     ServiceResult<Void> closeAssessment(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can close assessments")
+    ServiceResult<Void> closeAssessmentByAssessmentPeriod(long assessmentPeriodId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
@@ -83,6 +88,7 @@ public interface CompetitionService {
 
     @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
     ServiceResult<FileAndContents> downloadTerms(long competitionId);
+
 
 
 }

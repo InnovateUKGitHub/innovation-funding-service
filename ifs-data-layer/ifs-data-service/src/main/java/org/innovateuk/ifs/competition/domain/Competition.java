@@ -473,6 +473,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
+        if (assessmentPeriodValues().contains(milestoneType)){
+            throw new IllegalArgumentException("Milestone of type: " + milestoneType.name() + " must have an AssessmentPeriod");
+        }
         Milestone milestone = getMilestone(milestoneType).orElseGet(() -> {
             Milestone m = new Milestone(milestoneType, this);
             milestones.add(m);
@@ -816,8 +819,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
 
-    public void closeAssessment(ZonedDateTime date) {
-        setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, date);
+    public void closeAssessment(ZonedDateTime date, AssessmentPeriod assessmentPeriod) {
+        setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, assessmentPeriod, date);
     }
 
     public boolean isNonIfs() {

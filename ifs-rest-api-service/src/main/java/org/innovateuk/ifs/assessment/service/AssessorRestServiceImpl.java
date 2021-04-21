@@ -44,4 +44,10 @@ public class AssessorRestServiceImpl extends BaseRestService implements Assessor
         return putWithRestResult(String.format("%s/notify-assessors/assessment-period/%s", assessorRestUrl, assessmentPeriodId),
                 Void.class);
     }
+
+    @Override
+    public RestResult<Void> closeAssessmentByAssessmentPeriod(long assessmentPeriodId) {
+        return putWithRestResult(String.format("%s/close-assessment/assessment-period/%s", assessorRestUrl, assessmentPeriodId),
+                Void.class);
+    }
 }

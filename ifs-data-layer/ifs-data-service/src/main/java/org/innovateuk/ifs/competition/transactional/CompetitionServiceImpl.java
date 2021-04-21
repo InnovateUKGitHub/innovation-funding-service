@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
@@ -36,6 +37,7 @@ import java.util.Optional;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
@@ -117,24 +119,36 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> closeAssessment(long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId).get();
-        ServiceResult<?> result = serviceSuccess();
-        if (competition.isKtp()) {
-            result = aggregate(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, newArrayList(ApplicationState.SUBMITTED))
-                    .stream()
-                    .map(Application::getId)
-                    .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
-                    .collect(toList()));
-        }
-        competition.closeAssessment(ZonedDateTime.now());
-        return result.andOnSuccessReturnVoid();
+        return getCompetition(competitionId)
+                .andOnSuccessReturn(competition -> competition.getAssessmentPeriods().get(0).getId())
+                .andOnSuccess(assessmentPeriodId -> closeAssessmentByAssessmentPeriod(assessmentPeriodId));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> closeAssessmentByAssessmentPeriod(long assessmentPeriodId) {
+        return find(assessmentPeriodRepository.findById(assessmentPeriodId), notFoundError(Application.class, assessmentPeriodId))
+                .andOnSuccess(assessmentPeriod -> {
+                    Competition competition = assessmentPeriod.getCompetition();
+                    ServiceResult<?> result = serviceSuccess();
+                    if (competition.isKtp()) {
+                        result = aggregate(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competition.getId(), newArrayList(SUBMITTED))
+                                .stream()
+                                .map(Application::getId)
+                                .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
+                                .collect(toList()));
+                    }
+                    competition.closeAssessment(ZonedDateTime.now(), assessmentPeriod);
+                    return result.andOnSuccessReturnVoid();
+                });
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> notifyAssessors(long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId).get();
-        return notifyAssessorsByAssessmentPeriod(competition.getAssessmentPeriods().get(0).getId());
+        return getCompetition(competitionId)
+                .andOnSuccessReturn(competition -> competition.getAssessmentPeriods().get(0).getId())
+                .andOnSuccess(assessmentPeriodId -> notifyAssessorsByAssessmentPeriod(assessmentPeriodId));
     }
 
     @Override

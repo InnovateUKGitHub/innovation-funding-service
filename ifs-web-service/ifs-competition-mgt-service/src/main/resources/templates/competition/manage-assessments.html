@@ -139,12 +139,25 @@
 
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <button th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}"
-                                            type="submit"
-                                            id="notify-assessors-button"
-                                            th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/notify-assessors/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId})}"
-                                            class="govuk-button">Notify assessors
-                                    </button>
+                                    <th:block th:if="${assessmentPeriod.valid}">
+                                        <th:block th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}">
+                                            <button th:if="${!assessmentPeriod.hasAssessmentClosedMilestone}"
+                                                    th:disabled="${!assessmentPeriod.canNotifyAssessors()}"
+                                                    type="submit"
+                                                    id="notify-assessors-button"
+                                                    th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/notify-assessors/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId})}"
+                                                    class="govuk-button">Notify assessors
+                                            </button>
+                                        </th:block>
+                                        <th:block th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_DEADLINE}">
+                                            <button th:if="${assessmentPeriod.canCloseAssessment()}"
+                                                    type="submit"
+                                                    id="assessment-close-button"
+                                                    th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/close-assessment/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId})}"
+                                                    class="govuk-button">Close assessment
+                                            </button>
+                                        </th:block>
+                                    </th:block>
                                 </td>
                             </tr>
                             </tbody>
