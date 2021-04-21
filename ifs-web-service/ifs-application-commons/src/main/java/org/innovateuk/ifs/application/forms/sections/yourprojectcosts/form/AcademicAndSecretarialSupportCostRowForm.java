@@ -3,7 +3,10 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 import org.innovateuk.ifs.finance.resource.cost.AcademicAndSecretarialSupport;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import javax.validation.constraints.Min;
 import java.math.BigInteger;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.VALUE_MUST_BE_HIGHER_MESSAGE;
 
 public class AcademicAndSecretarialSupportCostRowForm extends AbstractCostRowForm<AcademicAndSecretarialSupport> {
 
@@ -26,7 +29,7 @@ public class AcademicAndSecretarialSupportCostRowForm extends AbstractCostRowFor
 
     @Override
     public boolean isBlank() {
-        return false;
+        return cost == null;
     }
 
     @Override
