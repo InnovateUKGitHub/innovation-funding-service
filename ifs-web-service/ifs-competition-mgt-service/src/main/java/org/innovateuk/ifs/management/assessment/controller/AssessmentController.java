@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
@@ -8,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller for the Manage Assessments dashboard.
@@ -22,30 +18,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentController {
 
-    @Autowired
-    private AssessorRestService assessorRestService;
+
+    private static final String DEFAULT_PAGE = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "2";
 
     @Autowired
-    private AssessmentRestService assessmentRestService;
+    private AssessorRestService assessorRestService;
 
     @Autowired
     private ManageAssessmentsModelPopulator manageAssessmentsModelPopulator;
 
     @GetMapping
-    public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model) {
-        model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
-
+    public String manageAssessments(@RequestParam(defaultValue = DEFAULT_PAGE) int page, @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int pageSize, @PathVariable("competitionId") long competitionId, Model model) {
+        model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId, page, pageSize));
         return "competition/manage-assessments";
     }
 
     @PostMapping("/assessment-period/{assessmentPeriodId}/notify-assessors")
-    public String notifyAssessors(@PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
+    public String notifyAssessors(@RequestParam(defaultValue = DEFAULT_PAGE) int page, @PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
         assessorRestService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId).getSuccess();
         return String.format("redirect:/assessment/competition/%s", competitionId);
     }
 
     @PostMapping("/assessment-period/{assessmentPeriodId}/close-assessment")
-    public String closeAssessment(@PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
+    public String closeAssessment(@RequestParam(defaultValue = DEFAULT_PAGE) int page, @PathVariable("competitionId")long competitionId, @PathVariable("assessmentPeriodId")long assessmentPeriodId){
         assessorRestService.closeAssessmentByAssessmentPeriod(assessmentPeriodId).getSuccess();
         return String.format("redirect:/assessment/competition/%s", competitionId);
     }

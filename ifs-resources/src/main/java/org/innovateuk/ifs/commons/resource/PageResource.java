@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <PageableResource> the resource type that is being paginated.
  */
-public abstract class PageResource<PageableResource> {
+public class PageResource<PageableResource> {
 
     /**
      * The total number of elements across all pages.
@@ -44,6 +44,12 @@ public abstract class PageResource<PageableResource> {
         this.content = content;
         this.number = number;
         this.size = size;
+    }
+
+    public static <PageableResource> PageResource<PageableResource> fromList(List<PageableResource> all, int number, int size){
+        int totalElements = all.size();
+        int totalPages = totalElements / size;
+        return new PageResource(totalElements, totalPages, all, number, size); // TODO qqRP sublist
     }
 
     public long getTotalElements() {

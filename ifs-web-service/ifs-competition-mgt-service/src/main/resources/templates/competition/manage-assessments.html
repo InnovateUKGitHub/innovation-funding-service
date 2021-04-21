@@ -162,10 +162,10 @@
                             </tr>
                             </tbody>
                         </table>
-
                     </th:block>
                 </th:block>
             </form>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
