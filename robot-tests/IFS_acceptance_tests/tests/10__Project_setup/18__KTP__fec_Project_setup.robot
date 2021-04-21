@@ -140,10 +140,13 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     Then the user should view their non-fec project finances after editing
     And the user should see the element                                        jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
-#Lead applicant can see the approved non-FEC cost categories in the GOL
-#    [Documentation]  IFS-9306
-#    [Setup]  internal user approves finances
-#    Given log in as a different user             &{ktpLead}
+IFS admin can see the approved non-FEC cost categories in the GOL
+    [Documentation]  IFS-9306
+    [Setup]  internal user releases the feedback
+    Given the user views the grant offer letter page
+    When Select Window                                                 NEW
+    Then the user should see the non-FEC cost categories in the GOL
+    [Teardown]  the user closes the last opened tab
 
 *** Keywords ***
 Custom Suite Setup
@@ -249,6 +252,56 @@ the user should view updated values in changes to finances
     the user should see the element     jQuery = table:contains("Updated") th:contains("Total project costs") ~ td:contains("£${totalProjectCostsUpdated}")
     the user should see the element     jQuery = table:contains("Updated") th:contains("Academic and secretarial support") ~ td:contains("${academicCostValueFormatted}")
     the user should see the element     jQuery = table:contains("Updated") th:contains("Indirect costs") ~ td:contains("${indirectCostUpdated}")
+
+internal user releases the feedback
+    the user assignes project to MO
+    the lead applicant submits bank details
+    project finance approves bank details
+    ifs admin user releases the feedback
+
+the user assignes project to MO
+    log in as a different user                 &{ifs_admin_user_credentials}
+    the user navigates to the page             ${server}/project-setup-management/competition/${ktpCompetitonId}/status/all
+    the user clicks the button/link            jQuery = table:contains("MO") td:contains("Assign") a
+    search for MO                              Hermen  Hermen Mermen
+    the internal user assign project to MO     ${ktpApplicationId}  ${ktpApplication}
+
+the lead applicant submits bank details
+    log in as a different user                             &{ktpLead}
+    the user clicks the button/link                        link = ${ktpApplication}
+    the user clicks the button/link                        link = Bank details
+    the user enters text to a text field                   name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                        id = postcode-lookup
+    the user selects the index from the drop-down menu     1  id=addressForm.selectedPostcodeIndex
+    applicant user enters bank details
+
+project finance approves bank details
+    log in as a different user                              &{internal_finance_credentials}
+    the user navigates to the page                          ${server}/management/dashboard/project-setup
+    project finance is able to approve the bank details     ${ktpLeadOrgName}
+
+ifs admin user releases the feedback
+    log in as a different user                                                &{ifs_admin_user_credentials}
+    the user navigates to the page                                            ${server}/management/competition/${ktpCompetitonId}
+    the user clicks the button/link                                           link = Input and review funding decision
+    the user selects the checkbox                                             app-row-1
+    the user clicks the button/link                                           jQuery = button:contains("Successful")
+    the user clicks the button/link                                           jQuery = .govuk-back-link:contains("Competition")
+    the user clicks the button/link                                           jQuery = a:contains("Manage funding notifications")
+    the user selects the checkbox                                             app-row-${ktpApplicationId}
+    the user clicks the button/link                                           jQuery = button:contains("Write and send email")
+    the internal sends the descision notification email to all applicants     EmailTextBody
+    the user clicks the button/link                                           jQuery = .govuk-back-link:contains("Competition")
+    the user clicks the button/link                                           jQuery = button:contains("Release feedback")
+
+the user views the grant offer letter page
+    the user clicks the button/link     link = ${ktpCompetiton}
+    the user clicks the button/link     jQuery = table:contains("GOL") td:contains("Review") a
+    the user clicks the button/link     link = View the grant offer letter page (opens in a new window)
+
+the user should see the non-FEC cost categories in the GOL
+    the user should see the element     xpath = //td[text()="b. Academic and secretarial support"]/..//td[text()="${academicCostValue}"]
+    the user should see the element     xpath = //td[text()="b. Academic and Secretarial Support"]/..//td[text()="${academicCostValue}"]
 
 Custom suite teardown
     Close browser and delete emails
