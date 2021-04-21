@@ -418,9 +418,9 @@ the user makes changes to the project finances
     the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) [class="govuk-button"]
     the user clicks the button/link     jQuery = button:contains("Other costs")
     the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) a
-    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
-    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]   11100
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]   11100
     input text                          css = div[id='accordion-finances'] div:nth-of-type(8) textarea   Some other costs
     the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) [class="govuk-button"]
 
