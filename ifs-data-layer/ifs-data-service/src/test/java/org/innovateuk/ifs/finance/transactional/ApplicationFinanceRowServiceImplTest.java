@@ -18,6 +18,7 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -28,6 +29,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -242,5 +244,69 @@ public class ApplicationFinanceRowServiceImplTest extends BaseServiceUnitTest<Ap
 
         assertTrue(result.isSuccess());
         verify(financeRowMetaValueRepositoryMock, times(0)).save(any(FinanceRowMetaValue.class));
+    }
+
+    @Test
+    public void testResetNonFECCostRowEntries() {
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(RESEARCH).build();
+        Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+       //When FEC model is Yes we need to reset non-FEC row entries
+        ApplicationFinance applicationFinance = newApplicationFinance()
+                .withFecEnabled(true)
+                .withApplication(application).withOrganisation(organisation).build();
+        ApplicationFinanceRow nonFECAcademicCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).withCost(BigDecimal.TEN).build();
+        ApplicationFinanceRow nonFECIndirectCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.INDIRECT_COSTS).withCost(BigDecimal.TEN).build();
+        List<ApplicationFinanceRow> nonFECRows = new ArrayList<ApplicationFinanceRow>();
+        nonFECRows.add(nonFECAcademicCostRow);
+        nonFECRows.add(nonFECIndirectCostRow);
+
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(Optional.of(applicationFinance));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(nonFECRows);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        ServiceResult<Void> result = service.resetCostRowEntriesBasedOnFecModelUpdate(application.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(applicationFinanceRowRepositoryMock, organisationFinanceDelegateMock);
+        inOrder.verify(applicationFinanceRowRepositoryMock).findByTargetId(applicationFinance.getId());
+
+    }
+
+    @Test
+    public void testResetFECCostRowEntries() {
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(RESEARCH).build();
+        Organisation organisation = newOrganisation().withOrganisationType(organisationType).build();
+        //When FEC model is False we need to reset FEC row entries
+        ApplicationFinance applicationFinance = newApplicationFinance()
+                .withFecEnabled(false)
+                .withApplication(application).withOrganisation(organisation).build();
+        ApplicationFinanceRow fecKnowledgeBaseCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.KNOWLEDGE_BASE).withCost(BigDecimal.TEN).build();
+        ApplicationFinanceRow fecEstateCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.ESTATE_COSTS).withCost(BigDecimal.TEN).build();
+        ApplicationFinanceRow fecAssociateSupportCostRow = newApplicationFinanceRow()
+                .withTarget(applicationFinance).withType(FinanceRowType.ASSOCIATE_SUPPORT).withCost(BigDecimal.TEN).build();
+
+        List<ApplicationFinanceRow> fecRows = new ArrayList<ApplicationFinanceRow>();
+        fecRows.add(fecKnowledgeBaseCostRow);
+        fecRows.add(fecEstateCostRow);
+        fecRows.add(fecAssociateSupportCostRow);
+
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(Optional.of(applicationFinance));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(fecRows);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(competition.getId(), organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+        ServiceResult<Void> result = service.resetCostRowEntriesBasedOnFecModelUpdate(application.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(applicationFinanceRowRepositoryMock, organisationFinanceDelegateMock);
+        inOrder.verify(applicationFinanceRowRepositoryMock).findByTargetId(applicationFinance.getId());
+
     }
 }

@@ -310,14 +310,14 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
-    public IndustrialCostDataBuilder withAcademicAndSecretarialSupport(BigDecimal cost) {
+    public IndustrialCostDataBuilder withAcademicAndSecretarialSupport(BigInteger cost) {
         return addCostItem("Academic And Secretarial Support", (finance) ->
-                new KtpTravelCost(null, null, null, cost, 1, finance.getId()));
+                new AcademicAndSecretarialSupport(finance.getId(), null, cost));
     }
 
-    public IndustrialCostDataBuilder withIndirectCosts(BigDecimal cost) {
-        return addCostItem("IndirectCosts", (finance) ->
-                new KtpTravelCost(null, null, null, cost, 1, finance.getId()));
+    public IndustrialCostDataBuilder withIndirectCosts(BigInteger cost) {
+        return addCostItem("Indirect costs", (finance) ->
+                new IndirectCost(finance.getId(), null, cost));
     }
 
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn, Predicate<IndustrialCostData> predicate) {

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.populator;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
