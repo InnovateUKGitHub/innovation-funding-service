@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -16,9 +17,11 @@ import java.util.List;
 )
 public abstract class AssessmentPeriodMapper extends BaseMapper<AssessmentPeriod, AssessmentPeriodResource, Long> {
 
+    @Mapping(target = "competitionId", ignore = true)
     @Override
     public abstract AssessmentPeriodResource mapToResource(AssessmentPeriod domain);
 
+    @Mapping(target = "competition", ignore = true)
     @Override
     public abstract AssessmentPeriod mapToDomain(AssessmentPeriodResource resource);
 
