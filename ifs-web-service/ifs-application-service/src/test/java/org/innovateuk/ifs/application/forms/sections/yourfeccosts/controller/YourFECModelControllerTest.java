@@ -7,9 +7,16 @@ import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECMo
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.form.YourFECModelFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.populator.YourFECViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfeccosts.viewmodel.YourFECViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
+import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -17,14 +24,18 @@ import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,6 +62,16 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     @Mock
     private OrganisationRestService organisationRestServiceMock;
+
+    @Mock
+    private YourProjectCostsAutosaver yourProjectCostsAutosaverMock;
+
+    @Mock
+    private SectionStatusRestService sectionStatusRestServiceMock;
+    @Mock
+    private SectionRestService sectionRestServiceMock;
+    @Mock
+    private CompetitionRestService competitionRestServiceMock;
 
     private long applicationId = 123L;
     private long sectionId = 456L;
@@ -109,7 +130,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
-
+        yourProjectCostsAutosaverMock.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
         ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
@@ -142,6 +163,7 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
+        yourProjectCostsAutosaverMock.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
 
         ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
 
@@ -174,24 +196,25 @@ public class YourFECModelControllerTest extends AbstractAsyncWaitMockMVCTest<You
 
     @Test
     public void markAsIncomplete() throws Exception {
-
+        long applicationId=1L;
         ProcessRoleResource processRole = newProcessRoleResource().build();
         when(processRoleRestServiceMock.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(processRole));
-
-        String viewUrl = String.format("redirect:/application/%d/form/your-fec-model/" +
-                "organisation/%d/section/%d", applicationId, organisationId, sectionId);
+        CompetitionResource competition = newCompetitionResource().build();
+        when(competitionRestServiceMock.getCompetitionForApplication(applicationId)).thenReturn(restSuccess(competition));
+        SectionResource financeSection = newSectionResource().build();
+        when(sectionRestServiceMock.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(restSuccess(singletonList(financeSection)));
+        when(sectionStatusRestServiceMock.markAsInComplete(financeSection.getId(), applicationId, processRole.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/your-fec-model/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
                 .param("mark-as-incomplete", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(viewUrl))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application/sections/your-fec-model/your-fec-model"))
                 .andReturn();
 
         verify(processRoleRestServiceMock, times(1)).findProcessRole(loggedInUser.getId(), applicationId);
         verify(sectionServiceMock, times(1)).markAsInComplete(sectionId, applicationId, processRole.getId());
 
-        verifyNoMoreInteractionsWithMocks();
     }
 
     private void verifyNoMoreInteractionsWithMocks() {
