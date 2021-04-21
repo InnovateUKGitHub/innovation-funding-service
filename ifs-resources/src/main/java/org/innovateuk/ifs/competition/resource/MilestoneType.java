@@ -80,7 +80,7 @@ public enum MilestoneType {
     }
 
     public static EnumSet<MilestoneType> assessmentPeriodValues() {
-        return EnumSet.of(ASSESSOR_BRIEFING, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE);
+        return EnumSet.of(ASSESSOR_BRIEFING, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE, ASSESSORS_NOTIFIED, ASSESSMENT_CLOSED);
     }
 }
 
