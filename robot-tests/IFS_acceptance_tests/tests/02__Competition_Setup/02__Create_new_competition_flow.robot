@@ -358,13 +358,15 @@ Funding eligibility: Mark as Done
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
     [Tags]
-    Given the user clicks the button/link           link = Milestones
-    Then the user should see the element            jQuery = h1:contains("Completion stage")
-    And the user should see the element             jQuery = label:contains("Release feedback")
-    And the user should see the element             jQuery = label:contains("Project setup")
-    And the user selects the radio button           selectedCompletionStage  PROJECT_SETUP
-    And the user clicks the button/link             jQuery = button:contains("Done")
-    And the pre-field date should be correct
+    Given the user clicks the button/link         link = Milestones
+    And the user should see the element           jQuery = h1:contains("Completion stage")
+    And the user should see the element           jQuery = label:contains("Release feedback")
+    And the user should see the element           jQuery = label:contains("Project setup")
+    When the user selects the radio button        selectedCompletionStage  PROJECT_SETUP
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user clicks the button twice          jQuery = label:contains("No")
+    And the user clicks the button/link           jQuery = button:contains("Save and continue")
+    Then the pre-field date should be correct
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993

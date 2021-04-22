@@ -65,12 +65,13 @@ Comp Admin starts a new Competition
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
     [Tags]
-    Given the user should see the element    jQuery = div:contains("Milestones") ~ .task-status-complete
-    When the user clicks the button/link     link = Milestones
-    And the user clicks the button/link      jQuery = a:contains("Next")
-    Then the user should see the element     jQuery = button:contains("Edit")
+    Given the user should see the element               jQuery = div:contains("Milestones") ~ .task-status-complete
+    When the user clicks the button/link                link = Milestones
+    And the user clicks the button/link                 jQuery = a:contains("Next")
+    And the user clicks the button/link                 jQuery = span:contains("Milestones")
+    Then the user should see the element                jQuery = button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link     link = Back to competition details
+    Then the user clicks the button/link                link = Back to competition details
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393  IFS-7700
