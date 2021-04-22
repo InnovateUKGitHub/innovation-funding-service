@@ -753,7 +753,7 @@ the user completes application submission page
     the user clicks the button twice      jQuery = label:contains("${isOpenComp}")
     the user clicks the button/link       jQuery = button:contains("Save and continue")
     the user clicks the button/link       jQuery = span:contains("Application submission")
-    the user should see the element       jQuery = p:contains("Will this be an open-ended competition?") strong:contains("${isOpenComp}")
+    the user should see the element       jQuery = p:contains("${isOpenComp}") strong:contains("Will this be an open-ended competition?")
     the user should see the element       jQuery = button:contains("Edit")
     the user clicks the button/link       jQuery = span:contains("Milestones")
 
