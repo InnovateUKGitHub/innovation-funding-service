@@ -1,25 +1,28 @@
 package org.innovateuk.ifs.management.model;
 
-import org.assertj.core.util.Lists;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
-import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
-import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
+import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentPeriodViewModel;
 import org.innovateuk.ifs.management.assessmentperiod.populator.AssessmentPeriodFormPopulator;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
@@ -40,8 +43,12 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
     @Mock
     private AssessmentPeriodFormPopulator assessmentPeriodFormPopulator;
 
+
+    @Mock
+    private MilestoneRestService milestoneRestService;
+
     @Test
-    public void populateModel() throws Exception {
+    public void populateModel() {
         final long expectedCompetitionId = 13;
         final String expectedCompetitionName = "Test Competition";
         final CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
@@ -64,17 +71,18 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        ManageAssessmentPeriodsForm form = new ManageAssessmentPeriodsForm();
-        AssessmentPeriodForm period = new AssessmentPeriodForm();
-        List<AssessmentPeriodForm> periods = Lists.newArrayList(period);
-        form.setAssessmentPeriods(periods);
         when(competitionRestService.getCompetitionById(expectedCompetitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
-        when(assessmentPeriodFormPopulator.populate(expectedCompetitionId)).thenReturn(form);
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, periods);
+        when(milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(emptyList()));
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromList(emptyList(), 0, 2));
 
-        ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(expectedCompetitionId);
+        ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(expectedCompetitionId, 0, 2);
 
         assertEquals(expectedModel, actualModel);
+    }
+
+
+    public void populateModelAlwayOpen() {
+        // TODO qqRP
     }
 }

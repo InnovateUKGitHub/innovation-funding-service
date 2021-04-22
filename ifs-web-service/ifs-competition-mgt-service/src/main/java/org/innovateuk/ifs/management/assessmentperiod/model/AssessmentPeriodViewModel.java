@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.management.assessmentperiod.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
-import javax.swing.text.html.Option;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
@@ -73,5 +72,38 @@ public class AssessmentPeriodViewModel {
                 .map(AssessmentMilestoneViewModel::getMilestoneType)
                 .collect(toList())
                 .containsAll(of(ASSESSOR_BRIEFING, ASSESSOR_DEADLINE, ASSESSOR_ACCEPTS));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessmentPeriodViewModel that = (AssessmentPeriodViewModel) o;
+
+        return new EqualsBuilder()
+                .append(hasAssessorsToNotify, that.hasAssessorsToNotify)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
+                .append(milestones, that.milestones)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessmentPeriodId)
+                .append(hasAssessorsToNotify)
+                .append(milestones)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "AssessmentPeriodViewModel{" +
+                "assessmentPeriodId=" + assessmentPeriodId +
+                ", hasAssessorsToNotify=" + hasAssessorsToNotify +
+                ", milestones=" + milestones +
+                '}';
     }
 }

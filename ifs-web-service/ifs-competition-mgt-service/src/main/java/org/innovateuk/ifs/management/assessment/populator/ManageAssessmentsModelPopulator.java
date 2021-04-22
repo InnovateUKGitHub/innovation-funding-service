@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
-import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentMilestoneViewModel;
 import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentPeriodViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,17 +48,17 @@ public class ManageAssessmentsModelPopulator {
         return new ManageAssessmentsViewModel(competition, keyStatistics, fromList(assessmentPeriodViewModels, page, pageSize));
     }
 
+    private List<AssessmentPeriodViewModel> assessmentPeriodViewModels(long competitionId){
+        return periodIdToMilestone(competitionId).entrySet().stream()
+                .map(e -> assessmentPeriodViewModel(e.getValue(), e.getKey())).collect(toList());
+    }
+
     private Map<Long, List<MilestoneResource>> periodIdToMilestone(long competitionId){
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
         return  milestones
                 .stream()
                 .filter(milestone -> milestone.getAssessmentPeriodId() != null)
                 .collect(groupingBy(MilestoneResource::getAssessmentPeriodId));
-    }
-
-    private List<AssessmentPeriodViewModel> assessmentPeriodViewModels(long competitionId){
-        return periodIdToMilestone(competitionId).entrySet().stream()
-                .map(e -> assessmentPeriodViewModel(e.getValue(), e.getKey())).collect(toList());
     }
 
     private AssessmentPeriodViewModel assessmentPeriodViewModel(List<MilestoneResource> milestones, long assessmentPeriodId){

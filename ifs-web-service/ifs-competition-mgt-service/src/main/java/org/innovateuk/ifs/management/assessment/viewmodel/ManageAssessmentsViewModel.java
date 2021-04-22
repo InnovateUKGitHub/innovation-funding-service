@@ -131,4 +131,21 @@ public class ManageAssessmentsViewModel {
                 .append(assessmentPeriods)
                 .toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "ManageAssessmentsViewModel{" +
+                "competitionId=" + competitionId +
+                ", competitionName='" + competitionName + '\'' +
+                ", inAssessment=" + inAssessment +
+                ", totalAssessments=" + totalAssessments +
+                ", assessmentsAwaitingResponse=" + assessmentsAwaitingResponse +
+                ", assessmentsAccepted=" + assessmentsAccepted +
+                ", assessmentsStarted=" + assessmentsStarted +
+                ", assessmentsCompleted=" + assessmentsCompleted +
+                ", alwaysOpen=" + alwaysOpen +
+                ", pagination=" + pagination +
+                ", assessmentPeriods=" + assessmentPeriods +
+                '}';
+    }
 }
