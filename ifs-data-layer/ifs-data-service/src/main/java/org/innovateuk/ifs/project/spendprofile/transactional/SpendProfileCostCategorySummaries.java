@@ -12,6 +12,10 @@ public class SpendProfileCostCategorySummaries {
     private List<SpendProfileCostCategorySummary> costs;
     private CostCategoryType costCategoryType;
 
+    private SpendProfileCostCategorySummaries(){
+
+    }
+
     public SpendProfileCostCategorySummaries(List<SpendProfileCostCategorySummary> costs, CostCategoryType costCategoryType) {
         this.costs = costs;
         this.costCategoryType = costCategoryType;

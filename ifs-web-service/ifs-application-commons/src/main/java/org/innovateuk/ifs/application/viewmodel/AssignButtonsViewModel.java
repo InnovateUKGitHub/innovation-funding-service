@@ -86,7 +86,7 @@ public class AssignButtonsViewModel {
     }
 
     public boolean isAssignedTo(ProcessRoleResource role) {
-        return (isNotAssigned() && role.getRole().isLeadApplicant()) || (isAssigned() && assignee.getUser().equals(role.getUser()));
+        return Boolean.TRUE.equals(question.hasMultipleStatuses()) || (isNotAssigned() && role.getRole().isLeadApplicant()) || (isAssigned() && assignee.getUser().equals(role.getUser()));
     }
 
     public boolean isNotAssigned() {

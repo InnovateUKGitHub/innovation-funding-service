@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewRowViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
@@ -45,6 +47,8 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QU
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +78,8 @@ public class ApplicationOverviewModelPopulatorTest {
     private QuestionService questionService;
     @Mock
     private AsyncFuturesGenerator asyncFuturesGenerator;
+    @Mock
+    private ApplicationUrlHelper applicationUrlHelper;
 
     @Before
     public void setupExpectations() {
@@ -113,6 +119,7 @@ public class ApplicationOverviewModelPopulatorTest {
         List<SectionResource> sections = newSectionResource()
                 .withPriority(1, 2, 3, 4)
                 .withName("Section with questions", "Finances", "Project details", "Terms and conditions")
+                .withType(SectionType.GENERAL, SectionType.FINANCES, SectionType.PROJECT_DETAILS, SectionType.TERMS_AND_CONDITIONS)
                 .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList())
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList())
                 .build(4);
@@ -132,7 +139,7 @@ public class ApplicationOverviewModelPopulatorTest {
         when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
         when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
         when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
-
+        when(applicationUrlHelper.getQuestionUrl(any(), anyLong(), anyLong(), anyLong())).thenReturn(Optional.of("/the-question-url"));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
@@ -157,7 +164,7 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewRowViewModel questionRow = sectionWithQuestions.getRows().iterator().next();
         assertEquals("4. A question", questionRow.getTitle());
-        assertEquals(String.format("/application/%d/form/question/%d/generic", application.getId(), questions.get(0).getId()), questionRow.getUrl());
+        assertEquals("/the-question-url", questionRow.getUrl());
         assertEquals(false, questionRow.isComplete());
         assertEquals(processRoles.get(1), questionRow.getAssignButtonsViewModel().get().getAssignee());
         assertEquals(processRoles, questionRow.getAssignButtonsViewModel().get().getAssignableApplicants());

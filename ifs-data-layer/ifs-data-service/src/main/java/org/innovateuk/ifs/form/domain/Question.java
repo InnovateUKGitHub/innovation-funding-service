@@ -26,6 +26,9 @@ public class Question {
     @Column(length = 5000)
     private String description;
 
+    @Column(length = 5000)
+    private String description2;
+
     private Boolean markAsCompletedEnabled = false;
 
     private Boolean assignEnabled = true;
@@ -163,6 +166,8 @@ public class Question {
         this.description = description;
     }
 
+
+
     public void setMarkAsCompletedEnabled(Boolean markAsCompletedEnabled) {
         this.markAsCompletedEnabled = markAsCompletedEnabled;
     }
@@ -217,5 +222,13 @@ public class Question {
 
     public boolean isCompetitionOpen() {
         return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
+    }
+
+    public String getDescription2() {
+        return description2;
+    }
+
+    public void setDescription2(String description2) {
+        this.description2 = description2;
     }
 }

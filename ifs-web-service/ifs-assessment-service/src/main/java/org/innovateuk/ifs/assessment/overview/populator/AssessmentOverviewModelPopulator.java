@@ -47,12 +47,12 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCES;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.*;
 
 /**
  * Build the model for Assessment Overview view.
@@ -136,7 +136,7 @@ public class AssessmentOverviewModelPopulator {
                     sectionResource.getName(),
                     sectionResource.getAssessorGuidanceDescription(),
                     getQuestions(sectionQuestions, formInputs, responses),
-                    "Finances".equals(sectionResource.getName()),
+                    sectionResource.getType() == FINANCES,
                     sectionResource.getType() == TERMS_AND_CONDITIONS
             );
         });
@@ -235,8 +235,11 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
-        if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+        if (FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        if (FundingType.LOAN == competitionResource.getFundingType()) {
+            return TERMS_AND_CONDITIONS_LOAN;
         }
         return TERMS_AND_CONDITIONS_OTHER;
     }

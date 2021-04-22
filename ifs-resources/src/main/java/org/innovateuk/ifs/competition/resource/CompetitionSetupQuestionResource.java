@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "guidance", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "subTitle2", argument="subTitle2Required", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "guidanceTitle", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "shortTitle", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "title", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
@@ -49,6 +50,7 @@ public class CompetitionSetupQuestionResource {
     private String guidanceTitle;
 
     private String guidance;
+    private String subTitle2;
 
     /* text area */
     private Boolean textArea;
@@ -125,6 +127,14 @@ public class CompetitionSetupQuestionResource {
 
     public void setGuidanceTitle(String guidanceTitle) {
         this.guidanceTitle = guidanceTitle;
+    }
+
+    public String getSubTitle2() {
+        return subTitle2;
+    }
+
+    public void setSubTitle2(String subTitle2) {
+        this.subTitle2 = subTitle2;
     }
 
     public String getGuidance() {
@@ -345,7 +355,15 @@ public class CompetitionSetupQuestionResource {
 
     @JsonIgnore
     public boolean isGuidanceRequired() {
-        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type && QuestionSetupType.KTP_ASSESSMENT != type;
+        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type
+                && QuestionSetupType.KTP_ASSESSMENT != type
+                && QuestionSetupType.NORTHERN_IRELAND_DECLARATION != type
+                && QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION != type;
+    }
+
+    @JsonIgnore
+    public boolean isSubTitle2Required() {
+        return QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == type;
     }
 
     @JsonIgnore
@@ -370,7 +388,11 @@ public class CompetitionSetupQuestionResource {
                 .append(subTitle, that.subTitle)
                 .append(guidanceTitle, that.guidanceTitle)
                 .append(guidance, that.guidance)
+                .append(subTitle2, that.subTitle2)
+                .append(textArea, that.textArea)
                 .append(maxWords, that.maxWords)
+                .append(multipleChoice, that.multipleChoice)
+                .append(choices, that.choices)
                 .append(appendix, that.appendix)
                 .append(numberOfUploads, that.numberOfUploads)
                 .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
@@ -378,12 +400,14 @@ public class CompetitionSetupQuestionResource {
                 .append(templateDocument, that.templateDocument)
                 .append(allowedTemplateResponseFileTypes, that.allowedTemplateResponseFileTypes)
                 .append(templateTitle, that.templateTitle)
+                .append(templateFilename, that.templateFilename)
+                .append(templateFormInput, that.templateFormInput)
+                .append(writtenFeedback, that.writtenFeedback)
                 .append(assessmentGuidanceTitle, that.assessmentGuidanceTitle)
                 .append(assessmentGuidance, that.assessmentGuidance)
                 .append(assessmentMaxWords, that.assessmentMaxWords)
                 .append(scored, that.scored)
                 .append(scoreTotal, that.scoreTotal)
-                .append(writtenFeedback, that.writtenFeedback)
                 .append(guidanceRows, that.guidanceRows)
                 .append(researchCategoryQuestion, that.researchCategoryQuestion)
                 .append(scope, that.scope)
@@ -401,7 +425,11 @@ public class CompetitionSetupQuestionResource {
                 .append(subTitle)
                 .append(guidanceTitle)
                 .append(guidance)
+                .append(subTitle2)
+                .append(textArea)
                 .append(maxWords)
+                .append(multipleChoice)
+                .append(choices)
                 .append(appendix)
                 .append(numberOfUploads)
                 .append(allowedAppendixResponseFileTypes)
@@ -409,12 +437,14 @@ public class CompetitionSetupQuestionResource {
                 .append(templateDocument)
                 .append(allowedTemplateResponseFileTypes)
                 .append(templateTitle)
+                .append(templateFilename)
+                .append(templateFormInput)
+                .append(writtenFeedback)
                 .append(assessmentGuidanceTitle)
                 .append(assessmentGuidance)
                 .append(assessmentMaxWords)
                 .append(scored)
                 .append(scoreTotal)
-                .append(writtenFeedback)
                 .append(guidanceRows)
                 .append(researchCategoryQuestion)
                 .append(scope)

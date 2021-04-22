@@ -270,6 +270,12 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 andReturn();
 
         assertReadOnlyViewEligibilityDetails(result);
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertNull(viewModel.getFecModelEnabled());
     }
 
     @Test
@@ -324,6 +330,10 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         assertReadOnlyViewEligibilityDetails(result);
 
         Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertTrue(viewModel.getFecModelEnabled());
 
         FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
 
@@ -386,6 +396,10 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         assertReadOnlyViewEligibilityDetails(result);
 
         Map<String, Object> model = result.getModelAndView().getModel();
+
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
+
+        assertFalse(viewModel.getFecModelEnabled());
 
         FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
 

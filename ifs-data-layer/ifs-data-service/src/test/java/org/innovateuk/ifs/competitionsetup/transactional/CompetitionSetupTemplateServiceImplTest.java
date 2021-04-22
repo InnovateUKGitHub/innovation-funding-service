@@ -167,7 +167,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
-        verify(subsidyControlTemplate).sections(any());
+        verify(subsidyControlTemplate).sections(any(), any());
     }
 
     @Test

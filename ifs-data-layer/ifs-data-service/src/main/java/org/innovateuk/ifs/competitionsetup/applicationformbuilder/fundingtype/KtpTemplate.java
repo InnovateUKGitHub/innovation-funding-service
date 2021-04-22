@@ -50,7 +50,7 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
-        competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
+        competitionTypeSections.stream().filter(section -> section.getType() == SectionType.FINANCES)
                 .findAny()
                 .ifPresent(financeSection ->
                 {
@@ -114,7 +114,14 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     @Override
     public Competition initialiseFinanceTypes(Competition competition) {
-        List<FinanceRowType> types = newArrayList(ASSOCIATE_SALARY_COSTS, ACADEMIC_AND_SECRETARIAL_SUPPORT, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, INDIRECT_COSTS);
+        List<FinanceRowType> types;
+
+        if (fecFinanceModel) {
+            types = newArrayList(ASSOCIATE_SALARY_COSTS, ACADEMIC_AND_SECRETARIAL_SUPPORT, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, INDIRECT_COSTS);
+        } else {
+            types = newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING);
+        }
+
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
@@ -139,7 +146,7 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {
         Optional<SectionBuilder> applicationQuestionSection = sections.stream()
-                .filter(sectionBuilder -> sectionBuilder.getName().equals("Application questions"))
+                .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.APPLICATION_QUESTIONS)
                 .findFirst();
 
         applicationQuestionSection.ifPresent(sectionBuilder -> {

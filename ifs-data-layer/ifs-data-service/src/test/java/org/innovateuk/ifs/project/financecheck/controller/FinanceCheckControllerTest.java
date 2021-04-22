@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -143,6 +144,53 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         when(financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getFundingRules() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        FundingRulesResource expectedFundingRulesResource = new FundingRulesResource(FundingRulesState.REVIEW, FundingRules.STATE_AID);
+        expectedFundingRulesResource.setFundingRulesLastModifiedDate(LocalDate.now());
+        expectedFundingRulesResource.setFundingRulesInternalUserFirstName("Lee");
+        expectedFundingRulesResource.setFundingRulesInternalUserLastName("Bowman");
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(financeCheckService.getFundingRules(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedFundingRulesResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/funding-rules", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedFundingRulesResource)));
+    }
+
+    @Test
+    public void saveFundingRules() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        FundingRules fundingRules = FundingRules.SUBSIDY_CONTROL;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(financeCheckService.saveFundingRules(projectOrganisationCompositeId, fundingRules)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/funding-rules/{eligibility}", projectId, organisationId, fundingRules))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void approveFundingRules() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(financeCheckService.approveFundingRules(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/funding-rules/approve", projectId, organisationId))
                 .andExpect(status().isOk());
     }
 

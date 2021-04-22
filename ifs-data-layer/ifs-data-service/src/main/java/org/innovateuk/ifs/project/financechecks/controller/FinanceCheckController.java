@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -59,6 +60,14 @@ public class FinanceCheckController {
         return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
     }
 
+    @GetMapping("/{projectId}/partner-organisation/{organisationId}/funding-rules")
+    public RestResult<FundingRulesResource> getFundingRules(@PathVariable("projectId") final Long projectId,
+                                                      @PathVariable("organisationId") final Long organisationId) {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.getFundingRules(projectOrganisationCompositeId).toGetResponse();
+    }
+
 
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/viability/reset")
     public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId,
@@ -96,6 +105,21 @@ public class FinanceCheckController {
                                             @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus).toPostResponse();
+    }
+
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/funding-rules/{fundingRules}")
+    public RestResult<Void> saveFundingRules(@PathVariable("projectId") final Long projectId,
+                                          @PathVariable("organisationId") final Long organisationId,
+                                          @PathVariable("fundingRules") final FundingRules fundingRules) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.saveFundingRules(projectOrganisationCompositeId, fundingRules).toPostResponse();
+    }
+
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/funding-rules/approve")
+    public RestResult<Void> approveFundingRules(@PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.approveFundingRules(projectOrganisationCompositeId).toPostResponse();
     }
 
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}")
