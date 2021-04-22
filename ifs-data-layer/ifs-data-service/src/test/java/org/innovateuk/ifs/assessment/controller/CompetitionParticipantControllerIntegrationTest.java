@@ -3,9 +3,12 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
+import org.innovateuk.ifs.competition.builder.MilestoneBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -14,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
@@ -22,8 +26,11 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSORS_NOTIFIED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
@@ -52,12 +59,12 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         flushAndClearSession();
     }
 
     @Test
-    public void getParticipants() throws Exception {
+    public void getParticipants() {
         Competition competition1 = buildInAssessmentCompetition();
         Competition competition2 = buildInAssessmentCompetition();
 
@@ -89,7 +96,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Test
-    public void getParticipants_differentUser() throws Exception {
+    public void getParticipants_differentUser() {
         loginFelixWilson();
 
         List<CompetitionParticipantResource> participants = controller.getAssessorParticipants(
@@ -100,13 +107,13 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Test
-    public void getParticipants_accepted() throws Exception {
+    public void getParticipants_accepted() {
         Competition competition1 = competitionRepository.findById(1L).get();
         competition1.setStartDate(now().minusDays(10L));
         competition1.setEndDate(now().minusDays(5L));
-        competition1.notifyAssessors(now().minusSeconds(1L));
-
+        competition1.notifyAssessors(now().minusSeconds(1L), competition1.getAssessmentPeriods().get(0));
         Competition competition2 = buildInAssessmentCompetition();
+
 
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
@@ -136,7 +143,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Test
-    public void getParticipants_filtersRejected() throws Exception {
+    public void getParticipants_filtersRejected() {
         Competition competition1 = buildInAssessmentCompetition();
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, REJECTED);
 
@@ -152,7 +159,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     }
 
     @Test
-    public void getParticipants_filtersInAssessment() throws Exception {
+    public void getParticipants_filtersInAssessment() {
         Competition competition1 = buildOutOfAssessmentCompetition();
         Competition competition2 = buildOutOfAssessmentCompetition();
 
@@ -176,6 +183,12 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     private Competition buildInAssessmentCompetition() {
         Competition competition = newCompetition()
                 .with(id(null))
+                .withAssessmentPeriods(
+                        asList(newAssessmentPeriod()
+                                .withMilestones(
+                                        asList(newMilestone().withType(ASSESSORS_NOTIFIED)
+                                                .build()))
+                                .build()))
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorsNotifiedDate(now())
                 .build();

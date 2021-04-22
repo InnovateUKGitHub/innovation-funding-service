@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.domain;
 
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -21,10 +22,12 @@ import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -34,12 +37,9 @@ import static org.junit.Assert.assertTrue;
 
 public class CompetitionTest {
     private Competition competition;
-    @Mock
-    CompetitionMapper competitionMapper;
-
     private Long id;
-    private List<Question> questions;
     private List<Section> sections;
+    private List<AssessmentPeriod> assessmentPeriods;
     private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
@@ -81,14 +81,18 @@ public class CompetitionTest {
                 .withName("Sector")
                 .build();
 
-        competition = new Competition(questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
+        competition = new Competition(emptyList(), sections, name, startDate, endDate, registrationDate, termsAndConditions);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 
+        assessmentPeriods = new ArrayList<>();
+        assessmentPeriods.add(new AssessmentPeriod());
+        competition.setId(id);
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);
         competition.setFunders(getTestFunders(competition));
         competition.setCompetitionType(competitionType);
+        competition.setAssessmentPeriods(assessmentPeriods);
     }
 
 
@@ -168,7 +172,7 @@ public class CompetitionTest {
     @Test
     public void competitionStatusInAssessment() {
         competition.setEndDate(ZonedDateTime.now().minusDays(1));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(1));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(1), assessmentPeriods.get(0));
         competition.setFundersPanelDate(ZonedDateTime.now().plusDays(1));
         assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
     }
@@ -183,11 +187,11 @@ public class CompetitionTest {
     @Test
     public void competitionStatusInAssessment_notCompetitionClosed() throws Exception {
         competition.setEndDate(ZonedDateTime.now().minusDays(3));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(2));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(1));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(2), assessmentPeriods.get(0));
+        competition.closeAssessment(ZonedDateTime.now().minusDays(1), assessmentPeriods.get(0));
 
         try {
-            competition.notifyAssessors(ZonedDateTime.now());
+            competition.notifyAssessors(ZonedDateTime.now(), assessmentPeriods.get(0));
         } catch (IllegalStateException e) {
             assertEquals("Tried to notify assessors when in competitionStatus=FUNDERS_PANEL. " +
                     "Applications can only be distributed when competitionStatus=CLOSED", e.getMessage());
@@ -197,16 +201,16 @@ public class CompetitionTest {
     @Test
     public void competitionStatusInAssessment_alreadyInAssessment() throws Exception {
         competition.setEndDate(ZonedDateTime.now().minusDays(3));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(2));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(1));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(2), assessmentPeriods.get(0));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(1), assessmentPeriods.get(0));
         assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
     }
 
     @Test
     public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent() {
         competition.setEndDate(ZonedDateTime.now().minusDays(5));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(4));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(3));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(4), assessmentPeriods.get(0));
+        competition.closeAssessment(ZonedDateTime.now().minusDays(3), assessmentPeriods.get(0));
         competition.setFundersPanelDate(ZonedDateTime.now().minusDays(2));
         assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
@@ -215,8 +219,8 @@ public class CompetitionTest {
     public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture() {
         competition.setEndDate(ZonedDateTime.now().minusDays(6));
         competition.setAssessorAcceptsDate(ZonedDateTime.now().minusDays(5));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(4));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(3));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(4), assessmentPeriods.get(0));
+        competition.closeAssessment(ZonedDateTime.now().minusDays(3), assessmentPeriods.get(0));
         competition.setFundersPanelDate(ZonedDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(ZonedDateTime.now().plusDays(1));
         assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
@@ -226,8 +230,8 @@ public class CompetitionTest {
     public void competitionStatusAssessorFeedback() {
         competition.setEndDate(ZonedDateTime.now().minusDays(6));
         competition.setAssessorAcceptsDate(ZonedDateTime.now().minusDays(5));
-        competition.notifyAssessors(ZonedDateTime.now().minusDays(4));
-        competition.closeAssessment(ZonedDateTime.now().minusDays(3));
+        competition.notifyAssessors(ZonedDateTime.now().minusDays(4), assessmentPeriods.get(0));
+        competition.closeAssessment(ZonedDateTime.now().minusDays(3), assessmentPeriods.get(0));
         competition.setFundersPanelDate(ZonedDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(1));
         assertEquals(ASSESSOR_FEEDBACK, competition.getCompetitionStatus());

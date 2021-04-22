@@ -8,6 +8,9 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import javax.persistence.*;
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSMENT_CLOSED;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSORS_NOTIFIED;
+
 /**
  * An Assessment Period.
  */
@@ -69,10 +72,10 @@ public class AssessmentPeriod {
     }
 
     public boolean isInAssessment(){
-        return !isAssessmentClosed() && milestones.stream().anyMatch(milestone -> MilestoneType.ASSESSORS_NOTIFIED.equals(milestone.getType()));
+        return !isAssessmentClosed() && milestones.stream().anyMatch(milestone -> ASSESSORS_NOTIFIED.equals(milestone.getType()));
     }
 
     public boolean isAssessmentClosed(){
-        return milestones.stream().anyMatch(milestone -> MilestoneType.ASSESSMENT_CLOSED.equals(milestone.getType()));
+        return milestones.stream().anyMatch(milestone -> ASSESSMENT_CLOSED.equals(milestone.getType()));
     }
 }
