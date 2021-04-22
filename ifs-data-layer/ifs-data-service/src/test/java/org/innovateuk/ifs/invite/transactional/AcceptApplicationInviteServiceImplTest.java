@@ -205,7 +205,7 @@ public class AcceptApplicationInviteServiceImplTest {
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
-        verify(autoCompleteSectionsUtil).intitialiseCompleteSectionsForOrganisation(invite.getTarget(), usersCurrentOrganisation.getId(), expectedProcessRole.getId());
+        verify(autoCompleteSectionsUtil).initialiseCompleteSectionsForOrganisation(invite.getTarget(), usersCurrentOrganisation.getId(), expectedProcessRole.getId());
         expectedProcessRole.setId(null);
         verify(processRoleRepositoryMock).save(expectedProcessRole);
         verify(applicationProgressService).updateApplicationProgress(invite.getTarget().getId());
