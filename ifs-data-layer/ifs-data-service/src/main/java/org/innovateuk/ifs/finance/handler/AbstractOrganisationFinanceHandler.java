@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -77,28 +78,50 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     protected abstract boolean initialiseCostTypeSupported(FinanceRowType costType);
 
-    protected abstract Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition);
+    protected abstract Map<FinanceRowType, FinanceRowCostCategory> createCostCategories(Competition competition, Finance finance);
 
     protected abstract Map<FinanceRowType, FinanceRowCostCategory> afterTotalCalculation(Map<FinanceRowType, FinanceRowCostCategory> costCategories);
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId)).andOnSuccessReturn(finance -> {
-            List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-            return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getApplication().getCompetition()));
+            List<? extends FinanceRow> costs = getApplicationCosts(applicationFinanceId, finance);
+            return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getApplication().getCompetition(), finance));
         }).getSuccess();
+    }
+
+    private List<? extends FinanceRow> getApplicationCosts(long applicationFinanceId, ApplicationFinance finance) {
+        List<ApplicationFinanceRow> applicationFinanceRows = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
+        return filterKtpFecCostCategoriesIfRequired(finance, applicationFinanceRows);
+    }
+
+    private List<? extends FinanceRow> filterKtpFecCostCategoriesIfRequired(Finance finance, List<? extends FinanceRow> financeRows) {
+        if (finance.getApplication().getCompetition().isKtp()) {
+            financeRows = financeRows.stream()
+                    .filter(financeRow -> BooleanUtils.isFalse(finance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRow.getType())
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRow.getType()))
+                    .collect(Collectors.toList());
+        }
+
+        return financeRows;
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId) {
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccessReturn(finance -> {
-            List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-            return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getProject().getApplication().getCompetition()));
+            List<? extends FinanceRow> costs = getProjectCosts(projectFinanceId, finance);
+            return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getProject().getApplication().getCompetition(), finance));
         }).getSuccess();
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories(competition);
+    private List<? extends FinanceRow> getProjectCosts(long projectFinanceId, ProjectFinance finance) {
+        List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+        return filterKtpFecCostCategoriesIfRequired(finance, projectFinanceRows);
+    }
+
+    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition, Finance finance) {
+        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories(competition, finance);
         costCategories = addCostsToCategories(costCategories, costs);
         costCategories = calculateTotals(costCategories);
         return costCategories;

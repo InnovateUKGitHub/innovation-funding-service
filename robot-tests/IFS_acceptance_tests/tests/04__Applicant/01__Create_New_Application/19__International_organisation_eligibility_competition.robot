@@ -17,6 +17,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -433,7 +435,7 @@ Internal user is able to add a new international partner organisation
     Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
-    [Documentation]  IFS-7197
+    [Documentation]  IFS-7197  IFS-9289
     [Tags]  HappyPath
     When partner user provide organisation detail and create account     ${international_invite_email}
     And the user clicks the button/link                                  link = ${internationalApplicationTitle}
@@ -541,7 +543,7 @@ non-uk based partner applicant can see the read only view of the corresponding a
     Then the user should see read only view of completed correspondence address details
 
 External dashboard - lead applicant - view status of partners - bank details not required message should display for international lead applicant organisation
-    [Documentation]    IFS - 7163
+    [Documentation]    IFS - 7163  IFS-9289
     [Tags]
     Given lead applicant invites new partner and accepts invitation
     And partner organisation sets funding level to zero
@@ -940,6 +942,9 @@ lead applicant invites new partner and accepts invitation
 partner organisation sets funding level to zero
     The new partner can complete Your organisation
     the user clicks the button/link                          link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords      the user completes subsidy basis as subsidy control
+    ...                                    AND               the user clicks the button/link                  link = Your funding
     the user selects the radio button                        requestingFunding   false
     the user selects the radio button                        otherFunding  false
     the user clicks the button/link                          jQuery = button:contains("Mark as complete")
@@ -947,6 +952,7 @@ partner organisation sets funding level to zero
     the user clicks the button/link                          id = submit-join-project-button
 
 partner completes all sections to join the project
+    the user completes subsidy basis as subsidy control
     The new partner can complete Your organisation
     the user clicks the button/link                          link = Your funding
     the user selects the radio button                        requestingFunding   true
@@ -1085,12 +1091,19 @@ the user complete all sections of the project setup and generates GOL
     project finance approves Eligibility                                ${organisationTestEmpireOneID}        ${organistaionTestEmpireID}    ${organistaionInnovateID}   ${ProjectID}
     project finance approves Eligibility for Innovate uk organisation   ${organisationUiveristyOfLiverPoolId}
     the user clicks the button/link                                     link = Return to finance checks
+    the user approves funding rules of lead and partner organisations
     the user clicks the button/link                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                     css = #generate-spend-profile-modal-button
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
     proj finance approves the spend profiles                            ${ProjectID}
+
+the user approves funding rules of lead and partner organisations
+    the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(4) td:nth-child(2) a:contains("Review")
 
 a new organisation is able to accept project invite in project setup
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}  ${applicationID}  ${appTitle}  ${organisationBase}
@@ -1205,6 +1218,7 @@ Uk lead completes project setup details and generated GOL
     project finance approves Viability for                                              ${organistaionNewEmpireID}    ${ukLeadApplicationProjectID}
     project finance approves Eligibility for uk based lead and international partner    ${organistaionOrg2}   ${organistaionNewEmpireID}   ${ukLeadApplicationProjectID}
     the user clicks the button/link                                                     link = Return to finance checks
+    the user approves funding rules of lead and partner
     the user clicks the button/link                                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}

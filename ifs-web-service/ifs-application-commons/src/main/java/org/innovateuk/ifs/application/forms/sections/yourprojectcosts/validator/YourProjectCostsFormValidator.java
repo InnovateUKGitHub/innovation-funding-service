@@ -104,9 +104,16 @@ public class YourProjectCostsFormValidator {
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+            case ACADEMIC_AND_SECRETARIAL_SUPPORT:
+                validateAcademicAndSecretarialSupportCosts(form.getAcademicAndSecretarialSupportForm(), validationHandler);
+                break;
             default:
                 // do nothing
         }
+    }
+
+    private void validateAcademicAndSecretarialSupportCosts(AcademicAndSecretarialSupportCostRowForm academicAndSecretarialSupportForm, ValidationHandler validationHandler) {
+        validateForm(academicAndSecretarialSupportForm, validationHandler, "academicAndSecretarialSupportForm");
     }
 
     private void validateJustification(JustificationForm justificationForm, ValidationHandler validationHandler) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.populator;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -23,18 +24,33 @@ public class KtpFinanceModelPopulator {
 
         KtpFundingRowsRunningTotal fundingRunningTotal = new KtpFundingRowsRunningTotal();
 
-        return aKtpFinanceModel()
-                .withAssociateEmployment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SALARY_COSTS), claimPercentage, fundingRunningTotal))
-                .withAssociateDevelopment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS), claimPercentage, fundingRunningTotal))
-                .withTravelAndSubsistence(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KTP_TRAVEL), claimPercentage, fundingRunningTotal))
-                .withConsumables(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.CONSUMABLES), claimPercentage, fundingRunningTotal))
-                .withKnowledgeBaseSupervisor(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KNOWLEDGE_BASE), claimPercentage, fundingRunningTotal))
-                .withAdditionalSupportCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SUPPORT), claimPercentage, fundingRunningTotal))
-                .withOtherCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.OTHER_COSTS), claimPercentage, fundingRunningTotal))
-                .withAssociateEstateCosts(rowFromRunningTotal(fundingRunningTotal, leadFinances))
-                .withAcademicAndSecretarialSupport(row(calculateAcademicAndSecretarialSupport(project), claimPercentage, fundingRunningTotal))
-                .withClaimPercentage(claimPercentage)
-                .build();
+        if (BooleanUtils.isFalse(leadFinances.getFecModelEnabled())) {
+            return aKtpFinanceModel()
+                    .withAssociateEmployment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SALARY_COSTS), claimPercentage, fundingRunningTotal))
+                    .withAssociateDevelopment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS), claimPercentage, fundingRunningTotal))
+                    .withTravelAndSubsistence(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KTP_TRAVEL), claimPercentage, fundingRunningTotal))
+                    .withConsumables(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.CONSUMABLES), claimPercentage, fundingRunningTotal))
+                    .withOtherCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.OTHER_COSTS), claimPercentage, fundingRunningTotal))
+                    .withAcademicAndSecretarialSupport(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT),
+                            claimPercentage, fundingRunningTotal))
+                    .withClaimPercentage(claimPercentage)
+                    .withFecModelEnabled(leadFinances.getFecModelEnabled())
+                    .build();
+        } else {
+            return aKtpFinanceModel()
+                    .withAssociateEmployment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SALARY_COSTS), claimPercentage, fundingRunningTotal))
+                    .withAssociateDevelopment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS), claimPercentage, fundingRunningTotal))
+                    .withTravelAndSubsistence(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KTP_TRAVEL), claimPercentage, fundingRunningTotal))
+                    .withConsumables(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.CONSUMABLES), claimPercentage, fundingRunningTotal))
+                    .withKnowledgeBaseSupervisor(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KNOWLEDGE_BASE), claimPercentage, fundingRunningTotal))
+                    .withAdditionalSupportCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SUPPORT), claimPercentage, fundingRunningTotal))
+                    .withOtherCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.OTHER_COSTS), claimPercentage, fundingRunningTotal))
+                    .withAssociateEstateCosts(rowFromRunningTotal(fundingRunningTotal, leadFinances))
+                    .withAcademicAndSecretarialSupport(row(calculateAcademicAndSecretarialSupport(project), claimPercentage, fundingRunningTotal))
+                    .withClaimPercentage(claimPercentage)
+                    .withFecModelEnabled(leadFinances.getFecModelEnabled())
+                    .build();
+        }
     }
 
     private static BigDecimal calculateAcademicAndSecretarialSupport(ProjectResource project) {

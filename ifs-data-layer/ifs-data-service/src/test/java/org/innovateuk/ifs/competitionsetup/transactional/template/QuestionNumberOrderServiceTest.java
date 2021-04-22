@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,7 +17,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 
 public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
 
@@ -39,7 +39,7 @@ public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<Question
                 .withCompetition(competition)
                 .build(4);
 
-        when(questionRepositoryMock.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), APPLICATION_QUESTIONS.getName()))
+        when(questionRepositoryMock.findByCompetitionIdAndSectionTypeOrderByPriorityAsc(competition.getId(), SectionType.APPLICATION_QUESTIONS))
                 .thenReturn(existingQuestions);
 
         service.updateAssessedQuestionsNumbers(competition.getId());

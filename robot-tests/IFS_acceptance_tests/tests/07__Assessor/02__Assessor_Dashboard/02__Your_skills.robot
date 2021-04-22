@@ -70,7 +70,7 @@ the user checks for serve side validations
     browser validations have been disabled
     the user enters multiple strings into a text field    id = skillAreas    e    5001
     the user clicks the button/link                       jQuery = button:contains("Save and return to your skills")
-    the user should see a field and summary error         This field cannot contain more than 5,000 characters.
+    the user should see a field and summary error         This field cannot contain more than 5000 characters.
 
 the user enter and save the 'Your skills' details
     the user clicks the button/link         jQuery = label:contains("Business")

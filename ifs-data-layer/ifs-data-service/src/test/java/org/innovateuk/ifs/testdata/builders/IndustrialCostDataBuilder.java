@@ -309,6 +309,16 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
+    public IndustrialCostDataBuilder withAcademicAndSecretarialSupport(BigInteger cost) {
+        return addCostItem("Academic And Secretarial Support", (finance) ->
+                new AcademicAndSecretarialSupport(finance.getId(), null, cost));
+    }
+
+    public IndustrialCostDataBuilder withIndirectCosts(BigInteger cost) {
+        return addCostItem("Indirect costs", (finance) ->
+                new IndirectCost(finance.getId(), null, cost));
+    }
+
     private <T extends FinanceRowItem> IndustrialCostDataBuilder updateCostItem(Class<T> clazz, FinanceRowType financeRowType, Consumer<T> updateFn, Predicate<IndustrialCostData> predicate) {
         return with(data -> {
             if (predicate.test(data)) {

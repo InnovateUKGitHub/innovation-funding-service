@@ -519,7 +519,8 @@ The applications should be sorted by column
     @{sorted_column_contents}=    Create List
     : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
+    \    ${converted_contents}=     to number if number    ${cell_contents}
+    \    append to list    ${sorted_column_contents}    ${converted_contents}
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
     Sort List    ${test_sorting_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
@@ -740,7 +741,7 @@ the user search for an existing user
     the user clicks the button/link          css = input[type="submit"]
 
 the user select stakeholder and add to competition
-    the user clicks the button/link           css = a[href="?tab=add"]
-    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
-    And the user clicks the button/link       jQuery = a:contains("Added to competition")
-    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+    the user clicks the button/link     css = a[href="?tab=add"]
+    the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    the user clicks the button/link     jQuery = a:contains("Added to competition")
+    the user should see the element     jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")

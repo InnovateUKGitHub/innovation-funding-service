@@ -1,20 +1,28 @@
 package org.innovateuk.ifs.competition.domain;
 
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.Funder;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.Finance;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.ReflectionUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static junit.framework.TestCase.assertFalse;
@@ -223,5 +231,56 @@ public class CompetitionTest {
         competition.setFundersPanelDate(ZonedDateTime.now().minusDays(2));
         competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(1));
         assertEquals(ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void getFinanceRowTypesByFinanceForFecCostModel() {
+        List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .map(financeRowType -> new CompetitionFinanceRowTypes(competition, financeRowType, 0))
+                .collect(Collectors.toList());
+
+        ReflectionTestUtils.setField(competition, "competitionFinanceRowTypes", competitionFinanceRowTypes);
+        competition.setFundingType(FundingType.KTP);
+
+        ApplicationFinance applicationFinance = new ApplicationFinance();
+        applicationFinance.setFecModelEnabled(true);
+
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(applicationFinance);
+        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
+                FinanceRowType.FINANCE,
+                FinanceRowType.ASSOCIATE_SALARY_COSTS,
+                FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
+                FinanceRowType.CONSUMABLES,
+                FinanceRowType.ASSOCIATE_SUPPORT,
+                FinanceRowType.KNOWLEDGE_BASE,
+                FinanceRowType.ESTATE_COSTS,
+                FinanceRowType.KTP_TRAVEL,
+                FinanceRowType.ADDITIONAL_COMPANY_COSTS,
+                FinanceRowType.PREVIOUS_FUNDING), financeRowTypes);
+    }
+
+    @Test
+    public void getFinanceRowTypesByFinanceForNonFecCostModel() {
+        List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .map(financeRowType -> new CompetitionFinanceRowTypes(competition, financeRowType, 0))
+                .collect(Collectors.toList());
+
+        ReflectionTestUtils.setField(competition, "competitionFinanceRowTypes", competitionFinanceRowTypes);
+        competition.setFundingType(FundingType.KTP);
+
+        ApplicationFinance applicationFinance = new ApplicationFinance();
+        applicationFinance.setFecModelEnabled(false);
+
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(applicationFinance);
+        assertEquals(Arrays.asList(FinanceRowType.OTHER_COSTS,
+                FinanceRowType.FINANCE,
+                FinanceRowType.ASSOCIATE_SALARY_COSTS,
+                FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
+                FinanceRowType.CONSUMABLES,
+                FinanceRowType.KTP_TRAVEL,
+                FinanceRowType.ADDITIONAL_COMPANY_COSTS,
+                FinanceRowType.PREVIOUS_FUNDING,
+                FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
+                FinanceRowType.INDIRECT_COSTS), financeRowTypes);
     }
 }

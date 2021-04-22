@@ -54,7 +54,7 @@ public class AutoCompleteSectionsUtilTest {
         when(sectionStatusService.markSectionAsNotRequired(section.getId(), application.getId(), processRoleId)).thenReturn(serviceSuccess());
         when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
 
-        util.intitialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRoleId);
+        util.initialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRoleId);
 
         verify(sectionStatusService).markSectionAsNotRequired(section.getId(), application.getId(), processRoleId);
     }

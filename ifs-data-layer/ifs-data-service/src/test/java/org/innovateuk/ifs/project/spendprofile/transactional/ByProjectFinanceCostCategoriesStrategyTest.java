@@ -9,7 +9,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -31,7 +31,6 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.ApplicationConfiguration.SBRI_PILOT;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
@@ -182,27 +181,27 @@ import static org.mockito.Mockito.*;
     }
 
         @Test
-        public void testSbriPilotCreate() {
-            CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withName(SBRI_PILOT).withFundingType(FundingType.PROCUREMENT).build();
+        public void testProcurementCreate() {
+            CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withName("name").withFundingType(FundingType.PROCUREMENT).build();
             ApplicationResource ar = newApplicationResource().build();
             ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
             OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
             ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
 
-            SbriPilotCostCategoryGenerator[] spendProfileGenerators =
-                    stream(SbriPilotCostCategoryGenerator.values())
-                            .filter(SbriPilotCostCategoryGenerator::isIncludedInSpendProfile)
-                            .toArray(SbriPilotCostCategoryGenerator[]::new);
+            ProcurementCostCategoryGenerator[] spendProfileGenerators =
+                    stream(ProcurementCostCategoryGenerator.values())
+                            .filter(ProcurementCostCategoryGenerator::isIncludedInSpendProfile)
+                            .toArray(ProcurementCostCategoryGenerator[]::new);
 
             CostCategoryType expectedCct = newCostCategoryType().
-                    withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(SbriPilotCostCategoryGenerator.values(),
-                            SbriPilotCostCategoryGenerator::isIncludedInSpendProfile),
-                            SbriPilotCostCategoryGenerator::getDisplayName,
+                    withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(ProcurementCostCategoryGenerator.values(),
+                            ProcurementCostCategoryGenerator::isIncludedInSpendProfile),
+                            ProcurementCostCategoryGenerator::getDisplayName,
                             ", ")).
                     withCostCategoryGroup(newCostCategoryGroup().
                             withCostCategories(newCostCategory().
-                                    withName(simpleMapArray(spendProfileGenerators, SbriPilotCostCategoryGenerator::getDisplayName, String.class)).
-                                    withLabel(simpleMapArray(spendProfileGenerators, SbriPilotCostCategoryGenerator::getLabel, String.class)).
+                                    withName(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getDisplayName, String.class)).
+                                    withLabel(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getLabel, String.class)).
                                     build(spendProfileGenerators.length)).
                             
                             build()).

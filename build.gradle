@@ -45,7 +45,7 @@ apply from: "gradle-support/openshift-support.gradle"
 buildscript {
 
     ext {
-        springBootVersion = '2.0.9.RELEASE'
+        springBootVersion = '2.4.1'
     }
 
     repositories {
@@ -64,6 +64,8 @@ buildscript {
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
 
         classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
+        classpath "com.github.node-gradle:gradle-node-plugin:1.5.3"
+
     }
 
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final Long yourFecCostSectionId;
 
+    private final Boolean fecModelEnabled;
+
+    private final BigDecimal grantClaimPercentage;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -74,7 +79,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean yourFundingRequired,
                                      Long yourFundingSectionId,
                                      boolean yourFecCostRequired,
-                                     Long yourFecCostSectionId) {
+                                     Long yourFecCostSectionId,
+                                     Boolean fecModelEnabled,
+                                     BigDecimal grantClaimPercentage) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -98,6 +105,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.yourFundingSectionId = yourFundingSectionId;
         this.yourFecCostRequired = yourFecCostRequired;
         this.yourFecCostSectionId = yourFecCostSectionId;
+        this.fecModelEnabled = fecModelEnabled;
+        this.grantClaimPercentage = grantClaimPercentage;
     }
 
     public YourProjectCostsViewModel(long applicationId,
@@ -116,10 +125,12 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      List<FinanceRowType> financeRowTypes,
                                      boolean overheadAlwaysTwenty,
                                      boolean showCovidGuidance,
-                                     boolean showJustificationForm) {
+                                     boolean showJustificationForm,
+                                     Boolean fecModelEnabled,
+                                     BigDecimal grantClaimPercentage) {
         this(applicationId, competitionName, sectionId, competitionId, organisationId, complete, open,
                 includeVat, applicationName, organisationName, financesUrl, procurementCompetition, ktpCompetition, financeRowTypes,
-                overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false, false, null, false, null);
+                overheadAlwaysTwenty, showCovidGuidance, showJustificationForm, false, false, null, false, null, fecModelEnabled, grantClaimPercentage);
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
@@ -147,6 +158,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.yourFundingSectionId = null;
         this.yourFecCostRequired = false;
         this.yourFecCostSectionId = null;
+        this.fecModelEnabled = null;
+        this.grantClaimPercentage = BigDecimal.ZERO;
     }
 
     @Override
@@ -232,6 +245,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return isReadOnly();
     }
 
+    public boolean showEditButton(FinanceRowType type) {
+        return !type.equals(FinanceRowType.INDIRECT_COSTS);
+    }
+
     public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
         return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
     }
@@ -258,5 +275,13 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public Long getYourFecCostSectionId() {
         return yourFecCostSectionId;
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public BigDecimal getGrantClaimPercentage() {
+        return grantClaimPercentage;
     }
 }

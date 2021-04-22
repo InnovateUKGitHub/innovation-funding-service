@@ -50,9 +50,11 @@ public class CompetitionSetupApplicationQuestionValidator {
         validateAssessmentGuidanceRows(form, bindingResult);
     }
 
-    public void validate(ProjectForm form, BindingResult bindingResult) {
+    public void validate(ProjectForm form, BindingResult bindingResult, long questionId) {
         validateScopeGuidanceRows(form, bindingResult);
         validateTypeOfQuestion(form, bindingResult);
+        validateAppendix(form, bindingResult);
+        validateFileUploaded(form, bindingResult, questionId);
     }
 
 
@@ -68,7 +70,7 @@ public class CompetitionSetupApplicationQuestionValidator {
         }
     }
 
-    private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+    private void validateAppendix(AbstractQuestionForm competitionSetupForm, BindingResult bindingResult) {
         if (competitionSetupForm.getNumberOfUploads() != null && competitionSetupForm.getNumberOfUploads() > 0) {
             if (isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
@@ -96,7 +98,7 @@ public class CompetitionSetupApplicationQuestionValidator {
         }
     }
 
-    private void validateFileUploaded(QuestionForm questionForm, BindingResult bindingResult, long questionId) {
+    private void validateFileUploaded(AbstractQuestionForm questionForm, BindingResult bindingResult, long questionId) {
         if (TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
             CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
             if (question.getTemplateFilename() == null) {

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.questionnaire.controller;
 
 
-import org.innovateuk.ifs.application.forms.questions.questionnaire.form.ApplicationQuestionQuestionnaireForm;
+import org.innovateuk.ifs.application.forms.questions.questionnaire.form.QuestionQuestionnaireForm;
 import org.innovateuk.ifs.application.forms.questions.questionnaire.populator.ApplicationQuestionQuestionnaireModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.questionnaire.viewmodel.ApplicationQuestionQuestionnaireViewModel;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -47,8 +47,11 @@ public class ApplicationQuestionQuestionnaireController {
     @Autowired
     private ProcessRoleRestService processRoleRestService;
 
+
+    @SecuredBySpring(value = "VIEW_APPLICATION_QUESTION_QUESTIONNAIRE", description = "Applicants and internal users can view the application question questionnaire page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor', 'monitoring_officer')")
     @GetMapping
-    public String view(@ModelAttribute(name = "form", binding = false) ApplicationQuestionQuestionnaireForm form,
+    public String view(@ModelAttribute(name = "form", binding = false) QuestionQuestionnaireForm form,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        Model model,
                        @PathVariable long applicationId,
@@ -96,7 +99,7 @@ public class ApplicationQuestionQuestionnaireController {
                            @PathVariable long applicationId,
                            @PathVariable long organisationId,
                            @PathVariable long questionId,
-                           @Valid @ModelAttribute("form") ApplicationQuestionQuestionnaireForm form,
+                           @Valid @ModelAttribute("form") QuestionQuestionnaireForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToOverview(applicationId);

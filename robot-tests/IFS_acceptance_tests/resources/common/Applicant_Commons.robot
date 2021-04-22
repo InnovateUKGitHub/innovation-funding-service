@@ -331,10 +331,11 @@ the user checks for funding level guidance at application level
 
 the user checks for funding level guidance at PS level
     the user clicks the button/link     link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords    the user completes subsidy basis as subsidy control
+    ...                                    AND             the user clicks the button/link               link = Your funding
     the user selects the radio button   requestingFunding   true
     the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
-#    the user clicks the button/link     link = competition's rules (opens in a new window)
-#    the user closes the last opened tab
     the user clicks the button/link     link = Back to join project
 
 the user selects research area
@@ -679,6 +680,14 @@ the applicant marks EDI question as complete
     the user can mark the question as complete
     the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
 
+the applicant fills in the Subsidy Basis question
+    the user clicks the button/link                link = Subsidy basis
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+    the user clicks the button/link                jQuery = label:contains("Yes")
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Subsidy basis") > .task-status-complete
+
 the user uploads an appendix
     [Arguments]  ${question_link}  ${appendix_file}
     the user clicks the button/link                link = ${question_link}
@@ -881,3 +890,88 @@ the user completes subsidy basis as subsidy control
     the user selects the checkbox                 agreement
     the user clicks the button/link               id = mark-questionnaire-complete
     the user should see the element               jQuery = li:contains("Subsidy basis") > .task-status-complete
+
+the user completes funding level in application
+    the user clicks the button/link          link = Your project finances
+    the user clicks the button/link          link = Your funding
+    the user selects the radio button        requestingFunding   true
+    the user enters text to a text field     css = [name^="grantClaimPercentage"]  100
+    the user selects the radio button        otherFunding   false
+    the user clicks the button/link          jQuery = button:contains("Mark as complete")
+    the user clicks the button/link          link = Your funding
+
+the lead user completes project details, application questions and finances sections
+    the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
+    the applicant completes Application Team
+    the applicant marks EDI question as complete
+    the user completes the research category
+    the lead applicant fills all the questions and marks as complete(programme)
+    the user clicks the button/link                                                 link = Your project finances
+    the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
+
+the user checks the status of the application before completion
+    the user should see the element         jQuery = dt:contains("Application deadline:") ~ dd:contains("Decision pending")
+    the user clicks the button/link         link = Back to applications
+    the user should see the element         jQuery = li:contains("${applicationName}") .status:contains("% complete")
+    the user should not see the element     jQuery = li:contains("${applicationName}") .status:contains("days left")
+
+the user completes the application details section
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
+    the user clicks the button/link             link = Application details
+    the user should see the element             jQuery = h1:contains("Application details")
+    the user enters text to a text field        id = name  ${appTitle}
+    the user enters text to a text field        id = startDate  ${tomorrowday}
+    the user enters text to a text field        css = #application_details-startdate_month  ${month}
+    the user enters text to a text field        css = #application_details-startdate_year  ${nextyear}
+    the user should see the element             jQuery = label:contains("Project duration in months")
+    the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
+    the user clicks the button twice            css = label[for="resubmission-no"]
+    the user clicks the button/link             id = application-question-complete
+    the user clicks the button/link             link = Back to application overview
+    the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
+
+the user edits the KTP fec model
+    [Arguments]   ${fecModelID}
+    the user clicks the button/link        link = Your fEC model
+    the user clicks the button/link        jQuery = button:contains("Edit your fEC Model")
+    the user selects the radio button      fecModelEnabled  ${fecModelID}
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+
+the user completes the your funding section
+    [Arguments]   ${requestingFundingID}  ${value}   ${otherFundingID}
+    the user clicks the button/link        link = Your funding
+    the user selects the radio button      requestingFunding   ${requestingFundingID}
+    the user enters text to a text field   css = input[id^="grantClaimPercentage"]  ${value}
+    the user selects the radio button      otherFunding  ${otherFundingID}
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+
+the user completes project costs table for non-fec model
+    [Arguments]  ${employmentDuration}  ${cost}  ${costType}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${text}  ${quantity}
+    the user enters text to a text field                    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${employmentDuration}
+    the user enters text to a text field                    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
+    the user enters text to a text field                    id = academicAndSecretarialSupportForm   ${cost}
+    the user selects the option from the drop-down menu     ${costType}  jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) select[name^="ktp"][name$="type"]
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) textarea[name^="ktp"][name$="description"]  ${travelCostDescription}
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="times"]  ${numberOfTrips}
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${cost}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="item"]  ${text}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="quantity"]      ${quantity}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="cost"]       ${cost}
+    the user enters text to a text field                    css = textarea[id^="otherRows"][id$="description"]    ${text}
+    the user enters text to a text field                    css = input[id^="otherRows"][id$="estimate"]       ${cost}
+    the user clicks the button/link                         exceed-limit-no
+    the user clicks the button/link                         css = label[for="stateAidAgreed"]
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
+the partner applicant marks Your project finances information as complete
+    [Arguments]   ${otherFundingID}  ${org_size}  ${month}   ${Year}
+    the user clicks the button/link                link = Other funding
+    the user selects the radio button              otherFunding  ${otherFundingID}
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user enters the project location
+    the user clicks the button/link                link = Your organisation
+    the user selects the radio button              organisationSize  ${org_size}
+    the user enters text to a text field           financialYearEndMonthValue    ${month}
+    the user enters text to a text field           financialYearEndYearValue    ${Year}
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                link = Back to application overview

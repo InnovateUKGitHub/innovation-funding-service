@@ -15,7 +15,8 @@ Documentation  IFS-8414 Internal user - View co funder feedback progress - list 
 ...
 ...            IFS-8408  Co funder view of application
 ...
-
+...            IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -25,9 +26,10 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${supporterApplicationTitle}     	      Reconfiguring an immune response
+${supporterApplicationTitle}     	       Reconfiguring an immune response
 &{Supporter01_credentials}                email=mister.branches@money.com    password=${short_password}
-${KTP_Application_URL}                    ${server}/assessment/supporter/application/266/response
+${ktp_application_id}                     ${application_ids["Myeloid upheaval in severe COVID-19"]}
+${KTP_Application_URL}                    ${server}/assessment/supporter/application/${ktp_application_id}/response
 ${ktpCofundingCompetitionNavigation}      Co funder dashboard - application level
 ${supporterUserUsername}                  Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
@@ -36,6 +38,8 @@ ${cofundingApplicationTitle}              How cancer invasion takes shape
 ${cofundingApplicationID}                 ${application_ids['${cofundingApplicationTitle}']}
 ${supporterOrg}                           The University of Surrey
 ${newApplication}                         New application
+&{fec_supporter_credentials}              email=douglas.alston@money.com    password=${short_password}
+${uploadedPdf}                            fec-file
 
 *** Test Cases ***
 The internal user can allocate applications
@@ -57,15 +61,27 @@ The internal user can invite a supporter to a KTP application
     Given the user can view already assigned supporters
     Then the user can invite a supporter to a KTP application
 
+Supporter can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    [Setup]    get application id using application name
+    Given log in as a different user                                    &{fec_supporter_credentials}
+    When the user navigates to the page                                 ${server}/application/${protonApplicationId}/summary
+    And the user clicks the button/link                                 jQuery = button:contains("Finances summary")
+    Then the user should see read only view for FEC declaration
+
 The internal user can remove a supporter from an application
     [Documentation]   IFS-8405
-    Given the user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
-    Then the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+    Given log in as a different user             &{ifs_admin_user_credentials}
+    When the user clicks the button/link         link = ${cofundingCompetitionName}
+    And the user clicks the button/link          link = Manage supporters
+    And the user can allocate applictions
+    And the user can allocate supporters
+    Then the user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+    And the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
 
 The supporter should not see the removed application on their dashboard
      [Documentation]   IFS-8405
-     [Setup]    get application id using application name
-     Given Log in as a different user                                        email=douglas.alston@money.com    password=${short_password}
+     Given Log in as a different user                                        &{fec_supporter_credentials}
      When the user clicks the button/link                                    link = ${cofundingCompetitionName}
      Then the user navigates to the page and gets a custom error message     ${server}/application/${protonApplicationId}/summary    ${403_error_message}
 
@@ -279,9 +295,9 @@ the user is no longer able to allocate applications
 
 the user checks the feedback validation
     [Arguments]  ${decision}
-    And the user selects the radio button                       decision  ${decision}
-    Then the user clicks the button/link                        jQuery = button:contains("Save and return to applications")
-    And the user should see a field and summary error           Please provide some feedback.
+    the user selects the radio button                 decision  ${decision}
+    the user clicks the button/link                   jQuery = button:contains("Save and return to applications")
+    the user should see a field and summary error     Please provide some feedback.
 
 the user gets the number of applications in page
    ${pages} =   get element count      css = [class="pagination-links govuk-body"] a
@@ -302,12 +318,19 @@ get application id using application name
     ${protonApplicationId} =    get application id by name      The proton size
     set suite variable     ${protonApplicationId}
 
-the user clicks view feedback link
-    And the user clicks the button/link             link = ${cofundingCompetitionName}
-    And the user clicks the button/link             link = Manage co-funders
-    And the user clicks the button/link             link = View supporter feedback
+non-applicant user navigates to your FEC model page
+    the user clicks the button/link     jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
+    the user clicks the button/link     link = Your fEC model
 
-the user can view the feedback
-    When the user clicks the button/link            link = ${cofunderApplicationID}
-    And the user clicks the button/link             link = Back to co-funders
-    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
+the user should see read only view for FEC declaration
+    non-applicant user navigates to your FEC model page
+    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
+    the user checks the read-only page
+
+the user checks the read-only page
+    # Due to us testing webtest data here, the file does not exist so we check for only no internal server errors. Page not found is OK in this case.
+    the user should see the element                                  jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
+    the user clicks the button/link                                  jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
+    Select Window                                                    NEW
+    the user should not see internal server and forbidden errors
+    the user closes the last opened tab

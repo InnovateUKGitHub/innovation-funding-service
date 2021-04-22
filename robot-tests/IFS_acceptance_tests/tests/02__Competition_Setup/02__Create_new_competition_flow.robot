@@ -108,6 +108,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+...               IFS-9482 Loans: Comp setup - new question in Project details section
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -450,7 +452,16 @@ Application: Application details
     And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("84")
     [Teardown]  the user clicks the button/link     link = Application
 
-External user edits the EDI question.
+Project details: Business and financial information
+    [Documentation]  INF-9482
+    Given the user clicks the button/link           link = Business and financial information
+    And the user should see the element             jQuery = h1:contains("Business and financial information")
+    When the user enters text to a text field       id = question.guidanceTitle  Guidance title
+    And the user enters text to a text field        css = label[for="question.guidance"] + * .editor  Guidance text
+    And The user clicks the button/link             jQuery = button:contains('Done')
+    Then the user should see the element            jQuery = li:contains("Business and financial information") .task-status-complete
+
+External user edits the EDI question
     [Documentation]  IFS-7700  IFS-8522
     Given the user marks each question as complete     Equality, diversity and inclusion
     And the user clicks the button/link                link = Equality, diversity and inclusion

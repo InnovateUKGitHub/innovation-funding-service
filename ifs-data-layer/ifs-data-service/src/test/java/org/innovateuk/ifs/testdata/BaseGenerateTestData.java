@@ -53,8 +53,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.testdata.data.CompetitionWebTestData.buildCompetitionLines;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplicationFinances;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
@@ -87,7 +89,7 @@ import static org.mockito.Mockito.when;
  *    In conjunction with "ifs.generate.test.data.competition.filter=BY_NAME", this parameter allows you to specify a
  *    single Competition to generate.
  */
-@ActiveProfiles({"integration-test,seeding-db"})
+@ActiveProfiles({"integration-test","seeding-db"})
 @DirtiesContext
 @SpringBootTest(classes = GenerateTestDataConfiguration.class)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
@@ -102,7 +104,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         NO_COMPETITIONS(competitionLine -> false),
         BY_NAME(competitionLine -> {
             assert competitionNameForFilter != null;
-            return competitionNameForFilter.equals(competitionLine.name);
+            return competitionNameForFilter.equals(competitionLine.getName());
         });
 
         private Predicate<CompetitionLine> test;
@@ -197,8 +199,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
+    private List<CsvUtils.QuestionnaireResponseLine> questionnaireResponseLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control competition}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Subsidy control comp in assessment}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -213,7 +216,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Before
     public void readCsvs() {
         organisationLines = readOrganisations();
-        competitionLines = readCompetitions();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
         externalUserLines = readExternalUsers();
@@ -226,6 +228,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
+        competitionLines = buildCompetitionLines();
+        questionnaireResponseLines = readQuestionnaireResponseLines();
     }
 
     @PostConstruct
@@ -344,7 +348,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitions.forEach(competition -> {
 
             CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
+                    Objects.equals(l.getName(), competition.getCompetition().getName()));
 
             applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
         });
@@ -404,7 +408,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createCompetitionAssessmentPeriods(competitions);
     }
 
-    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
+    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CompetitionLine> competitionLines) {
         return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() ->
                 competitionDataBuilderService.createCompetition(line), taskExecutor));
     }
@@ -421,14 +425,25 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
-        applicationFinances.join(); //wait for finances to be created.
+        applicationFinances.join(); // wait for finances to be created.
+
+        CompletableFuture<List<QuestionnaireResponseData>> questionnaireResponses = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createQuestionnaireResponse(applicationData, applicationLine, questionnaireResponseLines, externalUserLines),
+                taskExecutor);
+
+        List<QuestionnaireResponseData> questionnaireResponseData = questionnaireResponses.join();
+
+        CompletableFuture<List<SubsidyBasisData>> subsidyBasis = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createSubsidyBasis(applicationLine, questionnaireResponseData),
+                taskExecutor);
 
         CompletableFuture<List<ProcurementMilestoneData>> procurementMilestones = CompletableFuture.supplyAsync(() ->
                         applicationDataBuilderService.createProcurementMilestones(applicationData, applicationLine, externalUserLines),
                 taskExecutor);
 
 
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, procurementMilestones);
+
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, questionnaireResponses, subsidyBasis, procurementMilestones);
 
         return allQuestionsAnswered.thenApplyAsync(done -> {
 

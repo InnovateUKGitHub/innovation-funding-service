@@ -32,6 +32,16 @@ public class PendingPartnerProgressRestServiceImpl extends BaseRestService imple
     }
 
     @Override
+    public RestResult<Void> markSubsidyBasisComplete(long projectId, long organisationId) {
+        return postWithRestResult(format(pendingPartnerProgressUrl, projectId, organisationId) + "/subsidy-basis-complete");
+    }
+
+    @Override
+    public RestResult<Void> markSubsidyBasisIncomplete(long projectId, long organisationId) {
+        return postWithRestResult(format(pendingPartnerProgressUrl, projectId, organisationId) + "/subsidy-basis-incomplete");
+    }
+
+    @Override
     public RestResult<Void> markYourOrganisationIncomplete(long projectId, long organisationId) {
         return postWithRestResult(format(pendingPartnerProgressUrl, projectId, organisationId) + "/your-organisation-incomplete");
     }

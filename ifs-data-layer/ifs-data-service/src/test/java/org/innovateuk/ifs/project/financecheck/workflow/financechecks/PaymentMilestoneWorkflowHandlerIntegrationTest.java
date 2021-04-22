@@ -76,7 +76,7 @@ public class PaymentMilestoneWorkflowHandlerIntegrationTest extends
         assertTrue(result);
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
-        // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
+        // This can be done by building the expected PaymentMilestoneProcess object (say X) and verifying that X was the object that was saved.
         PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(projectUser, partnerOrganisation, PaymentMilestoneState.REVIEW);
 
         // Ensure the correct event was fired by the workflow
@@ -133,7 +133,7 @@ public class PaymentMilestoneWorkflowHandlerIntegrationTest extends
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withProject(project).build();
         User internalUser = newUser().build();
 
-        // Set the current state in the Eligibility Process
+        // Set the current state in the Payment Milestone Process
         PaymentMilestoneProcess currentProcess = new PaymentMilestoneProcess((User) null, partnerOrganisation, currentState);
         when(repository.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentProcess);
 
@@ -145,16 +145,16 @@ public class PaymentMilestoneWorkflowHandlerIntegrationTest extends
         assertTrue(result);
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
-        // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        PaymentMilestoneProcess expectedEligibilityProcess = new PaymentMilestoneProcess(internalUser, partnerOrganisation, destinationState);
+        // This can be done by building the expected PaymentMilestoneProcess object (say X) and verifying that X was the object that was saved.
+        PaymentMilestoneProcess expectedPaymentMilestoneProcess = new PaymentMilestoneProcess(internalUser, partnerOrganisation, destinationState);
 
         // Ensure the correct event was fired by the workflow
-        expectedEligibilityProcess.setProcessEvent(expectedEventToBeFired.getType());
+        expectedPaymentMilestoneProcess.setProcessEvent(expectedEventToBeFired.getType());
 
         if (fired) {
-            verify(repository).save(expectedEligibilityProcess);
+            verify(repository).save(expectedPaymentMilestoneProcess);
         } else {
-            verify(repository, never()).save(expectedEligibilityProcess);
+            verify(repository, never()).save(expectedPaymentMilestoneProcess);
         }
     }
 

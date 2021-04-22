@@ -12,7 +12,43 @@
             <label th:if="${model.question != null}" class="govuk-label">
                 <span th:text="${model.question}" class="govuk-heading-s"></span>
             </label>
-            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
+
+            <th:block th:if="${model.multipleStatuses}">
+
+                <th:block th:if="${model.hasAnswerNotMarkedAsComplete()}">
+                    <div class="warning-alert">
+                        <p class="govuk-body">The following organisations have not yet marked this question as complete:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <th:block th:each="nonMarkedAsCompletePartner : ${model.nonMarkedAsCompletePartners}">
+                                <li th:text="${nonMarkedAsCompletePartner.partnerName}">Non marked as complete partner organisation</li>
+                            </th:block>
+                        </ul>
+                        <p class="govuk-body">This application cannot be submitted until all partners mark this question as complete.</p>
+                    </div>
+                </th:block>
+
+                <table class="govuk-table">
+
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Partner</th>
+                        <th scope="col" class="govuk-table__header">Answer</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr th:each="answerRow : ${model.answers}" class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <th:block th:text="${answerRow.partnerName}">Org</th:block><th:block th:if="${answerRow.lead}"> <span class="hint">(Lead)</span></th:block>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${answerRow.answer}"></p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </th:block>
+
+            <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  : 'Answer yet to be provided'}" >Answer</p>
 
             <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
                 <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
@@ -100,6 +136,39 @@
             </dl>
         </div>
     </div>
+</th:block>
+
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.SubsidyBasisReadOnlyViewModel"*/-->
+<th:block th:fragment="subsidy-basis (model)">
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Partner</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Funding rules</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third"></th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr th:each="row : ${model.partners}"
+                class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <th:block th:text="${row.name}"></th:block>
+                    <th:block th:if="${row.lead}">(Lead)</th:block>
+                </td>
+                <td class="govuk-table__cell">
+                    <th:block th:if="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">
+                        <th:block th:text="${row.northernIslandDeclaration ? 'State aid' : 'Subsidy control'}"></th:block>
+                    </th:block>
+                    <th:block th:unless="${row.northernIslandDeclaration != null && row.questionnaireMarkedAsComplete}">Not determined</th:block>
+                </td>
+                <td class="govuk-table__cell ifs-table__email">
+                    <a th:if="${row.questionnaireMarkedAsComplete}"
+                       th:href="@{~/application/{applicationId}/form/organisation/{organisationId}/question/{questionId}/questionnaire(applicationId=${row.applicationId}, organisationId=${row.organisationId}, questionId=${row.questionId})}">
+                       View answers</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </th:block>
 
 <th:block th:fragment="research-category (model)">
@@ -310,7 +379,6 @@
     </table>
 </th:block>
 
-
 <th:block th:fragment="terms-and-conditions (model)">
     <div class="govuk-!-margin-bottom-3">
         <!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.readonly.viewmodel.TermsAndConditionsReadOnlyViewModel"*/-->
@@ -327,9 +395,6 @@
         </th:block>
         <th:block th:insert="this :: terms-and-conditions-partner-table (${model.applicationId}, ${model.questionId}, ${model.partners}, ${model.includeFundingRules}, ${model.displayCompleteStatus})" />
     </div>
-</th:block>
-
-<th:block th:fragment="subsidy-basis(model)">
 </th:block>
 
 </html>
