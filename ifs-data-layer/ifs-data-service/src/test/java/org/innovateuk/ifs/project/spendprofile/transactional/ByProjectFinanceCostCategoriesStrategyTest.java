@@ -293,45 +293,46 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         assertEquals(expectedCct, result);
     }
 
-    @Test
-    public void testSbriPilotCreate() {
-        CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withName(SBRI_PILOT).withFundingType(FundingType.PROCUREMENT).build();
-        ApplicationResource ar = newApplicationResource().build();
-        ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
-        ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
+        @Test
+        public void testProcurementCreate() {
+            CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withName("name").withFundingType(FundingType.PROCUREMENT).build();
+            ApplicationResource ar = newApplicationResource().build();
+            ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
+            OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
+            ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
 
-        ProcurementCostCategoryGenerator[] spendProfileGenerators =
-                stream(ProcurementCostCategoryGenerator.values())
-                        .filter(ProcurementCostCategoryGenerator::isIncludedInSpendProfile)
-                        .toArray(ProcurementCostCategoryGenerator[]::new);
+            ProcurementCostCategoryGenerator[] spendProfileGenerators =
+                    stream(ProcurementCostCategoryGenerator.values())
+                            .filter(ProcurementCostCategoryGenerator::isIncludedInSpendProfile)
+                            .toArray(ProcurementCostCategoryGenerator[]::new);
 
-        CostCategoryType expectedCct = newCostCategoryType().
-                withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(ProcurementCostCategoryGenerator.values(),
-                        ProcurementCostCategoryGenerator::isIncludedInSpendProfile),
-                        ProcurementCostCategoryGenerator::getDisplayName,
-                        ", ")).
-                withCostCategoryGroup(newCostCategoryGroup().
-                        withCostCategories(newCostCategory().
-                                withName(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getDisplayName, String.class)).
-                                withLabel(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getLabel, String.class)).
-                                build(spendProfileGenerators.length)).
+            CostCategoryType expectedCct = newCostCategoryType().
+                    withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(ProcurementCostCategoryGenerator.values(),
+                            ProcurementCostCategoryGenerator::isIncludedInSpendProfile),
+                            ProcurementCostCategoryGenerator::getDisplayName,
+                            ", ")).
+                    withCostCategoryGroup(newCostCategoryGroup().
+                            withCostCategories(newCostCategory().
+                                    withName(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getDisplayName, String.class)).
+                                    withLabel(simpleMapArray(spendProfileGenerators, ProcurementCostCategoryGenerator::getLabel, String.class)).
+                                    build(spendProfileGenerators.length)).
 
-                        build()).
-                build();
+                            build()).
+                    build();
 
-        when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
-        when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(projectFinanceService.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
-        when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
-        when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
+            when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
+            when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
+            when(projectFinanceService.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+            when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
+            when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
+            when(competitionService.getCompetitionById(competition.getId())).thenReturn(serviceSuccess(competition));
 
-        CostCategoryType result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId()).getSuccess();
-        assertEquals(expectedCct, result);
-    }
+            CostCategoryType result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId()).getSuccess();
+            assertEquals(expectedCct, result);
+        }
 
-    private CostCategoryType matcherForCostCategoryType(CostCategoryType expected) {
+
+        private CostCategoryType matcherForCostCategoryType(CostCategoryType expected) {
         return createLambdaMatcher(actual -> {
             assertEquals(expected.getName(), actual.getName());
             assertEquals(expected.getCostCategories().size(), expected.getCostCategories().size());
