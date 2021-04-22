@@ -51,7 +51,7 @@
     <th:block th:unless="${model.general.editable}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application submission',size='govuk-heading-xl'" />
         <p class="govuk-body">
-            Will this be an open-ended competition? &emsp; <strong th:text="${competitionSetupForm.alwaysOpen} ? 'Yes' : 'No'"></strong>.
+            <strong>Will this be an open-ended competition?</strong> &emsp; <th:block th:text="${competitionSetupForm.alwaysOpen} ? 'Yes' : 'No'"></th:block>
         </p>
         <form th:action="@{('application-submission/edit')}" method="post">
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
