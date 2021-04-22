@@ -28,7 +28,7 @@ public class PageResource<PageableResource> {
      */
     private List<PageableResource> content;
     /**
-     * The current page number.
+     * The current page number zero based.
      */
     private int number;
     /**
