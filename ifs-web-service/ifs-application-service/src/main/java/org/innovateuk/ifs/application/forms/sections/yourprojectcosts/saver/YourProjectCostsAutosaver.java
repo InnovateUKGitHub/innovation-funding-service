@@ -26,6 +26,8 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
+import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.INDIRECT_COST_PERCENTAGE;
+import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.calculateIndirectCost;
 
 @Component
 public class YourProjectCostsAutosaver {
@@ -316,33 +318,7 @@ public class YourProjectCostsAutosaver {
         }
     }
 
-    private BigDecimal calculateIndirectCost(ApplicationFinanceResource organisationFinance) {
-        BigDecimal totalAssociateSalaryCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS).getCosts().stream()
-                .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
-                .map(FinanceRowItem::getTotal)
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO);
 
-        BigDecimal totalGrantAssociateSalaryCost = totalAssociateSalaryCost
-                .multiply(organisationFinance.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        BigDecimal totalAcademicAndSecretarialSupportCost = organisationFinance.getFinanceOrganisationDetails().get(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT).getCosts().stream()
-                .filter(financeRowItem -> !financeRowItem.isEmpty() && financeRowItem.getTotal() != null)
-                .map(FinanceRowItem::getTotal)
-                .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO);
-
-        BigDecimal totalGrantAcademicAndSecretarialSupportCost = totalAcademicAndSecretarialSupportCost
-                .multiply(organisationFinance.getGrantClaimPercentage())
-                .divide(new BigDecimal(100));
-
-        return totalGrantAssociateSalaryCost
-                .add(totalGrantAcademicAndSecretarialSupportCost)
-                .multiply(YourProjectCostsForm.INDIRECT_COST_PERCENTAGE)
-                .divide(BigDecimal.valueOf(100))
-                .setScale(0, RoundingMode.HALF_UP);
-    }
 
     private Optional<Long> autosaveAssociateSupportCost(String field, String value, ApplicationFinanceResource finance) {
         String id = idFromRowPath(field);
@@ -573,5 +549,9 @@ public class YourProjectCostsAutosaver {
 
     private String fieldFromRowPath(String field) {
         return field.substring(field.indexOf("].") + 2);
+    }
+
+    public void resetCostRowEntriesBasedOnFecModelUpdate(long applicationId, long organisationId) {
+        financeRowRestService.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
     }
 }

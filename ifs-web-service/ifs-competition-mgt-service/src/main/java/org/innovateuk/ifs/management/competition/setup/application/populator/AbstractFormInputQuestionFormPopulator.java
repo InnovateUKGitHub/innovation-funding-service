@@ -22,6 +22,15 @@ public abstract class AbstractFormInputQuestionFormPopulator {
                 questionResource.getChoices().add(new MultipleChoiceOptionResource());
             }
         }
+        if (questionResource.getNumberOfUploads() != null) {
+            if (questionResource.getNumberOfUploads() == 0) {
+                competitionSetupForm.setNumberOfUploads(0);
+                questionResource.setAppendix(false);
+            } else {
+                competitionSetupForm.setNumberOfUploads(questionResource.getNumberOfUploads());
+                questionResource.setAppendix(true);
+            }
+        }
     }
 
 

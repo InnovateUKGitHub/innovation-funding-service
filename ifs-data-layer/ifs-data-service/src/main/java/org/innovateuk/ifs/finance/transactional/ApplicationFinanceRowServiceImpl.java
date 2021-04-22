@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
@@ -15,15 +16,18 @@ import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FINANCE_TYPE_NOT_SUPPORTED_BY_COMPETITION;
@@ -235,4 +239,26 @@ public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService i
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetCostRowEntriesBasedOnFecModelUpdate(long applicationId, long organisationId) {
+        Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+                applicationId, organisationId);
+        if (applicationFinance.isPresent()) {
+            List<ApplicationFinanceRow> applicationFinanceRows = financeRowRepository.findByTargetId(applicationFinance.get().getId());
+            OrganisationTypeFinanceHandler organisationFinanceHandler =
+                    organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.get().getApplication().getCompetition().getId(), applicationFinance.get().getOrganisation().getOrganisationType().getId());
+            List<ApplicationFinanceRow> financeRows = applicationFinanceRows.stream()
+                    .filter(financeRow -> BooleanUtils.isFalse(applicationFinance.get().getFecModelEnabled())
+                            ? FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRow.getType())
+                            : FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRow.getType()))
+                    .collect(Collectors.toList());
+
+            financeRows.forEach(financeRow -> {
+                financeRow.setCost(BigDecimal.ZERO);
+                organisationFinanceHandler.updateCost(financeRow);
+            });
+        }
+        return serviceSuccess();
+    }
 }

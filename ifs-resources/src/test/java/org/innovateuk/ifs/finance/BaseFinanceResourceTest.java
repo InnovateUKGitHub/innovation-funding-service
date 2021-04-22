@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance;
 
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.Vat;
@@ -12,6 +13,7 @@ import org.mockito.Mockito;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
@@ -20,6 +22,7 @@ import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLa
 import static org.innovateuk.ifs.finance.builder.VATCategoryBuilder.newVATCategory;
 import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.VAT;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 
@@ -71,7 +74,7 @@ public class BaseFinanceResourceTest {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 withTotal(BigDecimal.valueOf(100)).
@@ -96,7 +99,7 @@ public class BaseFinanceResourceTest {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 withTotal(BigDecimal.valueOf(100)).
@@ -126,14 +129,14 @@ public class BaseFinanceResourceTest {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 withTotal(BigDecimal.valueOf(100)).
                                 build(2)).
                         withTotal(BigDecimal.valueOf(100)).
                         build(),
-                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat)).build());
+                VAT,  newVATCategory().withCosts(singletonList(vat)).build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
@@ -152,14 +155,14 @@ public class BaseFinanceResourceTest {
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 withTotal(BigDecimal.valueOf(100)).
                                 build(2)).
                         withTotal(BigDecimal.valueOf(100)).
                         build(),
-                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat)).withTotal(new BigDecimal("20")).build());
+                VAT,  newVATCategory().withCosts(singletonList(vat)).withTotal(new BigDecimal("20")).build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
@@ -174,7 +177,7 @@ public class BaseFinanceResourceTest {
                 .build();
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
-                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat))
+                VAT,  newVATCategory().withCosts(singletonList(vat))
                         .build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
@@ -190,7 +193,7 @@ public class BaseFinanceResourceTest {
                 .build();
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
-                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat))
+                VAT,  newVATCategory().withCosts(singletonList(vat))
                         .build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
@@ -206,11 +209,69 @@ public class BaseFinanceResourceTest {
                 .build();
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
-                FinanceRowType.VAT,  newVATCategory().withCosts(singletonList(vat))
+                VAT,  newVATCategory().withCosts(singletonList(vat))
                         .build());
 
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
         assertTrue(baseFinanceResource.isVatRegistered());
+    }
+
+    @Test
+    public void VatRate_null() {
+        // Setup
+        VatCostCategory vatCostCategoryRegisteredNullRateNull
+                = newVATCategory()
+                .withCosts(
+                        singletonList(newVATCost() // Registered null, rate null
+                                .build()))
+                .build();
+        baseFinanceResource.setFinanceOrganisationDetails(asMap(VAT, vatCostCategoryRegisteredNullRateNull));
+        // Method under test
+        assertEquals(ZERO, baseFinanceResource.getVatRate());
+
+        // Setup
+        VatCostCategory vatCostCategoryRegisteredTrueRateNull
+                = newVATCategory()
+                .withCosts(
+                        singletonList(newVATCost()
+                                .withRegistered(true) // Registered true, rate null
+                                .build()))
+                .build();
+        baseFinanceResource.setFinanceOrganisationDetails(asMap(VAT, vatCostCategoryRegisteredTrueRateNull));
+        // Method under test
+        assertEquals(ZERO, baseFinanceResource.getVatRate());
+    }
+
+    @Test
+    public void VatRate_registeredWithRate() {
+        // Setup
+        VatCostCategory vatCostCategoryRegisteredTrueRateNotNull
+                = newVATCategory()
+                .withCosts(
+                        singletonList(newVATCost()
+                                .withRegistered(true) // Registered true, Rate not null
+                                .withRate(new BigDecimal("0.2"))
+                                .build()))
+                .build();
+        baseFinanceResource.setFinanceOrganisationDetails(asMap(VAT, vatCostCategoryRegisteredTrueRateNotNull));
+        // Method under test
+        assertEquals(new BigDecimal("0.2"), baseFinanceResource.getVatRate());
+    }
+
+    @Test
+    public void VatRate_notRegisteredWithRate() {
+        // Setup
+        VatCostCategory vatCostCategoryRegisteredFalseRateNotNull
+                = newVATCategory()
+                .withCosts(
+                        singletonList(newVATCost()
+                                .withRegistered(false) // Registered false, Rate not null
+                                .withRate(new BigDecimal("0.2"))
+                                .build()))
+                .build();
+        baseFinanceResource.setFinanceOrganisationDetails(asMap(VAT, vatCostCategoryRegisteredFalseRateNotNull));
+        // Method under test
+        assertEquals(ZERO, baseFinanceResource.getVatRate());
     }
 }
