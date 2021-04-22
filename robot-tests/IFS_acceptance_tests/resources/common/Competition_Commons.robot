@@ -652,7 +652,7 @@ the user selects the organisational eligibility to no
 the user should see the correct inputs in the Milestones form
     the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = tr:contains("Submission date") td:contains("Midday") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery = button:contains("Edit")
 
 comp admin enters two answer options
