@@ -31,7 +31,6 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.ApplicationConfiguration.SBRI_PILOT;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
@@ -182,8 +181,8 @@ import static org.mockito.Mockito.*;
     }
 
         @Test
-        public void testSbriPilotCreate() {
-            CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withName(SBRI_PILOT).withFundingType(FundingType.PROCUREMENT).build();
+        public void testProcurementCreate() {
+            CompetitionResource competition = newCompetitionResource().withIncludeJesForm(true).withName("name").withFundingType(FundingType.PROCUREMENT).build();
             ApplicationResource ar = newApplicationResource().build();
             ProjectResource pr = newProjectResource().withCompetition(competition.getId()).withApplication(ar.getId()).build();
             OrganisationResource or = newOrganisationResource().withOrganisationType(BUSINESS.getId()).build();
