@@ -1,28 +1,22 @@
 package org.innovateuk.ifs.competition.domain;
 
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
-import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.util.ReflectionUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -127,7 +121,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionShouldReturnCorrectAttributeValues() throws Exception {
+    public void competitionShouldReturnCorrectAttributeValues() {
         assertEquals(competition.getId(), id);
         assertEquals(competition.getName(), name);
         assertEquals(competition.getSections(), sections);
@@ -185,7 +179,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusInAssessment_notCompetitionClosed() throws Exception {
+    public void competitionStatusInAssessment_notCompetitionClosed() {
         competition.setEndDate(ZonedDateTime.now().minusDays(3));
         competition.notifyAssessors(ZonedDateTime.now().minusDays(2), assessmentPeriods.get(0));
         competition.closeAssessment(ZonedDateTime.now().minusDays(1), assessmentPeriods.get(0));
@@ -193,13 +187,12 @@ public class CompetitionTest {
         try {
             competition.notifyAssessors(ZonedDateTime.now(), assessmentPeriods.get(0));
         } catch (IllegalStateException e) {
-            assertEquals("Tried to notify assessors when in competitionStatus=FUNDERS_PANEL. " +
-                    "Applications can only be distributed when competitionStatus=CLOSED", e.getMessage());
+            assertEquals("Tried to notify assessors when assessment is closed", e.getMessage());
         }
     }
 
     @Test
-    public void competitionStatusInAssessment_alreadyInAssessment() throws Exception {
+    public void competitionStatusInAssessment_alreadyInAssessment() {
         competition.setEndDate(ZonedDateTime.now().minusDays(3));
         competition.notifyAssessors(ZonedDateTime.now().minusDays(2), assessmentPeriods.get(0));
         competition.notifyAssessors(ZonedDateTime.now().minusDays(1), assessmentPeriods.get(0));

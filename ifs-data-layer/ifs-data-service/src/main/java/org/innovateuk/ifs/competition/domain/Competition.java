@@ -398,7 +398,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public ZonedDateTime getAssessorDeadlineDate(AssessmentPeriod assessmentPeriod) {
-        return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
+        return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessmentPeriod).orElse(null);
     }
 
     public void setAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
@@ -486,6 +486,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         Milestone milestone = getMilestone(milestoneType, assessmentPeriod).orElseGet(() -> {
             Milestone m = new Milestone(milestoneType, this, assessmentPeriod);
             milestones.add(m);
+            assessmentPeriod.getMilestones().add(m);
             return m;
         });
         milestone.setDate(dateTime == null ? null : dateTime.truncatedTo(ChronoUnit.SECONDS));

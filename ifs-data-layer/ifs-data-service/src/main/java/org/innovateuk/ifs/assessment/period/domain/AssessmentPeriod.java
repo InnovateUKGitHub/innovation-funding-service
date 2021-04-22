@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSMENT_CLOSED;
@@ -26,7 +27,7 @@ public class AssessmentPeriod {
     private Competition competition;
 
     @OneToMany(mappedBy="assessmentPeriod")
-    public List<Milestone> milestones;
+    public List<Milestone> milestones = new ArrayList<>();
 
     @OneToMany(mappedBy="assessmentPeriod")
     public List<Application> applications;
@@ -72,10 +73,10 @@ public class AssessmentPeriod {
     }
 
     public boolean isInAssessment(){
-        return !isAssessmentClosed() && milestones.stream().anyMatch(milestone -> ASSESSORS_NOTIFIED.equals(milestone.getType()));
+        return milestones != null && !isAssessmentClosed() && milestones.stream().anyMatch(milestone -> ASSESSORS_NOTIFIED.equals(milestone.getType()));
     }
 
     public boolean isAssessmentClosed(){
-        return milestones.stream().anyMatch(milestone -> ASSESSMENT_CLOSED.equals(milestone.getType()));
+        return milestones != null  && milestones.stream().anyMatch(milestone -> ASSESSMENT_CLOSED.equals(milestone.getType()));
     }
 }

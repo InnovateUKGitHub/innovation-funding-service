@@ -6,6 +6,8 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -64,6 +66,7 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -78,6 +81,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_NOTI
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
@@ -105,6 +109,10 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
+
+
+    @Mock
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Mock
     private AssessmentRepository assessmentRepository;
@@ -138,6 +146,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private CompetitionRepository competitionRepository;
+
+
 
     @Mock
     private SystemNotificationSource systemNotificationSource;
@@ -203,7 +213,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withInnovationArea(innovationAreaResource)
                 .build();
 
-        when(profileRepository.findById(anyLong())).thenReturn(Optional.of(newProfile().build()));
+        when(profileRepository.findById(anyLong())).thenReturn(of(newProfile().build()));
         when(innovationAreaMapper.mapToDomain(innovationAreaResource)).thenReturn(newInnovationArea().build());
 
         when(assessmentInviteService.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
@@ -221,7 +231,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         when(registrationService.activateAssessorAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(assessmentInviteService.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
-        when(userRepository.findById(createdUserResource.getId())).thenReturn(Optional.of(createdUser));
+        when(userRepository.findById(createdUserResource.getId())).thenReturn(of(createdUser));
         when(assessmentParticipantRepository.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
@@ -427,7 +437,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         long assessorId = 7L;
         long profileId = 11L;
 
-        Optional<User> user = Optional.of(
+        Optional<User> user = of(
                 newUser()
                         .withProfileId(profileId)
                         .build()
@@ -438,7 +448,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ProfileResource profileResource = newProfileResource().build();
 
         when(userRepository.findById(assessorId)).thenReturn(user);
-        when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
+        when(profileRepository.findById(profileId)).thenReturn(of(profile));
         when(userMapper.mapToResource(user.get())).thenReturn(userResource);
         when(assessorProfileMapper.mapToResource(profile)).thenReturn(profileResource);
 
@@ -522,7 +532,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
         );
 
-        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepository.findById(competitionId)).thenReturn(of(competition));
         when(assessmentRepository.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId)).thenReturn(assessments);
         when(assessmentWorkflowHandler.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandler.notify(same(assessments.get(1)))).thenReturn(true);
@@ -549,7 +559,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void notifyAssessorsByCompetition_oneEmailPerUser() {
         Long competitionId = 1L;
-
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName("Test Competition")
@@ -558,20 +567,29 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
         User user = newUser().build();
 
-        List<Assessment> assessments = newAssessment()
-                .withId(2L, 3L)
-                .withProcessState(AssessmentState.CREATED)
-                .withApplication(
-                        newApplication().withCompetition(competition).build(),
-                        newApplication().withCompetition(competition).build()
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod()
+                .withCompetition(competition)
+                .withApplications(asList(
+                        newApplication()
+                                .withCompetition(competition)
+                                .withAssessments(
+                                        asList(newAssessment()
+                                                .withProcessState(AssessmentState.CREATED)
+                                                .withParticipant(newProcessRole().withUser(user).build())
+                                                .build()))
+                                .build(),
+                        newApplication()
+                                .withCompetition(competition)
+                                .withAssessments(
+                                        asList(newAssessment()
+                                                .withProcessState(AssessmentState.CREATED)
+                                                .withParticipant(newProcessRole().withUser(user).build())
+                                                .build()))
+                                .build()
+                        )
                 )
-                .withParticipant(
-                        newProcessRole().withUser(user).build(),
-                        newProcessRole().withUser(user).build()
-                )
-                .build(2);
-
-        EmailContent emailContent = newEmailContentResource().build();
+                .build();
+        competition.getMilestones().forEach(m -> m.setAssessmentPeriod(assessmentPeriod));
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
@@ -587,20 +605,22 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
         );
 
-        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(assessmentRepository.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId)).thenReturn(assessments);
-        when(assessmentWorkflowHandler.notify(same(assessments.get(0)))).thenReturn(true);
-        when(assessmentWorkflowHandler.notify(same(assessments.get(1)))).thenReturn(true);
+        when(competitionRepository.findById(competitionId)).thenReturn(of(competition));
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(true);
 
         when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(assessmentRepository, competitionRepository, assessmentWorkflowHandler, notificationService);
+        InOrder inOrder = inOrder(assessmentRepository, competitionRepository, assessmentWorkflowHandler, notificationService, assessmentPeriodRepository);
         inOrder.verify(competitionRepository).findById(competitionId);
-        inOrder.verify(assessmentRepository).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
-        inOrder.verify(assessmentWorkflowHandler).notify(same(assessments.get(0)));
-        inOrder.verify(assessmentWorkflowHandler).notify(same(assessments.get(1)));
+        inOrder.verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
+        inOrder.verify(assessmentPeriodRepository).findById(assessmentPeriod.getId());
+        inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)));
+        inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)));
         inOrder.verify(notificationService).sendNotificationWithFlush(expectedNotification, EMAIL);
 
         inOrder.verifyNoMoreInteractions();
@@ -627,29 +647,52 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void notifyAssessorsByCompetition_oneTransitionFails() {
-        long competitionId = 1L;
-
         Competition competition = newCompetition()
-                .withId(competitionId)
+                .withName("Test Competition")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().minusDays(1))
                 .build();
-        List<Assessment> assessments = newAssessment()
-                .withProcessState(AssessmentState.CREATED)
-                .withId(2L, 3L)
-                .build(2);
+        User user = newUser().build();
 
-        when(assessmentRepository.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId))
-                .thenReturn(assessments);
-        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(assessmentWorkflowHandler.notify(same(assessments.get(0)))).thenReturn(true);
-        when(assessmentWorkflowHandler.notify(same(assessments.get(1)))).thenReturn(false);
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod()
+                .withCompetition(competition)
+                .withApplications(asList(
+                        newApplication()
+                                .withCompetition(competition)
+                                .withAssessments(
+                                        asList(newAssessment()
+                                                .withProcessState(AssessmentState.CREATED)
+                                                .withParticipant(newProcessRole().withUser(user).build())
+                                                .build()))
+                                .build(),
+                        newApplication()
+                                .withCompetition(competition)
+                                .withAssessments(
+                                        asList(newAssessment()
+                                                .withProcessState(AssessmentState.CREATED)
+                                                .withParticipant(newProcessRole().withUser(user).build())
+                                                .build()))
+                                .build()
+                        )
+                )
+                .build();
+        competition.getMilestones().forEach(m -> m.setAssessmentPeriod(assessmentPeriod));
 
-        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(false);
 
-        InOrder inOrder = inOrder(assessmentRepository, competitionRepository, assessmentWorkflowHandler, notificationService);
-        inOrder.verify(competitionRepository).findById(competitionId);
-        inOrder.verify(assessmentRepository).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
-        inOrder.verify(assessmentWorkflowHandler).notify(same(assessments.get(0)));
-        inOrder.verify(assessmentWorkflowHandler).notify(same(assessments.get(1)));
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competition.getId());
+
+        InOrder inOrder = inOrder(assessmentRepository, competitionRepository, assessmentWorkflowHandler,  assessmentPeriodRepository);
+        inOrder.verify(competitionRepository).findById(competition.getId());
+        inOrder.verify(assessmentPeriodRepository).findByCompetitionId(competition.getId());
+        inOrder.verify(assessmentPeriodRepository).findById(assessmentPeriod.getId());
+        inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)));
+        inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)));
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());
@@ -659,29 +702,52 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void notifyAssessorsByCompetition_allTransitionsFail() {
-        long competitionId = 1L;
-
         Competition competition = newCompetition()
-                .withId(competitionId)
+                .withName("Test Competition")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().minusDays(1))
                 .build();
-        List<Assessment> assessments = newAssessment()
-                .withProcessState(AssessmentState.CREATED)
-                .withId(2L, 3L)
-                .build(2);
+        User user = newUser().build();
 
-        when(assessmentRepository.findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId))
-                .thenReturn(assessments);
-        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(assessmentWorkflowHandler.notify(same(assessments.get(0)))).thenReturn(false);
-        when(assessmentWorkflowHandler.notify(same(assessments.get(1)))).thenReturn(false);
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod()
+                .withCompetition(competition)
+                .withApplications(asList(
+                        newApplication()
+                                .withCompetition(competition)
+                                .withAssessments(
+                                        asList(newAssessment()
+                                                .withProcessState(AssessmentState.CREATED)
+                                                .withParticipant(newProcessRole().withUser(user).build())
+                                                .build()))
+                                .build(),
+                        newApplication()
+                                .withCompetition(competition)
+                                .withAssessments(
+                                        asList(newAssessment()
+                                                .withProcessState(AssessmentState.CREATED)
+                                                .withParticipant(newProcessRole().withUser(user).build())
+                                                .build()))
+                                .build()
+                        )
+                )
+                .build();
+        competition.getMilestones().forEach(m -> m.setAssessmentPeriod(assessmentPeriod));
 
-        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
+        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(false);
+        when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(false);
 
-        InOrder inOrder = inOrder(assessmentRepository, competitionRepository, assessmentWorkflowHandler, notificationService);
-        inOrder.verify(competitionRepository).findById(competitionId);
-        inOrder.verify(assessmentRepository).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
-        inOrder.verify(assessmentWorkflowHandler).notify(same(assessments.get(0)));
-        inOrder.verify(assessmentWorkflowHandler).notify(same(assessments.get(1)));
+        ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competition.getId());
+
+        InOrder inOrder = inOrder(assessmentRepository, competitionRepository, assessmentWorkflowHandler,  assessmentPeriodRepository);
+        inOrder.verify(competitionRepository).findById(competition.getId());
+        inOrder.verify(assessmentPeriodRepository).findByCompetitionId(competition.getId());
+        inOrder.verify(assessmentPeriodRepository).findById(assessmentPeriod.getId());
+        inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)));
+        inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)));
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());

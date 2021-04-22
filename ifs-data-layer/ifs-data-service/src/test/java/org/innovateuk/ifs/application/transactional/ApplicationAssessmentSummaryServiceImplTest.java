@@ -14,6 +14,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +45,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -252,6 +256,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .build())
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
+                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
                 .withProcessRoles(newProcessRole()
@@ -301,6 +306,11 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withName("Digital Manufacturing")
                         .build())
                 .withCompetition(newCompetition()
+                        .withAssessmentPeriods(
+                                asList(newAssessmentPeriod().withMilestones(
+                                        asList(newMilestone()
+                                                .build()))
+                                        .build()))
                         .withName("Connected digital additive manufacturing")
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())

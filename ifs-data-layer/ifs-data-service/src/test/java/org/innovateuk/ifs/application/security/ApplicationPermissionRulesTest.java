@@ -5,6 +5,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
+import org.innovateuk.ifs.competition.builder.MilestoneBuilder;
 import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
@@ -22,19 +25,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -267,7 +269,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
 
-                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+                Competition competition = newCompetition()
+                        .withAssessmentPeriods(
+                                asList(newAssessmentPeriod()
+                                        .withMilestones(asList(
+                                                newMilestone().build()))
+                                        .build()))
+                        .withCompetitionStatus(competitionStatus).build();
                 ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
 
                 // if the user is not a Comp Admin, immediately fail
@@ -382,6 +390,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void markAsIneligibleAllowedBeforeAssessment() {
         asList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
             Competition competition = newCompetition()
+                    .withAssessmentPeriods(asList(newAssessmentPeriod().withMilestones(Arrays.asList(newMilestone().build())).build()))
                     .withCompetitionStatus(competitionStatus)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();

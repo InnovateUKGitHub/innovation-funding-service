@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.domain;
 
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
-import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
-import org.innovateuk.ifs.competition.builder.MilestoneBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
@@ -15,7 +13,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.PROJECT_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.RELEASE_FEEDBACK;
 import static org.junit.Assert.*;
@@ -35,7 +32,7 @@ public class CompetitionStatusTest {
     	currentDate = ZonedDateTime.now();
     	future = currentDate.plusMinutes(1);
     	past = currentDate.minusMinutes(1);
-        assessmentPeriods = asList(newAssessmentPeriod().withMilestones(asList(newMilestone().build())).build());
+        assessmentPeriods = asList(newAssessmentPeriod().build());
         competitionType = newCompetitionType()
                 .withName("Sector")
                 .build();
