@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.mapper;
 
+import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Milestone;

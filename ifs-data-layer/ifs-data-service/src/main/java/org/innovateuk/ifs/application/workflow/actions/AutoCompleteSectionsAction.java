@@ -20,7 +20,7 @@ public class AutoCompleteSectionsAction extends BaseApplicationAction {
     @Override
     protected void doExecute(final Application application,
                              final StateContext<ApplicationState, ApplicationEvent> context) {
-        autoCompleteSectionsUtil.intitialiseCompleteSectionsForOrganisation(application
+        autoCompleteSectionsUtil.initialiseCompleteSectionsForOrganisation(application
                 , application.getLeadOrganisationId(),
                 application.getLeadApplicantProcessRole().getId());
     }
