@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -27,6 +28,10 @@ public class ProjectFinanceBuilder extends BaseBuilder<ProjectFinance, ProjectFi
 
     public ProjectFinanceBuilder withProject(Project... value) {
         return withArray((v, finance) -> finance.setProject(v), value);
+    }
+
+    public ProjectFinanceBuilder withFecModelEnabled(Boolean fecModelEnabled) {
+        return with(finance -> finance.setFecModelEnabled(fecModelEnabled));
     }
 
     private ProjectFinanceBuilder(List<BiConsumer<Integer, ProjectFinance>> newMultiActions) {

@@ -112,6 +112,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private CovidType covidType;
     private boolean alwaysOpen;
     private boolean subsidyControl;
+    private boolean hasBusinessAndFinancialInformationQuestion;
 
     public CompetitionResource() {
     }
@@ -210,7 +211,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return financeRowTypes;
     }
 
-    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<BaseFinanceResource> finance) {
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<? extends BaseFinanceResource> finance) {
         List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
 
         if (this.isKtp() && finance.isPresent()) {
@@ -1004,4 +1005,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 );
     }
 
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return hasBusinessAndFinancialInformationQuestion;
+    }
+
+    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
+        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
+        return this;
+    }
 }

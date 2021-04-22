@@ -14,6 +14,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("shortTitle").description("Short title of the question"),
             fieldWithPath("title").description("Title of the question"),
             fieldWithPath("subTitle").description("Sub title of the question"),
+            fieldWithPath("subTitle2").description("Sub title2 of the question"),
             fieldWithPath("guidanceTitle").description("The title of the guidance for the question"),
             fieldWithPath("guidance").description("The content of the guidance for the question"),
             fieldWithPath("textArea").description("Does this question include the textarea section"),
