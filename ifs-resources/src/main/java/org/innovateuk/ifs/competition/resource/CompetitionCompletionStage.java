@@ -34,4 +34,5 @@ public enum CompetitionCompletionStage {
                 .filter(completionStage -> (completionStage == RELEASE_FEEDBACK || completionStage == PROJECT_SETUP))
                 .collect(Collectors.toList());
     }
+
 }
