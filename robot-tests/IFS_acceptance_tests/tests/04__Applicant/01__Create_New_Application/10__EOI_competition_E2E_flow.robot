@@ -23,6 +23,8 @@ Documentation     Suite description
 ...
 ...               IFS-7724 Input organisation details manually
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -57,7 +59,7 @@ ${applicant_email}          sherlock@holmes.com
 
 *** Test Cases ***
 Comp Admin Creates EOI type competition
-    [Documentation]  IFS-2192  IFS-8779
+    [Documentation]  IFS-2192  IFS-8779  IFS-8847
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
     Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative  No
 

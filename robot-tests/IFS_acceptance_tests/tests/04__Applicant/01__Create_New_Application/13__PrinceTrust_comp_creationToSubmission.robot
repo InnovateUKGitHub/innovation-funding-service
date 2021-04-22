@@ -7,6 +7,8 @@ Documentation   IFS-2688 As a Portfolio manager I am able to create a Prince's T
 ...
 ...             IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...             IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -20,7 +22,7 @@ ${application_name}  The Prince Trust Application
 
 *** Test Cases ***
 Comp Admin creates The Prince's Trust type competition
-    [Documentation]  IFS-2688  IFS-8779
+    [Documentation]  IFS-2688  IFS-8779  IFS-8847
     [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
     Then the competition admin creates The Prince's Trust Comp   ${rto_type_id}  ${comp_name}  Prince

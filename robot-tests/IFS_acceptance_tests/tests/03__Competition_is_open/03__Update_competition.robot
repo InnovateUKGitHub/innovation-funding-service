@@ -27,6 +27,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               IFS-6775 Initial details type ahead
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -137,7 +139,7 @@ Funding Information is editable (Open)
     [Teardown]    the user clicks the button/link  link = Back to competition details
 
 Milestones are editable (Open)
-    [Documentation]    INFUND-6694
+    [Documentation]    INFUND-6694  IFS-8847
     [Tags]
     When the user clicks the button/link                     link = Milestones
     And the user clicks the button/link                      jQuery = a:contains("Next")

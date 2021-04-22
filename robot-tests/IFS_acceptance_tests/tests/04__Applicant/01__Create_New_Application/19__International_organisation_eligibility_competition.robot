@@ -19,6 +19,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -91,7 +93,7 @@ Eligibility is changed to project eligibility in pagination
      Then the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
 
 Comp admin can not complete the competition setup without organisational eligibility category completetion
-     [Documentation]  IFS-7195
+     [Documentation]  IFS-7195  IFS-8847
      Given the user clicks the button/link          link = Return to setup overview
      When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
      Then The user should see the element                                                  css = #compCTA[disabled]
@@ -156,7 +158,7 @@ Comp admin sets lead organisations can lead international competitions and sets 
      Then the user should see the element                        jQuery = h2:contains('Open') ~ ul a:contains('${internationalLeadInternationalCompetition}')
 
 Comp admin sets lead organisations can not lead international competitions and sets competition to live
-     [Documentation]  IFS-7246
+     [Documentation]  IFS-7246  IFS-8847
      Given the user navigates to the page                                                  ${CA_UpcomingComp}
      When comp admin sets lead organisation can not lead the international competition
      And Get competition id and set open date to yesterday                                 ${ukLeadInternationalCompetition}

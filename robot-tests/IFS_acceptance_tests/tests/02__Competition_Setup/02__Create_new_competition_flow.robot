@@ -110,6 +110,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-9482 Loans: Comp setup - new question in Project details section
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -356,7 +358,7 @@ Funding eligibility: Mark as Done
     Then The user clicks the button/link          link = Return to setup overview
 
 Milestones: Page should contain the correct fields
-    [Documentation]    INFUND-2993
+    [Documentation]    INFUND-2993  IFS-8847
     [Tags]
     Given the user clicks the button/link         link = Milestones
     And the user should see the element           jQuery = h1:contains("Completion stage")

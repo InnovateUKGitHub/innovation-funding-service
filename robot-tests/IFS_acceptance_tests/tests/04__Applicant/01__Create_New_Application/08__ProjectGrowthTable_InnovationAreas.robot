@@ -25,6 +25,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -46,7 +48,7 @@ ${fundingRule}               SUBSIDY_CONTROL
 
 *** Test Cases ***
 Comp Admin starts a new Competition
-    [Documentation]    INFUND-6393  IFS-8779  IFS-8791
+    [Documentation]    INFUND-6393  IFS-8779  IFS-8791  IFS-8847
     [Tags]  HappyPath
     [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields

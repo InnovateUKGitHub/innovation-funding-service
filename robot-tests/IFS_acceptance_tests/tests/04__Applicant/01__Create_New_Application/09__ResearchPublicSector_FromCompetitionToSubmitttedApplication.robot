@@ -13,6 +13,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -32,7 +34,7 @@ ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
-    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700  IFS-8779
+    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700  IFS-8779  IFS-8847
     [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}

@@ -11,6 +11,8 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+...            IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -26,7 +28,7 @@ ${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
-    [Documentation]  IFS-5158  IFS-6775
+    [Documentation]  IFS-5158  IFS-6775  IFS-8847
     Given a user starts a new competition
     When the user clicks the button/link                               link = Initial details
     Then the user selects the option from the drop-down menu           ${compType_H2020}   name = competitionTypeId

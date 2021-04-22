@@ -33,6 +33,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-6775 Initial details type ahead
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -147,7 +149,7 @@ Project eligibility client-side validations
     And the user cannot see a validation error in the page
 
 Milestones: Server side validations, submission time is default
-    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650
+    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650  IFS-8847
     [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link                         link = Milestones
@@ -164,7 +166,7 @@ Milestones: Server side validations, submission time is default
     [Teardown]  the user clicks the button/link                   link = Back to competition details
 
 Milestones: Client side validations, submission time is non-default
-    [Documentation]  INFUND-2993, INFUND-7632
+    [Documentation]  INFUND-2993, INFUND-7632  IFS-8847
     [Tags]
     Given the user clicks the button/link                                     link = Milestones
     And the user completes completition stage and application submissions
@@ -173,7 +175,7 @@ Milestones: Client side validations, submission time is non-default
     Then the user should see the element                                      jQuery = div:contains("Milestones") ~ .task-status-complete
 
 Milestones: Autosave
-    [Documentation]  INFUND-2993 INFUND-7632
+    [Documentation]  INFUND-2993 INFUND-7632  IFS-8847
     [Tags]
     When the user clicks the button/link              link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
