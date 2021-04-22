@@ -35,10 +35,4 @@ public enum CompetitionCompletionStage {
                 .collect(Collectors.toList());
     }
 
-    public static List<CompetitionCompletionStage> assessmentValues() {
-        return Stream.of(values())
-                .filter(competitionCompletionStage -> (competitionCompletionStage == CompetitionCompletionStage.PROJECT_SETUP
-                        || competitionCompletionStage == CompetitionCompletionStage.RELEASE_FEEDBACK))
-                .collect(Collectors.toList());
-    }
 }
