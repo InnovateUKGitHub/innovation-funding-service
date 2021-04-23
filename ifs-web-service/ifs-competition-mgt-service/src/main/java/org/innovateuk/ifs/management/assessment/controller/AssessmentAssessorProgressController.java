@@ -113,6 +113,15 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 
+    @PostMapping("/withdraw/{assessmentId}/period/{assessmentPeriodId}")
+    public String withdrawAssessmentFromPeriod(@PathVariable long competitionId,
+                                     @PathVariable long assessorId,
+                                     @PathVariable long assessmentId,
+                                     @PathVariable long assessmentPeriodId) {
+        assessmentRestService.withdrawAssessment(assessmentId).getSuccess();
+        return format("redirect:/assessment/competition/%s/assessors/%s/period/%s", competitionId, assessorId, assessmentPeriodId);
+    }
+
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
     public String withdrawAssessmentConfirm(
             Model model,
@@ -123,6 +132,22 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                 competitionId,
                 assessorId,
                 assessmentId
+        ));
+        return "competition/assessor-progress-remove-confirm";
+    }
+
+    @GetMapping(value = "/withdraw/{assessmentId}/period/{assessmentPeriodId}/confirm")
+    public String withdrawAssessmentConfirm(
+            Model model,
+            @PathVariable long competitionId,
+            @PathVariable long assessorId,
+            @PathVariable long assessmentId,
+            @PathVariable long assessmentPeriodId) {
+        model.addAttribute("model", new AssessorAssessmentProgressRemoveViewModel(
+                competitionId,
+                assessorId,
+                assessmentId,
+                assessmentPeriodId
         ));
         return "competition/assessor-progress-remove-confirm";
     }
