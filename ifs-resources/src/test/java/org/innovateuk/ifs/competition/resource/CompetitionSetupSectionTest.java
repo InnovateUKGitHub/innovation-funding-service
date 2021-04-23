@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
@@ -63,7 +64,25 @@ public class CompetitionSetupSectionTest {
 		
 		assertEquals(CompetitionSetupSection.MILESTONES, result);
 	}
-	
+
+	@Test
+	public void testFromPathCompletionStage() {
+		String path = "completion-stage";
+
+		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
+
+		assertEquals(CompetitionSetupSection.COMPLETION_STAGE, result);
+	}
+
+	@Test
+	public void testFromPathApplicationSubmission() {
+		String path = "application-submission";
+
+		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
+
+		assertEquals(CompetitionSetupSection.APPLICATION_SUBMISSION, result);
+	}
+
 	@Test
 	public void testFromPathApplication() {
 		String path = "application";
@@ -161,5 +180,21 @@ public class CompetitionSetupSectionTest {
 		assertTrue(initialDetailsSection.preventEdit(competitionResource));
 		assertTrue(additionalInfoSection.preventEdit(competitionResource));
 		assertTrue(projectDocumentSection.preventEdit(competitionResource));
+	}
+
+	@Test
+	public void testGetAllNextSectionsForCompletionStage() {
+		List<CompetitionSetupSection> nextSections = CompetitionSetupSection.COMPLETION_STAGE.getAllNextSections();
+
+		assertEquals(1, nextSections.size());
+		assertEquals(CompetitionSetupSection.MILESTONES, nextSections.get(0));
+	}
+
+	@Test
+	public void testGetAllNextSectionsForApplicationSubmission() {
+		List<CompetitionSetupSection> nextSections = CompetitionSetupSection.APPLICATION_SUBMISSION.getAllNextSections();
+
+		assertEquals(1, nextSections.size());
+		assertEquals(CompetitionSetupSection.MILESTONES, nextSections.get(0));
 	}
 }
