@@ -14,10 +14,10 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,7 @@ public class GenericQuestionApplicationModelPopulator {
         QuestionResource question = applicantQuestion.getQuestion();
         ApplicationResource application = applicantQuestion.getApplication();
         CompetitionResource competition = applicantQuestion.getCompetition();
+        OrganisationResource leadOrganisation = applicantQuestion.getLeadOrganisation();
 
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
@@ -79,6 +80,8 @@ public class GenericQuestionApplicationModelPopulator {
                 .withOpen(application.isOpen() && competition.isOpen())
                 .withLeadApplicant(applicantQuestion.getCurrentApplicant().isLead())
                 .withAssignButtonsViewModel(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, hideAssignButtons))
+                .withLeadOrganisationName(leadOrganisation.getName())
+                .withLeadOrganisationCompaniesHouseNumber(leadOrganisation.getCompaniesHouseNumber())
                 .build();
     }
 

@@ -84,7 +84,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
 
     private Map<CostCategory, BigDecimal> getTotalsPerCostCategory(CompetitionResource competition, OrganisationResource organisation, CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
 
-        if (competition.isSbriPilot() || competition.isProcurement()) {
+        if (competition.isProcurement()) {
             return getProcurementTotalsPerCostCategory(costCategoryType, spendRows);
         } else if (competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
             return getAcademicTotalsPerCostCategory(costCategoryType, spendRows);

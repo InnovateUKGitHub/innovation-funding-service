@@ -48,7 +48,7 @@
                 </table>
             </th:block>
 
-            <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
+            <p th:unless="${model.multipleStatuses}" data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer != null ? model.answer  : 'Answer yet to be provided'}" >Answer</p>
 
             <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
                 <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
