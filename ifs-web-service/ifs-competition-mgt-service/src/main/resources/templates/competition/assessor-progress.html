@@ -26,6 +26,11 @@
                     subTitle=|${model.competitionId} : ${model.competitionName}|,
                     size='govuk-heading-xl'" />
 
+        <th:block th:unless="${model.assessmentPeriodId == null}">
+            <h3 class="govuk-heading-m" th:text="${model.assessmentPeriodName}">assessment period</h3>
+            <hr/>
+        </th:block>
+
         <h2 class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorName}"></h2>
 
         <h3 class="govuk-heading-m govuk-!-margin-0">Innovation area and skills</h3>

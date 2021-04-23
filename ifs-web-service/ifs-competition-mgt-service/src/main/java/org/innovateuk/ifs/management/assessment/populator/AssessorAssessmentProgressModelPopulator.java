@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.S
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -35,6 +36,9 @@ public class AssessorAssessmentProgressModelPopulator {
 
     @Autowired
     private CompetitionRestService competitionService;
+
+    @Autowired
+    private AssessmentPeriodService assessmentPeriodService;
 
     public AssessorAssessmentProgressViewModel populateModel(long competitionId,
                                                              long assessorId,
@@ -74,12 +78,15 @@ public class AssessorAssessmentProgressModelPopulator {
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
 
+        String assessmentPeriodName = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, summaryResource.getCompetitionId());
+
         return new AssessorAssessmentProgressViewModel(
                 summaryResource.getCompetitionId(),
                 summaryResource.getCompetitionName(),
                 summaryResource.getCompetitionStatus(),
                 assessorId,
                 assessmentPeriodId,
+                assessmentPeriodName,
                 summaryResource.getAssessor().getUser().getName(),
                 innovationAreas,
                 filter,
