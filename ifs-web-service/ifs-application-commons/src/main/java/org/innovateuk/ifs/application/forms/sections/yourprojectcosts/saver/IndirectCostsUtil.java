@@ -84,7 +84,7 @@ public class IndirectCostsUtil {
                         getCostTotalFromFinances(FinanceRowType.ASSOCIATE_SALARY_COSTS, finance),
                         finance.getGrantClaimPercentage()),
                 calculateGrantPercentageAmount.apply(
-                        updatedValue,
+                        Optional.ofNullable(updatedValue).orElse(new BigDecimal("0")),
                         finance.getGrantClaimPercentage()));
     }
 
