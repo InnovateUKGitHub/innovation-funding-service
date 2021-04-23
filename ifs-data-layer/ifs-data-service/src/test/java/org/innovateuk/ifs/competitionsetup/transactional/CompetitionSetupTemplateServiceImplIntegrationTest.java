@@ -38,7 +38,7 @@ public class CompetitionSetupTemplateServiceImplIntegrationTest extends BaseAuth
 
         stream(CompetitionTypeEnum.values()).forEach(type -> {
             Competition competition = competitionRepository.save(newCompetition()
-                    .withId(null)
+                    .withId((Long) null)
                     .withFundingType(FundingType.GRANT)
                     .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                     .build());
@@ -57,7 +57,7 @@ public class CompetitionSetupTemplateServiceImplIntegrationTest extends BaseAuth
 
         stream(FundingType.values()).forEach(type -> {
             Competition competition = competitionRepository.save(newCompetition()
-                    .withId(null)
+                    .withId((Long) null)
                     .withFundingType(type)
                     .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                     .build());
@@ -77,7 +77,7 @@ public class CompetitionSetupTemplateServiceImplIntegrationTest extends BaseAuth
 
         stream(FundingRules.values()).forEach(fundingRules -> {
             Competition competition = competitionRepository.save(newCompetition()
-                    .withId(null)
+                    .withId((Long) null)
                     .withFundingType(FundingType.GRANT)
                     .withFundingRules(fundingRules)
                     .build());
