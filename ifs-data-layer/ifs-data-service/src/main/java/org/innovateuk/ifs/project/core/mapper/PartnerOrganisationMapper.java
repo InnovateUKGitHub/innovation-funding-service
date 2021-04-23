@@ -8,9 +8,11 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(
         config = GlobalMapperConfig.class,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {
                 ProjectMapper.class,
                 OrganisationMapper.class

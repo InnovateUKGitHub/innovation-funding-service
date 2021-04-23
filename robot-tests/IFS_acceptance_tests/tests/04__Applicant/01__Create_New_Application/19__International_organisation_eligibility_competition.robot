@@ -19,6 +19,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -91,9 +93,9 @@ Eligibility is changed to project eligibility in pagination
      Then the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
 
 Comp admin can not complete the competition setup without organisational eligibility category completetion
-     [Documentation]  IFS-7195
+     [Documentation]  IFS-7195  IFS-8847
      Given the user clicks the button/link          link = Return to setup overview
-     When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL
+     When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
      Then The user should see the element                                                  css = #compCTA[disabled]
 
 Comp admin can access the Organisational eligibility category and check for all required fields
@@ -156,7 +158,7 @@ Comp admin sets lead organisations can lead international competitions and sets 
      Then the user should see the element                        jQuery = h2:contains('Open') ~ ul a:contains('${internationalLeadInternationalCompetition}')
 
 Comp admin sets lead organisations can not lead international competitions and sets competition to live
-     [Documentation]  IFS-7246
+     [Documentation]  IFS-7246  IFS-8847
      Given the user navigates to the page                                                  ${CA_UpcomingComp}
      When comp admin sets lead organisation can not lead the international competition
      And Get competition id and set open date to yesterday                                 ${ukLeadInternationalCompetition}
@@ -648,12 +650,12 @@ the user checks for lead organisations fields
     the user should see the element           link = Return to setup overview
 
 the user completes all categories except organisational eligibility category
-    [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}  ${fundingRule}
-    the user selects the Terms and Conditions               ${compType}  ${fundingRule}
+    [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}  ${fundingRule}   ${isOpenComp}
+    the user selects the Terms and Conditions               ${compType}            ${fundingRule}
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS funding eligibility            ${researchCategory}    ${compType}    ${fundingRule}
-    the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}
+    the user fills in the CS funding eligibility            ${researchCategory}    ${compType}                 ${fundingRule}
+    the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}          ${isOpenComp}
     the user marks the Application as done                  ${projectGrowth}       ${compType}                 ${internationalLeadInternationalCompetition}
     the user fills in the CS Assessors                      GRANT
     the user clicks the button/link                         link = Public content
@@ -675,7 +677,7 @@ comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
      the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      the user selects the organisational eligibility                                   true    false
-     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL
+     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
      the user clicks the button/link                                                   jQuery = a:contains("Complete")
      the user clicks the button/link                                                   jQuery = button:contains('Done')
 
