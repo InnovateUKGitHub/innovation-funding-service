@@ -35,5 +35,3 @@ public enum ProcurementCostCategoryGenerator implements CostCategoryGenerator<Pr
     }
 
 }
-
-
