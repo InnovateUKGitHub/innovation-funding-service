@@ -1,4 +1,6 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.assessment.period.domain;
+
+import org.innovateuk.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 
@@ -12,9 +14,6 @@ public class AssessmentPeriod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rank")
-    private Integer index;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competition_id", referencedColumnName = "id")
     private Competition competition;
@@ -23,9 +22,8 @@ public class AssessmentPeriod {
         // default constructor
     }
 
-    public AssessmentPeriod(Competition competition, Integer index) {
+    public AssessmentPeriod(Competition competition) {
         this.competition = competition;
-        this.index = index;
     }
 
     public Long getId() {
@@ -34,14 +32,6 @@ public class AssessmentPeriod {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
     }
 
     public Competition getCompetition() {

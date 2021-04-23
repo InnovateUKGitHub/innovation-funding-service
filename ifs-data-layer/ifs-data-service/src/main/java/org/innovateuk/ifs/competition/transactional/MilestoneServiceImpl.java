@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -17,10 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
@@ -28,6 +32,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.assessmentPeriodValues;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -50,6 +55,12 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Autowired
     private MilestoneMapper milestoneMapper;
+
+    @Autowired
+    private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Override
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
@@ -154,11 +165,25 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     @Transactional
-    public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
-        Competition competition = competitionRepository.findById(id).orElse(null);
+    public ServiceResult<MilestoneResource> create(MilestoneResource milestoneResource) {
+        return getCompetition(milestoneResource.getCompetitionId()).andOnSuccess(competition -> {
+            AssessmentPeriod assessmentPeriod = null;
+            if (assessmentPeriodValues().contains(milestoneResource.getType())) {
+                if (competition.isAlwaysOpen()) {
+                    if (milestoneResource.getAssessmentPeriodId() != null) {
+                        assessmentPeriod = assessmentPeriodRepository.findById(milestoneResource.getAssessmentPeriodId()).orElse(null);
+                    } else {
+                        return serviceFailure(CommonFailureKeys.ASSESSMENT_PERIOD_MISSING_FROM_MILESTONE);
+                    }
+                } else {
+                    assessmentPeriod = assessmentPeriodRepository.findFirstByCompetitionId(competition.getId())
+                            .orElseGet(() -> assessmentPeriodRepository.save(new AssessmentPeriod(competition)));
+                }
+            }
+            Milestone milestone = new Milestone(milestoneResource.getType(), competition, assessmentPeriod);
+            return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
 
-        Milestone milestone = new Milestone(type, competition);
-        return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
+        });
     }
 
     @Override
@@ -170,7 +195,11 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 competition.setCompletionStage(completionStage);
 
                 List<Milestone> currentMilestones = milestoneRepository.findAllByCompetitionId(competitionId);
-                List<Milestone> newMilestones = new ArrayList<>();
+                Set<MilestoneType> targetMilestoneTypes = EnumSet.allOf(MilestoneType.class)
+                        .stream()
+                        .filter(milestoneType -> milestoneTypeShouldBeCreatedAtCompletionStageChange(milestoneType, competition))
+                        .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
+                        .collect(Collectors.toSet());
 
                 if (currentMilestones.size() > 1) {
                     List<Milestone> milestonesToDelete = currentMilestones.stream()
@@ -180,24 +209,34 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                     milestoneRepository.deleteAll(milestonesToDelete);
 
                     List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
-                            .map(milestone -> milestone.getType())
+                            .map(Milestone::getType)
                             .collect(toList());
 
-                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                            .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType)).forEach(type ->
-                            newMilestones.add(new Milestone(type, competition))
-                    );
-                    milestoneRepository.saveAll(newMilestones);
+                    targetMilestoneTypes.stream()
+                            .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType))
+                            .forEach(type -> create(new MilestoneResource(type, competition.getId())
+                    ));
                 } else {
-                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                            .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
-                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
-                            newMilestones.add(new Milestone(type, competition))
+                    targetMilestoneTypes.stream()
+                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
+                            .forEach(type -> create(new MilestoneResource(type, competition.getId()))
                     );
-                    milestoneRepository.saveAll(newMilestones);
                 }
             }
         });
+    }
+
+    private boolean milestoneTypeShouldBeCreatedAtCompletionStageChange(MilestoneType milestoneType, Competition competition) {
+        if (milestoneType.isOnlyNonIfs()) {
+            return false;
+        }
+        if (!milestoneType.isPresetDate()) {
+            return false;
+        }
+        if (competition.isAlwaysOpen()) {
+            return !assessmentPeriodValues().contains(milestoneType);
+        }
+        return true;
     }
 
     private ValidationMessages validate(List<MilestoneResource> milestones) {

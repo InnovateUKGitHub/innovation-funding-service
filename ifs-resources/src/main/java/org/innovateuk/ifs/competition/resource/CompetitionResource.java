@@ -1005,11 +1005,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 );
     }
 
-    @JsonIgnore
-    @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
-    }
 
     public boolean isHasBusinessAndFinancialInformationQuestion() {
         return hasBusinessAndFinancialInformationQuestion;
