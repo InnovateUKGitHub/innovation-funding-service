@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
@@ -47,6 +48,9 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private AssessmentPeriodService assessmentPeriodService;
 
     @Override
     protected AssessmentAssessorsController supplyControllerUnderTest() {
