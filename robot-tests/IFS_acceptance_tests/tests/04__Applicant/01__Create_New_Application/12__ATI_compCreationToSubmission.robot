@@ -29,6 +29,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-9297 PCR - Applicant can view and accept the correct T&Cs (Project Setup)
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -51,9 +53,9 @@ ${assessor2_email}                    alexis.colon@gmail.com
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
-    [Documentation]  IFS-2396  IFS-8779
+    [Documentation]  IFS-2396  IFS-8779  IFS-8847
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative  No
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
