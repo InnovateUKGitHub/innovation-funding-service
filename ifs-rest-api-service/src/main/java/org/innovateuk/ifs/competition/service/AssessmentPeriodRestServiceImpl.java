@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.service;
 
+import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
@@ -22,8 +23,12 @@ public class AssessmentPeriodRestServiceImpl
     private String assessmentPeriodRestURL = "/assessment-period";
 
     @Override
-    public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId) {
+    public RestResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId) {
         return getWithRestResult(assessmentPeriodRestURL + "?competitionId=" + competitionId, ParameterizedTypeReferences.assessmentPeriodResourceListType());
+    }
+    @Override
+    public RestResult<PageResource<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId, int page, int size) {
+        return getWithRestResult(String.format("%s/?competitionId=%d&page=%d&size=%d", assessmentPeriodRestURL, competitionId, page, size), new ParameterizedTypeReference<PageResource<AssessmentPeriodResource>>() {});
     }
 
     @Override

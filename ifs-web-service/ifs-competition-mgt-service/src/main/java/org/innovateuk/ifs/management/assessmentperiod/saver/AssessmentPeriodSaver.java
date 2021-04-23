@@ -51,6 +51,7 @@ public class AssessmentPeriodSaver {
                     MilestoneResource milestone = new MilestoneResource();
                     milestone.setDate(date);
                     milestone.setType(milestoneRowForm.getMilestoneType());
+                    milestone.setCompetitionId(competitionId);
                     milestone.setAssessmentPeriodId(assessmentPeriodId);
                     return milestoneRestService.create(milestone).toServiceResult().andOnSuccessReturnVoid();
                 }

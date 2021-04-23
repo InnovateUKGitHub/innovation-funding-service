@@ -9,6 +9,7 @@ import java.util.Map;
 public class AssessmentPeriodForm extends BaseBindingResultTarget {
 
     private Long assessmentPeriodId;
+    private int index;
     private LinkedMap<String, MilestoneRowForm> milestoneEntries;
 
     public void setMilestoneEntries(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
@@ -27,4 +28,12 @@ public class AssessmentPeriodForm extends BaseBindingResultTarget {
         this.assessmentPeriodId = assessmentPeriodId;
     }
 
+    public int getIndex() {
+        return index;
+    }
+
+    public AssessmentPeriodForm setIndex(int index) {
+        this.index = index;
+        return this;
+    }
 }

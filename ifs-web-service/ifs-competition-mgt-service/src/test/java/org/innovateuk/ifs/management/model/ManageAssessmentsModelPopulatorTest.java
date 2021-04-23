@@ -71,7 +71,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
         when(competitionRestService.getCompetitionById(expectedCompetitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
         when(assessmentPeriodFormPopulator.populate(expectedCompetitionId)).thenReturn(form);
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, periods);
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, periods, assessmentPeriodPagination);
 
         ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(expectedCompetitionId);
 
