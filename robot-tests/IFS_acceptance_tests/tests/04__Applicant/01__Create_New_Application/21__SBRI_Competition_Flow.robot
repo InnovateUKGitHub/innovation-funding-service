@@ -85,9 +85,9 @@ Comp admin edits the completition stage with competition close option
 
 Comp admin complete the SBRI milestones
     [Documentation]  IFS-7313
-    Given the user clicks the button/link                                  jQuery = span:contains("Milestones")
+    Given the user clicks the button/link                             jQuery = span:contains("Milestones")
     When the user fills in the competition close Milestones
-    Then the user should see the correct inputs in the Milestones form
+    Then the user should see correct inputs in milestones form
     And the user should see milestones section marked as complete
 
 Project duration validation in application payment milestones if project duration not completed in application details
@@ -613,3 +613,9 @@ generate spend profile
     the user clicks the button/link     link = Return to finance checks
     the user clicks the button/link     css = .generate-spend-profile-main-button
     the user should see the element     css = .success-alert
+
+the user should see correct inputs in milestones form
+    the user should see the element     jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element     jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element     jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element     jQuery = button:contains("Edit")

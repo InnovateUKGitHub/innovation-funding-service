@@ -317,7 +317,8 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
-        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm.getCost())
+        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm)
+                .map(AcademicAndSecretarialSupportCostRowForm::getCost)
                 .orElse(BigInteger.valueOf(0)));
     }
 
