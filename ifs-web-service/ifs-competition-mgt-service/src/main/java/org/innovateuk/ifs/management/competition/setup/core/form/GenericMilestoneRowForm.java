@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.core.form;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.text.WordUtils;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -146,12 +147,12 @@ public class GenericMilestoneRowForm {
 
     protected String getNameOfDay() {
         String dayName =  getMilestoneDate(day, month, year);
-        if(dayName == null) {
+        if (dayName == null) {
             dayOfWeek = "-";
         }
         else {
             try {
-                dayOfWeek = dayName.substring(0, 1) + dayName.substring(1, 3).toLowerCase();
+                dayOfWeek = WordUtils.capitalize(dayName.toLowerCase());
             } catch (Exception e) {
                 LOG.trace(e);
             }

@@ -220,6 +220,7 @@
 <!-- =================== Public content section - Dates  =========================================================== -->
 <th:block th:fragment="section-dates(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-6">These dates are set in the competition milestones:</h2>
         <th:block th:each="event : ${model.sortedEvents}">
             <div class="govuk-grid-row govuk-!-margin-bottom-6">
                 <div class="govuk-grid-column-one-third">
@@ -233,7 +234,7 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p class="govuk-body">Text entered into this section will appear within the dates tab.</p>
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-6">Generated automatically from the competition milestones.</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-6">These dates are set in the competition milestones:</h2>
         <th:block th:each="event : ${model.sortedEvents}">
             <div class="govuk-grid-row govuk-!-margin-bottom-6">
                 <div class="govuk-grid-column-one-third">
@@ -250,8 +251,9 @@
                     <fieldset class="govuk-fieldset">
                         <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="form.dates[__${index}__]">
-                            <h2 class="govuk-fieldset__heading">Date</h2>
+                            <h2 class="govuk-fieldset__heading">New event</h2>
                         </legend>
+                        <p class="govuk-body">Everything entered here will appear in the competition's 'Dates' tab.</p>
                         <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
                         </th:block>
@@ -311,7 +313,7 @@
                 </div>
                 <div class="govuk-form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'govuk-form-group--error':''">
                     <label class="govuk-label govuk-label--s" th:for="dates[__${index}__].content">
-                        Content
+                        Event description
                     </label>
                     <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />

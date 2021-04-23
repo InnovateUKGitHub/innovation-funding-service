@@ -60,8 +60,11 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                 }
             }
         });
-
-        return milestoneRestService.updateMilestones(updatedMilestones).toServiceResult();
+        if (!updatedMilestones.isEmpty()) {
+            return milestoneRestService.updateMilestones(updatedMilestones).toServiceResult();
+        } else {
+            return serviceSuccess();
+        }
     }
 
     @Override

@@ -96,7 +96,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
                     dateViewModel.setContent("This is open-ended competition and applications can be submitted at any time.");
                     dateViewModel.setNullDateText("No submission deadline");
                 } else {
-                    dateViewModel.setContent("Submission deadline, competition closed.");
+                    dateViewModel.setContent("Submission deadline - competition closes");
                 }
                 break;
             case REGISTRATION_DATE:
