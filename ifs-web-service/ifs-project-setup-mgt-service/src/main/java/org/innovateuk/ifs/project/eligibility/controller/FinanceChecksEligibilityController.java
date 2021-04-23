@@ -61,6 +61,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * This controller serves the Eligibility page where internal users can confirm the eligibility of a partner organisation's
@@ -239,15 +240,16 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
         Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, new ResetEligibilityForm(), form, null, false, user, true);
 
-        List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
+        ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
 
-        Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
-                .filter(projectFinance -> projectFinance.getOrganisation().longValue() == organisationId)
-                .findFirst();
-        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(organisationProjectFinance);
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(projectFinance))
+                .stream()
+                .filter(FinanceRowType::isAppearsInProjectCostsAccordion)
+                .collect(Collectors.toList());
 
         financeRowTypes.forEach(type -> yourProjectCostsFormValidator.validateType(form, type, validationHandler));
+
         ProjectResource project = projectService.getById(projectId);
         boolean ktp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
 
