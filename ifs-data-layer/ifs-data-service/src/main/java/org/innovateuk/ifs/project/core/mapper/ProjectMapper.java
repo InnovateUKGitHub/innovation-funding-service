@@ -54,7 +54,10 @@ public abstract class ProjectMapper extends BaseMapper<Project, ProjectResource,
     @Mappings({
             @Mapping(target = "organisations", ignore = true),
             @Mapping(target = "partnerOrganisations", ignore = true),
-            @Mapping(target = "spendProfiles", ignore = true)
+            @Mapping(target = "spendProfiles", ignore = true),
+            @Mapping(target = "projectProcess", ignore = true),
+            @Mapping(target = "signedAdditionalContractFile", ignore = true),
+            @Mapping(target = "signedGolDocusignDocument", ignore = true)
     })
     @Override
     public abstract Project mapToDomain(ProjectResource projectResource);
