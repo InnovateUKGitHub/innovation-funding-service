@@ -560,12 +560,12 @@ the data is in the database correctly
      ${month1VAT} =    get spend profile value     VAT   ${sbriProjectId}  0
      ${month2VAT} =    get spend profile value     VAT   ${sbriProjectId}  1
      ${month3VAT} =    get spend profile value     VAT   ${sbriProjectId}  2
-     Should Be Equal As Integers   ${month1Costs}   55228
-     Should Be Equal As Integers   ${month2Costs}   0
-     Should Be Equal As Integers   ${month3Costs}   165675
-     Should Be Equal As Integers   ${month1VAT}     11046
-     Should Be Equal As Integers   ${month2VAT}     0
-     Should Be Equal As Integers   ${month3VAT}     33135
+     Should Be Equal As Integers   ${month1Costs}   73634
+     Should Be Equal As Integers   ${month2Costs}   49089
+     Should Be Equal As Integers   ${month3Costs}   98180
+     Should Be Equal As Integers   ${month1VAT}     14727
+     Should Be Equal As Integers   ${month2VAT}     9818
+     Should Be Equal As Integers   ${month3VAT}     19636
 
 internal user generates the contract
     [Arguments]  ${projectID}
