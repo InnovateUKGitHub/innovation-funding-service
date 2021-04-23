@@ -117,12 +117,13 @@
         <th:block th:if="${model.readOnly}">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
                 Will you be using the full economic costing (fEC) funding model?
-                <p class="govuk-list readonly-data  govuk-!-margin-top-0"
-                   th:classappend = "${form.fecModelEnabled} ? 'govuk-!-margin-bottom-5'
-                                                  : 'govuk-!-margin-bottom-7'"
-                   th:text="${form.fecModelEnabled} ? 'Yes' : 'No'"></p>
+               <p class="govuk-body" th:if="${!model.complete}">
+                    Question not answered.</p>
+                <p class="govuk-list readonly-data  govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+                   th:if="${model.complete}"
+                   th:text="${form.fecModelEnabled}? 'Yes' : 'No'"></p>
             </legend>
-            <th:block th:if="${ form.fecModelEnabled}">
+            <th:block th:if="${form.fecModelEnabled != null and form.fecModelEnabled and model.complete != null and model.complete}">
                 <div class="upload-section ">
                     <h3 th:if="${model.readOnly}" class="govuk-heading-s govuk-!-margin-0">View fEC certificate</h3>
                     <div class="govuk-form-group">
@@ -139,8 +140,12 @@
             </th:block>
         </th:block>
 
-        <div class="form-footer" th:if="${model.open}">
-             <div class="form-footer__actions">
+        <div class="message-alert  govuk-!-margin-top-9 " th:if="${form.displayBanner}">
+            <p class="govuk-body">Changing your answer may affect any project costs already entered.</p>
+        </div>
+
+        <div class="form-footer govuk-!-margin-top-9" th:if="${model.open}">
+            <div class="form-footer__actions">
                  <button id="mark_as_complete" th:unless="${model.complete}" type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                  </button>
@@ -148,8 +153,9 @@
                             class="button-clear" value="true"
                             th:text="${'Edit your fEC Model'}">Edit
                  </button>
-             </div>
+            </div>
         </div>
+
         <div>
              <a th:href="${model.financesUrl}"
                    th:if="${model.readOnly}"

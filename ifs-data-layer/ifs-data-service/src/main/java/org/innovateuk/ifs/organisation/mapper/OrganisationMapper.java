@@ -10,6 +10,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
@@ -24,7 +27,8 @@ public abstract class OrganisationMapper extends BaseMapper<Organisation, Organi
     @Mappings({
             @Mapping(source = "organisationType.name", target = "organisationTypeName"),
             @Mapping(source = "organisationType.description", target = "organisationTypeDescription"),
-            @Mapping(target = "addresses", ignore = true)
+            @Mapping(target = "addresses", ignore = true),
+            @Mapping(target = "registrationNumber", ignore = true)
     })
     @Override
     public abstract OrganisationResource mapToResource(Organisation domain);
@@ -34,5 +38,11 @@ public abstract class OrganisationMapper extends BaseMapper<Organisation, Organi
             return null;
         }
         return object.getId();
+    }
+
+    public List<OrganisationResource> mapToResources(List<Organisation> domains) {
+        List<OrganisationResource> resources = new ArrayList<>(domains.size());
+        domains.forEach(d -> resources.add(mapToResource(d)));
+        return resources;
     }
 }

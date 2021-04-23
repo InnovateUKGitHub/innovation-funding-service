@@ -17,6 +17,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestionWithMultipleStatuses;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSubSection;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.GRANT_OFFER_LETTER;
 
 @Component
 public class ProcurementTemplate implements FundingTypeTemplate {
@@ -39,7 +41,7 @@ public class ProcurementTemplate implements FundingTypeTemplate {
         }
 
         competitionTypeSections.stream()
-                .filter(section -> section.getName().equals("Finances"))
+                .filter(section -> section.getType() == SectionType.FINANCES)
                 .flatMap(section -> section.getChildSections().stream())
                 .filter(section -> section.getType() == SectionType.FINANCE)
                 .findAny()
@@ -57,6 +59,19 @@ public class ProcurementTemplate implements FundingTypeTemplate {
                                 aQuestionWithMultipleStatuses()
                         ))
         );
+    }
+
+
+    @Override
+    public Competition initialiseProjectSetupColumns(Competition competition) {
+        commonBuilders.addProjectSetupStage(competition, PROJECT_DETAILS);
+        commonBuilders.addProjectSetupStage(competition, PROJECT_TEAM);
+        commonBuilders.addProjectSetupStage(competition, DOCUMENTS);
+        commonBuilders.addProjectSetupStage(competition, MONITORING_OFFICER);
+        commonBuilders.addProjectSetupStage(competition, BANK_DETAILS);
+        commonBuilders.addProjectSetupStage(competition, FINANCE_CHECKS);
+        commonBuilders.addProjectSetupStage(competition, GRANT_OFFER_LETTER);
+        return competition;
     }
 
     @Override

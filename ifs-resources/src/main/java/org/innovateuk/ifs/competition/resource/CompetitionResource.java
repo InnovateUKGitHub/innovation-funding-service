@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -15,10 +17,8 @@ import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
@@ -112,6 +112,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private CovidType covidType;
     private boolean alwaysOpen;
     private boolean subsidyControl;
+    private boolean hasBusinessAndFinancialInformationQuestion;
 
     public CompetitionResource() {
     }
@@ -207,6 +208,21 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     public List<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<? extends BaseFinanceResource> finance) {
+        List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
+
+        if (this.isKtp() && finance.isPresent()) {
+            BaseFinanceResource orgFinance = finance.get();
+            financeRowTypes = financeRowTypes.stream()
+                    .filter(financeRowType -> BooleanUtils.isFalse(orgFinance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .collect(Collectors.toList());
+        }
+
         return financeRowTypes;
     }
 
@@ -815,17 +831,17 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.procurementMilestones = procurementMilestones;
     }
 
+    @JsonIgnore
+    public boolean isCompetitionTermsUploaded() {
+        return competitionTerms != null;
+    }
+
     public boolean isSubsidyControl() {
         return subsidyControl;
     }
 
     public void setSubsidyControl(boolean subsidyControl) {
         this.subsidyControl = subsidyControl;
-    }
-
-    @JsonIgnore
-    public boolean isCompetitionTermsUploaded() {
-        return competitionTerms != null;
     }
 
     @Override
@@ -989,9 +1005,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 );
     }
 
-    @JsonIgnore
-    @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return hasBusinessAndFinancialInformationQuestion;
+    }
+
+    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
+        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
+        return this;
     }
 }

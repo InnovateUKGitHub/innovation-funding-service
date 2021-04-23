@@ -15,6 +15,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-7718 EDI question - application form
 ...
+...             IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Force Tags      AuthServiceTests
@@ -34,9 +36,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8847
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative  No
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688

@@ -7,29 +7,23 @@ import java.math.BigInteger;
 /**
  * {@code IndirectCosts} implements {@link FinanceRowItem}
  */
-public class IndirectCosts extends AbstractFinanceRowItem {
+public class IndirectCost extends AbstractFinanceRowItem {
 
     private Long id;
 
-    private String role;
-
-    private Integer duration;
-
     private BigInteger cost;
 
-    private IndirectCosts() {
+    private IndirectCost() {
         this(null);
     }
 
-    public IndirectCosts(Long targetId) {
+    public IndirectCost(Long targetId) {
         super(targetId);
     }
 
-    public IndirectCosts(Long targetId, Long id, String role, Integer duration, BigInteger cost) {
+    public IndirectCost(Long targetId, Long id, BigInteger cost) {
         super(targetId);
         this.id = id;
-        this.role = role;
-        this.duration = duration;
         this.cost = cost;
     }
 
@@ -40,22 +34,6 @@ public class IndirectCosts extends AbstractFinanceRowItem {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 
     public BigInteger getCost() {
@@ -78,7 +56,7 @@ public class IndirectCosts extends AbstractFinanceRowItem {
 
     @Override
     public String getName() {
-        return "Indirect costs";
+        return this.getCostType().getType();
     }
 
     @Override

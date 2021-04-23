@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApproval
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetterTemplatePopulator;
+import org.innovateuk.ifs.project.grantofferletter.populator.ProcurementGrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
@@ -69,6 +70,9 @@ public class GrantOfferLetterController {
 
     @Autowired
     private KtpGrantOfferLetterTemplatePopulator ktpGrantOfferLetterTemplatePopulator;
+
+    @Autowired
+    private ProcurementGrantOfferLetterTemplatePopulator procurementGrantOfferLetterTemplatePopulator;
 
     private static final String FORM_ATTR = "form";
     private static final String APPROVAL_FORM_ATTR = "approvalForm";
@@ -304,7 +308,9 @@ public class GrantOfferLetterController {
         if (template.getName().equals(DEFAULT_GOL_TEMPLATE)) {
             model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
         } else if (template.getName().equals(FundingType.KTP.getGolType())) {
-            model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project, competition));
+            model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project));
+        } else if (template.getName().equals(FundingType.PROCUREMENT.getGolType())) {
+            model.addAttribute("model", procurementGrantOfferLetterTemplatePopulator.populate(project, competition));
         }
         return "project/" + template.getTemplate();
     }

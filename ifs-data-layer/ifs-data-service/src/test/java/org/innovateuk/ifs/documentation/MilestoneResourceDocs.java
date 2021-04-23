@@ -23,5 +23,5 @@ public class MilestoneResourceDocs {
             .withDate(ZonedDateTime.now())
             .withName(MilestoneType.OPEN_DATE)
             .withCompetitionId(1L)
-            .withAssessmentPeriod(null);
+            .withAssessmentPeriod((Long) null);
 }

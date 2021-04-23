@@ -764,7 +764,6 @@ public class CsvUtils {
     public static class AssessmentPeriodLine {
         public int lineNumber;
         public String competition;
-        public int index;
         public ZonedDateTime assessorBriefing;
         public ZonedDateTime assessorAccepts;
         public ZonedDateTime assessorDeadline;
@@ -773,7 +772,6 @@ public class CsvUtils {
             this.lineNumber = lineNumber;
             int i = 0;
             competition = nullable(line.get(i++));
-            index = nullableInteger(line.get(i++));
             assessorBriefing = nullableDateTime(line.get(i++));
             assessorAccepts  = nullableDateTime(line.get(i++));
             assessorDeadline = nullableDateTime(line.get(i++));

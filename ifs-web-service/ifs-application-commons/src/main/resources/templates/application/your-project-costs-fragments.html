@@ -2250,6 +2250,16 @@
                        id="section-total-associate-salary-costs"
                        th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"/>
+                <th:block th:if="${#bools.isFalse(model.fecModelEnabled)}">
+                    <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
+                    <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
+                    <input type="hidden"
+                           data-calculation-operations="*,/"
+                           id="total-grant-associate-salary-costs"
+                           th:attr="data-calculation-rawvalue=${form.totalGrantAssociateSalaryCosts},
+                                    data-calculation-fields=${'#section-total-associate-salary-costs, ' + form.grantClaimPercentage + ', 100'}"
+                           th:value="'£' + ${#numbers.formatInteger(form.totalGrantAssociateSalaryCosts, 0,'DEFAULT')}"/>
+                </th:block>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
@@ -3859,8 +3869,188 @@
 </th:block>
 <!--/*</editor-fold>*/-->
 
+<!--/***************************
+
+ACADEMIC_AND_SECRETARIAL_SUPPORT
+
+*********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="academic_and_secretarial_support"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ACADEMIC_AND_SECRETARIAL_SUPPORT}">
+    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
+                    Academic and secretarial support
+                </span>
+                <span class="finance-total" data-mirror="#section-total-academic-and-secretarial-support"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-academic-and-secretarial-support"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalAcademicAndSecretarialSupportCosts, form.organisationFinanceTotal) + '%'}"></span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
+             aria-labelledby="accordion-finances-heading-9">
+            <th:block
+                th:if="${model.isReadOnly(financeRowType)}">
+                <th:block
+                    th:insert="application/your-project-costs-fragments :: academic_and_secretarial_support_read_only"/>
+            </th:block>
+
+            <th:block th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block th:unless="${model.internal}">
+                    <p class="govuk-body">You may enter up to £875 (or up to £1,000 for London weighting) multiplied by the number of months your project will run.
+                    </p>
+                </th:block>
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table" id="academic-secretarial-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="academic-secretarial-costs" scope="col" class="govuk-table__header table-header-width-15-percent alignright">
+                                Cost (£)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=academicAndSecretarialSupportForm)"/>
+                        <input type="number"
+                               id="academicAndSecretarialSupportForm"
+                               th:field="${form.academicAndSecretarialSupportForm.cost}"
+                               class="govuk-input academic-and-secretarial-support-totals width-15-percent"
+                               required="required"
+                               th:errorclass="govuk-input--error"
+                               placeholder="0"
+                               min="0"
+                               max="9999999999999999999"
+                               data-field-errormessage="This field can only accept whole numbers."
+                        />
+                        </td>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total academic and secretarial support costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-academic-and-secretarial-support"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalAcademicAndSecretarialSupportCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".academic-and-secretarial-support-totals"
+                       data-calculation-operations="+"
+                       id="section-total-academic-and-secretarial-support"
+                       th:attr="data-calculation-rawvalue=${form.totalAcademicAndSecretarialSupportCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalAcademicAndSecretarialSupportCosts, 0,'DEFAULT')}"/>
+                <input type="hidden"
+                       data-calculation-operations="*,/"
+                       id="total-grant-academic-and-secretarial-support"
+                       th:attr="data-calculation-rawvalue=${form.totalGrantAcademicAndSecretarialSupportCosts},
+                                data-calculation-fields=${'#section-total-academic-and-secretarial-support, ' + form.grantClaimPercentage + ', 100'}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalGrantAcademicAndSecretarialSupportCosts, 0,'DEFAULT')}"/>
+            </th:block>
+            <th:block th:if="${model.internal}"
+                      th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="academic_and_secretarial_support_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="academic-and-secretarial-support-table">
+            <tfoot class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">Total academic and secretarial support costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-academic-and-secretarial-support"
+                    th:attr="data-calculation-rawvalue=${form.totalAcademicAndSecretarialSupportCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalAcademicAndSecretarialSupportCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+        INDIRECT_COSTS
+
+*********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="indirect_costs"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).INDIRECT_COSTS}">
+    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
+                    Indirect costs
+                </span>
+                <span class="finance-total" data-mirror="#section-total-indirect-costs"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-indirect-costs"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalIndirectCosts, form.organisationFinanceTotal) + '%'}"></span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
+             aria-labelledby="accordion-finances-heading-9">
+            <th:block
+                th:if="${model.isReadOnly(financeRowType)}">
+                <th:block th:insert="application/your-project-costs-fragments :: indirect_costs_read_only"/>
+            </th:block>
+            <th:block
+                th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These costs are calculated automatically and paid at 100%. The calculation is 46% of the sum of 2 grant amounts:'Associate employment costs' and the 'Academic and secretarial support costs'.</p>
+                </th:block>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total indirect costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-indirect-costs"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-operations="+,*,/"
+                       id="section-total-indirect-costs"
+                       th:attr="data-calculation-rawvalue=${form.totalIndirectCosts},
+                                data-calculation-fields=${'#total-grant-associate-salary-costs, #total-grant-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>
+            </th:block>
+            <th:block th:if="${model.internal}"
+                      th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="indirect_costs_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="indirect-costs-table">
+            <tfoot class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">Total indirect costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-padding-right-0" id="section-total-indirect-costs"
+                    th:attr="data-calculation-rawvalue=${form.totalIndirectCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalIndirectCosts, 0, 'DEFAULT')}"/>
+                </td>
+                <input type="hidden"
+                       data-calculation-operations="+,*,/"
+                       id="section-total-indirect-costs"
+                       th:attr="data-calculation-rawvalue=${form.totalIndirectCosts},
+                                data-calculation-fields=${'#total-grant-associate-salary-costs, #total-grant-academic-and-secretarial-support, ' + form.indirectCostsPercentage + ', 100'}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalIndirectCosts, 0,'DEFAULT')}"/>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
 <th:block th:fragment="internal_view_buttons (financeType)">
-    <div class="alignright-button" th:if="${model.open}">
+    <div class="alignright-button" th:if="${model.open and model.showEditButton(financeType)}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}"
            th:if="${model.isReadOnly(financeType)}"
            class="govuk-button govuk-button--secondary">Edit</a>

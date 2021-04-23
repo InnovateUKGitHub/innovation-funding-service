@@ -525,14 +525,16 @@
                 <th></th>
                 <th></th>
             </tr>
-            <tr>
-                <td>e. Knowledge base supervisor</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.knowledgeBaseSupervisor')"></th:block>
-            </tr>
-            <tr>
-                <td>f.  Associate estates costs</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEstateCosts')"></th:block>
-            </tr>
+            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+                <tr>
+                    <td>e. Knowledge base supervisor</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.knowledgeBaseSupervisor')"></th:block>
+                </tr>
+                <tr>
+                    <td>f.  Associate estates costs</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEstateCosts')"></th:block>
+                </tr>
+            </th:block>
             <tr>
                 <td>g. Other costs</td>
                 <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
@@ -543,10 +545,12 @@
                 <th></th>
                 <th></th>
             </tr>
-            <tr>
-                <td>h. Additional associate support</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.additionalSupportCosts')"></th:block>
-            </tr>
+            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+                <tr>
+                    <td>h. Additional associate support</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.additionalSupportCosts')"></th:block>
+                </tr>
+            </th:block>
             <tr>
                 <th>TOTAL</th>
                 <th th:text="${model.ktpFinanceModel.getTable1TotalCost()}">TOTAL</th>
@@ -697,14 +701,16 @@
                 <th>Directly Allocated Costs</th>
                 <th></th>
             </tr>
-            <tr>
-                <td>v Knowledge base supervisor</td>
-                <td th:text="${model.ktpFinanceModel.knowledgeBaseSupervisor.cost}"></td>
-            </tr>
-            <tr>
-                <td>vi Associate Estates provision</td>
-                <td th:text="${model.ktpFinanceModel.associateEstateCosts.cost}"></td>
-            </tr>
+            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+                <tr>
+                    <td>v Knowledge base supervisor</td>
+                    <td th:text="${model.ktpFinanceModel.knowledgeBaseSupervisor.cost}"></td>
+                </tr>
+                <tr>
+                    <td>vi Associate Estates provision</td>
+                    <td th:text="${model.ktpFinanceModel.associateEstateCosts.cost}"></td>
+                </tr>
+            </th:block>
             <tr>
                 <td>vii Mentoring Support</td>
                 <td th:text="${model.ktpFinanceModel.otherCosts.cost}"></td>
@@ -713,10 +719,12 @@
                 <th>Indirect Costs</th>
                 <th></th>
             </tr>
-            <tr>
-                <td>viii Additional Associate Support</td>
-                <td th:text="${model.ktpFinanceModel.additionalSupportCosts.cost}"></td>
-            </tr>
+            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+                <tr>
+                    <td>viii Additional Associate Support</td>
+                    <td th:text="${model.ktpFinanceModel.additionalSupportCosts.cost}"></td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
 

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.domain.Finance;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
@@ -19,7 +20,6 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
@@ -257,6 +258,20 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public List<FinanceRowType> getFinanceRowTypes() {
         return competitionFinanceRowTypes.stream().map(CompetitionFinanceRowTypes::getFinanceRowType).collect(toList());
+    }
+
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Finance finance) {
+        List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
+
+        if (this.isKtp()) {
+            financeRowTypes = financeRowTypes.stream()
+                    .filter(financeRowType -> BooleanUtils.isFalse(finance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .collect(Collectors.toList());
+        }
+
+        return financeRowTypes;
     }
 
     public List<ProjectStages> getProjectStages() {
@@ -953,11 +968,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
-    }
-
-    @Override
     public boolean isProcurementMilestones() {
         return isProcurement() &&
             sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
@@ -991,5 +1001,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isSubsidyControl() {
         return SUBSIDY_CONTROL.equals(fundingRules)
                 && questions.stream().anyMatch(question -> SUBSIDY_BASIS == question.getQuestionSetupType());
+    }
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return isLoan()
+                && questions.stream().anyMatch(question -> LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestionSetupType());
     }
 }

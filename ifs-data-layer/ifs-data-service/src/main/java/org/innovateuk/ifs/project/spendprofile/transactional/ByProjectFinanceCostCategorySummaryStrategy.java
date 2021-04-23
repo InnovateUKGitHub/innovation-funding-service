@@ -84,8 +84,8 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
 
     private Map<CostCategory, BigDecimal> getTotalsPerCostCategory(CompetitionResource competition, OrganisationResource organisation, CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
 
-        if (competition.isSbriPilot()) {
-            return getSbriPilotTotalsPerCostCategory(costCategoryType, spendRows);
+        if (competition.isProcurement()) {
+            return getProcurementTotalsPerCostCategory(costCategoryType, spendRows);
         } else if (competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
             return getAcademicTotalsPerCostCategory(costCategoryType, spendRows);
         } else {
@@ -111,13 +111,13 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         return valuesPerCostCategory;
     }
 
-    private Map<CostCategory, BigDecimal> getSbriPilotTotalsPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
+    private Map<CostCategory, BigDecimal> getProcurementTotalsPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
 
         Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
         costCategoryType.getCostCategories().forEach(cc -> valuesPerCostCategory.put(cc, BigDecimal.ZERO));
 
         for (Entry<FinanceRowType, FinanceRowCostCategory> entry : spendRows.entrySet()) {
-            SbriPilotCostCategoryGenerator generator = SbriPilotCostCategoryGenerator.fromFinanceRowType(entry.getKey());
+            ProcurementCostCategoryGenerator generator = ProcurementCostCategoryGenerator.fromFinanceRowType(entry.getKey());
             if (generator != null) {
                 CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, generator);
                 BigDecimal value = entry.getValue().getTotal();
