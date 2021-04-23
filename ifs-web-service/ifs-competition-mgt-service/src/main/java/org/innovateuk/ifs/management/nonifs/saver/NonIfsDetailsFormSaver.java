@@ -61,7 +61,7 @@ public class NonIfsDetailsFormSaver {
     }
 
     private void createPublicMilestones(Long competitionId) {
-        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(type, competitionId).getSuccess());
+        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(new MilestoneResource(type, competitionId)).getSuccess());
     }
 
     private void mapFormFields(NonIfsDetailsForm form, CompetitionResource competitionResource) {

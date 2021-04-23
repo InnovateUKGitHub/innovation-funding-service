@@ -50,6 +50,10 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
+    public QuestionResourceBuilder withDescription2(String... descriptions) {
+        return withArray((description, object) -> setField("description2", description, object), descriptions);
+    }
+
     public QuestionResourceBuilder withCompetition(Long... competitions) {
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }

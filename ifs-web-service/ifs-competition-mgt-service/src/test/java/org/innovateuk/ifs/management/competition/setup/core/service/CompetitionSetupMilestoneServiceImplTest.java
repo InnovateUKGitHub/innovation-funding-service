@@ -38,7 +38,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
 
 	@Test
 	public void testCreateMilestonesForCompetition() {
-        when(milestoneRestService.create(any(MilestoneType.class), anyLong())).thenReturn(restSuccess(newMilestoneResource().with(
+        when(milestoneRestService.create(any(MilestoneResource.class))).thenReturn(restSuccess(newMilestoneResource().with(
 				(integer, milestoneResource) -> milestoneResource.setType(MilestoneType.OPEN_DATE)).build()));
 
 		List<MilestoneResource> result = service.createMilestonesForIFSCompetition(123L).getSuccess();
@@ -49,7 +49,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
                 .filter(milestoneType -> !milestoneType.isOnlyNonIfs()).collect(toList()).size();
 
 		assertEquals(numberOfMilestonesExpected, result.size());
-		verify(milestoneRestService, times(numberOfMilestonesExpected)).create(any(MilestoneType.class), anyLong());
+		verify(milestoneRestService, times(numberOfMilestonesExpected)).create(any(MilestoneResource.class));
 	}
 
 	@Test

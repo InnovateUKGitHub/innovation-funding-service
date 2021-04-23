@@ -10,11 +10,10 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
@@ -27,12 +26,10 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -43,7 +40,6 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -58,10 +54,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
-import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD;
-import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
@@ -559,6 +552,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void submitSectionInitialDetailsWithoutErrors() throws Exception {
+        String redirectUrl = String.format( "%s/%s/section/initial", URL_PREFIX, COMPETITION_ID);
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -567,6 +561,13 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(Boolean.FALSE);
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.INITIAL_DETAILS))
+        ).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -587,7 +588,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("title", "My competition")
                 .param("stateAid", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"));
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService).getNextSetupSection(isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.INITIAL_DETAILS));
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -638,12 +643,20 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void submitSectionEligibilityWithoutErrors() throws Exception {
+        String redirectUrl = String.format("%s/%s/section/project-eligibility", URL_PREFIX, COMPETITION_ID);
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY))
+        ).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -662,7 +675,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("resubmission", "yes")
                 .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility"));
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService).getNextSetupSection(isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY));
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -729,6 +746,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void submitSectionEligibilitySucceedsWithoutResearchParticipationIfCompetitionHasNoApplicationFinance() throws Exception {
+        String redirectUrl = String.format("%s/%s/section/project-eligibility", URL_PREFIX, COMPETITION_ID);
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -736,6 +754,13 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY))
+        ).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -753,7 +778,13 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("resubmission", "no")
                 .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility"));
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService).getNextSetupSection(
+                isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
+        );
 
         verify(competitionSetupService).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
@@ -764,6 +795,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void coFundersForCompetition() throws Exception {
+        String redirectUrl = String.format("%s/%s/section/additional", URL_PREFIX, COMPETITION_ID);
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withActivityCode("Activity Code")
@@ -775,6 +807,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                any(AdditionalInfoForm.class),
+                any(CompetitionResource.class), any(CompetitionSetupSection.class))
+        ).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(AdditionalInfoForm.class),
                 any(CompetitionResource.class), any(CompetitionSetupSection.class))
@@ -790,7 +828,13 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("funders[0].coFunder", "false")
                 .param("budgetCode", "b123"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/additional"));
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService, atLeastOnce()).getNextSetupSection(
+                any(AdditionalInfoForm.class),
+                any(CompetitionResource.class),
+                any(CompetitionSetupSection.class)
+        );
 
         verify(competitionSetupService, atLeastOnce()).saveCompetitionSetupSection(
                 any(AdditionalInfoForm.class),
@@ -804,11 +848,18 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void submitCompletionStageSectionDetails() throws Exception {
 
+        String redirectUrl = String.format( "%s/%s/section/milestones", URL_PREFIX, COMPETITION_ID);
+
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                any(CompletionStageForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.COMPLETION_STAGE))).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
 
         when(competitionSetupService.saveCompetitionSetupSection(
                 any(CompletionStageForm.class),
@@ -817,13 +868,18 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         // assert that after a successful submission, the view moves on to the Milestones page
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage")
-                .param("selectedCompletionStage", CompetitionCompletionStage.PROJECT_SETUP.name()))
+                .param("selectedCompletionStage", CompetitionCompletionStage.COMPETITION_CLOSE.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/milestones"));
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService, times(1)).getNextSetupSection(
+                any(CompletionStageForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.COMPLETION_STAGE));
 
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
                 createLambdaMatcher(form -> {
-                    assertThat(((CompletionStageForm) form).getSelectedCompletionStage()).isEqualTo(CompetitionCompletionStage.PROJECT_SETUP);
+                    assertThat(((CompletionStageForm) form).getSelectedCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
                 }),
                 eq(competition),
                 eq(CompetitionSetupSection.COMPLETION_STAGE));
@@ -869,7 +925,88 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
+    public void submitApplicationSubmissionSectionDetails() throws Exception {
+
+        String redirectUrl = String.format( "%s/%s/section/milestones", URL_PREFIX, COMPETITION_ID);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                any(ApplicationSubmissionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION))).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(ApplicationSubmissionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION))).thenReturn(serviceSuccess());
+
+        // assert that after a successful submission, the view moves on to the Milestones page
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission")
+                .param("alwaysOpen", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService, times(1)).getNextSetupSection(
+                any(ApplicationSubmissionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
+
+        verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
+                createLambdaMatcher(form -> {
+                    assertThat(((ApplicationSubmissionForm) form).getAlwaysOpen()).isEqualTo(true);
+                }),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
+    }
+
+    @Test
+    public void submitApplicationSubmissionSectionDetailsWithValidationErrors() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm",
+                        "alwaysOpen", "NotNull"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
+    }
+
+    @Test
+    public void markApplicationSubmissionSectionIncomplete() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupRestService.markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_SUBMISSION)).
+                thenReturn(restSuccess());
+
+        // assert that after successful marking incomplete, the view remains on the editable view of the Completion Stage page
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission/edit"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission"));
+
+        verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_SUBMISSION);
+    }
+
+    @Test
     public void submitMilestonesSectionDetails() throws Exception {
+
+        String redirectUrl = String.format("%s/%s/section/milestones", URL_PREFIX, COMPETITION_ID);
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
@@ -882,10 +1019,20 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 eq(competition),
                 eq(CompetitionSetupSection.MILESTONES))).thenReturn(serviceSuccess());
 
+        when(competitionSetupService.getNextSetupSection(
+                any(MilestonesForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.MILESTONES))).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
         // assert that after successful submission, the view remains on the read-only view of the Milestones page
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/milestones"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/milestones"));
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService, times(1)).getNextSetupSection(
+                any(MilestonesForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.MILESTONES));
 
         verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
                 any(MilestonesForm.class),
@@ -971,12 +1118,19 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void submitAssessorsSectionDetailsWithoutErrors() throws Exception {
+        String redirectUrl = String.format("%s/%s/section/assessors", URL_PREFIX, COMPETITION_ID);
+
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionSetupService.getNextSetupSection(
+                isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.ASSESSORS))).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl))
+        );
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -991,8 +1145,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("hasInterviewStage", "0")
                 .param("assessorFinanceView", "OVERVIEW"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"));
+                .andExpect(redirectedUrl(redirectUrl));
 
+        verify(competitionSetupService).getNextSetupSection(
+                isA(CompetitionSetupForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.ASSESSORS));
         verify(competitionSetupService).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
