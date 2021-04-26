@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.period.domain;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
 import java.util.ArrayList;

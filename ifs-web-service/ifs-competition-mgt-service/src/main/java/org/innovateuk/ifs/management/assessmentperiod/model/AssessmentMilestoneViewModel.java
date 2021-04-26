@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.assessmentperiod.model;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime;
+
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm.WITH_MIDDAY_TIME;

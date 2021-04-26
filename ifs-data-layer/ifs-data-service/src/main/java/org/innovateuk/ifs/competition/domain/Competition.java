@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;

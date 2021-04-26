@@ -4,13 +4,10 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.springframework.statemachine.StateContext;
-
-import java.util.Arrays;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;

@@ -13,7 +13,6 @@ import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
 import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;

@@ -22,7 +22,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
@@ -87,7 +86,6 @@ import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilesto
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -555,7 +553,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)));
         inOrder.verify(assessmentWorkflowHandler).notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)));
         inOrder.verify(notificationService).sendNotificationWithFlush(expectedNotification2, EMAIL);
-        
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());

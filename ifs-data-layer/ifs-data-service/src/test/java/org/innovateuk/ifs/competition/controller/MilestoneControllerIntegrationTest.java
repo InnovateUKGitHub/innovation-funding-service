@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 
 /**

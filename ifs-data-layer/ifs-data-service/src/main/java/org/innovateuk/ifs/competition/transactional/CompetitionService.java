@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
