@@ -87,6 +87,9 @@ public class PublicContentItemViewModel {
         return alwaysOpen;
     }
 
+    public String getNullCloseDateText() {
+        return alwaysOpen ? "No submission deadline" : "Unknown";
+    }
     public PublicContentItemViewModel setAlwaysOpen(boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
         return this;

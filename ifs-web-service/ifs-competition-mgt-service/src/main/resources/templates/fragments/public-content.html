@@ -233,7 +233,6 @@
         </th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p class="govuk-body">Text entered into this section will appear within the dates tab.</p>
         <h2 class="govuk-heading-s govuk-!-margin-bottom-6">These dates are set in the competition milestones:</h2>
         <th:block th:each="event : ${model.sortedEvents}">
             <div class="govuk-grid-row govuk-!-margin-bottom-6">
