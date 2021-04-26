@@ -8,15 +8,18 @@ import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.DateTimeException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.assessmentPeriodValues;
 
 @Component
@@ -38,22 +41,24 @@ public class AssessmentPeriodSaver {
                 MilestoneRowForm milestoneRowForm = e.getValue();
                 Optional<MilestoneResource> matchingMilestoneResource = existingMilestones.stream()
                         .filter(m ->
-                                isEditable(m)
-                                && m.getAssessmentPeriodId().equals(assessmentPeriodId)
+                                   m.getAssessmentPeriodId().equals(assessmentPeriodId)
                                 && m.getType() == milestoneRowForm.getMilestoneType())
                         .findAny();
 
                 ZonedDateTime date = milestoneRowForm.getMilestoneAsZonedDateTime();
                 if (matchingMilestoneResource.isPresent()) {
-                    matchingMilestoneResource.get().setDate(date);
-                    return milestoneRestService.updateMilestone(matchingMilestoneResource.get()).toServiceResult();
+                    if (isEditable(matchingMilestoneResource.get())) {
+                        matchingMilestoneResource.get().setDate(date);
+                        return validate(assessmentPeriodId, milestoneRowForm).andOnSuccess(() -> milestoneRestService.updateMilestone(matchingMilestoneResource.get()).toServiceResult());
+                    }
+                    return serviceSuccess();
                 } else {
                     MilestoneResource milestone = new MilestoneResource();
                     milestone.setDate(date);
                     milestone.setType(milestoneRowForm.getMilestoneType());
                     milestone.setCompetitionId(competitionId);
                     milestone.setAssessmentPeriodId(assessmentPeriodId);
-                    return milestoneRestService.create(milestone).toServiceResult().andOnSuccessReturnVoid();
+                    return validate(assessmentPeriodId, milestoneRowForm).andOnSuccess(() -> milestoneRestService.create(milestone).toServiceResult().andOnSuccessReturnVoid());
                 }
             });
         })
@@ -77,5 +82,28 @@ public class AssessmentPeriodSaver {
         period.setCompetitionId(competitionId);
         AssessmentPeriodResource savedPeriod = assessmentPeriodRestService.create(period).getSuccess();
         assessmentPeriodValues().forEach(t -> milestoneRestService.create(new MilestoneResource(t, null, competitionId, savedPeriod.getId())).getSuccess());
+    }
+
+    private ServiceResult<Void> validate(Long assessmentPeriodId, MilestoneRowForm milestone) {
+        Integer day = milestone.getDay();
+        Integer month = milestone.getMonth();
+        Integer year = milestone.getYear();
+        String fieldName = String.format("assessmentPeriods[%d].milestoneEntries[%s]", assessmentPeriodId, milestone.getMilestoneType());
+        String fieldValidationError = milestone.getMilestoneType().getMilestoneDescription();
+        boolean dateFieldsIncludeNull = (day == null || month == null || year == null);
+        if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year))) {
+            return serviceFailure(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
+        }
+        return serviceSuccess();
+    }
+
+    private boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
+        try{
+            TimeZoneUtil.fromUkTimeZone(year, month, day);
+            return year <= 9999;
+        }
+        catch(DateTimeException dte){
+            return false;
+        }
     }
 }

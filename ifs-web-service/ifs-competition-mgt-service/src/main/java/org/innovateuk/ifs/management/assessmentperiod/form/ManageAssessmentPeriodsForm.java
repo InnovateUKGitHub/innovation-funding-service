@@ -2,10 +2,12 @@ package org.innovateuk.ifs.management.assessmentperiod.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public class ManageAssessmentPeriodsForm extends BaseBindingResultTarget {
 
+    @Valid
     private List<AssessmentPeriodForm> assessmentPeriods;
 
     public List<AssessmentPeriodForm> getAssessmentPeriods() {

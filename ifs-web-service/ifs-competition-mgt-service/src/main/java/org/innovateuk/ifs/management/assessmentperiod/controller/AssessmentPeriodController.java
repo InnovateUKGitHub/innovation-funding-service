@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.management.assessmentperiod.controller;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
@@ -21,7 +23,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Comparator;
+import java.util.Map.Entry;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -78,7 +83,17 @@ public class AssessmentPeriodController {
     ) {
 
         Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
-        Supplier<String> failureView = () -> view(competitionId, page, model);
+        Supplier<String> failureView = () -> {
+            form.getAssessmentPeriods().forEach(p -> p.setMilestoneEntries(
+                    p.getMilestoneEntries()
+                            .entrySet()
+                            .stream()
+                            .sorted(Comparator.comparing(entry -> MilestoneType.valueOf(entry.getKey()).ordinal()))
+                            .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedMap::new))
+
+            ));
+            return view(competitionId, page, model);
+        };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = saver.save(competitionId, form);
