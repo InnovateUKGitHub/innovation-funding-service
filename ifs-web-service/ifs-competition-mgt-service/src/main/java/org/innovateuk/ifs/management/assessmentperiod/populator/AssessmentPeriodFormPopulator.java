@@ -34,7 +34,7 @@ public class AssessmentPeriodFormPopulator {
                     AssessmentPeriodResource assessmentPeriod = assessmentPeriodResources.getContent().get(index);
                     LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
                     periodIdToMilestoneMap.get(assessmentPeriod.getId()).forEach(milestone ->
-                            milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
+                            milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone))
                     );
                     AssessmentPeriodForm assessmentPeriodForm = new AssessmentPeriodForm();
                     assessmentPeriodForm.setAssessmentPeriodId(assessmentPeriod.getId());
