@@ -182,6 +182,139 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
     }
 
     @Test
+    public void populate_ktp_for_lead_applicant_with_fec_feature_disabled() {
+        ReflectionTestUtils.setField(service, "fecFinanceModelEnabled", false);
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withName("orgname")
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(competition.getId())
+                .withName("Name")
+                .withApplicationState(ApplicationState.OPENED)
+                .build();
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicantResource applicantResource = newApplicantResource()
+                .withOrganisation(organisation)
+                .build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(competition.getId())
+                .build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource()
+                .withSection(section)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicantResource)
+                .withCurrentUser(user)
+                .build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
+                .withFecEnabled(null)
+                .build();
+
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Arrays.asList(SECTION_ID));
+        when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
+        when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(null);
+        when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(null);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+
+        YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
+
+        assertTrue(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isProjectCostSectionLocked());
+        assertFalse(viewModel.isYourFundingRequired());
+        assertNull(viewModel.getYourFundingSectionId());
+        assertFalse(viewModel.isYourFecCostRequired());
+        assertNull(viewModel.getYourFecCostSectionId());
+        assertNull(viewModel.getFecModelEnabled());
+    }
+
+    @Test
+    public void populate_ktp_for_lead_applicant_with_null_your_fec_cost_section() {
+        Long yourFundingSectionId = 4L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.KTP)
+                .withFinanceRowTypes(FinanceRowType.getKtpFinanceRowTypes())
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withName("orgname")
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(competition.getId())
+                .withName("Name")
+                .withApplicationState(ApplicationState.OPENED)
+                .build();
+        UserResource user = newUserResource()
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        ApplicantResource applicantResource = newApplicantResource()
+                .withOrganisation(organisation)
+                .build();
+        SectionResource section = newSectionResource()
+                .withId(SECTION_ID)
+                .withCompetition(competition.getId())
+                .build();
+        ApplicantSectionResource applicantSection = newApplicantSectionResource()
+                .withSection(section)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicantResource)
+                .withCurrentUser(user)
+                .build();
+        SectionResource fundingFinanceSection = newSectionResource()
+                .withId(yourFundingSectionId)
+                .withCompetition(competition.getId())
+                .build();
+        ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
+                .withFecEnabled(null)
+                .withGrantClaimPercentage(BigDecimal.valueOf(50))
+                .build();
+
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(application.getId(), organisation.getId())).thenReturn(Arrays.asList(SECTION_ID, yourFundingSectionId));
+        when(applicantRestService.getSection(user.getId(), application.getId(), SECTION_ID)).thenReturn(applicantSection);
+        when(sectionService.getFundingFinanceSection(competition.getId())).thenReturn(fundingFinanceSection);
+        when(sectionService.getFecCostFinanceSection(competition.getId())).thenReturn(null);
+        when(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+        when(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId())).thenReturn(restSuccess(applicationFinance));
+
+        YourProjectCostsViewModel viewModel = service.populate(application.getId(), SECTION_ID, organisation.getId(), user);
+
+        assertTrue(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isProjectCostSectionLocked());
+        assertFalse(viewModel.isYourFundingRequired());
+        assertEquals(yourFundingSectionId, viewModel.getYourFundingSectionId());
+        assertFalse(viewModel.isYourFecCostRequired());
+        assertNull(viewModel.getYourFecCostSectionId());
+        assertNull(viewModel.getFecModelEnabled());
+        assertEquals(BigDecimal.valueOf(50), viewModel.getGrantClaimPercentage());
+    }
+
+    @Test
     public void populate_ktp_for_lead_applicant_with_project_cost_enabled() {
         Long yourFundingSectionId = 4L;
         Long yourFecCostSectionId = 5L;

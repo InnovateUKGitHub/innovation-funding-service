@@ -112,21 +112,21 @@ import static org.junit.Assert.assertThat;
     }
 
     private TestData setupTestData() {
-        Competition competition = competitionRepository.save(newCompetition().withId(null).build());
-        Application application = applicationRepository.save(newApplication().withName("App name 1").withId(null).withCompetition(competition).withApplicationState(ApplicationState.SUBMITTED).build());
-        Application application2 = applicationRepository.save(newApplication().withName("App name 2").withId(null).withCompetition(competition).withApplicationState(ApplicationState.SUBMITTED).build());
+        Competition competition = competitionRepository.save(newCompetition().withId((Long) null).build());
+        Application application = applicationRepository.save(newApplication().withName("App name 1").withId((Long) null).withCompetition(competition).withApplicationState(ApplicationState.SUBMITTED).build());
+        Application application2 = applicationRepository.save(newApplication().withName("App name 2").withId((Long) null).withCompetition(competition).withApplicationState(ApplicationState.SUBMITTED).build());
 
-        Organisation lead = organisationRepository.save(newOrganisation().withId(null).withName("lead org").build());
+        Organisation lead = organisationRepository.save(newOrganisation().withId((Long) null).withName("lead org").build());
         processRoleRepository.saveAll(
                 newProcessRole().withApplication(application, application2)
                         .withOrganisationId(lead.getId())
-                        .withUser(userRepository.save(newUser().withId(null).withEmailAddress("asd@gmail").withUid("asdasd").build()))
+                        .withUser(userRepository.save(newUser().withId((Long) null).withEmailAddress("asd@gmail").withUid("asdasd").build()))
                         .withRole(ProcessRoleType.LEADAPPLICANT)
                         .build(2)
         );
 
         List<Profile> profiles = newProfile()
-                .withId(null)
+                .withId((Long) null)
                 .withSimpleOrganisation(
                         simpleOrganisationRepository.save(newSimpleOrganisation().withName("Simple 1").build()),
                         simpleOrganisationRepository.save(newSimpleOrganisation().withName("Simple 2").build()),
@@ -136,7 +136,7 @@ import static org.junit.Assert.assertThat;
         profiles = newArrayList(profileRepository.saveAll(profiles));
 
         List<User> supporters = newUser()
-                .withId(null)
+                .withId((Long) null)
                 .withUid("1", "2", "3", "4")
                 .withEmailAddress("supporter1@gmail.com", "supporter2@gmail.com", "supporter3@gmail.com", "supporter4@gmail.com")
                 .withFirstName("Bob", "Frank", "Jim", "Rob")
