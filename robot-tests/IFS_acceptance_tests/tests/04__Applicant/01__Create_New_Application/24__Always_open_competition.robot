@@ -3,6 +3,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8850  Always open competitions: applicant changes
 ...
+...               IFS-8851  Always open competitions: create assessment periods
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -22,6 +24,8 @@ ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
 ${webTestAssessor}                 Paul Plum
 ${webTestAssessorEmailAddress}     paul.plum@gmail.com
+${briefingErrormessage}            Assessor briefing:you must enter a valid date.
+${deadlineErrormessage}            Assessment deadline: you must enter a date later than the previous milestone.
 
 *** Test Cases ***
 Send the email invite to the assessor for the competition using new content
@@ -56,6 +60,20 @@ Lead applicant checks the dashboard content and the guidance after an assessor i
     And the user clicks the application tile if displayed
     When the user clicks the button/link                                link = ${webTestAppName}
     Then the user checks the status of the application in assessment
+
+Comp admin updates the assessment period
+    [Documentation]  IFS-8851
+    Given Log in as a different user                       &{Comp_admin1_credentials}
+    And the user clicks the button/link                    link = ${webTestCompName}
+    And the user clicks the button/link                    link = Manage assessments
+    And the user clicks the button/link                    link = Manage assessment period
+    When the user enters text to a text field              assessmentPeriods1.milestoneEntries6. Assessor accepts.day  55
+    And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
+    Then the user should see a field and summary error     ${briefingErrormessage}
+    And the user enters text to a text field               assessmentPeriods3.milestoneEntries7. Assessor deadline.year  1999
+    And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
+    And the user should see a field and summary error      ${deadlineErrormessage}
+    And the user should see the element                    jQuery = td:contains(20/01/2021)
 
 *** Keywords ***
 Custom suite setup
