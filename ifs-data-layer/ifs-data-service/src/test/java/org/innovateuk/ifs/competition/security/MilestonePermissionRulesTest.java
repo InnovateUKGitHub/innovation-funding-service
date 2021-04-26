@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -121,6 +123,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         stream(CompetitionStatus.values()).forEach(status -> {
 
             Competition competitionInSetup = newCompetition().
+                    withAssessmentPeriods(asList(AssessmentPeriodBuilder.newAssessmentPeriod().build())).
                     withCompetitionStatus(status).
                     build();
 
