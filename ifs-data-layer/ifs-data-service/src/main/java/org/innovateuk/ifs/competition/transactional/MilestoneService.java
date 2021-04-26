@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -47,5 +48,6 @@ public interface MilestoneService {
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'UPDATE_COMPLETION_STAGE')")
     ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
 
+    @NotSecured(value = "This Service is to be used within other secured services")
     ServiceResult<Void> rebuildMilestones(long competitionId);
 }
