@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.eligibility.propulator;
 
+import org.innovateuk.ifs.application.finance.viewmodel.CostChangeViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.MilestoneChangeViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesProjectFinancesViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -29,16 +31,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneResourceBuilder.newApplicationProcurementMilestoneResource;
@@ -46,6 +51,7 @@ import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcuremen
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -229,4 +235,41 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         assertThat(diff.isUpdated()).isTrue();
     }
 
+    @Test
+    public void shouldVerifyNonFECCostRowEntriesDisplay() {
+        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
+
+       Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
+               FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+               FinanceRowType.ASSOCIATE_SALARY_COSTS, newDefaultCostCategory().build(),
+               FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newDefaultCostCategory().build(),
+               FinanceRowType.CONSUMABLES, newDefaultCostCategory().build(),
+               FinanceRowType.KTP_TRAVEL, newDefaultCostCategory().build(),
+               FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT, newDefaultCostCategory().build(),
+               FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().build());
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withFecEnabled(false)
+                .withOrganisation(organisationId)
+                .withFinanceOrganisationDetails(financeOrganisationDetails)
+                .build();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withFinanceOrganisationDetails(financeOrganisationDetails).build();
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel =
+                populator.getProjectFinancesViewModel(competitionResource,organisationResource,applicationFinanceResource,projectFinanceResource);
+        List<CostChangeViewModel> costChangeViewModelsList = projectFinanceChangesProjectFinancesViewModel.getEntries();
+        assertThat(costChangeViewModelsList).hasSize(7);
+        boolean isIndirectCostRowPresent = false;
+        boolean isAcademicAndSecreterialSupport = false;
+        for(CostChangeViewModel  costChangeViewModel :costChangeViewModelsList) {
+            if (costChangeViewModel.getSection().equals(FinanceRowType.INDIRECT_COSTS.getDisplayName())) {
+                isIndirectCostRowPresent = true;
+            }
+            if (costChangeViewModel.getSection().equals(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT.getDisplayName())) {
+                isAcademicAndSecreterialSupport = true;
+            }
+        }
+        assertThat(isIndirectCostRowPresent).isTrue();
+        assertThat(isAcademicAndSecreterialSupport).isTrue();
+    }
 }

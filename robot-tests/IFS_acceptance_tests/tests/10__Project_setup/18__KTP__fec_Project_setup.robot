@@ -5,6 +5,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-9249  KTP fEC/Non-fEC: view and edit non-fEC costs in project setup
 ...
+...               IFS-9250  feature/IFS-9250-ktp-fec-non-fec-changes-to-finances
+...
 ...               IFS-9306  KTP fEC/non-fEC: 'academic and secretarial support' GOL value
 ...
 Suite Setup       Custom Suite Setup
@@ -77,16 +79,18 @@ Lead applicant submits the application
     And the applicant submits the application
 
 Lead applicant can view their non-FEC project finances in the Eligibility section
-    [Documentation]  IFS-9248
+    [Documentation]  IFS-9248 IFS-9250
     [Setup]  internal user moves competition to project setup
     Given log in as a different user                             &{ktpLead}
     When the user navigates to finance checks
     And the user clicks the button/link                          link = your project finances
     Then the user should view their non-fec project finances
+    And The user should not see the element                      link = View changes to finances
 
 Lead applicant can view their non-FEC project finance overview
-    [Documentation]  IFS-9248
+    [Documentation]  IFS-9248 IFS-9250
     Given the user clicks the button/link                              link = Back to finance checks
+    And the user should not see the element                            link = view any changes to finances
     When the user clicks the button/link                               link = view the project finance overview
     Then the user should view the non-fec project finance overview
 
@@ -130,6 +134,12 @@ IFS admin can view the correct updated values in the Finance overview
     And the user should see the element       jQuery = td:contains("Academic and secretarial support") ~ td:contains("${academicCostValueFormatted}")
     And the user should see the element       jQuery = td:contains("Indirect costs") ~ td:contains("${indirectCostUpdated}")
     And the user should see the element       jQuery = th:contains("Total") ~ td:contains("£${totalProjectCostsUpdated}")
+
+Lead applicant should be able to view any changes to finances screen before approved
+    [Documentation]  IFS-9250
+    Given log in as a different user                      &{ktpLead}
+    When the user navigates to finance checks
+    Then the user views the changes to finance screen
 
 Lead applicant can view their non-FEC project finances in the Eligibility section when approved
     [Documentation]  IFS-9248
@@ -247,6 +257,12 @@ the user closed ktp assesment
     run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
 
 internal user approves finances
+    log in as a different user                              &{ifs_admin_user_credentials}
+#    the user navigates to the page                          ${server}/project-setup-management/project/${project_id}/finance-check/organisation/${lead_org_id}/eligibility
+#    the user selects the checkbox                           project-eligible
+#    the user selects the option from the drop-down menu     Green  id = rag-rating
+#    the user clicks the button/link                         jQuery = .govuk-button:contains("Approve eligible costs")
+#    the user clicks the button/link                         name = confirm-eligibility
     the user navigates to the page      ${server}/project-setup-management/project/${project_id}/finance-check
     confirm eligibility                 0
     confirm viability                   1
@@ -270,6 +286,14 @@ the user should view updated values in changes to finances
     the user should see the element     jQuery = table:contains("Updated") th:contains("Total project costs") ~ td:contains("£${totalProjectCostsUpdated}")
     the user should see the element     jQuery = table:contains("Updated") th:contains("Academic and secretarial support") ~ td:contains("${academicCostValueFormatted}")
     the user should see the element     jQuery = table:contains("Updated") th:contains("Indirect costs") ~ td:contains("${indirectCostUpdated}")
+
+the user views the changes to finance screen
+    the user clicks the button/link     link = view any changes to finances
+    the user should see the element     jQuery = h1:contains("Changes to finances")
+    the user clicks the button/link     link = Back to finance checks
+    the user clicks the button/link     link = your project finances
+    the user clicks the button/link     link = View changes to finances
+    the user should see the element     jQuery = h1:contains("Changes to finances")
 
 internal user releases the feedback
     the user assignes project to MO
