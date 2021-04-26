@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
@@ -182,8 +183,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 .withAssessmentPeriods(
                         asList(newAssessmentPeriod()
                                 .withMilestones(
-                                        asList(newMilestone().withType(ASSESSORS_NOTIFIED)
-                                                .build()))
+                                        new ArrayList(asList(newMilestone().withType(ASSESSORS_NOTIFIED)
+                                                .build())))
                                 .build()))
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorsNotifiedDate(now())

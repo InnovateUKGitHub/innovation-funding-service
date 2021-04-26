@@ -187,7 +187,7 @@ public class CompetitionTest {
         try {
             competition.notifyAssessors(ZonedDateTime.now(), assessmentPeriods.get(0));
         } catch (IllegalStateException e) {
-            assertEquals("Tried to notify assessors when assessment is closed", e.getMessage());
+            assertEquals("Tried to notify assessors when in competitionStatus=FUNDERS_PANEL. Applications can only be distributed when competitionStatus=CLOSED", e.getMessage());
         }
     }
 
