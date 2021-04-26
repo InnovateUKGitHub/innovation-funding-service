@@ -65,6 +65,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
         when(milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(emptyList()));
         ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromList(emptyList(), 0, 2));
 
+
         ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(competitionResource.getId(), 0, 2);
 
         assertEquals(expectedModel, actualModel);

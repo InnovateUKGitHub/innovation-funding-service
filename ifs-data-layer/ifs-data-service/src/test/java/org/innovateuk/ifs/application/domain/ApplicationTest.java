@@ -179,7 +179,7 @@ public class ApplicationTest {
                         newApplicationFinance().withMilestones(asList(
                                 newApplicationProcurementMilestone().withMonth(1).build(),
                                 newApplicationProcurementMilestone().withMonth(10).build(),
-                                newApplicationProcurementMilestone().withMonth(null).build() // This should not happen but check it is handled
+                                newApplicationProcurementMilestone().withMonth((Integer) null).build() // This should not happen but check it is handled
                                 )).build(),
                         newApplicationFinance().withMilestones(asList(
                                 newApplicationProcurementMilestone().withMonth(maxMilestoneMonth).build(), // The maximum

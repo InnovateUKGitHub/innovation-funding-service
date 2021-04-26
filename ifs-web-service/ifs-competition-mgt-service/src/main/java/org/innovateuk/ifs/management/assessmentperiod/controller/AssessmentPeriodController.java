@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessmentperiod.controller;
 
+import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPeriodController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentPeriodController {
+    private static Integer PAGE_SIZE = 6;
 
     private static final Logger LOG = LoggerFactory.getLogger(AssessmentPeriodController.class);
 
@@ -47,26 +49,36 @@ public class AssessmentPeriodController {
     private AssessmentPeriodFormPopulator formPopulator;
 
     @GetMapping
-    public String manageAssessmentPeriods(@PathVariable long competitionId, Model model) {
-        model.addAttribute("form", formPopulator.populate(competitionId));
-        return view(competitionId, model);
+    public String manageAssessmentPeriods(@PathVariable long competitionId,
+                                          @RequestParam(value = "page", defaultValue = "1") int page,
+                                          Model model) {
+        PageResource<AssessmentPeriodResource> pageResult = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId, page - 1, PAGE_SIZE).getSuccess();
+        model.addAttribute("form", formPopulator.populate(competitionId, pageResult));
+        return view(competitionId, pageResult, model);
     }
 
-    private String view(long competitionId, Model model) {
-        model.addAttribute("model", assessmentPeriodsPopulator.populateModel(competitionId));
+    private String view(long competitionId, PageResource<AssessmentPeriodResource> pageResult, Model model) {
+        model.addAttribute("model", assessmentPeriodsPopulator.populateModel(competitionId, pageResult));
         return "competition/manage-assessment-periods";
     }
+
+    private String view(long competitionId, int page, Model model) {
+        PageResource<AssessmentPeriodResource> pageResult = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId, page, PAGE_SIZE).getSuccess();
+        return view(competitionId, pageResult, model);
+    }
+
     @PostMapping
     public String submitAssessmentPeriods(@Valid @ModelAttribute(value = "form", binding = true) ManageAssessmentPeriodsForm form,
                                           BindingResult bindingResult,
                                           ValidationHandler validationHandler,
+                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                           Model model,
                                           @PathVariable long competitionId,
                                           UserResource loggedInUser
     ) {
 
         Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
-        Supplier<String> failureView = () -> view(competitionId, model);
+        Supplier<String> failureView = () -> view(competitionId, page, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = saver.save(competitionId, form);

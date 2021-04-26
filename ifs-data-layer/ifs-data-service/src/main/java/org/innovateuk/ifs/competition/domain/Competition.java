@@ -1013,11 +1013,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
-    }
-
-    @Override
     public boolean isProcurementMilestones() {
         return isProcurement() &&
             sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());

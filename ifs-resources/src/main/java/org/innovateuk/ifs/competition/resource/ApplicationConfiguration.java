@@ -15,8 +15,6 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
  */
 public interface ApplicationConfiguration {
 
-    String SBRI_PILOT = "The Sustainable Innovation Fund: SBRI phase 1";
-
     boolean isFullyFunded();
 
     boolean isH2020();
@@ -28,8 +26,6 @@ public interface ApplicationConfiguration {
     Boolean getIncludeJesForm();
 
     Boolean getIncludeYourOrganisationSection();
-
-    boolean isSbriPilot();
 
     boolean isProcurementMilestones();
 

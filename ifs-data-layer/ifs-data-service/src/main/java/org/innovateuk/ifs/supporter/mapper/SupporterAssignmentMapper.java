@@ -23,6 +23,7 @@ public abstract class SupporterAssignmentMapper extends BaseResourceMapper<Suppo
             @Mapping(source = "supporterOutcome.comment", target = "comments"),
             @Mapping(source = "processState", target = "state"),
             @Mapping(source = "id", target = "assignmentId"),
+            @Mapping(target = "userSimpleOrganisation", ignore = true)
     })
     @Override
     public abstract SupporterAssignmentResource mapToResource(SupporterAssignment domain);
