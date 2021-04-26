@@ -25,6 +25,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -46,7 +48,7 @@ ${fundingRule}               SUBSIDY_CONTROL
 
 *** Test Cases ***
 Comp Admin starts a new Competition
-    [Documentation]    INFUND-6393  IFS-8779  IFS-8791
+    [Documentation]    INFUND-6393  IFS-8779  IFS-8791  IFS-8847
     [Tags]  HappyPath
     [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
@@ -59,18 +61,19 @@ Comp Admin starts a new Competition
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
-    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}   No
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
     [Tags]
-    Given the user should see the element    jQuery = div:contains("Milestones") ~ .task-status-complete
-    When the user clicks the button/link     link = Milestones
-    And the user clicks the button/link      jQuery = a:contains("Next")
-    Then the user should see the element     jQuery = button:contains("Edit")
+    Given the user should see the element               jQuery = div:contains("Milestones") ~ .task-status-complete
+    When the user clicks the button/link                link = Milestones
+    And the user clicks the button/link                 jQuery = a:contains("Next")
+    And the user clicks the button/link                 jQuery = span:contains("Milestones")
+    Then the user should see the element                jQuery = button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link     link = Back to competition details
+    Then the user clicks the button/link                link = Back to competition details
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393  IFS-7700
@@ -141,7 +144,7 @@ Once the project growth table is selected
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS funding eligibility            true   ${compType_Programme}  ${fundingRule}
     And the user selects the organisational eligibility to no   false
-    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}   No
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
     And the user fills in the CS Assessors                      GRANT
     And the user fills in the CS Documents in other projects
