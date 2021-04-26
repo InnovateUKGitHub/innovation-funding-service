@@ -735,9 +735,13 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                         FinanceRowType.OVERHEADS, newDefaultCostCategory().build(),
                         FinanceRowType.MATERIALS, newDefaultCostCategory().build(),
                         FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().build(),
+                        FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.TRAVEL, newDefaultCostCategory().build(),
                         FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
-                        FinanceRowType.TRAVEL, newDefaultCostCategory().build()))
-                .build();
+                        FinanceRowType.YOUR_FINANCE, newDefaultCostCategory().build(),
+                        FinanceRowType.FINANCE, newDefaultCostCategory().build(),
+                        FinanceRowType.OTHER_FUNDING, newDefaultCostCategory().build()))
+                        .build();
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(123L)
