@@ -10,6 +10,9 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...               IFS-1117: As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
 ...
 ...               IFS-5945: Pagination in Project Setup
+...
+...               IFS-8848  Always open competitions: new comp setup configuration
+...
 Suite Setup       Connect to Database  @{database}
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -29,12 +32,12 @@ Create new non-IFS competition by proj Finance
     Then the user should see the element    link = No competition title defined
 
 Validation errors on non-IFS competition details
-    [Documentation]    INFUND-7964
+    [Documentation]    INFUND-7964   IFS-8848
     [Tags]
     Given log in as a different user                       &{Comp_admin1_credentials}
     And the user navigates to the Non IFS competitions tab
     When the user clicks the button/link                   link = No competition title defined
-    Then the user should see the dropdown option selected  12:00 pm  id=closeDate-time
+    Then the user should see the dropdown option selected  9:00 am  id=closeDate-time
     When the user clicks the button/link                   jQuery = button:contains("Save and continue")
     Then the user should see a field and summary error     Please enter a title.
     And the user should see a field and summary error      Please enter a competition URL.
