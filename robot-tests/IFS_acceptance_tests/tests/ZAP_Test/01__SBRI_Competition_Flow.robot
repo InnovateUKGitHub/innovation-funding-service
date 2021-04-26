@@ -31,7 +31,7 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
-Force Tags        CompAdmin ZAPTests
+Force Tags        CompAdmin   ZAPTests
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 Resource          ../../resources/common/Competition_Commons.robot
