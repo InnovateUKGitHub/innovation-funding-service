@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -359,5 +360,13 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAlwaysOpen(boolean... alwaysOpen) {
         return withArraySetFieldByReflection("alwaysOpen", alwaysOpen);
+    }
+
+    @Override
+    protected void postProcess(int index, Competition competition) {
+        List<AssessmentPeriod> assessmentPeriods = competition.getAssessmentPeriods();
+        if (assessmentPeriods != null){
+            assessmentPeriods.forEach(assessmentPeriod -> assessmentPeriod.setCompetition(competition));
+        }
     }
 }

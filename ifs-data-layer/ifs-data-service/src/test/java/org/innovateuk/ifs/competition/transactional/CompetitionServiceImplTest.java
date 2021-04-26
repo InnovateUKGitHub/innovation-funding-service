@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
@@ -28,15 +30,18 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
@@ -60,6 +65,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private CompetitionRepository competitionRepositoryMock;
+
+    @Mock
+    private AssessmentPeriodRepository assessmentPeriodRepositoryMock;
 
     @Mock
     private CompetitionMapper competitionMapperMock;
@@ -91,7 +99,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void getCompetitionById() {
         Competition competition = new Competition();
         CompetitionResource resource = new CompetitionResource();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
         when(competitionMapperMock.mapToResource(competition)).thenReturn(resource);
 
         CompetitionResource response = service.getCompetitionById(competitionId).getSuccess();
@@ -105,7 +113,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = new Competition();
         Application application = newApplication().withCompetition(competition).build();
         CompetitionResource resource = new CompetitionResource();
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(of(application));
         when(competitionMapperMock.mapToResource(competition)).thenReturn(resource);
 
         CompetitionResource response = service.getCompetitionByApplicationId(applicationId).getSuccess();
@@ -120,7 +128,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Application application = newApplication().withCompetition(competition).build();
         Project project = newProject().withApplication(application).build();
         CompetitionResource resource = new CompetitionResource();
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
+        when(projectRepositoryMock.findById(projectId)).thenReturn(of(project));
         when(competitionMapperMock.mapToResource(competition)).thenReturn(resource);
 
         CompetitionResource response = service.getCompetitionByProjectId(projectId).getSuccess();
@@ -150,9 +158,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
         Competition competition = newCompetition().withSetupComplete(true)
+                .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                 .withMilestones(milestones)
                 .build();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
+        when(assessmentPeriodRepositoryMock.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(of(competition.getAssessmentPeriods().get(0)));
 
         service.closeAssessment(competitionId);
 
@@ -171,9 +181,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .build(1));
 
         Competition competition = newCompetition().withSetupComplete(true)
+                .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                 .withMilestones(milestones)
                 .build();
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
+        when(assessmentPeriodRepositoryMock.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(of(competition.getAssessmentPeriods().get(0)));
 
         service.notifyAssessors(competitionId);
 
@@ -214,7 +226,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(5);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatistics));
 
@@ -252,7 +264,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(4);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatistics));
 
@@ -292,7 +304,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(5);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatistics));
 
@@ -331,7 +343,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsSubmitted(5);
         keyStatistics.setApplicationsNotifiedOfDecision(4);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
         when(competitionKeyApplicationStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId))
                 .thenReturn(serviceSuccess(keyStatistics));
 
@@ -348,7 +360,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = new Competition();
         competition.setLeadApplicantTypes(organisationTypes);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(of(competition));
         when(organisationTypeMapperMock.mapToResource(organisationTypes)).thenReturn(organisationTypeResources);
 
         List<OrganisationTypeResource> response = service.getCompetitionOrganisationTypes(competitionId).getSuccess();
@@ -409,8 +421,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = newCompetition().build();
 
         when(grantTermsAndConditionsRepositoryMock.findById(termsAndConditions.getId()))
-                .thenReturn(Optional.of(termsAndConditions));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+                .thenReturn(of(termsAndConditions));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(of(competition));
 
         ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competition.getId(), termsAndConditions.getId());
 
@@ -428,7 +440,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = newCompetition().build();
 
         when(grantTermsAndConditionsRepositoryMock.findById(competition.getTermsAndConditions().getId())).thenReturn(Optional.empty());
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(of(competition));
 
         ServiceResult<Void> result = service.updateTermsAndConditionsForCompetition(competitionId, competition.getTermsAndConditions().getId());
         assertTrue(result.isFailure());
@@ -443,8 +455,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = newCompetition().build();
 
         when(grantTermsAndConditionsRepositoryMock.findById(termsAndConditions.getId()))
-                .thenReturn(Optional.of(termsAndConditions));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+                .thenReturn(of(termsAndConditions));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(of(competition));
 
         ServiceResult<Void> result = service.updateOtherFundingRulesTermsAndConditionsForCompetition(competition.getId(), termsAndConditions.getId());
 
@@ -463,7 +475,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         long termsAndConditionsId = 999L;
 
         when(grantTermsAndConditionsRepositoryMock.findById(termsAndConditionsId)).thenReturn(Optional.empty());
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(of(competition));
 
         ServiceResult<Void> result = service.updateOtherFundingRulesTermsAndConditionsForCompetition(competitionId, termsAndConditionsId);
         assertTrue(result.isFailure());
