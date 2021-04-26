@@ -35,10 +35,10 @@
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
                       th:if="${milestoneEntry.value.milestoneType.presetDate}"
                       th:with="milestoneDescription=${model.general.competition.alwaysOpen ? milestoneEntry.value.milestoneType.alwaysOpenDescription : milestoneEntry.value.milestoneType.milestoneDescription},
-                               reqiured=${!(model.general.competition.alwaysOpen and milestoneEntry.value.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).SUBMISSION_DATE)}"
+                               required=${!(model.general.competition.alwaysOpen and milestoneEntry.value.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).SUBMISSION_DATE)}"
                       class="govuk-table__row date-group form-group-row"
                       data-future-date=""
-                      th:classappend="${reqiured} ? 'not-required-in-sequence'"
+                      th:classappend="${required} ? '' : 'not-required-in-sequence'"
                       th:attr="data-date-invalid-errormessage=${milestoneDescription + ': Please enter a valid date.'},
                                data-date-future-errormessage=${milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
                       <th class="govuk-table__header" scope="row">
@@ -56,7 +56,7 @@
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   aria-labelledby="time"
                                   class="govuk-select"
-                                  th:required="${reqiured} ? 'required'"
+                                  th:required="${required} ? 'required'"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
                               <option th:selected="${time == null}" value=""></option>
@@ -79,7 +79,7 @@
                                  min="1"
                                  max="31"
                                  data-maxlength-errormessage=""
-                                 th:required="${reqiured} ? 'required'"
+                                 th:required="${required} ? 'required'"
                                  pattern="^[0-9]{1,2}$"
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="2"
@@ -96,7 +96,7 @@
                                 placeholder="MM"
                                 min="1"
                                 max="12"
-                                th:required="${reqiured} ? 'required'"
+                                th:required="${required} ? 'required'"
                                 pattern="^[0-9]{1,2}$"
                                 data-prevent-input-regex="[^0-9]"
                                 maxlength="2"
@@ -118,7 +118,7 @@
                                  th:attr="aria-labelledby=|year milestone-${milestoneEntry.key}|,
                                  data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|,
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"
-                                 th:required="${reqiured} ? 'required'"
+                                 th:required="${required} ? 'required'"
                                  class="govuk-input govuk-input--width-4"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
