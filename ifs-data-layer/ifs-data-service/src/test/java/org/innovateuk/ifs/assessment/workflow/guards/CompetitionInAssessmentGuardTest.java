@@ -82,6 +82,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     public void evaluate_assessmentStartedButWillCloseInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
+                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                         .withCompetitionStatus(CLOSED)
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .withAssessmentClosedDate(now().plusDays(10L))
