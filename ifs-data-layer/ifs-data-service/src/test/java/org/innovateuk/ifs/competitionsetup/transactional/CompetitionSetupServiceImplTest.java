@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -73,42 +74,63 @@ public class CompetitionSetupServiceImplTest {
 
     @InjectMocks
     private CompetitionSetupServiceImpl service;
+
     @Mock
     private CompetitionRepository competitionRepository;
+
     @Mock
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
     @Mock
     private FileTypeRepository fileTypeRepository;
+
     @Mock
     private PublicContentService publicContentService;
+
     @Mock
     private FormInputRepository formInputRepository;
+
     @Mock
     private PublicContentRepository publicContentRepository;
+
     @Mock
     private MilestoneRepository milestoneRepository;
+
     @Mock
     private QuestionRepository questionRepository;
+
     @Mock
     private SectionRepository sectionRepository;
+
     @Mock
     private CompetitionMapper competitionMapperMock;
+
     @Mock
     private CompetitionFunderService competitionFunderService;
+
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+
     @Mock
     private StakeholderRepository stakeholderRepository;
+
     @Mock
     private CompetitionSetupTemplateService competitionSetupTemplateService;
+
     @Mock
     private SetupStatusService setupStatusService;
+
     @Mock
     private SetupStatusRepository setupStatusRepository;
+
     @Mock
     private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
+
     @Mock
     private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
+
+    @Mock
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Before
     public void setup() {
@@ -566,7 +588,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
-                setupStatusRepository, milestoneRepository, competitionFinanceRowsTypesRepository, grantProcessConfigurationRepository );
+                setupStatusRepository, milestoneRepository, competitionFinanceRowsTypesRepository, grantProcessConfigurationRepository, assessmentPeriodRepository );
         inOrder.verify(competitionRepository).findById(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
@@ -578,6 +600,7 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
         inOrder.verify(competitionFinanceRowsTypesRepository).deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);;
         inOrder.verify(grantProcessConfigurationRepository).deleteByCompetitionId(competition.getId());;
+        inOrder.verify(assessmentPeriodRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
     }

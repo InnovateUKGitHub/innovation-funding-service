@@ -142,8 +142,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
     @Autowired
-    private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
-    @Autowired
     private ProcurementMilestonesSpendProfileFigureDistributer procurementMilestonesSpendProfileFigureDistributer;
     @Autowired
     private CompetitionService competitionService;
@@ -331,9 +329,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project, Organisation organisation) {
         List<List<Cost>> costs;
-        if (project.getApplication().getCompetition().isSbriPilot()) {
-            costs = sbriPilotSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
-        } else if (project.getApplication().getCompetition().isProcurementMilestones()) {
+        if (project.getApplication().getCompetition().isProcurementMilestones()) {
             costs = procurementMilestonesSpendProfileFigureDistributer.distributeCosts(summaryPerCategory, project, organisation);
         } else {
             costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);

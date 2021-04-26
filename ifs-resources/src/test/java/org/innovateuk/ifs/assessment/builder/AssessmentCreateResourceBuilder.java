@@ -26,6 +26,10 @@ public class AssessmentCreateResourceBuilder extends BaseBuilder<AssessmentCreat
         return withArraySetFieldByReflection("assessorId", assessorId);
     }
 
+    public AssessmentCreateResourceBuilder withAssessmentPeriodId(Long ...assessmentPeriodId) {
+        return withArraySetFieldByReflection("assessmentPeriodId", assessmentPeriodId);
+    }
+
     @Override
     protected AssessmentCreateResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentCreateResource>> actions) {
         return new AssessmentCreateResourceBuilder(actions);
