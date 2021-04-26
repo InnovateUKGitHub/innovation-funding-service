@@ -272,8 +272,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 Competition competition = newCompetition()
                         .withAssessmentPeriods(
                                 asList(newAssessmentPeriod()
-                                        .withMilestones(asList(
-                                                newMilestone().build()))
+                                        .withMilestones(new ArrayList(asList(
+                                                newMilestone().build())))
                                         .build()))
                         .withCompetitionStatus(competitionStatus).build();
                 ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
@@ -390,7 +390,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void markAsIneligibleAllowedBeforeAssessment() {
         asList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
             Competition competition = newCompetition()
-                    .withAssessmentPeriods(asList(newAssessmentPeriod().withMilestones(Arrays.asList(newMilestone().build())).build()))
+                    .withAssessmentPeriods(asList(newAssessmentPeriod().withMilestones(new ArrayList(asList(newMilestone().build()))).build()))
                     .withCompetitionStatus(competitionStatus)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
