@@ -7,6 +7,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.junit.Test;
@@ -15,12 +16,14 @@ import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -28,6 +31,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOut
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.*;
@@ -181,6 +185,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                             .withCompetition(
                                     newCompetition()
                                             .withCompetitionStatus(CLOSED)
+                                            .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                                             .withAssessorsNotifiedDate(now().minusDays(10L))
                                             .withAssessmentClosedDate(now().plusDays(10L))
                                             .build()
@@ -202,6 +207,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                         .withCompetition(
                                 newCompetition()
                                         .withCompetitionStatus(CLOSED)
+                                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                                         .withAssessorsNotifiedDate(now().plusDays(10L))
                                         .withAssessmentClosedDate(now().plusDays(20L))
                                         .build()

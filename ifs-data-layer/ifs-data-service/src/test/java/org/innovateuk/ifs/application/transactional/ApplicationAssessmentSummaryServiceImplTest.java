@@ -14,7 +14,6 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -30,7 +29,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -308,8 +307,8 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(newCompetition()
                         .withAssessmentPeriods(
                                 asList(newAssessmentPeriod().withMilestones(
-                                        asList(newMilestone()
-                                                .build()))
+                                        new ArrayList(asList(newMilestone()
+                                                .build())))
                                         .build()))
                         .withName("Connected digital additive manufacturing")
                         .withCompetitionStatus(FUNDERS_PANEL)
