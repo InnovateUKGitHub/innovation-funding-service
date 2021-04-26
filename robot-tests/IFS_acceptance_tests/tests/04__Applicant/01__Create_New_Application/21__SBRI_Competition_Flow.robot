@@ -617,5 +617,5 @@ generate spend profile
 the user should see correct inputs in milestones form
     the user should see the element     jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element     jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element     jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element     jQuery = tr:contains("Submission date") td:contains("Midday") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element     jQuery = button:contains("Edit")
