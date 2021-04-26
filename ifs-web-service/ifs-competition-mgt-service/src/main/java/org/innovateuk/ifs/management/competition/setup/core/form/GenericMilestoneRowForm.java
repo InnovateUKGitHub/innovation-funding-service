@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.util.DateUtil;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.thymeleaf.util.StringUtils;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.DateTimeException;
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
@@ -145,36 +147,14 @@ public class GenericMilestoneRowForm {
         this.editable = editable;
     }
 
-    // TODO commonise
     protected String getNameOfDay() {
-        String dayName =  getMilestoneDate(day, month, year);
-        if(dayName == null) {
-            dayOfWeek = "-";
-        }
-        else {
-            try {
-                dayOfWeek = StringUtils.capitalize(dayName.toLowerCase());
-            } catch (Exception e) {
-                LOG.trace(e);
-            }
-        }
-        return dayOfWeek;
+        return DateUtil.getNameOfDay(day, month, year);
     }
 
-    // TODO commonise
     protected String getMilestoneDate (Integer day, Integer month, Integer year) {
-        if (day != null && month != null && year != null) {
-            try {
-                return TimeZoneUtil.fromUkTimeZone(year, month, day).getDayOfWeek().name();
-            } catch (DateTimeException e) {
-                LOG.trace(e);
-            }
-        }
-
-        return null;
+        return DateUtil.getDayOfWeek(day, month, year).map(DayOfWeek::name).orElse(null);
     }
 
-    // TODO commonise
     public ZonedDateTime getMilestoneAsZonedDateTime() {
 
         if (day != null && month != null && year != null){
