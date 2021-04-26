@@ -30,7 +30,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     private CompetitionInAssessmentGuard competitionInAssessmentGuard = new CompetitionInAssessmentGuard();
 
     @Test
-    public void evaluate_assessmentDatesNotSet() throws Exception {
+    public void evaluate_assessmentDatesNotSet() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
@@ -41,7 +41,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartsInFuture() throws Exception {
+    public void evaluate_assessmentStartsInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
@@ -54,7 +54,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartsAndClosesInFuture() throws Exception {
+    public void evaluate_assessmentStartsAndClosesInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
@@ -68,7 +68,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartedAndClosed() throws Exception {
+    public void evaluate_assessmentStartedAndClosed() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
@@ -82,7 +82,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartedButWillCloseInFuture() throws Exception {
+    public void evaluate_assessmentStartedButWillCloseInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
@@ -95,7 +95,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartedButCloseDateNotSet() throws Exception {
+    public void evaluate_assessmentStartedButCloseDateNotSet() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
@@ -108,7 +108,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartDateNotSetButClosesInFuture() throws Exception {
+    public void evaluate_assessmentStartDateNotSetButClosesInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)

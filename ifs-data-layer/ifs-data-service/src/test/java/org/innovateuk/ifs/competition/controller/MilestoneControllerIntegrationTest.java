@@ -51,16 +51,16 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
 
     @Test
-    public void testGetAllMilestonesByCompetitionId() throws Exception {
+    public void testGetAllMilestonesByCompetitionId() {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllMilestonesByCompetitionId(COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         List<MilestoneResource> milestone = milestoneResult.getSuccess();
         assertNotNull(milestone);
-        assertEquals(15, milestone.size());
+        assertEquals(13, milestone.size());
     }
 
     @Test
-    public void testGetAllPublicMilestonesByCompetitionId() throws Exception {
+    public void testGetAllPublicMilestonesByCompetitionId() {
         loginSystemRegistrationUser();
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllPublicMilestonesByCompetitionId(COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
@@ -70,7 +70,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetMilestoneByTypeAndCompetitionId() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionId() {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccess();
@@ -79,7 +79,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testGetMilestoneByTypeAndCompetitionIdWithNullDate() throws Exception {
+    public void testGetMilestoneByTypeAndCompetitionIdWithNullDate() {
         RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.LINE_DRAW, COMPETITION_ID_VALID);
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccess();
@@ -87,7 +87,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testCreateSingleMilestone() throws Exception {
+    public void testCreateSingleMilestone() {
         Competition newCompetition = competitionRepository.save(newCompetition().withId((Long) null).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
@@ -102,7 +102,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testCreateMilestones() throws Exception {
+    public void testCreateMilestones() {
         Competition newCompetition = competitionRepository.save(newCompetition().withId((Long) null).build());
 
         List<MilestoneResource> milestones = getMilestonesForCompetition(newCompetition.getId());
@@ -169,7 +169,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testUpdateMilestones() throws Exception {
+    public void testUpdateMilestones() {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_VALID);
 
         //Open date
@@ -206,7 +206,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testUpdateMilestonesWithValidDateOrder() throws Exception {
+    public void testUpdateMilestonesWithValidDateOrder() {
         List<MilestoneResource> milestones = getMilestonesForCompetition(COMPETITION_ID_UPDATE);
 
         assertTrue(!milestones.isEmpty() && milestones.size() == 15);
@@ -224,7 +224,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testUpdateSingleMilestone() throws Exception {
+    public void testUpdateSingleMilestone() {
         MilestoneResource milestone = getMilestoneByCompetitionByType(COMPETITION_ID_UPDATE, MilestoneType.BRIEFING_EVENT);
 
         assertNotNull(milestone);
