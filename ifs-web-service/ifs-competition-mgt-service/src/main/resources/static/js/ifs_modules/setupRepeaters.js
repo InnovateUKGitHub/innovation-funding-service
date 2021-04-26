@@ -183,7 +183,7 @@ IFS.competitionManagement.repeater = (function () {
                     '</div>' +
                 '</fieldset></div>' +
                 '<div class="govuk-form-group textarea-wrapped">' +
-                    '<label class="govuk-label govuk-label--s" for="dates[' + idCount + '].content">' +
+                    '<label class="govuk-label" for="dates[' + idCount + '].content">' +
                         'Event description' +
                     '</label>' +
                     '<textarea cols="30" rows="5" id="dates[' + idCount + '].content" name="dates[' + count + '].content" data-editor="html" class="govuk-textarea" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
