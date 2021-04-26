@@ -259,8 +259,9 @@
                         <div class="form-footer__actions">
                             <button class="button-clear"
                                     name="edit-project-costs">
-                                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}">Edit
-                                    project costs</a>
+                                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}">
+                                    Edit project costs
+                                </a>
                             </button>
                         </div>
                     </div>
@@ -278,9 +279,9 @@
                     </div>
                 </th:block>
                 <div th:if="${model.canEditProjectCosts}">
-                    <button id="save-project-costs"
+                    <button id="save-eligibility"
                             class="govuk-button govuk-!-margin-top-9"
-                            name="save-project-costs">
+                            name="save-eligibility">
                         <a th:ref="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
                             Save and return to eligibility check
                         </a>

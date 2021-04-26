@@ -49,6 +49,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -724,11 +725,37 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     public void testProjectFinanceFormSubmit() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
-        FinanceRowType rowType = FinanceRowType.LABOUR;
-        when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(rowType), eq(projectId), eq(organisationId), eq(false))).thenReturn(serviceSuccess());
+
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(false)
+                .withOrganisation(organisationId)
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.LABOUR, newDefaultCostCategory().build(),
+                        FinanceRowType.OVERHEADS, newDefaultCostCategory().build(),
+                        FinanceRowType.MATERIALS, newDefaultCostCategory().build(),
+                        FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().build(),
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.TRAVEL, newDefaultCostCategory().build()))
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(123L)
+                .withFinanceRowTypes(FinanceRowType.getNonFecSpecificFinanceRowTypes())
+                .build();
+
+        when(projectFinanceRestService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinance));
+        when(competitionRestService.getCompetitionForProject(projectId)).thenReturn(restSuccess(competition));
+
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(projectFinance))
+                .stream()
+                .filter(FinanceRowType::isAppearsInProjectCostsAccordion)
+                .collect(Collectors.toList());
+
+        financeRowTypes.forEach(financeRowType -> when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(financeRowType), eq(projectId), eq(organisationId), eq(false))).thenReturn(serviceSuccess()));
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
-                param("save-eligibility", rowType.name())).
+                param("save-eligibility", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
     }

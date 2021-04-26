@@ -112,7 +112,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', FinanceChecksEligibilityController'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     @AsyncMethod
     public String viewEligibility(@PathVariable long projectId,
@@ -227,7 +227,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @PostMapping(params = "save-project-costs")
+    @PostMapping(params = "save-eligibility")
     @AsyncMethod
     public String projectFinanceFormSubmit(@PathVariable long projectId,
                                            @PathVariable long organisationId,
