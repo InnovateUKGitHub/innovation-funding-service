@@ -50,5 +50,8 @@ public interface AssessmentPeriodService extends IfsCrudService<AssessmentPeriod
     ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId);
 
 
+    @PreAuthorize("hasAuthority('comp_admin')")
+    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
+            description = "Only Comp Admins are able to get the assessment periods for the given competitions")
     ServiceResult<PageResource<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId, Pageable page);
 }
