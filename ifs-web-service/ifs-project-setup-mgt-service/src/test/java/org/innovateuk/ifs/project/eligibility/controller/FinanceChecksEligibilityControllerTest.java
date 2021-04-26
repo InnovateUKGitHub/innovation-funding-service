@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -722,6 +723,22 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     }
 
     @Test
+    public void testViewEligibilityEditFinances() throws Exception {
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
+        setUpViewEligibilityMocking(eligibility, project);
+
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility?editProjectCosts=true",
+                project.getId(), industrialOrganisation.getId())).
+                andExpect(model().attributeExists("model")).
+                andExpect(view().name("project/financecheck/eligibility")).
+                andExpect(status().isOk());
+    }
+
+    @Test
     public void testProjectFinanceFormSubmit() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
@@ -756,6 +773,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 .filter(FinanceRowType::isAppearsInProjectCostsAccordion)
                 .collect(Collectors.toList());
 
+        financeRowTypes.forEach(type -> yourProjectCostsFormValidator.validateType(isA(YourProjectCostsForm.class), eq(type), any(ValidationHandler.class)));
         financeRowTypes.forEach(financeRowType -> when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(financeRowType), eq(projectId), eq(organisationId), eq(false))).thenReturn(serviceSuccess()));
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
@@ -765,7 +783,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     }
 
     @Test
-    public void testEligibiltiyChanges() throws Exception {
+    public void testEligibilityChanges() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
