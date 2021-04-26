@@ -157,13 +157,13 @@
         <th:block th:unless="${model.general.editable}">
             <p class="govuk-body" th:unless="${model.general.competition.financeType}">Competition does not request applicants finance details.</p>
             <th:block th:if="${model.general.competition.financeType}">
-                <th:block th:if="${model.dualFunding}">
+                <th:block th:if="${model.dualFunding AND model.hasFundingRulesData}">
                     <h3 class="govuk-heading-m">Subsidy control</h3>
                     <th:block th:insert="this :: readonly(${competitionSetupForm.subsidyControlMaximums})"></th:block>
                     <h3 class="govuk-heading-m">State aid</h3>
                     <th:block th:insert="this :: readonly(${competitionSetupForm.stateAidMaximums})"></th:block>
                 </th:block>
-                <th:block th:unless="${model.dualFunding}">
+                <th:block th:unless="${model.dualFunding AND model.hasFundingRulesData}">
                     <th:block th:insert="this :: readonly(${competitionSetupForm.maximums})"></th:block>
                 </th:block>
             </th:block>

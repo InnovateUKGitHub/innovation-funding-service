@@ -5,7 +5,9 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
@@ -25,6 +27,9 @@ public class FundingLevelPercentageViewModelPopulator implements CompetitionSetu
     @Autowired
     private CategoryRestService categoryRestService;
 
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     @Value("${ifs.subsidy.control.northern.ireland.enabled}")
     private boolean northernIrelandSubsidyControlToggle;
 
@@ -36,9 +41,14 @@ public class FundingLevelPercentageViewModelPopulator implements CompetitionSetu
     @Override
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competition) {
         List<ResearchCategoryResource> allResearchCategories = categoryRestService.getResearchCategories().getSuccess();
+
+        List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess();
+        boolean hasFundingRulesData = maximums.stream().anyMatch(m -> m.getFundingRules() != null);
+
         return new FundingLevelPercentageViewModel(generalViewModel,
                 allResearchCategories.stream().filter(cat -> competition.getResearchCategories().contains(cat.getId())).collect(Collectors.toList()),
                 asList(OrganisationSize.values()),
+                hasFundingRulesData,
                 competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle);
     }
 }
