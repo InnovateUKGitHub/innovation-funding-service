@@ -765,6 +765,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public void notifyAssessors(ZonedDateTime date, AssessmentPeriod assessmentPeriod) {
+        if (date == null){
+            throw new IllegalArgumentException("The date cannot be null when notifying assessors");
+        }
         if (assessmentPeriod.isInAssessment()) {
             return; // We have an ASSESSOR_NOTIFIED milestone, but not an ASSESSMENT_CLOSED milestone.
         }
@@ -818,6 +821,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public void closeAssessment(ZonedDateTime date, AssessmentPeriod assessmentPeriod) {
+        if (date == null){
+            throw new IllegalArgumentException("The date cannot be null when closing assessment");
+        }
         setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, assessmentPeriod, date);
     }
 
