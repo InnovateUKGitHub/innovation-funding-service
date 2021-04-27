@@ -162,7 +162,7 @@ Milestones: Server side validations, submission time is default
     And the user fills the milestones with invalid data
     And the user clicks the button/link                           jQuery = button:contains(Done)
     Then Validation summary should be visible
-    And the user should see the text in the element               jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  ${empty}
+    And the user should see the text in the element               jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  Midday
     [Teardown]  the user clicks the button/link                   link = Back to competition details
 
 Milestones: Client side validations, submission time is non-default

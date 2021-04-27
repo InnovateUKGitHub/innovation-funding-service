@@ -37,7 +37,7 @@ Validation errors on non-IFS competition details
     Given log in as a different user                       &{Comp_admin1_credentials}
     And the user navigates to the Non IFS competitions tab
     When the user clicks the button/link                   link = No competition title defined
-    Then the user should see the dropdown option selected  9:00 am  id=closeDate-time
+    Then the user should see the dropdown option selected  Midday  id=closeDate-time
     When the user clicks the button/link                   jQuery = button:contains("Save and continue")
     Then the user should see a field and summary error     Please enter a title.
     And the user should see a field and summary error      Please enter a competition URL.
