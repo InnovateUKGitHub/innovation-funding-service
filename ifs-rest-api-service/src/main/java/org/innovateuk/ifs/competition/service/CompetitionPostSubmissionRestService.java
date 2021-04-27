@@ -22,4 +22,6 @@ public interface CompetitionPostSubmissionRestService {
     RestResult<Long> countPendingSpendProfiles(long competitionId);
 
     RestResult<Void> closeAssessment(long competitionId);
+
+    RestResult<Void> reopenAssessmentPeriod(long competitionId);
 }

@@ -10,8 +10,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isIFSAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Permission checker around the access to user admin
@@ -32,7 +31,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "VIEW_USER_PAGE", description = "IFS admin can view edit user page")
     public boolean ifsAdminCanViewEditUserPage(UserCompositeId userCompositeId, UserResource user) {
-        return isIFSAdmin(user);
+        return hasIFSAdminAuthority(user);
     }
 
     @PermissionRule(value = "VIEW_USER_PAGE", description = "Support can view edit user page")

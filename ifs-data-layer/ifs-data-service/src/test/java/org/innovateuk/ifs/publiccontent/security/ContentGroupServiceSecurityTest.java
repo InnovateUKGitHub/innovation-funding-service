@@ -24,7 +24,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<ContentGroupService> {
 
-    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
+    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER);
     private ContentGroupPermissionRules rules;
     private ContentGroupLookupStrategy contentGroupLookupStrategies;
 
@@ -43,28 +43,28 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     }
 
     @Test
-    public void testUploadFile() {
+    public void uploadFile() {
         runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.uploadFile(1L, mock(FileEntryResource.class), mock(Supplier.class)));
     }
 
     @Test
-    public void testRemoveFile() {
+    public void removeFile() {
         runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.removeFile(1L));
     }
 
     @Test
-    public void testSaveContentGroups() {
+    public void saveContentGroups() {
         runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.saveContentGroups(newPublicContentResource().build(), newPublicContent().build(), PublicContentSectionType.DATES));
     }
 
     @Test
-    public void testGetFileDetails() {
+    public void getFileDetails() {
         when(contentGroupLookupStrategies.getContentGroupCompositeId(1L)).thenReturn(ContentGroupCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getFileDetails(1L), this::verifyPermissionRules);
     }
 
     @Test
-    public void testGetFileContents() {
+    public void getFileContents() {
         when(contentGroupLookupStrategies.getContentGroupCompositeId(1L)).thenReturn(ContentGroupCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getFileContents(1L), this::verifyPermissionRules);
     }

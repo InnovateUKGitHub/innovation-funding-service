@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
  */
 public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER));
     private static final EnumSet<Role> NON_SYSTEM_REGISTRATION_ROLES = complementOf(of(SYSTEM_REGISTRATION_USER));
 
     private ProjectPermissionRules projectPermissionRules;
@@ -47,7 +47,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectById() {
+    public void getProjectById() {
         final long projectId = 1L;
 
         when(classUnderTestMock.getProjectById(projectId)).thenReturn(serviceSuccess(newProjectResource().withId(projectId).build()));
@@ -198,4 +198,3 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         return ProjectServiceImpl.class;
     }
 }
-

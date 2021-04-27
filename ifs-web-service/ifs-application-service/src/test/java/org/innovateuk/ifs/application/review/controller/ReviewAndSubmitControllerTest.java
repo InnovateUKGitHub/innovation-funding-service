@@ -29,7 +29,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -139,14 +138,11 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.isLeadApplicant(loggedInUser.getId(), application)).thenReturn(true);
 
-        when(applicationRestService.applicationHasAssessment(application.getId()))
-                .thenReturn(restSuccess(false));
-
         MvcResult mvcResult = mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("always-open-track"))
                 .andReturn();
         TrackViewModel model = (TrackViewModel) mvcResult.getModelAndView().getModel().get("model");
-        assertTrue(model.isReopenLinkVisible());
+        assertFalse(model.isReopenLinkVisible());
     }
 
     @Test
