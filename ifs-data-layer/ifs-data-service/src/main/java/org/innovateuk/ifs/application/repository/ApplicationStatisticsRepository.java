@@ -66,7 +66,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                     " LEFT JOIN Assessment assessment ON assessment.target.id = application.id AND type(assessment) = Assessment " +
                     "WHERE application.competition.id = :competitionId " +
                     "AND (application.applicationProcess.activityState IN " + SUBMITTED_APPLICATION_STATES + ") " +
-                    "AND application.assessmentPeriod.id = :assessmentPeriodId " +
                     "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = application.id) " +
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id";
