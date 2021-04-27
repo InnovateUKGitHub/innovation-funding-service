@@ -347,7 +347,7 @@ public class ProjectFinanceChecksController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
-        return doViewEligibility(application, project, isLeadPartnerOrganisation, organisation, model);
+        return doViewEligibility(application, project, isLeadPartnerOrganisation, organisation, model, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
@@ -465,7 +465,7 @@ public class ProjectFinanceChecksController {
         return attachments;
     }
 
-    private String doViewEligibility(ApplicationResource application, ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model) {
+    private String doViewEligibility(ApplicationResource application, ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, boolean canEditProjectCosts) {
 
         EligibilityResource eligibility = financeCheckRestService.getEligibility(project.getId(), organisation.getId()).getSuccess();
 
@@ -484,7 +484,7 @@ public class ProjectFinanceChecksController {
             Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
                     .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
                     .findFirst();
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, canEditProjectCosts));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
