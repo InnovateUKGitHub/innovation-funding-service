@@ -3,6 +3,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8850  Always open competitions: applicant changes
 ...
+...               IFS-9504  Always open assessments: applicants cannot reopen a submitted application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -44,7 +46,7 @@ Lead applicant completes the application and checks the dashboard content before
     Then the user checks the status of the application after completion
 
 Lead applicant submits the application and checks the dashboard content and the guidance after submission
-    [Documentation]  IFS-8850
+    [Documentation]  IFS-8850  IFS-9504
     Given the user clicks the button/link                                  link = ${applicationName}
     When the user clicks the button/link                                   link = Review and submit
     And the user clicks the button/link                                    jQuery = button:contains("Submit application")
@@ -109,12 +111,12 @@ the user checks the status of the application after completion
     the user should not see the element     jQuery = li:contains("${applicationName}") .status:contains("days left")
 
 the user checks the status of the application after submission
-    the user should see the element     jQuery = h2:contains("Application submitted")
-    the user should see the element     jQuery = a:contains("Reopen application")
-    the user should see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
-    the user should see the element     jQuery = p:contains("You will be asked to set up your project.")
-    the user clicks the button/link     link = Back to applications
-    the user should see the element     jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Awaiting assessment") + .msg-progress:contains("Submitted") a:contains("Reopen")
+    the user should see the element         jQuery = h2:contains("Application submitted")
+    the user should not see the element     jQuery = a:contains("Reopen application")
+    the user should not see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
+    the user should see the element         jQuery = p:contains("You will be asked to set up your project.")
+    the user clicks the button/link         link = Back to applications
+    the user should see the element         jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Decision pending") + .msg-progress:contains("Submitted")
 
 the user checks the status of the application in assessment
     the user should see the element         jQuery = h2:contains("Application submitted")
