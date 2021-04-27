@@ -68,13 +68,14 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId, 0, 20, sortField, "")).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}?sort={sortField}&filter={filter}", competitionId, assessorId, sortField, filter)
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}?sort={sortField}&filter={filter}", competitionId, assessorId, assessmentPeriodId, sortField, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
                         pathParameters(
                                 parameterWithName("assessorId").description("Id of assessor to exclude results for"),
-                                parameterWithName("competitionId").description("Id of competition")
+                                parameterWithName("competitionId").description("Id of competition"),
+                                parameterWithName("assessmentPeriodId").description("Id of assessment period")
                         ),
                         requestParameters(
                                 parameterWithName("sort").description("Field to sort by"),

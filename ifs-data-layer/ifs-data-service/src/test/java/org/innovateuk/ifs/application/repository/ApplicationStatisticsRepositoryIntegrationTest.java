@@ -187,7 +187,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition() {
         long competitionId = 1L;
-        long assessmentPeriodId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -221,7 +224,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
@@ -268,7 +271,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_sortByFirstName() {
         long competitionId = 1L;
-        long assessmentPeriodId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -302,7 +308,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
@@ -349,11 +355,13 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_assessorFilter() {
         long competitionId = 1L;
-        long assessmentPeriodId = 1L;
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
 
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         List<Profile> profiles = newProfile()
                 .with(id(null))
@@ -388,7 +396,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
@@ -435,7 +443,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_accepted() {
         long competitionId = 1L;
-        long assessmentPeriodId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -469,7 +480,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
@@ -515,7 +526,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_otherCompetition() {
         long competitionId = 1L;
-        long assessmentPeriodId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -561,7 +575,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         assessmentParticipantRepository.saveAll(otherCompetitionParticipants);
 
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
@@ -608,7 +622,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_submitted() {
         long competitionId = 1L;
-        long assessmentPeriodId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -642,7 +659,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
@@ -696,7 +713,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_noAssessorsOnCompetition() {
         final long competitionId = 1L;
-        final long assessmentPeriodId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         final int pageSize = 10;
         final int pageNumber = 0;
