@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
@@ -19,6 +18,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.CREATED;
 import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 
 /**
@@ -62,14 +62,14 @@ public class ManageAssessmentsModelPopulator {
     }
 
     private AssessmentPeriodViewModel assessmentPeriodViewModel(List<MilestoneResource> milestones, long assessmentPeriodId){
-        long assessmentsToNofity = assessmentRestService.countByStateAndAssessmentPeriod(AssessmentState.CREATED, assessmentPeriodId).getSuccess();
+        long assessmentsToNotify = assessmentRestService.countByStateAndAssessmentPeriod(CREATED, assessmentPeriodId).getSuccess();
         List<AssessmentMilestoneViewModel> assessmentMilestoneViewModel = milestones
                 .stream()
                 .map(milestone -> new AssessmentMilestoneViewModel(milestone.getType(), milestone.getDate()))
                 .collect(toList());
         AssessmentPeriodViewModel assessmentPeriodViewModel = new AssessmentPeriodViewModel();
         assessmentPeriodViewModel.setMilestones(assessmentMilestoneViewModel);
-        assessmentPeriodViewModel.setHasAssessorsToNotify(assessmentsToNofity > 0);
+        assessmentPeriodViewModel.setHasAssessorsToNotify(assessmentsToNotify > 0);
         assessmentPeriodViewModel.setAssessmentPeriodId(assessmentPeriodId);
         return assessmentPeriodViewModel;
     }

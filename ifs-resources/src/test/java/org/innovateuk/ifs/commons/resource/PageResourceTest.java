@@ -61,7 +61,7 @@ public class PageResourceTest {
         assertEquals(emptyList(), pageSizeThreeAndNineResults.getContent());
         assertEquals(3, pageSizeThreeAndNineResults.getTotalPages());
     }
-    
+
     private List<Integer> listToN(int n){
         return rangeClosed(1, n).boxed().collect(toList());
     }
