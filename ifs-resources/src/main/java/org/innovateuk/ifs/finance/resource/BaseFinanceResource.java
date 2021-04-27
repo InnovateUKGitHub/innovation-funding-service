@@ -198,8 +198,8 @@ public abstract class BaseFinanceResource {
         GrantClaim grantClaim = getGrantClaim();
         if (fecModelEnabled != null && !fecModelEnabled && financeOrganisationDetails.containsKey(FinanceRowType.INDIRECT_COSTS)) {
             BigDecimal indirectCostsTotal = Optional.of(financeOrganisationDetails.get(FinanceRowType.INDIRECT_COSTS).getTotal()).orElse(BigDecimal.ZERO);
-            BigDecimal fundingSought = grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(),
-                    getTotalOtherFunding().add(indirectCostsTotal)).max(BigDecimal.ZERO);
+            BigDecimal fundingSought = grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal().subtract(indirectCostsTotal),
+                    getTotalOtherFunding()).max(BigDecimal.ZERO);
             return fundingSought.add(indirectCostsTotal);
         }
         return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
