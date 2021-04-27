@@ -92,7 +92,7 @@ public class BaseFinanceResourceTest {
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
         assertEquals(BigDecimal.valueOf(100), baseFinanceResource.getTotal());
-        assertEquals(BigDecimal.valueOf(150), baseFinanceResource.getTotalFundingSought());
+        assertEquals(BigDecimal.valueOf(100), baseFinanceResource.getTotalFundingSought());
     }
 
     @Test

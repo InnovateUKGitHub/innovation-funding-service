@@ -199,7 +199,7 @@ public abstract class BaseFinanceResource {
         if (fecModelEnabled != null && !fecModelEnabled && financeOrganisationDetails.containsKey(FinanceRowType.INDIRECT_COSTS)) {
             BigDecimal indirectCostsTotal = Optional.of(financeOrganisationDetails.get(FinanceRowType.INDIRECT_COSTS).getTotal()).orElse(BigDecimal.ZERO);
             BigDecimal fundingSought = grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(),
-                    getTotalOtherFunding()).max(BigDecimal.ZERO);
+                    getTotalOtherFunding().add(indirectCostsTotal)).max(BigDecimal.ZERO);
             return fundingSought.add(indirectCostsTotal);
         }
         return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
