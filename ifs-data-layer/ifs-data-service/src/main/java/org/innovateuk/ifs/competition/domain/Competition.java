@@ -768,24 +768,16 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         if (date == null){
             throw new IllegalArgumentException("The date cannot be null when notifying assessors");
         }
-        if (!this.isAlwaysOpen()) {
-            if (getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT) {
-                return;
-            }
-
-            if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
+        if (assessmentPeriod.isInAssessment()) {
+            return; // We have an ASSESSOR_NOTIFIED milestone, but not an ASSESSMENT_CLOSED milestone.
+        }
+        if (assessmentPeriod.isAssessmentClosed()) {
+            throw new IllegalStateException("Tried to notify assessors when assessment is closed");
+        }
+        if (!this.isAlwaysOpen() && getCompetitionStatus() != CompetitionStatus.CLOSED) {
                 throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +
                         getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
                         CompetitionStatus.CLOSED);
-            }
-        }
-        else {
-            if (assessmentPeriod.isInAssessment()) {
-                return; // We have an ASSESSOR_NOTIFIED milestone, but not an ASSESSMENT_CLOSED milestone.
-            }
-            if (assessmentPeriod.isAssessmentClosed()) {
-                throw new IllegalStateException("Tried to notify assessors when assessment is closed");
-            }
         }
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, assessmentPeriod, date);
     }

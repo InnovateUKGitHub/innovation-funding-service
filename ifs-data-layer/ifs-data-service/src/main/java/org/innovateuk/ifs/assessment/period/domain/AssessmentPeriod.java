@@ -5,9 +5,13 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static java.time.ZonedDateTime.now;
+import static java.util.stream.Stream.empty;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSMENT_CLOSED;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSORS_NOTIFIED;
 
@@ -72,10 +76,17 @@ public class AssessmentPeriod {
     }
 
     public boolean isInAssessment(){
-        return milestones != null && !isAssessmentClosed() && milestones.stream().anyMatch(milestone -> ASSESSORS_NOTIFIED.equals(milestone.getType()));
+        return !isAssessmentClosed() && reached().anyMatch(milestone -> ASSESSORS_NOTIFIED.equals(milestone.getType()));
     }
 
     public boolean isAssessmentClosed(){
-        return milestones != null  && milestones.stream().anyMatch(milestone -> ASSESSMENT_CLOSED.equals(milestone.getType()));
+        return reached().anyMatch(milestone -> ASSESSMENT_CLOSED.equals(milestone.getType()));
+    }
+
+    private Stream<Milestone> reached(){
+        return milestones == null ? empty():
+                milestones.stream()
+                        .filter(milestone -> milestone.getDate() != null)
+                        .filter(milestone -> milestone.isReached(now()));
     }
 }

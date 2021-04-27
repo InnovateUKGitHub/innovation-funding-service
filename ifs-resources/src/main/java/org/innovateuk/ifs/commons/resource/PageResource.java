@@ -50,7 +50,7 @@ public class PageResource<PageableResource> {
 
     public static <PageableResource> PageResource<PageableResource> fromList(List<PageableResource> all, int number, int size){
         int totalElements = all.size();
-        int totalPages = totalElements / size;
+        int totalPages = ((totalElements - 1) / size) + 1;
         int startIndex = min(number * size, totalElements);
         int endIndex = min((number + 1) * size, totalElements);
         List<PageableResource> content = all.subList(startIndex, endIndex);
