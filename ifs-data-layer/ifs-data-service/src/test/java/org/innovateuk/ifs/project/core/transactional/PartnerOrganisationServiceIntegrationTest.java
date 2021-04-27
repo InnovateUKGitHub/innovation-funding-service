@@ -8,6 +8,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.*;
 
@@ -130,7 +131,7 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .build(2);
         project = projectRepository.save(newProject()
                 .with(id(null))
-                .withProjectProcess(null)
+                .withProjectProcess((ProjectProcess) null)
                 .withApplication(application)
                 .withDateSubmitted(ZonedDateTime.now())
                 .withDuration(6L)

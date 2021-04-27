@@ -44,7 +44,6 @@ public interface MilestoneService {
             description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions")
     ServiceResult<MilestoneResource> create(MilestoneResource milestone);
 
-
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'UPDATE_COMPLETION_STAGE')")
     ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage);
 }

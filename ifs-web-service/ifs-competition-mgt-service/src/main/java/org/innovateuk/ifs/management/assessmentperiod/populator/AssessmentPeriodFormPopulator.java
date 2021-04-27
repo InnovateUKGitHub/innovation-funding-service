@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.assessmentperiod.populator;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.innovateuk.ifs.commons.resource.PageResource;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
@@ -13,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class AssessmentPeriodFormPopulator {
@@ -20,26 +23,29 @@ public class AssessmentPeriodFormPopulator {
     @Autowired
     private MilestoneRestService milestoneRestService;
 
-    public ManageAssessmentPeriodsForm populate(long competitionId) {
+    public ManageAssessmentPeriodsForm populate(long competitionId, PageResource<AssessmentPeriodResource> assessmentPeriodResources) {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
         Map<Long, List<MilestoneResource>> periodIdToMilestoneMap = milestones
                 .stream()
                 .filter(milestone -> milestone.getAssessmentPeriodId() != null)
                 .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
-        List<AssessmentPeriodForm> milestonesForms = periodIdToMilestoneMap.entrySet().stream()
-                .map(e -> {
+        List<AssessmentPeriodForm> assessmentPeriods = IntStream.range(0, assessmentPeriodResources.getContent().size())
+                .mapToObj(index -> {
+                    AssessmentPeriodResource assessmentPeriod = assessmentPeriodResources.getContent().get(index);
                     LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
-                    e.getValue().forEach(milestone ->
-                            milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
+                    periodIdToMilestoneMap.get(assessmentPeriod.getId()).forEach(milestone ->
+                            milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone))
                     );
-                    AssessmentPeriodForm milestonesForm = new AssessmentPeriodForm();
-                    milestonesForm.setAssessmentPeriodId(e.getKey());
-                    milestonesForm.setMilestoneEntries(milestoneFormEntries);
-                    return milestonesForm;
+                    AssessmentPeriodForm assessmentPeriodForm = new AssessmentPeriodForm();
+                    assessmentPeriodForm.setAssessmentPeriodId(assessmentPeriod.getId());
+                    assessmentPeriodForm.setMilestoneEntries(milestoneFormEntries);
+                    int pageStart = (assessmentPeriodResources.getNumber() * assessmentPeriodResources.getSize());
+                    assessmentPeriodForm.setIndex(index + 1 + pageStart);
+                    return assessmentPeriodForm;
                 })
                 .collect(Collectors.toList());
         ManageAssessmentPeriodsForm form = new ManageAssessmentPeriodsForm();
-        form.setAssessmentPeriods(milestonesForms);
+        form.setAssessmentPeriods(assessmentPeriods);
         return form;
     }
 

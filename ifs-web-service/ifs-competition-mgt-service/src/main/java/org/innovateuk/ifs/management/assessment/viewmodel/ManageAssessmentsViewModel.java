@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessme
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 
 import java.util.List;
 
@@ -27,10 +28,12 @@ public class ManageAssessmentsViewModel {
     private final int assessmentsCompleted;
     private final boolean alwaysOpen;
     private final List<AssessmentPeriodForm> assessmentPeriods;
+    private final PaginationViewModel assessmentPeriodPagination;
 
     public ManageAssessmentsViewModel(CompetitionResource competition,
                                       CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics,
-                                      List<AssessmentPeriodForm> assessmentPeriods) {
+                                      List<AssessmentPeriodForm> assessmentPeriods,
+                                      PaginationViewModel assessmentPeriodPagination) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.inAssessment = competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
@@ -42,6 +45,7 @@ public class ManageAssessmentsViewModel {
         this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
         this.alwaysOpen = competition.isAlwaysOpen();
         this.assessmentPeriods = assessmentPeriods;
+        this.assessmentPeriodPagination = assessmentPeriodPagination;
     }
 
     public long getCompetitionId() {
@@ -82,6 +86,10 @@ public class ManageAssessmentsViewModel {
 
     public List<AssessmentPeriodForm> getAssessmentPeriods() {
         return assessmentPeriods;
+    }
+
+    public PaginationViewModel getAssessmentPeriodPagination() {
+        return assessmentPeriodPagination;
     }
 
     @Override
