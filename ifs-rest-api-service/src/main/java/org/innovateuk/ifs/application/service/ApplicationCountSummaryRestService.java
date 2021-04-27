@@ -15,12 +15,6 @@ public interface ApplicationCountSummaryRestService {
                                                                                                 int pageSize,
                                                                                                 String filter);
 
-    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(long competitionId,
-                                                                                                             long assessorId,
-                                                                                                             int page,
-                                                                                                             Sort sort,
-                                                                                                             String filter);
-
     RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(long competitionId,
                                                                                                                                   long assessorId,
                                                                                                                                   long assessmentPeriodId,

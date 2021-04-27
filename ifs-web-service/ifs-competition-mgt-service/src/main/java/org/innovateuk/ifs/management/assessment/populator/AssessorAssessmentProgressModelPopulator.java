@@ -42,7 +42,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     public AssessorAssessmentProgressViewModel populateModel(long competitionId,
                                                              long assessorId,
-                                                             Long assessmentPeriodId,
+                                                             long assessmentPeriodId,
                                                              int page,
                                                              Sort sort,
                                                              String filter) {
@@ -100,9 +100,9 @@ public class AssessorAssessmentProgressModelPopulator {
         );
     }
 
-    private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
+    private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, long assessmentPeriodId) {
         return assessorAssessments.stream()
-                .filter(assessmentPeriodFilter(assessmentPeriodId))
+                .filter(it -> it.getAssessmentPeriodId().equals(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isAssigned)
                 .map(this::getAssessorAssessmentProgressAssignedRowViewModel)
                 .collect(toList());
@@ -121,18 +121,10 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private List<AssessorAssessmentProgressRejectedRowViewModel> getRejectedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
-                .filter(assessmentPeriodFilter(assessmentPeriodId))
+                .filter(it -> it.getAssessmentPeriodId().equals(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isRejected)
                 .map(this::getAssessorAssessmentProgressRejectedRowViewModel)
                 .collect(toList());
-    }
-
-    private Predicate<? super AssessorAssessmentResource> assessmentPeriodFilter(Long assessmentPeriodId) {
-        if (assessmentPeriodId == null) {
-            return it -> true;
-        } else {
-            return it -> assessmentPeriodId.equals(it.getAssessmentPeriodId());
-        }
     }
 
     private AssessorAssessmentProgressRejectedRowViewModel getAssessorAssessmentProgressRejectedRowViewModel(AssessorAssessmentResource assessment) {
@@ -149,7 +141,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
-                .filter(assessmentPeriodFilter(assessmentPeriodId))
+                .filter(it -> it.getAssessmentPeriodId().equals(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isWithdrawn)
                 .map(this::getAssessorAssessmentProgressPreviousAssignedRowViewModel)
                 .collect(toList());
@@ -167,20 +159,10 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId,
                                                                      long assessorId,
-                                                                     Long assessmentPeriodId,
+                                                                     long assessmentPeriodId,
                                                                      int page,
                                                                      String filter,
                                                                      Sort sort) {
-        if (assessmentPeriodId == null) {
-            return applicationCountSummaryRestService
-                    .getApplicationCountSummariesByCompetitionIdAndAssessorId(
-                            competitionId,
-                            assessorId,
-                            page,
-                            sort,
-                            filter)
-                    .getSuccess();
-        }
         return applicationCountSummaryRestService
                 .getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(
                         competitionId,

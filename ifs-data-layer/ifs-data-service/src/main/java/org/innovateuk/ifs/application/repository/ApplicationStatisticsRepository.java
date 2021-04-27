@@ -66,6 +66,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                     " LEFT JOIN Assessment assessment ON assessment.target.id = application.id AND type(assessment) = Assessment " +
                     "WHERE application.competition.id = :competitionId " +
                     "AND (application.applicationProcess.activityState IN " + SUBMITTED_APPLICATION_STATES + ") " +
+                    "AND application.assessmentPeriod.id = :assessmentPeriodId " +
                     "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = application.id) " +
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id";
@@ -98,24 +99,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             SUM_ACCEPTED + ", " +
             SUM_SUBMITTED +
             ")" +
-            ASSESSOR_FILTER)
-    Page<ApplicationCountSummaryResource> findStatisticsForApplicationsNotAssignedTo(long competitionId,
-                                                                                     long assessorId,
-                                                                                     String filter,
-                                                                                     Pageable pageable);
-
-    @Query("SELECT NEW org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource(" +
-            " application.id, " +
-            " application.name, " +
-            " lead.name, " +
-            SUM_ASSESSORS + ", " +
-            SUM_ACCEPTED + ", " +
-            SUM_SUBMITTED +
-            ")" +
             ASSESSMENT_PERIOD_AND_ASSESSOR_FILTER)
     Page<ApplicationCountSummaryResource> findStatisticsForAssessmentPeriodForApplicationsNotAssignedTo(
             long competitionId,
-            Long assessmentPeriodId,
+            long assessmentPeriodId,
             long assessorId,
             String filter,
             Pageable pageable);
@@ -125,39 +112,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     List<Long> findApplicationIdsNotAssignedTo(long competitionId,
                                                long assessorId,
                                                String filter);
-
-    @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
-            "  user.id, " +
-            "  concat(user.firstName, ' ', user.lastName), " +
-            "  profile.skillsAreas, " +
-            "  sum(case when application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
-            "  sum(case when application.id IS NOT NULL AND application.competition.id = :compId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
-            "  sum(case when application.id IS NOT NULL AND application.competition.id = :compId AND assessment.activityState NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
-            "  sum(case when application.id IS NOT NULL AND application.competition.id = :compId AND assessment.activityState     IN " + SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)  " +  // submitted
-            ") " +
-            "FROM AssessmentParticipant assessmentParticipant " +
-            "JOIN User user ON user.id = assessmentParticipant.user.id " +
-            "JOIN assessmentParticipant.competition competition " +
-            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
-            "JOIN Profile profile ON profile.id = user.profileId " +
-            // join on all applications for each invited assessor on the system
-            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.ASSESSOR " +
-            "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND type(assessment) = Assessment " +
-            "LEFT JOIN Application application ON assessment.target.id = application.id  " +
-            "WHERE " +
-            "  assessmentParticipant.competition.id = :compId AND " +
-            "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
-            "  assessmentParticipant.role = 'ASSESSOR' AND " +
-            "(roleStatuses IS NULL OR " +
-            "(" +
-            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE))  " +
-            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
-            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')" +
-            "GROUP BY user ")
-    Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessorNameLike(@Param("compId") long competitionId,
-                                                                                               @Param("assessorNameFilter") String assessorNameFilter,
-                                                                                               Pageable pageable);
 
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +

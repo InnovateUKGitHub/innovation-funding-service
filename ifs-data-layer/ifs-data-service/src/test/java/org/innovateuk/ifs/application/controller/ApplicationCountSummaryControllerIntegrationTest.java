@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -15,6 +17,8 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
@@ -36,6 +40,9 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -85,11 +92,16 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         long assessorId = 20L;
         loginCompAdmin();
 
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
+
         Application application = newApplication()
                 .with(id(null))
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
                 .withCompetition(competitionRepository.findById(competitionId).get())
+                .withAssessmentPeriod(assessmentPeriod)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
@@ -107,7 +119,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
         flushAndClearSession();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, 6, Sort.APPLICATION_NUMBER, "").getSuccess();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId,  0, 6, Sort.APPLICATION_NUMBER, "").getSuccess();
 
         assertEquals(6, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

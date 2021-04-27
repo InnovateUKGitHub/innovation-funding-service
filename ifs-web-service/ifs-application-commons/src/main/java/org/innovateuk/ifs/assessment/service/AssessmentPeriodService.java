@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.service;
 
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,16 @@ import java.util.stream.Collectors;
 public class AssessmentPeriodService {
 
     @Autowired
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
+    @Autowired
     private MilestoneRestService milestoneRestService;
 
-    public String assessmentPeriodName(Long assessmentPeriodId, long competitionId) {
-        if (assessmentPeriodId == null) {
+    public String assessmentPeriodName(long assessmentPeriodId, long competitionId) {
+
+        List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
+
+        if (!(assessmentPeriods.size() > 1)) {
             return null;
         }
 

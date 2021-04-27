@@ -62,6 +62,8 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         final int pageNumber = 1;
         final int pageSize = 20;
 
+        long assessmentPeriodId = 3L;
+
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("name")
                 .withCompetitionStatus(IN_ASSESSMENT)
@@ -83,7 +85,7 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionResource.getId(), assessmentPeriodId,  "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
 
         ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId())
                 .param("assessorNameFilter",""))

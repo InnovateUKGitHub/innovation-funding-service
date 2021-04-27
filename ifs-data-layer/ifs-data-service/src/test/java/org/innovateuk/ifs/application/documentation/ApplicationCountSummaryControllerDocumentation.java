@@ -59,13 +59,14 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() throws Exception {
         long competitionId = 1L;
         long assessorId = 2L;
+        long assessmentPeriodId = 3L;
         Sort sortField = Sort.APPLICATION_NUMBER;
         String filter = "";
         ApplicationCountSummaryResource applicationCountSummaryResource = applicationCountSummaryResourceBuilder.build();
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, 20, sortField, "")).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId, 0, 20, sortField, "")).thenReturn(serviceSuccess(pageResource));
 
         mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}?sort={sortField}&filter={filter}", competitionId, assessorId, sortField, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -81,7 +82,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, 20, sortField, "");
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId,0, 20, sortField, "");
     }
 
     @Test

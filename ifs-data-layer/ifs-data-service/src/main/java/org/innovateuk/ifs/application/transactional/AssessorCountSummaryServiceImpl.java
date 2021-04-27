@@ -23,24 +23,6 @@ public class AssessorCountSummaryServiceImpl extends BaseTransactionalService im
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Override
-    public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(long competitionId, String assessorNameFilter, int pageIndex, int pageSize) {
-
-        Pageable pageable = PageRequest.of(pageIndex, pageSize, SORT_BY_FIRSTNAME);
-
-        assessorNameFilter = EncodingUtils.urlDecode(assessorNameFilter);
-
-        Page<AssessorCountSummaryResource> assessorStatistics =
-                applicationStatisticsRepository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, assessorNameFilter, pageable);
-
-        return find(assessorStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> new AssessorCountSummaryPageResource(
-                assessorStatistics.getTotalElements(),
-                assessorStatistics.getTotalPages(),
-                assessorStatistics.getContent(),
-                assessorStatistics.getNumber(),
-                assessorStatistics.getSize()));
-    }
-
-    @Override
     public ServiceResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(long competitionId, long assessmentPeriodId, String assessorNameFilter, int pageIndex, int pageSize) {
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize, SORT_BY_FIRSTNAME);

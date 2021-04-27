@@ -51,25 +51,19 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
             return "competition/assessor-progress-choose-period";
         }
 
-        CompetitionResource competitionResource = getCompetition(competitionId);
-        AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, null, assessorNameFilter, page);
+        AssessmentPeriodResource assessmentPeriod = assessmentPeriods.get(0);
 
-        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts));
-
-        return "competition/manage-assessors";
+        return format("redirect:/assessment/competition/%s/assessors/period?assessmentPeriodId=%s", competitionId, assessmentPeriod.getId());
     }
 
     @GetMapping("/assessors/period")
     public String manageAssessorsForPeriod(Model model,
                                            @PathVariable("competitionId") long competitionId,
-                                           @RequestParam("assessmentPeriodId") Long assessmentPeriodId,
+                                           @RequestParam("assessmentPeriodId") long assessmentPeriodId,
                                            @RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter
     ) {
 
-        if (assessmentPeriodId == null) {
-            return format("redirect:/assessment/competition/%s/assessors", competitionId);
-        }
         CompetitionResource competitionResource = getCompetition(competitionId);
         AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, assessmentPeriodId, assessorNameFilter, page);
 
@@ -78,12 +72,7 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
         return "competition/manage-assessors";
     }
 
-    private AssessorCountSummaryPageResource getCounts(long competitionId, Long assessmentPeriodId, String assessorNameFilter, int page) {
-        if (assessmentPeriodId == null) {
-            return applicationCountSummaryRestService
-                    .getAssessorCountSummariesByCompetitionId(competitionId, StringUtils.trim(assessorNameFilter), page, PAGE_SIZE)
-                    .getSuccess();
-        }
+    private AssessorCountSummaryPageResource getCounts(long competitionId, long assessmentPeriodId, String assessorNameFilter, int page) {
         return applicationCountSummaryRestService
                 .getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, StringUtils.trim(assessorNameFilter), page, PAGE_SIZE)
                 .getSuccess();

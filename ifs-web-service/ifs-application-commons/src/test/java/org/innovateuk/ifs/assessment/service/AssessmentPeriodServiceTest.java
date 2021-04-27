@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.assessment.service;
 
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +13,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.mockito.BDDMockito.given;
 
@@ -24,12 +30,22 @@ public class AssessmentPeriodServiceTest {
     private AssessmentPeriodService assessmentPeriodService;
 
     @Mock
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
+    @Mock
     private MilestoneRestService milestoneRestService;
 
     @Test
-    public void shouldGiveNullForNullAssessmentPeriodId() {
+    public void shouldGiveNullNameIfOnlyPeriodForCompetition() {
+        // given
+        long competitionId = 123L;
+        long assessmentPeriodId = 101L;
+
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource().build();
+        given(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId)).willReturn(restSuccess(singletonList(assessmentPeriodResource)));
+
         // when
-        String result = assessmentPeriodService.assessmentPeriodName(null, 123L);
+        String result = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionId);
 
         // then
         assertThat(result).isNull();
@@ -52,6 +68,9 @@ public class AssessmentPeriodServiceTest {
                 .build(4);
 
         given(milestoneRestService.getAllMilestonesByCompetitionId(competitionId)).willReturn(restSuccess(milestones));
+
+        List<AssessmentPeriodResource> assessmentPeriodResources = newAssessmentPeriodResource().build(3);
+        given(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId)).willReturn(restSuccess(assessmentPeriodResources));
 
         // when
         String result = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId2, competitionId);
@@ -78,6 +97,9 @@ public class AssessmentPeriodServiceTest {
 
         given(milestoneRestService.getAllMilestonesByCompetitionId(competitionId)).willReturn(restSuccess(milestones));
 
+        List<AssessmentPeriodResource> assessmentPeriodResources = newAssessmentPeriodResource().build(3);
+        given(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId)).willReturn(restSuccess(assessmentPeriodResources));
+
         // when
         String result = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId2, competitionId);
 
@@ -101,6 +123,9 @@ public class AssessmentPeriodServiceTest {
                 .build(3);
 
         given(milestoneRestService.getAllMilestonesByCompetitionId(competitionId)).willReturn(restSuccess(milestones));
+
+        List<AssessmentPeriodResource> assessmentPeriodResources = newAssessmentPeriodResource().build(3);
+        given(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId)).willReturn(restSuccess(assessmentPeriodResources));
 
         // when
         String result = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId2, competitionId);

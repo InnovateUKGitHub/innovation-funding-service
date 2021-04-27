@@ -24,7 +24,7 @@ public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPop
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
 
-    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts, Long assessmentPeriodId) {
+    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts, long assessmentPeriodId) {
 
         String assessmentPeriodName = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competition.getId());
 
@@ -36,10 +36,6 @@ public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPop
                 competition.getCompetitionStatus() == IN_ASSESSMENT,
                 categoryRestService.getInnovationSectors().getSuccess(),
                 new Pagination(assessorCounts));
-    }
-
-    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts) {
-        return populateModel(competition, assessorCounts, null);
     }
 
     private ManageAssessorsRowViewModel getRowViewModel(AssessorCountSummaryResource assessorCount) {

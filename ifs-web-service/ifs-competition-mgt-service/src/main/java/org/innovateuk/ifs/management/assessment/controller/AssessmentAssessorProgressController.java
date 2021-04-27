@@ -52,21 +52,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return ApplicationSelectionForm.class;
     }
 
-    @GetMapping
-    public String assessorProgress(@PathVariable long competitionId,
-                                   @PathVariable long assessorId,
-                                   @ModelAttribute(name = SELECTION_FORM, binding = false) ApplicationSelectionForm selectionForm,
-                                   @RequestParam(value = "page", defaultValue = "1") int page,
-                                   @RequestParam(value = "sort", defaultValue = "APPLICATION_NUMBER") Sort sort,
-                                   @RequestParam(value = "filterSearch", defaultValue = "") String filter,
-                                   Model model,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response) {
-        updateSelectionForm(request, response, competitionId, assessorId, selectionForm, filter);
-        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, null, page - 1, sort, filter));
-        return "competition/assessor-progress";
-    }
-
     @GetMapping("/period/{assessmentPeriodId}")
     public String assessorProgressForPeriod(@PathVariable long competitionId,
                                    @PathVariable long assessorId,
@@ -105,14 +90,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s/period/%s", competitionId, assessorId, assessmentPeriodId);
     }
 
-    @PostMapping("/withdraw/{assessmentId}")
-    public String withdrawAssessment(@PathVariable long competitionId,
-                                     @PathVariable long assessorId,
-                                     @PathVariable long assessmentId) {
-        assessmentRestService.withdrawAssessment(assessmentId).getSuccess();
-        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
-    }
-
     @PostMapping("/withdraw/{assessmentId}/period/{assessmentPeriodId}")
     public String withdrawAssessmentFromPeriod(@PathVariable long competitionId,
                                      @PathVariable long assessorId,
@@ -120,20 +97,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                                      @PathVariable long assessmentPeriodId) {
         assessmentRestService.withdrawAssessment(assessmentId).getSuccess();
         return format("redirect:/assessment/competition/%s/assessors/%s/period/%s", competitionId, assessorId, assessmentPeriodId);
-    }
-
-    @GetMapping(value = "/withdraw/{assessmentId}/confirm")
-    public String withdrawAssessmentConfirm(
-            Model model,
-            @PathVariable long competitionId,
-            @PathVariable long assessorId,
-            @PathVariable long assessmentId) {
-        model.addAttribute("model", new AssessorAssessmentProgressRemoveViewModel(
-                competitionId,
-                assessorId,
-                assessmentId
-        ));
-        return "competition/assessor-progress-remove-confirm";
     }
 
     @GetMapping(value = "/withdraw/{assessmentId}/period/{assessmentPeriodId}/confirm")
@@ -152,52 +115,9 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return "competition/assessor-progress-remove-confirm";
     }
 
-    @PostMapping
-    public String assessorAssign(@PathVariable long competitionId,
-                                 @PathVariable long assessorId,
-                                 @ModelAttribute(SELECTION_FORM) ApplicationSelectionForm selectionForm,
-                                 HttpServletRequest request) {
-
-        ApplicationSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(form -> !form.getSelectedApplications().isEmpty())
-                .orElse(selectionForm);
-
-        List<AssessmentCreateResource> assessments = submittedSelectionForm.getSelectedApplications().stream()
-                .map(applicationId -> new AssessmentCreateResource(applicationId, assessorId))
-                .collect(Collectors.toList());
-        assessmentRestService.createAssessments(assessments).getSuccess();
-        return redirectToAssessorProgress(competitionId, assessorId);
-    }
-
-    private String redirectToAssessorProgress(long competitionId, long assessorId) {
-        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
-    }
-
     @PostMapping(value = "/period/{assessmentPeriodId}", params = {"selectionId"})
     @ResponseBody
     public JsonNode selectAssessorForResendListForPeriod(
-            @PathVariable long competitionId,
-            @PathVariable long assessorId,
-            @RequestParam("selectionId") long applicationId,
-            @RequestParam("isSelected") boolean isSelected,
-            @RequestParam(value = "filterSearch", defaultValue = "") String filter,
-            HttpServletRequest request,
-            HttpServletResponse response) {
-        return selectAssessorForResendListJsonNode(
-                competitionId,
-                assessorId,
-                applicationId,
-                isSelected,
-                filter,
-                request,
-                response
-        );
-    }
-
-
-    @PostMapping(params = {"selectionId"})
-    @ResponseBody
-    public JsonNode selectAssessorForResendList(
             @PathVariable long competitionId,
             @PathVariable long assessorId,
             @RequestParam("selectionId") long applicationId,
@@ -250,7 +170,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         }
     }
 
-    @PostMapping(params = {"addAll"})
+    @PostMapping(value = "/period/{assessmentPeriodId}", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToResendList(@PathVariable long competitionId,
                                                               @PathVariable long assessorId,
                                                               @RequestParam("addAll") boolean addAll,

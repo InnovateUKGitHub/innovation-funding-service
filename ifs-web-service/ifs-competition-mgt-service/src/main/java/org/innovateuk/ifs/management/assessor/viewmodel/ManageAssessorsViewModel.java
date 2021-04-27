@@ -54,6 +54,10 @@ public class ManageAssessorsViewModel {
         return assessmentPeriodName;
     }
 
+    public boolean isOnlyAssessmentPeriod() {
+        return assessmentPeriodName == null;
+    }
+
     public List<ManageAssessorsRowViewModel> getAssessors() {
         return assessors;
     }

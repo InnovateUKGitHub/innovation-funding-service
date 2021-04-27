@@ -63,6 +63,7 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() throws Exception {
         long competitionId = 1L;
         long assessorId = 10L;
+        long assessmentPeriodId = 2L;
         int page = 2;
         int pageSize = 3;
         String filter = "ads";
@@ -70,13 +71,13 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, page, pageSize, sortField, filter)).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId, page, pageSize, sortField, filter)).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, assessorId, page, pageSize, sortField, filter))
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, assessorId, assessmentPeriodId, page, pageSize, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
-        verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, page, pageSize, sortField, filter);
+        verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId, page, pageSize, sortField, filter);
 
     }
 }

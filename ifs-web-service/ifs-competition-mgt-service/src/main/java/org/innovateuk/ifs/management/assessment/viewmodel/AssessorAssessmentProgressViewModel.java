@@ -23,7 +23,7 @@ public class AssessorAssessmentProgressViewModel {
     private final String businessType;
     private final long totalApplications;
     private final long assessorId;
-    private final Long assessmentPeriodId;
+    private final long assessmentPeriodId;
     private final String assessmentPeriodName;
     private final String filter;
     private final boolean selectAllDisabled;
@@ -37,7 +37,7 @@ public class AssessorAssessmentProgressViewModel {
                                                String competitionName,
                                                CompetitionStatus competitionStatus,
                                                long assessorId,
-                                               Long assessmentPeriodId,
+                                               long assessmentPeriodId,
                                                String assessmentPeriodName,
                                                String assessorName,
                                                List<String> innovationAreas,
@@ -98,12 +98,16 @@ public class AssessorAssessmentProgressViewModel {
 
     public long getAssessorId() { return assessorId; }
 
-    public Long getAssessmentPeriodId() {
+    public long getAssessmentPeriodId() {
         return assessmentPeriodId;
     }
 
     public String getAssessmentPeriodName() {
         return assessmentPeriodName;
+    }
+
+    public boolean isOnlyAssessmentPeriod() {
+        return assessmentPeriodName == null;
     }
 
     public List<AssessorAssessmentProgressAssignedRowViewModel> getAssigned() {
