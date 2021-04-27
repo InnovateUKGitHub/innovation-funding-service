@@ -151,7 +151,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
         applicationProgressService.updateApplicationProgress(application.getId());
 
         if (firstOfOrganisation) {
-            autoCompleteSectionsUtil.intitialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRole.getId());
+            autoCompleteSectionsUtil.initialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRole.getId());
         }
     }
 }

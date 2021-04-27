@@ -100,8 +100,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         return new FundingRulesChangeViewModel(appNiDec, projNiDec);
     }
 
-    private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(CompetitionResource competition, OrganisationResource organisation, ApplicationFinanceResource appFinance, ProjectFinanceResource projectFinance) {
-
+    public ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(CompetitionResource competition, OrganisationResource organisation, ApplicationFinanceResource appFinance, ProjectFinanceResource projectFinance) {
         List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
         CostChangeViewModel vat = null;
 

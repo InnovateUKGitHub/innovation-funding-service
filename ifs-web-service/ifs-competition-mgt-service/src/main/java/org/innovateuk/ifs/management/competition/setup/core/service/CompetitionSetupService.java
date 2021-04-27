@@ -35,6 +35,9 @@ public interface CompetitionSetupService {
     ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
                                                     CompetitionResource competitionResource, CompetitionSetupSection section);
 
+    ServiceResult<String> getNextSetupSection(CompetitionSetupForm competitionSetupForm,
+                                              CompetitionResource competitionResource, CompetitionSetupSection section);
+
     ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
                                                        CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection);
 

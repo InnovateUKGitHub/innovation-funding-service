@@ -23,7 +23,8 @@ public abstract class ApplicationKtaInviteMapper extends BaseMapper<ApplicationK
             @Mapping(source = "target.competition.name", target = "competitionName"),
             @Mapping(source = "target.leadOrganisationId", target = "leadOrganisationId"),
             @Mapping(source = "target.leadApplicant.name", target = "leadApplicant"),
-            @Mapping(source = "target.name", target = "applicationName")
+            @Mapping(source = "target.name", target = "applicationName"),
+            @Mapping(target = "leadOrganisationName", ignore = true)
     })
     @Override
     public abstract ApplicationKtaInviteResource mapToResource(ApplicationKtaInvite domain);
@@ -31,7 +32,8 @@ public abstract class ApplicationKtaInviteMapper extends BaseMapper<ApplicationK
     public abstract List<ApplicationKtaInviteResource> mapToResource(List<ApplicationKtaInvite> domain);
 
     @Mappings({
-            @Mapping(source="application", target="target")
+            @Mapping(source = "application", target = "target"),
+            @Mapping(target = "user", ignore = true)
     })
     @Override
     public abstract ApplicationKtaInvite mapToDomain(ApplicationKtaInviteResource resource);

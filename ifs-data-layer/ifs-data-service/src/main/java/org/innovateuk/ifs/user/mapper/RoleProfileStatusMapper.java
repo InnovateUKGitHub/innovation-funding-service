@@ -24,6 +24,7 @@ public abstract class RoleProfileStatusMapper extends BaseMapper<RoleProfileStat
     @Override
     public abstract RoleProfileStatusResource mapToResource(RoleProfileStatus domain);
 
+    @Mapping(target = "user", ignore = true)
     @Override
     public abstract RoleProfileStatus mapToDomain(RoleProfileStatusResource resource);
 }
