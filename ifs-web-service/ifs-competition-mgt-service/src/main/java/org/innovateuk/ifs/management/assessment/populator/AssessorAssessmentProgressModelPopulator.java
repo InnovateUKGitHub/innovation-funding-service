@@ -102,7 +102,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, long assessmentPeriodId) {
         return assessorAssessments.stream()
-                .filter(it -> it.getAssessmentPeriodId().equals(assessmentPeriodId))
+                .filter(assessmentPeriodFilter(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isAssigned)
                 .map(this::getAssessorAssessmentProgressAssignedRowViewModel)
                 .collect(toList());
@@ -121,7 +121,7 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private List<AssessorAssessmentProgressRejectedRowViewModel> getRejectedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
-                .filter(it -> it.getAssessmentPeriodId().equals(assessmentPeriodId))
+                .filter(assessmentPeriodFilter(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isRejected)
                 .map(this::getAssessorAssessmentProgressRejectedRowViewModel)
                 .collect(toList());
@@ -141,10 +141,14 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private List<AssessorAssessmentProgressWithdrawnRowViewModel> getPreviouslyAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments, Long assessmentPeriodId) {
         return assessorAssessments.stream()
-                .filter(it -> it.getAssessmentPeriodId().equals(assessmentPeriodId))
+                .filter(assessmentPeriodFilter(assessmentPeriodId))
                 .filter(AssessorAssessmentResource::isWithdrawn)
                 .map(this::getAssessorAssessmentProgressPreviousAssignedRowViewModel)
                 .collect(toList());
+    }
+
+    private Predicate<AssessorAssessmentResource> assessmentPeriodFilter(long assessmentPeriodId) {
+        return it -> it.getAssessmentPeriodId() != null && it.getAssessmentPeriodId().equals(assessmentPeriodId);
     }
 
     private AssessorAssessmentProgressWithdrawnRowViewModel getAssessorAssessmentProgressPreviousAssignedRowViewModel(AssessorAssessmentResource assessment) {
@@ -177,7 +181,7 @@ public class AssessorAssessmentProgressModelPopulator {
     private AssessorAssessmentProgressApplicationsViewModel getApplicationsViewModel(ApplicationCountSummaryPageResource applicationCounts,
                                                                                      long competitionId,
                                                                                      Sort sort) {
-        CompetitionResource competition  = getCompetition(competitionId);
+        CompetitionResource competition = getCompetition(competitionId);
 
         return new AssessorAssessmentProgressApplicationsViewModel(
                 simpleMap(applicationCounts.getContent(), this::getRowViewModel),

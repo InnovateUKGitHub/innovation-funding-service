@@ -86,8 +86,9 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionResource.getId(), assessmentPeriodId,  "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionResource.getId())).thenReturn("name");
 
-        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId())
+        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/period?assessmentPeriodId={assessmentPeriodId}&page=1", competitionResource.getId(), assessmentPeriodId)
                 .param("assessorNameFilter",""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-assessors"))
@@ -96,6 +97,8 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
 
         assertEquals(competitionResource.getId().longValue(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());
+        assertEquals(assessmentPeriodId, model.getAssessmentPeriodId());
+        assertEquals("name", model.getAssessmentPeriodName());
 
         assertTrue(model.isInAssessment());
         assertEquals(2, model.getAssessors().size());
@@ -120,6 +123,6 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?assessmentPeriodId=3&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }

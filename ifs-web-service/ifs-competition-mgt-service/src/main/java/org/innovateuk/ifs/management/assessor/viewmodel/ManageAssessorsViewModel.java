@@ -13,7 +13,7 @@ import java.util.List;
 public class ManageAssessorsViewModel {
     private final long competitionId;
     private final String competitionName;
-    private final Long assessmentPeriodId;
+    private final long assessmentPeriodId;
     private final String assessmentPeriodName;
     private final List<ManageAssessorsRowViewModel> assessors;
     private final boolean inAssessment;
@@ -22,7 +22,7 @@ public class ManageAssessorsViewModel {
 
     public ManageAssessorsViewModel(long competitionId,
                                     String competitionName,
-                                    Long assessmentPeriodId,
+                                    long assessmentPeriodId,
                                     String assessmentPeriodName,
                                     List<ManageAssessorsRowViewModel> assessors,
                                     boolean inAssessment,
@@ -46,7 +46,7 @@ public class ManageAssessorsViewModel {
         return competitionName;
     }
 
-    public Long getAssessmentPeriodId() {
+    public long getAssessmentPeriodId() {
         return assessmentPeriodId;
     }
 
