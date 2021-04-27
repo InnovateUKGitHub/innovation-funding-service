@@ -113,7 +113,7 @@ the user checks the status of the application after completion
 the user checks the status of the application after submission
     the user should see the element         jQuery = h2:contains("Application submitted")
     the user should not see the element     jQuery = a:contains("Reopen application")
-    the user should see the element         jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
+    the user should not see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
     the user should see the element         jQuery = p:contains("You will be asked to set up your project.")
     the user clicks the button/link         link = Back to applications
     the user should see the element         jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Awaiting assessment") + .msg-progress:contains("Submitted") a:contains("Reopen")
