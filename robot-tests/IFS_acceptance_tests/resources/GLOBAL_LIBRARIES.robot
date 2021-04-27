@@ -16,3 +16,4 @@ Library           ../libs/WaitUntilLibrary.py
 Library           ../libs/EmailExtensionLibrary.py
 Library           PdfLibrary
 Library           CloseTabsLibrary.py
+Library           RoboZap.py

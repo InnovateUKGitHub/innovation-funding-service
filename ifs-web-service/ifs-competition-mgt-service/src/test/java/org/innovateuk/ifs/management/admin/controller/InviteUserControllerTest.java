@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.management.admin.form.InviteUserForm;
+import org.innovateuk.ifs.management.admin.populator.InviteUserModelPopulator;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,9 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Mock
     private InviteUserService inviteUserServiceMock;
+
+    @Mock
+    private InviteUserModelPopulator populator;
 
     @Test
     public void inviteInternalNewUser() throws Exception {

@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.ProjectStateCommentsResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,7 +60,7 @@ public class OnHoldController {
                                 @PathVariable long competitionId,
                                 UserResource user) {
         projectStateRestService.resumeProject(projectId).getSuccess();
-        return user.hasRole(Role.IFS_ADMINISTRATOR)
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR)
                 ? redirectToManagePage(projectId, competitionId, true)
                 : redirectToProjectDetails(projectId, competitionId, true);
     }
