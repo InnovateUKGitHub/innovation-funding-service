@@ -24,8 +24,9 @@ ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
 ${webTestAssessor}                 Paul Plum
 ${webTestAssessorEmailAddress}     paul.plum@gmail.com
-${briefingErrormessage}            Assessor briefing:you must enter a valid date.
-${deadlineErrormessage}            Assessment deadline: you must enter a date later than the previous milestone.
+${briefingErrormessage}            1. Assessor Briefing: Please enter a valid date.
+${deadlineErrormessage}            2. Acceptance deadline: Please enter a valid date.
+${assessmentErrorMessage}          3. Assessment deadline: Please enter a valid date.
 
 *** Test Cases ***
 Send the email invite to the assessor for the competition using new content
@@ -67,13 +68,17 @@ Comp admin updates the assessment period
     And the user clicks the button/link                    link = ${webTestCompName}
     And the user clicks the button/link                    link = Manage assessments
     And the user clicks the button/link                    link = Manage assessment period
-    When the user enters text to a text field              assessmentPeriods1.milestoneEntries6. Assessor accepts.day  55
+    When the user enters text to a text field              assessmentPeriods2.milestoneEntriesASSESSOR_BRIEFING.day  55
+    And the user enters text to a text field               assessmentPeriods2.milestoneEntriesASSESSOR_ACCEPTS.month  13
+    And the user enters text to a text field               assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.year  1999
+    And the user enters text to a text field               assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.month  15
     And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
-    Then the user should see a field and summary error     ${briefingErrormessage}
-    And the user enters text to a text field               assessmentPeriods3.milestoneEntries7. Assessor deadline.year  1999
-    And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
-    And the user should see a field and summary error      ${deadlineErrormessage}
-    And the user should see the element                    jQuery = td:contains(20/01/2021)
+    Then the user should see a summary error               ${briefingErrormessage}
+    And the user should see a summary error                ${deadlineErrormessage}
+    And the user should see a summary error                ${assessmentErrorMessage}
+    And the user clicks the button/link                    link = Back to manage assessments
+    And the user should see the element                    jQuery = .govuk-table__cell:contains('20/01/2021')
+
 
 *** Keywords ***
 Custom suite setup
