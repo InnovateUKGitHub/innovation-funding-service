@@ -42,7 +42,7 @@ public class ManageAssessmentsViewModelTest {
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList(), assessmentPeriodPagination);
+        manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList(), null);
     }
 
     @Test

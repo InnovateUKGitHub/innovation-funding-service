@@ -49,9 +49,9 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList(), assessmentPeriodPagination);
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList(), null);
 
-        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId())).thenReturn(expectedModel);
+        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId(), 0)).thenReturn(expectedModel);
 
         mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))
                 .andExpect(status().isOk())
