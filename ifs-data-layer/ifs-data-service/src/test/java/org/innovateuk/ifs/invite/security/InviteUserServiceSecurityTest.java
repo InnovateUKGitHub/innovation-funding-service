@@ -12,8 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -27,7 +26,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     }
 
     @Test
-    public void testSaveUserInvite() {
+    public void saveUserInvite() {
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
@@ -40,7 +39,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     }
 
     @Test
-    public void testFindPendingInternalUserInvites() {
+    public void findPendingInternalUserInvites() {
         Pageable pageable = PageRequest.of(0, 5);
 
         when(classUnderTestMock.findPendingInternalUserInvites("", pageable))
@@ -57,9 +56,9 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     }
 
     @Test
-    public void testResendPendingInternalUserInvites() {
+    public void resendPendingInternalUserInvites() {
         assertRolesCanPerform(() -> classUnderTest.resendInvite(123L),
-                IFS_ADMINISTRATOR);
+                IFS_ADMINISTRATOR, SUPER_ADMIN_USER);
     }
 
     @Override

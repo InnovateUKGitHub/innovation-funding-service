@@ -157,4 +157,20 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                         )
                 ));
     }
+
+    @Test
+    public void reopenAssessment() throws Exception {
+        long competitionId = 2L;
+        when(competitionService.reopenAssessmentPeriod(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment-period", competitionId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition to reopen the assessment period of")
+                        )
+                ));
+    }
 }

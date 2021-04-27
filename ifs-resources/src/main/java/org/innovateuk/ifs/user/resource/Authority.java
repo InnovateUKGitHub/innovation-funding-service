@@ -15,7 +15,8 @@ public enum Authority {
     LIVE_PROJECTS_USER,
     EXTERNAL_FINANCE,
     KNOWLEDGE_TRANSFER_ADVISER,
-    SUPPORTER;
+    SUPPORTER,
+    SUPER_ADMIN_USER;
 
     public String toSpringSecurityAuthorityString() {
         return this.name().toLowerCase();

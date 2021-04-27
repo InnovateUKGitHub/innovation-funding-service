@@ -14,8 +14,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Authority.SUPPORT;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 
@@ -76,7 +78,7 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
     }
 
     private boolean isDownloadableBeforeSubmission(final ApplicationFinanceRow overheads, final UserResource user) {
-        boolean isSupportOrAdmin = user.hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR);
+        boolean isSupportOrAdmin = user.hasAnyAuthority(asList(IFS_ADMINISTRATOR, SUPPORT));
         return !isApplicationSubmitted(overheads) && isSupportOrAdmin;
     }
 
