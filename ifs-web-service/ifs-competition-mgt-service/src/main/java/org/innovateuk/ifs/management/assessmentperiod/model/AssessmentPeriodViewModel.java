@@ -73,7 +73,7 @@ public class AssessmentPeriodViewModel {
         return milestones == null ? empty() :
                 milestones.stream()
                         .filter(milestone -> milestone.getDate() != null)
-                        .filter(milestone -> milestone.getDate().isAfter(now()));
+                        .filter(milestone -> now().isAfter(milestone.getDate()));
     }
 
     public boolean isValid(){
