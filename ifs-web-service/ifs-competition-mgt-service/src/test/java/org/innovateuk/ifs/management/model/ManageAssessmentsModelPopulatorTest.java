@@ -17,7 +17,7 @@ import org.mockito.Spy;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
-import static org.innovateuk.ifs.commons.resource.PageResource.fromList;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
@@ -63,7 +63,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionResource.getId())).thenReturn(restSuccess(statisticsResource));
         when(milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(emptyList()));
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromList(emptyList(), 0, 2));
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
 
 
         ManageAssessmentsViewModel actualModel = manageAssessmentsModelPopulator.populateModel(competitionResource.getId(), 0, 2);

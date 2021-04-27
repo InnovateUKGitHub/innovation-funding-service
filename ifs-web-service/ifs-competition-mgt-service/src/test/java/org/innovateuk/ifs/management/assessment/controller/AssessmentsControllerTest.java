@@ -11,7 +11,7 @@ import org.mockito.Mock;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
-import static org.innovateuk.ifs.commons.resource.PageResource.fromList;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -49,7 +49,7 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromList(emptyList(), 0, 2));
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
 
         when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId(), 0, 2)).thenReturn(expectedModel);
 

@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.commons.resource.PageResource.fromList;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 
 /**
  * Populates the model for the 'Manage assessments' page.
@@ -45,7 +45,7 @@ public class ManageAssessmentsModelPopulator {
                 competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition
                         (competitionId).getSuccess();
         List<AssessmentPeriodViewModel> assessmentPeriodViewModels = assessmentPeriodViewModels(competitionId);
-        return new ManageAssessmentsViewModel(competition, keyStatistics, fromList(assessmentPeriodViewModels, page, pageSize));
+        return new ManageAssessmentsViewModel(competition, keyStatistics, fromListZeroBased(assessmentPeriodViewModels, page, pageSize));
     }
 
     private List<AssessmentPeriodViewModel> assessmentPeriodViewModels(long competitionId){

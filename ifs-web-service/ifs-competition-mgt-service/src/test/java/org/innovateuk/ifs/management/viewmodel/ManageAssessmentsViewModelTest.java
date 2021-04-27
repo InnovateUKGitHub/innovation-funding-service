@@ -1,19 +1,15 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
-import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
-import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentPeriodViewModel;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
-import static org.innovateuk.ifs.commons.resource.PageResource.fromList;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -45,7 +41,7 @@ public class ManageAssessmentsViewModelTest {
                 .withAssessmentsStarted(expectedAssessmentsStarted)
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
-        manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromList(emptyList(), 0, 2));
+        manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
     }
 
     @Test

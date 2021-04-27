@@ -3,8 +3,10 @@ package org.innovateuk.ifs.commons.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 /**
@@ -28,7 +30,7 @@ public class PageResource<PageableResource> {
      */
     private List<PageableResource> content;
     /**
-     * The current page number zero based.
+     * The current page number.
      */
     private int number;
     /**
@@ -48,12 +50,13 @@ public class PageResource<PageableResource> {
         this.size = size;
     }
 
-    public static <PageableResource> PageResource<PageableResource> fromList(List<PageableResource> all, int number, int size){
-        int totalElements = all.size();
+    public static <PageableResource> PageResource<PageableResource> fromListZeroBased(List<PageableResource> all, int number, int size){
+        List<PageableResource> results = all == null ? new ArrayList<>() : all;
+        int totalElements = results .size();
         int totalPages = ((totalElements - 1) / size) + 1;
-        int startIndex = min(number * size, totalElements);
-        int endIndex = min((number + 1) * size, totalElements);
-        List<PageableResource> content = all.subList(startIndex, endIndex);
+        int startIndex = max(0, min(number * size, totalElements));
+        int endIndex = max(0, min((number + 1) * size, totalElements));
+        List<PageableResource> content = results.subList(startIndex, endIndex);
         return new PageResource(totalElements, totalPages, content, number, size);
     }
 
