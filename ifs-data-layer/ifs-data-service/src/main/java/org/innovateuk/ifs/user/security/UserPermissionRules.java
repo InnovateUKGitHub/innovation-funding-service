@@ -10,8 +10,8 @@ import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -116,7 +116,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "UPDATE_USER_EMAIL", description = "IFS admins can update all users email addresses")
     public boolean ifsAdminCanUpdateAllEmailAddresses(UserResource userToUpdate, UserResource user) {
-        return user.hasRole(IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "UPDATE_USER_EMAIL", description = "Support users can update external users email addresses ")
@@ -131,7 +131,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ_INTERNAL", description = "Administrators can view internal users")
     public boolean internalUsersCanViewEveryone(ManageUserPageResource userToView, UserResource user) {
-        return user.hasAnyRoles(IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
@@ -242,7 +242,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
     public boolean supportUsersCanViewExternalUsers(ManageUserPageResource userToView, UserResource user) {
-        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
+        return user.hasAnyAuthority(asList(Authority.IFS_ADMINISTRATOR, Authority.SUPPORT));
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
@@ -288,12 +288,12 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "EDIT_INTERNAL_USER", description = "Only an IFS Administrator can edit an internal user")
     public boolean ifsAdminCanEditInternalUser(final UserResource userToEdit, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "IFS Administrator can deactivate Users")
     public boolean ifsAdminCanDeactivateUsers(UserResource userToDeactivate, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "DEACTIVATE", description = "A Support user can deactivate external Users")
@@ -308,7 +308,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "ACTIVATE", description = "IFS Administrator can reactivate Users")
     public boolean ifsAdminCanReactivateUsers(UserResource userToReactivate, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+        return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "ACTIVATE", description = "A Support user can reactivate external Users")
