@@ -59,7 +59,6 @@
                                   th:required="${required} ? 'required'"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
-                              <option th:selected="${time == null}" value=""></option>
                               <option th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>

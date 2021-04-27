@@ -56,7 +56,7 @@ public class GenericMilestoneRowForm {
             if (isTimeOption()) {
                 this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
             }
-        } else if (isMiddayTime()) {
+        } else if (isTimeOption() || isMiddayTime()) {
             this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
