@@ -4,11 +4,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.empty;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 
 public class AssessmentPeriodViewModel {
@@ -35,11 +39,11 @@ public class AssessmentPeriodViewModel {
     }
 
     public boolean hasAssessorsNotifiedMilestone() {
-        return assessmentMilestoneViewModel(ASSESSORS_NOTIFIED).isPresent();
+        return reached().anyMatch(milestone -> ASSESSORS_NOTIFIED.equals(milestone.milestoneType));
     }
 
     public boolean hasAssessmentClosedMilestone() {
-        return assessmentMilestoneViewModel(ASSESSMENT_CLOSED).isPresent();
+        return reached().anyMatch(milestone -> ASSESSMENT_CLOSED.equals(milestone.milestoneType));
     }
 
     private Optional<AssessmentMilestoneViewModel> assessmentMilestoneViewModel(MilestoneType milestoneType){
@@ -63,6 +67,13 @@ public class AssessmentPeriodViewModel {
                 hasAssessorsNotifiedMilestone() &&
                 !hasAssessmentClosedMilestone() &&
                 assessmentMilestoneViewModel(ASSESSOR_DEADLINE).map(AssessmentMilestoneViewModel::isPast).orElse(false);
+    }
+
+    private Stream<AssessmentMilestoneViewModel> reached(){
+        return milestones == null ? empty() :
+                milestones.stream()
+                        .filter(milestone -> milestone.getDate() != null)
+                        .filter(milestone -> milestone.getDate().isAfter(now()));
     }
 
     public boolean isValid(){
