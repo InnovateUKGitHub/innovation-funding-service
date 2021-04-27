@@ -136,9 +136,9 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isStakeholder);
     }
 
-    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Comp admin or project finance users can approve or reject documents")
+    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "IFS admin can approve or reject documents")
     public boolean internalAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
-        return SecurityRuleUtil.isInternalAdmin(user);
+        return SecurityRuleUtil.hasIFSAdminAuthority(user);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "An internal user can access the Grant Offer Letter send " +
