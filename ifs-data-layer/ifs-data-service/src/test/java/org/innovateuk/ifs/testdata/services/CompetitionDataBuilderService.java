@@ -294,6 +294,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
         List<MilestoneType> presetMilestoneTypes = (isAlwaysOpen ? MilestoneType.alwaysOpenCompSetupMilestones().stream() : Arrays.stream(MilestoneType.values()))
                 .filter(type -> type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE))
+                .filter(type -> isAlwaysOpen && type != SUBMISSION_DATE) //For always open competition submission date is not required.
                 .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                 .collect(Collectors.toList());
 
