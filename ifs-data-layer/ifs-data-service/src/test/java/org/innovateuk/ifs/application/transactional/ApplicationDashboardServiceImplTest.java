@@ -99,9 +99,6 @@ public class ApplicationDashboardServiceImplTest {
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
                 .thenReturn(applications);
 
-        when(assessmentService.existsByTargetId(inProgressAlwaysOpenCompApplicationInAssessment.getId()))
-                .thenReturn(serviceSuccess(true));
-
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
         assertEquals(1, dashboardResource.getEuGrantTransfer().size());

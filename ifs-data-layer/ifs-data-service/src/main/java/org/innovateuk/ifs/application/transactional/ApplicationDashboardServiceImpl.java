@@ -203,20 +203,11 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        if (application.getCompetition().isAlwaysOpen()) {
-            return isAlwaysOpenApplicationInAssessment(application, userId);
-        }
-        return application.getLeadApplicant().getId().equals(userId) &&
+        return !application.getCompetition().isAlwaysOpen() &&
+                application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                 application.getFundingDecision() == null &&
                 application.isSubmitted();
-    }
-
-    private boolean isAlwaysOpenApplicationInAssessment(Application application, long userId) {
-        return application.getLeadApplicant().getId().equals(userId) &&
-                application.getFundingDecision() == null &&
-                application.isSubmitted() &&
-                !assessmentService.existsByTargetId(application.getId()).getSuccess();
     }
 
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {

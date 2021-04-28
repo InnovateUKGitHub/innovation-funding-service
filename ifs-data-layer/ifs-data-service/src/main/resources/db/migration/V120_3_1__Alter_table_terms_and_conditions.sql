@@ -8,8 +8,8 @@ SET @system_maintenance_user_id = (SELECT id
 ALTER TABLE terms_and_conditions
   ADD COLUMN `type` enum('SITE','GRANT') NOT NULL,
   ADD COLUMN `created_by` bigint(20) NOT NULL,
-  ADD COLUMN `created_on` datetime NOT NULL,
-  ADD COLUMN `modified_on` datetime NOT NULL,
+  ADD COLUMN `created_on` datetime NOT NULL DEFAULT now(),
+  ADD COLUMN `modified_on` datetime NOT NULL DEFAULT now(),
   ADD COLUMN `modified_by` bigint(20) NOT NULL;
 
 -- Change the type of the version column from varchar to int

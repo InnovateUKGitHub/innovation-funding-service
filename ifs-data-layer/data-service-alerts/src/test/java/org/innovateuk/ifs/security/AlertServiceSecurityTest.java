@@ -24,32 +24,28 @@ public class AlertServiceSecurityTest extends BaseServiceSecurityTest<AlertServi
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         alertPermissionRules = getMockPermissionRulesBean(AlertPermissionRules.class);
         alertLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AlertLookupStrategy.class);
     }
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         final AlertResource alertResource = AlertResourceBuilder.newAlertResource()
                 .build();
         assertAccessDenied(
                 () -> classUnderTest.create(alertResource),
-                () -> {
-                    verify(alertPermissionRules).systemMaintenanceUserCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class));
-                });
+                () -> verify(alertPermissionRules).systemMaintenanceUserCanCreateAlerts(isA(AlertResource.class), isA(UserResource.class)));
     }
 
     @Test
-    public void delete() throws Exception {
+    public void delete() {
         when(alertLookupStrategy.getAlertResource(9999L)).thenReturn(AlertResourceBuilder.newAlertResource()
                 .withId(9999L)
                 .build());
 
         assertAccessDenied(
                 () -> classUnderTest.delete(9999L),
-                () -> {
-                    verify(alertPermissionRules).systemMaintenanceUserCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class));
-                });
+                () -> verify(alertPermissionRules).systemMaintenanceUserCanDeleteAlerts(isA(AlertResource.class), isA(UserResource.class)));
     }
 }
