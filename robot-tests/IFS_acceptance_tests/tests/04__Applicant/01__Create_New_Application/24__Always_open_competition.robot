@@ -64,21 +64,13 @@ Lead applicant checks the dashboard content and the guidance after an assessor i
 
 Comp admin updates the assessment period
     [Documentation]  IFS-8851
-    Given Log in as a different user                       &{Comp_admin1_credentials}
-    And the user clicks the button/link                    link = ${webTestCompName}
-    And the user clicks the button/link                    link = Manage assessments
-    And the user clicks the button/link                    link = Manage assessment period
-    When the user enters text to a text field              assessmentPeriods2.milestoneEntriesASSESSOR_BRIEFING.day  55
-    And the user enters text to a text field               assessmentPeriods2.milestoneEntriesASSESSOR_ACCEPTS.month  13
-    And the user enters text to a text field               assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.year  1999
-    And the user enters text to a text field               assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.month  15
-    And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
-    Then the user should see a summary error               ${briefingErrormessage}
-    And the user should see a summary error                ${deadlineErrormessage}
-    And the user should see a summary error                ${assessmentErrorMessage}
-    And the user clicks the button/link                    link = Back to manage assessments
-    And the user should see the element                    jQuery = .govuk-table__cell:contains('20/01/2021')
-
+    Given Log in as a different user                           &{Comp_admin1_credentials}
+    When the user clicks the button/link                       link = ${webTestCompName}
+    And the user clicks the button/link                        link = Manage assessments
+    And the user clicks the button/link                        link = Manage assessment period
+    Then the user checks the milestone validation messages
+    And the user clicks the button/link                        link = Back to manage assessments
+    And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 *** Keywords ***
 Custom suite setup
@@ -147,3 +139,13 @@ the user checks the status of the application in assessment
     the user clicks the button/link         link = Back to applications
     the user should see the element         jQuery = li:contains("${webTestAppName}") .msg-deadline-waiting:contains("Decision pending") + .msg-progress:contains("Submitted")
     the user should not see the element     jQuery = li:contains("${webTestAppName}") a:contains("Reopen")
+
+the user checks the milestone validation messages
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_BRIEFING.day  55
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_ACCEPTS.month  13
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.year  1999
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.month  15
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+    the user should see a summary error      ${briefingErrormessage}
+    the user should see a summary error      ${deadlineErrormessage}
+    the user should see a summary error      ${assessmentErrorMessage}
