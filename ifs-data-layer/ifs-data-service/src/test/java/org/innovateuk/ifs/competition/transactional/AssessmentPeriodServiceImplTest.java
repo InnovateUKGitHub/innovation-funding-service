@@ -54,11 +54,11 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(result.isSuccess());
 
         verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
-        verify(assessmentPeriodMapper).mapToResource(Collections.singletonList(assessmentPeriod));
+        verify(assessmentPeriodMapper).mapToResource(assessmentPeriod);
     }
 
     @Test
-    public void getAssessmentPeriodByCompetitionId_returnFailure() {
+    public void getAssessmentPeriodByCompetitionId_returnEmpty() {
         Long competitionId = 1L;
 
         when(assessmentPeriodRepository.findByCompetitionId(competitionId))
@@ -66,14 +66,7 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
 
         ServiceResult<List<AssessmentPeriodResource>> result = service.getAssessmentPeriodByCompetitionId(competitionId);
 
-        assertTrue(result.isFailure());
-
-        assertNotNull(result.getErrors());
-        assertEquals(1, result.getErrors().size());
-        assertEquals(HttpStatus.NOT_FOUND, result.getErrors().get(0).getStatusCode());
-        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
-        assertNotNull(result.getErrors().get(0).getArguments());
-        assertEquals("AssessmentPeriodResource not found", result.getErrors().get(0).getArguments().get(0));
+        assertTrue(result.isSuccess());
 
         verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
     }
