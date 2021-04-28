@@ -257,7 +257,9 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     protected void assertRolesCanPerform(Runnable actionFn, List<Role> supportedRoles) {
         if (supportedRoles.contains(Role.ASSESSOR)) {
             supportedRoles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        } else if (supportedRoles.contains(Role.PROJECT_FINANCE) || supportedRoles.contains(Role.IFS_ADMINISTRATOR)) {
+        } else if (supportedRoles.contains(Role.PROJECT_FINANCE)
+                || supportedRoles.contains(Role.IFS_ADMINISTRATOR)
+                || supportedRoles.contains(Role.SUPER_ADMIN_USER)) {
             supportedRoles.add(Role.SYSTEM_MAINTAINER);
         }
 

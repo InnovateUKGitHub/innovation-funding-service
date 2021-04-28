@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.lang.Boolean.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -31,17 +32,17 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGetFinanceCheckByProjectAndOrganisation() {
-        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER);
+    public void getFinanceCheckByProjectAndOrganisation() {
+        assertRolesCanPerform(() -> classUnderTest.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(1L, 2L)), PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER);
     }
 
     @Test
-    public void testGetFinanceCheckSummary(){
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, EXTERNAL_FINANCE);
+    public void getFinanceCheckSummary(){
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER, EXTERNAL_FINANCE);
     }
 
     @Test
-    public void testGetFinanceCheckOverview() {
+    public void getFinanceCheckOverview() {
         when(projectLookupStrategies.getProjectCompositeId(1l)).thenReturn(ProjectCompositeId.id(1L));
         assertAccessDenied(
                 () -> classUnderTest.getFinanceCheckOverview(1L),
@@ -71,9 +72,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGetViability() {
-        Long projectId = 1L;
-        Long organisationId = 1L;
+    public void getViability() {
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -88,9 +89,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSaveViability() {
-        Long projectId = 1L;
-        Long organisationId = 1L;
+    public void saveViability() {
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -105,9 +106,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGetEligibility() {
-        Long projectId = 1L;
-        Long organisationId = 1L;
+    public void getEligibility() {
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -124,7 +125,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSaveEligibility() {
+    public void saveEligibility() {
         long projectId = 1;
         long organisationId = 1;
 
@@ -141,9 +142,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGetFundingRules() {
-        Long projectId = 1L;
-        Long organisationId = 1L;
+    public void getFundingRules() {
+        long projectId = 1L;
+        long organisationId = 1L;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -158,7 +159,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSaveFundingRules() {
+    public void saveFundingRules() {
         long projectId = 1;
         long organisationId = 1;
 
@@ -175,7 +176,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testApproveFundingRules() {
+    public void approveFundingRules() {
         long projectId = 1;
         long organisationId = 1;
 
@@ -192,7 +193,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testGetCreditReport() {
+    public void getCreditReport() {
         when(projectLookupStrategies.getProjectCompositeId(1L)).thenReturn(ProjectCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getCreditReport(1, 2L),
                 () -> {
@@ -205,9 +206,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSetCreditReport() {
-        when(projectLookupStrategies.getProjectCompositeId(1l)).thenReturn(ProjectCompositeId.id(1L));
-        assertAccessDenied(() -> classUnderTest.saveCreditReport(1L, 2L, Boolean.TRUE),
+    public void setCreditReport() {
+        when(projectLookupStrategies.getProjectCompositeId(1L)).thenReturn(ProjectCompositeId.id(1L));
+        assertAccessDenied(() -> classUnderTest.saveCreditReport(1L, 2L, TRUE),
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());

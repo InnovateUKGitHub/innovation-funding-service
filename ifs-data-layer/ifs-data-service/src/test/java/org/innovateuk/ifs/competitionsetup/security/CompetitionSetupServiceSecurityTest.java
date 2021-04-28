@@ -27,7 +27,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER));
     private CompetitionPermissionRules rules;
 
     @Before
@@ -44,12 +44,12 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testAllAccessDenied() {
+    public void allAccessDenied() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
-            Long competitionId = 2L;
+            long competitionId = 2L;
 
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
@@ -76,7 +76,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testCompAdminAllAccessAllowed() {
+    public void compAdminAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
 
         Long competitionId = 2L;
@@ -94,7 +94,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
-    public void testProjectFinanceAllAccessAllowed() {
+    public void projectFinanceAllAccessAllowed() {
         setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         Long competitionId = 2L;
