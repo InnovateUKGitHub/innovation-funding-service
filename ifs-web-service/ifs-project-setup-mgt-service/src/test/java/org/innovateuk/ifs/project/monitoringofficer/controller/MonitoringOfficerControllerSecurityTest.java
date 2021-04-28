@@ -25,7 +25,7 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
     public void viewMonitoringOfficer() {
         final long monitoringOfficerId = 1;
         final Model model = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewProjects(monitoringOfficerId, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewProjects(monitoringOfficerId, model), IFS_ADMINISTRATOR, SUPER_ADMIN_USER, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
@@ -36,27 +36,27 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
         final ValidationHandler validationHandler = null;
         final Model model = null;
         final UserResource user = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignProject(monitoringOfficerId, form, bindingResult, validationHandler, model, user), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignProject(monitoringOfficerId, form, bindingResult, validationHandler, model, user), IFS_ADMINISTRATOR, SUPER_ADMIN_USER, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
     public void unassignProject() {
         final long monitoringOfficerId = 1;
         final long projectId = 1;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignProject(monitoringOfficerId, projectId ), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignProject(monitoringOfficerId, projectId ), IFS_ADMINISTRATOR, SUPER_ADMIN_USER, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
     public void viewAll() {
         final Model model = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewAll(false, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.viewAll(false, model), IFS_ADMINISTRATOR, SUPER_ADMIN_USER, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
     public void create() {
         final Model model = null;
         final String emailAddress = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.create(emailAddress, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.create(emailAddress, model), IFS_ADMINISTRATOR, SUPER_ADMIN_USER, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
@@ -65,12 +65,11 @@ public class MonitoringOfficerControllerSecurityTest extends BaseProjectSetupCon
         final BindingResult bindingResult = null;
         final ValidationHandler validationHandler = null;
         final Model model = null;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createUser(form, bindingResult, validationHandler, model), IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createUser(form, bindingResult, validationHandler, model), IFS_ADMINISTRATOR, SUPER_ADMIN_USER, PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
         return null;
     }
-
 }

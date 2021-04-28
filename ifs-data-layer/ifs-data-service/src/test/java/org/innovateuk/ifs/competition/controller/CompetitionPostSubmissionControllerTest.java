@@ -21,10 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionPostSubmissionControllerTest extends BaseControllerMockMVCTest<CompetitionPostSubmissionController> {
 
     @Mock
-    private CompetitionService competitionServiceMock;
+    private CompetitionService competitionService;
 
     @Mock
-    private ApplicationNotificationService applicationNotificationServiceMock;
+    private ApplicationNotificationService applicationNotificationService;
 
     @Override
     protected CompetitionPostSubmissionController supplyControllerUnderTest() {
@@ -35,27 +35,40 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
     public void releaseFeedback() throws Exception {
         final Long competitionId = 1L;
 
-        when(competitionServiceMock.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
-        when(applicationNotificationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
+        when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
+        when(applicationNotificationService.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
-        verify(competitionServiceMock, only()).releaseFeedback(competitionId);
-        verify(applicationNotificationServiceMock).notifyApplicantsByCompetition(competitionId);
+        verify(competitionService, only()).releaseFeedback(competitionId);
+        verify(applicationNotificationService).notifyApplicantsByCompetition(competitionId);
     }
 
     @Test
     public void closeAssessment() throws Exception {
-        final Long competitionId = 1L;
+        final long competitionId = 1L;
 
-        when(competitionServiceMock.closeAssessment(competitionId)).thenReturn(serviceSuccess());
+        when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/post-submission/{id}/close-assessment", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(competitionServiceMock, only()).closeAssessment(competitionId);
+        verify(competitionService, only()).closeAssessment(competitionId);
+    }
+
+    @Test
+    public void reopenAssessment() throws Exception {
+        final long competitionId = 1L;
+
+        when(competitionService.reopenAssessmentPeriod(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/post-submission/{id}/reopen-assessment-period", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verify(competitionService, only()).reopenAssessmentPeriod(competitionId);
     }
 
     @Test
@@ -63,13 +76,13 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         final Long competitionId = 1L;
 
         List<SpendProfileStatusResource> pendingSpendProfiles = new ArrayList<>();
-        when(competitionServiceMock.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
+        when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
         mockMvc.perform(get("/competition/post-submission/{competitionId}/pending-spend-profiles", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingSpendProfiles)));
 
-        verify(competitionServiceMock, only()).getPendingSpendProfiles(competitionId);
+        verify(competitionService, only()).getPendingSpendProfiles(competitionId);
 
     }
 
@@ -78,13 +91,13 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         final Long competitionId = 1L;
         final Long pendingSpendProfileCount = 3L;
 
-        when(competitionServiceMock.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
+        when(competitionService.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
 
         mockMvc.perform(get("/competition/post-submission/{competitionId}/count-pending-spend-profiles", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pendingSpendProfileCount)));
 
-        verify(competitionServiceMock, only()).countPendingSpendProfiles(competitionId);
+        verify(competitionService, only()).countPendingSpendProfiles(competitionId);
 
     }
 }

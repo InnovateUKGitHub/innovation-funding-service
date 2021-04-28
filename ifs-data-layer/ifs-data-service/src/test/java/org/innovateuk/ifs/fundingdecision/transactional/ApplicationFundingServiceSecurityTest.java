@@ -17,16 +17,16 @@ import static org.junit.Assert.fail;
 
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER, SYSTEM_MAINTAINER));
 
     @Test
-    public void testNotifyLeadApplicantAllowedIfGlobalCompAdminRole() {
+    public void notifyLeadApplicantAllowedIfGlobalCompAdminRole() {
         setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
         classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
     }
 
     @Test
-    public void testNotifyLeadApplicantDeniedIfNotLoggedIn() {
+    public void notifyLeadApplicantDeniedIfNotLoggedIn() {
 
         setLoggedInUser(null);
         try {
@@ -38,7 +38,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testNotifyLeadApplicantDeniedIfNoGlobalRolesAtAll() {
+    public void notifyLeadApplicantDeniedIfNoGlobalRolesAtAll() {
 
         try {
             classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
@@ -50,7 +50,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testNotifyLeadApplicantDeniedIfNotCorrectGlobalRoles() {
+    public void notifyLeadApplicantDeniedIfNotCorrectGlobalRoles() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
@@ -65,13 +65,13 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testSaveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
+    public void saveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
         setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
         classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
     }
 
     @Test
-    public void testSaveFundingDecisionDataDeniedIfNotLoggedIn() {
+    public void saveFundingDecisionDataDeniedIfNotLoggedIn() {
 
         setLoggedInUser(null);
         try {
@@ -83,7 +83,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testSaveFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
+    public void saveFundingDecisionDataDeniedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
             fail("Should not have been able to save funding decision data without the global comp admin role");
@@ -93,7 +93,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testSaveFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
+    public void saveFundingDecisionDataDeniedIfNotCorrectGlobalRoles() {
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRoleGlobal(role).build());
