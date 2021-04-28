@@ -19,6 +19,7 @@ public class OverheadFileDownloadControllerSecurityTest extends BaseControllerSe
                 Role.COMP_ADMIN,
                 Role.SUPPORT,
                 Role.IFS_ADMINISTRATOR,
+                Role.SUPER_ADMIN_USER,
                 Role.INNOVATION_LEAD);
     }
 }

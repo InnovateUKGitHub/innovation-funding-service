@@ -15,12 +15,12 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 public enum Role implements Identifiable {
 
-    ASSESSOR                    ( 3, "Assessor", Authority.ASSESSOR),
-    APPLICANT                   ( 4, "Applicant", Authority.APPLICANT),
-    COMP_ADMIN                  ( 5,  "Competition Administrator", Authority.COMP_ADMIN),
-    SYSTEM_REGISTRATION_USER    ( 6, "System Registration User", Authority.SYSTEM_REGISTRAR),
-    SYSTEM_MAINTAINER           ( 7, "System Maintainer", Authority.SYSTEM_MAINTAINER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
-    PROJECT_FINANCE             ( 8, "Project Finance", Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    ASSESSOR                    (3, "Assessor", Authority.ASSESSOR),
+    APPLICANT                   (4, "Applicant", Authority.APPLICANT),
+    COMP_ADMIN                  (5, "Competition Administrator", Authority.COMP_ADMIN),
+    SYSTEM_REGISTRATION_USER    (6, "System Registration User", Authority.SYSTEM_REGISTRAR),
+    SYSTEM_MAINTAINER           (7, "System Maintainer", Authority.SYSTEM_MAINTAINER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    PROJECT_FINANCE             (8, "Project Finance", Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
     INNOVATION_LEAD             (13, "Innovation Lead", Authority.INNOVATION_LEAD),
     IFS_ADMINISTRATOR           (14, "IFS Administrator", Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
     SUPPORT                     (15, "IFS Support User", Authority.SUPPORT),
@@ -29,7 +29,8 @@ public enum Role implements Identifiable {
     LIVE_PROJECTS_USER          (21, "Live projects user", Authority.LIVE_PROJECTS_USER),
     EXTERNAL_FINANCE            (22, "External finance reviewer", Authority.EXTERNAL_FINANCE),
     KNOWLEDGE_TRANSFER_ADVISER  (23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
-    SUPPORTER                   (24, "Supporter", Authority.SUPPORTER);
+    SUPPORTER                   (24, "Supporter", Authority.SUPPORTER),
+    SUPER_ADMIN_USER            (25, "Super Admin User", Authority.SUPER_ADMIN_USER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN);
 
     final long id;
     final String displayName;
@@ -41,7 +42,7 @@ public enum Role implements Identifiable {
         this.authorities = newArrayList(authorities);
     }
 
-    public static Role getById (long id) {
+    public static Role getById(long id) {
         return Stream.of(values()).filter(role -> role.id == id).findFirst().get();
     }
 
@@ -53,19 +54,27 @@ public enum Role implements Identifiable {
         return displayName;
     }
 
-    public boolean isStakeHolder() {return this == STAKEHOLDER; }
+    public boolean isStakeHolder() {
+        return this == STAKEHOLDER;
+    }
 
-    public boolean isAssessor() {return this == ASSESSOR; }
+    public boolean isAssessor() {
+        return this == ASSESSOR;
+    }
 
     public boolean isKta() {
         return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
-    public static Set<Role> internalRoles(){
-        return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
+    public boolean isSuperAdminUser() {
+        return this == SUPER_ADMIN_USER;
     }
 
-    public static Set<Role> inviteExternalRoles(){
+    public static Set<Role> internalRoles() {
+        return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER);
+    }
+
+    public static Set<Role> inviteExternalRoles() {
         return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
@@ -77,7 +86,7 @@ public enum Role implements Identifiable {
         return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
     }
 
-    public static boolean containsMultiDashboardRole(Collection<Role> roles){
+    public static boolean containsMultiDashboardRole(Collection<Role> roles) {
         return multiDashboardRoles().stream().anyMatch(roles::contains);
     }
 

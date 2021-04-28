@@ -9,6 +9,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-9306  KTP fEC/non-fEC: 'academic and secretarial support' GOL value
 ...
+...               IFS-9633  Funding sought calculated incorrectly
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -30,6 +32,7 @@ ${academicCostValue}              1000
 ${academicCostValueFormatted}     1,000
 ${indirectCostUpdated}            152
 ${totalProjectCostsUpdated}       2,159
+${fundingSought}                  754
 
 *** Test Cases ***
 Lead applicant can view the project finances section is complete
@@ -110,30 +113,34 @@ IFS admin can view the correct fields in project finance overview table for non-
     Then the user should view their non-fec project finances
 
 IFS admin can edit the project finances in project setup
-    [Documentation]  IFS-9249
+    [Documentation]  IFS-9249  IFS-9633
     Given the user edits the Academic and secretarial support costs in project setup
     Then the user should see the element                                                 jQuery = th:contains("Total indirect costs") ~ td:contains("${indirectCostUpdated}")
     And the user should see the element                                                  jQuery = div:contains("Total project costs") input[value="£${totalProjectCostsUpdated}"]
     And the user should see the element                                                  jQuery = table:contains("Total costs") td:contains("£${totalProjectCostsUpdated}")
+    #  funding sought (£) = (total of all costs except Indirect costs) x funding level (%)) + indirect costs (at 100%)
+    And the user should see the element                                                  jQuery = table:contains("Funding sought (£)") tr:contains("${fundingSought}")
 
 IFS admin can view the correct updated values in the Changes to finances page from eligibility screen
-    [Documentation]  IFS-9249
+    [Documentation]  IFS-9249  IFS-9633
     Given the user clicks the button/link                               link = View changes to finances
     Then the user should view updated values in changes to finances
 
 IFS admin can view the correct updated values in the Finance checks
-    [Documentation]  IFS-9249
+    [Documentation]  IFS-9249  IFS-9633
     Given the user clicks the button/link     link = Eligibility
     When the user clicks the button/link      link = Back to finance checks
     Then the user should see the element      jQuery = dt:contains("Total project cost:") ~ dd:contains("£${totalProjectCostsUpdated}")
+    Then the user should see the element      jQuery = dt:contains("Current amount:") ~ dd:contains("£${fundingSought}")
 
 IFS admin can view the correct updated values in the Finance overview
-    [Documentation]  IFS-9249
+    [Documentation]  IFS-9249  IFS-9633
     Given the user clicks the button/link     link = View finances
     Then the user should see the element      jQuery = th:contains("${ktpLeadOrgName}") ~ td:contains("${totalProjectCostsUpdated}")
     And the user should see the element       jQuery = td:contains("Academic and secretarial support") ~ td:contains("${academicCostValueFormatted}")
     And the user should see the element       jQuery = td:contains("Indirect costs") ~ td:contains("${indirectCostUpdated}")
     And the user should see the element       jQuery = th:contains("Total") ~ td:contains("£${totalProjectCostsUpdated}")
+    And the user should see the element       jQuery = table:contains("Funding sought") th:contains("${ktpLeadOrgName}") ~ td:contains("${fundingSought}")
 
 Lead applicant should be able to view any changes to finances screen before approved
     [Documentation]  IFS-9250
@@ -142,7 +149,7 @@ Lead applicant should be able to view any changes to finances screen before appr
     Then the user views the changes to finance screen
 
 Lead applicant can view their non-FEC project finances in the Eligibility section when approved
-    [Documentation]  IFS-9248
+    [Documentation]  IFS-9248  IFS-9633
     [Setup]  internal user approves finances
     Given log in as a different user                                           &{ktpLead}
     When the user navigates to finance checks
@@ -228,6 +235,7 @@ the user should view their non-fec project finances
     the user should not see the element     jQuery = button:contains("Additional associate support")
 
 the user should view their non-fec project finances after editing
+    the user should see the element         jQuery = table:contains("Funding sought (£)") td:contains("${fundingSought}")
     the user should see the element         jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") p:contains("No")
     the user should see the element         jQuery = span:contains("${academicCostValueFormatted}") ~ button:contains("Academic and secretarial support")
     the user should see the element         jQuery = th:contains("Total academic and secretarial support costs") ~ td:contains("${academicCostValueFormatted}")
@@ -257,12 +265,7 @@ the user closed ktp assesment
     run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
 
 internal user approves finances
-    log in as a different user                              &{ifs_admin_user_credentials}
-#    the user navigates to the page                          ${server}/project-setup-management/project/${project_id}/finance-check/organisation/${lead_org_id}/eligibility
-#    the user selects the checkbox                           project-eligible
-#    the user selects the option from the drop-down menu     Green  id = rag-rating
-#    the user clicks the button/link                         jQuery = .govuk-button:contains("Approve eligible costs")
-#    the user clicks the button/link                         name = confirm-eligibility
+    log in as a different user          &{ifs_admin_user_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${project_id}/finance-check
     confirm eligibility                 0
     confirm viability                   1
@@ -286,6 +289,7 @@ the user should view updated values in changes to finances
     the user should see the element     jQuery = table:contains("Updated") th:contains("Total project costs") ~ td:contains("£${totalProjectCostsUpdated}")
     the user should see the element     jQuery = table:contains("Updated") th:contains("Academic and secretarial support") ~ td:contains("${academicCostValueFormatted}")
     the user should see the element     jQuery = table:contains("Updated") th:contains("Indirect costs") ~ td:contains("${indirectCostUpdated}")
+    the user should see the element     jQuery = table:contains("Updated") th:contains("Funding sought") ~ td:contains("${fundingSought}")
 
 the user views the changes to finance screen
     the user clicks the button/link     link = view any changes to finances

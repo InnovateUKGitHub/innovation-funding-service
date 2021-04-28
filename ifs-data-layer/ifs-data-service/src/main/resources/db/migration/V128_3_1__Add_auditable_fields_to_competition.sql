@@ -5,8 +5,8 @@ SET @system_maintenance_user_id = (SELECT id
 
 ALTER TABLE competition
   ADD COLUMN `created_by` bigint(20) NOT NULL,
-  ADD COLUMN `created_on` datetime NOT NULL,
-  ADD COLUMN `modified_on` datetime NOT NULL,
+  ADD COLUMN `created_on` datetime NOT NULL DEFAULT now(),
+  ADD COLUMN `modified_on` datetime NOT NULL DEFAULT now(),
   ADD COLUMN `modified_by` bigint(20) NOT NULL;
 
 UPDATE competition

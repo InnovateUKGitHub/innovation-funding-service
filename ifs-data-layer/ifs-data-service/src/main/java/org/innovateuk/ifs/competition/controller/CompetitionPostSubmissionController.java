@@ -35,6 +35,11 @@ public class CompetitionPostSubmissionController {
         return competitionService.closeAssessment(id).toPutResponse();
     }
 
+    @PutMapping("/{id}/reopen-assessment-period")
+    public RestResult<Void> reopenAssessmentPeriod(@PathVariable("id") final Long id) {
+        return competitionService.reopenAssessmentPeriod(id).toPutResponse();
+    }
+
     @GetMapping("/{id}/queries/open")
     public RestResult<List<CompetitionOpenQueryResource>> getOpenQueries(@PathVariable("id") Long competitionId) {
         return competitionService.findAllOpenQueries(competitionId).toGetResponse();

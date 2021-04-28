@@ -226,6 +226,19 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     }
 
     @Test
+    public void reopenAssessmentPeriod() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionPostSubmissionRestService.reopenAssessmentPeriod(competitionId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/reopen-assessment-period", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
+
+        verify(competitionPostSubmissionRestService).reopenAssessmentPeriod(competitionId);
+    }
+
+    @Test
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 

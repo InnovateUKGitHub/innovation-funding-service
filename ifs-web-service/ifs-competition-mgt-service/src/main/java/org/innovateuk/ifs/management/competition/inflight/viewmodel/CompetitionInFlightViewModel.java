@@ -36,13 +36,15 @@ public class CompetitionInFlightViewModel {
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
     private boolean supporterEnabled;
+    private boolean isSuperAdminUser;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
-                                        boolean readOnly) {
+                                        boolean readOnly,
+                                        boolean isSuperAdminUser) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionCompletionStage = competitionResource.getCompletionStage();
@@ -59,6 +61,7 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
+        this.isSuperAdminUser = isSuperAdminUser;
         this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
@@ -124,6 +127,10 @@ public class CompetitionInFlightViewModel {
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public boolean isSuperAdminUser() {
+        return isSuperAdminUser;
     }
 
     public CompetitionCompletionStage getCompetitionCompletionStage() {
