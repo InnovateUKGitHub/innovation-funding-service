@@ -255,15 +255,12 @@
                 <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
                 <th:block th:if="${model.isInternal() and model.open and !summaryModel.isApproved() and !model.canEditProjectCosts}">
-                    <div class="form-footer">
-                        <div class="form-footer__actions">
-                            <button class="button-clear"
-                                    name="edit-project-costs">
-                                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}">
-                                    Edit project costs
-                                </a>
-                            </button>
-                        </div>
+                    <div class="form-footer govuk-!-margin-top-4">
+                        <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#project-cost-actions'}(editProjectCosts=${true})}"
+                           name="edit-project-costs"
+                           class="button-clear">
+                            Edit project costs
+                        </a>
                     </div>
                     <div th:if="${model.isInternal()}">
                         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
@@ -271,11 +268,11 @@
                 </th:block>
                 <th:block th:if="${model.canEditProjectCosts}">
                     <div class="form-footer">
-                        <div class="form-footer__actions">
-                            <button class="button-clear" id="cancel-project-cost-actions">
-                                <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) }}">Cancel changes</a>
-                            </button>
-                        </div>
+                        <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) }}"
+                           id="cancel-project-cost-actions"
+                           class="button-clear">
+                            Cancel changes
+                        </a>
                     </div>
                 </th:block>
                 <div th:if="${model.canEditProjectCosts}">
