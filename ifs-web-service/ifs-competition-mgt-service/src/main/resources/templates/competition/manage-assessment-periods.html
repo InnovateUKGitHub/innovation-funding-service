@@ -56,7 +56,7 @@
                         class="govuk-table__row date-group form-group-row"
                         data-future-date=""
                         th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription() + ': Please enter a valid date.'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()  + ': Please enter a future date' + (milestoneEntry.value.firstAssessmentPeriodMilestone ? '' : ' that is after the previous milestone') + '.'}">
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()  + ': ' + (milestoneEntry.value.firstAssessmentPeriodMilestone ? 'Please enter a future date' : 'You must enter a date later than the previous milestone') + '.'}">
                         <th class="govuk-table__header" scope="row">
                             <legend class="govuk-!-padding-left-3" th:id="${path}"
                                     th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
