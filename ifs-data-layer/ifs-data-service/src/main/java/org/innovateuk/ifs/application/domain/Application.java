@@ -51,6 +51,7 @@ public class Application implements ProcessActivity {
     private String previousApplicationTitle;
     private ZonedDateTime manageFundingEmailDate;
     private Long previousApplicationId;
+    private ZonedDateTime feedbackReleased;
 
     @Min(0)
     private Long durationInMonths; // in months
@@ -500,6 +501,15 @@ public class Application implements ProcessActivity {
 
     public void setProjectToBeCreated(ProjectToBeCreated projectToBeCreated) {
         this.projectToBeCreated = projectToBeCreated;
+    }
+
+    public ZonedDateTime getFeedbackReleased() {
+        return feedbackReleased;
+    }
+
+    public Application setFeedbackReleased(ZonedDateTime feedbackReleased) {
+        this.feedbackReleased = feedbackReleased;
+        return this;
     }
 
     public AssessmentPeriod getAssessmentPeriod() {
