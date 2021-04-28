@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
@@ -42,6 +44,9 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
     @Autowired
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
 
+    @Autowired
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
     @Override
     protected String getCookieName() {
         return SELECTION_FORM;
@@ -66,6 +71,20 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         updateSelectionForm(request, response, competitionId, assessorId, selectionForm, filter);
         model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, assessmentPeriodId, page - 1, sort, filter));
         return "competition/assessor-progress";
+    }
+
+    @GetMapping
+    public String assessorProgressForOnlyPeriod(@PathVariable long competitionId,
+                                            @PathVariable long assessorId) {
+
+        List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
+
+        if (assessmentPeriods.size() == 1) {
+            long assessmentPeriodId = assessmentPeriods.get(0).getId();
+            return format("redirect:/assessment/competition/%s/assessors/%s/period/%s", competitionId, assessorId, assessmentPeriodId);
+        }
+
+        return format("redirect:/assessment/competition/{competitionId}/assessors", competitionId);
     }
 
     @PostMapping("/period/{assessmentPeriodId}")
