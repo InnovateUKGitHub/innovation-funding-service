@@ -113,6 +113,10 @@ public class GenericMilestoneRowForm {
         return MilestoneType.OPEN_DATE.equals(milestoneType);
     }
 
+    public boolean isFirstAssessmentPeriodMilestone() {
+        return MilestoneType.ASSESSOR_BRIEFING.equals(milestoneType);
+    }
+
     public ZonedDateTime getDate() {
         return date;
     }
