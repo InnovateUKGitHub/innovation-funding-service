@@ -18,7 +18,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private ApplicationState applicationState;
     private boolean leadApplicant;
     private ZonedDateTime endDate;
-    private long daysLeft;
+    private Long daysLeft;
     private int applicationProgress;
     private boolean assignedToInterview;
     private LocalDate startDate;
@@ -47,7 +47,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return endDate;
     }
 
-    public long getDaysLeft() {
+    public Long getDaysLeft() {
         return daysLeft;
     }
 
@@ -130,7 +130,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private ApplicationState applicationState;
         private boolean leadApplicant;
         private ZonedDateTime endDate;
-        private long daysLeft;
+        private Long daysLeft;
         private int applicationProgress;
         private boolean assignedToInterview;
         private LocalDate startDate;
@@ -173,7 +173,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
-        public DashboardApplicationInProgressResourceBuilder withDaysLeft(long daysLeft) {
+        public DashboardApplicationInProgressResourceBuilder withDaysLeft(Long daysLeft) {
             this.daysLeft = daysLeft;
             return this;
         }
