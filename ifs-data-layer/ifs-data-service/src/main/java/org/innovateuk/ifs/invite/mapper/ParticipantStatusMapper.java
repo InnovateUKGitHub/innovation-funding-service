@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.mapper;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 /**
  * Maps between domain and resource DTO for {@link org.innovateuk.ifs.invite.domain.ParticipantStatus}.

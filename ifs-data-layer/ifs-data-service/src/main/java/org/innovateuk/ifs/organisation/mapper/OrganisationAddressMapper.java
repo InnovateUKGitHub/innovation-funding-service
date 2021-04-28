@@ -7,9 +7,11 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 @Mapper(
     config = GlobalMapperConfig.class,
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
     uses = {
             AddressMapper.class,
             AddressTypeMapper.class,
