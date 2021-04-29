@@ -27,8 +27,8 @@ ${webTestCompName}                 Always open competition
 ${applicationName}                 Always open application
 ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
-${webTestAssessor}                 Paul Plum
-${webTestAssessorEmailAddress}     paul.plum@gmail.com
+${webTestAssessor}                 Angel Witt
+${webTestAssessorEmailAddress}     angel.witt@gmail.com
 
 *** Test Cases ***
 the user fills in milestones without a submission date
@@ -64,7 +64,7 @@ Send the email invite to the assessor for the competition using new content
     [Documentation]  IFS-9009
     Given the user navigates to the page        ${CA_Live}
     When comp admin sends invite to assesor
-    Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${webTestCompName}'  We invite you to assess applications for the competition:
+    Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${openEndedCompName}'  We invite you to assess applications for the competition:
 
 Lead applicant creates an application and checks the dashboard content when the application is incomplete
     [Documentation]  IFS-8850
@@ -75,8 +75,11 @@ Lead applicant creates an application and checks the dashboard content when the 
 
 Lead applicant completes the application and checks the dashboard content before the application is submitted
     [Documentation]  IFS-8850
-    Given the user clicks the button/link                                   link = ${applicationName}
-    When the user accept the competition terms and conditions               Back to application overview
+    Given the user adds a partner organisation and application details
+    And log in as a different user                                         test.user1@gmail.com     ${short_password}
+    When the user clicks the button/link                                   link = ${applicationName}
+    And the applicant completes Application Team
+    And the user accept the competition terms and conditions               Back to application overview
     Then the user checks the status of the application after completion
 
 Lead applicant submits the application and checks the dashboard content and the guidance after submission
@@ -111,7 +114,7 @@ the user completes milestones section
     the user clicks the button/link                    jQuery = button:contains("Done")
 
 comp admin sends invite to assesor
-    the user clicks the button/link          link = ${webTestCompName}
+    the user clicks the button/link          link = ${openEndedCompName}
     the user clicks the button/link          link = Invite assessors to assess the competition
     the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
@@ -123,7 +126,7 @@ comp admin sends invite to assesor
 
 the lead user creates an always open application
     [Arguments]   ${firstName}   ${lastName}   ${email}   ${applicationName}
-    the user select the competition and starts application          ${webTestCompName}
+    the user select the competition and starts application          ${openEndedCompName}
     the user clicks the button/link                                 link = Continue and create an account
     the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
@@ -135,13 +138,6 @@ the lead user creates an always open application
     the user clicks the button/link                                 link = Sign in
     Logging in and Error Checking                                   ${email}  ${short_password}
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-
-the user completes the research category
-    the user clicks the button/link      link = Research category
-    the user selects the checkbox        id = researchCategory
-    the user clicks the button/link      id = application-question-complete
-    the user clicks the button/link      link = Back to application overview
-    the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
 
 the user checks the status of the application after completion
     the user should see the element         jQuery = dt:contains("Application deadline:") ~ dd:contains("Decision pending")
@@ -194,3 +190,8 @@ the user check for valid content on front end
     the user should see the element     jQuery = li:contains("There is no submission deadline") strong:contains("Competition closes:")
     the user clicks the button/link     id = tab_dates
     the user should see the element     jQuery = dt:contains("No submission deadline") + dd:contains("This is open-ended competition and applications can be submitted at any time.")
+
+the user adds a partner organisation and application details
+    the user clicks the button/link                      link = ${applicationName}
+    the lead invites already registered user             ${collaborator1_credentials["email"]}   ${openEndedCompName}
+    partner applicant completes the project finances     ${applicationName}  no  ${collaborator1_credentials["email"]}  ${short_password}
