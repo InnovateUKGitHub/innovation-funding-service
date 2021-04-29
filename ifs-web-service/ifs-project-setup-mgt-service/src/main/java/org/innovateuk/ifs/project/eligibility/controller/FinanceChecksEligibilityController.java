@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourP
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -243,6 +244,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionForProject(projectId).getSuccess();
 
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
         List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(projectFinance))
                 .stream()
                 .filter(FinanceRowType::isAppearsInProjectCostsAccordion)
@@ -254,7 +257,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         boolean ktp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            financeRowTypes.forEach(financeRowType -> validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, financeRowType, projectId, organisationId, ktp)));
+            validationHandler.addAnyErrors(yourProjectCostsSaver.save(form, projectId, organisationResource, new ValidationMessages()));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
     }

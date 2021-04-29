@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.Labou
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
@@ -774,7 +775,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 .collect(Collectors.toList());
 
         financeRowTypes.forEach(type -> yourProjectCostsFormValidator.validateType(isA(YourProjectCostsForm.class), eq(type), any(ValidationHandler.class)));
-        financeRowTypes.forEach(financeRowType -> when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(financeRowType), eq(projectId), eq(organisationId), eq(false))).thenReturn(serviceSuccess()));
+        when(yourProjectCostsSaver.save(isA(YourProjectCostsForm.class), eq(projectId), eq(industrialOrganisation), eq(new ValidationMessages()))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                 param("save-eligibility", "")).
