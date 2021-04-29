@@ -163,6 +163,20 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         return serviceSuccess();
     }
 
+
+
+    private void validatePresetMilestonesSequentialOrder(ValidationMessages vm, List<MilestoneResource> milestones) {
+        for (int i = 1; i < milestones.size(); i++) {
+            MilestoneResource previous = milestones.get(i - 1);
+            MilestoneResource current = milestones.get(i);
+
+            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
+                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
+            }
+        }
+    }
+
     @Override
     @Transactional
     public ServiceResult<MilestoneResource> create(MilestoneResource milestoneResource) {
@@ -185,6 +199,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         });
     }
+
 
     @Override
     @Transactional
@@ -295,15 +310,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         // preset milestones must be in the correct order
         List<MilestoneResource> presetMilestones = simpleFilter(milestones, milestoneResource -> milestoneResource.getType().isPresetDate());
 
-        for (int i = 1; i < presetMilestones.size(); i++) {
-            MilestoneResource previous = presetMilestones.get(i - 1);
-            MilestoneResource current = presetMilestones.get(i);
-
-            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
-                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
-                vm.addError(error);
-            }
-        }
+        validatePresetMilestonesSequentialOrder(vm, presetMilestones);
 
         return vm;
     }
