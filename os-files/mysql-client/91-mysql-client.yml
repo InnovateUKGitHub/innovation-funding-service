@@ -8,6 +8,6 @@ items:
   spec:
     containers:
     - name: mysql-client
-      image: innovateuk/mysql-client:${mysqlClientVersion}
+      image: innovateuk/mysql-client:5.7.34
       imagePullPolicy: Always
     restartPolicy: Never
