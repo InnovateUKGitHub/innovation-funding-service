@@ -284,8 +284,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
         return asCompAdmin(data -> {
+            shiftOpenDateToYesterday(data);
             shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
-
         });
     }
 
@@ -314,6 +314,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    private void shiftOpenDateToYesterday(CompetitionData data) {
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
+        MilestoneResource openDate = simpleFindFirst(milestones, m -> OPEN_DATE.equals(m.getType())).get();
+        openDate.setDate(now().minusDays(1));
+        milestoneService.updateMilestone(openDate).getSuccess();
+    }
+
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
         MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
@@ -321,19 +328,21 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
         ZonedDateTime submissionDeadline = submissionDateMilestone.getDate();
 
-        final long daysPassedSinceSubmissionEnded;
-        if (ZonedDateTime.now().withZoneSameInstant(submissionDeadline.getZone()).toLocalTime().isAfter(submissionDeadline.toLocalTime())) {
-            daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
-        } else {
-            daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
-        }
-
-        milestones.forEach(m -> {
-            if (m.getDate() != null) {
-                m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
-                milestoneService.updateMilestone(m).getSuccess();
+        if (submissionDeadline != null) {
+            final long daysPassedSinceSubmissionEnded;
+            if (ZonedDateTime.now().withZoneSameInstant(submissionDeadline.getZone()).toLocalTime().isAfter(submissionDeadline.toLocalTime())) {
+                daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
+            } else {
+                daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
             }
-        });
+
+            milestones.forEach(m -> {
+                if (m.getDate() != null) {
+                    m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
+                    milestoneService.updateMilestone(m).getSuccess();
+                }
+            });
+        }
     }
 
     public CompetitionDataBuilder withNewMilestones(CompetitionLine line) {
