@@ -308,7 +308,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
             competitionBuilder = competitionBuilder.withMilestoneUpdate(earliestDate.plusDays(i * 10), presetMilestoneTypes.get(i));
         }
 
-        if (indexWhereDatesStartInTheFuture > 0) {
+        if (indexWhereDatesStartInTheFuture >= 0) {
             for (int i = indexWhereDatesStartInTheFuture; i < presetMilestoneTypes.size(); i++) {
                 competitionBuilder = competitionBuilder.withMilestoneUpdate(firstFutureDate.plusDays(i * 10), presetMilestoneTypes.get(i));
             }
