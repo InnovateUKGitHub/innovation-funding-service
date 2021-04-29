@@ -542,21 +542,27 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                                                        AssessmentInvite invite,
                                                        Notifications notificationType) {
         NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
+        Map<String, Object> args = asMap(
+                "subject", subject,
+                "name", invite.getName(),
+                "competitionName", invite.getTarget().getName(),
+                "competitionId", invite.getTarget().getId(),
+                "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
+                "customTextPlain", customTextPlain,
+                "customTextHtml", customTextHtml
+        );
+
+        if (notificationType == Notifications.INVITE_ASSESSOR_GROUP) {
+            args.put("acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter));
+            args.put("deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter));
+        }
+
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
                 notificationType,
-                asMap(
-                        "subject", subject,
-                        "name", invite.getName(),
-                        "competitionName", invite.getTarget().getName(),
-                        "competitionId", invite.getTarget().getId(),
-                        "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                        "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                        "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
-                        "customTextPlain", customTextPlain,
-                        "customTextHtml", customTextHtml
-                ));
+                args
+                );
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
