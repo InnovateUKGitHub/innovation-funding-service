@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
@@ -49,14 +48,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission, long organisationId) {
 
         return with(data -> doAs(leadApplicant, () -> {
-            ApplicationResource created;
-            try {
-                 created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(
-                        applicationName, data.getCompetition().getId(), leadApplicant.getId(), organisationId).
-                        getSuccess();
-            } catch (Exception e) {
-                throw new IFSRuntimeException("Failure at" + data.getCompetition().getName(), e);
-            }
+
+            ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(
+                    applicationName, data.getCompetition().getId(), leadApplicant.getId(), organisationId).
+                    getSuccess();
+
             created.setResubmission(resubmission);
             ValidationMessages validationMessages = applicationService.saveApplicationDetails(created.getId(), created)
                     .getSuccess();
