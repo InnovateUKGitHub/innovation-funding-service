@@ -14,6 +14,8 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +69,7 @@ public class DocumentsPopulator {
                 .orElse(DocumentStatus.UNSET);
     }
 
-    public DocumentViewModel populateViewDocument(long projectId, long loggedInUserId, long documentConfigId) {
+    public DocumentViewModel populateViewDocument(long projectId, long documentConfigId, UserResource userResource) {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
@@ -85,6 +87,8 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
+        boolean userCanApproveOrRejectDocuments = userResource.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.MONITORING_OFFICER);
+
         return new DocumentViewModel(project.getId(),
                 project.getName(),
                 project.getApplication(),
@@ -94,8 +98,9 @@ public class DocumentsPopulator {
                 fileDetails,
                 projectDocument.map(ProjectDocumentResource::getStatus).orElse(DocumentStatus.UNSET),
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
-                isProjectManager(loggedInUserId, projectId),
-                project.getProjectState().isActive());
+                isProjectManager(userResource.getId(), projectId),
+                project.getProjectState().isActive(),
+                userCanApproveOrRejectDocuments);
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {

@@ -19,6 +19,8 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -68,11 +70,17 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private String documentConfigGuidance1 = "Guidance Risk Register";
     private String documentConfigGuidance2 = "Guidance Plan Document";
     private String collaborationAgreement = COLLABORATION_AGREEMENT_TITLE;
+    private UserResource loggedInUser;
 
     @Before
     public void setup() {
 
         super.setup();
+
+        loggedInUser = UserResourceBuilder
+                .newUserResource()
+                .withId(loggedInUserId)
+                .build();
 
         List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
                 .newCompetitionDocumentResource()
@@ -125,7 +133,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateAllDocuments() {
 
-        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUserId);
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUser.getId());
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(applicationId, viewModel.getApplicationId());
@@ -141,7 +149,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateViewDocument() {
 
-        DocumentViewModel viewModel = populator.populateViewDocument(projectId, loggedInUserId, documentConfigId1);
+        DocumentViewModel viewModel = populator.populateViewDocument(projectId, documentConfigId1, loggedInUser);
 
         assertEquals(projectId, viewModel.getProjectId());
         assertEquals(projectName, viewModel.getProjectName());
