@@ -284,8 +284,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
         return asCompAdmin(data -> {
-            shiftOpenDateToYesterday(data);
             shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
+            shiftOpenDateToYesterday(data);
         });
     }
 
