@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.springframework.statemachine.StateContext;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
@@ -42,7 +41,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
-                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessorsNotifiedDate(now().plusDays(10L))
                         .build()
         );
@@ -55,7 +54,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
-                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessorsNotifiedDate(now().plusDays(10L))
                         .withAssessmentClosedDate(now().plusDays(20L))
                         .build()
@@ -69,7 +68,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
-                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .withAssessmentClosedDate(now().minusDays(1L))
                         .build()
@@ -82,7 +81,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     public void evaluate_assessmentStartedButWillCloseInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
-                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withCompetitionStatus(CLOSED)
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .withAssessmentClosedDate(now().plusDays(10L))
@@ -96,7 +95,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     public void evaluate_assessmentStartedButCloseDateNotSet() {
         Assessment assessment = buildAssessment(
                 newCompetition()
-                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withCompetitionStatus(CLOSED)
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .build()
@@ -110,7 +109,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
-                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessmentClosedDate(now().plusDays(10L))
                         .build()
         );
