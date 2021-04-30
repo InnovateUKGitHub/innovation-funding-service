@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
@@ -43,6 +44,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -180,12 +182,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     public ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long id) {
         return find(assessmentPeriodRepository.findById(id), notFoundError(Assessment.class, id))
                 .andOnSuccess(assessmentPeriod -> {
-                    List<Assessment> assessmentsToNotify = assessmentPeriod.getApplications()
-                            .stream()
-                            .flatMap(application -> application.getAssessments().stream())
-                            .filter(assessment -> CREATED.equals(assessment.getProcessState()))
-                            .collect(toList());
-
+                    List<Assessment> assessmentsToNotify = assessmentRepository.findByTargetAssessmentPeriodIdAndAndActivityStateIn(assessmentPeriod.getId(), EnumSet.of(CREATED));
                     return processAnyFailuresOrSucceed(simpleMap(assessmentsToNotify, this::attemptNotifyAssessorTransition))
                             .andOnSuccess(() -> assessmentsToNotify.stream()
                                     .collect(groupingBy(assessment -> assessment.getParticipant().getUser()))

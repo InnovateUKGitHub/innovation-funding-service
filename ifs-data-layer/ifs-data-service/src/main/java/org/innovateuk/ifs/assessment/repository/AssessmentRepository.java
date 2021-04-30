@@ -123,4 +123,6 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     List<Assessment> findByTargetIdAndActivityStateIn(Long applicationId, Set<AssessmentState> states);
 
     boolean existsByTargetId(Long targetId);
+
+    List<Assessment> findByTargetAssessmentPeriodIdAndAndActivityStateIn(long assessmentPeriodId, Collection<AssessmentState> state);
 }
