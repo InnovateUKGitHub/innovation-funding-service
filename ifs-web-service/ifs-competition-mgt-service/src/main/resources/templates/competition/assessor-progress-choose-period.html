@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Return to manage assessment',
+              th:with="linkTitle='Return to manage assessments',
                 linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -48,7 +48,7 @@
 
         <p class="govuk-body">
             <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
-               class="govuk-link">Return to manage assessment</a>
+               class="govuk-link">Return to manage assessments</a>
         </p>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
