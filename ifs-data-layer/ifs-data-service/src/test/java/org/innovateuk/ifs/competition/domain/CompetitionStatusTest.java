@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.time.ZonedDateTime;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -38,7 +39,7 @@ public class CompetitionStatusTest {
     	competition = new Competition();
         competition.setSetupComplete(true);
         competition.setCompetitionType(competitionType);
-        competition.setAssessmentPeriods(Lists.newArrayList(assessmentPeriod));
+        competition.setAssessmentPeriods(newArrayList(assessmentPeriod));
     }
 
     @Test

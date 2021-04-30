@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
@@ -34,6 +33,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static com.google.common.collect.Lists.newArrayList;
 
 
 public class CompetitionParticipantControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionParticipantController> {
@@ -68,7 +68,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, SENT, PENDING);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        assessmentParticipantRepository.saveAll(asList(
+        assessmentParticipantRepository.saveAll(newArrayList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -115,7 +115,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        assessmentParticipantRepository.saveAll(asList(
+        assessmentParticipantRepository.saveAll(newArrayList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -163,7 +163,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
-        assessmentParticipantRepository.saveAll(asList(
+        assessmentParticipantRepository.saveAll(newArrayList(
                 expectedParticipant1,
                 expectedParticipant2
         ));
@@ -181,10 +181,10 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition = newCompetition()
                 .with(id(null))
                 .withAssessmentPeriods(
-                        asList(newAssessmentPeriod()
+                        newArrayList(newAssessmentPeriod()
                                 .withMilestones(
-                                        new ArrayList(asList(newMilestone().withType(ASSESSORS_NOTIFIED)
-                                                .build())))
+                                        newArrayList(newMilestone().withType(ASSESSORS_NOTIFIED)
+                                                .build()))
                                 .build()))
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorsNotifiedDate(now())
