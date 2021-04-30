@@ -17,9 +17,9 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
@@ -123,7 +123,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         stream(CompetitionStatus.values()).forEach(status -> {
 
             Competition competitionInSetup = newCompetition().
-                    withAssessmentPeriods(asList(AssessmentPeriodBuilder.newAssessmentPeriod().build())).
+                    withAssessmentPeriods(newAssessmentPeriod().build(1)).
                     withCompetitionStatus(status).
                     build();
 

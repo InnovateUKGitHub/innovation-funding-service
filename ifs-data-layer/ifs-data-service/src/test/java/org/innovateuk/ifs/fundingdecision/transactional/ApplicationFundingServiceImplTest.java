@@ -53,7 +53,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -134,7 +133,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
     @Before
     public void setup() {
-    	competition = newCompetition().withAssessmentPeriods(asList(newAssessmentPeriod().build())).withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withCompetitionAssessmentConfig(newCompetitionAssessmentConfig().withIncludeAverageAssessorScoreInNotifications(true).build()).withId(123L).build();
+    	competition = newCompetition().withAssessmentPeriods(newAssessmentPeriod().build(1)).withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withCompetitionAssessmentConfig(newCompetitionAssessmentConfig().withIncludeAverageAssessorScoreInNotifications(true).build()).withId(123L).build();
     	when(competitionRepository.findById(123L)).thenReturn(Optional.of(competition));
     	
     	when(fundingDecisionMapper.mapToDomain(any(FundingDecision.class))).thenAnswer(new Answer<FundingDecisionStatus>(){
@@ -192,7 +191,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application3.getCompetition().getName(),
                 "applicationId", application3.getId()));
 
-        List<NotificationMessage> expectedLeadApplicants = asList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
+        List<NotificationMessage> expectedLeadApplicants = newArrayList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
@@ -205,8 +204,8 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Notification expectedFundingNotification = new Notification(systemNotificationSource, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
 
-        List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
-        List<Application> applications = asList(application1, application2, application3);
+        List<Long> applicationIds = newArrayList(application1.getId(), application2.getId(), application3.getId());
+        List<Application> applications = newArrayList(application1, application2, application3);
         when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
 
         leadApplicantProcessRoles.forEach(processRole ->
@@ -274,7 +273,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 "competitionName", application3.getCompetition().getName(),
                 "applicationId", application3.getId(),
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore3.getScore() + "%"));
-        List<NotificationMessage> expectedLeadApplicants = asList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
+        List<NotificationMessage> expectedLeadApplicants = newArrayList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
 
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
@@ -288,8 +287,8 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Notification expectedFundingNotification = new Notification(systemNotificationSource, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
 
-        List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
-        List<Application> applications = asList(application1, application2, application3);
+        List<Long> applicationIds = newArrayList(application1.getId(), application2.getId(), application3.getId());
+        List<Application> applications = newArrayList(application1, application2, application3);
         when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
         when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
 
@@ -343,7 +342,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
         UserNotificationTarget application1CollaboratorTarget = new UserNotificationTarget(application1Collaborator.getName(), application1Collaborator.getEmail());
         UserNotificationTarget application2CollaboratorTarget = new UserNotificationTarget(application2Collaborator.getName(), application2Collaborator.getEmail());
-        List<NotificationTarget> expectedApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application1CollaboratorTarget, application2CollaboratorTarget);
+        List<NotificationTarget> expectedApplicants = newArrayList(application1LeadApplicantTarget, application2LeadApplicantTarget, application1CollaboratorTarget, application2CollaboratorTarget);
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
@@ -353,11 +352,11 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Notification expectedFundingNotification =
                 new Notification(systemNotificationSource, expectedApplicants.stream().map(NotificationMessage::new).collect(Collectors.toList()), APPLICATION_FUNDING, emptyMap());
         
-        List<Long> applicationIds = asList(application1.getId(), application2.getId());
-        List<Application> applications = asList(application1, application2);
+        List<Long> applicationIds = newArrayList(application1.getId(), application2.getId());
+        List<Application> applications = newArrayList(application1, application2);
         when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
 
-        asList(application1, application2).forEach(application ->
+        newArrayList(application1, application2).forEach(application ->
                 when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application))
         );
 
@@ -432,7 +431,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         UserNotificationTarget application2ParticipantTarget = new UserNotificationTarget(application2Participant.getName(), application2Participant.getEmail());
         UserNotificationTarget application2MoTarget = new UserNotificationTarget(application2Mo.getName(), application2Mo.getEmail());
 
-        List<NotificationTarget> expectedTargets = asList(application1ParticipantTarget, application1MoTarget, application2ParticipantTarget, application2MoTarget);
+        List<NotificationTarget> expectedTargets = newArrayList(application1ParticipantTarget, application1MoTarget, application2ParticipantTarget, application2MoTarget);
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
@@ -442,11 +441,11 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Notification expectedFundingNotification =
                 new Notification(systemNotificationSource, expectedTargets.stream().map(NotificationMessage::new).collect(Collectors.toList()), APPLICATION_FUNDING, emptyMap());
 
-        List<Long> applicationIds = asList(application1.getId(), application2.getId());
-        List<Application> applications = asList(application1, application2);
+        List<Long> applicationIds = newArrayList(application1.getId(), application2.getId());
+        List<Application> applications = newArrayList(application1, application2);
         when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
 
-        asList(application1, application2).forEach(application ->
+        newArrayList(application1, application2).forEach(application ->
                 when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application))
         );
 
@@ -476,7 +475,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     	
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
-    	when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(asList(application1, application2));
+    	when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(newArrayList(application1, application2));
 
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
@@ -563,7 +562,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 .build();
 
         Competition projectSetupCompetition = newCompetition()
-                .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                .withAssessmentPeriods(newArrayList(newAssessmentPeriod().build()))
                 .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
                 .withCompetitionType(competitionType)
                 .withId(projectSetupCompetitionId)
@@ -601,7 +600,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
         Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
-        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(asList(application1, application2));
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(newArrayList(application1, application2));
 
         Map<Long, FundingDecision> decision = new HashMap<>();
 
@@ -646,7 +645,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
             Collection<String> actualTo = new TreeSet<>(Collator.getInstance());
             actualTo.addAll(simpleMap(notification.getTo(), t -> t.getTo().getEmailAddress()));
-            assertEquals(asList(expectedTo.toArray()), asList(actualTo.toArray()));
+            assertEquals(newArrayList(expectedTo.toArray()), newArrayList(actualTo.toArray()));
 
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
         });

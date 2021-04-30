@@ -16,8 +16,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.CREATED;
@@ -55,7 +55,7 @@ public class ManageAssessmentsModelPopulatorTest {
         long assessmentPeriod3Id = 3;
         long assessmentPeriod4Id = 4;
         List<MilestoneResource> milestones =
-        asList(newMilestoneResource()
+        newArrayList(newMilestoneResource()
                         .withAssessmentPeriod(assessmentPeriod1Id)
                         .withType(ASSESSORS_NOTIFIED, ASSESSOR_BRIEFING, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE, ASSESSMENT_CLOSED) // Have been notified and closed
                         .withDate(now().minusDays(21), now().minusDays(20), now().minusDays(19), now().minusDays(18), now().minusDays(17))

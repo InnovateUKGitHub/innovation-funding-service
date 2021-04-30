@@ -35,7 +35,6 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
@@ -165,8 +164,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                 .withMilestones(milestones)
                 .build();
-        when(competitionRepository.findById(competitionId)).thenReturn(of(competition));
-        when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(of(competition.getAssessmentPeriods().get(0)));
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(Optional.of(competition.getAssessmentPeriods().get(0)));
 
         service.closeAssessment(competitionId);
 
@@ -242,8 +241,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                 .withMilestones(milestones)
                 .build();
-        when(competitionRepository.findById(competitionId)).thenReturn(of(competition));
-        when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(of(competition.getAssessmentPeriods().get(0)));
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(Optional.of(competition.getAssessmentPeriods().get(0)));
 
         service.notifyAssessors(competitionId);
 
