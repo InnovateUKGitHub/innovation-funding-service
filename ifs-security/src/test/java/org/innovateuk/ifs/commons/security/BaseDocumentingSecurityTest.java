@@ -313,11 +313,14 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
         if (rolesThatShouldSucceed.contains(Role.COMP_ADMIN)) {
             rolesThatShouldSucceed.add(Role.PROJECT_FINANCE);
             rolesThatShouldSucceed.add(Role.IFS_ADMINISTRATOR);
+            rolesThatShouldSucceed.add(Role.SUPER_ADMIN_USER);
             rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
         } else if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE)) {
             rolesThatShouldSucceed.add(Role.IFS_ADMINISTRATOR);
+            rolesThatShouldSucceed.add(Role.SUPER_ADMIN_USER);
             rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
         } else if (rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+            rolesThatShouldSucceed.add(Role.SUPER_ADMIN_USER);
             rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
         }
         if (rolesThatShouldSucceed.contains(Role.ASSESSOR) || rolesThatShouldSucceed.contains(Role.MONITORING_OFFICER)) {

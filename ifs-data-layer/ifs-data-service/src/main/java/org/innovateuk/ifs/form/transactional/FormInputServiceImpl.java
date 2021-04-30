@@ -61,7 +61,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     public ServiceResult<List<FormInputResource>> findByCompetitionId(long competitionId) {
-        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndActiveTrueOrderByPriorityAsc(competitionId)));
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndActiveTrueOrderByPriorityAscIdAsc(competitionId)));
     }
 
     @Override

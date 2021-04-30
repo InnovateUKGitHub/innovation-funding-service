@@ -78,7 +78,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Internal users (barring innovation leads and stakeholders), and IFS Admin can view previous applications")
     public boolean internalUsersAndIFSAdminCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
-        return (isInternal(user) && !isInnovationLead(user) && !isStakeholder(user)) || isIFSAdmin(user);
+        return (isInternal(user) && !isInnovationLead(user) && !isStakeholder(user)) || hasIFSAdminAuthority(user);
     }
     @PermissionRule(value = "VIEW_PREVIOUS_APPLICATIONS", description = "Innovation leads for the competition can view previous applications")
     public boolean innovationLeadForCompetitionCanViewPreviousApplications(CompetitionResource competition, UserResource user) {
@@ -94,7 +94,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
             description = "Comp admins are able to delete competitions in preparation prior to them being in the Open state",
             particularBusinessState = "Competition is in preparation")
     public boolean internalAdminAndIFSAdminCanDeleteCompetitionInPreparation(CompetitionResource competition, UserResource user) {
-        return (isInternalAdmin(user) || isIFSAdmin(user)) &&
+        return (isInternalAdmin(user) || hasIFSAdminAuthority(user)) &&
                 EnumSet.of(COMPETITION_SETUP, READY_TO_OPEN).contains(competition.getCompetitionStatus());
     }
 

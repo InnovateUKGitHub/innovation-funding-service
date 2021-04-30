@@ -62,7 +62,7 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                                 andOnSuccess((finances) -> {
                                     CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    if (competition.isSbriPilot() || competition.isProcurement()) {
+                                    if (competition.isProcurement()) {
                                         costCategoryGenerators = sort(allOf(ProcurementCostCategoryGenerator.class));
                                     } else if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();

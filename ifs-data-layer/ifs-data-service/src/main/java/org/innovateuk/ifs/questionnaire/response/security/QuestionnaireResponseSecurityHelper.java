@@ -10,7 +10,6 @@ import org.innovateuk.ifs.questionnaire.link.repository.ProjectOrganisationQuest
 import org.innovateuk.ifs.questionnaire.response.domain.QuestionnaireResponse;
 import org.innovateuk.ifs.questionnaire.response.repository.QuestionnaireResponseRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +19,7 @@ import java.util.UUID;
 
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkHasAnyProcessRole;
+import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 
@@ -52,7 +52,7 @@ public class QuestionnaireResponseSecurityHelper extends BasePermissionRules {
     }
 
     public boolean hasReadPermission(UUID questionnaireResponseId, UserResource user) {
-        if (user.hasRole(Role.IFS_ADMINISTRATOR)) {
+        if (user.hasAuthority(IFS_ADMINISTRATOR)) {
             return true;
         }
         QuestionnaireResponse questionnaireResponse = questionnaireResponseRepository.findById(questionnaireResponseId).orElseThrow(ObjectNotFoundException::new);

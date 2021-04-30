@@ -3,11 +3,7 @@ package org.innovateuk.ifs.finance.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
-import org.innovateuk.ifs.finance.resource.cost.Vat;
+import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -200,6 +196,12 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public BigDecimal getTotalFundingSought() {
         GrantClaim grantClaim = getGrantClaim();
+        if (fecModelEnabled != null && !fecModelEnabled && financeOrganisationDetails.containsKey(FinanceRowType.INDIRECT_COSTS)) {
+            BigDecimal indirectCostsTotal = Optional.of(financeOrganisationDetails.get(FinanceRowType.INDIRECT_COSTS).getTotal()).orElse(BigDecimal.ZERO);
+            BigDecimal fundingSought = grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal().subtract(indirectCostsTotal),
+                    getTotalOtherFunding()).max(BigDecimal.ZERO);
+            return fundingSought.add(indirectCostsTotal);
+        }
         return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
                 .max(BigDecimal.ZERO);
     }

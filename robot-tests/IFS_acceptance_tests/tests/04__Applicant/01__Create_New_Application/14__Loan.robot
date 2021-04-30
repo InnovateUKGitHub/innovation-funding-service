@@ -66,9 +66,7 @@ The user can see qualtrics survey fields in business and financial information a
     When the user clicks the button/link                 link = Complete the online business survey (opens in a new window)
     And select window                                    Innovate UK - Innovation Continuity Loans
     And the user clicks the button/link                  id = NextButton
-    Then the user should see the element                 xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
-    And the user should see the element                  xpath = //span[contains(text(),'60674010')]
-    And the user should see the element                  xpath = //span[contains(text(),'${loanApplicationID}')]
+    Then the user should see qualtrics survey fields
     [Teardown]  the user closes the last opened tab
 
 The user will not be able to mark the application as complete without completing business and financial information
@@ -375,3 +373,8 @@ the user enters a value over the max funding
     the user clicks the button/link                jQuery = button:contains("Edit your funding")
     the user enters text to a text field           id = amount  65000
     the user clicks the button/link                id = mark-all-as-complete
+
+the user should see qualtrics survey fields
+    the user should see the element     xpath = //span[contains(text(),'${EMPIRE_LTD_NAME}')]
+    the user should see the element     xpath = //span[contains(text(),'60674010')]
+    the user should see the element     xpath = //span[contains(text(),'${loanApplicationID}')]

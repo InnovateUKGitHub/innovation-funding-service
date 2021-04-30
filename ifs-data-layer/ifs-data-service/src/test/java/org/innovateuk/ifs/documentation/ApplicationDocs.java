@@ -72,5 +72,5 @@ public class ApplicationDocs {
             .withLeadOrganisationId(1L)
             .withNoInnovationAreaApplicable(false)
             .withCollaborationLevel(SINGLE_OR_COLLABORATIVE)
-            .withAssessmentPeriod(null);
+            .withAssessmentPeriod((Long) null);
 }

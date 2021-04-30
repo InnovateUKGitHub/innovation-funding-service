@@ -42,6 +42,6 @@ public class AutoCompleteSectionsActionTest {
 
         autoCompleteSectionsAction.doExecute(application, stateContext);
 
-        verify(autoCompleteSectionsUtil).intitialiseCompleteSectionsForOrganisation(application, processRole.getOrganisationId(), processRole.getId());
+        verify(autoCompleteSectionsUtil).initialiseCompleteSectionsForOrganisation(application, processRole.getOrganisationId(), processRole.getId());
     }
 }

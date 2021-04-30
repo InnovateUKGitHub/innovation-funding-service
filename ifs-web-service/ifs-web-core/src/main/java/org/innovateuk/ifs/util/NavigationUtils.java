@@ -31,7 +31,8 @@ public class NavigationUtils {
                     STAKEHOLDER, "management/dashboard",
                     EXTERNAL_FINANCE, "management/dashboard",
                     KNOWLEDGE_TRANSFER_ADVISER, "assessment/assessor/dashboard",
-                    SUPPORTER, "assessment/supporter/dashboard"
+                    SUPPORTER, "assessment/supporter/dashboard",
+                    SUPER_ADMIN_USER, "management/dashboard"
             );
 
     @Value("${ifs.live.projects.landing.page.url}")

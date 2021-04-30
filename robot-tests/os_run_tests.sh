@@ -76,6 +76,12 @@ function startPybot() {
     else
       local rerunString=''
     fi
+    if [[ ${zapTest} -eq 1 ]]
+      then
+        local includeZapTags='--include ZAPTests'
+      else
+        local includeZapTags='--exclude ZAPTests'
+    fi
 
 
     python3 -m robot --xunit output-xunit.xml --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
@@ -92,6 +98,7 @@ function startPybot() {
     $includeBespokeTags \
     $excludeBespokeTags \
     $includeAtsTags \
+    $includeZapTags \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
@@ -193,9 +200,10 @@ parallel=0
 stopGrid=0
 noDeploy=0
 ats=0
+zapTest=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :n :a :w :d: :I: :E:" opt ; do
+while getopts ":p :q :h :t :r :c :n :a :w :d: :I: :E: :p" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -235,6 +243,9 @@ while getopts ":p :q :h :t :r :c :n :a :w :d: :I: :E:" opt ; do
         ;;
         a)
           ats=1
+        ;;
+        p)
+          zapTest=1
         ;;
         w)
           vnc=1
