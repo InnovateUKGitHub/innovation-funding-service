@@ -58,7 +58,7 @@ public class AssessmentController {
     @GetMapping("/state/{state}/assessment-period/{assessmentPeriodId}/count")
     public RestResult<Integer> countByStateAndAssessmentPeriod(
             @PathVariable("state") AssessmentState state,
-            @PathVariable("assessmentPeriodId") Long assessmentPeriodId) {
+            @PathVariable("assessmentPeriodId") long assessmentPeriodId) {
         return assessmentService.countByStateAndAssessmentPeriodId(state, assessmentPeriodId).toGetResponse();
     }
 
