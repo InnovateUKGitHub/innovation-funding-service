@@ -42,13 +42,15 @@ public class FundingLevelPercentageViewModelPopulator implements CompetitionSetu
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competition) {
         List<ResearchCategoryResource> allResearchCategories = categoryRestService.getResearchCategories().getSuccess();
 
-        List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess();
-        boolean hasFundingRulesData = maximums.stream().anyMatch(m -> m.getFundingRules() != null);
+        boolean dualFunding = competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle;
+        if (dualFunding) {
+            List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess();
+            dualFunding = maximums.stream().anyMatch(m -> m.getFundingRules() != null);
+        }
 
         return new FundingLevelPercentageViewModel(generalViewModel,
                 allResearchCategories.stream().filter(cat -> competition.getResearchCategories().contains(cat.getId())).collect(Collectors.toList()),
                 asList(OrganisationSize.values()),
-                hasFundingRulesData,
-                competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle);
+                dualFunding);
     }
 }

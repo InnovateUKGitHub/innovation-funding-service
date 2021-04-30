@@ -13,16 +13,14 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
     private final List<ResearchCategoryResource> categories;
     private final List<OrganisationSize> sizes;
     private final boolean dualFunding;
-    private final boolean hasFundingRulesData;
 
     public FundingLevelPercentageViewModel(
             GeneralSetupViewModel generalSetupViewModel,
-            List<ResearchCategoryResource> categories, List<OrganisationSize> sizes, boolean hasFundingRulesData,
+            List<ResearchCategoryResource> categories, List<OrganisationSize> sizes,
             boolean dualFunding) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.categories = categories;
         this.sizes = sizes;
-        this.hasFundingRulesData = hasFundingRulesData;
         this.dualFunding = dualFunding;
     }
 
@@ -49,7 +47,4 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
                  && !dualFunding;
     }
 
-    public boolean isHasFundingRulesData() {
-        return hasFundingRulesData;
-    }
 }
