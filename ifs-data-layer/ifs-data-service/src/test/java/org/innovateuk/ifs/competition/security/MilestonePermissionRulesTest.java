@@ -114,7 +114,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
             }
         });
 
-        verify(competitionRepository, times(4)).findById(competitionId);
+        verify(competitionRepository, times(5)).findById(competitionId);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
                 }
             });
 
-            verify(competitionRepository, times(4)).findById(competitionId);
+            verify(competitionRepository, times(5)).findById(competitionId);
             reset(competitionRepository);
         });
     }

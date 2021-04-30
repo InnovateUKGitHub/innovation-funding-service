@@ -44,8 +44,8 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentPeriodRepository.findByCompetitionId(competitionId))
                 .thenReturn(Collections.singletonList(assessmentPeriod));
 
-        when(assessmentPeriodMapper.mapToResource(Collections.singletonList(assessmentPeriod)))
-                .thenReturn(Collections.singletonList(newAssessmentPeriodResource().build()));
+        when(assessmentPeriodMapper.mapToResource(assessmentPeriod))
+                .thenReturn(newAssessmentPeriodResource().build());
 
         ServiceResult<List<AssessmentPeriodResource>> result = service.getAssessmentPeriodByCompetitionId(competitionId);
 
@@ -53,20 +53,5 @@ public class AssessmentPeriodServiceImplTest extends BaseServiceUnitTest<Assessm
 
         verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
         verify(assessmentPeriodMapper).mapToResource(assessmentPeriod);
-    }
-
-    @Test
-    public void getAssessmentPeriodByCompetitionId_returnEmpty() {
-        Long competitionId = 1L;
-
-        when(assessmentPeriodRepository.findByCompetitionId(competitionId))
-                .thenReturn(Collections.emptyList());
-
-        ServiceResult<List<AssessmentPeriodResource>> result = service.getAssessmentPeriodByCompetitionId(competitionId);
-
-        assertTrue(result.isSuccess());
-        assertTrue(result.getSuccess().isEmpty());
-
-        verify(assessmentPeriodRepository).findByCompetitionId(competitionId);
     }
 }

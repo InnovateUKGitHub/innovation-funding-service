@@ -34,6 +34,10 @@ public interface CompetitionService {
     @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can change the competition state to Assessment Closed")
     ServiceResult<Void> closeAssessment(long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('super_admin_user')")
+    @SecuredBySpring(value = "REOPEN_ASSESSMENT_PERIOD", description = "Super Admins can reopen the assessment period")
+    ServiceResult<Void> reopenAssessmentPeriod(long competitionId);
+
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can close assessments")
     ServiceResult<Void> closeAssessmentByAssessmentPeriod(long assessmentPeriodId);

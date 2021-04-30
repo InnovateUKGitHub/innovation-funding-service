@@ -10,10 +10,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -40,6 +38,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -53,6 +52,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
@@ -141,6 +143,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     competition.closeAssessment(ZonedDateTime.now(), assessmentPeriod);
                     return result.andOnSuccessReturnVoid();
                 });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> reopenAssessmentPeriod(long competitionId) {
+        CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource =
+                competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+                        .getSuccess();
+        if (!keyStatisticsResource.isCanManageFundingNotifications()) {
+            milestoneRepository.deleteByTypeAndCompetitionId(MilestoneType.ASSESSMENT_CLOSED, competitionId);
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error(COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD));
+        }
     }
 
     @Override

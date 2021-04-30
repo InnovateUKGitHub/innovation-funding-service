@@ -6,8 +6,8 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
@@ -89,8 +89,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Application application = newApplication().withCompetition(competition).build();
         Project project = newProject().withApplication(application).build();
         Stakeholder stakeholder = newStakeholder().withCompetition(competition).build();
-        UserResource stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
-        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource stakeholderResource = newUserResource().withRoleGlobal(Role.STAKEHOLDER).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         User user = newUser().withId(userResource.getId()).build();
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(user)
@@ -115,8 +115,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Application application = newApplication().withCompetition(competition).build();
         Project project = newProject().withApplication(application).build();
         ExternalFinance externalFinance = newCompetitionFinance().withCompetition(competition).build();
-        UserResource competitionFinanceResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
-        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource competitionFinanceResource = newUserResource().withRoleGlobal(Role.EXTERNAL_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         User user = newUser().withId(userResource.getId()).build();
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(user)
@@ -138,7 +138,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo() {
         Project project = newProject().build();
-        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         List<ProjectUser> projectUsers = newProjectUser()
                 .withProject(project)
                 .withRole(ProjectParticipantRole.PROJECT_MANAGER)
@@ -166,7 +166,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         ManageUserPageResource manageUserPageResource = new ManageUserPageResource();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.internalUsersCanViewEveryone(manageUserPageResource, user));
             } else {
                 assertFalse(rules.internalUsersCanViewEveryone(manageUserPageResource, user));
@@ -739,7 +739,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanEditInternalUser(userToEdit, user));
             } else {
                 assertFalse(rules.ifsAdminCanEditInternalUser(userToEdit, user));
@@ -753,7 +753,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
             } else {
                 assertFalse(rules.ifsAdminCanDeactivateUsers(userToDeactivate, user));
@@ -781,7 +781,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
             } else {
                 assertFalse(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
@@ -806,7 +806,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void systemMaintenanceUserCanUpdateUsersEmailAddresses() {
 
-        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemMaintenanceUser())) {
@@ -820,11 +820,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void supportCanUpdateExternalUsersEmailAddresses() {
 
-        UserResource externalUser = newUserResource().withRoleGlobal(APPLICANT).build();
-        UserResource internalUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+        UserResource externalUser = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource internalUser = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(SUPPORT)) {
+            if (user.hasAuthority(SUPPORT)) {
                 assertTrue(rules.supportCanUpdateExternalUsersEmailAddresses(externalUser, user));
                 assertFalse(rules.supportCanUpdateExternalUsersEmailAddresses(internalUser, user));
             } else {
@@ -837,10 +837,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void ifsAdminCanUpdateAllEmailAddresses() {
 
-        UserResource userResource = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.APPLICANT).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(IFS_ADMINISTRATOR)) {
+            if (user.hasAuthority(IFS_ADMINISTRATOR)) {
                 assertTrue(rules.ifsAdminCanUpdateAllEmailAddresses(userResource, user));
             } else {
                 assertFalse(rules.ifsAdminCanUpdateAllEmailAddresses(userResource, user));
@@ -851,11 +851,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void supportUserCanDeactivateExternalUsers() {
 
-        UserResource externalUser = newUserResource().withRoleGlobal(APPLICANT).build();
-        UserResource internalUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+        UserResource externalUser = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource internalUser = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(SUPPORT)) {
+            if (user.hasAuthority(SUPPORT)) {
                 assertTrue(rules.supportUserCanDeactivateExternalUsers(externalUser, user));
                 assertFalse(rules.supportUserCanDeactivateExternalUsers(internalUser, user));
             } else {
@@ -868,11 +868,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void supportUserCanReactivateExternalUsers() {
 
-        UserResource externalUser = newUserResource().withRoleGlobal(APPLICANT).build();
-        UserResource internalUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+        UserResource externalUser = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        UserResource internalUser = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(SUPPORT)) {
+            if (user.hasAuthority(SUPPORT)) {
                 assertTrue(rules.supportUserCanReactivateExternalUsers(externalUser, user));
                 assertFalse(rules.supportUserCanReactivateExternalUsers(internalUser, user));
             } else {
@@ -896,15 +896,15 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void isMultipleRoleDashboardUsersCanRequestApplicantRole() {
-        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
-        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
-        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
-        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), liveProjectsUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), Role.APPLICANT), assessorUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), Role.APPLICANT), stakeholderUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), Role.APPLICANT), monitoringOfficerUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), Role.APPLICANT), liveProjectsUser()));
     }
 
     @Test
     public void correctRolesCanGrantMonitoringOfficerRole() {
-        GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
+        GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), Role.MONITORING_OFFICER);
 
         assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, compAdminUser()));
         assertTrue(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantMonitoringOfficerRole, projectFinanceUser()));
@@ -915,7 +915,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void usersAllowedToGrantMonitoringOfficerRoleCannotGrantOtherRoles() {
-        GrantRoleCommand grantInnovationLeadRole = new GrantRoleCommand(assessorUser().getId(), INNOVATION_LEAD);
+        GrantRoleCommand grantInnovationLeadRole = new GrantRoleCommand(assessorUser().getId(), Role.INNOVATION_LEAD);
 
         assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, compAdminUser()));
         assertFalse(rules.isGrantingMonitoringOfficerRoleAndHasPermission(grantInnovationLeadRole, projectFinanceUser()));
@@ -927,13 +927,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void compAdminAndProjectFinanceCanViewAssessors() {
         UserPageResource userPageResourceWithOnlyAssessors = new UserPageResource();
-        userPageResourceWithOnlyAssessors.setContent(newUserResource().withRoleGlobal(ASSESSOR).build(1));
+        userPageResourceWithOnlyAssessors.setContent(newUserResource().withRoleGlobal(Role.ASSESSOR).build(1));
 
         UserPageResource userPageResourceWithNonAssessors = new UserPageResource();
-        userPageResourceWithNonAssessors.setContent(newUserResource().withRolesGlobal(singletonList(ASSESSOR), singletonList(APPLICANT)).build(2));
+        userPageResourceWithNonAssessors.setContent(newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR), singletonList(Role.APPLICANT)).build(2));
 
         allGlobalRoleUsers.forEach(u -> {
-                    if (u.hasAuthority(Authority.COMP_ADMIN)) {
+                    if (u.hasAuthority(COMP_ADMIN)) {
                         assertTrue(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
                         assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
                     } else {

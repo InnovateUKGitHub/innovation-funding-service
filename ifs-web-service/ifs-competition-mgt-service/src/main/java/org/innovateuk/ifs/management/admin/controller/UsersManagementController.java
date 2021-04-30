@@ -9,7 +9,6 @@ import org.innovateuk.ifs.management.admin.form.UserManagementFilterForm;
 import org.innovateuk.ifs.management.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.ManageUserPageResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -55,7 +54,7 @@ public class UsersManagementController extends AsyncAdaptor {
                              @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
                              @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
                              @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "active", filterForm.getFilter(), page, size, user.hasRole(Role.IFS_ADMINISTRATOR));
+        return view(model, "active", filterForm.getFilter(), page, size, user.hasAuthority(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
@@ -68,13 +67,13 @@ public class UsersManagementController extends AsyncAdaptor {
                                @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
                                @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
                                @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
-        return view(model, "inactive", filterForm.getFilter(), page, size, user.hasRole(IFS_ADMINISTRATOR));
+        return view(model, "inactive", filterForm.getFilter(), page, size, user.hasAuthority(IFS_ADMINISTRATOR));
     }
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewPending() method",
             description = "IFS administrators can view pending user invites")
-    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/pending")
     public String viewPendingUsers(Model model,
                               HttpServletRequest request,

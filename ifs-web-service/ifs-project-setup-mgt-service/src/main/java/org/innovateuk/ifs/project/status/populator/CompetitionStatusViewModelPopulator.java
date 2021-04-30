@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.user.resource.Role.*;
-
 /**
  * This class represents a populated CompetitionStatusViewModel.
  */
@@ -61,8 +59,8 @@ public class CompetitionStatusViewModelPopulator {
                 applicationSearchString,
                 internalProjectSetupRows,
                 new PaginationViewModel(projectStatusResources),
-                user.hasRole(EXTERNAL_FINANCE),
-                user.hasRole(IFS_ADMINISTRATOR));
+                user.hasAuthority(Authority.EXTERNAL_FINANCE),
+                user.hasAuthority(Authority.IFS_ADMINISTRATOR));
     }
 
 }

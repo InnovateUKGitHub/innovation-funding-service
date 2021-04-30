@@ -5,18 +5,22 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
+import org.innovateuk.ifs.finance.resource.cost.IndirectCost;
 import org.innovateuk.ifs.finance.resource.cost.Vat;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Map;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.VATCategoryBuilder.newVATCategory;
@@ -67,6 +71,28 @@ public class BaseFinanceResourceTest {
         BigDecimal grantClaimPercentage = baseFinanceResource.getGrantClaimPercentage();
 
         assertEquals(grantClaimPercentage, BigDecimal.valueOf(30));
+    }
+
+    @Test
+    public void getTotalFundingSoughtNonFec() {
+
+
+        IndirectCost indirectCost = new IndirectCost(null, null, new BigInteger("100"));
+        Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = asMap(
+                FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().withCosts(
+                        Collections.singletonList(indirectCost)).withTotal(BigDecimal.valueOf(100)).build(),
+                FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
+                        newGrantClaimPercentage().
+                                withGrantClaimPercentage(BigDecimal.valueOf(50)).
+                                build(1)).
+                        withTotal(BigDecimal.valueOf(50)).
+                        build());
+
+        baseFinanceResource.setFecModelEnabled(false);
+        baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
+
+        assertEquals(BigDecimal.valueOf(100), baseFinanceResource.getTotal());
+        assertEquals(BigDecimal.valueOf(100), baseFinanceResource.getTotalFundingSought());
     }
 
     @Test

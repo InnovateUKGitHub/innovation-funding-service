@@ -13,21 +13,21 @@ public class ApplicationAssessmentSummaryServiceSecurityTest extends
         BaseServiceSecurityTest<ApplicationAssessmentSummaryService> {
 
     @Test
-    public void testGetAvailableAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+    public void getAvailableAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getAvailableAssessors(1L, 0, 20, "", Sort.ASSESSOR), COMP_ADMIN, PROJECT_FINANCE
         );
     }
 
     @Test
-    public void testGetAssignedAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+    public void getAssignedAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getAssignedAssessors(1L), COMP_ADMIN, PROJECT_FINANCE
         );
     }
 
     @Test
-    public void testGetApplicationAssessmentSummaryIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+    public void getApplicationAssessmentSummaryIfGlobalCompAdminOrProjectFinanceRole() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getApplicationAssessmentSummary(1L), COMP_ADMIN,
                 PROJECT_FINANCE);
     }

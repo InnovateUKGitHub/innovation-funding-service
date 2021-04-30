@@ -19,7 +19,7 @@ public interface FormInputRepository extends PagingAndSortingRepository<FormInpu
     FormInput findByQuestionIdAndScopeAndType(Long questionId, FormInputScope scope, FormInputType type);
 
     //Return only active form inputs for FormInputService.
-    List<FormInput> findByCompetitionIdAndActiveTrueOrderByPriorityAsc(Long competitionId);
+    List<FormInput> findByCompetitionIdAndActiveTrueOrderByPriorityAscIdAsc(Long competitionId);
     List<FormInput> findByCompetitionIdAndScopeAndActiveTrueOrderByPriorityAsc(Long competitionId, FormInputScope scope);
     List<FormInput> findByQuestionIdAndActiveTrueOrderByPriorityAsc(Long questionId);
     List<FormInput> findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(Long questionId, FormInputScope scope);

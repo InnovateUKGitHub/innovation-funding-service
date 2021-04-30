@@ -5,6 +5,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8851  Always open competitions: create assessment periods
 ...
+...               IFS-9504  Always open assessments: applicants cannot reopen a submitted application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -24,8 +26,9 @@ ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
 ${webTestAssessor}                 Paul Plum
 ${webTestAssessorEmailAddress}     paul.plum@gmail.com
-${briefingErrormessage}            Assessor briefing:you must enter a valid date.
-${deadlineErrormessage}            Assessment deadline: you must enter a date later than the previous milestone.
+${briefingErrormessage}            1. Assessor Briefing: Please enter a valid date.
+${deadlineErrormessage}            2. Acceptance deadline: Please enter a valid date.
+${assessmentErrorMessage}          3. Assessment deadline: Please enter a valid date.
 
 *** Test Cases ***
 Send the email invite to the assessor for the competition using new content
@@ -48,7 +51,7 @@ Lead applicant completes the application and checks the dashboard content before
     Then the user checks the status of the application after completion
 
 Lead applicant submits the application and checks the dashboard content and the guidance after submission
-    [Documentation]  IFS-8850
+    [Documentation]  IFS-8850  IFS-9504
     Given the user clicks the button/link                                  link = ${applicationName}
     When the user clicks the button/link                                   link = Review and submit
     And the user clicks the button/link                                    jQuery = button:contains("Submit application")
@@ -63,17 +66,13 @@ Lead applicant checks the dashboard content and the guidance after an assessor i
 
 Comp admin updates the assessment period
     [Documentation]  IFS-8851
-    Given Log in as a different user                       &{Comp_admin1_credentials}
-    And the user clicks the button/link                    link = ${webTestCompName}
-    And the user clicks the button/link                    link = Manage assessments
-    And the user clicks the button/link                    link = Manage assessment period
-    When the user enters text to a text field              assessmentPeriods1.milestoneEntries6. Assessor accepts.day  55
-    And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
-    Then the user should see a field and summary error     ${briefingErrormessage}
-    And the user enters text to a text field               assessmentPeriods3.milestoneEntries7. Assessor deadline.year  1999
-    And the user clicks the button/link                    jQuery = button:contains('Save and return to manage assessments')
-    And the user should see a field and summary error      ${deadlineErrormessage}
-    And the user should see the element                    jQuery = td:contains(20/01/2021)
+    Given Log in as a different user                           &{Comp_admin1_credentials}
+    When the user clicks the button/link                       link = ${webTestCompName}
+    And the user clicks the button/link                        link = Manage assessments
+    And the user clicks the button/link                        link = Manage assessment period
+    Then the user checks the milestone validation messages
+    And the user clicks the button/link                        link = Back to manage assessments
+    And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 *** Keywords ***
 Custom suite setup
@@ -127,12 +126,12 @@ the user checks the status of the application after completion
     the user should not see the element     jQuery = li:contains("${applicationName}") .status:contains("days left")
 
 the user checks the status of the application after submission
-    the user should see the element     jQuery = h2:contains("Application submitted")
-    the user should see the element     jQuery = a:contains("Reopen application")
-    the user should see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
-    the user should see the element     jQuery = p:contains("You will be asked to set up your project.")
-    the user clicks the button/link     link = Back to applications
-    the user should see the element     jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Awaiting assessment") + .msg-progress:contains("Submitted") a:contains("Reopen")
+    the user should see the element         jQuery = h2:contains("Application submitted")
+    the user should not see the element     jQuery = a:contains("Reopen application")
+    the user should not see the element     jQuery = p:contains("If this application is reopened, it must be resubmitted before we can assess it.")
+    the user should see the element         jQuery = p:contains("You will be asked to set up your project.")
+    the user clicks the button/link         link = Back to applications
+    the user should see the element         jQuery = li:contains("${applicationName}") .msg-deadline-waiting:contains("Decision pending") + .msg-progress:contains("Submitted")
 
 the user checks the status of the application in assessment
     the user should see the element         jQuery = h2:contains("Application submitted")
@@ -142,3 +141,13 @@ the user checks the status of the application in assessment
     the user clicks the button/link         link = Back to applications
     the user should see the element         jQuery = li:contains("${webTestAppName}") .msg-deadline-waiting:contains("Decision pending") + .msg-progress:contains("Submitted")
     the user should not see the element     jQuery = li:contains("${webTestAppName}") a:contains("Reopen")
+
+the user checks the milestone validation messages
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_BRIEFING.day  55
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_ACCEPTS.month  13
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.year  1999
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.month  15
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+    the user should see a summary error      ${briefingErrormessage}
+    the user should see a summary error      ${deadlineErrormessage}
+    the user should see a summary error      ${assessmentErrorMessage}

@@ -105,5 +105,4 @@ public class ActivityLogResource {
     public boolean isIfsAdmin() {
         return getAuthoredByRoles().contains(IFS_ADMINISTRATOR);
     }
-
 }

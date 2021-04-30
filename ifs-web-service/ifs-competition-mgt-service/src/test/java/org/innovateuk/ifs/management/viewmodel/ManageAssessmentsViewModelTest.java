@@ -28,7 +28,7 @@ public class ManageAssessmentsViewModelTest {
     private ManageAssessmentsViewModel manageAssessmentsViewModel;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(expectedCompetitionId)
                 .withName(expectedCompetitionName)
@@ -42,6 +42,7 @@ public class ManageAssessmentsViewModelTest {
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
         manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
+
     }
 
     @Test
