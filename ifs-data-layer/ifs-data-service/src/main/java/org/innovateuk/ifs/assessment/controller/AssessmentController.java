@@ -59,7 +59,7 @@ public class AssessmentController {
     public RestResult<Integer> countByStateAndAssessmentPeriod(
             @PathVariable("state") AssessmentState state,
             @PathVariable("assessmentPeriodId") Long assessmentPeriodId) {
-        return assessmentService.countByStateAndAssessmentPeriod(state, assessmentPeriodId).toGetResponse();
+        return assessmentService.countByStateAndAssessmentPeriodId(state, assessmentPeriodId).toGetResponse();
     }
 
 
