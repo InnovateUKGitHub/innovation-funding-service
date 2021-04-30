@@ -29,9 +29,9 @@ ${webTestCompName}                 Always open competition
 ${applicationName}                 Always open application
 ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
-${briefingErrormessage}            1. Assessor Briefing: Please enter a valid date.
-${deadlineErrormessage}            2. Acceptance deadline: Please enter a valid date.
-${assessmentErrorMessage}          3. Assessment deadline: Please enter a valid date.
+${briefingErrormessage}            1. Assessor briefing: Please enter a valid date.
+${deadlineErrormessage}            2. Assessor accepts: Please enter a valid date.
+${assessmentErrorMessage}          3. Assessor deadline: Please enter a valid date.
 ${webTestAssessor}                 Angel Witt
 ${webTestAssessorEmailAddress}     angel.witt@gmail.com
 
