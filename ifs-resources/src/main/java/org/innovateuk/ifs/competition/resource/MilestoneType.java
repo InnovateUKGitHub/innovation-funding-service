@@ -50,11 +50,11 @@ public enum MilestoneType {
         if (this == SUBMISSION_DATE) {
             return getMilestoneDescription().replaceAll("[0-9]\\.", "2.");
         } else if (this == ASSESSOR_BRIEFING) {
-            return "1. Assessor Briefing";
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "1.");
         } else if (this == ASSESSOR_ACCEPTS) {
-            return "2. Acceptance deadline";
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "2.");
         } else if (this == ASSESSOR_DEADLINE) {
-            return "3. Assessment deadline";
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "3.");
         }
         return milestoneDescription;
     }

@@ -49,6 +49,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         loginCompAdmin();
     }
 
+
     @Test
     public void testGetAllMilestonesByCompetitionId() throws Exception {
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllMilestonesByCompetitionId(COMPETITION_ID_VALID);

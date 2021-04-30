@@ -3,9 +3,9 @@ package org.innovateuk.ifs.management.competition.setup.core.form;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.text.WordUtils;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.thymeleaf.util.StringUtils;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -113,6 +113,10 @@ public class GenericMilestoneRowForm {
         return MilestoneType.OPEN_DATE.equals(milestoneType);
     }
 
+    public boolean isFirstAssessmentPeriodMilestone() {
+        return MilestoneType.ASSESSOR_BRIEFING.equals(milestoneType);
+    }
+
     public ZonedDateTime getDate() {
         return date;
     }
@@ -152,7 +156,7 @@ public class GenericMilestoneRowForm {
         }
         else {
             try {
-                dayOfWeek = WordUtils.capitalize(dayName.toLowerCase());
+                dayOfWeek = StringUtils.capitalize(dayName.toLowerCase());
             } catch (Exception e) {
                 LOG.trace(e);
             }

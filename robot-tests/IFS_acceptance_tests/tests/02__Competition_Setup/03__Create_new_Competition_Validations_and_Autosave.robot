@@ -35,6 +35,10 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-8848 Always open competitions: comp setup milestones
 ...
+...               IFS-8851 Always open competitions: create assessment periods
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -149,7 +153,7 @@ Project eligibility client-side validations
     And the user cannot see a validation error in the page
 
 Milestones: Server side validations, submission time is default
-    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650  IFS-8847  IFS-8848
+    [Documentation]  INFUND-2993  INFUND-7632  IFS-4650  IFS-8851  IFS-8847  IFS-8848
     [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link                         link = Milestones

@@ -13,6 +13,8 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...
 ...               IFS-8848  Always open competitions: new comp setup configuration
 ...
+...               IFS-8851 Always open competitions: create assessment periods
+...
 Suite Setup       Connect to Database  @{database}
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -32,7 +34,7 @@ Create new non-IFS competition by proj Finance
     Then the user should see the element    link = No competition title defined
 
 Validation errors on non-IFS competition details
-    [Documentation]    INFUND-7964   IFS-8848
+    [Documentation]    INFUND-7964  IFS-8851   IFS-8848
     [Tags]
     Given log in as a different user                       &{Comp_admin1_credentials}
     And the user navigates to the Non IFS competitions tab

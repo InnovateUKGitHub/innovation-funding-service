@@ -7,6 +7,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8848  Always open competitions: comp setup milestones
 ...
+...               IFS-8851  Always open competitions: create assessment periods
+...
 ...               IFS-9504  Always open assessments: applicants cannot reopen a submitted application
 ...
 Suite Setup       Custom Suite Setup
@@ -29,6 +31,9 @@ ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
 ${webTestAssessor}                 Paul Plum
 ${webTestAssessorEmailAddress}     paul.plum@gmail.com
+${briefingErrormessage}            1. Assessor Briefing: Please enter a valid date.
+${deadlineErrormessage}            2. Acceptance deadline: Please enter a valid date.
+${assessmentErrorMessage}          3. Assessment deadline: Please enter a valid date.
 
 *** Test Cases ***
 the user fills in milestones without a submission date
@@ -92,6 +97,16 @@ Lead applicant checks the dashboard content and the guidance after an assessor i
     And the user clicks the application tile if displayed
     When the user clicks the button/link                                link = ${webTestAppName}
     Then the user checks the status of the application in assessment
+
+Comp admin updates the assessment period
+    [Documentation]  IFS-8851
+    Given Log in as a different user                           &{Comp_admin1_credentials}
+    When the user clicks the button/link                       link = ${webTestCompName}
+    And the user clicks the button/link                        link = Manage assessments
+    And the user clicks the button/link                        link = Manage assessment period
+    Then the user checks the milestone validation messages
+    And the user clicks the button/link                        link = Back to manage assessments
+    And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 *** Keywords ***
 Custom suite setup
@@ -194,3 +209,13 @@ the user check for valid content on front end
     the user should see the element     jQuery = li:contains("There is no submission deadline") strong:contains("Competition closes:")
     the user clicks the button/link     id = tab_dates
     the user should see the element     jQuery = dt:contains("No submission deadline") + dd:contains("This is open-ended competition and applications can be submitted at any time.")
+
+the user checks the milestone validation messages
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_BRIEFING.day  55
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_ACCEPTS.month  13
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.year  1999
+    the user enters text to a text field     assessmentPeriods2.milestoneEntriesASSESSOR_DEADLINE.month  15
+    the user clicks the button/link          jQuery = button:contains('Save and return to manage assessments')
+    the user should see a summary error      ${briefingErrormessage}
+    the user should see a summary error      ${deadlineErrormessage}
+    the user should see a summary error      ${assessmentErrorMessage}
