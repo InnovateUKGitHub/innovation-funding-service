@@ -17,6 +17,7 @@ public class ManageAssessorsViewModel {
     private final String assessmentPeriodName;
     private final List<ManageAssessorsRowViewModel> assessors;
     private final boolean inAssessment;
+    private final boolean alwaysOpen;
     private final List<InnovationSectorResource> innovationSectors;
     private final Pagination pagination;
 
@@ -26,6 +27,7 @@ public class ManageAssessorsViewModel {
                                     String assessmentPeriodName,
                                     List<ManageAssessorsRowViewModel> assessors,
                                     boolean inAssessment,
+                                    boolean alwaysOpen,
                                     List<InnovationSectorResource> innovationSectors,
                                     Pagination pagination) {
         this.competitionId = competitionId;
@@ -34,6 +36,7 @@ public class ManageAssessorsViewModel {
         this.assessmentPeriodName = assessmentPeriodName;
         this.assessors = assessors;
         this.inAssessment = inAssessment;
+        this.alwaysOpen = alwaysOpen;
         this.innovationSectors = innovationSectors;
         this.pagination = pagination;
     }
@@ -66,6 +69,10 @@ public class ManageAssessorsViewModel {
         return inAssessment;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
     public Pagination getPagination() {
         return pagination;
     }
@@ -85,6 +92,7 @@ public class ManageAssessorsViewModel {
         return new EqualsBuilder()
                 .append(competitionId, that.competitionId)
                 .append(inAssessment, that.inAssessment)
+                .append(alwaysOpen, that.alwaysOpen)
                 .append(competitionName, that.competitionName)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(assessors, that.assessors)
@@ -102,6 +110,7 @@ public class ManageAssessorsViewModel {
                 .append(assessmentPeriodId)
                 .append(assessors)
                 .append(inAssessment)
+                .append(alwaysOpen)
                 .append(innovationSectors)
                 .append(pagination)
                 .toHashCode();

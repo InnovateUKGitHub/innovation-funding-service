@@ -34,6 +34,7 @@ public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPop
                 assessmentPeriodName,
                 simpleMap(assessorCounts.getContent(), this::getRowViewModel),
                 competition.getCompetitionStatus() == IN_ASSESSMENT,
+                competition.isAlwaysOpen(),
                 categoryRestService.getInnovationSectors().getSuccess(),
                 new Pagination(assessorCounts));
     }
