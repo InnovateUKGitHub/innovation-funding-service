@@ -144,10 +144,11 @@ the user fills in the CS funding eligibility
     ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
     the user clicks the button/link       jQuery = button:contains("Done")
     Run Keyword If  "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
-    ...  ELSE IF   "${fundingRule}" == "STATE_AID"           run keywords                         the user fills in maximum funding level percentage
+    ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'true'           the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+    ...  ELSE IF   "${fundingRule}" == "STATE_AID" and '${researchCategory}' == 'false'          run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
-    ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                         the user fills in maximum funding level percentage
+    ...  ELSE IF    '${researchCategory}' == 'false'         run keywords                        the user fills in maximum funding level percentage
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                     AND              the user fills in maximum funding level percentage for state aid
     ...                                     AND              the user clicks the button/link     jQuery = button:contains("Done")
@@ -756,6 +757,3 @@ the user completes application submission page
     the user should see the element       jQuery = p:contains("${isOpenComp}") strong:contains("Will this be an open-ended competition?")
     the user should see the element       jQuery = button:contains("Edit")
     the user clicks the button/link       jQuery = span:contains("Milestones")
-
-
-

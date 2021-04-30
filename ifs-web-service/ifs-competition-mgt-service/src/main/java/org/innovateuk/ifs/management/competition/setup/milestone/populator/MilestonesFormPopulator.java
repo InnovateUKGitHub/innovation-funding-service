@@ -62,7 +62,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return !competitionResource.isSetupAndLive() || milestone.getDate().isAfter(ZonedDateTime.now());
+        return !competitionResource.isSetupAndLive() || milestone.getDate() == null || milestone.getDate().isAfter(ZonedDateTime.now());
     }
 }
 
