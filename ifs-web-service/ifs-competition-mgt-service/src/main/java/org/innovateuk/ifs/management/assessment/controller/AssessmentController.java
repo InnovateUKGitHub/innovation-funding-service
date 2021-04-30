@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller for the Manage Assessments dashboard.
@@ -23,9 +24,10 @@ public class AssessmentController {
     private ManageAssessmentsModelPopulator manageAssessmentsModelPopulator;
 
     @GetMapping
-    public String manageAssessments(@PathVariable("competitionId") long competitionId, Model model) {
-        model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId));
-
+    public String manageAssessments(@PathVariable("competitionId") long competitionId,
+                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                    Model model) {
+        model.addAttribute("model", manageAssessmentsModelPopulator.populateModel(competitionId, page - 1));
         return "competition/manage-assessments";
     }
 }

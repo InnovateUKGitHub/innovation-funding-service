@@ -33,6 +33,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-6775 Initial details type ahead
 ...
+...               IFS-8851 Always open competitions: create assessment periods
+...
 ...               IFS-8847 Always open competitions: new comp setup configuration
 ...
 Suite Setup       Custom suite setup
@@ -149,7 +151,7 @@ Project eligibility client-side validations
     And the user cannot see a validation error in the page
 
 Milestones: Server side validations, submission time is default
-    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650  IFS-8847
+    [Documentation]  INFUND-2993  INFUND-7632  IFS-4650  IFS-8851  IFS-8847
     [Tags]
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link                         link = Milestones
@@ -162,7 +164,7 @@ Milestones: Server side validations, submission time is default
     And the user fills the milestones with invalid data
     And the user clicks the button/link                           jQuery = button:contains(Done)
     Then Validation summary should be visible
-    Then the user should see the text in the element              jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
+    Then the user should see the text in the element              jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  Midday
     [Teardown]  the user clicks the button/link                   link = Back to competition details
 
 Milestones: Client side validations, submission time is non-default

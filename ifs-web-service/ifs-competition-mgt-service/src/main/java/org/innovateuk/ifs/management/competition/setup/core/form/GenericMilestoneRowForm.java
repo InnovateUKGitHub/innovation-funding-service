@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.thymeleaf.util.StringUtils;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -112,6 +113,10 @@ public class GenericMilestoneRowForm {
         return MilestoneType.OPEN_DATE.equals(milestoneType);
     }
 
+    public boolean isFirstAssessmentPeriodMilestone() {
+        return MilestoneType.ASSESSOR_BRIEFING.equals(milestoneType);
+    }
+
     public ZonedDateTime getDate() {
         return date;
     }
@@ -151,7 +156,7 @@ public class GenericMilestoneRowForm {
         }
         else {
             try {
-                dayOfWeek = dayName.substring(0, 1) + dayName.substring(1, 3).toLowerCase();
+                dayOfWeek = StringUtils.capitalize(dayName.toLowerCase());
             } catch (Exception e) {
                 LOG.trace(e);
             }

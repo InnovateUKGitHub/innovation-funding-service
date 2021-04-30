@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <PageableResource> the resource type that is being paginated.
  */
-public abstract class PageResource<PageableResource> {
+public class PageResource<PageableResource> {
 
     /**
      * The total number of elements across all pages.
