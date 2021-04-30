@@ -65,7 +65,6 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -211,7 +210,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withInnovationArea(innovationAreaResource)
                 .build();
 
-        when(profileRepository.findById(anyLong())).thenReturn(of(newProfile().build()));
+        when(profileRepository.findById(anyLong())).thenReturn(Optional.of(newProfile().build()));
         when(innovationAreaMapper.mapToDomain(innovationAreaResource)).thenReturn(newInnovationArea().build());
 
         when(assessmentInviteService.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
@@ -229,7 +228,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         when(registrationService.activateAssessorAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(assessmentInviteService.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
-        when(userRepository.findById(createdUserResource.getId())).thenReturn(of(createdUser));
+        when(userRepository.findById(createdUserResource.getId())).thenReturn(Optional.of(createdUser));
         when(assessmentParticipantRepository.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
@@ -435,7 +434,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         long assessorId = 7L;
         long profileId = 11L;
 
-        Optional<User> user = of(
+        Optional<User> user = Optional.of(
                 newUser()
                         .withProfileId(profileId)
                         .build()
@@ -446,7 +445,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ProfileResource profileResource = newProfileResource().build();
 
         when(userRepository.findById(assessorId)).thenReturn(user);
-        when(profileRepository.findById(profileId)).thenReturn(of(profile));
+        when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(userMapper.mapToResource(user.get())).thenReturn(userResource);
         when(assessorProfileMapper.mapToResource(profile)).thenReturn(profileResource);
 
@@ -536,9 +535,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
         );
 
-        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
-        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(Optional.of(assessmentPeriod));
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(true);
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(true);
 
@@ -607,9 +606,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
         );
 
-        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
-        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(Optional.of(assessmentPeriod));
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(true);
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(true);
 
@@ -680,9 +679,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
         competition.getMilestones().forEach(m -> m.setAssessmentPeriod(assessmentPeriod));
 
-        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
-        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(Optional.of(assessmentPeriod));
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(true);
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(false);
 
@@ -735,9 +734,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
         competition.getMilestones().forEach(m -> m.setAssessmentPeriod(assessmentPeriod));
 
-        when(competitionRepository.findById(competition.getId())).thenReturn(of(competition));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessmentPeriodRepository.findByCompetitionId(competition.getId())).thenReturn(asList(assessmentPeriod));
-        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(of(assessmentPeriod));
+        when(assessmentPeriodRepository.findById(assessmentPeriod.getId())).thenReturn(Optional.of(assessmentPeriod));
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(0).getAssessments().get(0)))).thenReturn(false);
         when(assessmentWorkflowHandler.notify(same(assessmentPeriod.getApplications().get(1).getAssessments().get(0)))).thenReturn(false);
 
