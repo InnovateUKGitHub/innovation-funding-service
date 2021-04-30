@@ -10,7 +10,6 @@ import org.thymeleaf.util.StringUtils;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.Set;
