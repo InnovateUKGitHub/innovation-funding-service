@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
@@ -164,12 +162,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> notifyAssessors(long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(competition -> competition.getAssessmentPeriods().get(0).getId())
-                .andOnSuccess(assessmentPeriodId -> notifyAssessorsByAssessmentPeriod(assessmentPeriodId));
+                .andOnSuccess(assessmentPeriodId -> notifyAssessorsByAssessmentPeriodId(assessmentPeriodId));
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> notifyAssessorsByAssessmentPeriod(long id) {
+    public ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long id) {
         return find(assessmentPeriodRepository.findById(id), notFoundError(Application.class, id))
                 .andOnSuccess(assessmentPeriod -> {
                     assessmentPeriod.getCompetition().notifyAssessors(ZonedDateTime.now(), assessmentPeriod);

@@ -48,7 +48,7 @@ public interface CompetitionService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
-    ServiceResult<Void> notifyAssessorsByAssessmentPeriod(long id);
+    ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "RELEASE_FEEDBACK", description = "Comp Admins can change the competition state to Feedback Released")
