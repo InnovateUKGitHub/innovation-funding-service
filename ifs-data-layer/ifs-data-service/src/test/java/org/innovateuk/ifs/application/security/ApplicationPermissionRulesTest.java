@@ -24,7 +24,7 @@ import org.mockito.Mock;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
+import static com.beust.jcommander.internal.Lists.newArrayList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -204,7 +204,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void internalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -218,7 +218,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                 } else {
 
-                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
+                    if (newArrayList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
                         assertTrue(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     } else {
                         assertFalse(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
@@ -231,7 +231,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -261,17 +261,16 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
-
                 Competition competition = newCompetition()
                         .withAssessmentPeriods(
-                                asList(newAssessmentPeriod()
-                                        .withMilestones(new ArrayList(asList(
-                                                newMilestone().build())))
-                                        .build()))
+                                newAssessmentPeriod()
+                                        .withMilestones(
+                                                newMilestone().build(1))
+                                        .build(1))
                         .withCompetitionStatus(competitionStatus).build();
                 ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
 
@@ -304,7 +303,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         List<UserResource> allUsersToTests = combineLists(allGlobalRoleUsers, leadApplicantUser, collaboratorUser, assessorUser);
 
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             application.setCompetitionStatus(competitionStatus);
 
@@ -367,7 +366,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void userCanCreateNewApplication() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -385,9 +384,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void markAsIneligibleAllowedBeforeAssessment() {
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
             Competition competition = newCompetition()
-                    .withAssessmentPeriods(asList(newAssessmentPeriod().withMilestones(new ArrayList(asList(newMilestone().build()))).build()))
+                    .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
                     .withCompetitionStatus(competitionStatus)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
