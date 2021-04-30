@@ -105,7 +105,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(long competitionId);
 
-    List<Application> findByAssessmentPeriodId(long competitionId);
+    List<Application> findByAssessmentPeriodId(long assessmentPeriodId);
 
     Optional<Application> findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
