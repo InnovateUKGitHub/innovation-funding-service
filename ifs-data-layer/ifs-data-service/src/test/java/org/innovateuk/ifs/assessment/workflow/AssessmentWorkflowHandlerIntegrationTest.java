@@ -21,7 +21,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -183,7 +182,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                             .withCompetition(
                                     newCompetition()
                                             .withCompetitionStatus(CLOSED)
-                                            .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                                            .withAssessmentPeriods(newAssessmentPeriod().build(1))
                                             .withAssessorsNotifiedDate(now().minusDays(10L))
                                             .withAssessmentClosedDate(now().plusDays(10L))
                                             .build()
@@ -205,7 +204,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                         .withCompetition(
                                 newCompetition()
                                         .withCompetitionStatus(CLOSED)
-                                        .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
+                                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                                         .withAssessorsNotifiedDate(now().plusDays(10L))
                                         .withAssessmentClosedDate(now().plusDays(20L))
                                         .build()

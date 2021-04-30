@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.domain;
 
-import com.google.common.collect.Lists;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
