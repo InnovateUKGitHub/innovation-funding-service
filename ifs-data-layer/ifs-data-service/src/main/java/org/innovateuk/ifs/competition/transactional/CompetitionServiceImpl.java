@@ -132,7 +132,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     Competition competition = assessmentPeriod.getCompetition();
                     ServiceResult<?> result = serviceSuccess();
                     if (competition.isKtp()) {
-                        result = aggregate(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competition.getId(), newArrayList(SUBMITTED))
+                        result = aggregate(applicationRepository.findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(competition.getId(), assessmentPeriodId, newArrayList(SUBMITTED))
                                 .stream()
                                 .map(Application::getId)
                                 .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
