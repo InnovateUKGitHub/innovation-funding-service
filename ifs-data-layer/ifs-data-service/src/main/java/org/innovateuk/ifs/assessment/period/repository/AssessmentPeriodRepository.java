@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.assessment.period.repository;
 
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -15,9 +13,7 @@ import java.util.Optional;
  */
 public interface AssessmentPeriodRepository extends CrudRepository<AssessmentPeriod, Long> {
 
-    List<AssessmentPeriod> findByCompetitionId(long competitionId);
-
-    Page<AssessmentPeriod> findByCompetitionId(long competitionId, Pageable pageable);
+    List<AssessmentPeriod> findByCompetitionId(Long competitionId);
 
     Optional<AssessmentPeriod> findFirstByCompetitionId(Long competitionId);
 

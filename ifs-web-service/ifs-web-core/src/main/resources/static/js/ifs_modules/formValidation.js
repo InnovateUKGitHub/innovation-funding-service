@@ -657,7 +657,7 @@ IFS.core.formValidation = (function () {
           // adding day of week which is not really validation
           // so could be better of somewhere else
           if (addWeekDay.length) {
-            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
             var weekday = days[date.getDay()]
             addWeekDay.text(weekday)
           }

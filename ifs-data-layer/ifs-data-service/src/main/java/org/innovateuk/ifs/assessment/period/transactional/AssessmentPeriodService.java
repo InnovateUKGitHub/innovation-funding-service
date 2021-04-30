@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.assessment.period.transactional;
 
-import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.crud.IfsCrudService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -47,8 +45,5 @@ public interface AssessmentPeriodService extends IfsCrudService<AssessmentPeriod
     @PreAuthorize("hasAuthority('comp_admin')")
     @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
             description = "Only Comp Admins are able to get the assessment periods for the given competitions")
-    ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId);
-
-
-    ServiceResult<PageResource<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId, Pageable page);
+    ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(Long competitionId);
 }

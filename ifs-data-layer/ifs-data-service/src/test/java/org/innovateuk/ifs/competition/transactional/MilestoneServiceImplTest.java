@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
-import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -96,6 +96,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         ServiceResult<Void> result = service.updateMilestones(milestones);
 
         assertTrue(result.isSuccess());
+        verify(milestoneRepository, times(1)).saveAll(milestonesToSave);
     }
 
     @Test

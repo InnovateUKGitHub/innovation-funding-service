@@ -12,17 +12,13 @@
     margin: 0 0 5px;
 
     > [class^="column"] {
-      padding: 0;
+      padding:0;
     }
 
     h3 {
       font-weight: bold;
     }
   }
-}
-
-.past-date {
-  @extend %icon-tick;
 }
 
 .info-area {

@@ -52,9 +52,14 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     }
 
     @Override
+    public RestResult<Void> resetMilestone(MilestoneResource milestone) {
+        milestone.setDate(null);
+        return putWithRestResult(milestonesRestURL + "/", milestone, Void.class);
+    }
+
+    @Override
     public RestResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
         return putWithRestResult(milestonesRestURL + "/competition/" + competitionId +
                 "/completion-stage?completionStage=" + completionStage.name(), Void.class);
     }
-
 }
