@@ -170,14 +170,14 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         return getCompetition(competitionId).andOnSuccess(competition-> {
             List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
             return assessmentPeriods.size() == 1 ?
-                    notifyAssessorsByAssessmentPeriod(assessmentPeriods.get(0).getId()) :
+                    notifyAssessorsByAssessmentPeriodId(assessmentPeriods.get(0).getId()) :
                     serviceFailure(CANNONT_NOTIFY_BY_COMPETITION_WHEN_MULTIPLE_ASSESSMENT_PERIODS);
         });
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> notifyAssessorsByAssessmentPeriod(long id) {
+    public ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long id) {
         return find(assessmentPeriodRepository.findById(id), notFoundError(Assessment.class, id))
                 .andOnSuccess(assessmentPeriod -> {
                     List<Assessment> assessmentsToNotify = assessmentPeriod.getApplications()

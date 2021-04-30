@@ -44,7 +44,7 @@ public class AssessorController {
     @PutMapping("/notify-assessors/assessment-period/{assessmentPeriodId}")
     public RestResult<Void> notifyAssessorsByAssessmentPeriod(@PathVariable("assessmentPeriodId") long assessmentPeriodId) {
         return competitionService.notifyAssessorsByAssessmentPeriodId(assessmentPeriodId)
-                .andOnSuccess(() -> assessorService.notifyAssessorsByAssessmentPeriod(assessmentPeriodId))
+                .andOnSuccess(() -> assessorService.notifyAssessorsByAssessmentPeriodId(assessmentPeriodId))
                 .toPutResponse();
     }
 
