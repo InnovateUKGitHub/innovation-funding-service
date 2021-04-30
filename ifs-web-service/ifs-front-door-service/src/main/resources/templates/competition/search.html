@@ -66,7 +66,8 @@
                                 <dt><th:block th:text="${publicContentItem.publicContentStatusText?.getOpenTense()}"/>:</dt>
                                 <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />
                                 <dt>Closes:</dt>
-                                <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />
+                                <dd th:unless="${publicContentItem.competitionCloseDate == null}" th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />
+                                <dd th:if="${publicContentItem.competitionCloseDate == null}" th:text="${publicContentItem.getNullCloseDateText()}" />
                             </dl>
                             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" th:unless="${iteration.last}"/>
                         </li>

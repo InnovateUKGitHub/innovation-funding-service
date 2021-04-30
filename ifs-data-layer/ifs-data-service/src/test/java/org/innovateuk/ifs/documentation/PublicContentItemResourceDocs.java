@@ -23,6 +23,7 @@ public class PublicContentItemResourceDocs {
             fieldWithPath("nonIfs").description("Boolean that indicates if this is a non IFS competition"),
             fieldWithPath("fundingType").description("Funding type of the competition"),
             fieldWithPath("setupComplete").description("Boolean that indicates if this competition has completed setup"),
-            fieldWithPath("competitionType").description("Type of the competition")
+            fieldWithPath("competitionType").description("Type of the competition"),
+            fieldWithPath("alwaysOpen").description("Is the competition always open type")
     };
 }

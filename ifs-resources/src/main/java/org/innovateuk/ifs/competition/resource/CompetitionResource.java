@@ -374,8 +374,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public long getDaysLeft() {
-        return DAYS.between(ZonedDateTime.now(), this.endDate);
+    public Long getDaysLeft() {
+        return this.endDate == null ? null : DAYS.between(ZonedDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
@@ -390,6 +390,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isClosingSoon() {
+        if (this.endDate == null) {
+            return false;
+        }
         long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(ZonedDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
@@ -397,11 +400,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public long getAssessmentTotalDays() {
         return DAYS.between(this.assessorAcceptsDate, this.assessorDeadlineDate);
-    }
-
-    @JsonIgnore
-    public long getStartDateToEndDatePercentage() {
-        return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
     }
 
     @JsonIgnore

@@ -151,7 +151,7 @@ public class GenericMilestoneRowForm {
 
     protected String getNameOfDay() {
         String dayName =  getMilestoneDate(day, month, year);
-        if(dayName == null) {
+        if (dayName == null) {
             dayOfWeek = "-";
         }
         else {

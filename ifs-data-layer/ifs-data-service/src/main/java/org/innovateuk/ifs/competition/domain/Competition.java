@@ -30,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -324,18 +325,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @JsonIgnore
-    public long getDaysLeft() {
-        return getDaysBetween(ZonedDateTime.now(), this.getEndDate());
+    public Long getDaysLeft() {
+        return this.getEndDate() == null ? null : DAYS.between(ZonedDateTime.now(), this.getEndDate());
     }
 
     @JsonIgnore
     public long getTotalDays() {
         return getDaysBetween(this.getStartDate(), this.getEndDate());
-    }
-
-    @JsonIgnore
-    public long getStartDateToEndDatePercentage() {
-        return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
     }
 
     @JsonIgnore
