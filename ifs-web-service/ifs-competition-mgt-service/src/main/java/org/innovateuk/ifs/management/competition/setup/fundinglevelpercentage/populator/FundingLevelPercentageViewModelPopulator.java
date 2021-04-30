@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.p
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -42,15 +43,26 @@ public class FundingLevelPercentageViewModelPopulator implements CompetitionSetu
     public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competition) {
         List<ResearchCategoryResource> allResearchCategories = categoryRestService.getResearchCategories().getSuccess();
 
-        boolean dualFunding = competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle;
-        if (dualFunding) {
-            List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess();
-            dualFunding = maximums.stream().anyMatch(m -> m.getFundingRules() != null);
-        }
+        boolean dualFunding = dualFunding(competition);
 
         return new FundingLevelPercentageViewModel(generalViewModel,
                 allResearchCategories.stream().filter(cat -> competition.getResearchCategories().contains(cat.getId())).collect(Collectors.toList()),
                 asList(OrganisationSize.values()),
                 dualFunding);
+    }
+
+    private boolean dualFunding(CompetitionResource competition) {
+        boolean dualFunding = competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle;
+
+        if (dualFunding) {
+            List<GrantClaimMaximumResource> maximums;
+            try {
+                maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess();
+            } catch (ObjectNotFoundException e) {
+                return true;
+            }
+            return maximums.stream().anyMatch(m -> m.getFundingRules() != null);
+        }
+        return false;
     }
 }

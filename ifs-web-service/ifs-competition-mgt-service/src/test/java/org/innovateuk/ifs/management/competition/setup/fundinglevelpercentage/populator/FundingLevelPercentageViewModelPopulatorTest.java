@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.populator;
 
-import org.assertj.core.api.Assertions;
-import org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.FundingRules;
-import org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
@@ -15,7 +12,6 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.viewmodel.FundingLevelPercentageViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -56,10 +52,6 @@ public class FundingLevelPercentageViewModelPopulatorTest {
 
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(2);
         given(categoryRestService.getResearchCategories()).willReturn(restSuccess(researchCategories));
-
-        List<GrantClaimMaximumResource> grantClaimMaximums = newGrantClaimMaximumResource()
-                .withFundingRules(FundingRules.STATE_AID, FundingRules.SUBSIDY_CONTROL)
-                .build(2);
 
         // when
         CompetitionSetupViewModel result = populator.populateModel(generalSetupViewModel, competition);
@@ -123,5 +115,30 @@ public class FundingLevelPercentageViewModelPopulatorTest {
         assertThat(result).isInstanceOf(FundingLevelPercentageViewModel.class);
         FundingLevelPercentageViewModel resultAsFlpvm = (FundingLevelPercentageViewModel) result;
         assertThat(resultAsFlpvm.isDualFunding()).isFalse();
+    }
+
+    @Test
+    public void shouldPopulateNiSubsidyToggleTrueButGrantClaimMaxNotFound() {
+        // given
+        ReflectionTestUtils.setField(populator, "northernIrelandSubsidyControlToggle", true);
+
+        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, null, null, null, false, false);
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
+                .withResearchCategories(Collections.emptySet())
+                .build();
+
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(2);
+        given(categoryRestService.getResearchCategories()).willReturn(restSuccess(researchCategories));
+
+        given(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).willThrow(ObjectNotFoundException.class);
+
+        // when
+        CompetitionSetupViewModel result = populator.populateModel(generalSetupViewModel, competition);
+
+        // then
+        assertThat(result).isInstanceOf(FundingLevelPercentageViewModel.class);
+        FundingLevelPercentageViewModel resultAsFlpvm = (FundingLevelPercentageViewModel) result;
+        assertThat(resultAsFlpvm.isDualFunding()).isTrue();
     }
 }
