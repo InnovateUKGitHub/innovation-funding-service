@@ -57,6 +57,6 @@ public class ApplicationCreationController {
             return false;
         }
         return (publicContentItem.getCompetitionOpenDate().isBefore(ZonedDateTime.now()) &&
-                publicContentItem.getCompetitionCloseDate().isAfter(ZonedDateTime.now()));
+                (publicContentItem.getCompetitionCloseDate() == null || publicContentItem.getCompetitionCloseDate().isAfter(ZonedDateTime.now())));
     }
 }

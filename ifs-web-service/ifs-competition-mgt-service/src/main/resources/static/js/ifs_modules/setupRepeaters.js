@@ -164,7 +164,8 @@ IFS.competitionManagement.repeater = (function () {
 
       var html = '<div class="contentGroup" id="contentDateGroup-row-' + idCount + '">' +
                  '<div class="govuk-form-group"><fieldset class="govuk-fieldset">' +
-                    '<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><span class="govuk-fieldset__heading">Date</span></legend>' +
+                    '<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><span class="govuk-fieldset__heading">New event</span></legend>' +
+                    '<p class="govuk-body">Everything entered here will appear in the competition\'s \'Dates\' tab.</p>' +
                     '<div class="date-group">' +
                         '<input type="hidden" disabled name="dates[' + count + '].combined" />' +
                         '<div class="day">' +
@@ -183,7 +184,7 @@ IFS.competitionManagement.repeater = (function () {
                 '</fieldset></div>' +
                 '<div class="govuk-form-group textarea-wrapped">' +
                     '<label class="govuk-label" for="dates[' + idCount + '].content">' +
-                        'Content' +
+                        'Event description' +
                     '</label>' +
                     '<textarea cols="30" rows="5" id="dates[' + idCount + '].content" name="dates[' + count + '].content" data-editor="html" class="govuk-textarea" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
                 '</div>' +
