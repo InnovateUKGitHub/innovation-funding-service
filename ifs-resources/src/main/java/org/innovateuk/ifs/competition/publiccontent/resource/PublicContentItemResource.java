@@ -19,6 +19,7 @@ public class PublicContentItemResource {
     private Boolean setupComplete;
     private FundingType fundingType;
     private String competitionType;
+    private boolean alwaysOpen;
 
     public PublicContentItemResource() {
     }
@@ -110,6 +111,15 @@ public class PublicContentItemResource {
 
     public void setCompetitionType(String competitionType) {
         this.competitionType = competitionType;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public PublicContentItemResource setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+        return this;
     }
 
     @JsonIgnore

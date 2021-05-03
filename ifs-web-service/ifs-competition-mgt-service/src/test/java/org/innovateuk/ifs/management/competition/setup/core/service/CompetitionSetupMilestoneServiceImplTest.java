@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.core.service;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -23,6 +24,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -80,8 +82,9 @@ public class CompetitionSetupMilestoneServiceImplTest {
         LinkedMap<String, GenericMilestoneRowForm> milestones = new LinkedMap<>();
         MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN.atZone(ZoneId.systemDefault()));
         milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
+        CompetitionResource competition = newCompetitionResource().build();
 
-        List<Error> result = service.validateMilestoneDates(milestones);
+        List<Error> result = service.validateMilestoneDates(competition, milestones);
 
         assertTrue(result.isEmpty());
     }
@@ -91,8 +94,9 @@ public class CompetitionSetupMilestoneServiceImplTest {
         LinkedMap<String, GenericMilestoneRowForm> milestones = new LinkedMap<>();
         MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MAX.atZone(ZoneId.systemDefault()));
         milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
+        CompetitionResource competition = newCompetitionResource().build();
 
-        List<Error> result = service.validateMilestoneDates(milestones);
+        List<Error> result = service.validateMilestoneDates(competition, milestones);
 
         assertTrue(!result.isEmpty());
     }
