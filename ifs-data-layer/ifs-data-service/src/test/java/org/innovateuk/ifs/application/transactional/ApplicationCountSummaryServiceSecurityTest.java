@@ -29,13 +29,13 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
     @Test
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea() {
         setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(1L, 2L, 3L,0, 0, Sort.APPLICATION_NUMBER, "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 2L,0, 0, Sort.APPLICATION_NUMBER, "");
     }
 
     @Test(expected = AccessDeniedException.class)
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(1L, 2L, 3L, 0, 0, Sort.APPLICATION_NUMBER, "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 2L, 0, 0, Sort.APPLICATION_NUMBER, "");
     }
 
     @Override

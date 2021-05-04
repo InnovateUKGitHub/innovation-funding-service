@@ -70,7 +70,6 @@ public class AssessorAssessmentProgressModelPopulator {
         ApplicationCountSummaryPageResource applicationCounts = getApplicationCounts(
                 competitionId,
                 assessorId,
-                assessmentPeriodId,
                 page,
                 filter,
                 sort);
@@ -164,15 +163,13 @@ public class AssessorAssessmentProgressModelPopulator {
 
     private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId,
                                                                      long assessorId,
-                                                                     long assessmentPeriodId,
                                                                      int page,
                                                                      String filter,
                                                                      Sort sort) {
         return applicationCountSummaryRestService
-                .getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(
+                .getApplicationCountSummariesByCompetitionIdAndAssessorId(
                         competitionId,
                         assessorId,
-                        assessmentPeriodId,
                         page,
                         sort,
                         filter)

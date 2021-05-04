@@ -151,7 +151,6 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
         AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
-        long assessmentPeriodId = assessmentPeriod.getId();
 
         Application application = newApplication()
                 .with(id(null))
@@ -177,7 +176,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "id"));
 
-        Page<ApplicationCountSummaryResource> statisticsPage = repository.findStatisticsForAssessmentPeriodForApplicationsNotAssignedTo(competitionId, assessmentPeriodId, assessorId, "", pageable);
+        Page<ApplicationCountSummaryResource> statisticsPage = repository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, "", pageable);
         assertEquals(6, statisticsPage.getTotalElements());
         assertTrue(statisticsPage.getContent().stream().anyMatch(row -> row.getName().equals(application.getName())));
         assertEquals(20, statisticsPage.getSize());

@@ -94,7 +94,6 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
         List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
         AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
-        long assessmentPeriodId = assessmentPeriod.getId();
 
         Application application = newApplication()
                 .with(id(null))
@@ -119,7 +118,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
         flushAndClearSession();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, assessorId, assessmentPeriodId,  0, 6, Sort.APPLICATION_NUMBER, "").getSuccess();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId,  0, 6, Sort.APPLICATION_NUMBER, "").getSuccess();
 
         assertEquals(6, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

@@ -60,10 +60,9 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(
             long competitionId,
             long assessorId,
-            long assessmentPeriodId,
             int page,
             int size,
             ApplicationCountSummaryResource.Sort sort,
@@ -71,7 +70,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
         Pageable pageable = PageRequest.of(page, size, getApplicationSummarySortField(sort));
 
         Page<ApplicationCountSummaryResource> result =
-                applicationStatisticsRepository.findStatisticsForAssessmentPeriodForApplicationsNotAssignedTo(competitionId, assessmentPeriodId, assessorId, filter, pageable);
+                applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, filter, pageable);
 
         return serviceSuccess(new ApplicationCountSummaryPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize()));
     }
