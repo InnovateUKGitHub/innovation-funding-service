@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressUnsubmitViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -84,14 +85,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 
-    @PostMapping("/unsubmit-assessment/{assessmentId}")
-    public String UnsubmitAssessment(@PathVariable long competitionId,
-                                     @PathVariable long assessorId,
-                                     @PathVariable long assessmentId) {
-        assessmentRestService.unsubmitAssessment(assessmentId).getSuccess();
-        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
-    }
-
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
     public String withdrawAssessmentConfirm(
             Model model,
@@ -104,6 +97,28 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                 assessmentId
         ));
         return "competition/assessor-progress-remove-confirm";
+    }
+
+    @PostMapping("/unsubmit-assessment/{assessmentId}")
+    public String unsubmitAssessment(@PathVariable long competitionId,
+                                     @PathVariable long assessorId,
+                                     @PathVariable long assessmentId) {
+        assessmentRestService.unsubmitAssessment(assessmentId).getSuccess();
+        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
+    }
+
+    @GetMapping(value = "/unsubmit-assessment/{assessmentId}/confirm")
+    public String unsubmitAssessmentConfirm(
+            Model model,
+            @PathVariable long competitionId,
+            @PathVariable long assessorId,
+            @PathVariable long assessmentId) {
+        model.addAttribute("model", new AssessorAssessmentProgressUnsubmitViewModel(
+                competitionId,
+                assessorId,
+                assessmentId
+        ));
+        return "competition/assessor-progress-unsubmit-assessment-confirm";
     }
 
     @PostMapping

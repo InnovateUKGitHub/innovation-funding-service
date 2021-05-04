@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressUnsubmitViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.util.CompressedCookieService;
@@ -305,6 +306,44 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("competition/assessor-progress-remove-confirm"));
+    }
+
+    @Test
+    public void unsubmitAssessment() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        when(assessmentRestService.unsubmitAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit-assessment/{assessmentId}", competitionId, assessorId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s", competitionId, assessorId)));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).unsubmitAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void unsubmitAssessmentConfirm() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        AssessorAssessmentProgressUnsubmitViewModel expectedModel = new AssessorAssessmentProgressUnsubmitViewModel(
+                competitionId,
+                assessorId,
+                assessmentId
+        );
+
+        mockMvc.perform(
+                get("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit-assessment/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/assessor-progress-unsubmit-assessment-confirm"));
     }
 
     private AddressResource getExpectedAddress() {

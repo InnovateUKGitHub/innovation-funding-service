@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
  */
 public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegrationTest {
 
-    public static final int USER_COUNT  = 19;
+    public static final int USER_COUNT = 19;
     public static final List<String> ALL_USERS_EMAIL = asList(
             "steve.smith@empire.com",
             "jessica.doe@ludlow.co.uk",
@@ -27,7 +27,6 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
             "finance@innovateuk.gov.uk",
             "pete.tom@egg.com",
             "felix.wilson@gmail.com",
-            "bucky.barnes@innovateuk.test",
             "ewan+1@hiveit.co.uk",
             "ifs_web_user@innovateuk.org",
             "compadmin@innovateuk.test",

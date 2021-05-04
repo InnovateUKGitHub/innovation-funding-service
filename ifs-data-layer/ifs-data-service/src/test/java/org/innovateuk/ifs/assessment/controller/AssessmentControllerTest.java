@@ -131,8 +131,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         List<AssessmentResource> expected = newAssessmentResource()
                 .build(2);
 
-        Long userId = 1L;
-        Long competitionId = 2L;
+        long userId = 1L;
+        long competitionId = 2L;
 
         when(assessmentService.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(expected));
 
@@ -149,8 +149,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         List<AssessmentResource> expected = newAssessmentResource()
                 .build(2);
 
-        Long userId = 1L;
-        Long applicationId = 2L;
+        long userId = 1L;
+        long applicationId = 2L;
 
         when(assessmentService.findByUserAndApplication(userId, applicationId)).thenReturn(serviceSuccess(expected));
 
@@ -164,7 +164,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void getTotalScore() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
         AssessmentTotalScoreResource expected = new AssessmentTotalScoreResource(74, 200);
 
@@ -180,7 +180,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void recommend() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
@@ -219,12 +219,12 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(fundingConfirmationError))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
     public void recommend_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         String comment = String.join(" ", nCopies(100, "comment"));
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
                 newAssessmentFundingDecisionOutcomeResource()
@@ -261,7 +261,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(content().json(toJson(new RestErrorResponse(feedbackError))))
                 .andReturn();
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
@@ -285,7 +285,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(asList(feedbackError, commentError)))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
@@ -309,12 +309,12 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(asList(feedbackError, commentError)))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
     public void recommend_eventNotAccepted() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
@@ -358,7 +358,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void rejectInvitation() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         String rejectComment = String.join(" ", nCopies(100, "comment"));
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource()
                 .withRejectReason(CONFLICT_OF_INTEREST)
@@ -391,7 +391,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectReasonError))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
@@ -411,7 +411,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
@@ -431,12 +431,12 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(rejectCommentError))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
     public void rejectInvitation_eventNotAccepted() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         String rejectComment = String.join(" ", nCopies(100, "comment"));
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource()
                 .withRejectReason(CONFLICT_OF_INTEREST)
@@ -459,7 +459,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void acceptInvitation() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
         when(assessmentService.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
 
@@ -471,7 +471,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
     @Test
     public void withdrawAssessment() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
         when(assessmentService.withdrawAssessment(assessmentId)).thenReturn(serviceSuccess());
 
@@ -537,7 +537,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isNotAcceptable())
                 .andExpect(content().json(toJson(new RestErrorResponse(error))));
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
@@ -610,7 +610,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .content(toJson(assessmentCreateResource)))
                 .andExpect(status().isNotAcceptable());
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 
     @Test
@@ -624,7 +624,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .content(toJson(assessmentCreateResource)))
                 .andExpect(status().isNotAcceptable());
 
-        verifyZeroInteractions(assessmentService);
+        verifyNoInteractions(assessmentService);
     }
 }
 
