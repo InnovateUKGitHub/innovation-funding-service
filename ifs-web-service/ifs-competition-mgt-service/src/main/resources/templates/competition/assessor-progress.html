@@ -79,10 +79,12 @@
                             class="govuk-table__header width-100 aligncentre">
                             Remove
                         </th>
-                        <th scope="col"
-                            class="govuk-table__header width-100 aligncentre">
-                            Unsubmit
-                        </th>
+                        <th:block th:if="${model.isSuperAdmin()}">
+                            <th scope="col"
+                                class="govuk-table__header width-100 aligncentre">
+                                Unsubmit
+                            </th>
+                        </th:block>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -131,21 +133,19 @@
                             </form>
                         </td>
 
-                        <td class="govuk-table__cell alignright">
-                            <a th:if="${app.submitted}"
-                               class="govuk-button govuk-button--secondary govuk-!-margin-0"
-                               data-js-modal="unsubmit-assessment-assigned-assessor-modal"
-                               th:href="${removeActionNonJs}"
-                               th:attr="data-modal-form-action=${removeAction}"
-                               th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
-                                       removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}/confirm(cId=${model.competitionId}, assessorId=${model.assessorId}, asId=${app.assessmentId})}">
-                                Unsubmit
-                            </a>
-                            <form th:unless="${app.notified}" method="post"
-                                  th:action="@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})}">
-                                <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Remove</button>
-                            </form>
-                        </td>
+                        <th:block th:if="${model.isSuperAdmin()}">
+                            <td class="govuk-table__cell alignright">
+                                <a th:if="${app.submitted}"
+                                   class="govuk-button govuk-button--secondary govuk-!-margin-0"
+                                   data-js-modal="unsubmit-assessment-assigned-assessor-modal"
+                                   th:href="${removeActionNonJs}"
+                                   th:attr="data-modal-form-action=${removeAction}"
+                                   th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
+                                           removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}/confirm(cId=${model.competitionId}, assessorId=${model.assessorId}, asId=${app.assessmentId})}">
+                                    Unsubmit
+                                </a>
+                            </td>
+                        </th:block>
                     </tr>
                 </tbody>
             </table>

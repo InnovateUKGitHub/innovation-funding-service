@@ -25,6 +25,7 @@ public class AssessorAssessmentProgressViewModel {
     private final long assessorId;
     private final String filter;
     private final boolean selectAllDisabled;
+    private final boolean isSuperAdmin;
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
     private final List<AssessorAssessmentProgressRejectedRowViewModel> rejected;
@@ -44,7 +45,8 @@ public class AssessorAssessmentProgressViewModel {
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned,
                                                List<AssessorAssessmentProgressRejectedRowViewModel> rejected,
                                                List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned,
-                                               AssessorAssessmentProgressApplicationsViewModel applicationsView) {
+                                               AssessorAssessmentProgressApplicationsViewModel applicationsView,
+                                               boolean isSuperAdmin) {
 
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -60,6 +62,7 @@ public class AssessorAssessmentProgressViewModel {
         this.selectAllDisabled = selectAllDisabled;
         this.previouslyAssigned = previouslyAssigned;
         this.applicationsView = applicationsView;
+        this.isSuperAdmin = isSuperAdmin;
     }
 
     public long getCompetitionId() {
@@ -118,4 +121,7 @@ public class AssessorAssessmentProgressViewModel {
         return IN_ASSESSMENT_STATES.contains(competitionStatus);
     }
 
+    public boolean isSuperAdmin() {
+        return isSuperAdmin;
+    }
 }

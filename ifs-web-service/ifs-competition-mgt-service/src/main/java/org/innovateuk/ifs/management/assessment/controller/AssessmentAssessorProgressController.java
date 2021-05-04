@@ -12,6 +12,8 @@ import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -61,9 +63,16 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                                    @RequestParam(value = "filterSearch", defaultValue = "") String filter,
                                    Model model,
                                    HttpServletRequest request,
-                                   HttpServletResponse response) {
+                                   HttpServletResponse response,
+                                   UserResource loggedInUser) {
         updateSelectionForm(request, response, competitionId, assessorId, selectionForm, filter);
-        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, page - 1, sort, filter));
+        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(
+                competitionId,
+                assessorId,
+                page - 1,
+                sort,
+                filter,
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER)));
         return "competition/assessor-progress";
     }
 
