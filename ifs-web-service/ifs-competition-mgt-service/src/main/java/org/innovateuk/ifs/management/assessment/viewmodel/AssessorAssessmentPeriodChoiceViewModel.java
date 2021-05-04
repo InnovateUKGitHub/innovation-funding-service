@@ -56,7 +56,10 @@ public class AssessorAssessmentPeriodChoiceViewModel {
             MilestoneViewModel last = milestoneEntries.get(milestoneEntries.lastKey());
             ZonedDateTime start = first.getDate();
             ZonedDateTime end = last.getDate();
-            if (first.getDate().getYear() == last.getDate().getYear()) {
+            if (start == null || end == null) {
+                return "";
+            }
+            if (start.getYear() == end.getYear()) {
                 return String.format("%s %s to %s %s %s",
                         start.getDayOfMonth(),
                         start.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),

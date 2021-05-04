@@ -38,11 +38,14 @@
                            class="govuk-label govuk-radios__label"><strong>Assessment period <th:block th:text="${index.index + 1}" /></strong><br/><th:block th:text="${assessmentPeriod.displayName}" /></label>
                 </div>
             </div>
-            <select name="assessmentPeriodId" class="govuk-select" th:if="${model.assessmentPeriods.size() >= 6}">
-                <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
-                        th:value="${assessmentPeriod.assessmentPeriodId}"
-                        th:text="${assessmentPeriod.assessmentPeriodId}"/>
-            </select>
+            <div class="govuk-input--width-35">
+                <select name="assessmentPeriodId" class="govuk-select" th:if="${model.assessmentPeriods.size() >= 6}" required="required">
+                    <option value="" selected="selected">Please select...</option>
+                    <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
+                            th:value="${assessmentPeriod.assessmentPeriodId}"
+                            th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"/>
+                </select>
+            </div>
             <button class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
 
