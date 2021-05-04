@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.inAssessment or model.alwaysOpen} ? 'Manage assessors' : 'Allocate assessors'" />
     </head>
 
     <body class="govuk-template__body competition-management">
@@ -10,10 +10,11 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub (linkTitle='Manage assessments',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
+            <th:block th:if="${model.assessmentPeriodName == null}" th:insert="fragments/layout :: header-sub (linkTitle='Back to manage assessments',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
+            <th:block th:unless="${model.assessmentPeriodName == null}" th:insert="fragments/layout :: header-sub (linkTitle='Back to choose an assessment period to manage assessors',linkUrl=@{/assessment/competition/{id}/assessors(id=${model.competitionId})})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment or model.alwaysOpen} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
 
                 <th:block th:unless="${model.assessmentPeriodName == null}">
                     <h3 class="govuk-heading-m" th:text="${model.assessmentPeriodName}">assessment period</h3>
@@ -56,7 +57,7 @@
                             <tr class="govuk-table__row">
                                 <th class="govuk-table__header width-150" scope="col">Assessor</th>
                                 <th class="govuk-table__header" scope="col">Skill areas</th>
-                                <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col"><th:block th:if="${model.onlyAssessmentPeriod}">Total applications</th:block><th:block th:unless="${model.onlyAssessmentPeriod}">Total applications for this period</th:block></th>
+                                <th class="govuk-table__header govuk-table__header--numeric width-200" scope="col"><th:block th:if="${model.onlyAssessmentPeriod}">Total applications</th:block><th:block th:unless="${model.onlyAssessmentPeriod}">Total applications for this period</th:block></th>
                                 <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Assigned</th>
                                 <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col" th:if="${model.inAssessment || model.alwaysOpen}">Accepted</th>
                                 <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col" th:if="${model.inAssessment || model.alwaysOpen}">Completed</th>

@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Allocate assessors',
+              th:with="linkTitle='Back to manage assessors',
                 linkUrl=@{/assessment/competition/{competitionId}/assessors/period?assessmentPeriodId={assessmentPeriodId}(competitionId=${model.competitionId},assessmentPeriodId=${model.assessmentPeriodId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -139,7 +139,7 @@
         <p class="govuk-body" th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
 
-        <div th:if="${model.competitionInAssessment}">
+        <div th:if="${model.competitionInAssessment or model.competitionAlwaysOpen}">
             <h2 class="govuk-heading-m" th:text="| Rejected (${#lists.size(model.rejected)}) |"/>
 
             <div class="table-overflow" th:if="${!#lists.isEmpty(model.rejected)}">
@@ -306,9 +306,9 @@
                         <th class="govuk-table__header" scope="col">Application number</th>
                         <th class="govuk-table__header" scope="col">Title</th>
                         <th class="govuk-table__header" scope="col">Lead organisation</th>
-                        <th class="govuk-table__header aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
-                        <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
-                        <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
+                        <th class="govuk-table__header aligncentre" scope="col" th:text="${(model.applicationsView.inAssessment or model.competitionAlwaysOpen)? 'Assessors' : 'Assigned'}">Assessors</th>
+                        <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment or model.competitionAlwaysOpen}">Accepted</th>
+                        <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment or model.competitionAlwaysOpen}">Submitted</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -332,8 +332,8 @@
                         <td class="govuk-table__cell" th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                         <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.assessors}">4</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment or model.competitionAlwaysOpen}">2</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment or model.competitionAlwaysOpen}">1</td>
                     </tr>
                     </tbody>
                 </table>

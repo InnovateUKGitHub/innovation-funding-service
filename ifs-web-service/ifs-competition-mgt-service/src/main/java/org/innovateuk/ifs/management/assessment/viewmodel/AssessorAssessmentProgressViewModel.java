@@ -18,6 +18,7 @@ public class AssessorAssessmentProgressViewModel {
     private final long competitionId;
     private final String competitionName;
     private final CompetitionStatus competitionStatus;
+    private final boolean competitionAlwaysOpen;
     private final String assessorName;
     private final List<String> innovationAreas;
     private final String businessType;
@@ -36,6 +37,7 @@ public class AssessorAssessmentProgressViewModel {
     public AssessorAssessmentProgressViewModel(long competitionId,
                                                String competitionName,
                                                CompetitionStatus competitionStatus,
+                                               boolean competitionAlwaysOpen,
                                                long assessorId,
                                                long assessmentPeriodId,
                                                String assessmentPeriodName,
@@ -53,6 +55,7 @@ public class AssessorAssessmentProgressViewModel {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
         this.assessorName = assessorName;
         this.innovationAreas = innovationAreas;
         this.businessType = businessType;
@@ -136,4 +139,7 @@ public class AssessorAssessmentProgressViewModel {
         return IN_ASSESSMENT_STATES.contains(competitionStatus);
     }
 
+    public boolean isCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
+    }
 }

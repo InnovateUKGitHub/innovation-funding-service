@@ -87,6 +87,7 @@ public class AssessorAssessmentProgressModelPopulator {
                 summaryResource.getCompetitionId(),
                 summaryResource.getCompetitionName(),
                 summaryResource.getCompetitionStatus(),
+                getCompetition(summaryResource.getCompetitionId()).isAlwaysOpen(),
                 assessorId,
                 assessmentPeriodId,
                 assessmentPeriodName,
