@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Upload files',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Upload files',size='govuk-heading-l'" />
+
+        <p class="govuk-body" th:text="Upload files"></p>
+        <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{fileUpload}')} ? 'govuk-form-group--error'">
+                <th:block th:if="${#fields.hasErrors('fileUpload')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('fileUpload')}" th:text="${err}"></span>
+                </th:block>
+                <div id="upload-fec" class="upload-section ">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        Upload your file
+                    </legend>
+                    <details class="govuk-details govuk-!-margin-bottom-1" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">What can I upload?</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body govuk-!-margin-bottom-0  govuk-!-font-weight-bold">Your file must be:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>in csv format (CSV) </li>
+                                <li>less than 10 MB in size</li>
+                            </ul>
+                        </div>
+                    </details>
+                    <div class="govuk-form-group">
+                        <th:block th:insert="question-type/types :: fileupload-fragment('edit',
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    true,
+                                    '',
+                                    '')"/>
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <button class="govuk-button">Start processing</button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
