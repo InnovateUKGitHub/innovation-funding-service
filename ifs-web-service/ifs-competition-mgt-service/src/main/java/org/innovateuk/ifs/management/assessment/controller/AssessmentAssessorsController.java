@@ -59,11 +59,14 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
     @GetMapping("/assessors/period")
     public String manageAssessorsForPeriod(Model model,
                                            @PathVariable("competitionId") long competitionId,
-                                           @RequestParam("assessmentPeriodId") long assessmentPeriodId,
+                                           @RequestParam(value = "assessmentPeriodId", required = false) Long assessmentPeriodId,
                                            @RequestParam(value = "page", defaultValue = "0") int page,
                                            @RequestParam(value = "assessorNameFilter", required = false) String assessorNameFilter
     ) {
 
+        if (assessmentPeriodId == null) {
+            return format("redirect:/assessment/competition/%s/assessors", competitionId);
+        }
         CompetitionResource competitionResource = getCompetition(competitionId);
         AssessorCountSummaryPageResource applicationCounts = getCounts(competitionId, assessmentPeriodId, assessorNameFilter, page);
 
