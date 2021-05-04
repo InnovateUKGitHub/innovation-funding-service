@@ -92,9 +92,9 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
         Page<ApplicationCountSummaryResource> pageCount = mock(Page.class);
-        when(applicationStatisticsRepository.findStatisticsForAssessmentPeriodForApplicationsNotAssignedTo(eq(competitionId), eq(2L), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
+        when(applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
 
-        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(competitionId, 1L, 2L, 0, 20, Sort.APPLICATION_NUMBER, "asd");
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, 1L, 0, 20, Sort.APPLICATION_NUMBER, "asd");
 
         assertTrue(result.isSuccess());
     }

@@ -24,10 +24,9 @@ public interface ApplicationCountSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ", description = "Comp Admins and project finance can see all Application Summary counts accros the whole system", securedType = ApplicationCountSummaryResource.class)
-    ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorIdAndAssessmentPeriodId(
+    ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(
             long competitionId,
             long assessorId,
-            long assessmentPeriodId,
             int page,
             int size,
             Sort sort,

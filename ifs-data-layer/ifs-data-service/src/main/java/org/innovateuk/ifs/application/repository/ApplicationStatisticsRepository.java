@@ -70,18 +70,6 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id";
 
-    String ASSESSMENT_PERIOD_AND_ASSESSOR_FILTER =
-            " FROM Application application " +
-                    " JOIN ProcessRole leadRole ON leadRole.applicationId = application.id AND leadRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT " +
-                    " JOIN Organisation lead ON lead.id = leadRole.organisationId " +
-                    " LEFT JOIN Assessment assessment ON assessment.target.id = application.id AND type(assessment) = Assessment " +
-                    "WHERE application.competition.id = :competitionId " +
-                    "AND (application.applicationProcess.activityState IN " + SUBMITTED_APPLICATION_STATES + ") " +
-                    "AND application.assessmentPeriod.id = :assessmentPeriodId " +
-                    "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = application.id) " +
-                    "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
-                    "GROUP BY application.id";
-
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
     @Query(APPLICATION_FILTER)
@@ -98,10 +86,9 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             SUM_ACCEPTED + ", " +
             SUM_SUBMITTED +
             ")" +
-            ASSESSMENT_PERIOD_AND_ASSESSOR_FILTER)
-    Page<ApplicationCountSummaryResource> findStatisticsForAssessmentPeriodForApplicationsNotAssignedTo(
+            ASSESSOR_FILTER)
+    Page<ApplicationCountSummaryResource> findStatisticsForApplicationsNotAssignedTo(
             long competitionId,
-            long assessmentPeriodId,
             long assessorId,
             String filter,
             Pageable pageable);
