@@ -8,7 +8,10 @@ import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +43,12 @@ public class DocumentsController {
     private DocumentsPopulator populator;
 
     private DocumentsRestService documentsRestService;
+
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     public DocumentsController() {
     }
@@ -156,9 +165,21 @@ public class DocumentsController {
         Supplier<String> failureView = () -> doViewDocument(projectId, documentConfigId, model, loggedInUser, form);
 
         RestResult<Void> result = documentsRestService.submitDocument(projectId, documentConfigId);
-
+        sendNotificationToMO(projectId, result);
         return validationHandler.addAnyErrors(result, asGlobalErrors()).
                 failNowOrSucceedWith(failureView, successView);
+    }
+
+    private void sendNotificationToMO(long projectId, RestResult<Void> result) {
+        if (result.isSuccess()) {
+            Optional<MonitoringOfficerResource> monitoringOfficer  = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();;
+            if (monitoringOfficer.isPresent()) {
+                  Optional<UserResource> moUser= userRestService.findUserByEmail(monitoringOfficer.get().getEmail()).getOptionalSuccessObject();
+                  if (moUser.isPresent()) {
+                      monitoringOfficerRestService.sendDocumentReviewNotification(projectId, moUser.get().getId());
+                  }
+               }
+            }
     }
 }
 

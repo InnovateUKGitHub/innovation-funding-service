@@ -55,6 +55,8 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     private UserMapper userMapper;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private MonitoringOfficerReviewNotificationService monitoringOfficerReviewNotificationService;
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
@@ -89,7 +91,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
         if (user.hasRole(MONITORING_OFFICER) && user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
             unassignedProjects = monitoringOfficerRepository.findAllUnassignedProjects();
-        assignedProjects = monitoringOfficerRepository.findAllAssignedProjects(user.getId());
+            assignedProjects = monitoringOfficerRepository.findAllAssignedProjects(user.getId());
         } else if (user.hasRole(MONITORING_OFFICER)) {
             unassignedProjects = monitoringOfficerRepository.findUnassignedNonKTPProjects();
             assignedProjects = monitoringOfficerRepository.findAssignedNonKTPProjects(user.getId());
@@ -184,4 +186,12 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
                 notFoundError(User.class, userId));
     }
 
+    @Override
+    public ServiceResult<Void> sendDocumentReviewNotification(long projectId, long userId) {
+              return getMonitoringOfficerUser(userId)
+                        .andOnSuccess(user -> find(projectRepository.findById(projectId), notFoundError(Project.class))
+                                .andOnSuccess(project -> (monitoringOfficerReviewNotificationService.sendDocumentReviewNotification(user, project))
+                                .andOnSuccessReturnVoid())
+                        );
+            }
 }
