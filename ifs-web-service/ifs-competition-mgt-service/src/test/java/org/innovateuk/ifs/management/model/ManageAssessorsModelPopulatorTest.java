@@ -74,6 +74,7 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
                 "name",
                 simpleMap(assessorCountSummaryResources, ManageAssessorsRowViewModel::new),
                 competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT,
+                false,
                 innovationSectorResources,
                 new Pagination(assessorCountSummaryPageResource)
         );
