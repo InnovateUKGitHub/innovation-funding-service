@@ -149,6 +149,12 @@ function startPybot() {
       else
         local includeAtsTags='--exclude AuthServiceTests'
     fi
+    if [[ ${zapTest} -eq 1 ]]
+      then
+        local includeZapTags='--include ZAPTests'
+      else
+        local includeZapTags='--exclude ZAPTests'
+    fi
 
 
     python3 -m robot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
@@ -168,6 +174,7 @@ function startPybot() {
     $excludeBespokeTags \
     $includeEuTags \
     $includeAtsTags \
+    $includeZapTags \
     --exclude Failing --exclude Pending --name ${targetDir} ${1} &
 }
 
@@ -316,9 +323,10 @@ eu=0
 ats=0
 dryRun=0
 openReports=1
+zapTest=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a :o" opt ; do
+while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a :o :p" opt ; do
     case ${opt} in
         q)
             quickTest=1
@@ -363,6 +371,9 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a :o" opt ; do
         ;;
         a)
           ats=1
+        ;;
+        p)
+          zapTest=1
         ;;
 	o)
 	  openReports=0

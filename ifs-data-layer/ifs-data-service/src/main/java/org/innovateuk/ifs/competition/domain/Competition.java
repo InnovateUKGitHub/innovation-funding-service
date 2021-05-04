@@ -30,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -37,6 +38,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
@@ -323,18 +325,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @JsonIgnore
-    public long getDaysLeft() {
-        return getDaysBetween(ZonedDateTime.now(), this.getEndDate());
+    public Long getDaysLeft() {
+        return this.getEndDate() == null ? null : DAYS.between(ZonedDateTime.now(), this.getEndDate());
     }
 
     @JsonIgnore
     public long getTotalDays() {
         return getDaysBetween(this.getStartDate(), this.getEndDate());
-    }
-
-    @JsonIgnore
-    public long getStartDateToEndDatePercentage() {
-        return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
     }
 
     @JsonIgnore
@@ -967,11 +964,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
-    }
-
-    @Override
     public boolean isProcurementMilestones() {
         return isProcurement() &&
             sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
@@ -1005,5 +997,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isSubsidyControl() {
         return SUBSIDY_CONTROL.equals(fundingRules)
                 && questions.stream().anyMatch(question -> SUBSIDY_BASIS == question.getQuestionSetupType());
+    }
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return isLoan()
+                && questions.stream().anyMatch(question -> LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestionSetupType());
     }
 }

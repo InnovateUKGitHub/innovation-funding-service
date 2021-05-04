@@ -73,4 +73,9 @@ public abstract class AbstractApplicantResource {
     public Stream<OrganisationResource> getAllOrganisations() {
         return applicants.stream().map(ApplicantResource::getOrganisation);
     }
+
+    @JsonIgnore
+    public OrganisationResource getLeadOrganisation() {
+        return getApplicants().stream().filter(ApplicantResource::isLead).map(ApplicantResource::getOrganisation).findFirst().get();
+    }
 }

@@ -42,6 +42,8 @@ delete from milestone where competition_id in (1);
 
 delete from project_stages where competition_id in (1);
 
+delete from assessment_period where competition_id in (1);
+
 delete from competition where id in (1);
 
 SET foreign_key_checks = 1;

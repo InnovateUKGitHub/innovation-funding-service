@@ -94,25 +94,6 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void create() throws Exception {
-        Long competitionId = 2L;
-        when(milestoneService.create(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(newMilestoneResource().build()));
-
-        mockMvc.perform(post("/milestone/{competitionId}?type=" + MilestoneType.OPEN_DATE, competitionId)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isCreated())
-                .andDo(document("milestone/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition where this milestone should be added")
-                        ),
-                        requestParameters(
-                                parameterWithName("type").description("milestone type that is being created")
-                        ),
-                        responseFields(milestoneResourceFields)
-                ));
-    }
-
-    @Test
     public void saveMilestones() throws Exception {
         List<MilestoneResource> milestoneResources = newMilestoneResource().build(1);
 

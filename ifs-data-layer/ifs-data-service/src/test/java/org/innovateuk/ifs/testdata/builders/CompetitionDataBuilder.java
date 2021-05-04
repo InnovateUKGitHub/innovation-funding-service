@@ -285,7 +285,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
         return asCompAdmin(data -> {
             shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
-
+            shiftOpenDateToYesterday(data);
         });
     }
 
@@ -314,6 +314,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    private void shiftOpenDateToYesterday(CompetitionData data) {
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
+        MilestoneResource openDate = simpleFindFirst(milestones, m -> OPEN_DATE.equals(m.getType())).get();
+        openDate.setDate(now().minusDays(1));
+        milestoneService.updateMilestone(openDate).getSuccess();
+    }
+
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
         MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
@@ -321,30 +328,32 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
         ZonedDateTime submissionDeadline = submissionDateMilestone.getDate();
 
-        final long daysPassedSinceSubmissionEnded;
-        if (ZonedDateTime.now().withZoneSameInstant(submissionDeadline.getZone()).toLocalTime().isAfter(submissionDeadline.toLocalTime())) {
-            daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
-        } else {
-            daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
-        }
-
-        milestones.forEach(m -> {
-            if (m.getDate() != null) {
-                m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
-                milestoneService.updateMilestone(m).getSuccess();
+        if (submissionDeadline != null) {
+            final long daysPassedSinceSubmissionEnded;
+            if (ZonedDateTime.now().withZoneSameInstant(submissionDeadline.getZone()).toLocalTime().isAfter(submissionDeadline.toLocalTime())) {
+                daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
+            } else {
+                daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
             }
-        });
+
+            milestones.forEach(m -> {
+                if (m.getDate() != null) {
+                    m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
+                    milestoneService.updateMilestone(m).getSuccess();
+                }
+            });
+        }
     }
 
     public CompetitionDataBuilder withNewMilestones(CompetitionLine line) {
         return asCompAdmin(data ->
-                Stream.of(BooleanUtils.isTrue(line.getAlwaysOpen()) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
+                (BooleanUtils.isTrue(line.getAlwaysOpen()) ? MilestoneType.alwaysOpenCompSetupMilestones().stream() : Stream.of(MilestoneType.presetValues()))
                         .filter(m -> !m.isOnlyNonIfs())
                         .filter(milestoneType -> milestoneType.getPriority() <= line.getCompetitionCompletionStage().getLastMilestone().getPriority())
                         .forEach(type ->
                                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                                         .handleSuccessOrFailure(
-                                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccess(),
+                                                failure -> milestoneService.create(new MilestoneResource(type, data.getCompetition().getId())).getSuccess(),
                                                 success -> success
                                         )
                         )
@@ -433,7 +442,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId())
                     .handleSuccessOrFailure(
-                            failure -> milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccess(),
+                            failure -> milestoneService.create(new MilestoneResource(milestoneType, data.getCompetition().getId())).getSuccess(),
                             success -> success
                     );
 

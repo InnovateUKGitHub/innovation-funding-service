@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.MilestonesRowViewModel;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -60,6 +61,7 @@ public class CompetitionInFlightModelPopulator {
                 simpleMap(milestones, MilestonesRowViewModel::new),
                 changesSinceLastNotify,
                 statsViewModel,
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER));
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER),
+                user.hasAuthority(Authority.SUPER_ADMIN_USER));
     }
 }

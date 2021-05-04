@@ -35,6 +35,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8945 SBRI milestones - Map milestones to IFS PA
 ...
+...             IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -55,9 +57,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124  IFS-8847
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  2  false  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  2  false  single-or-collaborative  No
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
@@ -418,9 +420,9 @@ the user makes changes to the project finances
     the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) [class="govuk-button"]
     the user clicks the button/link     jQuery = button:contains("Other costs")
     the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) a
-    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
-    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]   11100
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]   11100
     input text                          css = div[id='accordion-finances'] div:nth-of-type(8) textarea   Some other costs
     the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) [class="govuk-button"]
 

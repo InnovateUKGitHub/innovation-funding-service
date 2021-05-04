@@ -43,7 +43,7 @@ public class MilestoneResourceBuilder extends BaseBuilder<MilestoneResource, Mil
     }
 
     public MilestoneResourceBuilder withAssessmentPeriod(Long... assessmentPeriods) {
-        return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriod", assessmentPeriod, object), assessmentPeriods);
+        return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriodId", assessmentPeriod, object), assessmentPeriods);
     }
 
     @Override

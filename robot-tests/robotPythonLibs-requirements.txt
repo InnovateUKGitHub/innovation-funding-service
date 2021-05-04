@@ -25,4 +25,5 @@ simplejson==3.16.0
 #Timezones
 pytz==2018.3
 
+python-owasp-zap-v2.4==0.0.14
 

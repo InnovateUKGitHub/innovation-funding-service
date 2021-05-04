@@ -140,7 +140,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         userRepository.saveAll(asList(paulPlum, felixWilson));
 
         ktpCompetition = competitionRepository.save(newCompetition()
-                .withId(null)
+                .withId((Long) null)
                 .withFundingType(FundingType.KTP)
                 .withAlwaysOpen(false)
                 .build());

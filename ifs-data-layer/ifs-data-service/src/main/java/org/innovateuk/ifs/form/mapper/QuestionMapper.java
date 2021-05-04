@@ -28,7 +28,8 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
     public abstract QuestionResource mapToResource(Question domain);
 
     @Mappings({
-            @Mapping(target = "formInputs", ignore = true)
+            @Mapping(target = "formInputs", ignore = true),
+            @Mapping(target = "questionnaire", ignore = true)
     })
     public abstract Question mapToDomain(QuestionResource resource);
 }
