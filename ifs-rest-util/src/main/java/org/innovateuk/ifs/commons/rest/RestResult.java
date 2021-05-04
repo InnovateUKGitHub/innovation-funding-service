@@ -250,6 +250,10 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
             throw new InviteExpiredException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD)) {
+            throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
+        }
+
         if (restFailure.has(COMPETITION_CANNOT_RELEASE_FEEDBACK)) {
             throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
         }

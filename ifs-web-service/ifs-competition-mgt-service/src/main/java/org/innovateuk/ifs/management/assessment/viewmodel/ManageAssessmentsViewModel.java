@@ -5,6 +5,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
+
+import java.util.List;
 
 /**
  * View model for the 'Manage assessments' dashboard page.
@@ -22,8 +26,14 @@ public class ManageAssessmentsViewModel {
     private final int assessmentsAccepted;
     private final int assessmentsStarted;
     private final int assessmentsCompleted;
+    private final boolean alwaysOpen;
+    private final List<AssessmentPeriodForm> assessmentPeriods;
+    private final PaginationViewModel assessmentPeriodPagination;
 
-    public ManageAssessmentsViewModel(CompetitionResource competition, CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics) {
+    public ManageAssessmentsViewModel(CompetitionResource competition,
+                                      CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics,
+                                      List<AssessmentPeriodForm> assessmentPeriods,
+                                      PaginationViewModel assessmentPeriodPagination) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.inAssessment = competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
@@ -33,6 +43,9 @@ public class ManageAssessmentsViewModel {
         this.assessmentsAccepted = keyStatistics.getAssignmentsAccepted();
         this.assessmentsStarted = keyStatistics.getAssessmentsStarted();
         this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
+        this.alwaysOpen = competition.isAlwaysOpen();
+        this.assessmentPeriods = assessmentPeriods;
+        this.assessmentPeriodPagination = assessmentPeriodPagination;
     }
 
     public long getCompetitionId() {
@@ -67,6 +80,18 @@ public class ManageAssessmentsViewModel {
         return assessmentsStarted;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public List<AssessmentPeriodForm> getAssessmentPeriods() {
+        return assessmentPeriods;
+    }
+
+    public PaginationViewModel getAssessmentPeriodPagination() {
+        return assessmentPeriodPagination;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,9 +106,11 @@ public class ManageAssessmentsViewModel {
                 .append(totalAssessments, that.totalAssessments)
                 .append(assessmentsAwaitingResponse, that.assessmentsAwaitingResponse)
                 .append(assessmentsAccepted, that.assessmentsAccepted)
-                .append(assessmentsCompleted, that.assessmentsCompleted)
                 .append(assessmentsStarted, that.assessmentsStarted)
+                .append(assessmentsCompleted, that.assessmentsCompleted)
+                .append(alwaysOpen, that.alwaysOpen)
                 .append(competitionName, that.competitionName)
+                .append(assessmentPeriods, that.assessmentPeriods)
                 .isEquals();
     }
 
@@ -96,8 +123,10 @@ public class ManageAssessmentsViewModel {
                 .append(totalAssessments)
                 .append(assessmentsAwaitingResponse)
                 .append(assessmentsAccepted)
-                .append(assessmentsCompleted)
                 .append(assessmentsStarted)
+                .append(assessmentsCompleted)
+                .append(alwaysOpen)
+                .append(assessmentPeriods)
                 .toHashCode();
     }
 }

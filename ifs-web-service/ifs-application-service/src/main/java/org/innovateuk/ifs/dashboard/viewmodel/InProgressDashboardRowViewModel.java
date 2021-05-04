@@ -24,7 +24,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
     private final ZonedDateTime endDate;
-    private final long daysLeft;
+    private final Long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
     private final LocalDate startDate;
@@ -39,7 +39,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
                                            ApplicationState applicationState,
                                            boolean leadApplicant,
                                            ZonedDateTime endDate,
-                                           long daysLeft,
+                                           Long daysLeft,
                                            int applicationProgress,
                                            boolean assignedToInterview,
                                            LocalDate startDate,
@@ -87,7 +87,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         return endDate;
     }
 
-    public long getDaysLeft() {
+    public Long getDaysLeft() {
         return daysLeft;
     }
 
@@ -116,6 +116,11 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     }
 
     /* view logic */
+
+    public boolean isShouldDisplayEndDate() {
+        return hasAssessmentStage && daysLeft != null;
+    }
+
     public boolean isSubmitted() {
         return SUBMITTED.equals(applicationState) ||
                 INELIGIBLE.equals(applicationState);

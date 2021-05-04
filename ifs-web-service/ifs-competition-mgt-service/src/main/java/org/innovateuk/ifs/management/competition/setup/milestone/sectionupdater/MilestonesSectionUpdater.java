@@ -77,7 +77,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
             filteredMilestoneEntries = CollectionFunctions.simpleFilter(milestoneEntries, (name, form) -> futureTypes.contains(form.getMilestoneType()));
         }
 
-        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(filteredMilestoneEntries);
+        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(competition, filteredMilestoneEntries);
         if (!errors.isEmpty()) {
             return errors;
         }

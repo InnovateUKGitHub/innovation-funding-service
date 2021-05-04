@@ -32,6 +32,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.alwaysOpenCompSetupMilestones;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.assessmentPeriodValues;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -116,12 +117,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {
         List<MilestoneType> milestoneTypes = milestones
                 .stream()
-                .map(milestone -> milestone.getType()).collect(toList());
+                .map(Milestone::getType)
+                .collect(toList());
 
-        return milestoneTypes.containsAll(milestonesRequired)
-                && milestones
-                .stream()
-                .noneMatch(milestone -> milestone.getDate() == null);
+        return milestoneTypes.containsAll(milestonesRequired);
     }
 
     private boolean filterNonIfsOutOnIFSComp(MilestoneType milestoneType, boolean isNonIfs) {
@@ -163,6 +162,20 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         return serviceSuccess();
     }
 
+
+
+    private void validatePresetMilestonesSequentialOrder(ValidationMessages vm, List<MilestoneResource> milestones) {
+        for (int i = 1; i < milestones.size(); i++) {
+            MilestoneResource previous = milestones.get(i - 1);
+            MilestoneResource current = milestones.get(i);
+
+            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
+                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
+            }
+        }
+    }
+
     @Override
     @Transactional
     public ServiceResult<MilestoneResource> create(MilestoneResource milestoneResource) {
@@ -186,44 +199,54 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         });
     }
 
+
     @Override
     @Transactional
     public ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
 
-        return getCompetition(competitionId).andOnSuccessReturnVoid(competition -> {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
             if (competition.getCompletionStage() != completionStage) {
                 competition.setCompletionStage(completionStage);
-
-                List<Milestone> currentMilestones = milestoneRepository.findAllByCompetitionId(competitionId);
-                Set<MilestoneType> targetMilestoneTypes = EnumSet.allOf(MilestoneType.class)
-                        .stream()
-                        .filter(milestoneType -> milestoneTypeShouldBeCreatedAtCompletionStageChange(milestoneType, competition))
-                        .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
-                        .collect(Collectors.toSet());
-
-                if (currentMilestones.size() > 1) {
-                    List<Milestone> milestonesToDelete = currentMilestones.stream()
-                            .filter(milestone -> milestone.getType().getPriority() > completionStage.getLastMilestone().getPriority())
-                            .collect(Collectors.toList());
-
-                    milestoneRepository.deleteAll(milestonesToDelete);
-
-                    List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
-                            .map(Milestone::getType)
-                            .collect(toList());
-
-                    targetMilestoneTypes.stream()
-                            .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType))
-                            .forEach(type -> create(new MilestoneResource(type, competition.getId())
-                    ));
-                } else {
-                    targetMilestoneTypes.stream()
-                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
-                            .forEach(type -> create(new MilestoneResource(type, competition.getId()))
-                    );
-                }
+                return rebuildMilestones(competition);
             }
+            return serviceSuccess();
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> rebuildMilestones(long competitionId) {
+        return getCompetition(competitionId).andOnSuccess(this::rebuildMilestones);
+    }
+
+    private ServiceResult<Void> rebuildMilestones(Competition competition) {
+        List<Milestone> currentMilestones = milestoneRepository.findAllByCompetitionId(competition.getId());
+        Set<MilestoneType> targetMilestoneTypes = EnumSet.allOf(MilestoneType.class)
+                .stream()
+                .filter(milestoneType -> milestoneTypeShouldBeCreatedAtCompletionStageChange(milestoneType, competition))
+                .collect(Collectors.toSet());
+
+        if (currentMilestones.size() > 1) {
+            List<Milestone> milestonesToDelete = currentMilestones.stream()
+                    .filter(milestone -> !targetMilestoneTypes.contains(milestone.getType()))
+                    .collect(Collectors.toList());
+
+            competition.getMilestones().removeAll(milestonesToDelete);
+            milestoneRepository.deleteAll(milestonesToDelete);
+
+            List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
+                    .map(Milestone::getType)
+                    .collect(toList());
+
+            targetMilestoneTypes.stream()
+                    .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType))
+                    .forEach(type -> create(new MilestoneResource(type, competition.getId())));
+        } else {
+            targetMilestoneTypes.stream()
+                    .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
+                    .forEach(type -> create(new MilestoneResource(type, competition.getId())));
+        }
+        return serviceSuccess();
     }
 
     private boolean milestoneTypeShouldBeCreatedAtCompletionStageChange(MilestoneType milestoneType, Competition competition) {
@@ -234,9 +257,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             return false;
         }
         if (competition.isAlwaysOpen()) {
-            return !assessmentPeriodValues().contains(milestoneType);
+            return alwaysOpenCompSetupMilestones().contains(milestoneType);
         }
-        return true;
+        return milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority();
     }
 
     private ValidationMessages validate(List<MilestoneResource> milestones) {
@@ -295,15 +318,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         // preset milestones must be in the correct order
         List<MilestoneResource> presetMilestones = simpleFilter(milestones, milestoneResource -> milestoneResource.getType().isPresetDate());
 
-        for (int i = 1; i < presetMilestones.size(); i++) {
-            MilestoneResource previous = presetMilestones.get(i - 1);
-            MilestoneResource current = presetMilestones.get(i);
-
-            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
-                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
-                vm.addError(error);
-            }
-        }
+        validatePresetMilestonesSequentialOrder(vm, presetMilestones);
 
         return vm;
     }
