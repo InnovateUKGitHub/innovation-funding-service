@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -53,6 +54,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withCompetition(Competition... competitions) {
         return withArray((competition, application) -> application.setCompetition(competition), competitions);
+    }
+
+    public ApplicationBuilder withAssessments(List<Assessment>... assessments) {
+        return withArray((assessment, application) -> application.setAssessments(assessment), assessments);
     }
 
     public ApplicationBuilder withApplicationState(ApplicationState... applicationStates) {

@@ -93,62 +93,77 @@
                     link above.</p>
             </th:block>
 
-            <th:block th:unless="${model.assessmentPeriods.isEmpty()}">
-                <th:block th:each="assessmentPeriod, iStat : ${model.assessmentPeriods}">
-                    <table class="govuk-table milestones-table">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col" id="milestone"
-                                th:text="'Assessment Period ' + ${assessmentPeriod.index}">Assessment Period #
-                            </th>
-                            <th class="govuk-table__header" scope="col" id="time">Time</th>
-                            <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
-                            <th class="govuk-table__header" scope="col" id="date">Date</th>
-                            <th class="govuk-table__header" scope="col" id="isPast"></th>
-                            <th class="govuk-table__header" scope="col" id="action"></th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <tr th:each="(milestoneEntry, rowIStat : ${assessmentPeriod.milestoneEntries})"
-                            th:if="${milestoneEntry.value.milestoneType.presetDate}"
-                            class="govuk-table__row date-group form-group-row"
-                            data-future-date="">
-                            <td class="govuk-table__header govuk-!-font-weight-regular" scope="row">
-                                <legend class="govuk-!-padding-left-3" th:id="${'milestone-' + (rowIStat.index + 1)}"
-                                        th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
-                            </td>
-                            <td class="govuk-table__cell time">
-                                <th:block th:if="${milestoneEntry.value.middayTime}" th:unless="${milestoneEntry.value.date} == null">
-                                   Midday
-                                    <input type="hidden"
-                                           data-time="12"
-                                           th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                           th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                           th:value="${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).TWELVE_PM}">
-                                </th:block>
-                            </td>
-                            <td class="govuk-table__cell js-addWeekDay"
-                                th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}"
-                                th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                            <td class="govuk-table__cell date" th:unless="${milestoneEntry.value.date} == null"
-                                th:text="${#temporals.format(milestoneEntry.value.date, 'dd/MM/yyyy')}">
-                                01/01/2021
-                            </td>
-                            <td class="govuk-table__cell date" th:if="${milestoneEntry.value.date} == null">
-                                -
-                            </td>
-                            <td class="govuk-table__cell" th:classappend="${!milestoneEntry.value.editable} ? 'past-date'">
+            <form id="assessment-notification"
+                  method="POST"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                <th:block th:unless="${model.assessmentPeriods.isEmpty()}">
+                    <th:block th:each="assessmentPeriod, iStat : ${model.assessmentPeriods}">
+                        <table class="govuk-table milestones-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col" id="milestone"
+                                    th:text="'Assessment Period ' + ${iStat.index + 1}">Assessment Period #
+                                </th>
+                                <th class="govuk-table__header" scope="col" id="time">Time</th>
+                                <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
+                                <th class="govuk-table__header" scope="col" id="date">Date</th>
+                                <th class="govuk-table__header" scope="col" id="isPast"></th>
+                                <th class="govuk-table__header" scope="col" id="action"></th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr th:each="(milestone, rowIStat : ${assessmentPeriod.milestones})"
+                                th:if="${milestone.milestoneType.presetDate}"
+                                class="govuk-table__row date-group form-group-row"
+                                data-future-date="">
+                                <td class="govuk-table__header govuk-!-font-weight-regular" scope="row">
+                                    <legend class="govuk-!-padding-left-3" th:id="${'milestone-' + (rowIStat.index + 1)}"
+                                            th:text="${milestone.milestoneType.getAlwaysOpenDescription()}"/>
+                                </td>
+                                <td class="govuk-table__cell time">
+                                    <th:block th:if="${milestone.middayTime}" th:unless="${milestone.date} == null">
+                                       Midday
+                                    </th:block>
+                                </td>
+                                <td class="govuk-table__cell js-addWeekDay"
+                                    th:id="'milestoneWeekdayEntry-' + ${milestone.milestoneType.milestoneDescription}"
+                                    th:text="${milestone.dayOfWeek}"></td>
+                                <td class="govuk-table__cell date" th:unless="${milestone.date} == null"
+                                    th:text="${#temporals.format(milestone.date, 'dd/MM/yyyy')}">
+                                    01/01/2021
+                                </td>
+                                <td class="govuk-table__cell date" th:if="${milestone.date} == null">
+                                    -
+                                </td>
+                                <td class="govuk-table__cell" th:classappend="${milestone.past} ? 'past-date'">
 
-                            </td>
-                            <td class="govuk-table__cell">
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <th:block th:if="${assessmentPeriod.valid}">
+                                        <th:block th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_BRIEFING}">
+                                            <button th:if="${!assessmentPeriod.hasAssessmentClosedMilestone}"
+                                                    th:disabled="${!assessmentPeriod.canNotifyAssessors()}"
+                                                    type="submit"
+                                                    th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/notify-assessors/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId}, page=${model.pagination.currentPage})}"
+                                                    class="govuk-button">Notify assessors
+                                            </button>
+                                        </th:block>
+                                        <th:block th:if="${milestone.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_DEADLINE}">
+                                            <button th:if="${assessmentPeriod.canCloseAssessment()}"
+                                                    type="submit"
+                                                    th:formaction="@{/assessment/competition/{competitionId}/assessment-period/{assessmentPeriodId}/close-assessment/(competitionId=${model.competitionId}, assessmentPeriodId=${assessmentPeriod.assessmentPeriodId}, page=${model.pagination.currentPage})}"
+                                                    class="govuk-button">Close assessment
+                                            </button>
+                                        </th:block>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </th:block>
                 </th:block>
-                <th:block th:insert="fragments/elements :: pagination(pagination=${model.assessmentPeriodPagination})" />
-            </th:block>
+            </form>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

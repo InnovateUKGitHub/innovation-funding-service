@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOut
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.*;
@@ -181,6 +182,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                             .withCompetition(
                                     newCompetition()
                                             .withCompetitionStatus(CLOSED)
+                                            .withAssessmentPeriods(newAssessmentPeriod().build(1))
                                             .withAssessorsNotifiedDate(now().minusDays(10L))
                                             .withAssessmentClosedDate(now().plusDays(10L))
                                             .build()
@@ -202,6 +204,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                         .withCompetition(
                                 newCompetition()
                                         .withCompetitionStatus(CLOSED)
+                                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                                         .withAssessorsNotifiedDate(now().plusDays(10L))
                                         .withAssessmentClosedDate(now().plusDays(20L))
                                         .build()
