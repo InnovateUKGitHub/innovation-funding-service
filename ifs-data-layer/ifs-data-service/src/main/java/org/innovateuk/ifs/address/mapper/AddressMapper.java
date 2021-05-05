@@ -6,11 +6,9 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueMappingStrategy;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(
     config = GlobalMapperConfig.class,
-    unmappedTargetPolicy = ReportingPolicy.IGNORE,
     nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class AddressMapper  extends BaseMapper<Address, AddressResource, Long> {

@@ -10,11 +10,9 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(
         config = GlobalMapperConfig.class,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {
                 ProjectMapper.class,
                 AddressMapper.class,

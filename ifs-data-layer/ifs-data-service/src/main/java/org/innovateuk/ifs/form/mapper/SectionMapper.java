@@ -6,11 +6,9 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(
     config = GlobalMapperConfig.class,
-    unmappedTargetPolicy = ReportingPolicy.IGNORE,
     uses = {
         CompetitionMapper.class,
         QuestionMapper.class

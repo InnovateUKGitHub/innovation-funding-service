@@ -10,11 +10,9 @@ import org.innovateuk.ifs.form.mapper.MultipleChoiceOptionMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.*;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(
         config = GlobalMapperConfig.class,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {
                 ProcessRoleMapper.class,
                 FormInputMapper.class,

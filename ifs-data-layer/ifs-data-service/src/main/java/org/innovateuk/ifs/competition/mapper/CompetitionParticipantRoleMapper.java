@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.mapper;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
 
 /**
  * Maps between domain and resource DTO for {@link CompetitionParticipantRole}.

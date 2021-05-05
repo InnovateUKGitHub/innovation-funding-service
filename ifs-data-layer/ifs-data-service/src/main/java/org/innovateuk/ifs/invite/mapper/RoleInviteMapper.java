@@ -6,13 +6,12 @@ import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.mapstruct.ReportingPolicy;
 
 /**
  * Mapper for converting between RoleInvite domain and resource objects
  */
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public abstract class RoleInviteMapper extends BaseMapper<RoleInvite, RoleInviteResource, Long> {
 
     @Mappings({

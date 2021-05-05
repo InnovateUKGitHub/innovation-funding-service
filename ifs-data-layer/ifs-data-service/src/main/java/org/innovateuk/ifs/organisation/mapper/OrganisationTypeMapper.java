@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper(
     componentModel = "spring"
