@@ -1,17 +1,23 @@
 package org.innovateuk.ifs.management.admin.controller;
 
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.fileupload.resource.FileUploadType;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileUploadRestService;
 import org.innovateuk.ifs.management.admin.form.UploadFilesForm;
 import org.innovateuk.ifs.management.admin.populator.UploadFilesViewModelPopulator;
 import org.innovateuk.ifs.management.admin.viewmodel.UploadFilesViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * Controller for handling requests related to uploading files by the IFS Administrator
@@ -26,17 +32,51 @@ public class FileUploadController {
     private static final String MODEL_ATTR_NAME = "model";
 
     @Autowired
+    private FileUploadRestService fileUploadRestService;
+
+    @Autowired
     private UploadFilesViewModelPopulator uploadFilesViewModelPopulator;
 
     @GetMapping("/upload-files")
-    public String UploadFiles(@RequestParam(value = "type") FileUploadType fileUploadType, Model model) {
+    public String UploadFiles(Model model) {
         UploadFilesForm form = new UploadFilesForm();
 
-        UploadFilesViewModel viewModel = uploadFilesViewModelPopulator.populate(fileUploadType);
+        UploadFilesViewModel viewModel = uploadFilesViewModelPopulator.populate();
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(MODEL_ATTR_NAME, viewModel);
 
         return "admin/upload-files";
+    }
+
+    @PostMapping(params = "upload_file")
+    @SecuredBySpring(value = "UPLOAD_FILE", description = "Ifs admin can upload the file")
+    public String uploadFECCertificateFile(Model model,
+                                           UserResource user,
+                                           @ModelAttribute("form") UploadFilesForm form,
+                                           BindingResult bindingResult) throws IOException {
+        MultipartFile file = form.getFile();
+        RestResult<FileEntryResource> result = fileUploadRestService.addFile(null, file.getContentType(),
+                file.getSize(), file.getOriginalFilename(), file.getBytes());
+        if(result.isFailure()) {
+            result.getErrors().forEach(error ->
+                    bindingResult.rejectValue("file", error.getErrorKey(), error.getArguments().toArray(), "")
+            );
+        } else {
+            form.setFileName(result.getSuccess().getName());
+        }
+
+        model.addAttribute("model", uploadFilesViewModelPopulator.populate());
+        return "admin/upload-files";
+    }
+
+    @PostMapping(params = "remove_file")
+    @AsyncMethod
+    @SecuredBySpring(value = "REMOVE_FILE", description = "Ifs admin can remove the file")
+    public String removeFECCertificateFile(Model model,
+                                           UserResource user,
+                                           @ModelAttribute("form") UploadFilesForm form) {
+        fileUploadRestService.removeFile(null);
+        return "redirect:/admin/upload-files";
     }
 }

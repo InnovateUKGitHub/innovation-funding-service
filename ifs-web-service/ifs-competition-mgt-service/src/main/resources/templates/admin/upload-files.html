@@ -19,11 +19,30 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Upload files',size='govuk-heading-l'" />
 
-        <p class="govuk-body" th:text="Upload files"></p>
+        <p class="govuk-body">Upload files</p>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{fileUpload}')} ? 'govuk-form-group--error'">
-                <th:block th:if="${#fields.hasErrors('fileUpload')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('fileUpload')}" th:text="${err}"></span>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{type}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="type">
+                    Type
+                </label>
+                <th:block th:if="${#fields.hasErrors('type')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                </th:block>
+                <select name="type"
+                        class="govuk-select govuk-!-width-one-third"
+                        id="type"
+                        th:field="*{type}"
+                        required="required"
+                        data-required-errormessage="Please select a type">
+                    <option value="">Select a type</option>
+                    <option th:each="uploadType : ${T(org.innovateuk.ifs.fileupload.resource.FileUploadType).values()}"
+                            th:value="${uploadType}"
+                            th:text="${uploadType}">COMPETITION</option>
+                </select>
+            </div>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{file}')} ? 'govuk-form-group--error'">
+                <th:block th:if="${#fields.hasErrors('file')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('file')}" th:text="${err}"></span>
                 </th:block>
                 <div id="upload-fec" class="upload-section ">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -44,12 +63,12 @@
                     <div class="govuk-form-group">
                         <th:block th:insert="question-type/types :: fileupload-fragment('edit',
                                     '',
-                                    '',
-                                    '',
-                                    '',
+                                    ${form.fileName},
+                                    file,
+                                    file,
                                     true,
-                                    '',
-                                    '')"/>
+                                    remove_file,
+                                    upload_file)"/>
                     </div>
                 </div>
             </div>
