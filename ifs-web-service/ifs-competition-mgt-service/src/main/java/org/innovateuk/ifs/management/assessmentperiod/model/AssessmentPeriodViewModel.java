@@ -19,8 +19,17 @@ public class AssessmentPeriodViewModel {
 
     private Long assessmentPeriodId;
     private boolean hasAssessorsToNotify;
-
+    private Long periodNumber;
     private List<AssessmentMilestoneViewModel> milestones;
+
+
+    public Long getPeriodNumber() {
+        return periodNumber;
+    }
+
+    public void setPeriodNumber(Long periodNumber) {
+        this.periodNumber = periodNumber;
+    }
 
     public List<AssessmentMilestoneViewModel> getMilestones() {
         return milestones;
@@ -96,6 +105,7 @@ public class AssessmentPeriodViewModel {
         return new EqualsBuilder()
                 .append(hasAssessorsToNotify, that.hasAssessorsToNotify)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
+                .append(periodNumber, that.periodNumber)
                 .append(milestones, that.milestones)
                 .isEquals();
     }
@@ -105,6 +115,7 @@ public class AssessmentPeriodViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(assessmentPeriodId)
                 .append(hasAssessorsToNotify)
+                .append(periodNumber)
                 .append(milestones)
                 .toHashCode();
     }
@@ -114,6 +125,7 @@ public class AssessmentPeriodViewModel {
         return "AssessmentPeriodViewModel{" +
                 "assessmentPeriodId=" + assessmentPeriodId +
                 ", hasAssessorsToNotify=" + hasAssessorsToNotify +
+                ", periodNumber=" + periodNumber +
                 ", milestones=" + milestones +
                 '}';
     }
