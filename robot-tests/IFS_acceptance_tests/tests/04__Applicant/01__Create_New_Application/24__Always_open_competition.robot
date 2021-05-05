@@ -13,8 +13,11 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9008 Always open competitions – assessment period actions
 ...
+...               IFS-8852 Always open competitions: assign assessors to applications
+...
+
 Suite Setup       Custom Suite Setup
-Suite Teardown    Custom suite teardown
+#Suite Teardown    Custom suite teardown
 
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
@@ -116,11 +119,11 @@ Comp admin updates the assessment period
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008
+    [Documentation]  IFS-9008  IFS-8852
     Given assign the application to assessor
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
-    Then the user reads his email and clicks the link        ${assessorEmail}   Your applications for the competition ${webTestCompName}   You have been allocated some applications to assess within this competition   1
+    Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition 'Always open competition'  We have assigned applications for you to assess for this competition:   1
     And the assessor accepts an invite to an application
 
 Internal user closes assessment period one
