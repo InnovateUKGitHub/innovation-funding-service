@@ -513,6 +513,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 asMap(
                         "name", users.get(0).getName(),
                         "competitionName", competition.getName(),
+                        "competitionId", competition.getId(),
                         "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
                         "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
@@ -525,6 +526,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 asMap(
                         "name", users.get(1).getName(),
                         "competitionName", competition.getName(),
+                        "competitionId", competition.getId(),
                         "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
                         "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
@@ -582,6 +584,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 asMap(
                         "name", user.getName(),
                         "competitionName", competition.getName(),
+                        "competitionId", competition.getId(),
                         "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
                         "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
