@@ -36,6 +36,7 @@ public class CompetitionInFlightViewModel {
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
     private boolean supporterEnabled;
+    private boolean alwaysOpen;
     private boolean isSuperAdminUser;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
@@ -67,6 +68,7 @@ public class CompetitionInFlightViewModel {
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
         this.supporterEnabled = competitionResource.isKtp();
+        this.alwaysOpen = competitionResource.isAlwaysOpen();
     }
 
     public Long getCompetitionId() {
@@ -168,5 +170,9 @@ public class CompetitionInFlightViewModel {
 
     public boolean isManageSupportersLinkEnabled() {
         return supporterEnabled;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
     }
 }
