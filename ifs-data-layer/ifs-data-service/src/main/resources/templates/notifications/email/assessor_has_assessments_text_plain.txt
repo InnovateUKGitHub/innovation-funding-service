@@ -2,7 +2,8 @@
 <@layout.defaultPlainText>
 Dear ${name}
 
-We have assigned applications for you to assess for this competition: ${competitionId}: ${competitionName}
+We have assigned applications for you to assess for this competition:
+${competitionId}: ${competitionName}
 
 You must accept or reject these applications by ${acceptsDeadline}
 
