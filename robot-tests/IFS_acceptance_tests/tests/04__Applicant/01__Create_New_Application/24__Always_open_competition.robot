@@ -17,7 +17,7 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 
 Suite Setup       Custom Suite Setup
-#Suite Teardown    Custom suite teardown
+Suite Teardown    Custom suite teardown
 
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
