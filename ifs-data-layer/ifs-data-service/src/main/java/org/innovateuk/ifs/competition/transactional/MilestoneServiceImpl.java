@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -182,23 +183,15 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         return getCompetition(milestoneResource.getCompetitionId()).andOnSuccess(competition -> {
             AssessmentPeriod assessmentPeriod = null;
             if (assessmentPeriodValues().contains(milestoneResource.getType())) {
-                if (competition.isAlwaysOpen()) {
-                    if (milestoneResource.getAssessmentPeriodId() != null) {
-                        assessmentPeriod = assessmentPeriodRepository.findById(milestoneResource.getAssessmentPeriodId()).orElse(null);
-                    } else {
-                        return serviceFailure(CommonFailureKeys.ASSESSMENT_PERIOD_MISSING_FROM_MILESTONE);
-                    }
-                } else {
-                    assessmentPeriod = assessmentPeriodRepository.findFirstByCompetitionId(competition.getId())
-                            .orElseGet(() -> assessmentPeriodRepository.save(new AssessmentPeriod(competition)));
-                }
+                Optional<Long> assessmentPeriodId = Optional.ofNullable(milestoneResource.getAssessmentPeriodId());
+                assessmentPeriod = assessmentPeriodId.map(id -> assessmentPeriodRepository.findById(id))
+                                .orElseGet(() -> assessmentPeriodRepository.findFirstByCompetitionId(competition.getId()))
+                        .orElseGet(() -> assessmentPeriodRepository.save(new AssessmentPeriod(competition)));
             }
             Milestone milestone = new Milestone(milestoneResource.getType(), competition, assessmentPeriod);
             return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
-
         });
     }
-
 
     @Override
     @Transactional
@@ -233,7 +226,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             competition.getMilestones().removeAll(milestonesToDelete);
             milestoneRepository.deleteAll(milestonesToDelete);
-
+            assessmentPeriodRepository.deleteByCompetitionId(competition.getId());
             List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
                     .map(Milestone::getType)
                     .collect(toList());
