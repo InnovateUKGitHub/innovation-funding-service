@@ -55,7 +55,7 @@ public class AssessmentPeriodService {
         ZonedDateTime end = last.getDate();
 
         if (start == null || end == null) {
-            return "";
+            return String.format("Assessment period %d", assessmentPeriodNumber);
         }
         if (start.getYear() == end.getYear()) {
             return String.format("Assessment period %d: %s %s to %s %s %s",
