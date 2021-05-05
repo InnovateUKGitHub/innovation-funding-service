@@ -4,9 +4,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.ZonedDateTime;
-import java.time.format.TextStyle;
 import java.util.List;
-import java.util.Locale;
 
 public class AssessorAssessmentPeriodChoiceViewModel {
     private final long competitionId;
@@ -34,6 +32,7 @@ public class AssessorAssessmentPeriodChoiceViewModel {
     public static class AssessmentPeriodViewModel {
         private Long assessmentPeriodId;
         private LinkedMap<String, MilestoneViewModel> milestoneEntries;
+        private String displayName;
 
         public Long getAssessmentPeriodId() {
             return assessmentPeriodId;
@@ -52,28 +51,11 @@ public class AssessorAssessmentPeriodChoiceViewModel {
         }
 
         public String getDisplayName() {
-            MilestoneViewModel first = milestoneEntries.get(milestoneEntries.firstKey());
-            MilestoneViewModel last = milestoneEntries.get(milestoneEntries.lastKey());
-            ZonedDateTime start = first.getDate();
-            ZonedDateTime end = last.getDate();
-            if (start == null || end == null) {
-                return "";
-            }
-            if (start.getYear() == end.getYear()) {
-                return String.format("%s %s to %s %s %s",
-                        start.getDayOfMonth(),
-                        start.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                        end.getDayOfMonth(),
-                        end.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                        end.getYear());
-            }
-            return String.format("%s %s %s to %s %s %s",
-                    start.getDayOfMonth(),
-                    start.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                    start.getYear(),
-                    end.getDayOfMonth(),
-                    end.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
-                    end.getYear());
+            return displayName;
+        }
+
+        public void setDisplayName(String displayName) {
+            this.displayName = displayName;
         }
     }
 

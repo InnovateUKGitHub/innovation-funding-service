@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.management.assessment.populator;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
-import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -26,6 +25,9 @@ public class AssessorAssessmentPeriodChoiceModelPopulator {
     @Autowired
     private MilestoneRestService milestoneRestService;
 
+    @Autowired
+    private AssessmentPeriodService assessmentPeriodService;
+
     public AssessorAssessmentPeriodChoiceViewModel populate(long competitionId) {
 
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
@@ -40,10 +42,14 @@ public class AssessorAssessmentPeriodChoiceModelPopulator {
                     e.getValue().forEach(milestone ->
                             milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
                     );
-                    AssessmentPeriodViewModel milestonesForm = new AssessmentPeriodViewModel();
-                    milestonesForm.setAssessmentPeriodId(e.getKey());
-                    milestonesForm.setMilestoneEntries(milestoneFormEntries);
-                    return milestonesForm;
+                    AssessmentPeriodViewModel assessmentPeriodViewModel = new AssessmentPeriodViewModel();
+                    assessmentPeriodViewModel.setAssessmentPeriodId(e.getKey());
+                    assessmentPeriodViewModel.setMilestoneEntries(milestoneFormEntries);
+
+                    String displayName = assessmentPeriodService.displayName(e.getKey(), competitionId);
+                    assessmentPeriodViewModel.setDisplayName(displayName);
+
+                    return assessmentPeriodViewModel;
                 })
                 .collect(Collectors.toList());
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();

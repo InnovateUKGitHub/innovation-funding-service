@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +29,7 @@ public class AssessmentPeriodService {
             return null;
         }
 
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
-        Map<Long, List<MilestoneResource>> milestonesGroupedByAssessmentPeriodId = milestones.stream()
-                .filter(m -> m.getAssessmentPeriodId() != null)
-                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
+        Map<Long, List<MilestoneResource>> milestonesGroupedByAssessmentPeriodId = milestonesGroupedByAssessmentPeriodId(competitionId);
 
         int index = 1;
         int assessmentPeriodNumber = -1;
@@ -46,6 +41,18 @@ public class AssessmentPeriodService {
             index++;
         }
 
+        return String.format("Assessment period %d: ", assessmentPeriodNumber) + displayName(assessmentPeriodId, competitionId);
+    }
+
+    public String displayName(long assessmentPeriodId, long competitionId) {
+        List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
+
+        if (!(assessmentPeriods.size() > 1)) {
+            return null;
+        }
+
+        Map<Long, List<MilestoneResource>> milestonesGroupedByAssessmentPeriodId = milestonesGroupedByAssessmentPeriodId(competitionId);
+
         List<MilestoneResource> milestonesForAssessmentPeriod = milestonesGroupedByAssessmentPeriodId.get(assessmentPeriodId);
 
         MilestoneResource first = milestonesForAssessmentPeriod.get(0);
@@ -55,24 +62,30 @@ public class AssessmentPeriodService {
         ZonedDateTime end = last.getDate();
 
         if (start == null || end == null) {
-            return String.format("Assessment period %d", assessmentPeriodNumber);
+            return "";
         }
         if (start.getYear() == end.getYear()) {
-            return String.format("Assessment period %d: %s %s to %s %s %s",
-                    assessmentPeriodNumber,
+            return String.format("%s %s to %s %s %s",
                     start.getDayOfMonth(),
                     start.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
                     end.getDayOfMonth(),
                     end.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
                     end.getYear());
         }
-        return String.format("Assessment period %d: %s %s %s to %s %s %s",
-                assessmentPeriodNumber,
+        return String.format("%s %s %s to %s %s %s",
                 start.getDayOfMonth(),
                 start.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
                 start.getYear(),
                 end.getDayOfMonth(),
                 end.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),
                 end.getYear());
+    }
+
+    private Map<Long, List<MilestoneResource>> milestonesGroupedByAssessmentPeriodId(long competitionId) {
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
+        return milestones.stream()
+                .filter(m -> m.getAssessmentPeriodId() != null)
+                .filter(m -> m.getDate() != null)
+                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
     }
 }
