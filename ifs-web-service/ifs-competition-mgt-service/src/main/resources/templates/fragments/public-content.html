@@ -219,122 +219,124 @@
 
 <!-- =================== Public content section - Dates  =========================================================== -->
 <th:block th:fragment="section-dates(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <th:block th:if="${model.readOnly}">
-        <th:block th:each="event : ${model.sortedEvents}">
-            <div class="govuk-grid-row govuk-!-margin-bottom-6">
-                <div class="govuk-grid-column-one-third">
-                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-9">These dates are set in the competition milestones:</h2>
+        <th:block th:if="${model.readOnly}">
+            <th:block th:each="event : ${model.sortedEvents}">
+                <div class="govuk-grid-row govuk-!-margin-bottom-6">
+                    <div class="govuk-grid-column-one-third">
+                        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
+                    </div>
+                    <div class="govuk-grid-column-two-thirds">
+                        <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
+                    </div>
                 </div>
-                <div class="govuk-grid-column-two-thirds">
-                    <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
+            </th:block>
+        </th:block>
+        <th:block th:unless="${model.readOnly}">
+            <th:block th:each="event : ${model.sortedEvents}">
+                <div class="govuk-grid-row govuk-!-margin-bottom-6">
+                    <div class="govuk-grid-column-one-third">
+                        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
+                    </div>
+                    <div class="govuk-grid-column-two-thirds">
+                        <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
+                    </div>
                 </div>
+            </th:block>
+            <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
+                <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'govuk-form-group--error' : ''">
+                        <fieldset class="govuk-fieldset">
+                            <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="form.dates[__${index}__]">
+                                <h2 class="govuk-fieldset__heading">New event</h2>
+                            </legend>
+                            <p class="govuk-body">Everything entered here will appear in the competition's 'Dates' tab.</p>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
+                            </th:block>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].month')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].month')}" th:text="${err}" />
+                            </th:block>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].year')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].year')}" th:text="${err}" />
+                            </th:block>
+                            <div class="date-group">
+                                <div class="day">
+                                    <label class="govuk-label" th:for="dates[__${index}__].day">Day</label>
+                                    <input class="govuk-input govuk-input--width-2"
+                                           placeholder="DD"
+                                           th:errorclass="govuk-input--error"
+                                           type="number"
+                                           th:id="dates[__${index}__].day"
+                                           th:field="${form.dates[__${index}__].day}"
+                                           min="1"
+                                           max="31"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}">
+                                </div>
+                                <div class="month">
+                                    <label class="govuk-label" th:for="dates[__${index}__].month">Month</label>
+                                    <input class="govuk-input govuk-input--width-2"
+                                           placeholder="MM"
+                                           type="number"
+                                           th:errorclass="govuk-input--error"
+                                           th:id="dates[__${index}__].month"
+                                           th:field="${form.dates[__${index}__].month}"
+                                           min="1"
+                                           max="12"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}" />
+                                </div>
+                                <div class="year">
+                                    <label class="govuk-label" th:for="dates[__${index}__].year">Year</label>
+                                    <input class="govuk-input govuk-input--width-4"
+                                           placeholder="YYYY"
+                                           type="number"
+                                           th:errorclass="govuk-input--error"
+                                           th:id="dates[__${index}__].year"
+                                           th:field="${form.dates[__${index}__].year}"
+                                           min="1"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}" />
+                                </div>
+                                <!--/* this is becuase the javascript expects a field that contains the combined dates,
+                                    in other situations the  Back-end preferred this above dealing with 3 seperated fields
+                                    I've added an disabled attribute to make sure this is not send to the back-end for this instance */-->
+                                <input type="hidden" th:name="${'dates[' + index + '].combined'}" disabled="" />
+
+                            </div>
+                        </fieldset>
+
+                    </div>
+                    <div class="govuk-form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'govuk-form-group--error':''">
+                        <label class="govuk-label" th:for="dates[__${index}__].content">
+                            Event description
+                        </label>
+                        <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
+                        </th:block>
+                        <textarea cols="30" rows="5"
+                                  data-editor="html"
+                                  th:id="dates[__${index}__].content"
+                                  class="govuk-textarea"
+                                  th:errorclass="govuk-textarea--error"
+                                  th:field="${form.dates[__${iteration.index}__].content}"
+                                  required="required"
+                                  th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
+                </textarea>
+                    </div>
+                    <div class="govuk-form-group">
+                        <button class="button-clear" type="button" data-remove-row="dateContentGroup">Remove event</button>
+                    </div>
+                </div>
+            </th:block>
+            <div class="alignright">
+                <button class="button-clear" type="button"  data-add-row="dateContentGroup">+ add new event</button>
             </div>
         </th:block>
     </th:block>
-    <th:block th:unless="${model.readOnly}">
-        <p class="govuk-body">Text entered into this section will appear within the dates tab.</p>
-        <h2 class="govuk-heading-s govuk-!-margin-bottom-6">Generated automatically from the competition milestones.</h2>
-        <th:block th:each="event : ${model.sortedEvents}">
-            <div class="govuk-grid-row govuk-!-margin-bottom-6">
-                <div class="govuk-grid-column-one-third">
-                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
-                </div>
-                <div class="govuk-grid-column-two-thirds">
-                    <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
-                </div>
-            </div>
-        </th:block>
-        <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
-            <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'govuk-form-group--error' : ''">
-                    <fieldset class="govuk-fieldset">
-                        <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" th:id="form.dates[__${index}__]">
-                            <h2 class="govuk-fieldset__heading">Date</h2>
-                        </legend>
-                        <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
-                        </th:block>
-                        <th:block th:if="${#fields.hasErrors('dates[__${index}__].month')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].month')}" th:text="${err}" />
-                        </th:block>
-                        <th:block th:if="${#fields.hasErrors('dates[__${index}__].year')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].year')}" th:text="${err}" />
-                        </th:block>
-                        <div class="date-group">
-                            <div class="day">
-                                <label class="govuk-label" th:for="dates[__${index}__].day">Day</label>
-                                <input class="govuk-input govuk-input--width-2"
-                                       placeholder="DD"
-                                       th:errorclass="govuk-input--error"
-                                       type="number"
-                                       th:id="dates[__${index}__].day"
-                                       th:field="${form.dates[__${index}__].day}"
-                                       min="1"
-                                       max="31"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}">
-                            </div>
-                            <div class="month">
-                                <label class="govuk-label" th:for="dates[__${index}__].month">Month</label>
-                                <input class="govuk-input govuk-input--width-2"
-                                       placeholder="MM"
-                                       type="number"
-                                       th:errorclass="govuk-input--error"
-                                       th:id="dates[__${index}__].month"
-                                       th:field="${form.dates[__${index}__].month}"
-                                       min="1"
-                                       max="12"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}" />
-                            </div>
-                            <div class="year">
-                                <label class="govuk-label" th:for="dates[__${index}__].year">Year</label>
-                                <input class="govuk-input govuk-input--width-4"
-                                       placeholder="YYYY"
-                                       type="number"
-                                       th:errorclass="govuk-input--error"
-                                       th:id="dates[__${index}__].year"
-                                       th:field="${form.dates[__${index}__].year}"
-                                       min="1"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}" />
-                            </div>
-                            <!--/* this is becuase the javascript expects a field that contains the combined dates,
-                                in other situations the  Back-end preferred this above dealing with 3 seperated fields
-                                I've added an disabled attribute to make sure this is not send to the back-end for this instance */-->
-                            <input type="hidden" th:name="${'dates[' + index + '].combined'}" disabled="" />
 
-                        </div>
-                    </fieldset>
-
-                </div>
-                <div class="govuk-form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'govuk-form-group--error':''">
-                    <label class="govuk-label govuk-label--s" th:for="dates[__${index}__].content">
-                        Content
-                    </label>
-                    <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
-                    </th:block>
-                    <textarea cols="30" rows="5"
-                              data-editor="html"
-                              th:id="dates[__${index}__].content"
-                              class="govuk-textarea"
-                              th:errorclass="govuk-textarea--error"
-                              th:field="${form.dates[__${iteration.index}__].content}"
-                              required="required"
-                              th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
-                    </textarea>
-                </div>
-                <div class="govuk-form-group">
-                    <button class="button-clear" type="button" data-remove-row="dateContentGroup">Remove event</button>
-                </div>
-            </div>
-        </th:block>
-        <div class="alignright">
-            <button class="button-clear" type="button"  data-add-row="dateContentGroup">+ add new event</button>
-        </div>
-    </th:block>
 </th:block>
 
 <!-- =================== Public content section - Scope  =========================================================== -->

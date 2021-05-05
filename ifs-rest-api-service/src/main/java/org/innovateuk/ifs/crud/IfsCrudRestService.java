@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.crud;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
