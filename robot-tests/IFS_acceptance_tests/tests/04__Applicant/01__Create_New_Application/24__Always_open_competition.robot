@@ -39,7 +39,6 @@ ${webTestAssessor}                 Angel Witt
 ${webTestAssessorEmailAddress}     angel.witt@gmail.com
 ${assessorEmail}                   another.person@gmail.com
 
-
 *** Test Cases ***
 the user fills in milestones without a submission date
     [Documentation]  IFS-8848
@@ -131,7 +130,6 @@ Internal user closes assessment period one
     When the user clicks the button/link         jQuery = button:contains("Close assessment")
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
-
 
 *** Keywords ***
 Custom suite setup
