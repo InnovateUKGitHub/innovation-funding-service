@@ -143,6 +143,15 @@ public class GrantOfferLetterController {
 
         return redirectToGrantOfferLetterPage(projectId);
     }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PostMapping("/reset")
+    public String resetGrantOfferLetterSection(@PathVariable("projectId") final Long projectId) {
+
+        grantOfferLetterService.resetGrantOfferLetter(projectId);
+
+        return redirectToGrantOfferLetterPage(projectId);
+    }
     
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(value = "/upload-annex", params = "removeAdditionalContractFileClicked")
