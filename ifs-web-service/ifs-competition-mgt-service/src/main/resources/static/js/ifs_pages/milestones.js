@@ -34,19 +34,21 @@ IFS.competitionManagement.milestones = (function () {
     milestonesSetFutureDate: function (field) {
       setTimeout(function () {
         var currentRow = field.closest('tr')
-        var nextRow = currentRow.next('tr')
-        var date = field.attr('data-date')
-        var time
-        if (currentRow.find('.time select').length > 0) {
-          time = currentRow.find('.time option:selected').attr('data-time')
-        } else {
-          time = currentRow.find('.time [data-time]').attr('data-time')
-        }
-        if (nextRow.length) {
-          nextRow.attr({'data-future-date': date + (time !== undefined ? '-' + time : '')})
-          if (jQuery.trim(date.length) !== 0) {
-            var input = nextRow.find('.day input')
-            IFS.core.formValidation.checkDate(input)
+        if (!currentRow.hasClass('not-required-in-sequence')) {
+          var nextRow = currentRow.next('tr')
+          var date = field.attr('data-date')
+          var time
+          if (currentRow.find('.time select').length > 0) {
+            time = currentRow.find('.time option:selected').attr('data-time')
+          } else {
+            time = currentRow.find('.time [data-time]').attr('data-time')
+          }
+          if (nextRow.length) {
+            nextRow.attr({'data-future-date': date + (time !== undefined ? '-' + time : '')})
+            if (jQuery.trim(date.length) !== 0) {
+              var input = nextRow.find('.day input')
+              IFS.core.formValidation.checkDate(input)
+            }
           }
         }
       }, 0)
