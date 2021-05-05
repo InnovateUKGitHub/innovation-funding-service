@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
@@ -9,7 +11,6 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourP
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -257,7 +258,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         boolean ktp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(yourProjectCostsSaver.save(form, projectId, organisationResource, new ValidationMessages()));
+            financeRowTypes.forEach(financeRowType -> validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, financeRowType, projectId, organisationId, ktp)));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
     }
