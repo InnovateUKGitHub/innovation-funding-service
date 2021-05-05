@@ -71,7 +71,7 @@ public class NonIfsDetailsFormSaverTest {
         NonIfsDetailsForm form = createForm();
         CompetitionResource competition = newCompetitionResource().withNonIfs(true).build();
         List<MilestoneResource> allMilestones = newMilestoneResource().build(1);
-        when(competitionSetupMilestoneService.validateMilestoneDates(any())).thenReturn(emptyList());
+        when(competitionSetupMilestoneService.validateMilestoneDates(any(), any())).thenReturn(emptyList());
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(allMilestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(eq(allMilestones), any(), eq(competition.getId()))).thenReturn(serviceSuccess());

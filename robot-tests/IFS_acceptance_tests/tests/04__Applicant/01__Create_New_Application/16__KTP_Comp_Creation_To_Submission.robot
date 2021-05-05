@@ -1270,14 +1270,6 @@ the user fills in the KTP Application details
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Application details") > .task-status-complete
 
-The user completes the research category
-    [Arguments]  ${res_category}
-    the user clicks the button/link      link=Research category
-    the user selects the checkbox        researchCategory
-    the user clicks the button/link      jQuery=label:contains("${res_category}")
-    the user clicks the button/link      id=application-question-complete
-    the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
-
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser

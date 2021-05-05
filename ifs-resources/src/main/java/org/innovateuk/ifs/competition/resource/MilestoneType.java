@@ -45,6 +45,20 @@ public enum MilestoneType {
         return milestoneDescription;
     }
 
+    public String getAlwaysOpenDescription() {
+        String milestoneDescription = getMilestoneDescription();
+        if (this == SUBMISSION_DATE) {
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "2.");
+        } else if (this == ASSESSOR_BRIEFING) {
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "1.");
+        } else if (this == ASSESSOR_ACCEPTS) {
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "2.");
+        } else if (this == ASSESSOR_DEADLINE) {
+            return getMilestoneDescription().replaceAll("[0-9]\\.", "3.");
+        }
+        return milestoneDescription;
+    }
+
     public boolean isOnlyNonIfs() {
         return onlyNonIfs;
     }
@@ -61,10 +75,8 @@ public enum MilestoneType {
         return Stream.of(values()).filter(MilestoneType::isPresetDate).toArray(length -> new MilestoneType[length]);
     }
 
-    public static MilestoneType[] alwaysOpenValues() {
-        return Stream.of(values())
-                .filter(MilestoneType -> (MilestoneType == MilestoneType.OPEN_DATE || MilestoneType == MilestoneType.SUBMISSION_DATE))
-                .toArray(length -> new MilestoneType[length]);
+    public static EnumSet<MilestoneType> alwaysOpenCompSetupMilestones() {
+        return EnumSet.of(OPEN_DATE, SUBMISSION_DATE);
     }
 
     public static EnumSet<MilestoneType> assessmentPeriodValues() {
