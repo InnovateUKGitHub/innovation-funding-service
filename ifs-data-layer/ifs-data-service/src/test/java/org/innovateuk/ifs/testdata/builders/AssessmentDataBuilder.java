@@ -72,8 +72,6 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             switch (state) {
                 case ACCEPTED:
                 case READY_TO_SUBMIT:
-                    doAs(superAdmin(), () -> assessmentService.unsubmitAssessment(assessmentResource.getId())
-                            .getSuccess());
                 case SUBMITTED:
                     doAs(assessor, () -> assessmentService.acceptInvitation(assessmentResource.getId())
                             .getSuccess());
