@@ -129,6 +129,16 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         verify(projectMonitoringOfficerServiceMock, only()).isMonitoringOfficer(userId);
     }
 
+    @Test
+    public void sendDocumentReviewNotification() throws Exception {
+        long userId = 11;
+        long projectId = 13;
+        when(projectMonitoringOfficerServiceMock.sendDocumentReviewNotification(projectId, userId)).thenReturn(serviceSuccess());
+        mockMvc.perform(MockMvcRequestBuilders.post("/monitoring-officer/{projectId}/notify/{userId}", projectId, userId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(projectMonitoringOfficerServiceMock, only()).sendDocumentReviewNotification(projectId, userId);
+    }
 
     @Override
     protected MonitoringOfficerController supplyControllerUnderTest() {

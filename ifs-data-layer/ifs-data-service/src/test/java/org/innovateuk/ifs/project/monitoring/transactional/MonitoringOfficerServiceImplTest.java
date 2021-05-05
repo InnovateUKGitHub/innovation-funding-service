@@ -74,6 +74,9 @@ public class MonitoringOfficerServiceImplTest {
     @Mock
     private UserMapper userMapper;
 
+    @Mock
+    private MonitoringOfficerReviewNotificationService monitoringOfficerReviewNotificationServiceMock;
+
     @Test
     public void findAll() {
         User user = newUser().build();
@@ -294,5 +297,23 @@ public class MonitoringOfficerServiceImplTest {
         ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void sendDocumentReviewNotification() {
+        User moUser = newUser().withRoles(singleton(Role.MONITORING_OFFICER)).build();
+        Project project = newProject().build();
+
+        when(userRepositoryMock.findById(moUser.getId())).thenReturn(Optional.of(moUser));
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+        when(monitoringOfficerReviewNotificationServiceMock.sendDocumentReviewNotification(moUser, project)).thenReturn(serviceSuccess());
+
+        service.sendDocumentReviewNotification(project.getId(), moUser.getId()).getSuccess();
+
+        InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, monitoringOfficerReviewNotificationServiceMock);
+        inOrder.verify(userRepositoryMock).findById(moUser.getId());
+        inOrder.verify(projectRepositoryMock).findById(project.getId());
+        inOrder.verify(monitoringOfficerReviewNotificationServiceMock).sendDocumentReviewNotification(moUser, project);
+        inOrder.verifyNoMoreInteractions();
     }
 }
