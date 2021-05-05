@@ -294,6 +294,25 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         long projectId = 1L;
         long documentConfigId = 2L;
+
+        when(documentsRestService.submitDocument(projectId, documentConfigId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/project/" + projectId + "/document/config/" + documentConfigId)
+                        .param("submitDocument", "")
+                        .param("isMOJourneyUpdateEnabled", "false"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
+
+        verify(documentsRestService).submitDocument(projectId, documentConfigId);
+    }
+
+
+    @Test
+    public void submitDocumentAndSendNotificationToMO() throws Exception {
+
+        long projectId = 1L;
+        long documentConfigId = 2L;
         MonitoringOfficerResource monitoringOfficerResource = newMonitoringOfficerResource().build();
         UserResource userResource = newUserResource().build();
 
@@ -303,7 +322,8 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         when(monitoringOfficerRestService.sendDocumentReviewNotification(projectId, userResource.getId())).thenReturn(restSuccess());
         mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)
-                        .param("submitDocument", ""))
+                        .param("submitDocument", "")
+                        .param("isMOJourneyUpdateEnabled", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
 

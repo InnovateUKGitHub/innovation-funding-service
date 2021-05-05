@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestServic
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,6 +50,9 @@ public class DocumentsController {
 
     @Autowired
     private UserRestService userRestService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     public DocumentsController() {
     }
@@ -165,13 +169,14 @@ public class DocumentsController {
         Supplier<String> failureView = () -> doViewDocument(projectId, documentConfigId, model, loggedInUser, form);
 
         RestResult<Void> result = documentsRestService.submitDocument(projectId, documentConfigId);
-        sendNotificationToMO(projectId, result);
+        if(isMOJourneyUpdateEnabled && result.isSuccess()) {
+            sendDocumentReviewNotificationToMO(projectId);
+        }
         return validationHandler.addAnyErrors(result, asGlobalErrors()).
                 failNowOrSucceedWith(failureView, successView);
     }
 
-    private void sendNotificationToMO(long projectId, RestResult<Void> result) {
-        if (result.isSuccess()) {
+    private void sendDocumentReviewNotificationToMO(long projectId) {
             Optional<MonitoringOfficerResource> monitoringOfficer  = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();;
             if (monitoringOfficer.isPresent()) {
                   Optional<UserResource> moUser= userRestService.findUserByEmail(monitoringOfficer.get().getEmail()).getOptionalSuccessObject();
@@ -179,7 +184,6 @@ public class DocumentsController {
                       monitoringOfficerRestService.sendDocumentReviewNotification(projectId, moUser.get().getId());
                   }
                }
-            }
     }
 }
 
