@@ -48,17 +48,17 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
 
     @Test
     public void testViewGrantOfferLetterPage() {
-        assertSecured(() -> classUnderTest.viewGrantOfferLetterSend(projectCompositeId.id(), null));
+        assertSecured(() -> classUnderTest.viewGrantOfferLetterSend(projectCompositeId.id(), null, null));
     }
 
     @Test
     public void testSendGrantOfferLetterPage() {
-        assertSecured(() -> classUnderTest.sendGrantOfferLetter(projectCompositeId.id(), null, null, null, null));
+        assertSecured(() -> classUnderTest.sendGrantOfferLetter(projectCompositeId.id(), null, null, null, null, null));
     }
 
     @Test
     public void testUploadGrantOfferLetterFile() {
-        assertSecured(() -> classUnderTest.uploadGrantOfferLetterFile(projectCompositeId.id(), null, null, null, null));
+        assertSecured(() -> classUnderTest.uploadGrantOfferLetterFile(projectCompositeId.id(), null, null, null, null, null));
     }
 
     @Test

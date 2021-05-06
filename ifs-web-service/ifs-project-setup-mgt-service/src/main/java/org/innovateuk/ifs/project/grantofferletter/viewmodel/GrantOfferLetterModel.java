@@ -32,6 +32,7 @@ public class GrantOfferLetterModel {
     private final String grantOfferLetterRejectionReason;
     private final ProjectState projectState;
     private final boolean useDocusignForGrantOfferLetter;
+    private final boolean isSuperAdmin;
 
     public GrantOfferLetterModel(String title,
                                  String shortTitle,
@@ -51,7 +52,8 @@ public class GrantOfferLetterModel {
                                  GrantOfferLetterStateResource grantOfferState,
                                  String grantOfferLetterRejectionReason,
                                  ProjectState projectState,
-                                 boolean useDocusignForGrantOfferLetter) {
+                                 boolean useDocusignForGrantOfferLetter,
+                                 boolean isSuperAdmin) {
         this.title = title;
         this.shortTitle = shortTitle;
         this.competitionId = competitionId;
@@ -71,6 +73,7 @@ public class GrantOfferLetterModel {
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
         this.projectState = projectState;
         this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
+        this.isSuperAdmin = isSuperAdmin;
     }
 
     public String getTitle() {
@@ -161,6 +164,10 @@ public class GrantOfferLetterModel {
 
     public boolean isUseDocusignForGrantOfferLetter() {
         return useDocusignForGrantOfferLetter;
+    }
+
+    public boolean isSuperAdmin() {
+        return isSuperAdmin;
     }
 
     @Override
