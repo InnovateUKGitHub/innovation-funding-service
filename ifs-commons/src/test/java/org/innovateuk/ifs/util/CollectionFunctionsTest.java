@@ -455,19 +455,19 @@ public class CollectionFunctionsTest {
 
     @Test
     public void simpleMapArray() {
-        assertEquals(new String[]{"123 string", "456 string"},
+        assertEquals(asList("123 string", "456 string"),
                 CollectionFunctions.simpleMapArray(new Integer[]{123, 456}, element -> element + " string", String.class));
     }
 
     @Test
     public void simpleMapArray_nullArray() {
-        assertEquals(new String[]{},
+        assertEquals(Collections.emptyList(),
                 CollectionFunctions.simpleMapArray(null, element -> element + " string ", String.class));
     }
 
     @Test
     public void simpleMapArray_emptyArray() {
-        assertEquals(new String[]{},
+        assertEquals(Collections.emptyList(),
                 CollectionFunctions.simpleMapArray(new String[]{}, element -> element + " string ", String.class));
     }
 
