@@ -125,7 +125,7 @@ public class OrganisationControllerFullIntegrationTest extends BaseFullStackInte
         assertOneResultWithNameAndChn(
                 organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN + UPDATED).getSuccess(),
                 TEST_ORG_NAME_WITH_CHN + UPDATED,
-                Optional.of(CHN_UPDATED)
+                Optional.of(CHN)
         );
     }
 
