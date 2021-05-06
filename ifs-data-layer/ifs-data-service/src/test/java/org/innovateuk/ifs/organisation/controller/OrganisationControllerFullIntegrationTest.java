@@ -73,8 +73,8 @@ public class OrganisationControllerFullIntegrationTest extends BaseFullStackInte
 
     @Test
     public void validationNoOrgId() {
-        HttpStatus statusCode = organisationController.updateNameAndRegistration(Long.MAX_VALUE,
-                TEST_ORG_NAME_WITH_CHN + UPDATED, CHN_UPDATED).getStatusCode();
+        HttpStatus statusCode = organisationController.updateOrganisationName(Long.MAX_VALUE,
+                TEST_ORG_NAME_WITH_CHN + UPDATED).getStatusCode();
         assertThat(statusCode, equalTo(HttpStatus.NOT_FOUND));
     }
 
@@ -87,8 +87,8 @@ public class OrganisationControllerFullIntegrationTest extends BaseFullStackInte
                 Optional.of(CHN)
         );
         HttpStatus statusCode = organisationController
-                .updateNameAndRegistration(organisationResource.getId(),
-                        RandomStringUtils.randomAlphanumeric(260), CHN).getStatusCode();
+                .updateOrganisationName(organisationResource.getId(),
+                        RandomStringUtils.randomAlphanumeric(260)).getStatusCode();
         assertThat(statusCode, equalTo(HttpStatus.BAD_REQUEST));
     }
 
@@ -121,7 +121,7 @@ public class OrganisationControllerFullIntegrationTest extends BaseFullStackInte
             Optional.of(CHN)
         );
         Long id = organisationResource.getId();
-        organisationController.updateNameAndRegistration(id, TEST_ORG_NAME_WITH_CHN + UPDATED, CHN_UPDATED);
+        organisationController.updateOrganisationName(id, TEST_ORG_NAME_WITH_CHN + UPDATED);
         assertOneResultWithNameAndChn(
                 organisationController.findOrganisationsByName(TEST_ORG_NAME_WITH_CHN + UPDATED).getSuccess(),
                 TEST_ORG_NAME_WITH_CHN + UPDATED,
