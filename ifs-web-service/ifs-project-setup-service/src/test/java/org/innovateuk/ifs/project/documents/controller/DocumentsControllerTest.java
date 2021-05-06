@@ -58,9 +58,33 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .withName("Project 12")
                 .build();
 
-        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true, false);
+        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true, false, false);
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))
+                .andExpect(view().name("project/documents-all"))
+                .andReturn();
+
+        AllDocumentsViewModel returnedViewModel = (AllDocumentsViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(viewModel, returnedViewModel);
+    }
+
+    @Test
+    public void monitoringOfficerCanViewAllDocuments() throws Exception {
+
+        setLoggedInUser(monitoringOfficer);
+        long projectId = 1L;
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(2L)
+                .withCompetition(3L)
+                .withName("Project 12")
+                .build();
+
+        AllDocumentsViewModel viewModel =
+                new AllDocumentsViewModel(project, emptyList(), false, false, true);
+
+        when(populator.populateAllDocuments(projectId, monitoringOfficer.getId())).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))
                 .andExpect(view().name("project/documents-all"))
                 .andReturn();

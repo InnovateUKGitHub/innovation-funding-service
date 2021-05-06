@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentStatus;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -36,6 +37,9 @@ public class DocumentsPopulator {
     @Autowired
     private ProjectRestService projectRestService;
 
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
     public AllDocumentsViewModel populateAllDocuments(long projectId, long loggedInUserId) {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
@@ -57,7 +61,7 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement());
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), isMonitoringOfficer(loggedInUserId, projectId));
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -105,6 +109,10 @@ public class DocumentsPopulator {
                 .map(ProjectUserResource::getUser)
                 .map(userId -> userId.equals(loggedInUserId))
                 .orElse(false);
+    }
+
+    private boolean isMonitoringOfficer(long loggedInUserId, long projectId) {
+        return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUserId).getSuccess();
     }
 
     private CompetitionResource getCompetition(long competitionId) {

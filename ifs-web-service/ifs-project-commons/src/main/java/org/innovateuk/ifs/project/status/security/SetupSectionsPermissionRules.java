@@ -136,9 +136,19 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isStakeholder);
     }
 
+    @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A monitoring officer can access the Documents section")
+    public boolean monitoringOfficerCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isMonitoringOfficer);
+    }
+
     @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Comp admin or project finance users can approve or reject documents")
     public boolean internalAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
         return SecurityRuleUtil.isInternalAdmin(user);
+    }
+
+    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Monitoring Officer can approve or reject documents")
+    public boolean monitoringOfficerCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
+        return SecurityRuleUtil.isMonitoringOfficer(user);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "An internal user can access the Grant Offer Letter send " +

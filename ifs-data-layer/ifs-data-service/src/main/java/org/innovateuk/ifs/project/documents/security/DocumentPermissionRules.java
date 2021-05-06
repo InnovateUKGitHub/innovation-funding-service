@@ -55,6 +55,11 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isInternalAdmin(user) || hasIFSAdminAuthority(user);
     }
 
+    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Monitoring officer of the project can approve or reject document")
+    public boolean monitoringOfficerCanApproveDocument(ProjectResource project, UserResource user) {
+        return isMonitoringOfficer(project.getId(), user.getId());
+    }
+
     private boolean userIsStakeholderOnProject(ProjectResource project, UserResource user) {
         return userIsStakeholderOnCompetitionForProject(project.getId(), user.getId());
     }

@@ -20,11 +20,15 @@
 	       <p class="govuk-body govuk-!-margin-top-6">You can upload and submit additional documents to support your application.</p>
         </th:block>
 
-        <th:block th:unless="${model.projectManager}">
+        <th:block th:if="${model.isMonitoringOfficer}">
+            <p class="govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-9">Please review the documents submitted by the project manager. You must accept or reject them based on the Innovate UK's requirements.</p>
+        </th:block>
+
+        <th:block th:unless="${model.projectManager or model.isMonitoringOfficer}">
             <p class="govuk-body govuk-!-margin-top-6"> Only the project manager can upload and submit additional documents to support your<th:block th:text="${model.IsProcurement() ? ' ' : ' grant '}"></th:block>application.</p>
         </th:block>
 
-        <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject()}">These documents should be reviewed by all partners in the project team.</p>
+        <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject() or model.isMonitoringOfficer}">These documents should be reviewed by all partners in the project team.</p>
 
         <ul class="task-list">
             <li th:each="document : ${model.documents}">
@@ -35,18 +39,38 @@
                            class="govuk-link" />
                     </span>
                 </div>
-               <div th:if="${document.notSubmitted || document.rejected}"
-                     class="task-status-incomplete">
-                    <span>Incomplete</span>
-                </div>
-                <div th:if="${document.awaitingReview}"
-                    class="task-status-info">
-                    <span>Awaiting review</span>
-                </div>
-                <div th:if="${document.approved}"
-                     class="task-status-complete">
-                    <span>Complete</span>
-                </div>
+                <th:block th:unless="${model.isMonitoringOfficer}">
+                    <div th:if="${document.notSubmitted || document.rejected}"
+                         class="task-status-incomplete">
+                        <span>Incomplete</span>
+                    </div>
+                    <div th:if="${document.awaitingReview}"
+                         class="task-status-info">
+                        <span>Awaiting review</span>
+                    </div>
+                    <div th:if="${document.approved}"
+                         class="task-status-complete">
+                        <span>Complete</span>
+                    </div>
+                </th:block>
+                <th:block th:if="${model.isMonitoringOfficer}">
+                    <div th:if="${document.notSubmitted}"
+                         class="task-status-info">
+                        <span>No file uploaded</span>
+                    </div>
+                    <div th:if="${document.awaitingReview}"
+                         class="task-status-incomplete">
+                        <span>To be reviewed</span>
+                    </div>
+                    <div th:if="${document.approved}"
+                         class="task-status-complete">
+                        <span>Approved</span>
+                    </div>
+                    <div th:if="${document.rejected}"
+                         class="task-status-rejected">
+                        <span>Rejected</span>
+                    </div>
+                </th:block>
             </li>
         </ul>
 
