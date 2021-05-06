@@ -1,6 +1,8 @@
 
 package org.innovateuk.ifs;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.mockito.ArgumentMatcher;
 
 import java.util.Optional;
@@ -14,7 +16,7 @@ import static org.mockito.ArgumentMatchers.argThat;
  *
  * @param <T>
  */
-public class LambdaMatcher<T> implements ArgumentMatcher<T> {
+public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<T> {
 
     private final Predicate<T> matcher;
     private Optional<String> description = Optional.empty();
@@ -36,13 +38,20 @@ public class LambdaMatcher<T> implements ArgumentMatcher<T> {
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean matches(T argument) {
-        return matcher.test(argument);
+    public boolean matches(Object argument) {
+        return matcher.test((T) argument);
     }
 
+    @Override
+    public void describeTo(Description description) {
+        this.description.ifPresent(description::appendText);
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> LambdaMatcher<T> lambdaMatches(Predicate<T> predicate) {
-        return new LambdaMatcher<T>(predicate);
+        return new LambdaMatcher(predicate);
     }
 
     /**
