@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * View model for the dates section.
  */
+@SuppressWarnings("unchecked")
 public class DatesViewModel extends AbstractPublicContentViewModel {
     List<DateViewModel> publicContentDates;
 

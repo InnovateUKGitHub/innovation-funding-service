@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.sav
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private static final Log LOG = LogFactory.getLog(AbstractYourProjectCostsSaver.class);
 

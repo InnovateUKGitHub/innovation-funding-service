@@ -15,6 +15,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("unchecked")
 public class CompetitionResourceTest {
     @Test
     public void getFinanceRowTypesByFinanceForFecCostModel() {

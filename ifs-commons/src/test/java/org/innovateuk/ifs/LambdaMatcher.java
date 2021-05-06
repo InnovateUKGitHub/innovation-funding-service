@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.argThat;
  *
  * @param <T>
  */
+@SuppressWarnings("unchecked")
 public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<T> {
 
     private final Predicate<T> matcher;

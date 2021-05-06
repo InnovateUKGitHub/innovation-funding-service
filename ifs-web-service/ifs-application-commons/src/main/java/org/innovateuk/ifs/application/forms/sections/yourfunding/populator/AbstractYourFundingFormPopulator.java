@@ -16,6 +16,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractYourFundingFormPopulator {
 
     protected AbstractYourFundingForm populateForm(BaseFinanceResource finance, CompetitionResource competitionResource) {

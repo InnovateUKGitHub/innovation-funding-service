@@ -23,6 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
+@SuppressWarnings("unchecked")
 @Category(ControllerTest.class)
 public abstract class AbstractEndpointControllerMockMvcTest<T> {
 

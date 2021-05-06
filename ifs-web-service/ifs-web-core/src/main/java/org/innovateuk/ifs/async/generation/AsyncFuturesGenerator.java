@@ -42,6 +42,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  * with {@link AsyncFuturesHolder} which will prevent Controllers from rendering templates until all of the Futures have
  * completed.
  */
+@SuppressWarnings("unchecked")
 @Component
 public class AsyncFuturesGenerator {
 

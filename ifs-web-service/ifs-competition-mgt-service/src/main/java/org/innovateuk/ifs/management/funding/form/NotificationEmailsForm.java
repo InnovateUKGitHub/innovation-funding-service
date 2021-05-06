@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class NotificationEmailsForm {
 
     @NotBlank(message="{validation.manage.funding.notifications.message.required}")
