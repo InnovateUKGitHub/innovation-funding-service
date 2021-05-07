@@ -58,7 +58,7 @@ public class PageResource<PageableResource> {
         int startIndex = max(0, min(number * size, totalElements));
         int endIndex = max(0, min((number + 1) * size, totalElements));
         List<PageableResource> content = results.subList(startIndex, endIndex);
-        return new PageResource(totalElements, totalPages, content, number, size);
+        return new PageResource<>(totalElements, totalPages, content, number, size);
     }
 
     public long getTotalElements() {
