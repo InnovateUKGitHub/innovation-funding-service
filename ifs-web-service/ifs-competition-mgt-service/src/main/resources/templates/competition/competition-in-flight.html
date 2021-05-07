@@ -229,7 +229,8 @@
                             <li>
                                 <h3 class="govuk-heading-s">Briefing event</h3>
                                 <p class="govuk-body">
-                                    <a href="/">See public dates</a>
+                                    <a th:href="@{/competition/setup/public-content/dates/{competitionId}(competitionId=${model.competitionId})}"
+                                       class="govuk-link">See public dates</a>
                                 </p>
                             </li>
                             <li th:with="milestone=${model.findMilestoneByType(T(org.innovateuk.ifs.competition.resource.MilestoneType).SUBMISSION_DATE)}"

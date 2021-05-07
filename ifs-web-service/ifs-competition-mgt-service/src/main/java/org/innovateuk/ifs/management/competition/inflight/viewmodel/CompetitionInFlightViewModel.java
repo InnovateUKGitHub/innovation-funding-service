@@ -188,6 +188,6 @@ public class CompetitionInFlightViewModel {
     public boolean hasAClosedAssessmentPeriod() {
         return milestones
                 .stream()
-                .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed())
+                .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
     }
 }
