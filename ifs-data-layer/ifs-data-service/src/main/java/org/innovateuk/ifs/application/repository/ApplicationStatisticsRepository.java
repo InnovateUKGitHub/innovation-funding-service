@@ -87,11 +87,11 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             SUM_SUBMITTED +
             ")" +
             ASSESSOR_FILTER)
-    Page<ApplicationCountSummaryResource> findStatisticsForApplicationsNotAssignedTo(long competitionId,
-                                                                                     long assessorId,
-                                                                                     String filter,
-                                                                                     Pageable pageable);
-
+    Page<ApplicationCountSummaryResource> findStatisticsForApplicationsNotAssignedTo(
+            long competitionId,
+            long assessorId,
+            String filter,
+            Pageable pageable);
 
     @Query("SELECT application.id " +
             ASSESSOR_FILTER)
@@ -103,10 +103,10 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas, " +
-            "  sum(case when application.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
-            "  sum(case when application.id IS NOT NULL AND application.competition.id = :compId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
-            "  sum(case when application.id IS NOT NULL AND application.competition.id = :compId AND assessment.activityState NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
-            "  sum(case when application.id IS NOT NULL AND application.competition.id = :compId AND assessment.activityState     IN " + SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)  " +  // submitted
+            "  sum(case when application.id IS NOT NULL AND application.assessmentPeriod.id = :assessmentPeriodId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
+            "  sum(case when application.id IS NOT NULL AND application.assessmentPeriod.id = :assessmentPeriodId AND application.competition.id = :compId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
+            "  sum(case when application.id IS NOT NULL AND application.assessmentPeriod.id = :assessmentPeriodId AND application.competition.id = :compId AND assessment.activityState NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
+            "  sum(case when application.id IS NOT NULL AND application.assessmentPeriod.id = :assessmentPeriodId AND application.competition.id = :compId AND assessment.activityState     IN " + SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN User user ON user.id = assessmentParticipant.user.id " +
@@ -128,7 +128,8 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')" +
             "GROUP BY user ")
-    Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessorNameLike(@Param("compId") long competitionId,
-                                                                                               @Param("assessorNameFilter") String assessorNameFilter,
-                                                                                               Pageable pageable);
+    Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(@Param("compId") long competitionId,
+                                                                                                                    @Param("assessmentPeriodId") long assessmentPeriodId,
+                                                                                                                    @Param("assessorNameFilter") String assessorNameFilter,
+                                                                                                                    Pageable pageable);
 }

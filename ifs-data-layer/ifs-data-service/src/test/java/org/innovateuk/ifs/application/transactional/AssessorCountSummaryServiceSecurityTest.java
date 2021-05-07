@@ -22,13 +22,13 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
                         .withRoleGlobal(Role.COMP_ADMIN)
                         .build()
         );
-        classUnderTest.getAssessorCountSummariesByCompetitionId(1L,  "",0, 0);
+        classUnderTest.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(1L, 1L, "",0, 0);
     }
 
     @Test(expected = AccessDeniedException.class)
     public void testGetAssessorCountSummariesByCompetitionId_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getAssessorCountSummariesByCompetitionId(1L, "",0, 0);
+        classUnderTest.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(1L, 1L, "",0, 0);
     }
 
     @Override
