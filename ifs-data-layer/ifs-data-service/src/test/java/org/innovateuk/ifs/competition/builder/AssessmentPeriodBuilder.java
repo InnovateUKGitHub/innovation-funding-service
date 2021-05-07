@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Milestone;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -26,6 +28,14 @@ public class AssessmentPeriodBuilder extends BaseBuilder<AssessmentPeriod, Asses
 
     public AssessmentPeriodBuilder withCompetition(Competition... competitions) {
         return withArraySetFieldByReflection("competition", competitions);
+    }
+
+    public AssessmentPeriodBuilder withMilestones(List<Milestone>... milestones) {
+        return withArraySetFieldByReflection("milestones", milestones);
+    }
+
+    public AssessmentPeriodBuilder withApplications(List<Application>... applications) {
+        return withArraySetFieldByReflection("applications", applications);
     }
 
     @Override
