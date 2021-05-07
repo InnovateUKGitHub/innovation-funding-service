@@ -23,7 +23,7 @@ public class FileUploadController {
     @Value("10485760")
     private Long maxFilesizeBytesForApplicationFinance;
 
-    @Value("application/csv")
+     @Value("${ifs.data.service.file.upload.files.valid.media.types}")
     private List<String> validMediaTypesForApplicationFinance;
 
     @Autowired
@@ -39,12 +39,12 @@ public class FileUploadController {
     public RestResult<FileEntryResource> addFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "uploadId") long uploadId,
-            @RequestParam(value = "filename", required = false) String originalFilename,
+            @RequestParam(value = "fileType") String fileType,
+            @RequestParam(value = "fileName", required = false) String originalFilename,
             HttpServletRequest request) {
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
-                fileUploadService.createFileEntry(uploadId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+               fileUploadService.createFileEntry(fileType, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @DeleteMapping(value = "/delete-file", produces = "application/json")
@@ -54,16 +54,20 @@ public class FileUploadController {
         return deleteResult.toDeleteResponse();
     }
 
-    @GetMapping("/get-file")
+    @GetMapping("/getFileAndContents")
     public @ResponseBody
-    ResponseEntity<Object> getFileContent(@RequestParam("uploadId") long uploadId) throws IOException {
-        return fileControllerUtils.handleFileDownload(() -> fileUploadService.getFileContents(uploadId));
+    ResponseEntity<Object> getFileContent(@RequestParam("fileEntryId") long fileEntryId) throws IOException {
+        return fileControllerUtils.handleFileDownload(() -> fileUploadService.getFileContents(fileEntryId));
     }
-
+//TODO
     @GetMapping("/get-file/fileentry")
     public RestResult<FileEntryResource> getFileDetails(@RequestParam("uploadId") long uploadId) throws IOException {
         return fileUploadService.getFileContents(uploadId).
                 andOnSuccessReturn(FileAndContents::getFileEntry).
                 toGetResponse();
+    }
+    @GetMapping("/get-allFiles")
+    public RestResult<List<FileEntryResource>> getAllUploadedFileEntryResources() {
+       return fileUploadService.getAllUploadedFileEntryResources().toGetResponse();
     }
 }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.admin.populator.UploadFilesViewModelPopulat
 import org.innovateuk.ifs.management.admin.viewmodel.UploadFilesViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for handling requests related to uploading files by the IFS Administrator
@@ -49,14 +52,14 @@ public class FileUploadController {
         return "admin/upload-files";
     }
 
-    @PostMapping(params = "upload_file")
+    @PostMapping(path = "/upload-files", params = {"upload_file"})
     @SecuredBySpring(value = "UPLOAD_FILE", description = "Ifs admin can upload the file")
-    public String uploadFECCertificateFile(Model model,
+    public String uploadExternalSystemFiles(Model model,
                                            UserResource user,
                                            @ModelAttribute("form") UploadFilesForm form,
                                            BindingResult bindingResult) throws IOException {
         MultipartFile file = form.getFile();
-        RestResult<FileEntryResource> result = fileUploadRestService.addFile(null, file.getContentType(),
+        RestResult<FileEntryResource> result = fileUploadRestService.addFile(form.getType().name(), file.getContentType(),
                 file.getSize(), file.getOriginalFilename(), file.getBytes());
         if(result.isFailure()) {
             result.getErrors().forEach(error ->
@@ -68,6 +71,37 @@ public class FileUploadController {
 
         model.addAttribute("model", uploadFilesViewModelPopulator.populate());
         return "admin/upload-files";
+    }
+
+    @PostMapping(path = "/upload-files", params = {"process_files"})
+    @SecuredBySpring(value = "UPLOAD_FILE", description = "Ifs admin can upload the file")
+    public String parseUploadedFiles(Model model,
+                                     UserResource user,
+                                     @ModelAttribute("form") UploadFilesForm form,
+                                     BindingResult bindingResult) throws IOException {
+
+        RestResult<List<FileEntryResource>>  uploadedFileentriesResult = fileUploadRestService.getAllUploadedFileEntryResources();
+        if (uploadedFileentriesResult.isSuccess()) {
+            List<FileEntryResource> uploadedFileentries = uploadedFileentriesResult.getSuccess();
+            //TODO need to think about how to schedule each file parsing
+            FileEntryResource fileEntryResource =  uploadedFileentries.get(0);
+            Long fileEntryId = fileEntryResource.getId();
+            Optional<ByteArrayResource> fileAndContents = fileUploadRestService.getFileAndContents(fileEntryId).getOptionalSuccessObject();
+
+        //    return "admin/upload-files/get-file/";
+        }
+        return "admin/upload-files";
+    }
+
+    @GetMapping(path = "/upload-files/get-file/", params = {"fileEntryId"})
+    @SecuredBySpring(value = "GET_FILE", description = "Ifs admin can do parse and get the file")
+    public void getFileAndContents(Model model,
+                                     UserResource user,
+                                     @ModelAttribute("form") UploadFilesForm form,
+                                     @PathVariable("fileEntryId") final Long fileEntryId,
+                                     BindingResult bindingResult) throws IOException {
+
+        Optional<ByteArrayResource> fileAndContents = fileUploadRestService.getFileAndContents(fileEntryId).getOptionalSuccessObject();
     }
 
     @PostMapping(params = "remove_file")

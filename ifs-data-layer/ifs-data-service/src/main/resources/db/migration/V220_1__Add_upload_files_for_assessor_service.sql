@@ -3,7 +3,7 @@
 
 CREATE TABLE `upload_files` (
 	`id` bigint(20) NOT NULL AUTO_INCREMENT,
-	`type` varchar(255) NOT NULL,
+	`type` varchar(255) DEFAULT NULL,
 	`file_entry_id` bigint(20) DEFAULT NULL,
  	 PRIMARY KEY (`id`)
 );
