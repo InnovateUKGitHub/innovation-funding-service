@@ -76,6 +76,10 @@ public class SendNotificationsViewModel {
         return alwaysOpen;
     }
 
+    public String getPageTitle () {
+        return alwaysOpen ? "Send decision notification and release feedback" : "Send decision notification";
+    }
+
     public Map<Long, FundingDecision> getFundingDecisions() {
         return getApplications()
                 .stream()
