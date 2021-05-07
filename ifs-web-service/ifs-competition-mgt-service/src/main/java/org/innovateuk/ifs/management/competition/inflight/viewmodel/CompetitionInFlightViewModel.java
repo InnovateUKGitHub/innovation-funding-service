@@ -156,7 +156,8 @@ public class CompetitionInFlightViewModel {
 
     public boolean isFundingDecisionEnabled() {
         return fundingDecisionAllowedBeforeAssessment
-                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus);
+                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus)
+                || (alwaysOpen && hasAClosedAssessmentPeriod());
     }
 
     public boolean isFundingNotificationDisplayed() {

@@ -105,6 +105,11 @@
                         [competition name] <br/>
                         [application title] <br/>
                         <th:block th:if="${model.includeAssessorsScore}">Average assessor score: [assessor score]%</th:block>
+                        <th:block th:if="${model.alwaysOpen}">
+                            Thank you for submitting your application [application number]: [application title] to Innovate UK
+                            for the competition [competition number]: [competition name] <br/>
+                            Feedback is now available for you to view on the <a href="/">Innovation Funding Service</a>
+                        </th:block>
                     </p>
                 </div>
 
