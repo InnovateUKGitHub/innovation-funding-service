@@ -13,8 +13,8 @@ import org.innovateuk.ifs.management.assessmentperiod.model.AssessmentPeriodView
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -49,8 +49,13 @@ public class ManageAssessmentsModelPopulator {
     }
 
     private List<AssessmentPeriodViewModel> assessmentPeriodViewModels(long competitionId){
-        return periodIdToMilestone(competitionId).entrySet().stream()
-                .map(e -> assessmentPeriodViewModel(e.getValue(), e.getKey())).collect(toList());
+        SortedMap<Long, List<MilestoneResource>> periodIdToMilestone = new TreeMap<>(periodIdToMilestone(competitionId)); // Default ordering by assessment period id.
+        List<AssessmentPeriodViewModel> assessmentPeriodViewModels = new ArrayList<>();
+        long index = 0;
+        for (Entry<Long, List<MilestoneResource>> entry: periodIdToMilestone.entrySet()){
+            assessmentPeriodViewModels.add(assessmentPeriodViewModel(index++, entry.getKey(), entry.getValue()));
+        }
+        return assessmentPeriodViewModels;
     }
 
     private Map<Long, List<MilestoneResource>> periodIdToMilestone(long competitionId){
@@ -61,7 +66,7 @@ public class ManageAssessmentsModelPopulator {
                 .collect(groupingBy(MilestoneResource::getAssessmentPeriodId));
     }
 
-    private AssessmentPeriodViewModel assessmentPeriodViewModel(List<MilestoneResource> milestones, long assessmentPeriodId){
+    private AssessmentPeriodViewModel assessmentPeriodViewModel(long index,long assessmentPeriodId, List<MilestoneResource> milestones){
         long assessmentsToNotify = assessmentRestService.countByStateAndAssessmentPeriod(CREATED, assessmentPeriodId).getSuccess();
         List<AssessmentMilestoneViewModel> assessmentMilestoneViewModel = milestones
                 .stream()
@@ -71,6 +76,7 @@ public class ManageAssessmentsModelPopulator {
         assessmentPeriodViewModel.setMilestones(assessmentMilestoneViewModel);
         assessmentPeriodViewModel.setHasAssessorsToNotify(assessmentsToNotify > 0);
         assessmentPeriodViewModel.setAssessmentPeriodId(assessmentPeriodId);
+        assessmentPeriodViewModel.setPeriodNumber(index + 1);
         return assessmentPeriodViewModel;
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -130,17 +131,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return find(assessmentPeriodRepository.findById(assessmentPeriodId), notFoundError(Application.class, assessmentPeriodId))
                 .andOnSuccess(assessmentPeriod -> {
                     Competition competition = assessmentPeriod.getCompetition();
-                    ServiceResult<?> result = serviceSuccess();
-                    if (competition.isKtp()) {
-                        result = aggregate(applicationRepository.findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(competition.getId(), assessmentPeriodId, newArrayList(SUBMITTED))
-                                .stream()
-                                .map(Application::getId)
-                                .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
-                                .collect(toList()));
-                    }
+                    ServiceResult<Void> result = competition.isKtp() ? markApplicationsToBeCreatedOnCloseAssessmentKtp(competition, assessmentPeriod) : serviceSuccess();
                     competition.closeAssessment(ZonedDateTime.now(), assessmentPeriod);
-                    return result.andOnSuccessReturnVoid();
+                    return result;
                 });
+    }
+
+    private ServiceResult<Void> markApplicationsToBeCreatedOnCloseAssessmentKtp(Competition competition, AssessmentPeriod assessmentPeriod){
+            List<Application> applicationsToMark = competition.isAlwaysOpen() ?
+                    applicationRepository.findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(competition.getId(), assessmentPeriod.getId(), newArrayList(SUBMITTED)) :
+                    applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competition.getId(), newArrayList(SUBMITTED));
+         return aggregate(applicationsToMark.stream()
+                .map(Application::getId)
+                .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
+                .collect(toList())).andOnSuccessReturnVoid();
     }
 
     @Override

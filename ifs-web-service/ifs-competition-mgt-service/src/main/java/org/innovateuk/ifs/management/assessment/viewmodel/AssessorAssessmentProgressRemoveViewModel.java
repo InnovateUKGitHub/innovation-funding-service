@@ -11,6 +11,7 @@ public class AssessorAssessmentProgressRemoveViewModel {
     private long competitionId;
     private long assessorId;
     private long assessmentId;
+    private Long assessmentPeriodId;
 
     public AssessorAssessmentProgressRemoveViewModel(
             long competitionId,
@@ -19,6 +20,17 @@ public class AssessorAssessmentProgressRemoveViewModel {
         this.competitionId = competitionId;
         this.assessorId = assessorId;
         this.assessmentId = assessmentId;
+    }
+
+    public AssessorAssessmentProgressRemoveViewModel(
+            long competitionId,
+            long assessorId,
+            long assessmentId,
+            long assessmentPeriodId) {
+        this.competitionId = competitionId;
+        this.assessorId = assessorId;
+        this.assessmentId = assessmentId;
+        this.assessmentPeriodId = assessmentPeriodId;
     }
 
     public long getCompetitionId() {
@@ -31,6 +43,10 @@ public class AssessorAssessmentProgressRemoveViewModel {
 
     public long getAssessmentId() {
         return assessmentId;
+    }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
     }
 
     @Override
