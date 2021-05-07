@@ -4,10 +4,7 @@ apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
-apply from: "gradle-support/gradle-versions.gradle"
-apply from: "gradle-support/dependency-check.gradle"
 apply from: "gradle-support/pull-all-base-images.gradle"
-apply from: "gradle-support/stage-base-images.gradle"
 
 if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
     apply from: "gradle-support/zipkin.gradle"
@@ -68,21 +65,6 @@ buildscript {
 
     }
 
-}
-
-
-dependencyUpdates.resolutionStrategy = {
-    componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
-            // filters out any version numbers ending in rejected. e.g 1.0.0-rc.
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'pr1', 'Beta'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
 }
 
 
