@@ -44,6 +44,7 @@ public class FormValidatorResource {
     }
 
     @JsonIgnore
+    @SuppressWarnings("unchecked")
     public Class<Validator> getClazz() throws ClassNotFoundException {
         return (Class<Validator>) Class.forName(this.clazzName);
     }
