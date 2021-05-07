@@ -31,6 +31,7 @@ public class CompetitionParticipantResource {
     private long submittedAssessments;
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
+    private Boolean competitionAlwaysOpen;
 
     private Clock clock = Clock.systemDefaultZone();
 
@@ -152,6 +153,14 @@ public class CompetitionParticipantResource {
 
     public void setCompetitionStatus(CompetitionStatus competitionStatus) {
         this.competitionStatus = competitionStatus;
+    }
+
+    public Boolean getCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
+    }
+
+    public void setCompetitionAlwaysOpen(Boolean competitionAlwaysOpen) {
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
     }
 
     @JsonIgnore

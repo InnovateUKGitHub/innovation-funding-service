@@ -71,13 +71,16 @@ public class AssessorDashboardModelPopulator {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getAssessorParticipants(user.getId()).getSuccess();
 
+        List<CompetitionParticipantResource> participantResourceListByAssessmentPeriod = competitionParticipantRestService
+                .getAssessorParticipantsByAssessmentPeriod(user.getId()).getSuccess();
+
         List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
         List<InterviewParticipantResource> interviewParticipantResourceList = interviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource, roleProfileState),
-                getActiveCompetitions(participantResourceList),
+                getActiveCompetitions(participantResourceListByAssessmentPeriod),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(reviewParticipantResourceList),
@@ -91,8 +94,8 @@ public class AssessorDashboardModelPopulator {
         return new AssessorProfileStatusViewModel(assessorProfileStatusResource, roleProfileState);
     }
 
-    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
-        return participantResourceList.stream()
+    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceListByAssessmentPeriod) {
+        return participantResourceListByAssessmentPeriod.stream()
                 .filter(CompetitionParticipantResource::isAccepted)
                 .filter(CompetitionParticipantResource::isInAssessment)
                 .map(cpr -> new AssessorDashboardActiveCompetitionViewModel(
@@ -116,7 +119,8 @@ public class AssessorDashboardModelPopulator {
                         p.getCompetitionId(),
                         p.getCompetitionName(),
                         p.getAssessorAcceptsDate().toLocalDate(),
-                        p.getAssessorDeadlineDate().toLocalDate()
+                        p.getAssessorDeadlineDate().toLocalDate(),
+                        p.getCompetitionAlwaysOpen()
                 ))
                 .collect(toList());
     }
@@ -128,7 +132,8 @@ public class AssessorDashboardModelPopulator {
                         cpr.getInvite().getHash(),
                         cpr.getCompetitionName(),
                         cpr.getAssessorAcceptsDate().toLocalDate(),
-                        cpr.getAssessorDeadlineDate().toLocalDate()
+                        cpr.getAssessorDeadlineDate().toLocalDate(),
+                        cpr.getCompetitionAlwaysOpen()
                 ))
                 .collect(toList());
     }

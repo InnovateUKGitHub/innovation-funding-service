@@ -49,6 +49,19 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         return serviceSuccess(competitionParticipantResources);
     }
 
+    @Override
+    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessmentPeriodByAssessors(long userId) {
+
+        List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getAllAssessmentPeriodByAssessorId(userId).stream()
+                .map(compParticipantMapper::mapToResource)
+                .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
+                .collect(toList());
+
+        competitionParticipantResources.forEach(this::determineStatusOfCompetitionAssessments);
+
+        return serviceSuccess(competitionParticipantResources);
+    }
+
     private void determineStatusOfCompetitionAssessments(CompetitionParticipantResource competitionParticipant) {
         if (!competitionParticipant.isAccepted() || !competitionParticipant.isInAssessment()) {
             return;

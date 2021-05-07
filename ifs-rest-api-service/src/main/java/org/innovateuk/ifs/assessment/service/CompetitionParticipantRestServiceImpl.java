@@ -20,4 +20,12 @@ public class CompetitionParticipantRestServiceImpl extends BaseRestService imple
                 ParameterizedTypeReferences.competitionParticipantResourceListType()
         );
     }
+
+    @Override
+    public RestResult<List<CompetitionParticipantResource>> getAssessorParticipantsByAssessmentPeriod(long userId) {
+        return getWithRestResult(
+                String.format("%s/find-by-assessment-period/user/%s", COMPETITION_PARTICIPANT_REST_URL, userId),
+                ParameterizedTypeReferences.competitionParticipantResourceListType()
+        );
+    }
 }
