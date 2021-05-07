@@ -63,7 +63,7 @@ public class ProjectYourFundingController {
         if (viewModel.isFundingSectionLocked()) {
             return VIEW;
         }
-        AbstractYourFundingForm form = formPopulator.populateForm(projectId, organisationId);
+        AbstractYourFundingForm<?, ?> form = formPopulator.populateForm(projectId, organisationId);
         model.addAttribute("form", form);
         return VIEW;
     }
@@ -199,7 +199,7 @@ public class ProjectYourFundingController {
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
-        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
+        Map.Entry<String, OtherFundingRowForm> row = (Map.Entry<String, OtherFundingRowForm>) form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());
