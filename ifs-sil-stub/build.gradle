@@ -3,7 +3,6 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
@@ -36,7 +35,6 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
-    finalizedBy asciidoctor
 }
 
 prepareDockerBaseInput {

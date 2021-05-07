@@ -60,7 +60,6 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
 
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
 
         classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
