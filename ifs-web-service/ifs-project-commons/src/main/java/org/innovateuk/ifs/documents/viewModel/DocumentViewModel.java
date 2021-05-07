@@ -21,6 +21,7 @@ public class DocumentViewModel {
     private final String statusComments;
     private final boolean projectManager;
     private final boolean projectIsActive;
+    private final boolean isMonitoringOfficer;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -32,7 +33,8 @@ public class DocumentViewModel {
                              DocumentStatus status,
                              String statusComments,
                              boolean projectManager,
-                             boolean projectIsActive) {
+                             boolean projectIsActive,
+                             boolean isMonitoringOfficer) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -44,6 +46,7 @@ public class DocumentViewModel {
         this.statusComments = statusComments;
         this.projectManager = projectManager;
         this.projectIsActive = projectIsActive;
+        this.isMonitoringOfficer = isMonitoringOfficer;
     }
 
     public long getProjectId() {
@@ -98,6 +101,10 @@ public class DocumentViewModel {
         return projectManager && status == DocumentStatus.UNSET;
     }
 
+    public boolean isMonitoringOfficer() {
+        return isMonitoringOfficer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,6 +123,7 @@ public class DocumentViewModel {
                 .append(guidance, that.guidance)
                 .append(projectManager, that.projectManager)
                 .append(projectIsActive, that.projectIsActive)
+                .append(isMonitoringOfficer, that.isMonitoringOfficer)
                 .isEquals();
     }
 
@@ -131,6 +139,7 @@ public class DocumentViewModel {
                 .append(guidance)
                 .append(projectManager)
                 .append(projectIsActive)
+                .append(isMonitoringOfficer)
                 .toHashCode();
     }
 }

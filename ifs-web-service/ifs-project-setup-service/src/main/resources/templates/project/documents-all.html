@@ -74,7 +74,7 @@
             </li>
         </ul>
 
-        <div class="govuk-!-margin-top-6">
+        <div class="govuk-!-margin-top-6" th:unless="${model.isMonitoringOfficer}">
             <a th:href="@{/project/{projectId}(projectId=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to set up your project</a>
         </div>
 

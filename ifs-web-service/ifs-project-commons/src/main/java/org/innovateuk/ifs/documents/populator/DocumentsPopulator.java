@@ -99,7 +99,8 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatus).orElse(DocumentStatus.UNSET),
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUserId, projectId),
-                project.getProjectState().isActive());
+                project.getProjectState().isActive(),
+                isMonitoringOfficer(loggedInUserId, projectId));
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {

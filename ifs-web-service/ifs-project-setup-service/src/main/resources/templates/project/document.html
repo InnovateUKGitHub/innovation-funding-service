@@ -23,6 +23,8 @@
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
         </div>
+
+        <th:block th:unless="${model.isMonitoringOfficer}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
@@ -122,6 +124,107 @@
                 <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
             </div>
         </th:block>
+        </th:block>
+
+        <form th:object="${form}"
+              th:if="${model.isMonitoringOfficer}"
+              th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId},id=${model.projectId})}"
+              id="other-documents-form"
+              method="post"
+              novalidate="novalidate">
+
+            <th:block th:insert="fragments/modals :: modal-accept-configured-doc" />
+            <th:block th:insert="fragments/modals :: modal-reject-configured-doc" />
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+
+            <div class="success-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'APPROVED'}">
+                <p class="govuk-heading-s govuk-!-margin-top-0">You have approved this document.</p>
+            </div>
+
+            <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
+                <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
+            </div>
+
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">
+                <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
+            </div>
+
+        <th:block th:unless="${model.fileDetails == null}">
+            <h2 class="govuk-heading-m">File uploaded</h2>
+            <p class="govuk-body uploaded-file">
+                <a th:href="@{/project/{projectId}/document/config/{documentConfigId}/download(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}"
+                   class="govuk-link"
+                   target="_blank"
+                   th:text="|${model.fileDetails.filename} (opens in a new window)|">The-uploaded-file-example.pdf</a>
+            </p>
+        </th:block>
+
+        <th:block th:if="${model.fileDetails == null}">
+            <h2 class="govuk-heading-m">No file uploaded</h2>
+        </th:block>
+
+        <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive}">
+
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    </legend>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input"
+                                   id="radio-review-approve"
+                                   name="approved"
+                                   type="radio"
+                                   value="true"
+                                   required="required"
+                                   data-switches-button-status="#submit-button"
+                                   data-switches-modal-target="#submit-button"
+                                   data-switches-modal-target-value="modal-accept-configured-doc">
+                            <label class="govuk-label govuk-radios__label" for="radio-review-approve">
+                                Approve
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item" data-target="reject-document-panel">
+                            <input class="govuk-radios__input"
+                                   id="radio-review-reject"
+                                   name="approved"
+                                   type="radio"
+                                   value="false"
+                                   required="required"
+                                   data-switches-modal-target="#submit-button"
+                                   data-switches-modal-target-value="modal-reject-configured-doc">
+                            <label class="govuk-label govuk-radios__label" for="radio-review-reject">
+                                Reject
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="panel js-hidden govuk-!-margin-top-4" id="reject-document-panel">
+                    <div class="govuk-form-group">
+                        <label for="document-reject-reason"
+                               class="govuk-label govuk-label--s">
+                            Reason for rejection
+                        </label>
+                        <p class="govuk-hint">This will not be visible to the applicant.</p>
+                        <textarea
+                                class="govuk-textarea"
+                                id="document-reject-reason"
+                                name="rejectionReason"
+                                th:errorclass="govuk-textarea--error"
+                                required="required"
+                                maxlength="255"
+                                rows="3"
+                                data-switches-button-status="#submit-button"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+        </th:block>
+        </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

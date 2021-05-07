@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class DocumentForm extends BaseBindingResultTarget {
 
     private MultipartFile document;
+    private Boolean approved;
+    private String rejectionReason;
 
     public MultipartFile getDocument() {
         return document;
@@ -19,6 +21,23 @@ public class DocumentForm extends BaseBindingResultTarget {
     public void setDocument(MultipartFile document) {
         this.document = document;
     }
+
+    public Boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(Boolean approved) {
+        this.approved = approved;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -30,6 +49,8 @@ public class DocumentForm extends BaseBindingResultTarget {
 
         return new EqualsBuilder()
                 .append(document, that.document)
+                .append(approved, that.approved)
+                .append(rejectionReason, that.rejectionReason)
                 .isEquals();
     }
 
@@ -37,6 +58,8 @@ public class DocumentForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(document)
+                .append(approved)
+                .append(rejectionReason)
                 .toHashCode();
     }
 }

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -156,6 +157,26 @@ public class DocumentsController {
         Supplier<String> failureView = () -> doViewDocument(projectId, documentConfigId, model, loggedInUser, form);
 
         RestResult<Void> result = documentsRestService.submitDocument(projectId, documentConfigId);
+
+        return validationHandler.addAnyErrors(result, asGlobalErrors()).
+                failNowOrSucceedWith(failureView, successView);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'APPROVE_DOCUMENTS')")
+    @PostMapping("/config/{documentConfigId}")
+    public String documentDecision(@PathVariable("projectId") long projectId,
+                                   @PathVariable("documentConfigId") long documentConfigId,
+                                   @ModelAttribute(FORM_ATTR) DocumentForm form,
+                                   @SuppressWarnings("unused") BindingResult bindingResult,
+                                   ValidationHandler validationHandler,
+                                   Model model,
+                                   UserResource loggedInUser) {
+
+        Supplier<String> successView = () -> redirectToViewDocumentPage(projectId, documentConfigId);
+        Supplier<String> failureView = () -> doViewDocument(projectId, documentConfigId, model, loggedInUser, form);
+
+        RestResult<Void> result = documentsRestService.documentDecision(projectId, documentConfigId,
+                new ProjectDocumentDecision(form.getApproved(), form.getRejectionReason()));
 
         return validationHandler.addAnyErrors(result, asGlobalErrors()).
                 failNowOrSucceedWith(failureView, successView);
