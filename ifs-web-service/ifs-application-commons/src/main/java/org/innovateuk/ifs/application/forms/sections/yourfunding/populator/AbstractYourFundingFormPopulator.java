@@ -16,20 +16,18 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
-@SuppressWarnings("unchecked")
-public abstract class AbstractYourFundingFormPopulator {
+public abstract class AbstractYourFundingFormPopulator<R extends BaseOtherFunding, T extends BaseOtherFundingRowForm<R>> {
 
-    protected AbstractYourFundingForm populateForm(BaseFinanceResource finance, CompetitionResource competitionResource) {
-
-        AbstractYourFundingForm form = getForm(finance);
-
+    protected AbstractYourFundingForm<R, T> populateForm(BaseFinanceResource finance, CompetitionResource competitionResource) {
+        AbstractYourFundingForm<R, T> form = getForm(finance);
         populateOtherFunding(form, finance, competitionResource);
         return form;
     }
 
-    private void populateOtherFunding(AbstractYourFundingForm form, BaseFinanceResource finance, CompetitionResource competitionResource) {
+    @SuppressWarnings("unchecked")
+    private void populateOtherFunding(AbstractYourFundingForm<R, T> form, BaseFinanceResource finance, CompetitionResource competitionResource) {
         BaseOtherFundingCostCategory otherFundingCategory;
-        Map<String, BaseOtherFundingRowForm> rows;
+        Map<String, BaseOtherFundingRowForm<?>> rows;
         if (competitionResource.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING)) {
             otherFundingCategory = (PreviousFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
             rows = otherFundingCategory.getCosts().stream().map(cost -> {
@@ -49,10 +47,11 @@ public abstract class AbstractYourFundingFormPopulator {
         Boolean otherFundingSet = isOtherFundingSet(otherFundingCategory);
 
         form.setOtherFunding(otherFundingSet);
-        form.setOtherFundingRows(rows);
+        form.setOtherFundingRows((Map<String, T>) rows);
     }
 
-    private AbstractYourFundingForm getForm(BaseFinanceResource finance) {
+    @SuppressWarnings("unchecked")
+    private AbstractYourFundingForm<R, T> getForm(BaseFinanceResource finance) {
         GrantClaim grantClaim = finance.getGrantClaim();
 
         if (grantClaim instanceof GrantClaimPercentage) {
@@ -60,12 +59,12 @@ public abstract class AbstractYourFundingFormPopulator {
             YourFundingPercentageForm form = new YourFundingPercentageForm();
             form.setGrantClaimPercentage(grantClaimPercentage.getPercentage());
             form.setRequestingFunding(grantClaimPercentage.getPercentage() == null ? null : finance.isRequestingFunding());
-            return form;
+            return (AbstractYourFundingForm<R, T>) form;
         } else if (grantClaim instanceof GrantClaimAmount) {
             GrantClaimAmount grantClaimAmount = (GrantClaimAmount) grantClaim;
             YourFundingAmountForm form = new YourFundingAmountForm();
             form.setAmount(grantClaimAmount.getAmount());
-            return form;
+            return (AbstractYourFundingForm<R, T>) form;
         }
         throw new ObjectNotFoundException();
 
