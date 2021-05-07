@@ -15,6 +15,7 @@ import static java.lang.Math.min;
  *
  * @param <PageableResource> the resource type that is being paginated.
  */
+@SuppressWarnings("unchecked")
 public class PageResource<PageableResource> {
 
     /**

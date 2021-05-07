@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.validation.Validator;
 
 
+@SuppressWarnings("unchecked")
 public class FormValidatorResource {
     private Long id;
     private String title;
