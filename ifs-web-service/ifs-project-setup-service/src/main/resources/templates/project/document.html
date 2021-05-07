@@ -142,88 +142,133 @@
                 <p class="govuk-heading-s govuk-!-margin-top-0">You have approved this document.</p>
             </div>
 
-            <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
-                <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
+            <div class="message-alert govuk-!-margin-bottom-9" th:if="${model.status.name() == 'REJECTED'}">
+                <p class="govuk-body govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
             </div>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">
                 <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
             </div>
 
-        <th:block th:unless="${model.fileDetails == null}">
-            <h2 class="govuk-heading-m">File uploaded</h2>
-            <p class="govuk-body uploaded-file">
-                <a th:href="@{/project/{projectId}/document/config/{documentConfigId}/download(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}"
-                   class="govuk-link"
-                   target="_blank"
-                   th:text="|${model.fileDetails.filename} (opens in a new window)|">The-uploaded-file-example.pdf</a>
-            </p>
-        </th:block>
+            <th:block th:unless="${model.fileDetails == null}">
+                <div th:unless="${model.status.name() == 'APPROVED'}">
+                    <h2 class="govuk-heading-m">File uploaded</h2>
+                    <p class="govuk-body uploaded-file">
+                        <a th:href="@{/project/{projectId}/document/config/{documentConfigId}/download(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}"
+                           class="govuk-link"
+                           target="_blank"
+                           th:text="|${model.fileDetails.filename} (opens in a new window)|">The-uploaded-file-example.pdf</a>
+                    </p>
+                </div>
+
+                <div th:if="${model.status.name() == 'APPROVED'}" class="upload-section">
+                    <h2 class="govuk-heading-m govuk-!-margin-0">
+                        <th:block th:text=${model.title}>
+                            TITLE OF DOCUMENT
+                        </th:block>
+                    </h2>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">What should I include?</span>
+                        </summary>
+                        <div class="govuk-details__text wysiwyg-styles">
+                            <p class="govuk-body" ifs:utext=${model.guidance}>
+                                GUIDANCE FOR DOCUMENT
+                            </p>
+                        </div>
+                    </details>
+
+                    <th:block th:unless="${model.isEditable()}"
+                              th:with="viewmode='readonly',
+                                   downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId}, id=${model.projectId})},
+                                   filename=${model.fileDetails?.filename},
+                                   inputField='',
+                                   validationField='',
+                                   mayRemove=false,
+                                   removeName='',
+                                   saveName=''">
+                        <th:block
+                                th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})"/>
+                    </th:block>
+                </div>
+
+                <th:block th:if="${model.status.name() == 'REJECTED'}">
+                    <h3 class="govuk-heading-s govuk-!-margin-top-9">Reason for rejection</h3>
+                    <p class="govuk-body govuk-!-margin-bottom-9" th:text="${model.statusComments}"></p>
+                </th:block>
+
+                <th:block th:if="${!model.editable and model.status.name() == 'APPROVED' or model.status.name() == 'REJECTED'}">
+                    <div class="govuk-!-margin-top-6">
+                        <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}"
+                           class="govuk-button govuk-button--secondary">Return to documents</a>
+                    </div>
+                </th:block>
+            </th:block>
 
         <th:block th:if="${model.fileDetails == null}">
-            <h2 class="govuk-heading-m">No file uploaded</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">No file uploaded</h2>
         </th:block>
 
-        <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive}">
-
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset">
-                    <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                    </legend>
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input"
-                                   id="radio-review-approve"
-                                   name="approved"
-                                   type="radio"
-                                   value="true"
-                                   required="required"
-                                   data-switches-button-status="#submit-button"
-                                   data-switches-modal-target="#submit-button"
-                                   data-switches-modal-target-value="modal-accept-configured-doc">
-                            <label class="govuk-label govuk-radios__label" for="radio-review-approve">
-                                Approve
-                            </label>
+            <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive}">
+                <h2 class="govuk-heading-m govuk-!-margin-top-9">Review document</h2>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input"
+                                       id="radio-review-approve"
+                                       name="approved"
+                                       type="radio"
+                                       value="true"
+                                       required="required"
+                                       data-switches-button-status="#submit-button"
+                                       data-switches-modal-target="#submit-button"
+                                       data-switches-modal-target-value="modal-accept-configured-doc">
+                                <label class="govuk-label govuk-radios__label" for="radio-review-approve">
+                                    Approve
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item" data-target="reject-document-panel">
+                                <input class="govuk-radios__input"
+                                       id="radio-review-reject"
+                                       name="approved"
+                                       type="radio"
+                                       value="false"
+                                       required="required"
+                                       data-switches-modal-target="#submit-button"
+                                       data-switches-modal-target-value="modal-reject-configured-doc">
+                                <label class="govuk-label govuk-radios__label" for="radio-review-reject">
+                                    Reject
+                                </label>
+                            </div>
                         </div>
-                        <div class="govuk-radios__item" data-target="reject-document-panel">
-                            <input class="govuk-radios__input"
-                                   id="radio-review-reject"
-                                   name="approved"
-                                   type="radio"
-                                   value="false"
-                                   required="required"
-                                   data-switches-modal-target="#submit-button"
-                                   data-switches-modal-target-value="modal-reject-configured-doc">
-                            <label class="govuk-label govuk-radios__label" for="radio-review-reject">
-                                Reject
+                    </fieldset>
+                    <div class="panel js-hidden govuk-!-margin-top-4" id="reject-document-panel">
+                        <div class="govuk-form-group">
+                            <label for="document-reject-reason"
+                                   class="govuk-label govuk-label--s">
+                                Reason for rejection
                             </label>
+                            <p class="govuk-hint">You cannot change your decision after you click 'Submit'. You must contact the project manager to explain the reason for your decision, because the explanation below will not be visible to them.</p>
+                            <textarea
+                                    class="govuk-textarea"
+                                    id="document-reject-reason"
+                                    name="rejectionReason"
+                                    th:errorclass="govuk-textarea--error"
+                                    required="required"
+                                    maxlength="255"
+                                    rows="3"
+                                    data-switches-button-status="#submit-button"
+                            ></textarea>
                         </div>
-                    </div>
-                </fieldset>
-                <div class="panel js-hidden govuk-!-margin-top-4" id="reject-document-panel">
-                    <div class="govuk-form-group">
-                        <label for="document-reject-reason"
-                               class="govuk-label govuk-label--s">
-                            Reason for rejection
-                        </label>
-                        <p class="govuk-hint">This will not be visible to the applicant.</p>
-                        <textarea
-                                class="govuk-textarea"
-                                id="document-reject-reason"
-                                name="rejectionReason"
-                                th:errorclass="govuk-textarea--error"
-                                required="required"
-                                maxlength="255"
-                                rows="3"
-                                data-switches-button-status="#submit-button"
-                        ></textarea>
                     </div>
                 </div>
-            </div>
-
-            <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
-        </th:block>
+                <button class="govuk-button" type="submit" id="submit-button" data-js-modal=""
+                        data-enable-button-when="one-checked">Submit
+                </button>
+            </th:block>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
