@@ -137,7 +137,7 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return build(numberToBuild).toArray((T[]) Array.newInstance(clazz, numberToBuild));
     }
 
-    protected <T> T newInstance(Class<T> clazz) {
+    protected T newInstance(Class<T> clazz) {
         try {
             Optional<? extends Constructor<?>> ctor =
                     stream(clazz.getDeclaredConstructors()).filter(c -> c.getParameters().length == 0).findFirst();
