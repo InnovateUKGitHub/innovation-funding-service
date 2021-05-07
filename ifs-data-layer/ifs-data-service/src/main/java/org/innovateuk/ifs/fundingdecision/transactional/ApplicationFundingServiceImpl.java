@@ -260,7 +260,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     perNotificationTargetArguments.put("applicationName", application.getName());
                     perNotificationTargetArguments.put("applicationId", applicationId);
                     perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
-                    perNotificationTargetArguments.put("competitionId", application.getCompetition().getName());
+                    perNotificationTargetArguments.put("competitionId", application.getCompetition().getId());
                     perNotificationTargetArguments.put("alwaysOpen", application.getCompetition().isAlwaysOpen());
                     perNotificationTargetArguments.put("webBaseUrl", webBaseUrl);
                     if (includeAssesssorScore) {
