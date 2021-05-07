@@ -245,7 +245,7 @@
                             </li>
                             <li>
                                 <h3 class="govuk-heading-s">Funding decision and assessment feedback</h3>
-                                <a class="govuk-button"
+                                <a class="govuk-button" th:if="${model.hasAClosedAssessmentPeriod()}"
                                    th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
                                     Manage funding notifications</a>
                             </li>

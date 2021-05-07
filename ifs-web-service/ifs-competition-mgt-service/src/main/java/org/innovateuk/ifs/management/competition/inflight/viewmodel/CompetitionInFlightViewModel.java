@@ -184,4 +184,10 @@ public class CompetitionInFlightViewModel {
                 .findAny()
                 .orElseThrow(ObjectNotFoundException::new);
     }
+
+    public boolean hasAClosedAssessmentPeriod() {
+        return milestones
+                .stream()
+                .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed())
+    }
 }
