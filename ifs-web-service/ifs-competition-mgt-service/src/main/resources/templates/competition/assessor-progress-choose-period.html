@@ -23,12 +23,11 @@
 
 
         <form method="GET"
-              th:action="@{/assessment/competition/{competitionId}/assessors/period(competitionId=${model.competitionId})}"
-              >
+              th:action="@{/assessment/competition/{competitionId}/assessors/period(competitionId=${model.competitionId})}">
 
             <div th:if="${model.assessmentPeriods.size() < 6}" class="govuk-radios">
                 <div th:each="assessmentPeriod, index : ${model.assessmentPeriods}" class="govuk-radios__item">
-                    <input th:id="${'assmessent-period-' + index.index}"
+                    <input th:id="${'assessment-period-' + index.index}"
                            class="govuk-radios__input"
                            th:value="${assessmentPeriod.assessmentPeriodId}"
                            type="radio"
