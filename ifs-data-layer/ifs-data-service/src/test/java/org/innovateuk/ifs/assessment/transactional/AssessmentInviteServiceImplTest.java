@@ -233,14 +233,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
-        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
-        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
-
         Competition competition = newCompetition()
                 .withName("my competition")
                 .withId(1L)
-                .withAssessorAcceptsDate(acceptsDate)
-                .withAssessorDeadlineDate(deadlineDate)
                 .withAlwaysOpen(true)
                 .build();
 
@@ -255,9 +250,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .build(2);
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", competition.getName(),
-                "acceptsDate", acceptsDate.format(inviteFormatter),
-                "deadlineDate", deadlineDate.format(inviteFormatter)
+                "competitionName", competition.getName()
         );
 
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");

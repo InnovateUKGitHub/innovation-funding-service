@@ -336,6 +336,8 @@ ol {
     }
 
     dd {
+      max-width: 60%;
+
       & + dd {
         margin-left: 330px;
       }

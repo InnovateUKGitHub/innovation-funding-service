@@ -205,28 +205,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private String getInviteContent(AssessmentInvite invite) {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
-        Competition competition = invite.getTarget();
-        boolean alwaysOpen = competition.isAlwaysOpen();
-
-        return getInviteContent(notificationTarget, asMap(
-                "competitionName", competition.getName(),
-                "competitionId", competition.getId(),
-                "acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter),
-                "deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter),
-                "name", invite.getName(),
-                "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())
-        ), alwaysOpen);
+        return getInviteContent(notificationTarget, invite);
     }
 
     private String getInvitePreviewContent(Competition competition) {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
         boolean alwaysOpen = competition.isAlwaysOpen();
 
-        return getInvitePreviewContent(notificationTarget, asMap(
-                "competitionName", competition.getName(),
-                "acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter),
-                "deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter)
-        ), alwaysOpen);
+        return getInvitePreviewContent(notificationTarget, competition);
     }
 
     @Override
@@ -542,21 +528,27 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                                                        AssessmentInvite invite,
                                                        Notifications notificationType) {
         NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
+        Map<String, Object> args = asMap(
+                "subject", subject,
+                "name", invite.getName(),
+                "competitionName", invite.getTarget().getName(),
+                "competitionId", invite.getTarget().getId(),
+                "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
+                "customTextPlain", customTextPlain,
+                "customTextHtml", customTextHtml
+        );
+
+        if (notificationType == Notifications.INVITE_ASSESSOR_GROUP) {
+            args.put("acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter));
+            args.put("deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter));
+        }
+
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
                 notificationType,
-                asMap(
-                        "subject", subject,
-                        "name", invite.getName(),
-                        "competitionName", invite.getTarget().getName(),
-                        "competitionId", invite.getTarget().getId(),
-                        "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                        "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                        "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
-                        "customTextPlain", customTextPlain,
-                        "customTextHtml", customTextHtml
-                ));
+                args
+                );
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
@@ -587,17 +579,35 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return find(assessmentParticipantRepository.getByInviteId(inviteId), notFoundError(AssessmentParticipant.class, inviteId));
     }
 
-    private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments, boolean alwaysOpen) {
-        String templatePath = alwaysOpen ? PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_editable_text.txt" :
+    private String getInviteContent(NotificationTarget notificationTarget, AssessmentInvite invite) {
+        Competition competition = invite.getTarget();
+        Map<String, Object> args = asMap(
+                        "competitionName", competition.getName(),
+                        "competitionId", competition.getId(),
+                        "name", invite.getName(),
+                        "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())
+        );
+        if (!competition.isAlwaysOpen()) {
+            args.put("acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter));
+            args.put("deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter));
+        }
+
+        String templatePath = competition.isAlwaysOpen() ? PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_editable_text.txt" :
                 PREVIEW_TEMPLATES_PATH + "invite_assessor_editable_text.txt";
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, templatePath,
-                arguments).getSuccess();
+                args).getSuccess();
     }
 
-    private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments, boolean alwaysOpen) {
-        String templatePath = alwaysOpen ? PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_preview_text.txt" :
+    private String getInvitePreviewContent(NotificationTarget notificationTarget, Competition competition) {
+        Map<String, Object> args = asMap(
+                "competitionName", competition.getName());
+        if (!competition.isAlwaysOpen()) {
+            args.put("acceptsDate", competition.getAssessorAcceptsDate().format(inviteFormatter));
+            args.put("deadlineDate", competition.getAssessorDeadlineDate().format(inviteFormatter));
+        }
+        String templatePath = competition.isAlwaysOpen() ? PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_preview_text.txt" :
                 PREVIEW_TEMPLATES_PATH + "invite_assessor_preview_text.txt";
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, templatePath, arguments).getSuccess();
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, templatePath, args).getSuccess();
     }
 
     private ServiceResult<AssessmentInvite> getByEmailAndCompetition(String email, long competitionId) {
