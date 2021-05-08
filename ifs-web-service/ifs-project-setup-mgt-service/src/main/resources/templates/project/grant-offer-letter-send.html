@@ -56,9 +56,9 @@
                     <a class="govuk-button govuk-!-margin-top-6"
                        data-js-modal="modal-reset-grant-offer-letter"
                        th:href="${removeActionNonJs}"
-                       th:attr="data-modal-form-action=${resetAction}"
-                       th:with="resetAction=@{/project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})},
-                                resetActionNonJs=@{project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})}">
+                       th:attr="data-modal-form-action=${removeAction}"
+                       th:with="removeAction=@{/project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})},
+                                removeActionNonJs=@{project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})}">
                         Reset grant offer letter
                     </a>
                 </th:block>
