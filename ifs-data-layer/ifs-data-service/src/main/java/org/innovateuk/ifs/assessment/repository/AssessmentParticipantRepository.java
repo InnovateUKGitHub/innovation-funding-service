@@ -144,20 +144,6 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "   AND a.target.id = :appId" +
             ")";
 
-    String BY_ASSESSMENT_PERIOD_AND_USER = "SELECT assessmentParticipant " +
-            "FROM AssessmentParticipant assessmentParticipant " +
-            "LEFT JOIN assessmentParticipant.user user " +
-            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
-            "JOIN assessmentParticipant.competition competition " +
-            "JOIN assessmentParticipant.competition.assessmentPeriods assessmentPeriods " +
-            "WHERE assessmentParticipant.role = 'ASSESSOR' " +
-            "AND assessmentParticipant.user.id = :assessorId " +
-            "AND (user IS NULL OR " +
-            "(roleStatuses IS NULL OR " +
-            "(roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE))  " +
-            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE)";
-
     @Override
     List<AssessmentParticipant> findAll();
 
@@ -166,9 +152,6 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
     default List<AssessmentParticipant> getByAssessorId(long assessorId) {
         return getByUserIdAndRole(assessorId, ASSESSOR);
     }
-
-    @Query(BY_ASSESSMENT_PERIOD_AND_USER)
-    List<AssessmentParticipant> getAllAssessmentPeriodByAssessorId(long assessorId);
 
     List<AssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 

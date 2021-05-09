@@ -1,20 +1,25 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentParticipantMapper;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.mapper.RejectionReasonMapper;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
@@ -36,6 +41,18 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Autowired
+    private AssessmentInviteMapper assessmentInviteMapper;
+
+    @Autowired
+    private RejectionReasonMapper rejectionReasonMapper;
+
+    @Autowired
+    private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;
+
+    @Autowired
+    private ParticipantStatusMapper participantStatusMapper;
+
     @Override
     public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessors(long userId) {
 
@@ -52,9 +69,33 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     @Override
     public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessmentPeriodByAssessors(long userId) {
 
-        List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getAllAssessmentPeriodByAssessorId(userId).stream()
+        /*List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getAllAssessmentPeriodByAssessorId(userId).stream()
                 .map(compParticipantMapper::mapToResource)
                 .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
+                .collect(toList());*/
+
+        /*List<CompetitionParticipantResource> competitionParticipantResources;
+        assessmentParticipantRepository.getByAssessorId(userId).stream()
+                .flatMap(assessmentParticipant -> {
+                    Map<AssessmentParticipant, List<AssessmentPeriod>> participantAssessmentPeriodMap = new HashMap<AssessmentParticipant, List<AssessmentPeriod>>();
+                    participantAssessmentPeriodMap.put(assessmentParticipant, assessmentParticipant.getProcess().getAssessmentPeriods());
+                    return participantAssessmentPeriodMap.entrySet().stream();
+                })
+                .forEach(participantAssessmentPeriod -> {
+                    AssessmentParticipant assessmentParticipant = participantAssessmentPeriod.getKey();
+                    competitionParticipantResources.add(new CompetitionParticipantResource());
+                })*/
+
+        List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByAssessorId(userId).stream()
+                .flatMap(assessmentParticipant -> assessmentParticipant.getProcess().getAssessmentPeriods().stream()
+                        .map(assessmentPeriod -> new CompetitionParticipantResource(assessmentParticipant.getId(), assessmentParticipant.getProcess().getId(),
+                                assessmentParticipant.getUser().getId(), assessmentInviteMapper.mapToResource(assessmentParticipant.getInvite()),
+                                rejectionReasonMapper.mapToResource(assessmentParticipant.getRejectionReason()), assessmentParticipant.getRejectionReasonComment(),
+                                competitionParticipantRoleMapper.mapToResource(assessmentParticipant.getRole()), participantStatusMapper.mapToResource(assessmentParticipant.getStatus()),
+                                assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getCompetitionStatus(),
+                                assessmentParticipant.getProcess().isAlwaysOpen(), assessmentPeriod.getId()))
+                )
+                .filter(participant -> !participant.isRejected())
                 .collect(toList());
 
         competitionParticipantResources.forEach(this::determineStatusOfCompetitionAssessments);

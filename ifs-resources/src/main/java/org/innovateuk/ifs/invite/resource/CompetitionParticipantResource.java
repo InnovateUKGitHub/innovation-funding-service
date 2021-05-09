@@ -32,8 +32,29 @@ public class CompetitionParticipantResource {
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
     private Boolean competitionAlwaysOpen;
-
+    private Long assessmentPeriodId;
     private Clock clock = Clock.systemDefaultZone();
+
+    public CompetitionParticipantResource() {
+    }
+
+    public CompetitionParticipantResource(Long id, Long competitionId, Long userId, CompetitionInviteResource invite,
+                                          RejectionReasonResource rejectionReason, String rejectionReasonComment, CompetitionParticipantRoleResource role,
+                                          ParticipantStatusResource status, String competitionName, CompetitionStatus competitionStatus,
+                                          Boolean competitionAlwaysOpen, Long assessmentPeriodId) {
+        this.id = id;
+        this.competitionId = competitionId;
+        this.userId = userId;
+        this.invite = invite;
+        this.rejectionReason = rejectionReason;
+        this.rejectionReasonComment = rejectionReasonComment;
+        this.role = role;
+        this.status = status;
+        this.competitionName = competitionName;
+        this.competitionStatus = competitionStatus;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
+        this.assessmentPeriodId = assessmentPeriodId;
+    }
 
     public String getCompetitionName() {
         return competitionName;
@@ -161,6 +182,14 @@ public class CompetitionParticipantResource {
 
     public void setCompetitionAlwaysOpen(Boolean competitionAlwaysOpen) {
         this.competitionAlwaysOpen = competitionAlwaysOpen;
+    }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
+
+    public void setAssessmentPeriodId(Long assessmentPeriodId) {
+        this.assessmentPeriodId = assessmentPeriodId;
     }
 
     @JsonIgnore
