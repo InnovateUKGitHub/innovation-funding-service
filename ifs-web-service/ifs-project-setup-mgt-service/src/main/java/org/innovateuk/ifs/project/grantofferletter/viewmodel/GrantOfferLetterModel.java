@@ -154,6 +154,11 @@ public class GrantOfferLetterModel {
         return grantOfferLetterFile != null && !grantOfferState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
 
+    public boolean isShowResetGrantOfferLetterButton() {
+        return !getSignedGrantOfferLetterApproved() &&
+               !getSignedGrantOfferLetterFileAvailable();
+    }
+
     public boolean isOnHold() {
         return ON_HOLD.equals(projectState);
     }
