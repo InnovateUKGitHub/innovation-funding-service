@@ -57,8 +57,9 @@
                        data-js-modal="modal-reset-grant-offer-letter"
                        th:href="${removeActionNonJs}"
                        th:attr="data-modal-form-action=${removeAction}"
+                       th:text="${model.procurement} ? 'Reset contract' : 'Reset grant offer letter'"
                        th:with="removeAction=@{/project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})},
-                                   removeActionNonJs=@{project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})}">
+                                removeActionNonJs=@{project/{projectId}/grant-offer-letter/reset(projectId=${model.projectId})}">
                         Reset grant offer letter
                     </a>
                 </th:block>
