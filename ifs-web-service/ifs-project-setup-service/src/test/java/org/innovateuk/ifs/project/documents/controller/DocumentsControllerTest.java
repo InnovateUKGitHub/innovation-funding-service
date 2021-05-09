@@ -7,6 +7,7 @@ import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -316,6 +317,23 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
 
         verify(documentsRestService).submitDocument(projectId, documentConfigId);
+    }
+
+    @Test
+    public void documentDecision() throws Exception {
+
+        long projectId = 1L;
+        long documentConfigId = 2L;
+
+        when(documentsRestService.documentDecision(projectId, documentConfigId, new ProjectDocumentDecision(true, null))).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/project/" + projectId + "/document/config/" + documentConfigId)
+                        .param("approved", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
+
+        verify(documentsRestService).documentDecision(projectId, documentConfigId, new ProjectDocumentDecision(true, null));
     }
 
     @Override

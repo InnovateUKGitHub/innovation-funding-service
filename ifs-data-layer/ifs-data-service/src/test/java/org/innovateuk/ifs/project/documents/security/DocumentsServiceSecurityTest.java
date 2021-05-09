@@ -104,6 +104,7 @@ public class DocumentsServiceSecurityTest extends BaseServiceSecurityTest<Docume
 
         assertAccessDenied(() -> classUnderTest.documentDecision(123L, 2L, null), () -> {
             verify(documentPermissionRules).internalAdminCanApproveDocument(project, getLoggedInUser());
+            verify(documentPermissionRules).monitoringOfficerCanApproveDocument(project, getLoggedInUser());
             verifyNoMoreInteractions(documentPermissionRules);
         });
     }

@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,6 +40,9 @@ public class DocumentsPopulator {
 
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     public AllDocumentsViewModel populateAllDocuments(long projectId, long loggedInUserId) {
 
@@ -89,6 +93,8 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
+        boolean monitoringOfficerDocumentDecisionEnabled = isMOJourneyUpdateEnabled ? isMonitoringOfficer(loggedInUserId, projectId) : false;
+
         return new DocumentViewModel(project.getId(),
                 project.getName(),
                 project.getApplication(),
@@ -100,7 +106,7 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUserId, projectId),
                 project.getProjectState().isActive(),
-                isMonitoringOfficer(loggedInUserId, projectId));
+                monitoringOfficerDocumentDecisionEnabled);
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {
