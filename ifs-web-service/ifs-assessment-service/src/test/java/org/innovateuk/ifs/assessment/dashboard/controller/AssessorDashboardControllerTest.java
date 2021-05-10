@@ -180,7 +180,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 new AssessorDashboardActiveCompetitionViewModel(competitionResource.getId(), "Juggling Craziness", 1, 3, 1,
                         now.plusDays(4).toLocalDate(),
                         3,
-                        50
+                        50,
+                        false
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -262,7 +263,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3, 2,
                         now.plusDays(5).toLocalDate(),
                         5,
-                        16
+                        16,
+                        false
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -322,7 +324,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0, 0,
                         ZonedDateTime.now().plusDays(0).toLocalDate(),
                         0,
-                        100
+                        100,
+                        false
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -434,7 +437,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 new AssessorDashboardUpcomingCompetitionViewModel(
                         2L, "Juggling Craziness",
                         ZonedDateTime.now().plusDays(1).toLocalDate(),
-                        ZonedDateTime.now().plusDays(7).toLocalDate()
+                        ZonedDateTime.now().plusDays(7).toLocalDate(),
+                        false
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -494,7 +498,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0, 0,
                         ZonedDateTime.now().plusDays(0).toLocalDate(),
                         0,
-                        100
+                        100,
+                        false
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -561,7 +566,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         competitionParticipantResource.getInvite().getHash(),
                         competitionParticipantResource.getCompetitionName(),
                         competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
-                        competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
+                        competitionParticipantResource.getAssessorDeadlineDate().toLocalDate(),
+                        false)).collect(Collectors.toList());
 
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
 
