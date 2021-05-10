@@ -10,6 +10,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -55,4 +56,11 @@ public class FileUploadRestServiceImpl extends BaseRestService implements FileUp
         String url = fileUploadRestURL + "/get-allFiles";
         return getWithRestResult(url, new ParameterizedTypeReference<List<FileEntryResource>>() {});
     }
+
+    @Override
+    public RestResult<Void> parseAndSaveFileContents(File file) {
+        String url = fileUploadRestURL + "/parseAndSave" + "?file=" + file;
+        return postWithRestResult(url);
+    }
+
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.file.controller;
 
+import com.mchange.v2.csv.FastCsvUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -9,10 +10,12 @@ import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -55,8 +58,7 @@ public class FileUploadController {
     }
 
     @GetMapping("/getFileAndContents")
-    public @ResponseBody
-    ResponseEntity<Object> getFileContent(@RequestParam("fileEntryId") long fileEntryId) throws IOException {
+    public @ResponseBody ResponseEntity<Object> getFileContent(@RequestParam("fileEntryId") long fileEntryId) throws IOException {
         return fileControllerUtils.handleFileDownload(() -> fileUploadService.getFileContents(fileEntryId));
     }
 //TODO
@@ -69,5 +71,11 @@ public class FileUploadController {
     @GetMapping("/get-allFiles")
     public RestResult<List<FileEntryResource>> getAllUploadedFileEntryResources() {
        return fileUploadService.getAllUploadedFileEntryResources().toGetResponse();
+    }
+
+    @PostMapping("/parseAndSave")
+    public RestResult<Void> parseAndSaveFile(@RequestParam("file") File file) {
+        //This is a competition csv file object and need to parse this.
+        return null;
     }
 }

@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.management.admin.controller;
 
+import com.google.common.io.Files;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -18,9 +21,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Controller for handling requests related to uploading files by the IFS Administrator
@@ -84,15 +92,17 @@ public class FileUploadController {
         if (uploadedFileentriesResult.isSuccess()) {
             List<FileEntryResource> uploadedFileentries = uploadedFileentriesResult.getSuccess();
             //TODO need to think about how to schedule each file parsing
-            FileEntryResource fileEntryResource =  uploadedFileentries.get(0);
+            FileEntryResource fileEntryResource = uploadedFileentries.get(0);
             Long fileEntryId = fileEntryResource.getId();
-            Optional<ByteArrayResource> fileAndContents = fileUploadRestService.getFileAndContents(fileEntryId).getOptionalSuccessObject();
-
-        //    return "admin/upload-files/get-file/";
+            RestResult<ByteArrayResource> fileAndContents = fileUploadRestService.getFileAndContents(fileEntryId);
+            if (fileAndContents.isSuccess()) {
+                ByteArrayResource byteArrayResource = fileAndContents.getSuccess();
+                File competitionFile = byteArrayResource.getFile();
+                fileUploadRestService.parseAndSaveFileContents(competitionFile);
+            }
         }
-        return "admin/upload-files";
+         return "admin/upload-files";
     }
-
     @GetMapping(path = "/upload-files/get-file/", params = {"fileEntryId"})
     @SecuredBySpring(value = "GET_FILE", description = "Ifs admin can do parse and get the file")
     public void getFileAndContents(Model model,
