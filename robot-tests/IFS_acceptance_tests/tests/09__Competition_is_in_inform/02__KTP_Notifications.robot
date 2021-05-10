@@ -109,7 +109,7 @@ the user makes the application unsuccessful and sends notification
      the user clicks the button/link    link = Manage funding notifications
      the user selects the checkbox      app-row-${ktp_notification_application_id}
      the user clicks the button/link    jQuery = button:contains("Write and send email")
-     the user clicks the button/link    jQuery = button:contains("Send email to all applicants")
+     the user clicks the button/link    jQuery = button:contains("Send notification")
      the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
      the user should see the element    jQuery = td:contains("${KTP_application}") ~ td:contains("Unsuccessful") ~ td:contains("Sent")
 
@@ -173,12 +173,12 @@ the user is able to view the application overview page
     the user should see the element         jQuery = dt:contains("Application name:") ~ dd:contains("${KTP_application}")
 
 Project users checks their email
-    The user reads his email     ${ktp_KTA_email}               KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     ${ktp_Partner_email}           KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     ${ktp_Lead_email}              KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     bobs.mate@knowledge.base       KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     kevin.summers@ludlow.co.uk     KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     ${MemberEmail}                 KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_KTA_email}               Important message about your application ${KTP_applicationId}: ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_Partner_email}           Important message about your application ${KTP_applicationId}: ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_Lead_email}              Important message about your application ${KTP_applicationId}: ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
+    The user reads his email     bobs.mate@knowledge.base       Important message about your application ${KTP_applicationId}: ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
+    The user reads his email     kevin.summers@ludlow.co.uk     Important message about your application ${KTP_applicationId}: ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
+    The user reads his email     ${MemberEmail}                 Important message about your application ${KTP_applicationId}: ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
 
 the lead invites a team member to the project
     the user clicks the button/link          link = Project team
