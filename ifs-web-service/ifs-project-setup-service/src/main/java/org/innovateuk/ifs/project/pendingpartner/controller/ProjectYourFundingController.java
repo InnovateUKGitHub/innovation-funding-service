@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/your-funding")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)

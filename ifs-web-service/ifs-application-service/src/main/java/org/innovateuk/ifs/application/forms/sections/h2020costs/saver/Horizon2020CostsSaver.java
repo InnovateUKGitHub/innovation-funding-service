@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 @Component
+@SuppressWarnings("unchecked")
 public class Horizon2020CostsSaver {
 
     private final ApplicationFinanceRestService applicationFinanceRestService;
