@@ -65,7 +65,7 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), isMonitoringOfficer(loggedInUserId, projectId));
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), monitoringOfficerDocumentDecisionEnabled(loggedInUserId, projectId));
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -93,8 +93,6 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        boolean monitoringOfficerDocumentDecisionEnabled = isMOJourneyUpdateEnabled ? isMonitoringOfficer(loggedInUserId, projectId) : false;
-
         return new DocumentViewModel(project.getId(),
                 project.getName(),
                 project.getApplication(),
@@ -106,7 +104,7 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUserId, projectId),
                 project.getProjectState().isActive(),
-                monitoringOfficerDocumentDecisionEnabled);
+                monitoringOfficerDocumentDecisionEnabled(loggedInUserId, projectId));
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {
@@ -121,6 +119,11 @@ public class DocumentsPopulator {
     private boolean isMonitoringOfficer(long loggedInUserId, long projectId) {
         return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUserId).getSuccess();
     }
+
+    private boolean monitoringOfficerDocumentDecisionEnabled(long loggedInUserId, long projectId) {
+        return isMOJourneyUpdateEnabled ? isMonitoringOfficer(loggedInUserId, projectId) : false;
+    }
+
 
     private CompetitionResource getCompetition(long competitionId) {
         return competitionRestService.getCompetitionById(competitionId).getSuccess();
