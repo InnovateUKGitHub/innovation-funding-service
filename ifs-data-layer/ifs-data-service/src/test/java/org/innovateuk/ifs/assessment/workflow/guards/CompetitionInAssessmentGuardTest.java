@@ -12,6 +12,7 @@ import org.springframework.statemachine.StateContext;
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.assertFalse;
@@ -25,7 +26,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     private CompetitionInAssessmentGuard competitionInAssessmentGuard = new CompetitionInAssessmentGuard();
 
     @Test
-    public void evaluate_assessmentDatesNotSet() throws Exception {
+    public void evaluate_assessmentDatesNotSet() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
@@ -36,10 +37,11 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartsInFuture() throws Exception {
+    public void evaluate_assessmentStartsInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessorsNotifiedDate(now().plusDays(10L))
                         .build()
         );
@@ -48,10 +50,11 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartsAndClosesInFuture() throws Exception {
+    public void evaluate_assessmentStartsAndClosesInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessorsNotifiedDate(now().plusDays(10L))
                         .withAssessmentClosedDate(now().plusDays(20L))
                         .build()
@@ -61,10 +64,11 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartedAndClosed() throws Exception {
+    public void evaluate_assessmentStartedAndClosed() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .withAssessmentClosedDate(now().minusDays(1L))
                         .build()
@@ -74,9 +78,10 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartedButWillCloseInFuture() throws Exception {
+    public void evaluate_assessmentStartedButWillCloseInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withCompetitionStatus(CLOSED)
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .withAssessmentClosedDate(now().plusDays(10L))
@@ -87,9 +92,10 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartedButCloseDateNotSet() throws Exception {
+    public void evaluate_assessmentStartedButCloseDateNotSet() {
         Assessment assessment = buildAssessment(
                 newCompetition()
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withCompetitionStatus(CLOSED)
                         .withAssessorsNotifiedDate(now().minusDays(10L))
                         .build()
@@ -99,10 +105,11 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void evaluate_assessmentStartDateNotSetButClosesInFuture() throws Exception {
+    public void evaluate_assessmentStartDateNotSetButClosesInFuture() {
         Assessment assessment = buildAssessment(
                 newCompetition()
                         .withCompetitionStatus(CLOSED)
+                        .withAssessmentPeriods(newAssessmentPeriod().build(1))
                         .withAssessmentClosedDate(now().plusDays(10L))
                         .build()
         );
