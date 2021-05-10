@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -37,6 +38,9 @@ public class DocumentsPopulator {
 
     @Autowired
     private ProjectRestService projectRestService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     public AllDocumentsViewModel populateAllDocuments(long projectId, long loggedInUserId) {
 
@@ -87,7 +91,8 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        boolean userCanApproveOrRejectDocuments = userResource.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.MONITORING_OFFICER);
+        // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin and MO can approve.
+        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? true : userResource.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.MONITORING_OFFICER);
 
         return new DocumentViewModel(project.getId(),
                 project.getName(),
