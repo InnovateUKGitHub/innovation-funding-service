@@ -29,6 +29,7 @@ import static org.innovateuk.ifs.util.Either.right;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+@SuppressWarnings("deprecation")
 public abstract class AbstractRestTemplateAdaptor {
     private final static Log LOG = LogFactory.getLog(AbstractRestTemplateAdaptor.class);
 
