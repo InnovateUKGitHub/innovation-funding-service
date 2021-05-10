@@ -118,9 +118,9 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                 competitionParticipant.getCompetitionId()
         );
 
-        competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments));
-        competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments));
-        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments));
+        competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriodId()));
+        competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriodId()));
+        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriodId()));
     }
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
@@ -131,16 +131,25 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         }
     }
 
-    private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments) {
-        return assessments.stream().filter(assessment -> assessment.getProcessState().equals(SUBMITTED)).count();
+    private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
+        return assessments.stream()
+                .filter(assessment -> assessment.getProcessState().equals(SUBMITTED)
+                        && assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId)
+                .count();
     }
 
-    private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments) {
+    private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
         Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
-        return assessments.stream().filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState())).count();
+        return assessments.stream()
+                .filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState())
+                        && assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId)
+                .count();
     }
 
-    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments) {
-        return assessments.stream().filter(assessment -> assessment.getProcessState().equals(PENDING)).count();
+    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
+        return assessments.stream()
+                .filter(assessment -> assessment.getProcessState().equals(PENDING)
+                        && assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId)
+                .count();
     }
 }
