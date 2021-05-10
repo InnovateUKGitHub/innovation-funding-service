@@ -142,18 +142,16 @@ Assessor has been assigned to the competition
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852
-    Given log in as a different user             &{ifs_admin_user_credentials}
-    And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
-    Given the user clicks the button/link     link = Manage assessors
-    And the user selects the radio button     assessmentPeriodId  99
-    And the user clicks the button/link       jQuery = button:contains("Save and continue")
-    When the user clicks the button/link      link = Assign
-    #And the user selects the checkbox         assessor-row-1
-    #Then the user clicks the button/link      jQuery = button:contains("Add to assessor")
-    And the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
-    And the user clicks the button/link       link = Back to manage assessors
-    And the user clicks the button/link       link = Back to choose an assessment period to manage assessors
-    And the user clicks the button/link       link = Back to manage assessments
+    Given log in as a different user           &{ifs_admin_user_credentials}
+    And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
+    And the user clicks the button/link        link = Manage assessors
+    When the user selects the radio button     assessmentPeriodId  99
+    And the user clicks the button/link        jQuery = button:contains("Save and continue")
+    Then the user clicks the button/link       link = Assign
+    And the user should see the element        jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link        link = Back to manage assessors
+    And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
+    And the user clicks the button/link        link = Back to manage assessments
 
 *** Keywords ***
 Custom suite setup
@@ -268,8 +266,6 @@ the user adds a partner organisation and application details
 assign the application to assessor
     the user clicks the button/link     link = Manage applications
     the user clicks the button/link     link = Assign
-    #the user clicks the button/link     jQuery = button[type="submit"]:contains("Remove")
-    #the user clicks the button/link     jQuery = button:contains("Remove")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
     the user clicks the button/link     link = Allocate applications
