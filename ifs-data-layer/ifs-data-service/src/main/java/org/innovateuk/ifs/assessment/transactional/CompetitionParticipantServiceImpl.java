@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import com.mchange.v1.lang.BooleanUtils;
 import org.innovateuk.ifs.assessment.domain.Assessment;
-import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentParticipantMapper;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
@@ -69,18 +65,6 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
     @Override
     public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessmentPeriodByAssessors(long userId) {
-
-        /*List<CompetitionParticipantResource> competitionParticipantResources;
-        assessmentParticipantRepository.getByAssessorId(userId).stream()
-                .flatMap(assessmentParticipant -> {
-                    Map<AssessmentParticipant, List<AssessmentPeriod>> participantAssessmentPeriodMap = new HashMap<AssessmentParticipant, List<AssessmentPeriod>>();
-                    participantAssessmentPeriodMap.put(assessmentParticipant, assessmentParticipant.getProcess().getAssessmentPeriods());
-                    return participantAssessmentPeriodMap.entrySet().stream();
-                })
-                .forEach(participantAssessmentPeriod -> {
-                    AssessmentParticipant assessmentParticipant = participantAssessmentPeriod.getKey();
-                    competitionParticipantResources.add(new CompetitionParticipantResource());
-                })*/
 
         List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByAssessorId(userId).stream()
                 .flatMap(assessmentParticipant -> assessmentParticipant.getProcess().getAssessmentPeriods().stream()
