@@ -2,6 +2,7 @@ package org.innovateuk.ifs.workflow.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryEntityListener;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorOptions(force = true)
 @EntityListeners(ProcessHistoryEntityListener.class)
 public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessState> {
     @Id
