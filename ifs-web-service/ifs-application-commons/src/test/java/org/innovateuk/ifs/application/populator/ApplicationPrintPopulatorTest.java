@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -77,6 +78,7 @@ public class ApplicationPrintPopulatorTest {
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competition.getId())
+                .withFeedbackReleased(ZonedDateTime.now())
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .build();
 
@@ -120,6 +122,7 @@ public class ApplicationPrintPopulatorTest {
                 .withId(applicationId)
                 .withCompetition(competition.getId())
                 .withApplicationState(ApplicationState.SUBMITTED)
+                .withFeedbackReleased(ZonedDateTime.now())
                 .build();
 
         List<ProcessRoleResource> kta = newProcessRoleResource()
