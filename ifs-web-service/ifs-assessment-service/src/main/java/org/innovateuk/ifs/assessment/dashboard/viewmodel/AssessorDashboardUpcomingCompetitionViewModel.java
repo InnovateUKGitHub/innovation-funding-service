@@ -14,7 +14,7 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
     private String displayLabel;
     private LocalDate assessmentPeriodDateFrom;
     private LocalDate assessmentPeriodDateTo;
-    private final boolean competitionAlwaysOpen;
+    private boolean competitionAlwaysOpen;
 
     public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel, LocalDate assessmentPeriodDateFrom,
                                                          LocalDate assessmentPeriodDateTo, boolean competitionAlwaysOpen) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.mchange.v1.lang.BooleanUtils;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
@@ -69,11 +70,6 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     @Override
     public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessmentPeriodByAssessors(long userId) {
 
-        /*List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getAllAssessmentPeriodByAssessorId(userId).stream()
-                .map(compParticipantMapper::mapToResource)
-                .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
-                .collect(toList());*/
-
         /*List<CompetitionParticipantResource> competitionParticipantResources;
         assessmentParticipantRepository.getByAssessorId(userId).stream()
                 .flatMap(assessmentParticipant -> {
@@ -92,10 +88,11 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                                 assessmentParticipant.getUser().getId(), assessmentInviteMapper.mapToResource(assessmentParticipant.getInvite()),
                                 rejectionReasonMapper.mapToResource(assessmentParticipant.getRejectionReason()), assessmentParticipant.getRejectionReasonComment(),
                                 competitionParticipantRoleMapper.mapToResource(assessmentParticipant.getRole()), participantStatusMapper.mapToResource(assessmentParticipant.getStatus()),
-                                assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getCompetitionStatus(),
-                                assessmentParticipant.getProcess().isAlwaysOpen(), assessmentPeriod.getId()))
+                                assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getAssessorAcceptsDate(assessmentPeriod),
+                                assessmentParticipant.getProcess().getAssessorDeadlineDate(assessmentPeriod), assessmentParticipant.getProcess().getCompetitionStatus(),
+                                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriod.getId(), assessmentParticipant.getProcess().getAssessmentPeriodStatus(assessmentPeriod)))
                 )
-                .filter(participant -> !participant.isRejected())
+                .filter(competitionParticipant -> !competitionParticipant.isRejected() && isUpcomingOrInAssessment(competitionParticipant))
                 .collect(toList());
 
         competitionParticipantResources.forEach(this::determineStatusOfCompetitionAssessments);
@@ -103,8 +100,16 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         return serviceSuccess(competitionParticipantResources);
     }
 
+    private boolean isUpcomingOrInAssessment(CompetitionParticipantResource competitionParticipant) {
+        if (competitionParticipant.isCompetitionAlwaysOpen()) {
+            return competitionParticipant.isUpcomingOrInAssessmentPeriod();
+        } else {
+            return competitionParticipant.isUpcomingOrInAssessment();
+        }
+    }
+
     private void determineStatusOfCompetitionAssessments(CompetitionParticipantResource competitionParticipant) {
-        if (!competitionParticipant.isAccepted() || !competitionParticipant.isInAssessment()) {
+        if (!competitionParticipant.isAccepted() || !isInAssessment(competitionParticipant)) {
             return;
         }
 
@@ -116,6 +121,14 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments));
         competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments));
         competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments));
+    }
+
+    private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
+        if (competitionParticipant.isCompetitionAlwaysOpen()) {
+            return competitionParticipant.isInAssessmentPeriod();
+        } else {
+            return competitionParticipant.isInAssessment();
+        }
     }
 
     private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments) {

@@ -253,6 +253,35 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         }
     }
 
+    public CompetitionStatus getAssessmentPeriodStatus(AssessmentPeriod assessmentPeriod) {
+        if (setupComplete != null && setupComplete) {
+            if (!isMilestoneReached(OPEN_DATE)) {
+                return READY_TO_OPEN;
+            } else if (getMilestoneDate(SUBMISSION_DATE).isPresent() && !isMilestoneReached(SUBMISSION_DATE)) {
+                return OPEN;
+            } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
+                return PREVIOUS;
+            } else if (!isAlwaysOpen() && !isMilestoneReached(ASSESSORS_NOTIFIED)) {
+                return CLOSED;
+            } else if (isAlwaysOpen() && !isMilestoneReachedForAssessmentPeriod(ASSESSORS_NOTIFIED, assessmentPeriod)) {
+                return OPEN;
+            } else if (!isMilestoneReachedForAssessmentPeriod(ASSESSMENT_CLOSED, assessmentPeriod)) {
+                return IN_ASSESSMENT;
+            } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
+                return CompetitionStatus.FUNDERS_PANEL;
+            } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
+                return ASSESSOR_FEEDBACK;
+            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) &&
+                    CompetitionCompletionStage.RELEASE_FEEDBACK.equals(getCompletionStage())) {
+                return PREVIOUS;
+            } else {
+                return PROJECT_SETUP;
+            }
+        } else {
+            return COMPETITION_SETUP;
+        }
+    }
+
     public CovidType getCovidType() {
         return covidType;
     }
@@ -506,6 +535,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private boolean isMilestoneReached(MilestoneType milestoneType) {
         ZonedDateTime today = ZonedDateTime.now();
         return getMilestone(milestoneType).map(milestone -> milestone.isReached(today)).orElse(false);
+    }
+
+    private boolean isMilestoneReachedForAssessmentPeriod(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod) {
+        ZonedDateTime today = ZonedDateTime.now();
+        return getMilestone(milestoneType, assessmentPeriod)
+                .map(milestone -> milestone.isReached(today))
+                .orElse(false);
     }
 
     private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
@@ -1038,6 +1074,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public Boolean getAlwaysOpen() {
+        return alwaysOpen;
     }
 
     public boolean isAlwaysOpen() {

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -33,6 +34,7 @@ public class CompetitionParticipantResource {
     private CompetitionStatus competitionStatus;
     private Boolean competitionAlwaysOpen;
     private Long assessmentPeriodId;
+    private CompetitionStatus assessmentPeriodStatus;
     private Clock clock = Clock.systemDefaultZone();
 
     public CompetitionParticipantResource() {
@@ -40,8 +42,9 @@ public class CompetitionParticipantResource {
 
     public CompetitionParticipantResource(Long id, Long competitionId, Long userId, CompetitionInviteResource invite,
                                           RejectionReasonResource rejectionReason, String rejectionReasonComment, CompetitionParticipantRoleResource role,
-                                          ParticipantStatusResource status, String competitionName, CompetitionStatus competitionStatus,
-                                          Boolean competitionAlwaysOpen, Long assessmentPeriodId) {
+                                          ParticipantStatusResource status, String competitionName, ZonedDateTime assessorAcceptsDate,
+                                          ZonedDateTime assessorDeadlineDate, CompetitionStatus competitionStatus, Boolean competitionAlwaysOpen,
+                                          Long assessmentPeriodId, CompetitionStatus assessmentPeriodStatus) {
         this.id = id;
         this.competitionId = competitionId;
         this.userId = userId;
@@ -51,9 +54,12 @@ public class CompetitionParticipantResource {
         this.role = role;
         this.status = status;
         this.competitionName = competitionName;
+        this.assessorAcceptsDate = assessorAcceptsDate;
+        this.assessorDeadlineDate = assessorDeadlineDate;
         this.competitionStatus = competitionStatus;
         this.competitionAlwaysOpen = competitionAlwaysOpen;
         this.assessmentPeriodId = assessmentPeriodId;
+        this.assessmentPeriodStatus = assessmentPeriodStatus;
     }
 
     public String getCompetitionName() {
@@ -192,6 +198,14 @@ public class CompetitionParticipantResource {
         this.assessmentPeriodId = assessmentPeriodId;
     }
 
+    public CompetitionStatus getAssessmentPeriodStatus() {
+        return assessmentPeriodStatus;
+    }
+
+    public void setAssessmentPeriodStatus(CompetitionStatus assessmentPeriodStatus) {
+        this.assessmentPeriodStatus = assessmentPeriodStatus;
+    }
+
     @JsonIgnore
     public boolean isAccepted() {
         return status == ParticipantStatusResource.ACCEPTED;
@@ -230,6 +244,25 @@ public class CompetitionParticipantResource {
     @JsonIgnore
     public boolean isUpcomingOrInAssessment() {
         return isInAssessment() || isAnUpcomingAssessment();
+    }
+
+    @JsonIgnore
+    public boolean isInAssessmentPeriod() {
+        return assessmentPeriodStatus == IN_ASSESSMENT;
+    }
+
+    @JsonIgnore
+    public boolean isAnUpcomingAssessmentPeriod() {
+        return competitionStatus == READY_TO_OPEN || assessmentPeriodStatus == OPEN || competitionStatus == CLOSED;
+    }
+
+    @JsonIgnore
+    public boolean isUpcomingOrInAssessmentPeriod() {
+        return isInAssessment() || isAnUpcomingAssessment();
+    }
+
+    public boolean isCompetitionAlwaysOpen() {
+        return BooleanUtils.isTrue(competitionAlwaysOpen);
     }
 
     private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
