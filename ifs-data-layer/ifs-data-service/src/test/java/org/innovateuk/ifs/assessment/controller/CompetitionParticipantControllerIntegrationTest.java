@@ -108,6 +108,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         competition1.setStartDate(now().minusDays(10L));
         competition1.setEndDate(now().minusDays(5L));
         competition1.notifyAssessors(now().minusSeconds(1L), competition1.getAssessmentPeriods().get(0));
+        competition1.setAlwaysOpen(false);
         Competition competition2 = buildInAssessmentCompetition();
 
 
@@ -187,6 +188,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                                 .build()))
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorsNotifiedDate(now())
+                .withAlwaysOpen(false)
                 .build();
 
         competitionRepository.save(competition);
@@ -198,6 +200,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition = newCompetition()
                 .with(id(null))
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withAlwaysOpen(false)
                 .build();
 
         competitionRepository.save(competition);

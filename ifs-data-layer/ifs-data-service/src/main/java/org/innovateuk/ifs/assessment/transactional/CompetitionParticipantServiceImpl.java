@@ -118,22 +118,30 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
         return assessments.stream()
                 .filter(assessment -> assessment.getProcessState().equals(SUBMITTED)
-                        && assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId)
+                        && filterByAssessmentPeriod(assessmentPeriodId, assessment))
                 .count();
+    }
+
+    private boolean filterByAssessmentPeriod(Long assessmentPeriodId, Assessment assessment) {
+        if (assessmentPeriodId != null) {
+            return assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId;
+        } else {
+            return true;
+        }
     }
 
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
         Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         return assessments.stream()
                 .filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState())
-                        && assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId)
+                        && filterByAssessmentPeriod(assessmentPeriodId, assessment))
                 .count();
     }
 
     private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
         return assessments.stream()
                 .filter(assessment -> assessment.getProcessState().equals(PENDING)
-                        && assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId)
+                        && filterByAssessmentPeriod(assessmentPeriodId, assessment))
                 .count();
     }
 }
