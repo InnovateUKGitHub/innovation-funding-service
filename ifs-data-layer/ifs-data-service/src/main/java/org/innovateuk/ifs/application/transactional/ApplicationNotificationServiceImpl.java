@@ -131,8 +131,10 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private ServiceResult<Void> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
 
         Application application = applicationRepository.findById(processRole.getApplicationId()).get();
-        application.setFeedbackReleased(ZonedDateTime.now());
-        applicationRepository.save(application);
+        if (application.getFeedbackReleased() == null) {
+            application.setFeedbackReleased(ZonedDateTime.now());
+            applicationRepository.save(application);
+        }
 
         NotificationTarget recipient =
                 new UserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());
