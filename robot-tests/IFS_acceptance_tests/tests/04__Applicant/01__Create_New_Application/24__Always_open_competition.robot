@@ -118,21 +118,6 @@ Comp admin updates the assessment period
     And the user clicks the button/link                        link = Back to manage assessments
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
-Comp admin manages the assessors
-    [Documentation]  IFS-8852
-    Given the user clicks the button/link     link = Manage assessors
-    And the user selects the radio button     assessmentPeriodId  99
-    And the user clicks the button/link       jQuery = button:contains("Save and continue")
-    When the user clicks the button/link      link = Assign
-    And the user selects the checkbox         assessor-row-1
-    Then the user clicks the button/link      jQuery = button:contains("Add to assessor")
-    And the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
-    And the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application awaiting assessment')
-    And the user clicks the button/link       link = Back to manage assessors
-    And the user clicks the button/link       link = Back to choose an assessment period to manage assessors
-    And the user clicks the button/link       link = Back to manage assessments
-
-
 Internal user notify the assessors of their assigned applications
     [Documentation]  IFS-9008  IFS-8852
     Given assign the application to assessor
@@ -154,6 +139,21 @@ Assessor has been assigned to the competition
     Given log in as a different user             ${assessorEmail}   ${short_password}
     When the user clicks the button/link         jQuery = a:contains('Always open competition')
     Then the user should see the element         jQuery = h2:contains('Assessment period: 20 Feb to 20 Mar 2021')
+
+Comp admin manages the assessors
+    [Documentation]  IFS-8852
+    Given log in as a different user             &{ifs_admin_user_credentials}
+    And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
+    Given the user clicks the button/link     link = Manage assessors
+    And the user selects the radio button     assessmentPeriodId  99
+    And the user clicks the button/link       jQuery = button:contains("Save and continue")
+    When the user clicks the button/link      link = Assign
+    #And the user selects the checkbox         assessor-row-1
+    #Then the user clicks the button/link      jQuery = button:contains("Add to assessor")
+    And the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link       link = Back to manage assessors
+    And the user clicks the button/link       link = Back to choose an assessment period to manage assessors
+    And the user clicks the button/link       link = Back to manage assessments
 
 *** Keywords ***
 Custom suite setup
@@ -268,6 +268,8 @@ the user adds a partner organisation and application details
 assign the application to assessor
     the user clicks the button/link     link = Manage applications
     the user clicks the button/link     link = Assign
+    #the user clicks the button/link     jQuery = button[type="submit"]:contains("Remove")
+    #the user clicks the button/link     jQuery = button:contains("Remove")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
     the user clicks the button/link     link = Allocate applications
