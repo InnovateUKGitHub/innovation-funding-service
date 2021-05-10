@@ -3,7 +3,7 @@ package org.innovateuk.ifs.organisation.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,13 +38,13 @@ public class OrganisationSearchResult implements Serializable{
     @JsonIgnore
     public String getLocation() {
         List<String> parts = new ArrayList<>();
-        if(!StringUtils.isEmpty(organisationAddress.getAddressLine1())){
+        if(!ObjectUtils.isEmpty(organisationAddress.getAddressLine1())){
             parts.add(organisationAddress.getAddressLine1());
         }
-        if(!StringUtils.isEmpty(organisationAddress.getTown())){
+        if(!ObjectUtils.isEmpty(organisationAddress.getTown())){
             parts.add(organisationAddress.getTown());
         }
-        if(!StringUtils.isEmpty(organisationAddress.getPostcode())){
+        if(!ObjectUtils.isEmpty(organisationAddress.getPostcode())){
             parts.add(organisationAddress.getPostcode());
         }
         return String.join(", ", parts);
@@ -110,7 +110,7 @@ public class OrganisationSearchResult implements Serializable{
     }
 
     public String getOrganisationAddressSnippet() {
-        if(!StringUtils.isEmpty(organisationAddressSnippet)){
+        if(!ObjectUtils.isEmpty(organisationAddressSnippet)){
             return organisationAddressSnippet;
         }
         return "";
