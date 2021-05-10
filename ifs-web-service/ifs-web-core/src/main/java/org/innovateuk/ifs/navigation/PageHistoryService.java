@@ -34,12 +34,12 @@ public class PageHistoryService {
             history.clear();
         }
 
-        if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
-            if (!history.isEmpty()) {
-                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().buildUrl());
-                modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
-            }
+        if (!history.isEmpty()) {
+            modelAndView.getModel().put("cookieBackLinkUrl", history.peek().buildUrl());
+            modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
+        }
 
+        if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
             if (!ERROR.equals(request.getDispatcherType())) {
                 history.push(new PageHistory(null, request.getRequestURI(), request.getQueryString()));
                 encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));

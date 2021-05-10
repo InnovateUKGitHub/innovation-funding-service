@@ -8,9 +8,11 @@ IFS.core.pageHistory = (function () {
       if (pageTitleOverride.length) {
         name = pageTitleOverride.val()
       }
-      pageHistory[0].name = name
-      Cookies.remove('pageHistory')
-      Cookies.set('pageHistory', JSON.stringify(pageHistory))
+      if (pageHistory[0].uri.indexOf(window.location.pathname) !== -1) {
+        pageHistory[0].name = name
+        Cookies.remove('pageHistory')
+        Cookies.set('pageHistory', JSON.stringify(pageHistory))
+      }
     }
   }
 })()
