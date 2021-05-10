@@ -12,5 +12,5 @@ public interface CompetitionParticipantRestService {
 
     RestResult<List<CompetitionParticipantResource>> getAssessorParticipants(long userId);
 
-    RestResult<List<CompetitionParticipantResource>> getAssessorParticipantsByAssessmentPeriod(long userId);
+    RestResult<List<CompetitionParticipantResource>> getAssessorParticipantsWithAssessmentPeriod(long userId);
 }

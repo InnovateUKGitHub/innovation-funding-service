@@ -64,7 +64,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     @Override
-    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessmentPeriodByAssessors(long userId) {
+    public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessorsWithAssessmentPeriod(long userId) {
 
         List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByAssessorId(userId).stream()
                 .flatMap(assessmentParticipant -> assessmentParticipant.getProcess().getAssessmentPeriods().stream()
@@ -74,7 +74,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                                 competitionParticipantRoleMapper.mapToResource(assessmentParticipant.getRole()), participantStatusMapper.mapToResource(assessmentParticipant.getStatus()),
                                 assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getAssessorAcceptsDate(assessmentPeriod),
                                 assessmentParticipant.getProcess().getAssessorDeadlineDate(assessmentPeriod), assessmentParticipant.getProcess().getCompetitionStatus(),
-                                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriod.getId(), assessmentParticipant.getProcess().getAssessmentPeriodStatus(assessmentPeriod)))
+                                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriod.getId(), assessmentParticipant.getProcess().getCompetitionStatus(assessmentPeriod)))
                 )
                 .filter(competitionParticipant -> !competitionParticipant.isRejected() && isUpcomingOrInAssessment(competitionParticipant))
                 .collect(toList());

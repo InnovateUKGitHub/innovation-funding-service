@@ -71,8 +71,8 @@ public class AssessorDashboardModelPopulator {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getAssessorParticipants(user.getId()).getSuccess();
 
-        List<CompetitionParticipantResource> participantResourceListByAssessmentPeriod = competitionParticipantRestService
-                .getAssessorParticipantsByAssessmentPeriod(user.getId()).getSuccess();
+        List<CompetitionParticipantResource> participantListWithAssessmentPeriod = competitionParticipantRestService
+                .getAssessorParticipantsWithAssessmentPeriod(user.getId()).getSuccess();
 
         List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
@@ -80,8 +80,8 @@ public class AssessorDashboardModelPopulator {
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource, roleProfileState),
-                getActiveCompetitions(participantResourceListByAssessmentPeriod),
-                getUpcomingCompetitions(participantResourceListByAssessmentPeriod),
+                getActiveCompetitions(participantListWithAssessmentPeriod),
+                getUpcomingCompetitions(participantListWithAssessmentPeriod),
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(reviewParticipantResourceList),
                 getAssessmentPanelAccepted(reviewParticipantResourceList),
@@ -94,8 +94,8 @@ public class AssessorDashboardModelPopulator {
         return new AssessorProfileStatusViewModel(assessorProfileStatusResource, roleProfileState);
     }
 
-    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceListByAssessmentPeriod) {
-        return participantResourceListByAssessmentPeriod.stream()
+    private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
+        return participantListWithAssessmentPeriod.stream()
                 .filter(CompetitionParticipantResource::isAccepted)
                 .filter(competitionParticipant -> isInAssessment(competitionParticipant))
                 .map(cpr -> new AssessorDashboardActiveCompetitionViewModel(
@@ -120,8 +120,8 @@ public class AssessorDashboardModelPopulator {
         }
     }
 
-    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantResources) {
-        return participantResources.stream()
+    private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
+        return participantListWithAssessmentPeriod.stream()
                 .filter(CompetitionParticipantResource::isAccepted)
                 .filter(competitionParticipant -> isAnUpcomingAssessment(competitionParticipant))
                 .map(p -> new AssessorDashboardUpcomingCompetitionViewModel(
