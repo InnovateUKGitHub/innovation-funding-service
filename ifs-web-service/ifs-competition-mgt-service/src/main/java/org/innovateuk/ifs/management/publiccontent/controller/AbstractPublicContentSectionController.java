@@ -63,6 +63,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     @PostMapping(value = "/{competitionId}/edit")
+    @ExcludeFromPageHistory
     public String markAsComplete(Model model,
                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                  @Valid @ModelAttribute(FORM_ATTR_NAME) F form,

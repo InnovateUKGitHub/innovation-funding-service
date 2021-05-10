@@ -42,9 +42,9 @@ public class PageHistoryService {
         if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
             if (!ERROR.equals(request.getDispatcherType())) {
                 history.push(new PageHistory(null, request.getRequestURI(), request.getQueryString()));
-                encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
             }
         }
+        encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
 
     public Optional<PageHistory> getPreviousPage(HttpServletRequest request) {
