@@ -15,7 +15,6 @@ apply from: "finance-data-service-sync.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
 

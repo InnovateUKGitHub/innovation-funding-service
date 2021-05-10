@@ -50,11 +50,11 @@ public class DatabasePatchingTest extends BaseIntegrationTest {
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations){
         Map<String, String> placeholders = ImmutableMap.of("ifs.system.user.uuid", systemUserUUID);
-        Flyway f = new Flyway();
-        f.setDataSource(databaseUrl, databaseUser, databasePassword);
-        f.setLocations(patchLocations);
-        f.setPlaceholders(placeholders);
-        f.clean();
-        f.migrate();
+        Flyway flyway = Flyway.configure()
+                .dataSource(databaseUrl, databaseUser, databasePassword)
+                .locations(patchLocations)
+                .placeholders(placeholders).load();
+        flyway.clean();
+        flyway.migrate();
     }
 }
