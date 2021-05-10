@@ -96,6 +96,14 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
     }
 
+    public CompetitionParticipantResourceBuilder withAssessmentPeriodId(Long... assessmentPeriodIds) {
+        return withArraySetFieldByReflection("assessmentPeriodId", assessmentPeriodIds);
+    }
+
+    public CompetitionParticipantResourceBuilder withAssessmentPeriodStatus(CompetitionStatus... assessmentPeriodStatus) {
+        return withArraySetFieldByReflection("assessmentPeriodStatus", assessmentPeriodStatus);
+    }
+
     @Override
     protected void postProcess(int index, CompetitionParticipantResource instance) {
         super.postProcess(index, instance);
