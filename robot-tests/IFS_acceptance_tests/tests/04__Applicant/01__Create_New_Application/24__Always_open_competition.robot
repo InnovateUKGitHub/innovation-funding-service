@@ -11,6 +11,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9504  Always open assessments: applicants cannot reopen a submitted application
 ...
+...               IFS-9008 Always open competitions – assessment period actions
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -26,6 +28,7 @@ Resource          ../../../resources/keywords/05__Email_Keywords.robot
 ${openEndedCompName}               Open ended competition
 # REPLACE WEB TEST DATA VARIABLES WITH ACTUAL E2E FLOW DATA AND CHANGE NAME OF VARIABLES
 ${webTestCompName}                 Always open competition
+${webTestCompID}                   ${competition_ids["${webTestCompName}"]}
 ${applicationName}                 Always open application
 ${webTestAppName}                  Always open application decision pending
 #Delete the above application when the user can assign an assessor to the application
@@ -34,6 +37,7 @@ ${deadlineErrormessage}            2. Assessor accepts: Please enter a valid dat
 ${assessmentErrorMessage}          3. Assessor deadline: Please enter a valid date.
 ${webTestAssessor}                 Angel Witt
 ${webTestAssessorEmailAddress}     angel.witt@gmail.com
+${assessorEmail}                   another.person@gmail.com
 
 *** Test Cases ***
 the user fills in milestones without a submission date
@@ -110,6 +114,22 @@ Comp admin updates the assessment period
     Then the user checks the milestone validation messages
     And the user clicks the button/link                        link = Back to manage assessments
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
+
+Internal user notify the assessors of their assigned applications
+    [Documentation]  IFS-9008
+    Given assign the application to assessor
+    When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
+    And the user logs out if they are logged in
+    Then the user reads his email and clicks the link        ${assessorEmail}   Your applications for the competition ${webTestCompName}   You have been allocated some applications to assess within this competition   1
+    And the assessor accepts an invite to an application
+
+Internal user closes assessment period one
+    [Documentation]  IFS-9008
+    Given log in as a different user             &{ifs_admin_user_credentials}
+    And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
+    When the user clicks the button/link         jQuery = button:contains("Close assessment")
+    Then the user should not see the element     jQuery = button:contains("Close assessment")
+    And the user should see the element          jQuery = button:contains("Notify assessors")
 
 *** Keywords ***
 Custom suite setup
@@ -220,3 +240,17 @@ the user adds a partner organisation and application details
     the user clicks the button/link                      link = ${applicationName}
     the lead invites already registered user             ${collaborator1_credentials["email"]}   ${openEndedCompName}
     partner applicant completes the project finances     ${applicationName}  no  ${collaborator1_credentials["email"]}  ${short_password}
+
+assign the application to assessor
+    the user clicks the button/link     link = Manage applications
+    the user clicks the button/link     link = Assign
+    the user selects the checkbox       assessor-row-1
+    the user clicks the button/link     jQuery = button:contains("Add to application")
+    the user clicks the button/link     link = Allocate applications
+    the user clicks the button/link     link = Manage assessments
+
+the assessor accepts an invite to an application
+    logging in and error checking         ${assessorEmail}   ${short_password}
+    the user clicks the button/link       link = ${webTestAppName}
+    the user selects the radio button     assessmentAccept  true
+    the user clicks the button/link       jQuery = button:contains("Confirm")
