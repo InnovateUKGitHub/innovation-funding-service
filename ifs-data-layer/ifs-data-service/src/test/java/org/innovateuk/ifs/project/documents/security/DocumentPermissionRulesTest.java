@@ -237,7 +237,7 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (SecurityRuleUtil.isMonitoringOfficer(user)) {
+            if (SecurityRuleUtil.isMonitoringOfficer(user) && projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId())) {
                 assertTrue(rules.monitoringOfficerCanApproveDocument(project, user));
             } else {
                 assertFalse(rules.monitoringOfficerCanApproveDocument(project, user));
