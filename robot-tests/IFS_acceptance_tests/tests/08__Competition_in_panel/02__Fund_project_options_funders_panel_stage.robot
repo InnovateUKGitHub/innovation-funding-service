@@ -145,7 +145,7 @@ Notification email template includes assessor score
 
 Email to external user contains average assessor score
     [Documentation]  IFS-7370
-    Given the user clicks the button/link        jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    Given the user clicks the button/link        jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     When the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
     Then the user reads his email                nancy.peterson@gmail.com   	${assessorScoreComp}: Notification regarding your application ${assessorScoreApplicationId}: ${assessorScoreApplication}  Average assessor score
 
@@ -195,7 +195,7 @@ the internal user sends an email notification
     the user clicks the button/link         jQuery = button:contains("Write and send email")
     the user should not see the element     jQuery = p:contains("Average assessor score")
     the user enters text to a text field    css = .editor  ${message}
-    the user clicks the button/link         jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    the user clicks the button/link         jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link                          jQuery = .send-to-all-applicants-modal button:contains("Send email")
     the user refreshes until element appears on page         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
