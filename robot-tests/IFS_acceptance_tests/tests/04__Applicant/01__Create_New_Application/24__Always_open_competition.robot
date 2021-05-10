@@ -134,6 +134,25 @@ Internal user closes assessment period one
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
 
+Assessor has been assigned to the competition
+    [Documentation]  IFS-8852
+    Given log in as a different user             ${assessorEmail}   ${short_password}
+    When the user clicks the button/link         jQuery = a:contains('Always open competition')
+    Then the user should see the element         jQuery = h2:contains('Assessment period: 20 Feb to 20 Mar 2021')
+
+Comp admin manages the assessors
+    [Documentation]  IFS-8852
+    Given log in as a different user           &{ifs_admin_user_credentials}
+    And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
+    And the user clicks the button/link        link = Manage assessors
+    When the user selects the radio button     assessmentPeriodId  99
+    And the user clicks the button/link        jQuery = button:contains("Save and continue")
+    Then the user clicks the button/link       link = Assign
+    And the user should see the element        jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link        link = Back to manage assessors
+    And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
+    And the user clicks the button/link        link = Back to manage assessments
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
