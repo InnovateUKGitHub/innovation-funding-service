@@ -136,7 +136,7 @@ public class AssessorDashboardModelPopulator {
 
     private boolean isAnUpcomingAssessment(CompetitionParticipantResource competitionParticipant) {
         if (competitionParticipant.isCompetitionAlwaysOpen()) {
-            return competitionParticipant.isAnUpcomingAssessmentPeriod() && competitionParticipant.getTotalAssessments() == 0;
+            return competitionParticipant.isAnUpcomingAssessmentPeriod();
         } else {
             return competitionParticipant.isAnUpcomingAssessment();
         }
