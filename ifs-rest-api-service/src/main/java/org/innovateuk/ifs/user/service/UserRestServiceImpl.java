@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -17,7 +18,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
-import static org.springframework.util.StringUtils.isEmpty;
 
 
 /**
@@ -32,7 +32,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
-        if(isEmpty(uid))
+        if(ObjectUtils.isEmpty(uid))
             return restFailure(CommonErrors.notFoundError(UserResource.class, uid));
 
         return getWithRestResultAnonymous(USER_REST_URL + "/uid/" + uid, UserResource.class);
@@ -49,7 +49,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> checkPasswordResetHash(String hash) {
 
-        if(isEmpty(hash))
+        if(ObjectUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
         return getWithRestResultAnonymous(USER_REST_URL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
@@ -59,7 +59,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<Void> resetPassword(String hash, String password) {
 
 
-        if(isEmpty(hash))
+        if(ObjectUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
         return postWithRestResultAnonymous(String.format("%s/%s/%s", USER_REST_URL, URL_PASSWORD_RESET, hash), password,  Void.class);
@@ -67,7 +67,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> findUserByEmail(String email) {
-        if (isEmpty(email)) {
+        if (ObjectUtils.isEmpty(email)) {
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
@@ -159,7 +159,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setAllowMarketingEmails(allowMarketingEmails);
-        if(!isEmpty(title)) {
+        if(!ObjectUtils.isEmpty(title)) {
             user.setTitle(Title.valueOf(title));
         }
         user.setPhoneNumber(phoneNumber);
