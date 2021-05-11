@@ -94,7 +94,7 @@
                            readonly="readonly"
                            th:value="${model.isH2020()} ?
                            '<competition name>: Notification regarding your submission <application number>: <application title>' :
-                           'Important message about your application <application number>: <application title> for the competition <competition name>'" />
+                           'Important message about your application \'[application name]\' for the competition \'[competition name]\''" />
 
                 </div>
 
@@ -107,8 +107,8 @@
                         [application title] <br/><br/>
                         <th:block th:if="${model.includeAssessorsScore}">Average assessor score: [assessor score]%<br/><br/></th:block>
                         <th:block th:if="${model.alwaysOpen}">
-                            Thank you for submitting your application [application number]: [application title] to Innovate UK
-                            for the competition [competition number]: [competition name] <br/><br/>
+                            Thank you for submitting your application <strong>[application number]: [application name]</strong> to Innovate UK
+                            for the competition <strong>[competition number]: [competition name]</strong> <br/><br/>
                             Feedback is now available for you to view on the <a href="/">Innovation Funding Service</a>
                         </th:block>
                     </p>

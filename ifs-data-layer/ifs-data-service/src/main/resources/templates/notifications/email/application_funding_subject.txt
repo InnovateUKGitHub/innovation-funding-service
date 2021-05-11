@@ -1,1 +1,1 @@
-Important message about your application ${applicationId?c}: ${applicationName} for the competition ${competitionName}
+Important message about your application ${applicationName} for the competition ${competitionName}
