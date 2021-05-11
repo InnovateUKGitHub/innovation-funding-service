@@ -152,6 +152,11 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
+                else {
+                    form.recalculateTotals();
+                    form.orderAssociateCosts();
+                }
+
             } else {
                 if (academicCostForm == null) {
                     future = async(() -> model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), projectId, organisationId)));
