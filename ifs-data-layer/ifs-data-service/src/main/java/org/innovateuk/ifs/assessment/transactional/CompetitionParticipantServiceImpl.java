@@ -1,14 +1,18 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentParticipantMapper;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.mapper.RejectionReasonMapper;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -51,6 +55,9 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
 
+    @Autowired
+    private AssessmentPeriodMapper assessmentPeriodMapper;
+
     @Override
     public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessors(long userId) {
 
@@ -69,13 +76,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
         List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByAssessorId(userId).stream()
                 .flatMap(assessmentParticipant -> assessmentParticipant.getProcess().getAssessmentPeriods().stream()
-                        .map(assessmentPeriod -> new CompetitionParticipantResource(assessmentParticipant.getId(), assessmentParticipant.getProcess().getId(),
-                                assessmentParticipant.getUser().getId(), assessmentInviteMapper.mapToResource(assessmentParticipant.getInvite()),
-                                rejectionReasonMapper.mapToResource(assessmentParticipant.getRejectionReason()), assessmentParticipant.getRejectionReasonComment(),
-                                competitionParticipantRoleMapper.mapToResource(assessmentParticipant.getRole()), participantStatusMapper.mapToResource(assessmentParticipant.getStatus()),
-                                assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getAssessorAcceptsDate(assessmentPeriod),
-                                assessmentParticipant.getProcess().getAssessorDeadlineDate(assessmentPeriod), assessmentParticipant.getProcess().getCompetitionStatus(),
-                                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriod.getId(), assessmentParticipant.getProcess().getCompetitionStatus(assessmentPeriod)))
+                        .map(assessmentPeriod -> buildCompetitionParticipantResource(assessmentParticipant, assessmentPeriod))
                 )
                 .filter(competitionParticipant -> !competitionParticipant.isRejected() && isUpcomingOrInAssessment(competitionParticipant))
                 .collect(toList());
@@ -85,12 +86,19 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         return serviceSuccess(competitionParticipantResources);
     }
 
+    private CompetitionParticipantResource buildCompetitionParticipantResource(AssessmentParticipant assessmentParticipant, AssessmentPeriod assessmentPeriod) {
+        return new CompetitionParticipantResource(assessmentParticipant.getId(), assessmentParticipant.getProcess().getId(),
+                assessmentParticipant.getUser().getId(), assessmentInviteMapper.mapToResource(assessmentParticipant.getInvite()),
+                rejectionReasonMapper.mapToResource(assessmentParticipant.getRejectionReason()), assessmentParticipant.getRejectionReasonComment(),
+                competitionParticipantRoleMapper.mapToResource(assessmentParticipant.getRole()), participantStatusMapper.mapToResource(assessmentParticipant.getStatus()),
+                assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getAssessorAcceptsDate(assessmentPeriod),
+                assessmentParticipant.getProcess().getAssessorDeadlineDate(assessmentPeriod), assessmentParticipant.getProcess().getCompetitionStatus(),
+                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriodMapper.mapToResource(assessmentPeriod));
+    }
+
     private boolean isUpcomingOrInAssessment(CompetitionParticipantResource competitionParticipant) {
-        if (competitionParticipant.isCompetitionAlwaysOpen()) {
-            return competitionParticipant.isUpcomingOrInAssessmentPeriod();
-        } else {
-            return competitionParticipant.isUpcomingOrInAssessment();
-        }
+        return competitionParticipant.getAssessmentPeriod().isInAssessment()
+                || !competitionParticipant.getAssessmentPeriod().isAssessmentClosed();
     }
 
     private void determineStatusOfCompetitionAssessments(CompetitionParticipantResource competitionParticipant) {
@@ -103,52 +111,45 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                 competitionParticipant.getCompetitionId()
         );
 
-        competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriodId()));
-        competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriodId()));
-        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriodId()));
+        competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriod()));
+        competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriod()));
+        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriod()));
     }
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
-        if (competitionParticipant.isCompetitionAlwaysOpen()) {
-            return competitionParticipant.isInAssessmentPeriod();
-        } else {
-            return competitionParticipant.isInAssessment();
-        }
+        return competitionParticipant.getAssessmentPeriod() != null
+                && competitionParticipant.getAssessmentPeriod().isInAssessment();
     }
 
-    private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
+    private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments, AssessmentPeriodResource assessmentPeriod) {
         Stream<Assessment> assessmentStream =  assessments.stream()
                 .filter(assessment -> assessment.getProcessState().equals(SUBMITTED));
 
-        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriodId);
+        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriod);
 
         return assessmentStream.count();
     }
 
-    private Stream<Assessment> filterByAssessmentPeriod(Stream<Assessment> assessmentStream, Long assessmentPeriodId) {
-        if (assessmentPeriodId != null) {
-            assessmentStream = assessmentStream
-                    .filter(assessment -> assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId);
-        }
-
-        return assessmentStream;
+    private Stream<Assessment> filterByAssessmentPeriod(Stream<Assessment> assessmentStream, AssessmentPeriodResource assessmentPeriod) {
+        return assessmentStream
+                .filter(assessment -> assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriod.getId());
     }
 
-    private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
+    private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments, AssessmentPeriodResource assessmentPeriod) {
         Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         Stream<Assessment> assessmentStream = assessments.stream()
                 .filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState()));
 
-        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriodId);
+        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriod);
 
         return assessmentStream.count();
     }
 
-    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
+    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments, AssessmentPeriodResource assessmentPeriod) {
         Stream<Assessment> assessmentStream = assessments.stream()
                 .filter(assessment -> assessment.getProcessState().equals(PENDING));
 
-        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriodId);
+        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriod);
 
         return assessmentStream.count();
     }

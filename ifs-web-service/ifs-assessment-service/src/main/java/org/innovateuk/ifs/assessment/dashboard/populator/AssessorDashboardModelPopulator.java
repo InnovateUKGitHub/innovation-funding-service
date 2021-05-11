@@ -113,11 +113,7 @@ public class AssessorDashboardModelPopulator {
     }
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
-        if (competitionParticipant.isCompetitionAlwaysOpen()) {
-            return competitionParticipant.isInAssessmentPeriod();
-        } else {
-            return competitionParticipant.isInAssessment();
-        }
+        return competitionParticipant.getAssessmentPeriod().isInAssessment();
     }
 
     private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
@@ -135,11 +131,9 @@ public class AssessorDashboardModelPopulator {
     }
 
     private boolean isAnUpcomingAssessment(CompetitionParticipantResource competitionParticipant) {
-        if (competitionParticipant.isCompetitionAlwaysOpen()) {
-            return competitionParticipant.isAnUpcomingAssessmentPeriod();
-        } else {
-            return competitionParticipant.isAnUpcomingAssessment();
-        }
+        /*return competitionParticipant.getAssessmentPeriod() != null
+                && !competitionParticipant.getAssessmentPeriod().isAssessmentClosed();*/
+        return competitionParticipant.isAnUpcomingAssessment();
     }
 
     private List<AssessorDashboardPendingInviteViewModel> getPendingParticipations(List<CompetitionParticipantResource> participantResourceList) {

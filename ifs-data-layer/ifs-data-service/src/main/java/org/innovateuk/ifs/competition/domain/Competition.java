@@ -227,10 +227,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public CompetitionStatus getCompetitionStatus() {
-        return getCompetitionStatus(null);
-    }
-
-    public CompetitionStatus getCompetitionStatus(AssessmentPeriod assessmentPeriod) {
         if (setupComplete != null && setupComplete) {
             if (!isMilestoneReached(OPEN_DATE)) {
                 return READY_TO_OPEN;
@@ -238,9 +234,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return OPEN;
             } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
                 return PREVIOUS;
-            } else if (isAssessorNotifiedMilestoneReached(assessmentPeriod)) {
+            } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
-            } else if (isAssessmentClosedMilestoneReached(assessmentPeriod)) {
+            } else if (!isMilestoneReached(ASSESSMENT_CLOSED)) {
                 return IN_ASSESSMENT;
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
@@ -255,16 +251,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         } else {
             return COMPETITION_SETUP;
         }
-    }
-
-    private boolean isAssessmentClosedMilestoneReached(AssessmentPeriod assessmentPeriod) {
-        return (assessmentPeriod == null && !isMilestoneReached(ASSESSMENT_CLOSED))
-                || (assessmentPeriod != null &&!isMilestoneReachedForAssessmentPeriod(ASSESSMENT_CLOSED, assessmentPeriod));
-    }
-
-    private boolean isAssessorNotifiedMilestoneReached(AssessmentPeriod assessmentPeriod) {
-        return (assessmentPeriod == null && !isMilestoneReached(ASSESSORS_NOTIFIED))
-                || (assessmentPeriod != null && !isMilestoneReachedForAssessmentPeriod(ASSESSORS_NOTIFIED, assessmentPeriod));
     }
 
     public CovidType getCovidType() {
