@@ -9,9 +9,9 @@ import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewM
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
-
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -49,9 +49,9 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList(), null);
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
 
-        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId(), 0)).thenReturn(expectedModel);
+        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId(), 0, 2)).thenReturn(expectedModel);
 
         mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))
                 .andExpect(status().isOk())

@@ -39,8 +39,16 @@ public interface CompetitionService {
     ServiceResult<Void> reopenAssessmentPeriod(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can close assessments")
+    ServiceResult<Void> closeAssessmentByAssessmentPeriod(long assessmentPeriodId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
     ServiceResult<Void> notifyAssessors(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
+    ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "RELEASE_FEEDBACK", description = "Comp Admins can change the competition state to Feedback Released")
@@ -82,6 +90,7 @@ public interface CompetitionService {
 
     @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
     ServiceResult<FileAndContents> downloadTerms(long competitionId);
+
 
 
 }

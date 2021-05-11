@@ -37,7 +37,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 10L,2, Sort.ASSESSORS, "filter").getSuccess();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 10L, 2,  Sort.ASSESSORS, "filter").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 
