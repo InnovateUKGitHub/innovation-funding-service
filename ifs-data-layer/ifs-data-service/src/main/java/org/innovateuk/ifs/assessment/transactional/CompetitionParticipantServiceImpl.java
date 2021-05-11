@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
@@ -116,32 +117,39 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
-        return assessments.stream()
-                .filter(assessment -> assessment.getProcessState().equals(SUBMITTED)
-                        && filterByAssessmentPeriod(assessmentPeriodId, assessment))
-                .count();
+        Stream<Assessment> assessmentStream =  assessments.stream()
+                .filter(assessment -> assessment.getProcessState().equals(SUBMITTED));
+
+        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriodId);
+
+        return assessmentStream.count();
     }
 
-    private boolean filterByAssessmentPeriod(Long assessmentPeriodId, Assessment assessment) {
+    private Stream<Assessment> filterByAssessmentPeriod(Stream<Assessment> assessmentStream, Long assessmentPeriodId) {
         if (assessmentPeriodId != null) {
-            return assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId;
-        } else {
-            return true;
+            assessmentStream = assessmentStream
+                    .filter(assessment -> assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriodId);
         }
+
+        return assessmentStream;
     }
 
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
         Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
-        return assessments.stream()
-                .filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState())
-                        && filterByAssessmentPeriod(assessmentPeriodId, assessment))
-                .count();
+        Stream<Assessment> assessmentStream = assessments.stream()
+                .filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState()));
+
+        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriodId);
+
+        return assessmentStream.count();
     }
 
     private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments, Long assessmentPeriodId) {
-        return assessments.stream()
-                .filter(assessment -> assessment.getProcessState().equals(PENDING)
-                        && filterByAssessmentPeriod(assessmentPeriodId, assessment))
-                .count();
+        Stream<Assessment> assessmentStream = assessments.stream()
+                .filter(assessment -> assessment.getProcessState().equals(PENDING));
+
+        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriodId);
+
+        return assessmentStream.count();
     }
 }

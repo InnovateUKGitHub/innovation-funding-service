@@ -81,7 +81,7 @@ public class AssessorDashboardModelPopulator {
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource, roleProfileState),
                 getActiveCompetitions(participantListWithAssessmentPeriod),
-                getUpcomingCompetitions(participantListWithAssessmentPeriod),
+                getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(reviewParticipantResourceList),
                 getAssessmentPanelAccepted(reviewParticipantResourceList),
@@ -136,7 +136,7 @@ public class AssessorDashboardModelPopulator {
 
     private boolean isAnUpcomingAssessment(CompetitionParticipantResource competitionParticipant) {
         if (competitionParticipant.isCompetitionAlwaysOpen()) {
-            return competitionParticipant.isAnUpcomingAssessmentPeriod();
+            return competitionParticipant.isAnUpcomingAssessmentPeriod() && competitionParticipant.getTotalAssessments() == 0;
         } else {
             return competitionParticipant.isAnUpcomingAssessment();
         }

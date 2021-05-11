@@ -238,10 +238,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return OPEN;
             } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
                 return PREVIOUS;
-            } else if (assessmentPeriod == null && !isMilestoneReached(ASSESSORS_NOTIFIED)) {
+            } else if ((assessmentPeriod == null && !isMilestoneReached(ASSESSORS_NOTIFIED))
+                    || (assessmentPeriod != null && !isMilestoneReachedForAssessmentPeriod(ASSESSORS_NOTIFIED, assessmentPeriod))) {
                 return CLOSED;
-            } else if (assessmentPeriod != null && !isMilestoneReachedForAssessmentPeriod(ASSESSORS_NOTIFIED, assessmentPeriod)) {
-                return OPEN;
             } else if ((assessmentPeriod == null && !isMilestoneReached(ASSESSMENT_CLOSED))
                     || (assessmentPeriod != null &&!isMilestoneReachedForAssessmentPeriod(ASSESSMENT_CLOSED, assessmentPeriod))) {
                 return IN_ASSESSMENT;
