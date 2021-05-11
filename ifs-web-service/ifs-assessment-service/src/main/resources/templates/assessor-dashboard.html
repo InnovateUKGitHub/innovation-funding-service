@@ -141,7 +141,7 @@
                                 </h3>
                                 <p class="govuk-body govuk-!-margin-0">Upcoming competition</p>
                             </div>
-                            <!--th:block th:unless="${upcomingCompetition.competitionAlwaysOpen}"-->
+                            <th:block th:unless="${upcomingCompetition.competitionAlwaysOpen}"-->
                                 <div class="assessment-period">
                                     <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>
                                     <dl class="standard-definition-list reduced-width">
@@ -151,7 +151,7 @@
                                         <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateTo)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateTo)}|">25 December 2017</dd>
                                     </dl>
                                 </div>
-                            <!--/th:block-->
+                            </th:block>
                         </li>
                     </ul>
                 </div>
