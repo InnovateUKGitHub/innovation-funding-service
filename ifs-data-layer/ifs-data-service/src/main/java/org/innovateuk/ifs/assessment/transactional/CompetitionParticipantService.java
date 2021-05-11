@@ -14,14 +14,8 @@ import java.util.List;
 public interface CompetitionParticipantService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    @SecuredBySpring(
-            value = "READ_COMPETITION_PARTICIPANT",
-            description = "An Assessor can view a CompetitionParticipant provided that they are the same user as the CompetitionParticipant")
     ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessors(long assessorId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    @SecuredBySpring(
-            value = "READ_COMPETITION_PARTICIPANT_BY_ASSESSMENT_PERIOD",
-            description = "An Assessor can view a CompetitionParticipantWithAssessmentPeriod provided that they are the same user as the CompetitionParticipant")
     ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessorsWithAssessmentPeriod(long assessorId);
 }
