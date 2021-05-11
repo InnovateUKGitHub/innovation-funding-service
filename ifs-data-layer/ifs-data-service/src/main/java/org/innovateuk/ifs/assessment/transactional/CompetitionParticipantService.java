@@ -22,6 +22,6 @@ public interface CompetitionParticipantService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     @SecuredBySpring(
             value = "READ_COMPETITION_PARTICIPANT_BY_ASSESSMENT_PERIOD",
-            description = "An Assessor can view a CompetitionParticipantByAssessmentPeriod provided that they are the same user as the CompetitionParticipant")
-    ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessmentPeriodByAssessors(long assessorId);
+            description = "An Assessor can view a CompetitionParticipantWithAssessmentPeriod provided that they are the same user as the CompetitionParticipant")
+    ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessorsWithAssessmentPeriod(long assessorId);
 }

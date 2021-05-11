@@ -117,6 +117,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
                 .withPendingAssessments(1L)
+                .withAssessmentPeriodStatus(IN_ASSESSMENT)
                 .build();
         ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -162,6 +163,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -224,6 +226,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withTotalAssessments(3L)
                 .withPendingAssessments(2L)
                 .withCompetitionStatus(IN_ASSESSMENT)
+                .withAssessmentPeriodStatus(IN_ASSESSMENT)
                 .build();
         ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -246,6 +249,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -286,6 +290,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
                 .withCompetitionStatus(IN_ASSESSMENT)
+                .withAssessmentPeriodStatus(IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -307,6 +312,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -347,6 +353,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
                 .withCompetitionStatus(FUNDERS_PANEL)
+                .withAssessmentPeriodStatus(FUNDERS_PANEL)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -368,6 +375,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -399,6 +407,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(1))
                 .withAssessorDeadlineDate(now().plusDays(7))
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
+                .withAssessmentPeriodStatus(CompetitionStatus.CLOSED)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -420,6 +429,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -460,6 +470,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .withAssessorDeadlineDate(now().minusDays(0))
                 .withCompetitionStatus(IN_ASSESSMENT)
+                .withAssessmentPeriodStatus(IN_ASSESSMENT)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -481,6 +492,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -526,6 +538,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(10), now().plusDays(5))
                 .withAssessorDeadlineDate(now().plusDays(20), now().plusDays(15))
                 .withCompetitionStatus(CLOSED, IN_ASSESSMENT)
+                .withAssessmentPeriodStatus(CLOSED, IN_ASSESSMENT)
                 .build(2);
 
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -548,6 +561,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(participantResources));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(participantResources));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
@@ -597,6 +611,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(10))
                 .withAssessorDeadlineDate(now().plusDays(20))
                 .withCompetitionStatus(FUNDERS_PANEL)
+                .withAssessmentPeriodStatus(FUNDERS_PANEL)
                 .build(1);
 
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -645,6 +660,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         long userId = 3l;
 
         when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(participantResources));
+        when(competitionParticipantRestService.getAssessorParticipantsByAssessmentPeriod(userId)).thenReturn(restSuccess(participantResources));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));

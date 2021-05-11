@@ -227,33 +227,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public CompetitionStatus getCompetitionStatus() {
-        if (setupComplete != null && setupComplete) {
-            if (!isMilestoneReached(OPEN_DATE)) {
-                return READY_TO_OPEN;
-            } else if (!isMilestoneReached(SUBMISSION_DATE)) {
-                return OPEN;
-            } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
-                return PREVIOUS;
-            } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
-                return CLOSED;
-            } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {
-                return IN_ASSESSMENT;
-            } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
-                return CompetitionStatus.FUNDERS_PANEL;
-            } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
-                return ASSESSOR_FEEDBACK;
-            } else if (isMilestoneReached(MilestoneType.FEEDBACK_RELEASED) &&
-                    CompetitionCompletionStage.RELEASE_FEEDBACK.equals(getCompletionStage())) {
-                return PREVIOUS;
-            } else {
-                return PROJECT_SETUP;
-            }
-        } else {
-            return COMPETITION_SETUP;
-        }
+        return getCompetitionStatus(null);
     }
 
-    public CompetitionStatus getAssessmentPeriodStatus(AssessmentPeriod assessmentPeriod) {
+    public CompetitionStatus getCompetitionStatus(AssessmentPeriod assessmentPeriod) {
         if (setupComplete != null && setupComplete) {
             if (!isMilestoneReached(OPEN_DATE)) {
                 return READY_TO_OPEN;
@@ -261,11 +238,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return OPEN;
             } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
                 return PREVIOUS;
-            } else if (!isAlwaysOpen() && !isMilestoneReached(ASSESSORS_NOTIFIED)) {
+            } else if (assessmentPeriod == null && !isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
-            } else if (isAlwaysOpen() && !isMilestoneReachedForAssessmentPeriod(ASSESSORS_NOTIFIED, assessmentPeriod)) {
+            } else if (assessmentPeriod != null && !isMilestoneReachedForAssessmentPeriod(ASSESSORS_NOTIFIED, assessmentPeriod)) {
                 return OPEN;
-            } else if (!isMilestoneReachedForAssessmentPeriod(ASSESSMENT_CLOSED, assessmentPeriod)) {
+            } else if ((assessmentPeriod == null && !isMilestoneReached(ASSESSMENT_CLOSED))
+                    || (assessmentPeriod != null &&!isMilestoneReachedForAssessmentPeriod(ASSESSMENT_CLOSED, assessmentPeriod))) {
                 return IN_ASSESSMENT;
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
