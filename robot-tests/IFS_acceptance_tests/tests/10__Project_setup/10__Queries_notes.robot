@@ -296,8 +296,9 @@ Link to notes from viability section
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page  ${dreambit_finance_checks}/eligibility
-    And the user clicks the button/link   jQuery = a:contains("Notes")
+    Given the user navigates to the page  ${dreambit_finance_checks}/note
+#    Given the user navigates to the page  ${dreambit_finance_checks}/eligibility
+#    And the user clicks the button/link   jQuery = a:contains("Notes")
     Then the user should see the element  jQuery = .govuk-button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
@@ -645,6 +646,7 @@ the user should see the note comments client side validations
     the user should see a field error        ${empty_field_warning_message}
 
 the user navigates to queries page
-    the user navigates to the page       ${dreambit_finance_checks}/eligibility
-    the user clicks the button/link      jQuery = a:contains("Queries")
+    the user navigates to the page       ${dreambit_finance_checks}/query
+#    the user navigates to the page       ${dreambit_finance_checks}/eligibility
+#    the user clicks the button/link      jQuery = a:contains("Queries")
     the user should see the element      jQuery = h2:contains("Queries")
