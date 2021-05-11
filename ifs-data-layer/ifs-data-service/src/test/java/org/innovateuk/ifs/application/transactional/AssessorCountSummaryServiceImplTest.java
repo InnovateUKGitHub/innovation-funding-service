@@ -5,14 +5,12 @@ import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
 import static org.junit.Assert.assertEquals;
@@ -37,11 +35,10 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
     @Test
     public void getAssessorCountSummariesByCompetitionId() {
         final long competitionId = 1L;
+        final long assessmentPeriodId = 2L;
         final int pageNumber = 0;
         final int pageSize = 20;
-        final Optional<Long> innovationSectorId = Optional.of(5L);
         final String assessorFilter = "";
-        final Optional<BusinessType> businessType = Optional.of(BusinessType.ACADEMIC);
 
         List<AssessorCountSummaryResource> assessorCountSummaryResources = newAssessorCountSummaryResource().build(2);
 
@@ -53,15 +50,15 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
         when(page.getNumber()).thenReturn(pageNumber);
         when(page.getSize()).thenReturn(pageSize);
 
-        when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetitionAndAssessorNameLike(
-                eq(competitionId), eq(assessorFilter), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("user.firstName", Sort.Direction.ASC))))
+        when(applicationStatisticsRepositoryMock.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(
+                eq(competitionId), eq(assessmentPeriodId), eq(assessorFilter), argThat(new PageableMatcher(pageNumber, pageSize, PageableMatcher.srt("user.firstName", Sort.Direction.ASC))))
         ).thenReturn(page);
 
         final AssessorCountSummaryPageResource expectedPageResource =
                 new AssessorCountSummaryPageResource(2, 1, assessorCountSummaryResources, pageNumber, pageSize);
 
         AssessorCountSummaryPageResource result =
-                service.getAssessorCountSummariesByCompetitionId(competitionId, assessorFilter, pageNumber, pageSize)
+                service.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, assessorFilter, pageNumber, pageSize)
                         .getSuccess();
 
         assertEquals(expectedPageResource, result);

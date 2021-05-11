@@ -250,6 +250,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 asMap(
                         "name", user.getName(),
                         "competitionName", competition.getName(),
+                        "competitionId", competition.getId(),
                         "acceptsDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorAcceptsDate(assessmentPeriod)).format(formatter),
                         "assessmentDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorDeadlineDate(assessmentPeriod)).format(formatter),
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))

@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
  *
  * @param <ControllerType>
  */
-@Category(ControllerTest.class)
 abstract public class MockMvcTest<ControllerType> {
 
     protected MockMvc mockMvc;

@@ -2,11 +2,9 @@ package org.innovateuk.ifs.sil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.innovateuk.ifs.ControllerTest;
 import org.innovateuk.ifs.commons.rest.RestResultHandlingHttpMessageConverter;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -24,7 +22,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 @SuppressWarnings("unchecked")
-@Category(ControllerTest.class)
 public abstract class AbstractEndpointControllerMockMvcTest<T> {
 
     @InjectMocks
