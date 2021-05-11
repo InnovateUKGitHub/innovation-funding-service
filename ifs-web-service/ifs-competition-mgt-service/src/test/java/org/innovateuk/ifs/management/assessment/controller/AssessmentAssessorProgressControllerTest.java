@@ -317,7 +317,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         when(assessmentRestService.unsubmitAssessment(assessmentId)).thenReturn(restSuccess());
 
         mockMvc.perform(
-                post("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit-assessment/{assessmentId}", competitionId, assessorId, assessmentId))
+                post("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit/{assessmentId}", competitionId, assessorId, assessmentId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s", competitionId, assessorId)));
 
@@ -339,7 +339,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         );
 
         mockMvc.perform(
-                get("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit-assessment/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
+                get("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(model().attributeExists("model"))

@@ -487,7 +487,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
 
         when(assessmentService.unsubmitAssessment(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/unsubmit-assessment", assessmentId))
+        mockMvc.perform(put("/assessment/{id}/unsubmit", assessmentId))
                 .andExpect(status().isOk());
 
         verify(assessmentService, only()).unsubmitAssessment(assessmentId);

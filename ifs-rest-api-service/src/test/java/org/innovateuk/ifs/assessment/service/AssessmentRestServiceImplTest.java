@@ -173,7 +173,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void unsubmitAssessment() {
         long assessmentId = 1L;
 
-        setupPutWithRestResultExpectations(format("%s/%s/unsubmit-assessment", assessmentRestURL, assessmentId), null, OK);
+        setupPutWithRestResultExpectations(format("%s/%s/unsubmit", assessmentRestURL, assessmentId), null, OK);
         RestResult<Void> response = service.unsubmitAssessment(assessmentId);
         assertTrue(response.isSuccess());
     }

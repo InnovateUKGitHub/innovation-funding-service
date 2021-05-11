@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm unsubmit',size='govuk-heading-xl'" />
 
-        <form th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit-assessment/{assessmentId}(
+        <form th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit/{assessmentId}(
                       competitionId=${model.competitionId},
                       assessorId=${model.assessorId},
                       assessmentId=${model.assessmentId})}"

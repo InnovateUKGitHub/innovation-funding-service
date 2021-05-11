@@ -140,8 +140,8 @@
                                    data-js-modal="unsubmit-assessment-assigned-assessor-modal"
                                    th:href="${removeActionNonJs}"
                                    th:attr="data-modal-form-action=${removeAction}"
-                                   th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
-                                           removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit-assessment/{asId}/confirm(cId=${model.competitionId}, assessorId=${model.assessorId}, asId=${app.assessmentId})}">
+                                   th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
+                                           removeActionNonJs=@{/assessment/competition/{cId}/assessors/{assessorId}/unsubmit/{asId}/confirm(cId=${model.competitionId}, assessorId=${model.assessorId}, asId=${app.assessmentId})}">
                                     Unsubmit
                                 </a>
                             </td>

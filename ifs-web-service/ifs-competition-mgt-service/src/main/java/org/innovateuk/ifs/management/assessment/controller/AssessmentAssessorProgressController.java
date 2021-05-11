@@ -99,7 +99,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return "competition/assessor-progress-remove-confirm";
     }
 
-    @PostMapping("/unsubmit-assessment/{assessmentId}")
+    @PostMapping("/unsubmit/{assessmentId}")
     public String unsubmitAssessment(@PathVariable long competitionId,
                                      @PathVariable long assessorId,
                                      @PathVariable long assessmentId) {
@@ -107,7 +107,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 
-    @GetMapping(value = "/unsubmit-assessment/{assessmentId}/confirm")
+    @GetMapping(value = "/unsubmit/{assessmentId}/confirm")
     public String unsubmitAssessmentConfirm(
             Model model,
             @PathVariable long competitionId,

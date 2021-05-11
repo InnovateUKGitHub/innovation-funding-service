@@ -70,7 +70,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private final AssessmentService assessmentService = new AssessmentServiceImpl();
 
     @Mock
-    private CompetitionParticipantService competitionParticipantServiceMock;
+    private CompetitionParticipantService competitionParticipantService;
 
     @Mock
     private AssessmentRepository assessmentRepository;
@@ -79,13 +79,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private AssessmentMapper assessmentMapper;
 
     @Mock
-    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
+    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
 
     @Mock
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Mock
-    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapperMock;
+    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
 
     @Mock
     private UserRepository userRepository;
@@ -100,7 +100,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Mock
-    private ApplicationService applicationServiceMock;
+    private ApplicationService applicationService;
 
     @Test
     public void testExistsByTargetId() {
@@ -230,7 +230,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .build(1);
 
-        when(competitionParticipantServiceMock.getCompetitionAssessors(userId)).thenReturn(serviceSuccess(competitionParticipantList));
+        when(competitionParticipantService.getCompetitionAssessors(userId)).thenReturn(serviceSuccess(competitionParticipantList));
         when(assessmentRepository.findByParticipantUserIdAndTargetCompetitionId(userId, competitionId)).thenReturn(assessments);
         when(assessmentMapper.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapper.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
@@ -270,15 +270,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource().build();
 
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
-        when(assessmentFundingDecisionOutcomeMapperMock.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
+        when(assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
         when(assessmentWorkflowHandler.fundingDecision(assessment, assessmentFundingDecisionOutcome)).thenReturn(true);
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepository, assessmentFundingDecisionOutcomeMapperMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepository, assessmentFundingDecisionOutcomeMapper, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessmentId);
-        inOrder.verify(assessmentFundingDecisionOutcomeMapperMock).mapToDomain(assessmentFundingDecisionOutcomeResource);
+        inOrder.verify(assessmentFundingDecisionOutcomeMapper).mapToDomain(assessmentFundingDecisionOutcomeResource);
         inOrder.verify(assessmentWorkflowHandler).fundingDecision(assessment, assessmentFundingDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
     }
@@ -296,16 +296,16 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource().build();
 
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
-        when(assessmentFundingDecisionOutcomeMapperMock.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
+        when(assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
         when(assessmentWorkflowHandler.fundingDecision(assessment, assessmentFundingDecisionOutcome)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepository, assessmentFundingDecisionOutcomeMapperMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepository, assessmentFundingDecisionOutcomeMapper, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessmentId);
-        inOrder.verify(assessmentFundingDecisionOutcomeMapperMock).mapToDomain(assessmentFundingDecisionOutcomeResource);
+        inOrder.verify(assessmentFundingDecisionOutcomeMapper).mapToDomain(assessmentFundingDecisionOutcomeResource);
         inOrder.verify(assessmentWorkflowHandler).fundingDecision(assessment, assessmentFundingDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
     }
@@ -349,15 +349,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
 
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
-        when(assessmentRejectOutcomeMapperMock.mapToDomain(assessmentRejectOutcomeResource)).thenReturn(assessmentRejectOutcome);
+        when(assessmentRejectOutcomeMapper.mapToDomain(assessmentRejectOutcomeResource)).thenReturn(assessmentRejectOutcome);
         when(assessmentWorkflowHandler.rejectInvitation(assessment, assessmentRejectOutcome)).thenReturn(true);
 
         ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepository, assessmentRejectOutcomeMapperMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepository, assessmentRejectOutcomeMapper, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessmentId);
-        inOrder.verify(assessmentRejectOutcomeMapperMock).mapToDomain(assessmentRejectOutcomeResource);
+        inOrder.verify(assessmentRejectOutcomeMapper).mapToDomain(assessmentRejectOutcomeResource);
         inOrder.verify(assessmentWorkflowHandler).rejectInvitation(assessment, assessmentRejectOutcome);
         inOrder.verifyNoMoreInteractions();
     }
@@ -375,16 +375,16 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
 
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
-        when(assessmentRejectOutcomeMapperMock.mapToDomain(assessmentRejectOutcomeResource)).thenReturn(assessmentRejectOutcome);
+        when(assessmentRejectOutcomeMapper.mapToDomain(assessmentRejectOutcomeResource)).thenReturn(assessmentRejectOutcome);
         when(assessmentWorkflowHandler.rejectInvitation(assessment, assessmentRejectOutcome)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_REJECTION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepository, assessmentRejectOutcomeMapperMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepository, assessmentRejectOutcomeMapper, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessmentId);
-        inOrder.verify(assessmentRejectOutcomeMapperMock).mapToDomain(assessmentRejectOutcomeResource);
+        inOrder.verify(assessmentRejectOutcomeMapper).mapToDomain(assessmentRejectOutcomeResource);
         inOrder.verify(assessmentWorkflowHandler).rejectInvitation(assessment, assessmentRejectOutcome);
         inOrder.verifyNoMoreInteractions();
     }
@@ -437,6 +437,25 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = assessmentService.unsubmitAssessment(assessment.getId());
         assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(assessmentRepository, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepository).findById(assessment.getId());
+        inOrder.verify(assessmentWorkflowHandler).unsubmitAssessment(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void unsubmitAssessment_eventNotAccepted() {
+        Assessment assessment = newAssessment()
+                .withProcessState(OPEN)
+                .build();
+
+        when(assessmentRepository.findById(assessment.getId())).thenReturn(Optional.of(assessment));
+        when(assessmentWorkflowHandler.unsubmitAssessment(assessment)).thenReturn(false);
+
+        ServiceResult<Void> result = assessmentService.unsubmitAssessment(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(ASSESSMENT_UNSUBMIT_FAILED));
 
         InOrder inOrder = inOrder(assessmentRepository, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepository).findById(assessment.getId());
@@ -660,7 +679,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(
                 userRepository, applicationRepository,
-                processRoleRepository, applicationServiceMock, assessmentRepository, assessmentMapper
+                processRoleRepository, applicationService, assessmentRepository, assessmentMapper
         );
 
         inOrder.verify(userRepository).findById(assessorId);
@@ -782,7 +801,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(
                 userRepository, applicationRepository,
-                processRoleRepository, assessmentRepository, applicationServiceMock, assessmentMapper
+                processRoleRepository, assessmentRepository, applicationService, assessmentMapper
         );
 
         inOrder.verify(userRepository).findById(assessorId);
@@ -863,7 +882,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(
                 userRepository, applicationRepository,
-                processRoleRepository, applicationServiceMock, assessmentRepository, assessmentMapper
+                processRoleRepository, applicationService, assessmentRepository, assessmentMapper
         );
 
         inOrder.verify(userRepository).findById(assessorId);

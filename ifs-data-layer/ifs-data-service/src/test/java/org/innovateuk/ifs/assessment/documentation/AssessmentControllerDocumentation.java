@@ -267,7 +267,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         when(assessmentService.unsubmitAssessment(assessmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/assessment/{id}/unsubmit-assessment", assessmentId)
+        mockMvc.perform(put("/assessment/{id}/unsubmit", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
