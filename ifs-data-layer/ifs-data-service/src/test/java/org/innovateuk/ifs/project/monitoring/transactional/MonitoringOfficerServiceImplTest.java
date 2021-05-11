@@ -306,14 +306,14 @@ public class MonitoringOfficerServiceImplTest {
 
         when(userRepositoryMock.findById(moUser.getId())).thenReturn(Optional.of(moUser));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
-        when(monitoringOfficerReviewNotificationServiceMock.sendDocumentReviewNotification(moUser, project)).thenReturn(serviceSuccess());
+        when(monitoringOfficerReviewNotificationServiceMock.sendDocumentReviewNotification(moUser, project.getId())).thenReturn(serviceSuccess());
 
         service.sendDocumentReviewNotification(project.getId(), moUser.getId()).getSuccess();
 
         InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, monitoringOfficerReviewNotificationServiceMock);
         inOrder.verify(userRepositoryMock).findById(moUser.getId());
         inOrder.verify(projectRepositoryMock).findById(project.getId());
-        inOrder.verify(monitoringOfficerReviewNotificationServiceMock).sendDocumentReviewNotification(moUser, project);
+        inOrder.verify(monitoringOfficerReviewNotificationServiceMock).sendDocumentReviewNotification(moUser, project.getId());
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -32,6 +35,8 @@ public class MonitoringOfficerReviewNotificationServiceImplTest {
     @Mock
     private UserRepository userRepositoryMock;
     @Mock
+    private ProjectRepository projectRepositoryMock;
+    @Mock
     private NotificationService notificationServiceMock;
 
     @Test
@@ -50,7 +55,9 @@ public class MonitoringOfficerReviewNotificationServiceImplTest {
         when(notificationServiceMock.sendNotificationWithFlush(any(Notification.class), any(NotificationMedium.class)))
                 .thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.sendDocumentReviewNotification(moUser, project);
+        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
+
+        ServiceResult<Void> result = service.sendDocumentReviewNotification(moUser, project.getId());
 
         assertTrue(result.isSuccess());
 

@@ -7,5 +7,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface MonitoringOfficerReviewNotificationService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
-    ServiceResult<Void> sendDocumentReviewNotification(User monitoringOfficer, Project project);
+    ServiceResult<Void> sendDocumentReviewNotification(User monitoringOfficer, long projectId);
 }

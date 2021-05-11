@@ -190,7 +190,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     public ServiceResult<Void> sendDocumentReviewNotification(long projectId, long userId) {
               return getMonitoringOfficerUser(userId)
                         .andOnSuccess(user -> find(projectRepository.findById(projectId), notFoundError(Project.class))
-                                .andOnSuccess(project -> (monitoringOfficerReviewNotificationService.sendDocumentReviewNotification(user, project))
+                                .andOnSuccess(project -> (monitoringOfficerReviewNotificationService.sendDocumentReviewNotification(user, project.getId()))
                                 .andOnSuccessReturnVoid())
                         );
             }

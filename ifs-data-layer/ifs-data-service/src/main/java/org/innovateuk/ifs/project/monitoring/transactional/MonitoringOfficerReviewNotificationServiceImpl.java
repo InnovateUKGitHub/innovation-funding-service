@@ -19,10 +19,12 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerReviewNotificationServiceImpl.Notifications.MONITORING_OFFICER_NEW_DOCUMENT_REVIEW_NOTIFICATION;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class MonitoringOfficerReviewNotificationServiceImpl extends RootTransactionalService implements MonitoringOfficerReviewNotificationService {
@@ -41,8 +43,10 @@ public class MonitoringOfficerReviewNotificationServiceImpl extends RootTransact
         MONITORING_OFFICER_NEW_DOCUMENT_REVIEW_NOTIFICATION
     }
 
-    public ServiceResult<Void> sendDocumentReviewNotification(User monitoringOfficer, Project project) {
-        return  sendEmailToNotifyDocumentReview(monitoringOfficer, project);
+    public ServiceResult<Void> sendDocumentReviewNotification(User monitoringOfficer, long projectId) {
+        return find(projectRepository.findById(projectId), notFoundError(Project.class))
+                .andOnSuccess(project -> sendEmailToNotifyDocumentReview(monitoringOfficer, project)
+        );
     }
 
     private ServiceResult<Void> sendEmailToNotifyDocumentReview(User user, Project project) {
