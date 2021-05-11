@@ -9,10 +9,6 @@ apply from: "gradle-support/dependency-check.gradle"
 apply from: "gradle-support/pull-all-base-images.gradle"
 apply from: "gradle-support/stage-base-images.gradle"
 
-if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-    apply from: "gradle-support/zipkin.gradle"
-}
-
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance.totals.enabled'] ?: true
 
 ext.getCurrentBranchName = {
@@ -88,8 +84,6 @@ dependencyUpdates.resolutionStrategy = {
 
 apply plugin: "com.github.hierynomus.license"
 
-ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
-
 def nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository').toString() : ""
 
 apply plugin: 'maven-publish'
@@ -143,7 +137,6 @@ def osFileMap = [
 
         [name:'3-finance-totals-mysql', type: 'mysql'],
         [name:'3-mysql', type: 'mysql'],
-        [name:'3-zipkin-mysql', type: 'mysql'],
         [name:'survey-mysql', type: 'mysql'],
 
         [name:'91-mysql-client', type: 'mysql-client'],
