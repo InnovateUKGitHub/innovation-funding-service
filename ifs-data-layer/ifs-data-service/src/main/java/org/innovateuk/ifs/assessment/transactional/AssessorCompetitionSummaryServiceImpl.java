@@ -113,6 +113,8 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     count.getApplication().getLeadOrganisationId()
             ).get();
 
+            Long assessmentPeriodId = count.getApplication().getAssessmentPeriod() == null ? null : count.getApplication().getAssessmentPeriod().getId();
+
             return new AssessorAssessmentResource(
                     count.getApplication().getId(),
                     count.getApplication().getName(),
@@ -121,7 +123,8 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     count.getAssessment().getProcessState(),
                     assessmentRejectOutcomeValue,
                     comment,
-                    count.getAssessment().getId()
+                    count.getAssessment().getId(),
+                    assessmentPeriodId
             );
         });
     }

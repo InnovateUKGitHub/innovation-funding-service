@@ -39,6 +39,7 @@ public class ApplicationCountSummaryController {
                                                                                                                     @RequestParam(value = "filter") String filter) {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, page, size, sort, filter).toGetResponse();
     }
+
     @GetMapping("/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}")
     public RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(@PathVariable long competitionId,
                                                                                 @PathVariable long assessorId,

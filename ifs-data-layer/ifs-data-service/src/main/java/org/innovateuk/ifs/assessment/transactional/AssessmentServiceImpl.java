@@ -131,6 +131,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<Integer> countByStateAndAssessmentPeriodId(AssessmentState state, long assessmentPeriod) {
+        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetAssessmentPeriodIdAndParticipantUserStatusIn(state, assessmentPeriod, singletonList(UserStatus.ACTIVE)));
+    }
+
+    @Override
     public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
         return serviceSuccess(assessmentRepository.getTotalScore(assessmentId));
     }

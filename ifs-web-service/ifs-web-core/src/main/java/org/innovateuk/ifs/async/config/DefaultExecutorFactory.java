@@ -10,10 +10,9 @@ import java.util.concurrent.Executor;
 
 /**
  * An implementation of {@link AsyncExecutorFactory} that simply returns a configured ThreadPoolTaskExecutor (as
- * created in {@link AsyncThreadPoolTaskExecutorConfig}) when Sleuth is disabled.
+ * created in {@link AsyncThreadPoolTaskExecutorConfig}).
  */
 @Component
-@ConditionalOnProperty(name = "spring.sleuth.enabled", havingValue = "false")
 public class DefaultExecutorFactory implements AsyncExecutorFactory {
 
     @Autowired

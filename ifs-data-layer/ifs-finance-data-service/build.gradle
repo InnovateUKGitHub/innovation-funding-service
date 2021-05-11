@@ -10,7 +10,6 @@ apply from: rootProject.file("gradle-support/profile-handler.gradle")
 processResources.dependsOn applyProfiles
 
 apply from: "../flyway.gradle"
-apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'idea'
 
 group 'innovateuk'
@@ -115,24 +114,7 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
-    finalizedBy asciidoctor
 
-}
-
-asciidoctor {
-    attributes 'snippets': snippetsDir
-    backends 'html5'
-    inputs.dir snippetsDir
-}
-
-task asciidoctorOnly(type: Test) {
-    beforeTest { desc ->
-        println "Executing test ${desc.className}.${desc.name}"
-    }
-    useJUnit {
-        includeCategories 'org.innovateuk.ifs.ControllerTest'
-    }
-    finalizedBy asciidoctor
 }
 
 flywayClean.dependsOn applyProfiles

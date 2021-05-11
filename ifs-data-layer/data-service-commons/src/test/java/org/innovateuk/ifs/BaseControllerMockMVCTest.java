@@ -28,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
  * allows Controllers to be tested via their routes and their responses' HTTP responses tested also.
  */
-@Category(ControllerTest.class)
 public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnitTestMocksTest {
 
     @InjectMocks
