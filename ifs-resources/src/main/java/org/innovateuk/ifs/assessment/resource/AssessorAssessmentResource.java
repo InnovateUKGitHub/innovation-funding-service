@@ -24,6 +24,7 @@ public class AssessorAssessmentResource {
     private AssessmentRejectOutcomeValue rejectReason;
     private String rejectComment;
     private long assessmentId;
+    private Long assessmentPeriodId;
 
     public AssessorAssessmentResource() {
     }
@@ -34,8 +35,9 @@ public class AssessorAssessmentResource {
                                       int totalAssessors,
                                       AssessmentState state,
                                       AssessmentRejectOutcomeValue rejectReason,
-                                      String  rejectComment,
-                                      long assessmentId) {
+                                      String rejectComment,
+                                      long assessmentId,
+                                      Long assessmentPeriodId) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
@@ -44,6 +46,7 @@ public class AssessorAssessmentResource {
         this.rejectReason = rejectReason;
         this.rejectComment = rejectComment;
         this.assessmentId = assessmentId;
+        this.assessmentPeriodId = assessmentPeriodId;
     }
 
     public long getApplicationId() {
@@ -92,6 +95,10 @@ public class AssessorAssessmentResource {
 
     public void setAssessmentId(long assessmentId) {
         this.assessmentId = assessmentId;
+    }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
     }
 
     public AssessmentRejectOutcomeValue getRejectReason() {

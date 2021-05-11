@@ -13,6 +13,9 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9008 Always open competitions – assessment period actions
 ...
+...               IFS-8852 Always open competitions: assign assessors to applications
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -116,11 +119,11 @@ Comp admin updates the assessment period
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008
+    [Documentation]  IFS-9008  IFS-8852
     Given assign the application to assessor
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
-    Then the user reads his email and clicks the link        ${assessorEmail}   Your applications for the competition ${webTestCompName}   You have been allocated some applications to assess within this competition   1
+    Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition 'Always open competition'  We have assigned applications for you to assess for this competition:   1
     And the assessor accepts an invite to an application
 
 Internal user closes assessment period one
@@ -130,6 +133,25 @@ Internal user closes assessment period one
     When the user clicks the button/link         jQuery = button:contains("Close assessment")
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
+
+Assessor has been assigned to the competition
+    [Documentation]  IFS-8852
+    Given log in as a different user             ${assessorEmail}   ${short_password}
+    When the user clicks the button/link         jQuery = a:contains('Always open competition')
+    Then the user should see the element         jQuery = h2:contains('Assessment period: 20 Feb to 20 Mar 2021')
+
+Comp admin manages the assessors
+    [Documentation]  IFS-8852
+    Given log in as a different user           &{ifs_admin_user_credentials}
+    And the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
+    And the user clicks the button/link        link = Manage assessors
+    When the user selects the radio button     assessmentPeriodId  99
+    And the user clicks the button/link        jQuery = button:contains("Save and continue")
+    Then the user clicks the button/link       link = Assign
+    And the user should see the element        jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link        link = Back to manage assessors
+    And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
+    And the user clicks the button/link        link = Back to manage assessments
 
 *** Keywords ***
 Custom suite setup

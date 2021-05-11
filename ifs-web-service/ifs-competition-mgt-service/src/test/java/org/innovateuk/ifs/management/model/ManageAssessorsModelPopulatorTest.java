@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -36,9 +37,13 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
     @Mock
     private CategoryRestService categoryRestServiceMock;
 
+    @Mock
+    private AssessmentPeriodService assessmentPeriodService;
+
     @Test
     public void populateModel() {
         final CompetitionResource competition = newCompetitionResource().build();
+        final long assessmentPeriodId = 3L;
         final long totalElements = 23;
         final int totalPages = 3;
         final int pageSize = 11;
@@ -57,14 +62,19 @@ public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
 
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectorResources));
 
+        when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competition.getId())).thenReturn("name");
+
        ManageAssessorsViewModel manageAssessmentsViewModel =
-               manageAssessorsModelPopulator.populateModel(competition, assessorCountSummaryPageResource);
+               manageAssessorsModelPopulator.populateModel(competition, assessorCountSummaryPageResource, assessmentPeriodId);
 
         ManageAssessorsViewModel expectedViewModel = new ManageAssessorsViewModel(
                 competition.getId(),
                 competition.getName(),
+                assessmentPeriodId,
+                "name",
                 simpleMap(assessorCountSummaryResources, ManageAssessorsRowViewModel::new),
                 competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT,
+                false,
                 innovationSectorResources,
                 new Pagination(assessorCountSummaryPageResource)
         );
