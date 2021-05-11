@@ -207,9 +207,7 @@ public class AsyncFuturesGenerator {
     }
 
     /**
-     * Choose an appropriate Task Executor for executing any chained futures.  If sleuth is enabled, the
-     * SleuthExecutorFactory will be used to create an Executor, allowing child threads to record their
-     * data service calls under a parent thread's Span.  Otherwise, a default Executor will be used.
+     * Choose an appropriate Task Executor for executing any chained futures.
      */
     private Executor getExecutorForChainedFutures() {
         return executorFactory.createAsyncExecutor();
