@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,6 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/application-details")
@@ -232,7 +232,7 @@ public class ApplicationDetailsController {
             }
         }
 
-        if (!isEmpty(form.getDurationInMonths())) {
+        if (!ObjectUtils.isEmpty(form.getDurationInMonths())) {
             Optional<Integer> maxMilestoneMonth = applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId).getSuccess();
             int maxMonths = competition.getMaxProjectDuration();
             int minMonths = Math.max(maxMilestoneMonth.orElse(0), competition.getMinProjectDuration());
