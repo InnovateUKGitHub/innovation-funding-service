@@ -28,8 +28,8 @@ ${assessorScoreComp}         Living models for the future
 ${assessorScoreApplication}  Models with Virtual Reality
 ${assessorScoreApplicationId}   ${application_ids['${assessorScoreApplication}']}
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
-${application1Subject}    ${FUNDERS_PANEL_COMPETITION_NAME}: Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
-${application2Subject}    Notification regarding your application ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
+${application1Subject}    Important message about your application '${FUNDERS_PANEL_APPLICATION_1_TITLE}' for the competition '${FUNDERS_PANEL_COMPETITION_NAME}'
+${application2Subject}    Important message about your application '${FUNDERS_PANEL_APPLICATION_2_TITLE}'
 ${onHoldMessage}          We have put your project on hold because our Assessment department is very busy at the moment.
 ${unsuccMessage}          We are sorry to annouce that your application has failed the assessment procedure.
 ${successMessage}         We are happy to inform you that your application is eligible for funding.
@@ -145,9 +145,9 @@ Notification email template includes assessor score
 
 Email to external user contains average assessor score
     [Documentation]  IFS-7370
-    Given the user clicks the button/link        jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    Given the user clicks the button/link        jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     When the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
-    Then the user reads his email                nancy.peterson@gmail.com   	${assessorScoreComp}: Notification regarding your application ${assessorScoreApplicationId}: ${assessorScoreApplication}  Average assessor score
+    Then the user reads his email                nancy.peterson@gmail.com   Important message about your application '${assessorScoreApplication}' for the competition '${assessorScoreComp}'  Average assessor score
 
 *** Keywords ***
 Custom Suite Setup
@@ -195,7 +195,7 @@ the internal user sends an email notification
     the user clicks the button/link         jQuery = button:contains("Write and send email")
     the user should not see the element     jQuery = p:contains("Average assessor score")
     the user enters text to a text field    css = .editor  ${message}
-    the user clicks the button/link         jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    the user clicks the button/link         jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link                          jQuery = .send-to-all-applicants-modal button:contains("Send email")
     the user refreshes until element appears on page         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
@@ -233,14 +233,14 @@ the user should see write and send email button is disabled
     the user should see the element     jQuery = button[disabled]:contains("Write and send email")
 
 the user send funding decision email for all applicant
-    the user selects the checkbox            app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
-    the user clicks the button/link     jQuery = button:contains("Write and send email")
-    the user should see the element      css = #subject[value^="<competition name>: Notification regarding your application <application number>: <application title>"]
-    the user clicks the button/link     jQuery = summary:contains("Review list of recipients"):not([open])
-    the user should see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
-    the user should not see the element  jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    the user clicks the button/link     css = button[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link     jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user selects the checkbox           app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
+    the user clicks the button/link         jQuery = button:contains("Write and send email")
+    the user should see the element         css = #subject[value^="Important message about your application '[application name]' for the competition '[competition name]'"]
+    the user clicks the button/link         jQuery = summary:contains("Review list of recipients"):not([open])
+    the user should see the element         jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("On hold")
+    the user should not see the element     jQuery = td:contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
+    the user clicks the button/link         css = button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
 
 the user filter applications by application number
     the user enters text to a text field   css = #stringFilter  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}

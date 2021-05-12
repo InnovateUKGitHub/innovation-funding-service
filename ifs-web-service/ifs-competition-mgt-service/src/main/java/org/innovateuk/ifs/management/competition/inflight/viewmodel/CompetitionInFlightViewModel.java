@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 
@@ -155,7 +156,8 @@ public class CompetitionInFlightViewModel {
 
     public boolean isFundingDecisionEnabled() {
         return fundingDecisionAllowedBeforeAssessment
-                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus);
+                || !asList(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT).contains(competitionStatus)
+                || (alwaysOpen && hasAClosedAssessmentPeriod());
     }
 
     public boolean isFundingNotificationDisplayed() {
@@ -174,5 +176,19 @@ public class CompetitionInFlightViewModel {
 
     public boolean isAlwaysOpen() {
         return alwaysOpen;
+    }
+
+    public MilestonesRowViewModel findMilestoneByType(MilestoneType milestoneType) {
+        return milestones
+                .stream()
+                .filter(m -> m.getMilestoneType() == milestoneType)
+                .findAny()
+                .orElseThrow(ObjectNotFoundException::new);
+    }
+
+    public boolean hasAClosedAssessmentPeriod() {
+        return milestones
+                .stream()
+                .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
     }
 }
