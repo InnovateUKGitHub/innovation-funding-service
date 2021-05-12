@@ -17,10 +17,12 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Choose an assessment period to manage assessors',
+                  th:with="pageTitle='Choose an assessment period to manage applications',
                     subTitle=|${model.competitionId} : ${model.competitionName}|,
                     size='govuk-heading-xl'" />
-        <form method="GET" th:action="@{/assessment/competition/{competitionId}/assessors/period(competitionId=${model.competitionId})}">
+
+
+        <form method="GET" th:action="@{/assessment/competition/{competitionId}/applications/period(competitionId=${model.competitionId})}">
             <th:block th:insert="competition/choose-period-fragment :: choose-period(${model.assessmentPeriods})" />
         </form>
 

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class AssessorAssessmentPeriodChoiceModelPopulator {
+public class AssessmentPeriodChoiceModelPopulator {
 
     @Autowired
     private CompetitionRestService competitionRestService;
