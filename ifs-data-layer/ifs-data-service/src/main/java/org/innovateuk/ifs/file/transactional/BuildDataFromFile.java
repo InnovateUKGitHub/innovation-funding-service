@@ -11,12 +11,12 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.FormInputResponseService;
-import org.innovateuk.ifs.application.transactional.QuestionSetupService;
-import org.innovateuk.ifs.application.transactional.QuestionStatusService;
+import org.innovateuk.ifs.application.transactional.*;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -73,6 +74,9 @@ public class BuildDataFromFile {
     private static final String applicantDummyEmail = "dummy.person@example.com";
     private static final String applicantDummyOrganisation = "Dummy Organisation";
 
+
+    @Autowired
+    private ApplicationInnovationAreaService applicationInnovationAreaService;
 
     @Autowired
     private CompetitionAssessmentConfigService competitionAssessmentConfigService;
@@ -168,7 +172,7 @@ public class BuildDataFromFile {
 
         Map<String, CompetitionResource> createdCompetitions = createCompetitionsAndQuestions(competitions, questions);
         createApplications(applications, responses, createdCompetitions);
-
+        createdCompetitions.values().stream().forEach(c -> setMilestones(c, MilestoneType.ASSESSOR_BRIEFING));
     }
 
     private void createApplications(Set<BuildApplication> applications, Set<BuildResponse> responses, Map<String, CompetitionResource> createdCompetitions) {
@@ -177,11 +181,24 @@ public class BuildDataFromFile {
         Organisation organisation = organisationRepository.findOneByName(applicantDummyOrganisation);
         applications.forEach(a -> {
             ApplicationResource application = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(a.getName(), createdCompetitions.get(a.getCompetition()).getId(), user.getId(), organisation.getId()).getSuccess();
+
+            List<Milestone> milestones = milestoneRepository.findAllByCompetitionId(application.getCompetition());
+            Application appE = applicationRepository.findById(application.getId()).get();
+            appE.getCompetition().getMilestones().addAll(milestones);
+            entityManager.refresh(appE.getCompetition());
+            entityManager.refresh(appE);
+
+            applicationInnovationAreaService.setNoInnovationAreaApplies(application.getId()).getSuccess();
+            application.setStartDate(LocalDate.now().plusDays(5));
+            application.setDurationInMonths(2L);
+            applicationService.saveApplicationDetails(application.getId(), application).getSuccess();
             ProcessRole role = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), ProcessRoleType.LEADAPPLICANT, application.getId());
             saveResponses(application, appToResponseMap.get(a.getName()), role);
-//            Question applicationDetails = questionRepository.findFirstByCompetitionIdAndQuestionSetupType(application.getCompetition(), QuestionSetupType.APPLICATION_DETAILS);
-//            completeQuestion(application, applicationDetails, role);
-//            applicationService.updateApplicationState(application.getId(), ApplicationState.SUBMITTED).getSuccess();
+
+            Question applicationDetails = questionRepository.findFirstByCompetitionIdAndQuestionSetupType(application.getCompetition(), QuestionSetupType.APPLICATION_DETAILS);
+            completeQuestion(application, applicationDetails, role);
+            applicationService.updateApplicationState(application.getId(), ApplicationState.OPENED).getSuccess();
+            applicationService.updateApplicationState(application.getId(), ApplicationState.SUBMITTED).getSuccess();
         });
     }
 
@@ -190,13 +207,6 @@ public class BuildDataFromFile {
             Question question = questionRepository.findByCompetitionIdAndName(application.getCompetition(), r.getQuestion());
             FormInput formInput = formInputRepository.findByQuestionIdAndScopeAndType(question.getId(), FormInputScope.APPLICATION, FormInputType.TEXTAREA);
             FormInputResponseCommand command = new FormInputResponseCommand(formInput.getId(), application.getId(), role.getUser().getId(), r.getResponse(), null);
-
-            List<Milestone> milestones = milestoneRepository.findAllByCompetitionId(application.getCompetition());
-            Application appE = applicationRepository.findById(application.getId()).get();
-            appE.getCompetition().getMilestones().addAll(milestones);
-            entityManager.refresh(appE.getCompetition());
-            entityManager.refresh(appE);
-
             formInputResponseService.saveQuestionResponse(command).getSuccess();
             completeQuestion(application, question, role);
         });
@@ -205,7 +215,11 @@ public class BuildDataFromFile {
     }
 
     private void completeQuestion(ApplicationResource application, Question question, ProcessRole role) {
-        questionStatusService.markAsComplete(new QuestionApplicationCompositeId(question.getId(), application.getId()), role.getId()).getSuccess();
+        List<ValidationMessages> validations = questionStatusService.markAsComplete(new QuestionApplicationCompositeId(question.getId(), application.getId()), role.getId()).getSuccess();
+        if (validations.isEmpty()) {
+            return;
+        }
+        throw new IFSRuntimeException("error" + validations.toString());
     }
 
     private Map<String, CompetitionResource> createCompetitionsAndQuestions(Set<BuildCompetition> competitions, Set<BuildQuestion> questions) {
@@ -219,6 +233,10 @@ public class BuildDataFromFile {
             competition.setFundingType(FundingType.GRANT);
             competition.setFundingRules(FundingRules.NOT_AID);
             competition.setCompetitionType(13L);
+            competition.setResubmission(false);
+            competition.setMaxResearchRatio(100);
+            competition.setMinProjectDuration(1);
+            competition.setMaxProjectDuration(10);
             competitionSetupService.save(competition.getId(), competition).getSuccess();
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), 13L).getSuccess();
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
