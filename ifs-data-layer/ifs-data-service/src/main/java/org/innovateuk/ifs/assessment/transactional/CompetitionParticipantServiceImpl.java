@@ -125,7 +125,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
             return competitionParticipant.getAssessmentPeriod() != null
                 && competitionParticipant.getAssessmentPeriod().isOpen();
         } else {
-            return competitionParticipant.isUpcomingOrInAssessment();
+            return competitionParticipant.isInAssessment();
         }
     }
 

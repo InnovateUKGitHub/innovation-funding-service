@@ -217,6 +217,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         Competition competition = newCompetition().withId(competitionId)
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withAlwaysOpen(false)
                 .build();
 
         assessmentParticipantRepository.save(newAssessmentParticipant()

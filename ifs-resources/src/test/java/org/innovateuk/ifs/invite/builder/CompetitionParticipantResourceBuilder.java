@@ -97,6 +97,10 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
     }
 
+    public CompetitionParticipantResourceBuilder withCompetitionAlwaysOpen(Boolean... competitionAlwaysOpens) {
+        return withArraySetFieldByReflection("competitionAlwaysOpen", competitionAlwaysOpens);
+    }
+
     public CompetitionParticipantResourceBuilder withAssessmentPeriod(AssessmentPeriodResource... assessmentPeriods) {
         return withArraySetFieldByReflection("assessmentPeriod", assessmentPeriods);
     }

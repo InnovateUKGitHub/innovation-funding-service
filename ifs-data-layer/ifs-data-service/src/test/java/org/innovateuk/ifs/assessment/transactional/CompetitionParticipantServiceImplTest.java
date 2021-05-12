@@ -115,13 +115,11 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .withAssessmentPeriod(assessmentPeriodResource)
+                .withCompetitionAlwaysOpen(false)
                 .build();
 
         List<Assessment> assessments = newAssessment()
                 .withProcessState(OPEN, SUBMITTED, PENDING)
-                .withApplication(newApplication().build(),
-                        newApplication().withAssessmentPeriod(assesmentPeriod).build(),
-                        newApplication().build())
                 .build(3);
 
         when(assessmentParticipantRepositoryMock.getByAssessorId(userId)).thenReturn(competitionParticipants);
@@ -196,6 +194,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
                 .withCompetition(competitionId)
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .withCompetitionStatus(READY_TO_OPEN)
+                .withCompetitionAlwaysOpen(false)
                 .build();
 
         when(assessmentParticipantRepositoryMock.getByAssessorId(userId)).thenReturn(competitionParticipants);
