@@ -44,15 +44,13 @@ public class FileUploadServiceImpl extends BaseTransactionalService implements F
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> createFileEntry(String uploadFileType, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        buildDataFromFile.buildFromFile(inputStreamSupplier.get());
-        return serviceSuccess(new FileEntryResource());
-//
-//        return  fileService.createFile(fileEntryResource, inputStreamSupplier).
-//            andOnSuccessReturn(fileResults -> linkFileEntryToUploadFile(uploadFileType, fileResults))
-//                .andOnSuccessReturn(e -> {
-//                    getFileContents(e.getId()).andOnSuccessReturnVoid(i -> ;
-//                    return e;
-//                });
+        return  fileService.createFile(fileEntryResource, inputStreamSupplier).
+            andOnSuccessReturn(fileResults -> linkFileEntryToUploadFile(uploadFileType, fileResults))
+                .andOnSuccessReturn(e -> {
+                    //This is the main logic we bukld data from csvs.
+                    buildDataFromFile.buildFromFile(inputStreamSupplier.get());
+                    return e;
+                });
     }
 
     private FileEntryResource linkFileEntryToUploadFile(String uploadFileType, Pair< File, FileEntry > fileResults) {

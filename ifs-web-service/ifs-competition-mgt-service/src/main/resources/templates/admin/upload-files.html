@@ -17,12 +17,17 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Upload files',size='govuk-heading-l'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment as a Service POC',size='govuk-heading-l'" />
 
         <p class="govuk-body">Upload files</p>
+        <span class="govuk-hint">For POC Luke's decision is to make use of one simple csv which has the minimum data- such as
+            "Competition Name, Application Name, Question and Respone". Later this can be modified in the original work comes into picture.
+            Once the csv got uploaded,  in the background the competition/application/questions/responses are created in our DB with the default data
+            (may need to change in the later stage).
+        </span>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{type}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="type">
+            <!--    <label class="govuk-label govuk-label--s" for="type">
                     Type
                 </label>
                 <th:block th:if="${#fields.hasErrors('type')}">
@@ -38,7 +43,7 @@
                     <option th:each="uploadType : ${T(org.innovateuk.ifs.fileupload.resource.FileUploadType).values()}"
                             th:value="${uploadType}"
                             th:text="${uploadType}">COMPETITION</option>
-                </select>
+                </select> -->
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{file}')} ? 'govuk-form-group--error'">
                 <th:block th:if="${#fields.hasErrors('file')}">
@@ -72,11 +77,11 @@
                     </div>
                 </div>
             </div>
-            <div class="govuk-form-group govuk-!-margin-top-6">
+          <!--  <div class="govuk-form-group govuk-!-margin-top-6">
                 <button id="process_files"  type="submit" name="process_files"
                         class="govuk-button" value="true">Start processing
                 </button>
-            </div>
+            </div> -->
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

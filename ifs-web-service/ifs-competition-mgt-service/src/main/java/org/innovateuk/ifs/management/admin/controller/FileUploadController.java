@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.management.admin.controller;
 
-import com.google.common.io.Files;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -21,14 +18,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Controller for handling requests related to uploading files by the IFS Administrator
@@ -67,7 +60,9 @@ public class FileUploadController {
                                            @ModelAttribute("form") UploadFilesForm form,
                                            BindingResult bindingResult) throws IOException {
         MultipartFile file = form.getFile();
-        RestResult<FileEntryResource> result = fileUploadRestService.addFile(form.getType().name(), file.getContentType(),
+//        RestResult<FileEntryResource> result = fileUploadRestService.addFile(form.getType().name(), file.getContentType(),
+//                file.getSize(), file.getOriginalFilename(), file.getBytes());
+        RestResult<FileEntryResource> result = fileUploadRestService.addFile("AssessmentOnly", file.getContentType(),
                 file.getSize(), file.getOriginalFilename(), file.getBytes());
         if(result.isFailure()) {
             result.getErrors().forEach(error ->
