@@ -5,8 +5,10 @@ import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelP
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.*;
@@ -37,6 +39,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
@@ -105,6 +108,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withFundersPanelDate(now.plusDays(30))
                 .build();
 
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(true)
+                .withInAssessment(true)
+                .withAssessmentClosed(false)
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
@@ -117,7 +126,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
                 .withPendingAssessments(1L)
-                .withAssessmentPeriodStatus(IN_ASSESSMENT)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build();
         ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -214,6 +223,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     public void dashboard_activeStartsToday() throws Exception {
         ZonedDateTime now = now();
         Clock clock = Clock.fixed(now.toInstant(), systemDefault());
+
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(true)
+                .withInAssessment(true)
+                .withAssessmentClosed(false)
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
@@ -226,7 +242,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withTotalAssessments(3L)
                 .withPendingAssessments(2L)
                 .withCompetitionStatus(IN_ASSESSMENT)
-                .withAssessmentPeriodStatus(IN_ASSESSMENT)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build();
         ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -281,6 +297,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard_activeEndsToday() throws Exception {
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(true)
+                .withInAssessment(true)
+                .withAssessmentClosed(false)
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
@@ -290,7 +312,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
                 .withCompetitionStatus(IN_ASSESSMENT)
-                .withAssessmentPeriodStatus(IN_ASSESSMENT)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -344,6 +366,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard_fundersPanel() throws Exception {
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(false)
+                .withInAssessment(false)
+                .withAssessmentClosed(true)
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
@@ -353,7 +381,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(2))
                 .withAssessorDeadlineDate(now().plusDays(0))
                 .withCompetitionStatus(FUNDERS_PANEL)
-                .withAssessmentPeriodStatus(FUNDERS_PANEL)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
@@ -398,6 +426,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard_upcomingAssessments() throws Exception {
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(false)
+                .withInAssessment(false)
+                .withAssessmentClosed(false)
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
@@ -407,7 +441,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(1))
                 .withAssessorDeadlineDate(now().plusDays(7))
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessmentPeriodStatus(CompetitionStatus.CLOSED)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -461,6 +495,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard_pastAssessmentInAssessment() throws Exception {
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(true)
+                .withInAssessment(true)
+                .withAssessmentClosed(false)
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
                 .withStatus(ACCEPTED)
@@ -470,7 +510,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .withAssessorDeadlineDate(now().minusDays(0))
                 .withCompetitionStatus(IN_ASSESSMENT)
-                .withAssessmentPeriodStatus(IN_ASSESSMENT)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -528,6 +568,18 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withHash("inviteHash1", "inviteHash2")
                 .build(2);
 
+        AssessmentPeriodResource closedAssessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(false)
+                .withInAssessment(false)
+                .withAssessmentClosed(false)
+                .build();
+
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(true)
+                .withInAssessment(true)
+                .withAssessmentClosed(false)
+                .build();
+
         List<CompetitionParticipantResource> participantResources = newCompetitionParticipantResource()
                 .withInvite(inviteResource.get(0), inviteResource.get(1))
                 .withCompetitionParticipantRole(CompetitionParticipantRoleResource.ASSESSOR)
@@ -538,7 +590,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(10), now().plusDays(5))
                 .withAssessorDeadlineDate(now().plusDays(20), now().plusDays(15))
                 .withCompetitionStatus(CLOSED, IN_ASSESSMENT)
-                .withAssessmentPeriodStatus(CLOSED, IN_ASSESSMENT)
+                .withAssessmentPeriod(closedAssessmentPeriodResource, assessmentPeriodResource)
                 .build(2);
 
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
@@ -601,6 +653,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withFundersPanelDate(now().plusDays(30))
                 .build();
 
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withOpen(false)
+                .withInAssessment(false)
+                .withAssessmentClosed(false)
+                .build();
+
         List<CompetitionParticipantResource> participantResources = newCompetitionParticipantResource()
                 .withInvite(inviteResources.get(0))
                 .withCompetitionParticipantRole(PANEL_ASSESSOR)
@@ -611,7 +669,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorAcceptsDate(now().plusDays(10))
                 .withAssessorDeadlineDate(now().plusDays(20))
                 .withCompetitionStatus(FUNDERS_PANEL)
-                .withAssessmentPeriodStatus(FUNDERS_PANEL)
+                .withAssessmentPeriod(assessmentPeriodResource)
                 .build(1);
 
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()

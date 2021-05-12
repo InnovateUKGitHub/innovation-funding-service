@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.invite.resource.*;
 
 import java.time.ZonedDateTime;
@@ -96,12 +97,8 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
     }
 
-    public CompetitionParticipantResourceBuilder withAssessmentPeriodId(Long... assessmentPeriodIds) {
-        return withArraySetFieldByReflection("assessmentPeriodId", assessmentPeriodIds);
-    }
-
-    public CompetitionParticipantResourceBuilder withAssessmentPeriodStatus(CompetitionStatus... assessmentPeriodStatus) {
-        return withArraySetFieldByReflection("assessmentPeriodStatus", assessmentPeriodStatus);
+    public CompetitionParticipantResourceBuilder withAssessmentPeriod(AssessmentPeriodResource... assessmentPeriods) {
+        return withArraySetFieldByReflection("assessmentPeriod", assessmentPeriods);
     }
 
     @Override
