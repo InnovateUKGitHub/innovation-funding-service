@@ -66,7 +66,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                 .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
                 .collect(toList());
 
-        competitionParticipantResources.forEach(this::determineStatusOfCompetitionAssessments);
+        competitionParticipantResources.forEach(competitionParticipant -> determineStatusOfCompetitionAssessments(competitionParticipant, false));
 
         return serviceSuccess(competitionParticipantResources);
     }
@@ -81,7 +81,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                 .filter(competitionParticipant -> !competitionParticipant.isRejected() && isUpcomingOrInAssessment(competitionParticipant))
                 .collect(toList());
 
-        competitionParticipantResources.forEach(this::determineStatusOfCompetitionAssessments);
+        competitionParticipantResources.forEach(competitionParticipant -> determineStatusOfCompetitionAssessments(competitionParticipant, true));
 
         return serviceSuccess(competitionParticipantResources);
     }
@@ -105,7 +105,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         }
     }
 
-    private void determineStatusOfCompetitionAssessments(CompetitionParticipantResource competitionParticipant) {
+    private void determineStatusOfCompetitionAssessments(CompetitionParticipantResource competitionParticipant, boolean filterByAssessmentPeriod) {
         if (!competitionParticipant.isAccepted() || !isInAssessment(competitionParticipant)) {
             return;
         }
@@ -115,21 +115,29 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                 competitionParticipant.getCompetitionId()
         );
 
-        competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriod()));
-        competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriod()));
-        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments, competitionParticipant.getAssessmentPeriod()));
+        competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments, competitionParticipant, filterByAssessmentPeriod));
+        competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments, competitionParticipant, filterByAssessmentPeriod));
+        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments, competitionParticipant, filterByAssessmentPeriod));
     }
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
-        return competitionParticipant.getAssessmentPeriod() != null
+        if (competitionParticipant.getCompetitionAlwaysOpen()) {
+            return competitionParticipant.getAssessmentPeriod() != null
                 && competitionParticipant.getAssessmentPeriod().isOpen();
+        } else {
+            return competitionParticipant.isUpcomingOrInAssessment();
+        }
     }
 
-    private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments, AssessmentPeriodResource assessmentPeriod) {
+    private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments,
+                                                            CompetitionParticipantResource competitionParticipant,
+                                                            boolean filterByAssessmentPeriod) {
         Stream<Assessment> assessmentStream =  assessments.stream()
                 .filter(assessment -> assessment.getProcessState().equals(SUBMITTED));
 
-        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriod);
+        if (filterByAssessmentPeriod) {
+            assessmentStream = filterByAssessmentPeriod(assessmentStream, competitionParticipant.getAssessmentPeriod());
+        }
 
         return assessmentStream.count();
     }
@@ -139,21 +147,29 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
                 .filter(assessment -> assessment.getTarget().getAssessmentPeriod().getId() == assessmentPeriod.getId());
     }
 
-    private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments, AssessmentPeriodResource assessmentPeriod) {
+    private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments,
+                                                                CompetitionParticipantResource competitionParticipant,
+                                                                boolean filterByAssessmentPeriod) {
         Set<AssessmentState> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         Stream<Assessment> assessmentStream = assessments.stream()
                 .filter(assessment -> allowedAssessmentStates.contains(assessment.getProcessState()));
 
-        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriod);
+        if (filterByAssessmentPeriod) {
+            assessmentStream = filterByAssessmentPeriod(assessmentStream, competitionParticipant.getAssessmentPeriod());
+        }
 
         return assessmentStream.count();
     }
 
-    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments, AssessmentPeriodResource assessmentPeriod) {
+    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments,
+                                                          CompetitionParticipantResource competitionParticipant,
+                                                          boolean filterByAssessmentPeriod) {
         Stream<Assessment> assessmentStream = assessments.stream()
                 .filter(assessment -> assessment.getProcessState().equals(PENDING));
 
-        assessmentStream = filterByAssessmentPeriod(assessmentStream, assessmentPeriod);
+        if (filterByAssessmentPeriod) {
+            assessmentStream = filterByAssessmentPeriod(assessmentStream, competitionParticipant.getAssessmentPeriod());
+        }
 
         return assessmentStream.count();
     }

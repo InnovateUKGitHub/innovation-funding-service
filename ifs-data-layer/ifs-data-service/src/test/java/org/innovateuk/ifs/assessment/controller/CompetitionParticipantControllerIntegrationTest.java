@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -111,7 +113,6 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         competition1.setAlwaysOpen(false);
         Competition competition2 = buildInAssessmentCompetition();
 
-
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
@@ -162,6 +163,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
+
+
 
         assessmentParticipantRepository.saveAll(newArrayList(
                 expectedParticipant1,

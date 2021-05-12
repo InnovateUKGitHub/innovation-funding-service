@@ -32,8 +32,7 @@ public class CompetitionParticipantResourceDocs {
             fieldWithPath("competitionStatus").description("Status for the competition"),
             fieldWithPath("pendingAssessments").description("Total number of pending assessments for the competition"),
             fieldWithPath("competitionAlwaysOpen").description("Always open enabled for the competition"),
-            fieldWithPath("assessmentPeriodId").description("Assessment period id attached to the assessment"),
-            fieldWithPath("statusBasedOnAssessmentPeriod").description("Competition status based on assessment period")
+            fieldWithPath("assessmentPeriod").description("Assessment period attached to the assessment")
 
     };
 
