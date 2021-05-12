@@ -725,7 +725,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
         FinanceRowType rowType = FinanceRowType.LABOUR;
-        when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(rowType), eq(projectId), eq(organisationId))).thenReturn(serviceSuccess());
+        when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(rowType), eq(projectId), eq(organisationId), eq(false))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                 param("save-eligibility", rowType.name())).

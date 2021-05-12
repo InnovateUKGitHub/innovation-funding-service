@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.BooleanUtils;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -20,7 +21,6 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -31,13 +31,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.FundingRules.SUBSIDY_CONTROL;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.LOAN_BUSINESS_AND_FINANCIAL_INFORMATION;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
@@ -165,6 +167,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectStages> projectStages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "competition")
+    private List<AssessmentPeriod> assessmentPeriods = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
@@ -324,18 +329,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @JsonIgnore
-    public long getDaysLeft() {
-        return getDaysBetween(ZonedDateTime.now(), this.getEndDate());
+    public Long getDaysLeft() {
+        return this.getEndDate() == null ? null : DAYS.between(ZonedDateTime.now(), this.getEndDate());
     }
 
     @JsonIgnore
     public long getTotalDays() {
         return getDaysBetween(this.getStartDate(), this.getEndDate());
-    }
-
-    @JsonIgnore
-    public long getStartDateToEndDatePercentage() {
-        return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
     }
 
     @JsonIgnore
@@ -380,12 +380,20 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return getMilestoneDate(ASSESSOR_ACCEPTS).orElse(null);
     }
 
+    public ZonedDateTime getAssessorAcceptsDate(AssessmentPeriod assessmentPeriod) {
+        return getMilestoneDate(ASSESSOR_ACCEPTS, assessmentPeriod).orElse(null);
+    }
+
     public void setAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         setMilestoneDate(ASSESSOR_ACCEPTS, assessorAcceptsDate);
     }
 
     public ZonedDateTime getAssessorDeadlineDate() {
         return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
+    }
+
+    public ZonedDateTime getAssessorDeadlineDate(AssessmentPeriod assessmentPeriod) {
+        return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessmentPeriod).orElse(null);
     }
 
     public void setAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
@@ -461,17 +469,38 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
-        Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
+        Milestone milestone = getMilestone(milestoneType).orElseGet(() -> {
             Milestone m = new Milestone(milestoneType, this);
             milestones.add(m);
             return m;
         });
-        // IFS-2263 truncation to avoid mysql rounding up datetimes to the nearest second
+        milestone.setDate(dateTime == null ? null : dateTime.truncatedTo(ChronoUnit.SECONDS));
+    }
+
+    private void setMilestoneDate(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod, ZonedDateTime dateTime) {
+        Milestone milestone = getMilestone(milestoneType, assessmentPeriod).orElseGet(() -> {
+            Milestone m = new Milestone(milestoneType, this, assessmentPeriod);
+            milestones.add(m);
+            assessmentPeriod.getMilestones().add(m);
+            return m;
+        });
         milestone.setDate(dateTime == null ? null : dateTime.truncatedTo(ChronoUnit.SECONDS));
     }
 
     private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
-        return milestones.stream().filter(m -> m.getType() == milestoneType).findAny();
+        List<Milestone> milestones = getMilestones(milestoneType);
+        return milestones.size() == 0 ? empty() : of(milestones.get(0));
+    }
+
+    private List<Milestone> getMilestones(MilestoneType milestoneType) {
+         return milestones.stream().filter(m -> m.getType() == milestoneType).collect(toList());
+    }
+
+    private Optional<Milestone> getMilestone(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod) {
+        return getMilestones(milestoneType)
+                .stream()
+                .filter(m -> assessmentPeriod.equals(m.getAssessmentPeriod()))
+                .findFirst();
     }
 
     private boolean isMilestoneReached(MilestoneType milestoneType) {
@@ -482,6 +511,15 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType) {
         return getMilestone(milestoneType).map(Milestone::getDate);
     }
+
+    private List<ZonedDateTime> getMilestoneDates(MilestoneType milestoneType) {
+        return getMilestones(milestoneType).stream().map(Milestone::getDate).collect(Collectors.toList());
+    }
+
+    private Optional<ZonedDateTime> getMilestoneDate(MilestoneType milestoneType, AssessmentPeriod assessmentPeriod) {
+        return getMilestone(milestoneType, assessmentPeriod).map(Milestone::getDate);
+    }
+
 
     private long getDaysBetween(ZonedDateTime dateA, ZonedDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
@@ -722,17 +760,22 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public void notifyAssessors(ZonedDateTime date) {
-        if (getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT) {
-            return;
+    public void notifyAssessors(ZonedDateTime date, AssessmentPeriod assessmentPeriod) {
+        if (date == null){
+            throw new IllegalArgumentException("The date cannot be null when notifying assessors");
         }
-
-        if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
-            throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +
-                    getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
-                    CompetitionStatus.CLOSED);
+        if (assessmentPeriod.isInAssessment()) {
+            return; // We have an ASSESSOR_NOTIFIED milestone, but not an ASSESSMENT_CLOSED milestone.
         }
-        setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
+        if (assessmentPeriod.isAssessmentClosed()) {
+            throw new IllegalStateException("Tried to notify assessors when assessment is closed");
+        }
+        if (!this.isAlwaysOpen() && getCompetitionStatus() != CompetitionStatus.CLOSED) {
+                throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +
+                        getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +
+                        CompetitionStatus.CLOSED);
+        }
+        setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, assessmentPeriod, date);
     }
 
     public boolean isNonFinanceType() {
@@ -773,8 +816,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
 
-    public void closeAssessment(ZonedDateTime date) {
-        setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, date);
+    public void closeAssessment(ZonedDateTime date, AssessmentPeriod assessmentPeriod) {
+        if (date == null){
+            throw new IllegalArgumentException("The date cannot be null when closing assessment");
+        }
+        setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, assessmentPeriod, date);
     }
 
     public boolean isNonIfs() {
@@ -968,11 +1014,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
-    }
-
-    @Override
     public boolean isProcurementMilestones() {
         return isProcurement() &&
             sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
@@ -1006,5 +1047,18 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public boolean isSubsidyControl() {
         return SUBSIDY_CONTROL.equals(fundingRules)
                 && questions.stream().anyMatch(question -> SUBSIDY_BASIS == question.getQuestionSetupType());
+    }
+
+    public List<AssessmentPeriod> getAssessmentPeriods() {
+        return assessmentPeriods;
+    }
+
+    public void setAssessmentPeriods(List<AssessmentPeriod> assessmentPeriods) {
+        this.assessmentPeriods = assessmentPeriods;
+    }
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return isLoan()
+                && questions.stream().anyMatch(question -> LOAN_BUSINESS_AND_FINANCIAL_INFORMATION == question.getQuestionSetupType());
     }
 }

@@ -29,6 +29,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-9297 PCR - Applicant can view and accept the correct T&Cs (Project Setup)
 ...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -51,9 +53,9 @@ ${assessor2_email}                    alexis.colon@gmail.com
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
-    [Documentation]  IFS-2396  IFS-8779
+    [Documentation]  IFS-2396  IFS-8779  IFS-8847
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative  No
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
@@ -141,7 +143,7 @@ Lead can reopen application and gets an email notification including collaborato
     [Setup]  log in as a different user      &{lead_applicant_credentials}
     When the user clicks the button/link     link = Dashboard
     Then the user can reopen application     ${ATIapplicationTitle}
-    And the user reads his email             ${collaborator1_credentials["email"]}     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email             ${collaborator1_credentials["email"]}          An Innovation Funding Service funding application has been reopened   The application was reopened by
     And the user reads his email             ${lead_applicant_credentials["email"]}      An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes to the application and assign a question to collaborator
@@ -286,7 +288,7 @@ Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     Given Log in as a different user            &{internal_finance_credentials}
     When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
-    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(6) a:contains("Review")
     And the user expands the section            Overhead costs
     Then the user should see the element        jQuery = a:contains("${excel_file}")
     And the user should not see the element     jQuery = .govuk-details__summary span:contains("Overheads costs guidance")
@@ -448,7 +450,7 @@ the assessor checks the appendices
     open pdf link                       jQuery = a:contains("testing.pdf (opens in a new window)")
 
 the user posts a funding rule query
-    the user clicks the button/link                         css = table.table-progress tr:nth-child(1) td:nth-child(6)
+    the user clicks the button/link                         css = table.table-progress tr:nth-child(1) td:nth-child(8)
     the user clicks the button/link                         id = post-new-query
     the user enters text to a text field                    id = queryTitle  A funding rule query title
     the user selects the option from the drop-down menu     Funding rules    id = section
@@ -462,7 +464,7 @@ the user responds to the funding rule query
     the user should see the element          jQuery = .govuk-body:contains("Your response has been sent and will be reviewed by Innovate UK.")
 
 the user marks the query as resolved
-    the user clicks the button/link     css = table.table-progress tr:nth-child(1) td:nth-child(6)
+    the user clicks the button/link     css = table.table-progress tr:nth-child(1) td:nth-child(8)
     the user expands the section        A funding rule query title
     the user should see the element     jQuery = .govuk-body:contains("Response to funding query")
     the user clicks the button/link     link = Mark as resolved

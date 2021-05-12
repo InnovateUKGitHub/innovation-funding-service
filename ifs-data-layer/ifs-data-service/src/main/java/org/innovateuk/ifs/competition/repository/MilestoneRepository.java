@@ -21,4 +21,6 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
     Optional<Milestone> findByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 
     void deleteByCompetitionId(long competitionId);
+
+    void deleteByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 }

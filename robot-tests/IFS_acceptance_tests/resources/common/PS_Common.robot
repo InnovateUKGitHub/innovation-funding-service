@@ -224,23 +224,24 @@ Applicant uploads the contract
 
 Applicant uploads the GOL using Docusign
     [Arguments]  ${projectID}  ${date}
-    the user navigates to the page            ${server}/project-setup/project/${projectID}
-    the user clicks the button/link           jquery = a:contains("Grant offer letter")
-    the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
-    the user should see the element           css=.page.page-loaded
-    the user should see the element           jQuery = span:contains("Please review the documents below.")
-    the user selects the checkbox             disclosureAccepted
-    the user clicks the button/link           jQuery = button:contains("Continue")
-    the user clicks the button/link           jQuery = span:contains("Start")
-    the user clicks the button/link           css = div.initials-tab-content
-    the user should see the element           css=.page.page-loaded
-    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
-    the user should see the element           css=.page.page-loaded
-    the user clicks the button/link           jQuery = span:contains("Fill In")
-    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
-    the user clicks the button/link           css = div.signature-tab-content
-    the user clicks the button/link           css = div.documents-finish-button-decoration
-    the user should see the element           jQuery = h1:contains("Grant offer letter")
+    the user navigates to the page                                           ${server}/project-setup/project/${projectID}
+    the user clicks the button/link                                          jquery = a:contains("Grant offer letter")
+    the user clicks the button/link                                          jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element                                          css=.page.page-loaded
+    the user accepts electronic record and signature disclosure if exist
+    the user should see the element                                          jQuery = span:contains("Please review the documents below.")
+    the user clicks the button/link                                          jQuery = button:contains("Continue")
+    the user clicks the button/link                                          jQuery = span:contains("Start")
+    the user clicks the button/link                                          css = div.initials-tab-content
+    the user adopts initial details if exist
+    the user should see the element                                          css=.page.page-loaded
+    The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first input  ${date}
+    the user should see the element                                          css=.page.page-loaded
+    the user clicks the button/link                                          jQuery = span:contains("Fill In")
+    The user enters text to a docusign field                                 jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
+    the user clicks the button/link                                          css = div.signature-tab-content
+    the user clicks the button/link                                          css = div.documents-finish-button-decoration
+    the user should see the element                                          jQuery = h1:contains("Grant offer letter")
 
 the GOL has already been approved
     [Arguments]  ${projectID}
@@ -914,3 +915,22 @@ organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
     logout as user
     the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
+
+the user approves funding rules
+    [Arguments]  ${reviewLinkElement}
+    the user clicks the button/link     jQuery = ${reviewLinkElement}
+    the user selects the checkbox       project-funding-rules
+    the user clicks the button/link     id = confirm-button
+    the user clicks the button/link     jQuery = a:contains("Return to finance checks")
+
+the user approves funding rules of lead and partner
+    the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+
+the user accepts electronic record and signature disclosure if exist
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   link = Electronic Record and Signature Disclosure
+    Run Keyword If  '${status}' == 'PASS'    the user selects the checkbox     disclosureAccepted
+
+the user adopts initial details if exist
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element   jQuery = button:contains("Adopt and Initial")
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link     jQuery = button:contains("Adopt and Initial")

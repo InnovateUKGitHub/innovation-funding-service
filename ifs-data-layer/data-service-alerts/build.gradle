@@ -1,12 +1,10 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/asciidoc.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
-apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
 
@@ -73,8 +71,6 @@ task stopAlerts(type: Exec) {
 }
 
 createContainer.networkAliases = ["data-service-alerts"]
-
-test.finalizedBy asciidoctor
 
 dependencies {
     compile project(":ifs-commons")

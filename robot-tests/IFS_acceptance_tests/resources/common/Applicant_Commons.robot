@@ -904,7 +904,7 @@ the lead user completes project details, application questions and finances sect
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     the applicant completes Application Team
     the applicant marks EDI question as complete
-    the user completes the research category
+    the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user clicks the button/link                                                 link = Your project finances
     the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
@@ -975,3 +975,11 @@ the partner applicant marks Your project finances information as complete
     the user enters text to a text field           financialYearEndYearValue    ${Year}
     the user clicks the button/link                jQuery = button:contains("Mark as complete")
     the user clicks the button/link                link = Back to application overview
+
+The user completes the research category
+    [Arguments]  ${res_category}
+    the user clicks the button/link      link=Research category
+    the user clicks the button twice     jQuery = label:contains("${res_category}")
+    the user clicks the button/link      id=application-question-complete
+    the user clicks the button/link      link = Back to application overview
+    the user should see the element      jQuery=li:contains("Research category") > .task-status-complete

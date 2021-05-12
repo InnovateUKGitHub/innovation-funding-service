@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 public class DateViewModel {
     private ZonedDateTime dateTime;
     private String content;
+    private String nullDateText = "Unknown";
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
@@ -19,8 +20,8 @@ public class DateViewModel {
     }
 
     public String getDateTimeFormatted() {
-        if(null == dateTime) {
-            return "Unknown";
+        if (null == dateTime) {
+            return nullDateText;
         }
 
         return dateTime.format(DATE_FORMAT);
@@ -36,5 +37,14 @@ public class DateViewModel {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getNullDateText() {
+        return nullDateText;
+    }
+
+    public DateViewModel setNullDateText(String nullDateText) {
+        this.nullDateText = nullDateText;
+        return this;
     }
 }

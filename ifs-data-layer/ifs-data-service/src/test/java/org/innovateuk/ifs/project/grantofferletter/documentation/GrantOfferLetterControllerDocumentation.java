@@ -40,9 +40,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Api documentation for grant offer letter using ASCII docs
- **/
 public class GrantOfferLetterControllerDocumentation extends BaseFileControllerMockMVCTest<GrantOfferLetterController> {
 
     private static final long maxFilesize = 1234L;

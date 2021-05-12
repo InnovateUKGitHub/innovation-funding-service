@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.setup.completionstage.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.management.competition.setup.completionstage.util.CompletionStageUtils;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 
@@ -14,10 +15,11 @@ import static java.util.Arrays.asList;
  */
 public class CompletionStageViewModel extends CompetitionSetupViewModel {
 
-    public CompletionStageViewModel(GeneralSetupViewModel generalSetupViewModel) {
+    private CompletionStageUtils completionStageUtils;
 
+    public CompletionStageViewModel(GeneralSetupViewModel generalSetupViewModel, CompletionStageUtils completionStageUtils) {
         this.generalSetupViewModel = generalSetupViewModel;
-
+        this.completionStageUtils = completionStageUtils;
     }
 
     public List<CompetitionCompletionStage> getCompetitionCompletionStages() {
@@ -34,5 +36,13 @@ public class CompletionStageViewModel extends CompetitionSetupViewModel {
 
     public CompetitionCompletionStage getCompetitionCloseCompletionStage() {
         return CompetitionCompletionStage.COMPETITION_CLOSE;
+    }
+
+    public boolean isAlwaysOpenCompetitionEnabled() {
+        return completionStageUtils.isAlwaysOpenCompetitionEnabled();
+    }
+
+    public boolean isApplicationSubmissionEnabled() {
+        return completionStageUtils.isApplicationSubmissionEnabled(generalSetupViewModel.getCompetition().getCompletionStage());
     }
 }

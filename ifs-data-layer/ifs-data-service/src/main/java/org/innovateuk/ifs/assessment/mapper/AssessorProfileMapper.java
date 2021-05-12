@@ -33,7 +33,8 @@ public abstract class AssessorProfileMapper extends BaseMapper<Profile, ProfileR
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "agreement", ignore = true),
             @Mapping(target = "agreementSignedDate", ignore = true),
-            @Mapping(target = "doiNotifiedOn", ignore = true)
+            @Mapping(target = "doiNotifiedOn", ignore = true),
+            @Mapping(target = "simpleOrganisation", ignore = true)
     })
     @Override
     public abstract Profile mapToDomain(ProfileResource resource);

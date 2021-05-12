@@ -81,7 +81,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, 20, sortField, "");
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId,0, 20, sortField, "");
     }
 
     @Test

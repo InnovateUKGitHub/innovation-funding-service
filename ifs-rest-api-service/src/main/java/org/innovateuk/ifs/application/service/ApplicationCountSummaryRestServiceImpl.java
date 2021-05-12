@@ -34,10 +34,10 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
 
     @Override
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(long competitionId,
-                                                                                                                        long assessorId,
-                                                                                                                        int page,
-                                                                                                                        Sort sort,
-                                                                                                                        String filter) {
+                                                                                                                    long assessorId,
+                                                                                                                    int page,
+                                                                                                                    Sort sort,
+                                                                                                                    String filter) {
 
         String baseUrl = format("%s/%s/%d/%d", APPLICATION_COUNT_REST_URL, "find-by-competition-id-and-assessor-id", competitionId, assessorId);
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)

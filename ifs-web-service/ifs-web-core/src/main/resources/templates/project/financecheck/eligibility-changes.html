@@ -30,6 +30,31 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:if="${summaryModel.totalCosts}">
+                        <th class="govuk-table__header" scope="row" >Total costs (£)</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(summaryModel.totalCosts.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:if="${summaryModel.totalCosts.projectCostDifferent}">
+                                <th:block th:text="${#numbers.formatDecimal(summaryModel.totalCosts.projectCost, 1,'DEFAULT',0,'DEFAULT')}"/>
+                            </th:block>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:if="${summaryModel.totalCosts.projectCostDifferent}">
+                                <th:block th:text="${summaryModel.totalCosts.varianceDirection}"/> <th:block th:text="${#numbers.formatDecimal(summaryModel.totalCosts.variance, 1,'DEFAULT',0,'DEFAULT')}"/>
+                            </th:block>
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row" th:if="${summaryModel.fundingRules}">
+                        <th class="govuk-table__header" scope="row" >Funding rules</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${summaryModel.fundingRules.applicationBasis}"/></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:if="${summaryModel.fundingRules.rulesDifferent}">
+                                <th:block th:text="${summaryModel.fundingRules.projectBasis}"/>
+                            </th:block>
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                        </td>
+                    </tr>
                     <tr class="govuk-table__row" th:each="entry : ${summaryModel.entries}">
                         <th class="govuk-table__header" scope="row" th:text="${entry.section}" />
                         <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>

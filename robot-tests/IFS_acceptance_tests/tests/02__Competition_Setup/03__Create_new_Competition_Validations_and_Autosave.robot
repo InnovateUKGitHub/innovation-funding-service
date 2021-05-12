@@ -33,6 +33,12 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-6775 Initial details type ahead
 ...
+...               IFS-8848 Always open competitions: comp setup milestones
+...
+...               IFS-8851 Always open competitions: create assessment periods
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -147,27 +153,33 @@ Project eligibility client-side validations
     And the user cannot see a validation error in the page
 
 Milestones: Server side validations, submission time is default
-    [Documentation]  INFUND-2993, INFUND-7632, IFS-4650
+    [Documentation]  INFUND-2993  INFUND-7632  IFS-4650  IFS-8851  IFS-8847  IFS-8848
     [Tags]
     [Setup]  The user navigates to the Validation competition
-    Given the user clicks the button/link             link = Milestones
-    When the user clicks the button/link              jQuery = button:contains("Done")
-    Then the user should see a field error            Select a completion stage.
-    And the user selects the radio button             selectedCompletionStage  PROJECT_SETUP
-    And the user clicks the button/link               jQuery = button:contains("Done")
-    When the user fills the milestones with invalid data
-    And the user clicks the button/link               jQuery = button:contains(Done)
+    Given the user clicks the button/link                         link = Milestones
+    And the user clicks the button/link                           jQuery = button:contains("Done")
+    And the user should see a field error                         Select a completion stage.
+    When the user selects the radio button                        selectedCompletionStage  PROJECT_SETUP
+    And the user clicks the button/link                           jQuery = button:contains("Done")
+    And the user clicks the button twice                          jQuery = label:contains("No")
+    And the user clicks the button/link                           jQuery = button:contains("Save and continue")
+    And the user fills the milestones with invalid data
+    And the user clicks the button/link                           jQuery = button:contains(Done)
     Then Validation summary should be visible
-    Then the user should see the text in the element  jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
-    [Teardown]  the user clicks the button/link       link = Back to competition details
+    And the user should see the text in the element               jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  Midday
+    [Teardown]  the user clicks the button/link                   link = Back to competition details
 
 Milestones: Client side validations, submission time is non-default
-    [Documentation]  INFUND-2993, INFUND-7632
+    [Documentation]  INFUND-2993, INFUND-7632  IFS-8847
     [Tags]
-    Given the user fills in the CS Milestones   PROJECT_SETUP   ${month}   ${nextyear}
+    Given the user clicks the button/link                                     link = Milestones
+    And the user completes completition stage and application submissions
+    When the user clicks the button/link                                      jQuery = button:contains("Done")
+    And the user clicks the button/link                                       link = Back to competition details
+    Then the user should see the element                                      jQuery = div:contains("Milestones") ~ .task-status-complete
 
 Milestones: Autosave
-    [Documentation]  INFUND-2993 INFUND-7632
+    [Documentation]  INFUND-2993 INFUND-7632  IFS-8847
     [Tags]
     When the user clicks the button/link              link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
@@ -285,43 +297,43 @@ the validation error above the question should not be visible
 the user fills the milestones with invalid data
     The user enters text to a text field    name = milestoneEntries[OPEN_DATE].day    15
     The user enters text to a text field    name = milestoneEntries[OPEN_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2020
+    The user enters text to a text field    name = milestoneEntries[OPEN_DATE].year    2022
     The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].day    14
     The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].month    1
-    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2020
+    The user enters text to a text field    name = milestoneEntries[BRIEFING_EVENT].year    2022
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].day    13
     The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2020
+    The user enters text to a text field    name = milestoneEntries[SUBMISSION_DATE].year    2022
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].day    12
     The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].month    1
-    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2020
+    The user enters text to a text field    name = milestoneEntries[ALLOCATE_ASSESSORS].year    2022
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].day    11
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2020
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_BRIEFING].year    2022
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].day    10
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2020
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_ACCEPTS].year    2022
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].day    9
     The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2020
+    The user enters text to a text field    name = milestoneEntries[ASSESSOR_DEADLINE].year    2022
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].day    8
     The user enters text to a text field    name = milestoneEntries[LINE_DRAW].month    1
-    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2020
+    The user enters text to a text field    name = milestoneEntries[LINE_DRAW].year    2022
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].day    7
     The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2020
+    The user enters text to a text field    name = milestoneEntries[ASSESSMENT_PANEL].year    2022
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].day    6
     The user enters text to a text field    name = milestoneEntries[PANEL_DATE].month    1
-    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2020
+    The user enters text to a text field    name = milestoneEntries[PANEL_DATE].year    2022
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].day    5
     The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].month    1
-    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2020
+    The user enters text to a text field    name = milestoneEntries[FUNDERS_PANEL].year    2022
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].day    4
     The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].month    1
-    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2020
+    The user enters text to a text field    name = milestoneEntries[NOTIFICATIONS].year    2022
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].day    3
     The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].month    1
-    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2019
+    The user enters text to a text field    name = milestoneEntries[RELEASE_FEEDBACK].year    2021
 
 Validation summary should be visible
     the user should see a summary error  2. Briefing event: Please enter a future date that is after the previous milestone.
@@ -411,3 +423,16 @@ the user should not see the error any more
 the user should see the group of errors
     the user should see a summary error    Please enter guidance for the applicant.
     the user should see a summary error    Please enter a title.
+
+the user completes completition stage and application submissions
+    ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
+    Run Keyword If  '${status}' == 'FAIL'  run keywords   the user selects the radio button   selectedCompletionStage   PROJECT_SETUP
+    ...                                             AND   the user clicks the button/link  jQuery = button:contains("Done")
+    the user clicks the button/link  jQuery = span:contains("Milestones")
+    ${i} =  Set Variable   1
+     :FOR   ${ELEMENT}   IN    @{milestones}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.month input  ${month}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
+      \    ${i} =   Evaluate   ${i} + 1

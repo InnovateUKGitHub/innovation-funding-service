@@ -45,7 +45,7 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
     @Test
     public void testGetSectionFormDataNullStateAidTermsAndConditions() {
         CompetitionResource competition = newCompetitionResource()
-                .withOtherFundingRulesTermsAndConditions(null).build();
+                .withOtherFundingRulesTermsAndConditions((GrantTermsAndConditionsResource) null).build();
 
         TermsAndConditionsForm result = service.populateFormForStateAid(competition);
 

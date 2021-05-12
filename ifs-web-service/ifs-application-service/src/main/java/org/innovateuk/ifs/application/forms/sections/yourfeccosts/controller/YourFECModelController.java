@@ -96,7 +96,6 @@ public class YourFECModelController {
             @ModelAttribute YourFECModelForm form) {
 
         updateFECModelEnabled(applicationId, organisationId, form);
-        yourProjectCostsAutosaver.resetNonFECCostRowEntries(applicationId, organisationId);
         return redirectToYourFinances(applicationId);
     }
 
@@ -164,6 +163,7 @@ public class YourFECModelController {
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
         finance.setFecModelEnabled(form.getFecModelEnabled());
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
+        yourProjectCostsAutosaver.resetCostRowEntriesBasedOnFecModelUpdate(applicationId, organisationId);
     }
 
     @PostMapping(params = "upload_fecCertificateFile")

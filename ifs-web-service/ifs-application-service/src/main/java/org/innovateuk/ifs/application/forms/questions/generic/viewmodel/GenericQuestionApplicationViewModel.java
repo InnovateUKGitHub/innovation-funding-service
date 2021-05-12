@@ -18,12 +18,15 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final long currentUser;
     private final long applicationId;
     private final String competitionName;
+    private final String leadOrganisationName;
+    private final String leadOrganisationCompaniesHouseNumber;
 
     private final String applicationName;
     private final String questionName;
     private final String questionNumber;
     private final String questionSubtitle;
     private final String questionDescription;
+    private final String questionDescription2;
     private final String questionGuidanceTitle;
     private final String questionGuidance;
     private final QuestionSetupType questionType;
@@ -61,7 +64,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser,
                                                String applicationName, String questionName, String questionNumber, String questionSubtitle,
-                                               String questionDescription, String questionGuidanceTitle, String questionGuidance,
+                                               String questionDescription, String questionDescription2, String questionGuidanceTitle, String questionGuidance,
                                                QuestionSetupType questionType, boolean questionHasMultipleStatuses, Long textAreaFormInputId,
                                                Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance,
                                                Set<FileTypeCategory> appendixAllowedFileTypes, List<GenericQuestionAppendix> appendices,
@@ -69,7 +72,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                String templateDocumentFilename, String templateDocumentResponseFilename, Long templateDocumentResponseFileEntryId,
                                                ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open,
                                                boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel,
-                                               Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption) {
+                                               Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption,
+                                               String leadOrganisationName, String leadOrganisationCompaniesHouseNumber) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -79,6 +83,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.questionNumber = questionNumber;
         this.questionSubtitle = questionSubtitle;
         this.questionDescription = questionDescription;
+        this.questionDescription2 = questionDescription2;
         this.questionGuidanceTitle = questionGuidanceTitle;
         this.questionGuidance = questionGuidance;
         this.questionType = questionType;
@@ -106,6 +111,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.multipleChoiceFormInputId = multipleChoiceFormInputId;
         this.multipleChoiceOptions = multipleChoiceOptions;
         this.selectedMultipleChoiceOption = selectedMultipleChoiceOption;
+        this.leadOrganisationName = leadOrganisationName;
+        this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
     }
 
     @Override
@@ -144,6 +151,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     public String getQuestionDescription() {
         return questionDescription;
+    }
+
+    public String getQuestionDescription2() {
+        return questionDescription2;
     }
 
     public String getQuestionGuidanceTitle() {
@@ -296,6 +307,14 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return multipleChoiceFormInputId != null;
     }
 
+    public String getLeadOrganisationName() {
+        return leadOrganisationName;
+    }
+
+    public String getLeadOrganisationCompaniesHouseNumber() {
+        return leadOrganisationCompaniesHouseNumber;
+    }
+
     public static final class GenericQuestionApplicationViewModelBuilder {
         private long questionId;
         private long currentUser;
@@ -306,6 +325,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private String questionNumber;
         private String questionSubtitle;
         private String questionDescription;
+        private String questionDescription2;
         private String questionGuidanceTitle;
         private String questionGuidance;
         private QuestionSetupType questionType;
@@ -333,6 +353,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private Long multipleChoiceFormInputId;
         private List<MultipleChoiceOptionResource> multipleChoiceOptions;
         private MultipleChoiceOptionResource selectedMultipleChoiceOption;
+        private String leadOrganisationName;
+        private String leadOrganisationCompaniesHouseNumber;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -383,6 +405,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
         public GenericQuestionApplicationViewModelBuilder withQuestionDescription(String questionDescription) {
             this.questionDescription = questionDescription;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withQuestionDescription2(String questionDescription2) {
+            this.questionDescription2 = questionDescription2;
             return this;
         }
 
@@ -521,13 +548,24 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationName(String leadOrganisationName){
+            this.leadOrganisationName = leadOrganisationName;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withLeadOrganisationCompaniesHouseNumber(String leadOrganisationCompaniesHouseNumber){
+            this.leadOrganisationCompaniesHouseNumber = leadOrganisationCompaniesHouseNumber;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
-                    questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance,
+                    questionName, questionNumber, questionSubtitle, questionDescription, questionDescription2, questionGuidanceTitle, questionGuidance,
                     questionType, questionHasMultipleStatuses, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
                     appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
-                    open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption);
+                    open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption,
+                    leadOrganisationName, leadOrganisationCompaniesHouseNumber);
         }
     }
 }

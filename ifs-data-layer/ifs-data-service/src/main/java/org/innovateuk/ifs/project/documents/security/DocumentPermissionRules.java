@@ -52,7 +52,7 @@ public class DocumentPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin, project finance and IFS admin users can approve or reject document")
     public boolean internalAdminCanApproveDocument(ProjectResource project, UserResource user) {
-        return isInternalAdmin(user) || isIFSAdmin(user);
+        return isInternalAdmin(user) || hasIFSAdminAuthority(user);
     }
 
     private boolean userIsStakeholderOnProject(ProjectResource project, UserResource user) {

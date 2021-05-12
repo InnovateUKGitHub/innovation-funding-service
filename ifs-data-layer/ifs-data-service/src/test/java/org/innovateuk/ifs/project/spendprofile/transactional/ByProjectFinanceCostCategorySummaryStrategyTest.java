@@ -28,7 +28,6 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.ApplicationConfiguration.SBRI_PILOT;
 import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -230,7 +229,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.PROCUREMENT)
-                .withName(SBRI_PILOT)
+                .withName("name")
                 .build();
 
         OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();

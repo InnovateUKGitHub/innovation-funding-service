@@ -5,8 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class FinanceRowTypeTest {
 
@@ -38,6 +37,8 @@ public class FinanceRowTypeTest {
         assertEquals(Arrays.asList(FinanceRowType.ASSOCIATE_SUPPORT,
                 FinanceRowType.KNOWLEDGE_BASE,
                 FinanceRowType.ESTATE_COSTS), financeRowTypes);
+
+        financeRowTypes.forEach(financeRowType -> assertTrue(financeRowType.isIncludedInSpendProfile()));
     }
 
     @Test
@@ -47,5 +48,7 @@ public class FinanceRowTypeTest {
         assertNotNull(financeRowTypes);
         assertEquals(Arrays.asList(FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT,
                 FinanceRowType.INDIRECT_COSTS), financeRowTypes);
+
+        financeRowTypes.forEach(financeRowType -> assertTrue(financeRowType.isIncludedInSpendProfile()));
     }
 }

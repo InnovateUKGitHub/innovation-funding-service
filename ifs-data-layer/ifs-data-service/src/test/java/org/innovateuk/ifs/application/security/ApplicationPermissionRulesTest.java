@@ -22,19 +22,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import static java.util.Arrays.asList;
+import static com.beust.jcommander.internal.Lists.newArrayList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -205,7 +204,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void internalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -219,7 +218,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                 } else {
 
-                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
+                    if (newArrayList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
                         assertTrue(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     } else {
                         assertFalse(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
@@ -232,7 +231,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void compAdminCanRemoveAssessorFeedbackThatHasNotYetBeenPublished() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -262,12 +261,17 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
-
-                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+                Competition competition = newCompetition()
+                        .withAssessmentPeriods(
+                                newAssessmentPeriod()
+                                        .withMilestones(
+                                                newMilestone().build(1))
+                                        .build(1))
+                        .withCompetitionStatus(competitionStatus).build();
                 ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
 
                 // if the user is not a Comp Admin, immediately fail
@@ -299,7 +303,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         List<UserResource> allUsersToTests = combineLists(allGlobalRoleUsers, leadApplicantUser, collaboratorUser, assessorUser);
 
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             application.setCompetitionStatus(competitionStatus);
 
@@ -362,7 +366,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void userCanCreateNewApplication() {
         // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
             // For each possible role
             allGlobalRoleUsers.forEach(user -> {
@@ -380,14 +384,15 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void markAsIneligibleAllowedBeforeAssessment() {
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
+        newArrayList(CompetitionStatus.values()).forEach(competitionStatus -> allGlobalRoleUsers.forEach(user -> {
             Competition competition = newCompetition()
+                    .withAssessmentPeriods(newAssessmentPeriod().withMilestones(newMilestone().build(1)).build(1))
                     .withCompetitionStatus(competitionStatus)
                     .withCompetitionType(newCompetitionType().withName("Sector").build())
                     .build();
             ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
             when(competitionRepository.findById(application.getCompetition())).thenReturn(Optional.of(competition));
-            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)) {
+            if (!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP, PREVIOUS).contains(competitionStatus) && user.hasAnyRoles(IFS_ADMINISTRATOR, SYSTEM_MAINTAINER, PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD, SUPER_ADMIN_USER)) {
                 assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
             } else {
                 assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
