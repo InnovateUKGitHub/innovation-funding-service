@@ -10,11 +10,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileUploadService;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -44,22 +38,31 @@ public class FileUploadServiceImpl extends BaseTransactionalService implements F
     @Autowired
     private FileEntryService fileEntryService;
 
+    @Autowired
+    private BuildDataFromFile buildDataFromFile;
+
     @Override
     @Transactional
     public ServiceResult<FileEntryResource> createFileEntry(String uploadFileType, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return  fileService.createFile(fileEntryResource, inputStreamSupplier).
-                andOnSuccessReturn(fileResults -> linkFileEntryToUploadFile(uploadFileType, fileResults));
+        buildDataFromFile.buildFromFile(inputStreamSupplier.get());
+        return serviceSuccess(new FileEntryResource());
+//
+//        return  fileService.createFile(fileEntryResource, inputStreamSupplier).
+//            andOnSuccessReturn(fileResults -> linkFileEntryToUploadFile(uploadFileType, fileResults))
+//                .andOnSuccessReturn(e -> {
+//                    getFileContents(e.getId()).andOnSuccessReturnVoid(i -> ;
+//                    return e;
+//                });
     }
 
-        private FileEntryResource linkFileEntryToUploadFile(String uploadFileType, Pair< File, FileEntry > fileResults) {
-            FileEntry fileEntry = fileResults.getValue();
-            UploadFiles uploadFiles = new UploadFiles();
-            uploadFiles.setType(uploadFileType);
-            uploadFiles.setFileEntry(fileEntry);
-            uploadFilesRepository.save(uploadFiles);
-            return fileEntryMapper.mapToResource(fileEntry);
-        }
-
+    private FileEntryResource linkFileEntryToUploadFile(String uploadFileType, Pair< File, FileEntry > fileResults) {
+        FileEntry fileEntry = fileResults.getValue();
+        UploadFiles uploadFiles = new UploadFiles();
+        uploadFiles.setType(uploadFileType);
+        uploadFiles.setFileEntry(fileEntry);
+        uploadFilesRepository.save(uploadFiles);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
 
     @Override
     public ServiceResult<Void> deleteFileEntry(long uploadId) {
