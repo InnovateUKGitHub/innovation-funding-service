@@ -3,7 +3,11 @@ package org.innovateuk.ifs.commons.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 /**
  * Wraps a list of resources in {@link this#content} and exposes pageable properties
@@ -44,6 +48,16 @@ public class PageResource<PageableResource> {
         this.content = content;
         this.number = number;
         this.size = size;
+    }
+
+    public static <PageableResource> PageResource<PageableResource> fromListZeroBased(List<PageableResource> all, int number, int size){
+        List<PageableResource> results = all == null ? new ArrayList<>() : all;
+        int totalElements = results .size();
+        int totalPages = ((totalElements - 1) / size) + 1;
+        int startIndex = max(0, min(number * size, totalElements));
+        int endIndex = max(0, min((number + 1) * size, totalElements));
+        List<PageableResource> content = results.subList(startIndex, endIndex);
+        return new PageResource(totalElements, totalPages, content, number, size);
     }
 
     public long getTotalElements() {
