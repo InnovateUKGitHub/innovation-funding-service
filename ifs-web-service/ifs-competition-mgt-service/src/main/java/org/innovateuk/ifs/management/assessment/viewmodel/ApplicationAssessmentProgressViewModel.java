@@ -31,12 +31,16 @@ public class ApplicationAssessmentProgressViewModel {
     private Sort currentSort;
     private PaginationViewModel pagination;
     private boolean selectAllDisabled;
+    private final long assessmentPeriodId;
+    private final String assessmentPeriodName;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
                                                   String applicationInnovationArea,
                                                   Long competitionId,
                                                   String competitionName,
+                                                  long assessmentPeriodId,
+                                                  String assessmentPeriodName,
                                                   boolean inAssessment,
                                                   String leadOrganisation,
                                                   List<String> partnerOrganisations,
@@ -66,7 +70,11 @@ public class ApplicationAssessmentProgressViewModel {
         this.currentSort = currentSort;
         this.pagination = pagination;
         this.selectAllDisabled = selectAllDisabled;
+        this.assessmentPeriodId = assessmentPeriodId;
+        this.assessmentPeriodName = assessmentPeriodName;
     }
+
+
 
     public long getApplicationId() {
         return applicationId;
@@ -136,6 +144,18 @@ public class ApplicationAssessmentProgressViewModel {
         return selectAllDisabled;
     }
 
+    public long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
+
+    public String getAssessmentPeriodName() {
+        return assessmentPeriodName;
+    }
+
+    public boolean isOnlyAssessmentPeriod() {
+        return assessmentPeriodName == null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -147,6 +167,8 @@ public class ApplicationAssessmentProgressViewModel {
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
                 .append(inAssessment, that.inAssessment)
+                .append(selectAllDisabled, that.selectAllDisabled)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(applicationName, that.applicationName)
                 .append(applicationInnovationArea, that.applicationInnovationArea)
                 .append(competitionId, that.competitionId)
@@ -161,6 +183,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(assessorNameFilter, that.assessorNameFilter)
                 .append(currentSort, that.currentSort)
                 .append(pagination, that.pagination)
+                .append(assessmentPeriodName, that.assessmentPeriodName)
                 .isEquals();
     }
 
@@ -183,28 +206,34 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(assessorNameFilter)
                 .append(currentSort)
                 .append(pagination)
+                .append(selectAllDisabled)
+                .append(assessmentPeriodId)
+                .append(assessmentPeriodName)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("applicationId", applicationId)
-                .append("applicationName", applicationName)
-                .append("applicationInnovationArea", applicationInnovationArea)
-                .append("competitionId", competitionId)
-                .append("competitionName", competitionName)
-                .append("inAssessment", inAssessment)
-                .append("leadOrganisation", leadOrganisation)
-                .append("partnerOrganisations", partnerOrganisations)
-                .append("assigned", assigned)
-                .append("available", available)
-                .append("rejected", rejected)
-                .append("previouslyAssigned", previouslyAssigned)
-                .append("innovationSectors", innovationSectors)
-                .append("assessorNameFilter", assessorNameFilter)
-                .append("currentSort", currentSort)
-                .append("pagination", pagination)
-                .toString();
+        return "ApplicationAssessmentProgressViewModel{" +
+                "applicationId=" + applicationId +
+                ", applicationName='" + applicationName + '\'' +
+                ", applicationInnovationArea='" + applicationInnovationArea + '\'' +
+                ", competitionId=" + competitionId +
+                ", competitionName='" + competitionName + '\'' +
+                ", inAssessment=" + inAssessment +
+                ", leadOrganisation='" + leadOrganisation + '\'' +
+                ", partnerOrganisations=" + partnerOrganisations +
+                ", assigned=" + assigned +
+                ", available=" + available +
+                ", rejected=" + rejected +
+                ", previouslyAssigned=" + previouslyAssigned +
+                ", innovationSectors=" + innovationSectors +
+                ", assessorNameFilter='" + assessorNameFilter + '\'' +
+                ", currentSort=" + currentSort +
+                ", pagination=" + pagination +
+                ", selectAllDisabled=" + selectAllDisabled +
+                ", assessmentPeriodId=" + assessmentPeriodId +
+                ", assessmentPeriodName='" + assessmentPeriodName + '\'' +
+                '}';
     }
 }

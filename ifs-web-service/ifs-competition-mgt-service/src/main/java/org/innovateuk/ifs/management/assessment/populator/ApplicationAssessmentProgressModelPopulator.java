@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageR
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -34,18 +35,25 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, String assessorNameFilter, int page, Sort sort) {
+    @Autowired
+    AssessmentPeriodService assessmentPeriodService;
+
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccess();
 
         List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccess();
         ApplicationAvailableAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, assessorNameFilter, sort).getSuccess();
 
+        String assessmentPeriodName = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, applicationAssessmentSummary.getCompetitionId());
+
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
                 applicationAssessmentSummary.getInnovationArea(),
                 applicationAssessmentSummary.getCompetitionId(),
                 applicationAssessmentSummary.getCompetitionName(),
+                assessmentPeriodId,
+                assessmentPeriodName,
                 IN_ASSESSMENT == applicationAssessmentSummary.getCompetitionStatus(),
                 applicationAssessmentSummary.getLeadOrganisation(),
                 applicationAssessmentSummary.getPartnerOrganisations(),

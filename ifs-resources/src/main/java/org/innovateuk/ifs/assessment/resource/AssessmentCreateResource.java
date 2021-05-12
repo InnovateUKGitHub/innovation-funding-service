@@ -14,14 +14,16 @@ public class AssessmentCreateResource {
     private Long applicationId;
     @NotNull(message = "{validation.assessmentCreate.assessorId.required")
     private Long assessorId;
+    @NotNull(message = "{validation.assessmentCreate.assessmentPeriodId.required")
     private Long assessmentPeriodId;
 
     public AssessmentCreateResource() {
     }
 
-    public AssessmentCreateResource(Long applicationId, Long assessorId) {
+    public AssessmentCreateResource(Long applicationId, Long assessorId, Long assessmentPeriodId) {
         this.applicationId = applicationId;
         this.assessorId = assessorId;
+        this.assessmentPeriodId = assessmentPeriodId;
     }
 
     public Long getApplicationId() {
