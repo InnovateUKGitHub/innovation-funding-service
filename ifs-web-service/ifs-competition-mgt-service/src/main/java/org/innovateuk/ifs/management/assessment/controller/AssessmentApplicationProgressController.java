@@ -109,6 +109,7 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
                 competitionId,
                 applicationId,
                 assessmentId,
+                assessmentPeriodId,
                 AvailableAssessorsSortFieldType.valueOf(sortField)
         ));
         return "competition/application-progress-remove-confirm";
