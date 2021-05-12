@@ -45,11 +45,14 @@ public class AssessmentApplicationsController extends BaseAssessmentController {
                                               @PathVariable("competitionId") long competitionId,
                                               @RequestParam(value = "page", defaultValue = "0") int page,
                                               @RequestParam(value = "filterSearch", defaultValue = "") String filter) {
+        if (assessmentPeriodId == null) {
+            return format("redirect:/assessment/competition/%s/appliications", competitionId);
+        }
         CompetitionResource competitionResource = getCompetition(competitionId);
 
-        ApplicationCountSummaryPageResource applicationCounts = getCounts(competitionId, page, filter);
+        ApplicationCountSummaryPageResource applicationCounts = getCounts(competitionId, assessmentPeriodId, page, filter);
 
-        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter));
+        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, assessmentPeriodId));
 
         return "competition/manage-applications";
     }
@@ -68,9 +71,9 @@ public class AssessmentApplicationsController extends BaseAssessmentController {
         return format("redirect:/assessment/competition/%s/applications/period?assessmentPeriodId=%s", competitionId, assessmentPeriod.getId());
     }
 
-    protected ApplicationCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
+    private ApplicationCountSummaryPageResource getCounts(long competitionId, long assessmentPeriodId, int page, String filter) {
         return applicationCountSummaryRestService
-                .getApplicationCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE, filter)
+                .getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, page, PAGE_SIZE, filter)
                 .getSuccess();
     }
 }
