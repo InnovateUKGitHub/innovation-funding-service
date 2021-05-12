@@ -46,7 +46,7 @@ public class AssessmentApplicationsController extends BaseAssessmentController {
                                               @RequestParam(value = "page", defaultValue = "0") int page,
                                               @RequestParam(value = "filterSearch", defaultValue = "") String filter) {
         if (assessmentPeriodId == null) {
-            return format("redirect:/assessment/competition/%s/appliications", competitionId);
+            return format("redirect:/assessment/competition/%s/applications", competitionId);
         }
         CompetitionResource competitionResource = getCompetition(competitionId);
 

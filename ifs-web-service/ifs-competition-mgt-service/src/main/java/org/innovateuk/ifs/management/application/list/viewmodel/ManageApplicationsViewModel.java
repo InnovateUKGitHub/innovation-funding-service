@@ -15,9 +15,11 @@ public class ManageApplicationsViewModel {
     private String filter;
     private String assessmentPeriodName;
     private Pagination pagination;
+    private Long assessmentPeriodId;
 
     public ManageApplicationsViewModel(Long competitionId,
                                        String competitionName,
+                                       Long assessmentPeriodId,
                                        String assessmentPeriodName,
                                        List<ManageApplicationsRowViewModel> applications,
                                        boolean inAssessment,
@@ -25,6 +27,7 @@ public class ManageApplicationsViewModel {
                                        Pagination pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.assessmentPeriodId = assessmentPeriodId;
         this.assessmentPeriodName = assessmentPeriodName;
         this.applications = applications;
         this.inAssessment = inAssessment;
@@ -58,5 +61,9 @@ public class ManageApplicationsViewModel {
 
     public String getAssessmentPeriodName() {
         return assessmentPeriodName;
+    }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
     }
 }
