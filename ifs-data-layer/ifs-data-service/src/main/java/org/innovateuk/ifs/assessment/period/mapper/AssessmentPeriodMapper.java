@@ -26,6 +26,7 @@ public abstract class AssessmentPeriodMapper extends BaseResourceMapper<Assessme
 
     @Mappings({
             @Mapping(target = "competitionId", ignore = true),
+            @Mapping(source = "open", target = "open"),
             @Mapping(source = "inAssessment", target = "inAssessment"),
             @Mapping(source = "assessmentClosed", target = "assessmentClosed"),
     })
