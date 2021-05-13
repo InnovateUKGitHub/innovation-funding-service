@@ -16,6 +16,7 @@ public class ManageApplicationsViewModel {
     private String assessmentPeriodName;
     private Pagination pagination;
     private Long assessmentPeriodId;
+    private boolean alwaysOpen;
 
     public ManageApplicationsViewModel(Long competitionId,
                                        String competitionName,
@@ -23,6 +24,7 @@ public class ManageApplicationsViewModel {
                                        String assessmentPeriodName,
                                        List<ManageApplicationsRowViewModel> applications,
                                        boolean inAssessment,
+                                       boolean alwaysOpen,
                                        String filter,
                                        Pagination pagination) {
         this.competitionId = competitionId;
@@ -33,6 +35,7 @@ public class ManageApplicationsViewModel {
         this.inAssessment = inAssessment;
         this.filter = filter;
         this.pagination = pagination;
+        this.alwaysOpen = alwaysOpen;
     }
 
     public Long getCompetitionId() {
@@ -65,5 +68,9 @@ public class ManageApplicationsViewModel {
 
     public Long getAssessmentPeriodId() {
         return assessmentPeriodId;
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
     }
 }

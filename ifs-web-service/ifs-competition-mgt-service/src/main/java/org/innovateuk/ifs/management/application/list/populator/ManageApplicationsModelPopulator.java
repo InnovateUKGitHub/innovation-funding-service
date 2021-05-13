@@ -31,7 +31,7 @@ public class ManageApplicationsModelPopulator extends BaseManageAssessmentsModel
         ManageApplicationsViewModel model = new ManageApplicationsViewModel(
                 competition.getId(), competition.getName(), assessmentPeriodId,
                 assessmentPeriodName, simpleMap(applicationCounts.getContent(), this::getRowViewModel),
-                IN_ASSESSMENT.equals(competition.getCompetitionStatus()),
+                IN_ASSESSMENT.equals(competition.getCompetitionStatus()), competition.isAlwaysOpen(),
                 filter,
                 new Pagination(applicationCounts));
         return model;
