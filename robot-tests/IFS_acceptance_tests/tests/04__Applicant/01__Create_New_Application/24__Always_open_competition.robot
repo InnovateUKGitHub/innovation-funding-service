@@ -15,7 +15,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8852 Always open competitions: assign assessors to applications
 ...
-
+...               IFS-8853 Always open competitions: assign applications to assessors in assessment period
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -119,7 +120,7 @@ Comp admin updates the assessment period
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008  IFS-8852
+    [Documentation]  IFS-9008  IFS-8852  IFS-8853
     Given assign the application to assessor
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
@@ -147,8 +148,8 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Manage assessors
     When the user selects the radio button     assessmentPeriodId  99
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
-    Then the user clicks the button/link       link = Assign
-    And the user should see the element        jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
+    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
@@ -265,11 +266,14 @@ the user adds a partner organisation and application details
 
 assign the application to assessor
     the user clicks the button/link     link = Manage applications
-    the user clicks the button/link     link = Assign
+    the user clicks the button twice    jQuery = label:contains("Assessment period 1")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
-    the user clicks the button/link     link = Allocate applications
-    the user clicks the button/link     link = Manage assessments
+    the user clicks the button/link     link = Back to manage applications
+    the user clicks the button/link     link = Back to choose an assessment period to manage applications
+    the user clicks the button/link     link = Back to manage assessments
 
 the assessor accepts an invite to an application
     logging in and error checking         ${assessorEmail}   ${short_password}
