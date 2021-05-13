@@ -319,3 +319,10 @@ user queries migrated application id
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
     [Return]  ${id}
+
+get assessment period using competition id
+    [Arguments]  ${competition_id}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`assessment_period` WHERE `competition_id` = "${competition_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}

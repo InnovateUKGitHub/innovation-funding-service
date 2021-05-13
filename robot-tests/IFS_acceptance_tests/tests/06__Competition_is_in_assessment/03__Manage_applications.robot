@@ -44,7 +44,7 @@ View the list of the applications
     [Documentation]    INFUND-7042
     Given comp admin navigate to manage applications
     Then the application list is correct before changes
-    [Teardown]  the user clicks the button/link  link = Manage assessments
+    [Teardown]  the user clicks the button/link  link = Back to manage assessments
 
 View the list of assessors
     [Documentation]  IFS-319
