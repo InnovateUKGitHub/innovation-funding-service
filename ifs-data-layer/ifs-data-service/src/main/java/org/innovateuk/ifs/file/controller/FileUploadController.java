@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.file.controller;
 
-import com.mchange.v2.csv.FastCsvUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -10,12 +9,10 @@ import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,7 +23,7 @@ public class FileUploadController {
     @Value("10485760")
     private Long maxFilesizeBytesForApplicationFinance;
 
-     @Value("${ifs.data.service.file.upload.files.valid.media.types}")
+    @Value("${ifs.data.service.file.upload.files.valid.media.types}")
     private List<String> validMediaTypesForApplicationFinance;
 
     @Autowired
@@ -47,35 +44,30 @@ public class FileUploadController {
             HttpServletRequest request) {
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
-               fileUploadService.createFileEntry(fileType, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                fileUploadService.createFileEntry(fileType, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @DeleteMapping(value = "/delete-file", produces = "application/json")
     public RestResult<Void> deleteFileEntry(@RequestParam("uploadId") long uploadId) throws IOException {
-
         ServiceResult<Void> deleteResult = fileUploadService.deleteFileEntry(uploadId);
         return deleteResult.toDeleteResponse();
     }
 
     @GetMapping("/getFileAndContents")
-    public @ResponseBody ResponseEntity<Object> getFileContent(@RequestParam("fileEntryId") long fileEntryId) throws IOException {
+    public @ResponseBody
+    ResponseEntity<Object> getFileContent(@RequestParam("fileEntryId") long fileEntryId) throws IOException {
         return fileControllerUtils.handleFileDownload(() -> fileUploadService.getFileContents(fileEntryId));
     }
-//TODO
+
     @GetMapping("/get-file/fileentry")
     public RestResult<FileEntryResource> getFileDetails(@RequestParam("uploadId") long uploadId) throws IOException {
         return fileUploadService.getFileContents(uploadId).
                 andOnSuccessReturn(FileAndContents::getFileEntry).
                 toGetResponse();
     }
+
     @GetMapping("/get-allFiles")
     public RestResult<List<FileEntryResource>> getAllUploadedFileEntryResources() {
-       return fileUploadService.getAllUploadedFileEntryResources().toGetResponse();
-    }
-
-    @PostMapping("/parseAndSave")
-    public RestResult<Void> parseAndSaveFile(@RequestParam("file") File file) {
-        //This is a competition csv file object and need to parse this.
-        return null;
+        return fileUploadService.getAllUploadedFileEntryResources().toGetResponse();
     }
 }

@@ -13,7 +13,6 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonB
 @Component
 public class AssessmentOnlyTemplate implements CompetitionTemplate {
 
-
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.ASSESSMENT_ONLY;
@@ -21,8 +20,6 @@ public class AssessmentOnlyTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-
-
         return competition;
     }
 

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
 
-import java.io.File;
 import java.util.List;
 
 public interface FileUploadRestService {
@@ -14,5 +13,4 @@ public interface FileUploadRestService {
     RestResult<ByteArrayResource> getFileAndContents(Long fileEntryId);
     RestResult<FileEntryResource> getFileDetails(Long uploadId);
     RestResult<List<FileEntryResource>> getAllUploadedFileEntryResources();
-    RestResult<Void> parseAndSaveFileContents(File file);
 }

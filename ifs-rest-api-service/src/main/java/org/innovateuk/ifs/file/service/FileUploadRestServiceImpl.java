@@ -57,10 +57,4 @@ public class FileUploadRestServiceImpl extends BaseRestService implements FileUp
         return getWithRestResult(url, new ParameterizedTypeReference<List<FileEntryResource>>() {});
     }
 
-    @Override
-    public RestResult<Void> parseAndSaveFileContents(File file) {
-        String url = fileUploadRestURL + "/parseAndSave" + "?file=" + file;
-        return postWithRestResult(url);
-    }
-
 }

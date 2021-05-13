@@ -1,3 +1,4 @@
+-- (NOT USED NOW. NEED TO BE REMOVED IF NOT REQUIRED IN FUTURE)
 -- IFS-9619 - Assessment as a service PoC
 -- Adding constraint for uploading the files in the file entry table
 

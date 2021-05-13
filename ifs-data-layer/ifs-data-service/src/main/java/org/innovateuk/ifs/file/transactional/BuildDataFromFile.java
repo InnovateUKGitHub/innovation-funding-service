@@ -272,8 +272,6 @@ public class BuildDataFromFile {
                     }
                     milestoneService.updateMilestone(m).getSuccess();
                 });
-
-
     }
 
     public void setAssesmentConfig(CompetitionResource competition) {
@@ -357,7 +355,6 @@ public class BuildDataFromFile {
 
         competitionSetupService.markAsSetup(competition.getId());
     }
-
 
     private static class BuildQuestion {
         private String name;

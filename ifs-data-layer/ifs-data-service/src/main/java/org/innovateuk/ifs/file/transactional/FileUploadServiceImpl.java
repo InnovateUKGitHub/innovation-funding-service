@@ -47,6 +47,7 @@ public class FileUploadServiceImpl extends BaseTransactionalService implements F
         buildDataFromFile.buildFromFile(inputStreamSupplier.get());
         return serviceSuccess(new FileEntryResource());
 
+        //Need to consider if we need to save the uploaded file in future.
 //        return  fileService.createFile(fileEntryResource, inputStreamSupplier).
 //            andOnSuccessReturn(fileResults -> linkFileEntryToUploadFile(uploadFileType, fileResults))
 //                .andOnSuccessReturn(e -> {
