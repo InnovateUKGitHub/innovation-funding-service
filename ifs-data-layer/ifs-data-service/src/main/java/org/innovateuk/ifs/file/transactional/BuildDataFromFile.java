@@ -15,6 +15,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.*;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -62,6 +64,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
@@ -237,6 +240,8 @@ public class BuildDataFromFile {
             competition.setMaxResearchRatio(100);
             competition.setMinProjectDuration(1);
             competition.setMaxProjectDuration(10);
+            competition.setInnovationSector(InnovationSector.NONE);
+            competition.setInnovationAreas(newHashSet(InnovationArea.NONE));
             competitionSetupService.save(competition.getId(), competition).getSuccess();
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), 13L).getSuccess();
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
