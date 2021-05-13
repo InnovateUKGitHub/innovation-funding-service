@@ -191,4 +191,9 @@ public class CompetitionInFlightViewModel {
                 .stream()
                 .anyMatch(m -> m.getMilestoneType() == MilestoneType.ASSESSMENT_CLOSED && m.isPassed());
     }
+
+    public boolean isManageAssessmentLinkEnabled() {
+        return competitionStatus != READY_TO_OPEN
+                && (competitionStatus != OPEN || alwaysOpen);
+    }
 }
