@@ -45,6 +45,9 @@ public class Grant {
 
     private long duration;
 
+    @JsonProperty("fecModelEnabled")
+    private Boolean fecModelEnabled;
+
     @JsonProperty("participant")
     private Collection<Participant> participants;
 
@@ -136,6 +139,14 @@ public class Grant {
 
     public void setSourceSystem(String sourceSystem) {
         this.sourceSystem = sourceSystem;
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
     }
 
     @Override

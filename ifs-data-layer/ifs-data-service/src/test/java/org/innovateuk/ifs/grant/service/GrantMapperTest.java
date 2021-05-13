@@ -123,6 +123,7 @@ public class GrantMapperTest {
                                 build(1)).
                         build());
         ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(parameter.fecModelEnabled())
                 .withFinanceOrganisationDetails(industrialOrganisationFinances)
                 .withMaximumFundingLevel(50)
                 .build();
@@ -154,6 +155,7 @@ public class GrantMapperTest {
         assertThat(grant.getStartDate(), equalTo(DEFAULT_START_DATE));
         assertThat(grant.getGrantOfferLetterDate(), equalTo(DEFAULT_GOL_DATE));
         assertThat(grant.getSourceSystem(), equalTo("IFS"));
+        assertThat(grant.getFecModelEnabled(), equalTo(parameter.fecModelEnabled()));
 
         // expect 1 Project Manager record, one Finance Contact record for each Organisation and 1 innovation lead record and 1 monitoring officer
         int expectedNumberOfParticipantRecords = 1 + (parameter.participantCount()) + 1 + 1;
@@ -203,9 +205,10 @@ public class GrantMapperTest {
     @Parameters
     public static Collection<Parameter> parameters() {
         return asList(
-                newParameter("basic", newProject()).fundingType(FundingType.GRANT),
-                newParameter("single", newProject()).fundingType(FundingType.GRANT).duration(1).expectedOverheads(10L),
-                newParameter("no subcontracting", newProject()).fundingType(FundingType.KTP).withoutSubcontracting()
+                newParameter("basic", newProject()).fundingType(FundingType.GRANT).fecModelEnabled(null),
+                newParameter("single", newProject()).fundingType(FundingType.GRANT).duration(1).expectedOverheads(10L).fecModelEnabled(null),
+                newParameter("no subcontracting", newProject()).fundingType(FundingType.KTP).withoutSubcontracting().fecModelEnabled(true),
+                newParameter("non fec model", newProject()).fundingType(FundingType.KTP).withoutSubcontracting().fecModelEnabled(false)
         );
     }
 
@@ -228,6 +231,7 @@ public class GrantMapperTest {
         private List<Long> expectedOverheads = Collections.singletonList(120L);
         private List<Long> expectedOverheadRates = Collections.singletonList(50L);
         private FundingType fundingType;
+        private Boolean fecModelEnabled;
 
         private Parameter projectBuilder(ProjectBuilder projectBuilder) {
             this.projectBuilder = projectBuilder;
@@ -403,6 +407,15 @@ public class GrantMapperTest {
                     .withProjectUsers(projectUsers)
                     .withProjectMonitoringOfficer(projectMonitoringOfficer)
                     .build();
+        }
+
+        private Parameter fecModelEnabled(Boolean fecModelEnabled) {
+            this.fecModelEnabled = fecModelEnabled;
+            return this;
+        }
+
+        private Boolean fecModelEnabled() {
+            return fecModelEnabled;
         }
     }
 }
