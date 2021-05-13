@@ -192,11 +192,15 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Transactional
     public ServiceResult<Void> unsubmitAssessment(long assessmentId) {
         return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.unsubmitAssessment(found)) {
+            if (!assessmentWorkflowHandler.unsubmitAssessment(found) || isAssessmentClosed(found)) {
                 return serviceFailure(ASSESSMENT_UNSUBMIT_FAILED);
             }
             return serviceSuccess();
         });
+    }
+
+    private boolean isAssessmentClosed(Assessment assessment) {
+        return assessment.getTarget().getCompetition().isAssessmentClosed();
     }
 
     @Override

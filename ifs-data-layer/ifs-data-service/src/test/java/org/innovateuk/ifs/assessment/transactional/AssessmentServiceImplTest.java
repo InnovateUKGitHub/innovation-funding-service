@@ -19,6 +19,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -428,8 +429,17 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void unsubmitAssessment() {
+        Competition competition = newCompetition()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .build();
+
         Assessment assessment = newAssessment()
                 .withProcessState(SUBMITTED)
+                .withApplication(application)
                 .build();
 
         when(assessmentRepository.findById(assessment.getId())).thenReturn(Optional.of(assessment));

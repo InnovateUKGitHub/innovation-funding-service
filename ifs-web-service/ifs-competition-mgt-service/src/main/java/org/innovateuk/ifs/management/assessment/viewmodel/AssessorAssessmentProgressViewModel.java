@@ -148,4 +148,8 @@ public class AssessorAssessmentProgressViewModel {
     public boolean isSuperAdmin() {
         return isSuperAdmin;
     }
+
+    public boolean isAssessmentClosed() {
+        return competitionStatus.isLaterThan(CompetitionStatus.IN_ASSESSMENT);
+    }
 }
