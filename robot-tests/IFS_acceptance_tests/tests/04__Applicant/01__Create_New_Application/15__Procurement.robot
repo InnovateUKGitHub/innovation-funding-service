@@ -235,15 +235,15 @@ Internal user makes changes to project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
     And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
-    And the user should see the element                     jQuery = td:contains("£265,084")
+    And the user should see the element                     jQuery = td:contains("£231,244")
 
-#Internal user removes payment milestones
-#    [Documentation]   IFS-8944
-#    Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-#    And the user clicks the button/link                      link = Edit payment milestones
-#    When the user removes a payment milestone
-#    Then the user should not see the element                 jQuery = button:contains("Milestone for month 21")
-#    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("62.31%") ~ h3:contains("£165,171")
+Internal user removes payment milestones
+    [Documentation]   IFS-8944
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    And the user clicks the button/link                      link = Edit payment milestones
+    When the user removes a payment milestone
+    Then the user should not see the element                 jQuery = button:contains("Milestone for month 21")
+    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("62.31%") ~ h3:contains("£165,171")
 #
 #Internal user adds payment milestones
 #    [Documentation]   IFS-8944
@@ -413,21 +413,15 @@ the user makes changes to the payment milestones table
     the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
 
 the user makes changes to the project finances
-#    the user clicks the button/link     jQuery = button:contains("Subcontracting")
-#    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) a
     the user clicks the button/link     jQuery = a:contains("Edit project costs")
-    the user clicks the button/link     jQuery = button:contains("Materials")
-    clear element text                  jQuery = div[id='accordion-finances'] div:nth-of-type(4) input[id^="materialRows"][id$="cost"]
-#    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(4) input
-    input text                          css = div[id='accordion-finances'] div:nth-of-type(4) input[id^="materialRows"][id$="cost"]  80000
-#    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) [class="govuk-button"]
+    the user clicks the button/link     jQuery = button:contains("Subcontracting")
+    clear element text                  jQuery = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]   80000
     the user clicks the button/link     jQuery = button:contains("Other costs")
-#    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) a
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
     input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]   11100
     input text                          css = div[id='accordion-finances'] div:nth-of-type(8) textarea   Some other costs
-#    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) [class="govuk-button"]
     the user clicks the button/link     id = save-eligibility
 
 the user creates a new payment milestone

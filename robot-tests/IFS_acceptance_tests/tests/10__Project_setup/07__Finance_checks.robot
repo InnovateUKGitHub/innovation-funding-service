@@ -145,11 +145,9 @@ Status of the Eligibility column (workaround for private beta competition)
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
     [Tags]  HappyPath
-    When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/eligibility
-    And the user clicks the button/link     jQuery = a:contains("Queries")
+    When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/query
     Then the user should see the element    jQuery = button:contains("Post a new query")[disabled]
-    When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
-    And the user clicks the button/link     jQuery = a:contains("Queries")
+    When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query
     Then the user should see the element    jQuery = button:contains("Post a new query")[disabled]
     [Teardown]    finance contacts are selected and bank details are approved
 
@@ -513,26 +511,30 @@ Finance checks eligibility
     [Documentation]    INFUND-4833
     [Tags]
     When the user expands the section                Open all
-    And the user clicks the button/link              jQuery = #accordion-finances-content-1 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     When the user enters text to a text field        id = working-days-per-year    -230
     And the user clicks the button/link              css = .govuk-button[name = "save-eligibility"]
     Then the user should see a field error           ${field_should_be_1_or_higher}
     And the user reloads the page
-    And the user clicks the button/link              jQuery = #accordion-finances-content-3 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Cancel changes")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     When the user clicks the button/link             jQuery = button:contains("Add another materials cost")
     When the user enters text to a text field        css = #material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     And the user clicks the button/link              css = .govuk-button[name = "save-eligibility"]
     And the user reloads the page
-    And the user clicks the button/link              jQuery = #accordion-finances-content-4 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Cancel changes")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     When the user enters text to a text field        css = #capital-usage div:nth-child(1) div:nth-of-type(6) input   200
     Then the user should see a field error           This field should be 100 or lower
     And the user reloads the page
-    And the user clicks the button/link              jQuery = #accordion-finances-content-6 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Cancel changes")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     When the user clicks the button/link             jQuery = button:contains("Add another travel cost")
     And the user enters text to a text field         css = #travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    123
     When the user clicks the button/link             jQuery = .govuk-button[name = "save-eligibility"]
     And the user reloads the page
-    And the user clicks the button/link              jQuery = #accordion-finances-content-7 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Cancel changes")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     When the user clicks the button/link             jQuery = button:contains("Add another cost")
     And the user enters text to a text field         css = #other-costs-table tr:nth-child(2) td:nth-child(3) input  5000
     When the user clicks the button/link             css = .govuk-button[name = "save-eligibility"]
@@ -553,18 +555,18 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user expands the section                  Overhead costs
-    And the user clicks the button/link                jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link                jQuery = a:contains("Edit project costs")
     And the user clicks the button/link                css = [data-target = "overhead-default-percentage"] label
     When the user clicks the button/link               css = .govuk-button[name = "save-eligibility"]
     Then verify percentage and total                   Overhead costs  £11,886
     And the user should see the text in the element    jQuery = .govuk-accordion__section-heading:contains("Overhead costs") span[data-mirror*='#section-total']  £11,886
-    And the user should see the element                jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user should see the element                jQuery = a:contains("Edit project costs")
     Then verify total costs of project                 £187,716
 
 Project Finance user can Edit and Save Lead Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link    jQuery = #accordion-finances-content-2 a:contains("Edit")
+    When the user clicks the button/link     jQuery = a:contains("Edit project costs")
     And the user clicks the button/link     css = [data-target = "overhead-none"] label
     When the user clicks the button/link    css = .govuk-button[name = "save-eligibility"]
     Then the user should see the element    jQuery = span:contains("0%") ~ #accordion-finances-heading-2
@@ -573,12 +575,12 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
 Project Finance user can edit and save Lead Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link         jQuery = #accordion-finances-content-2 a:contains("Edit")
+    When the user clicks the button/link          jQuery = a:contains("Edit project costs")
     And the user clicks the button/link          css = [data-target = "overhead-total"] label
     And the user clicks the button/link          css = .govuk-button[name = "save-eligibility"]
     Then the user should see the element         jQuery = span:contains("0%")~ #accordion-finances-heading-2
     And the user should see the element          jQuery = span:contains("£0")~ #accordion-finances-heading-2
-    When the user clicks the button/link         jQuery = #accordion-finances-content-2 a:contains("Edit")
+    When the user clicks the button/link          jQuery = a:contains("Edit project costs")
     And the user enters text to a text field     id = overhead.totalSpreadsheet  ${empty}
     And the user clicks the button/link          css = .govuk-button[name = "save-eligibility"]
     And the user clicks the button/link          jQuery = a:contains("Return to finance checks")
@@ -587,7 +589,7 @@ Project Finance user can enter overhead values for Lead Partner manually
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link         css = a.eligibility-0
-    And the user clicks the button/link          jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     And the user enters text to a text field     id = overhead.totalSpreadsheet  1954
     Then the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     Then verify percentage and total             Overhead costs  £1,954
@@ -686,18 +688,18 @@ Project Finance user can edit and save partner's 20% of labour costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user expands the section           Overhead costs
-    And the user clicks the button/link         jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     And the user clicks the button/link         css = [data-target = "overhead-default-percentage"] label
     Then verify percentage and total            Overhead costs  £11,886
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     And the user should see the element         jQuery = span:contains("£11,886") ~ #accordion-finances-heading-2
-    And the user should see the element         jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user should see the element              jQuery = a:contains("Edit project costs")
     Then verify total costs of project          £187,716
 
 Project Finance user can edit and save Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link        jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link         jQuery = a:contains("Edit project costs")
     And the user clicks the button/link         css = [data-target = "overhead-none"] label
     Then the user should see the element        jQuery = span:contains("£0")
     When the user clicks the button/link        css = .govuk-button[name = "save-eligibility"]
@@ -707,19 +709,19 @@ Project Finance user can edit and save Partner's no overhead costs option
 Project Finance user can edit and save in Partner's calculate overheads option
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link        jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     And the user clicks the button/link         css = [data-target = "overhead-total"] label
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     Then the user should see the element        jQuery = span:contains("0%") ~ #accordion-finances-heading-2
     And the user should see the element         jQuery = span:contains("0%") ~ #accordion-finances-heading-2
-    When the user clicks the button/link        jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     And the user enters text to a text field    id = overhead.totalSpreadsheet  ${empty}
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
 
 Project Finance user can enter overhead values for partner manually
     [Documentation]     INFUND-7577
     [Tags]
-    When the user clicks the button/link        jQuery = #accordion-finances-content-2 a:contains("Edit")
+    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
     And the user enters text to a text field    id = overhead.totalSpreadsheet  1954
     Then the user clicks the button/link        css = .govuk-button[name = "save-eligibility"]
     Then verify percentage and total            Overhead costs  £1,954
@@ -978,11 +980,11 @@ Project finance user adds, modifies and removes labour rows
     [Setup]  Log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/project/${PS_EF_Application_Project_No}/finance-check/organisation/${Gabtype_Id}/eligibility
     When the user expands the section              Labour
-    When the user clicks the button/link           jQuery = #accordion-finances-content-1 a:contains("Edit")
+    And the user clicks the button/link                jQuery = a:contains("Edit project costs")
     And the user clicks the button/link            jQuery = button:contains("Add another role")
     And the user adds data into labour row         4  test  2000  100
     And the user clicks the button/link            css = .govuk-button[name = save-eligibility]
-    When the user clicks the button/link           jQuery = #accordion-finances-content-1 a:contains("Edit")
+    And the user clicks the button/link            jQuery = a:contains("Edit project costs")
     And the user clicks the button/link            jQuery = button:contains("Add another role")
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               Labour  £5,886
@@ -1109,7 +1111,7 @@ the user adds travel data into row
 Project finance user amends labour details in eligibility for lead
     the user expands the section               Labour
     the user should see the element            jQuery = span:contains("2%") + button:contains("Labour")
-    the user clicks the button/link            jQuery = #accordion-finances-content-1 a:contains("Edit")
+    the user clicks the button/link              jQuery = a:contains("Edit project costs")
     the user should see the element            css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field        id = working-days-per-year    230
     the user adds data into labour row          1  test  120000  100
@@ -1121,13 +1123,13 @@ Project finance user amends labour details in eligibility for lead
     verify percentage and total                Labour  £59,430
     the user clicks the button/link            css = .govuk-button[name = "save-eligibility"]
     verify total costs of project              £257,252
-    the user should see the element             jQuery = #accordion-finances-content-1 a:contains("Edit")
+    the user should see the element             jQuery = a:contains("Edit project costs")
     the user should not see the element         css = .govuk-button[name = "save-eligibility"]
 
 Project finance user amends materials details in eligibility for lead
     the user expands the section               Materials
     verify percentage and total                Materials  £100,200
-    the user clicks the button/link            jQuery = #accordion-finances-content-3 a:contains("Edit")
+    the user clicks the button/link            jQuery = a:contains("Edit project costs")
     the user adds data into materials row       1    test    10    8000
     verify percentage and total                Materials  £80,000
     the user clicks the button/link            jQuery = button:contains("Add another materials cost")
@@ -1137,13 +1139,13 @@ Project finance user amends materials details in eligibility for lead
     verify percentage and total                Materials  £80,000
     the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     verify total costs of project              £237,052
-    the user should see the element             jQuery = #accordion-finances-content-3 a:contains("Edit")
+    the user should see the element              jQuery = a:contains("Edit project costs")
     the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 Project finance user amends capital usage details in eligibility for lead
     the user expands the section               Capital usage
     the user should see the element            jQuery = span:contains("0%") + button:contains("Capital usage")
-    the user clicks the button/link            jQuery = #accordion-finances-content-4 a:contains("Edit")
+    the user clicks the button/link              jQuery = a:contains("Edit project costs")
     the user adds capital usage data into row   1    test    10600    500    50
     verify percentage and total                Capital usage  £5,050
     the user clicks the button/link            jQuery = button:contains("Add another asset")
@@ -1153,13 +1155,13 @@ Project finance user amends capital usage details in eligibility for lead
     verify percentage and total                Capital usage  £5,050
     the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     verify total costs of project              £241,550
-    the user should see the element             jQuery = #accordion-finances-content-4 a:contains("Edit")
+    the user should see the element              jQuery = a:contains("Edit project costs")
     the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 Project finance user amends subcontracting usage details in eligibility for lead
     the user expands the section               Subcontracting
     verify percentage and total                Subcontracting  £90,000
-    the user clicks the button/link            jQuery = #accordion-finances-content-5 a:contains("Edit")
+    the user clicks the button/link              jQuery = a:contains("Edit project costs")
     the user adds subcontracting data into row  1    test    10600
     verify percentage and total                Subcontracting  £10,600
     the user clicks the button/link            jQuery = button:contains("Add another subcontractor")
@@ -1168,12 +1170,12 @@ Project finance user amends subcontracting usage details in eligibility for lead
     the user clicks the button/link            css = #subcontracting div:nth-child(2) button
     the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     verify total costs of project              £162,150
-    the user should see the element             jQuery = #accordion-finances-content-5 a:contains("Edit")
+    the user should see the element              jQuery = a:contains("Edit project costs")
     the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 Project finance user amends travel details in eligibility for lead
     the user expands the section              Travel and subsistence
-    the user clicks the button/link            jQuery = #accordion-finances-content-6 a:contains("Edit")
+    the user clicks the button/link              jQuery = a:contains("Edit project costs")
     verify percentage and total                Travel and subsistence  £5,970
     the user adds travel data into row          1    test    10    1000
     verify percentage and total                Travel and subsistence  £10,000
@@ -1184,13 +1186,13 @@ Project finance user amends travel details in eligibility for lead
     verify percentage and total                Travel and subsistence  £10,000
     the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     verify total costs of project              £166,180
-    the user should see the element             jQuery = #accordion-finances-content-6 a:contains("Edit")
+    the user should see the element              jQuery = a:contains("Edit project costs")
     the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 Project finance user amends other costs details in eligibility for lead
     the user expands the section               Other costs
     verify percentage and total                Other costs  £1,100
-    the user clicks the button/link            jQuery = #accordion-finances-content-7 a:contains("Edit")
+    the user clicks the button/link              jQuery = a:contains("Edit project costs")
     the user enters text to a text field        css = #other-costs-table tr:nth-child(1) td:nth-child(2) textarea    some other costs
     the user enters text to a text field        css = #other-costs-table tr:nth-child(1) td:nth-child(3) input    5000
     verify percentage and total                Other costs  £5,000
@@ -1201,7 +1203,7 @@ Project finance user amends other costs details in eligibility for lead
     the user should see the element            css = #other-costs-table tr:nth-child(2) button
     the user clicks the button/link            jQuery = .govuk-button[name = save-eligibility]
     verify total costs of project              £175,830
-    the user should see the element             jQuery = #accordion-finances-content-7 a:contains("Edit")
+    the user should see the element              jQuery = a:contains("Edit project costs")
     the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 the categories are verified for Overview section

@@ -420,10 +420,10 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user should see the element         jQuery = td:contains("Successful")
     the user clicks the button/link         jQuery = a:contains("Competition")
     the user clicks the button/link         jQuery = a:contains("Manage funding notifications")
-    Set Focus To Element                    css = label[for = "app-row-103"]
-    the user selects the checkbox           app-row-103
-    Set Focus To Element                    css = label[for = "app-row-104"]
-    the user selects the checkbox           app-row-104
+    Set Focus To Element                    css = label[for = "app-row-9"]
+    the user selects the checkbox           app-row-9
+    Set Focus To Element                    css = label[for = "app-row-10"]
+    the user selects the checkbox           app-row-10
     the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
     the user refreshes until element appears on page         jQuery = td:contains("Sent")
