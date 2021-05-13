@@ -93,7 +93,6 @@ public class FileUploadController {
             if (fileAndContents.isSuccess()) {
                 ByteArrayResource byteArrayResource = fileAndContents.getSuccess();
                 File competitionFile = byteArrayResource.getFile();
-                fileUploadRestService.parseAndSaveFileContents(competitionFile);
             }
         }
          return "admin/upload-files";
