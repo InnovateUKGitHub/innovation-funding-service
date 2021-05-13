@@ -24,10 +24,10 @@
             <th:block th:insert="competition/choose-period-fragment :: choose-period(${model.assessmentPeriods})" />
         </form>
 
-        <p class="govuk-body">
-            <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
-               class="govuk-button govuk-button--secondary govuk-!-margin-0">Return to manage assessments</a>
-        </p>
+
+        <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
+           class="govuk-button govuk-button--secondary govuk-!-margin-0">Return to manage assessments</a>
+
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>
