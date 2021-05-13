@@ -173,12 +173,12 @@ the user is able to view the application overview page
     the user should see the element         jQuery = dt:contains("Application name:") ~ dd:contains("${KTP_application}")
 
 Project users checks their email
-    The user reads his email     ${ktp_KTA_email}               Important message about your application ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
-    The user reads his email     ${ktp_Partner_email}           Important message about your application ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
-    The user reads his email     ${ktp_Lead_email}              Important message about your application ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
-    The user reads his email     bobs.mate@knowledge.base       Important message about your application ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
-    The user reads his email     kevin.summers@ludlow.co.uk     Important message about your application ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
-    The user reads his email     ${MemberEmail}                 Important message about your application ${KTP_application} for the competition KTP notifications   Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_KTA_email}               Important message about your application '${KTP_application}' for the competition 'KTP notifications'   Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_Partner_email}           Important message about your application '${KTP_application}' for the competition 'KTP notifications'   Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_Lead_email}              Important message about your application '${KTP_application}' for the competition 'KTP notifications'   Thank you for submitting your application for this funding competition
+    The user reads his email     bobs.mate@knowledge.base       Important message about your application '${KTP_application}' for the competition 'KTP notifications'   Thank you for submitting your application for this funding competition
+    The user reads his email     kevin.summers@ludlow.co.uk     Important message about your application '${KTP_application}' for the competition 'KTP notifications'   Thank you for submitting your application for this funding competition
+    The user reads his email     ${MemberEmail}                 Important message about your application '${KTP_application}' for the competition 'KTP notifications'   Thank you for submitting your application for this funding competition
 
 the lead invites a team member to the project
     the user clicks the button/link          link = Project team
