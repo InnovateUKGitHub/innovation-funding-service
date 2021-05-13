@@ -25,10 +25,8 @@ public class DatesViewModel extends AbstractPublicSectionContentViewModel {
     }
 
     public List<DateViewModel> getSortedEvents() {
-        List<DateViewModel> sortedList = getPublicContentDates().stream()
-                .sorted(Comparator.comparing(DateViewModel::getDateTime))
+        return getPublicContentDates().stream()
+                .sorted(Comparator.comparing(DateViewModel::getDateTime, Comparator.nullsLast(Comparator.naturalOrder())))
                 .collect(toList());
-
-        return sortedList;
     }
 }

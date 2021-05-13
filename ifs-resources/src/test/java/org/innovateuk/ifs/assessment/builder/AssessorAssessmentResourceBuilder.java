@@ -61,4 +61,8 @@ public class AssessorAssessmentResourceBuilder extends BaseBuilder<AssessorAsses
     public AssessorAssessmentResourceBuilder withAssessmentId(Long... assessmentIds) {
         return withArraySetFieldByReflection("assessmentId", assessmentIds);
     }
+
+    public AssessorAssessmentResourceBuilder withAssessmentPeriodId(Long... assessmentPeriodIds) {
+        return withArraySetFieldByReflection("assessmentPeriodId", assessmentPeriodIds);
+    }
 }

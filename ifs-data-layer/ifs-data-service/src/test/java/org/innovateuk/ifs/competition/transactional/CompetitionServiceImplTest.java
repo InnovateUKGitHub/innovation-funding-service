@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -39,6 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsBuilder.newGrantTermsAndConditions;
@@ -65,10 +67,13 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     private CompetitionRepository competitionRepository;
 
     @Mock
-    private MilestoneRepository milestoneRepository;
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Mock
     private CompetitionMapper competitionMapper;
+
+    @Mock
+    private MilestoneRepository milestoneRepository;
 
     @Mock
     private CompetitionKeyApplicationStatisticsService competitionKeyApplicationStatisticsService;
@@ -156,9 +161,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
         Competition competition = newCompetition().withSetupComplete(true)
+                .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                 .withMilestones(milestones)
                 .build();
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(Optional.of(competition.getAssessmentPeriods().get(0)));
 
         service.closeAssessment(competitionId);
 
@@ -231,9 +238,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                 .build(1));
 
         Competition competition = newCompetition().withSetupComplete(true)
+                .withAssessmentPeriods(asList(newAssessmentPeriod().build()))
                 .withMilestones(milestones)
                 .build();
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(competition.getAssessmentPeriods().get(0).getId())).thenReturn(Optional.of(competition.getAssessmentPeriods().get(0)));
 
         service.notifyAssessors(competitionId);
 
@@ -275,8 +284,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsNotifiedOfDecision(5);
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId))
-                .thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.releaseFeedback(competitionId);
 
@@ -313,8 +321,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsNotifiedOfDecision(4);
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId))
-                .thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.releaseFeedback(competitionId);
 
@@ -353,8 +360,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsNotifiedOfDecision(5);
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId))
-                .thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.manageInformState(competitionId);
 
@@ -392,8 +398,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         keyStatistics.setApplicationsNotifiedOfDecision(4);
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
-        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId))
-                .thenReturn(serviceSuccess(keyStatistics));
+        when(competitionKeyApplicationStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
 
         ServiceResult<Void> response = service.manageInformState(competitionId);
 

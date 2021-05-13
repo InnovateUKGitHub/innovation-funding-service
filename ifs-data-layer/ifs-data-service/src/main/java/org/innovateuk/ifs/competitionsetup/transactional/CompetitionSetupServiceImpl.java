@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
+import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -102,6 +103,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private AssessmentPeriodRepository assessmentPeriodRepository;
 
+    @Autowired
+    private MilestoneService milestoneService;
+
 
     @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
     private Long maxFileSize;
@@ -154,14 +158,21 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
-
         Competition existingCompetition = competitionRepository.findById(competitionResource.getId()).orElse(null);
+        boolean alwaysOpenChanged = existingCompetition.isAlwaysOpen() != competitionResource.isAlwaysOpen();
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         competition = setCompetitionAuditableFields(competition, existingCompetition);
         saveFunders(competitionResource);
         competition = saveConfigs(existingCompetition, competition);
         competition = competitionRepository.save(competition);
-        return serviceSuccess(competitionMapper.mapToResource(competition));
+        return serviceSuccess(competitionMapper.mapToResource(competition))
+                .andOnSuccess(c -> {
+                    if (alwaysOpenChanged) {
+                        return milestoneService.rebuildMilestones(c.getId())
+                                .andOnSuccessReturn(() -> c);
+                    }
+                    return serviceSuccess(c);
+                });
     }
 
     private void saveFunders(CompetitionResource competitionResource) {
