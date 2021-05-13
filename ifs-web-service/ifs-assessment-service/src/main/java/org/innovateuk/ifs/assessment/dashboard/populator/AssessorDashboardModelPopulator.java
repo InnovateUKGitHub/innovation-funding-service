@@ -3,7 +3,9 @@ package org.innovateuk.ifs.assessment.dashboard.populator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -39,18 +41,22 @@ public class AssessorDashboardModelPopulator {
 
     private RoleProfileStatusRestService roleProfileStatusRestService;
 
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
     public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
                                            InterviewInviteRestService interviewInviteRestService,
                                            ProfileRestService profileRestService,
                                            ReviewInviteRestService reviewInviteRestService,
                                            CompetitionRestService competitionRestService,
-                                           RoleProfileStatusRestService roleProfileStatusRestService) {
+                                           RoleProfileStatusRestService roleProfileStatusRestService,
+                                           AssessmentPeriodRestService assessmentPeriodRestService) {
         this.competitionParticipantRestService = competitionParticipantRestService;
         this.interviewInviteRestService = interviewInviteRestService;
         this.profileRestService = profileRestService;
         this.reviewInviteRestService = reviewInviteRestService;
         this.competitionRestService = competitionRestService;
         this.roleProfileStatusRestService = roleProfileStatusRestService;
+        this.assessmentPeriodRestService = assessmentPeriodRestService;
     }
 
     public AssessorDashboardViewModel populateModel(UserResource user) {
@@ -131,7 +137,9 @@ public class AssessorDashboardModelPopulator {
     }
 
     private boolean isAnUpcomingAssessment(CompetitionParticipantResource competitionParticipant) {
-        return competitionParticipant.isAnUpcomingAssessment();
+        List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionParticipant.getCompetitionId()).getSuccess();
+        return assessmentPeriods.stream()
+                .allMatch(assessmentPeriodResource -> !assessmentPeriodResource.isOpen());
     }
 
     private List<AssessorDashboardPendingInviteViewModel> getPendingParticipations(List<CompetitionParticipantResource> participantResourceList) {
