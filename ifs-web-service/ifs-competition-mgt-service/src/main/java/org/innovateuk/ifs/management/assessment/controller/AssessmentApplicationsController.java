@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.assessment.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -35,6 +36,9 @@ public class AssessmentApplicationsController extends BaseAssessmentController {
 
     @Autowired
     private AssessmentPeriodRestService assessmentPeriodRestService;
+
+    @Autowired
+    private AssessmentPeriodService assessmentPeriodService;
 
     @Autowired
     private AssessmentPeriodChoiceModelPopulator assessmentPeriodChoiceModelPopulator;
