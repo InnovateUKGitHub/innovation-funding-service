@@ -297,6 +297,7 @@ public class BuildDataFromFile {
                     .withMultipleStatuses(false)
                     .withType(QuestionType.GENERAL)
                     .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                    .withAssessorMaximumScore(10)
                     .withFormInputs(newArrayList(
                             aFormInput()
                                     .withType(FormInputType.TEXTAREA)
