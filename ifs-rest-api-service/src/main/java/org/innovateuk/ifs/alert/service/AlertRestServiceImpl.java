@@ -33,33 +33,24 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
         this.serviceUrl = serviceUrl;
     }
 
-//    @Override
-//    public RestResult<List<AlertResource>> findAllVisible() {
-//        try {
-//            return getWithRestResultAnonymous(alertRestURL + "/find-all-visible", ParameterizedTypeReferences.alertResourceListType());
-//        } catch (Throwable t) {
-//            LOG.info("Calling Alerts Fallback:", t);
-//            return RestResult.restSuccess(Collections.emptyList());
-//        }
-//    }
-//
-//    @Override
-//    public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
-//        try {
-//            return getWithRestResultAnonymous(alertRestURL + "/find-all-visible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
-//        } catch (Throwable t) {
-//            LOG.info("Calling Alerts Fallback:", t);
-//            return RestResult.restSuccess(Collections.emptyList());
-//        }
-//    }
-
     @Override
     public RestResult<List<AlertResource>> findAllVisible() {
-        return RestResult.restSuccess(Collections.emptyList());
+        try {
+            return getWithRestResultAnonymous(alertRestURL + "/find-all-visible", ParameterizedTypeReferences.alertResourceListType());
+        } catch (Throwable t) {
+            LOG.info("Calling Alerts Fallback:", t);
+            return RestResult.restSuccess(Collections.emptyList());
+        }
     }
+
     @Override
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
-        return RestResult.restSuccess(Collections.emptyList());
+        try {
+            return getWithRestResultAnonymous(alertRestURL + "/find-all-visible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
+        } catch (Throwable t) {
+            LOG.info("Calling Alerts Fallback:", t);
+            return RestResult.restSuccess(Collections.emptyList());
+        }
     }
 
     @Override
