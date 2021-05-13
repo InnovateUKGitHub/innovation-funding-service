@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
@@ -23,16 +22,6 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 public class ApplicationCountSummaryRestServiceImpl extends BaseRestService implements ApplicationCountSummaryRestService {
 
     private static final String APPLICATION_COUNT_REST_URL = "/application-count-summary";
-
-    @ZeroDowntime(reference = "IFS-8853", description = "This can probably be removed")
-    @Override
-    public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
-                                                                                                       int pageIndex,
-                                                                                                       int pageSize,
-                                                                                                       String filter) {
-        String uriWithParams = buildUri(APPLICATION_COUNT_REST_URL + "/find-by-competition-id/{compId}", pageIndex, pageSize, filter, competitionId);
-        return getWithRestResult(uriWithParams, ApplicationCountSummaryPageResource.class);
-    }
 
     @Override
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(long competitionId, long assessmentPeriodId, int pageIndex, int pageSize, String filter) {
