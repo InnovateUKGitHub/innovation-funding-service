@@ -10,6 +10,8 @@ import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,10 @@ public class ApplicationAssessmentProgressModelPopulator {
     private CategoryRestService categoryRestService;
 
     @Autowired
-    AssessmentPeriodService assessmentPeriodService;
+    private AssessmentPeriodService assessmentPeriodService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, long assessmentPeriodId, String assessorNameFilter, int page, Sort sort) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
@@ -52,6 +57,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessmentSummary.getInnovationArea(),
                 applicationAssessmentSummary.getCompetitionId(),
                 applicationAssessmentSummary.getCompetitionName(),
+                getCompetition(applicationAssessmentSummary.getCompetitionId()).isAlwaysOpen(),
                 assessmentPeriodId,
                 assessmentPeriodName,
                 IN_ASSESSMENT == applicationAssessmentSummary.getCompetitionStatus(),
@@ -148,5 +154,9 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessorResource.getAssignedCount(),
                 applicationAssessorResource.getSubmittedCount()
         );
+    }
+
+    private CompetitionResource getCompetition(long competitionId) {
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 }

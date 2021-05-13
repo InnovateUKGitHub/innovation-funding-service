@@ -23,7 +23,7 @@
                       th:with="linkTitle='Allocate applications', linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment || model.competitionAlwaysOpen} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <th:block th:unless="${model.onlyAssessmentPeriod}">
                     <h3 class="govuk-heading-m" th:text="${model.assessmentPeriodName}">assessment period</h3>
@@ -53,7 +53,7 @@
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}" class="govuk-link">Review application</a>
                 </div>
 
-                <h2 class="govuk-heading-m" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
+                <h2 class="govuk-heading-m" th:text="(${model.inAssessment || model.competitionAlwaysOpen} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
                 <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
                     <table class="govuk-table assessors-assigned">
@@ -64,10 +64,10 @@
                                 <th class="govuk-table__header" scope="col">Innovation area</th>
                                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total applications</th>
                                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Assigned</th>
-                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Notified</th>
-                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Accepted</th>
-                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Started</th>
-                                <th th:if="${model.inAssessment}" class="govuk-table__header aligncentre" scope="col">Submitted</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Notified</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Accepted</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Started</th>
+                                <th th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__header aligncentre" scope="col">Submitted</th>
                                 <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
@@ -82,19 +82,19 @@
                                 <td class="govuk-table__cell" th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.totalApplicationsCount}">6</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assignedCount}">4</td>
-                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                <td th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__cell aligncentre">
                                     <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
                                     <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
-                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                <td th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__cell aligncentre">
                                     <span th:remove="${assessor.accepted} ? 'all' : 'tag'">-</span>
                                     <span th:remove="${assessor.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
-                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                <td th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__cell aligncentre">
                                     <span th:remove="${assessor.started} ? 'all' : 'tag'">-</span>
                                     <span th:remove="${assessor.started} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
-                                <td th:if="${model.inAssessment}" class="govuk-table__cell aligncentre">
+                                <td th:if="${model.inAssessment || model.competitionAlwaysOpen}" class="govuk-table__cell aligncentre">
                                     <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
                                     <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
@@ -118,7 +118,7 @@
 
                 <p class="govuk-body" th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
 
-                <th:block th:if="${model.inAssessment}">
+                <th:block th:if="${model.inAssessment || model.competitionAlwaysOpen}">
                 <h2 class="govuk-heading-m" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
                 <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">

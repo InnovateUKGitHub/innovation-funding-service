@@ -33,12 +33,14 @@ public class ApplicationAssessmentProgressViewModel {
     private boolean selectAllDisabled;
     private final long assessmentPeriodId;
     private final String assessmentPeriodName;
+    private final boolean competitionAlwaysOpen;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
                                                   String applicationInnovationArea,
                                                   Long competitionId,
                                                   String competitionName,
+                                                  boolean competitionAlwaysOpen,
                                                   long assessmentPeriodId,
                                                   String assessmentPeriodName,
                                                   boolean inAssessment,
@@ -72,6 +74,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.selectAllDisabled = selectAllDisabled;
         this.assessmentPeriodId = assessmentPeriodId;
         this.assessmentPeriodName = assessmentPeriodName;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
     }
 
 
@@ -156,6 +159,10 @@ public class ApplicationAssessmentProgressViewModel {
         return assessmentPeriodName == null;
     }
 
+    public boolean isCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -169,6 +176,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(inAssessment, that.inAssessment)
                 .append(selectAllDisabled, that.selectAllDisabled)
                 .append(assessmentPeriodId, that.assessmentPeriodId)
+                .append(competitionAlwaysOpen, that.competitionAlwaysOpen)
                 .append(applicationName, that.applicationName)
                 .append(applicationInnovationArea, that.applicationInnovationArea)
                 .append(competitionId, that.competitionId)
@@ -209,6 +217,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(selectAllDisabled)
                 .append(assessmentPeriodId)
                 .append(assessmentPeriodName)
+                .append(competitionAlwaysOpen)
                 .toHashCode();
     }
 
@@ -234,6 +243,7 @@ public class ApplicationAssessmentProgressViewModel {
                 ", selectAllDisabled=" + selectAllDisabled +
                 ", assessmentPeriodId=" + assessmentPeriodId +
                 ", assessmentPeriodName='" + assessmentPeriodName + '\'' +
+                ", competitionAlwaysOpen=" + competitionAlwaysOpen +
                 '}';
     }
 }
