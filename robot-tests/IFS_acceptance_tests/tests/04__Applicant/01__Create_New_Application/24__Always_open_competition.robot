@@ -170,6 +170,20 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
 
+Comp admin manages the application and assigns the assessor
+    [Documentation]  IFS-8853
+    Given the user navigates to the page       ${server}/management/assessment/competition/${webTestCompID}
+    And the user clicks the button/link        link = Manage applications
+    When the user selects the radio button     assessmentPeriodId  102
+    And the user clicks the button/link        jQuery = button:contains("Save and continue")
+    And the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(5) a:contains("Assign")
+    And the user selects the checkbox          selectedAssessors
+    And the user clicks the button/link        jQuery = button:contains("Add to application")
+    Then the user should see the element       jQuery = h2:contains('Assign Assessors (1)')
+    And the user clicks the button/link        link = Back to manage applications
+    And the user clicks the button/link        link = Back to choose an assessment period to manage applications
+    And the user clicks the button/link        link = Back to manage assessments
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
