@@ -140,8 +140,8 @@ public class AssessorDashboardModelPopulator {
                 .map(cpr -> new AssessorDashboardPendingInviteViewModel(
                         cpr.getInvite().getHash(),
                         cpr.getCompetitionName(),
-                        cpr.getAssessorAcceptsDate().toLocalDate(),
-                        cpr.getAssessorDeadlineDate().toLocalDate(),
+                        cpr.getAssessorAcceptsDate() != null ? cpr.getAssessorAcceptsDate().toLocalDate() : null,
+                        cpr.getAssessorDeadlineDate() != null ? cpr.getAssessorDeadlineDate().toLocalDate() : null,
                         cpr.isCompetitionAlwaysOpen()
                 ))
                 .collect(toList());
