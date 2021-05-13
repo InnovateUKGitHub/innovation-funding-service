@@ -541,7 +541,7 @@ IFS Expert user can reject and re-upload GOL
     [Setup]  Requesting Project ID of the GOL Project
     Given the IFS expert user rejects the GOL           ${GOLProjectID}
     And the user resets the GOL
-    AND INTERNAL USER UPLOADS THE GOL                   ${GOLProjectID}
+    And internal user uploads the GOL                   ${GOLProjectID}
     Then the user should not see the element            jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
 
 *** Keywords ***
