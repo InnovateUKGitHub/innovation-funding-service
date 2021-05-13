@@ -176,7 +176,8 @@ Comp admin manages the application and assigns the assessor
     And the user clicks the button/link        link = Manage applications
     When the user selects the radio button     assessmentPeriodId  102
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
-    And the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(5) a:contains("Assign")
+    And the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(7) a:contains("View progress")
+#    And the user clicks the button/link        jQuery = tr:nth-child(1) td:nth-child(5) a:contains("Assign")
     And the user selects the checkbox          selectedAssessors
     And the user clicks the button/link        jQuery = button:contains("Add to application")
     Then the user should see the element       jQuery = h2:contains('Assign Assessors (1)')
