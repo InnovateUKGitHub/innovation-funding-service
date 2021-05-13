@@ -415,8 +415,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         long userId = 3l;
 
-        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(singletonList(participant)));
-        when(competitionParticipantRestService.getAssessorParticipantsWithAssessmentPeriod(userId)).thenReturn(restSuccess(singletonList(participant)));
+        when(competitionParticipantRestService.getAssessorParticipants(userId)).thenReturn(restSuccess(emptyList()));
+        when(competitionParticipantRestService.getAssessorParticipantsWithAssessmentPeriod(userId)).thenReturn(restSuccess(emptyList()));
         when(profileRestService.getUserProfileStatus(userId)).thenReturn(restSuccess(profileStatusResource));
         when(reviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(reviewParticipantResource)));
         when(interviewInviteRestService.getAllInvitesByUser(userId)).thenReturn(restSuccess(singletonList(interviewParticipantResource)));
