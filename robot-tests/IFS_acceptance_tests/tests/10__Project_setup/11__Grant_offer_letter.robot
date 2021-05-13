@@ -66,7 +66,6 @@ Resource          ../../resources/common/PS_Common.robot
 ${HighSpeedProjectName}       High-speed rail and its effects on water quality
 ${NanoProjectName}            Energy saver- nano tech
 
-
 *** Test Cases ***
 Applicant able to update project location until GOL not generated
     [Documentation]  IFS-6731
