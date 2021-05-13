@@ -12,14 +12,8 @@ dependencies {
     // is a best practice that prevents devtools from being transitively applied to other modules using your project.
     compileOnly "org.springframework.boot:spring-boot-devtools"
 
-    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.5"
-    }
-
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.cloud:spring-cloud-starter-sleuth"
-    compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 }
