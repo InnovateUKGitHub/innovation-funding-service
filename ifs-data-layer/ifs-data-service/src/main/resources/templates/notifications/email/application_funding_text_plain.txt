@@ -5,6 +5,12 @@ Innovate UK
 ${competitionName}
 ${applicationName}
 <#if averageAssessorScore??>${averageAssessorScore}</#if>
+<#if alwaysOpen>
+  Thank you for submitting your application ${applicationId}: ${applicationName} to Innovate UK for the competition:
+  ${competitionId}: ${competitionName} <br/>
+  Feedback is now available for you to view on the Innovation Funding Service.
+  ${webBaseUrl}
+</#if>
 
 ${message}
 

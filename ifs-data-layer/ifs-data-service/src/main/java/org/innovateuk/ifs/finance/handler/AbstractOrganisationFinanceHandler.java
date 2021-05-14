@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -41,6 +41,9 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+
+    @Autowired
+    private KtpFecFilter ktpFecFilter;
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
@@ -92,19 +95,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     private List<? extends FinanceRow> getApplicationCosts(long applicationFinanceId, ApplicationFinance finance) {
         List<ApplicationFinanceRow> applicationFinanceRows = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-        return filterKtpFecCostCategoriesIfRequired(finance, applicationFinanceRows);
-    }
-
-    private List<? extends FinanceRow> filterKtpFecCostCategoriesIfRequired(Finance finance, List<? extends FinanceRow> financeRows) {
-        if (finance.getApplication().getCompetition().isKtp()) {
-            financeRows = financeRows.stream()
-                    .filter(financeRow -> BooleanUtils.isFalse(finance.getFecModelEnabled())
-                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRow.getType())
-                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRow.getType()))
-                    .collect(Collectors.toList());
-        }
-
-        return financeRows;
+        return ktpFecFilter.filterKtpFecCostCategoriesIfRequired(finance, applicationFinanceRows);
     }
 
     @Override
@@ -117,7 +108,7 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     private List<? extends FinanceRow> getProjectCosts(long projectFinanceId, ProjectFinance finance) {
         List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        return filterKtpFecCostCategoriesIfRequired(finance, projectFinanceRows);
+        return ktpFecFilter.filterKtpFecCostCategoriesIfRequired(finance, projectFinanceRows);
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition, Finance finance) {

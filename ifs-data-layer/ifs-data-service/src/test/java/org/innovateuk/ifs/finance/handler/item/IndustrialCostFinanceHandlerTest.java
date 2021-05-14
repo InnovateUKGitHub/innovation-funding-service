@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.in;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -113,6 +115,9 @@ public class IndustrialCostFinanceHandlerTest {
     @Mock
     private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
 
+    @Mock
+    private KtpFecFilter ktpFecFilterMock;
+
     private ApplicationFinance applicationFinance;
     private ProjectFinance projectFinance;
     private Materials material;
@@ -154,6 +159,8 @@ public class IndustrialCostFinanceHandlerTest {
 
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(applicationFinance, costs))
+                .thenAnswer(invocation -> invocation.getArgument(1));
     }
 
     private List<ApplicationFinanceRow> initialiseFinanceTypesAndCost(ApplicationFinance applicationFinance) {
@@ -452,6 +459,14 @@ public class IndustrialCostFinanceHandlerTest {
 
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(applicationFinance, costs)).thenAnswer(invocation -> {
+            List<? extends FinanceRow> financeRows = invocation.getArgument(1);
+            return financeRows.stream()
+                    .filter(cost -> fecModelEnabled
+                            ? !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(cost.getType())
+                            : !FinanceRowType.getFecSpecificFinanceRowTypes().contains(cost.getType()))
+                    .collect(Collectors.toList());
+        });
 
         Project project = newProject().withApplication(application).build();
         projectFinance = newProjectFinance()
@@ -463,6 +478,14 @@ public class IndustrialCostFinanceHandlerTest {
 
         when(projectFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(projectFinance));
         when(projectFinanceRowRepositoryMock.findByTargetId(projectFinance.getId())).thenReturn(projectCosts);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(projectFinance, projectCosts)).thenAnswer(invocation -> {
+            List<? extends FinanceRow> financeRows = invocation.getArgument(1);
+            return financeRows.stream()
+                    .filter(cost -> fecModelEnabled
+                            ? !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(cost.getType())
+                            : !FinanceRowType.getFecSpecificFinanceRowTypes().contains(cost.getType()))
+                    .collect(Collectors.toList());
+        });
     }
 
     @Test

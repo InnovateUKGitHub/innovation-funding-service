@@ -52,7 +52,7 @@ public class SendNotificationsModelPopulatorTest {
     @Test
     public void populateModel() {
 
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withName(COMPETITION_NAME).build();
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withId(COMPETITION_ID).withName(COMPETITION_NAME).build();
 
         FundingDecisionToSendApplicationResource application1
                 = new FundingDecisionToSendApplicationResource(1L, "", "", ON_HOLD);
