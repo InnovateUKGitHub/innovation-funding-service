@@ -48,8 +48,7 @@ import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -298,6 +297,8 @@ public class ApplicationNotificationServiceImplTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isSuccess());
+
+        applications.forEach(app -> assertNotNull(app.getFeedbackReleased()));
     }
 
     @Test
