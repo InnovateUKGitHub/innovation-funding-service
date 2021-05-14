@@ -4,6 +4,9 @@ public class AssessmentPeriodResource {
 
     private Long id;
     private Long competitionId;
+    private boolean open;
+    private boolean inAssessment;
+    private boolean assessmentClosed;
 
     public AssessmentPeriodResource() {
     }
@@ -26,5 +29,29 @@ public class AssessmentPeriodResource {
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public boolean isInAssessment() {
+        return inAssessment;
+    }
+
+    public void setInAssessment(boolean inAssessment) {
+        this.inAssessment = inAssessment;
+    }
+
+    public boolean isAssessmentClosed() {
+        return assessmentClosed;
+    }
+
+    public void setAssessmentClosed(boolean assessmentClosed) {
+        this.assessmentClosed = assessmentClosed;
     }
 }

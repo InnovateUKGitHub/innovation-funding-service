@@ -44,9 +44,7 @@ public interface AssessmentPeriodService extends IfsCrudService<AssessmentPeriod
             description = "Only comp admins can perform actions on assessment periods")
     ServiceResult<AssessmentPeriodResource> create(AssessmentPeriodResource assessmentPeriodResource);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
-    @SecuredBySpring(value="READ", securedType= AssessmentPeriodResource.class,
-            description = "Only Comp Admins are able to get the assessment periods for the given competitions")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'READ')")
     ServiceResult<List<AssessmentPeriodResource>> getAssessmentPeriodByCompetitionId(long competitionId);
 
     @PreAuthorize("hasAuthority('comp_admin')")

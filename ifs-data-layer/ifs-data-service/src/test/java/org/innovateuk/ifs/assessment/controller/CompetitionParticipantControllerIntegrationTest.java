@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -108,8 +110,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         competition1.setStartDate(now().minusDays(10L));
         competition1.setEndDate(now().minusDays(5L));
         competition1.notifyAssessors(now().minusSeconds(1L), competition1.getAssessmentPeriods().get(0));
+        competition1.setAlwaysOpen(false);
         Competition competition2 = buildInAssessmentCompetition();
-
 
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
@@ -162,6 +164,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
         AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
+
+
         assessmentParticipantRepository.saveAll(newArrayList(
                 expectedParticipant1,
                 expectedParticipant2
@@ -187,6 +191,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                                 .build()))
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorsNotifiedDate(now())
+                .withAlwaysOpen(false)
                 .build();
 
         competitionRepository.save(competition);
@@ -198,6 +203,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition = newCompetition()
                 .with(id(null))
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withAlwaysOpen(false)
                 .build();
 
         competitionRepository.save(competition);

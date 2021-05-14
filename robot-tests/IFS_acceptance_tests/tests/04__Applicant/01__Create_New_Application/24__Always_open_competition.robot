@@ -15,8 +15,11 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8852 Always open competitions: assign assessors to applications
 ...
+<<<<<<< HEAD
 ...               IFS-8853 Always open competitions: assign applications to assessors in assessment period
 ...
+=======
+>>>>>>> feature/IFS-8870-assessor-view-changes
 ...               IFS-8849 Always open competitions: internal comp dashboard
 ...
 ...               IFS-8855 Always open competitions: manage notifications/release feedback
@@ -123,9 +126,26 @@ Comp admin updates the assessment period
     And the user clicks the button/link                        link = Back to manage assessments
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
+Comp admin manages the assessors
+    [Documentation]  IFS-8852
+    Given the user clicks the button/link     link = Manage assessors
+    And the user selects the radio button     assessmentPeriodId  99
+    And the user clicks the button/link       jQuery = button:contains("Save and continue")
+    When the user clicks the button/link      link = Assign
+    And the user selects the checkbox         assessor-row-1
+    Then the user clicks the button/link      jQuery = button:contains("Add to assessor")
+    And the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link       link = Back to manage assessors
+    And the user clicks the button/link       link = Back to choose an assessment period to manage assessors
+    And the user clicks the button/link       link = Back to manage assessments
+
 Internal user notify the assessors of their assigned applications
+<<<<<<< HEAD
     [Documentation]  IFS-9008  IFS-8852  IFS-8853
     Given assign the application to assessor
+=======
+    [Documentation]  IFS-9008  IFS-8852
+>>>>>>> feature/IFS-8870-assessor-view-changes
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition 'Always open competition'  We have assigned applications for you to assess for this competition:   1
@@ -157,6 +177,7 @@ Assessor has been assigned to the competition
     When the user clicks the button/link         jQuery = a:contains('Always open competition')
     Then the user should see the element         jQuery = h2:contains('Assessment period: 20 Feb to 20 Mar 2021')
 
+<<<<<<< HEAD
 Comp admin manages the assessors
     [Documentation]  IFS-8852
     Given log in as a different user           &{ifs_admin_user_credentials}
@@ -170,6 +191,8 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
 
+=======
+>>>>>>> feature/IFS-8870-assessor-view-changes
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
