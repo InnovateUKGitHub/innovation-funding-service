@@ -123,7 +123,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
         if (competitionParticipant.getCompetitionAlwaysOpen()) {
             return competitionParticipant.getAssessmentPeriod() != null
-                && competitionParticipant.getAssessmentPeriod().isOpen();
+                && competitionParticipant.getAssessmentPeriod().isInAssessment();
         } else {
             return competitionParticipant.isInAssessment();
         }

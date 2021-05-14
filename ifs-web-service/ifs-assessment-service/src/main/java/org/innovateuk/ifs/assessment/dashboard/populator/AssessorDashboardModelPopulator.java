@@ -119,7 +119,7 @@ public class AssessorDashboardModelPopulator {
     }
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
-        return competitionParticipant.getAssessmentPeriod().isOpen();
+        return competitionParticipant.getAssessmentPeriod().isInAssessment();
     }
 
     private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantListWithAssessmentPeriod) {
@@ -139,7 +139,7 @@ public class AssessorDashboardModelPopulator {
     private boolean isAnUpcomingAssessment(CompetitionParticipantResource competitionParticipant) {
         List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionParticipant.getCompetitionId()).getSuccess();
         return assessmentPeriods.stream()
-                .allMatch(assessmentPeriodResource -> !assessmentPeriodResource.isOpen());
+                .allMatch(assessmentPeriodResource -> !assessmentPeriodResource.isInAssessment());
     }
 
     private List<AssessorDashboardPendingInviteViewModel> getPendingParticipations(List<CompetitionParticipantResource> participantResourceList) {
