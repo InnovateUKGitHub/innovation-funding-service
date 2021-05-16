@@ -246,7 +246,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     ) {
         Competition competition = applications.get(0)
                 .getCompetition();
-        boolean includeAsesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
+        boolean includeAssesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
         Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
@@ -260,7 +260,10 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     perNotificationTargetArguments.put("applicationName", application.getName());
                     perNotificationTargetArguments.put("applicationId", applicationId);
                     perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
-                    if (includeAsesssorScore) {
+                    perNotificationTargetArguments.put("competitionId", application.getCompetition().getId());
+                    perNotificationTargetArguments.put("alwaysOpen", application.getCompetition().isAlwaysOpen());
+                    perNotificationTargetArguments.put("webBaseUrl", webBaseUrl);
+                    if (includeAssesssorScore) {
                         Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(applicationId);
                         averageAssessorScore.ifPresent(score -> perNotificationTargetArguments.put("averageAssessorScore", "Average assessor score: " + score.getScore() + "%"));
                     }

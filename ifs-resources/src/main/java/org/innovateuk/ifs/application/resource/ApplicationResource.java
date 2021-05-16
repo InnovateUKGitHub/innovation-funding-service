@@ -55,6 +55,7 @@ public class ApplicationResource {
     private ZonedDateTime lastStateChangeDate;
     private FundingDecision fundingDecision;
     private Long assessmentPeriodId;
+    private ZonedDateTime feedbackReleased;
 
     public Long getId() {
         return id;
@@ -338,6 +339,18 @@ public class ApplicationResource {
 
     public void setAssessmentPeriodId(Long assessmentPeriodId) {
         this.assessmentPeriodId = assessmentPeriodId;
+    }
+
+    public ZonedDateTime getFeedbackReleased() {
+        return feedbackReleased;
+    }
+
+    public void setFeedbackReleased(ZonedDateTime feedbackReleased) {
+        this.feedbackReleased = feedbackReleased;
+    }
+
+    public boolean isFeedbackReleased() {
+        return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
     }
 
     @Override

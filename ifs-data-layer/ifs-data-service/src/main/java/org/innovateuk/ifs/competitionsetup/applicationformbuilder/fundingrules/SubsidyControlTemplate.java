@@ -65,7 +65,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
             return competitionTypeSections;
         }
 
-        if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
+        if (!northernIrelandSubsidyControlToggle || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
         } else if (northernIrelandSubsidyControlToggle) {
             competitionTypeSections.get(0)
@@ -86,10 +86,6 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
     private boolean generatingWebtestDataForComp(Competition competition) {
         return Arrays.stream(environment.getActiveProfiles()).anyMatch(profile -> "integration-test".equals(profile))
                 && competition.getName().contains("Subsidy control tactical");
-    }
-
-    private boolean northernIrelandSubsidyControlModeDisabled() {
-        return !northernIrelandSubsidyControlToggle;
     }
 
     private static void insertNorthernIrelandTacticalDeclaration(List<SectionBuilder> sectionBuilders) {

@@ -319,7 +319,7 @@ the user can send successful funding notification
     the user clicks the button/link    link = Manage funding notifications
     the user selects the checkbox      app-row-${application_id}
     the user clicks the button/link    id = write-and-send-email
-    the user clicks the button/link    jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    the user clicks the button/link    jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email")
     the user refreshes until element appears on page         jQuery = td:contains("${COVIDapplicationTitle1}") ~ td:contains("Sent")
 
