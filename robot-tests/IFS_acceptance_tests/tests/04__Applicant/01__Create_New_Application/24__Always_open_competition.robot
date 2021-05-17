@@ -155,7 +155,7 @@ Assessor has been assigned to the competition
     [Documentation]  IFS-8852
     Given log in as a different user             ${assessorEmail}   ${short_password}
     When the user clicks the button/link         jQuery = a:contains('Always open competition')
-    Then the user should see the element         jQuery = h2:contains('Assessment period: 20 Feb to 20 Mar 2021')
+    Then the user should see the element         jQuery = h2:contains('Assessing open-ended competitions')
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852
