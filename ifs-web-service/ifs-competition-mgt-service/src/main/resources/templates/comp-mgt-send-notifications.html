@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding decision notification',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.pageTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body class="govuk-template__body competition-management">
@@ -20,10 +20,11 @@
             </div>
 
             <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision notification',subTitle=${competitionTitle},size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.pageTitle},subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
 
-            <p class="govuk-body">This email can be edited. It will be received by all applicants associated with each of the applications you selected.</p>
+            <p class="govuk-body">You must add the funding decision and any additional information required to this email.
+                                <th:block th:if="${model.alwaysOpen}">Assessment feedback will be automatically release after this email has been sent.</th:block></p>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                   th:object="${form}"
@@ -93,7 +94,7 @@
                            readonly="readonly"
                            th:value="${model.isH2020()} ?
                            '<competition name>: Notification regarding your submission <application number>: <application title>' :
-                           '<competition name>: Notification regarding your application <application number>: <application title>'" />
+                           'Important message about your application \'[application name]\' for the competition \'[competition name]\''" />
 
                 </div>
 
@@ -103,14 +104,21 @@
                         Dear [recipient name] <br/>
                         Innovate UK <th:block th:if="${model.isH2020()}">, part of UK Research and Innovation</th:block><br/>
                         [competition name] <br/>
-                        [application title] <br/>
-                        <th:block th:if="${model.includeAssessorsScore}">Average assessor score: [assessor score]%</th:block>
+                        [application title] <br/><br/>
+                        <th:block th:if="${model.includeAssessorsScore}">Average assessor score: [assessor score]%<br/><br/></th:block>
+                        <th:block th:if="${model.alwaysOpen}">
+                            Thank you for submitting your application <strong>[application number]: [application name]</strong> to Innovate UK
+                            for the competition:<br/>
+                            <strong>[competition number]: [competition name]</strong> <br/><br/>
+                            Feedback is now available for you to view on the <a href="/">Innovation Funding Service</a>.
+                        </th:block>
                     </p>
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('message')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-label--s" for="body-text">
-                        Body text
+                    <label class="govuk-label" for="body-text">
+                        <th:block th:unless="${model.alwaysOpen}">Body text</th:block>
+                        <th:block th:if="${model.alwaysOpen}">Additional text</th:block>
                     </label>
                     <th:block th:if="${#fields.hasErrors('message')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
@@ -145,7 +153,7 @@
                     <input type="hidden"  th:name="'fundingDecisions[' + ${entry.key} + ']'" th:value="${entry.value}"/>
                 </th:block>
                 <div class="govuk-body">
-                    <button class="govuk-button govuk-!-margin-right-6" id="send-email-to-all-applicants" data-js-modal="send-to-all-applicants-modal">Send email to all applicants</button>
+                    <button class="govuk-button govuk-!-margin-right-6" id="send-email-to-all-applicants" data-js-modal="send-to-all-applicants-modal">Send notification</button>
                     <a class="button-clear" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
                         Cancel
                     </a>

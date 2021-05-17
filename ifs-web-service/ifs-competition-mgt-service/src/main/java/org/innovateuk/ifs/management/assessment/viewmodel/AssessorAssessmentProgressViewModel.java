@@ -18,11 +18,14 @@ public class AssessorAssessmentProgressViewModel {
     private final long competitionId;
     private final String competitionName;
     private final CompetitionStatus competitionStatus;
+    private final boolean competitionAlwaysOpen;
     private final String assessorName;
     private final List<String> innovationAreas;
     private final String businessType;
     private final long totalApplications;
     private final long assessorId;
+    private final long assessmentPeriodId;
+    private final String assessmentPeriodName;
     private final String filter;
     private final boolean selectAllDisabled;
 
@@ -34,7 +37,10 @@ public class AssessorAssessmentProgressViewModel {
     public AssessorAssessmentProgressViewModel(long competitionId,
                                                String competitionName,
                                                CompetitionStatus competitionStatus,
+                                               boolean competitionAlwaysOpen,
                                                long assessorId,
+                                               long assessmentPeriodId,
+                                               String assessmentPeriodName,
                                                String assessorName,
                                                List<String> innovationAreas,
                                                String filter,
@@ -49,11 +55,14 @@ public class AssessorAssessmentProgressViewModel {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
         this.assessorName = assessorName;
         this.innovationAreas = innovationAreas;
         this.businessType = businessType;
         this.totalApplications = totalApplications;
         this.assessorId = assessorId;
+        this.assessmentPeriodId = assessmentPeriodId;
+        this.assessmentPeriodName = assessmentPeriodName;
         this.assigned = assigned;
         this.rejected = rejected;
         this.filter = filter;
@@ -92,6 +101,18 @@ public class AssessorAssessmentProgressViewModel {
 
     public long getAssessorId() { return assessorId; }
 
+    public long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
+
+    public String getAssessmentPeriodName() {
+        return assessmentPeriodName;
+    }
+
+    public boolean isOnlyAssessmentPeriod() {
+        return assessmentPeriodName == null;
+    }
+
     public List<AssessorAssessmentProgressAssignedRowViewModel> getAssigned() {
         return assigned;
     }
@@ -118,4 +139,7 @@ public class AssessorAssessmentProgressViewModel {
         return IN_ASSESSMENT_STATES.contains(competitionStatus);
     }
 
+    public boolean isCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
+    }
 }

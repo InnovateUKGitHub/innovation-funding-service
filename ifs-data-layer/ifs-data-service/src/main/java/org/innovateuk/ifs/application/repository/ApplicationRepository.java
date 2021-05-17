@@ -105,6 +105,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(long competitionId);
 
+    List<Application> findByAssessmentPeriodId(long assessmentPeriodId);
+
     Optional<Application> findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
@@ -136,6 +138,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                  Pageable pageable);
 
     List<Application> findByCompetitionIdAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
+
+    List<Application> findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(long competitionId, long assessmentPeriodId, Collection<ApplicationState> applicationStates);
 
     Stream<Application> findByApplicationProcessActivityStateIn(Collection<ApplicationState> applicationStates);
 

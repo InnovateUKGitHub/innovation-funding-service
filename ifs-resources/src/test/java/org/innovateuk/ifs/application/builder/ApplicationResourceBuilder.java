@@ -133,4 +133,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriodId", assessmentPeriod, object), assessmentPeriods);
     }
 
+    public ApplicationResourceBuilder withFeedbackReleased(ZonedDateTime... feedbackReleaseds) {
+        return withArray((feedbackReleased, application) -> application.setFeedbackReleased(feedbackReleased), feedbackReleaseds);
+    }
 }

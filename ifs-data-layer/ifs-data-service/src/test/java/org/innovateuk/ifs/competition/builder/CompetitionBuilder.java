@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.*;
@@ -117,6 +118,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setMilestones(milestones));
     }
 
+    public CompetitionBuilder withAssessmentPeriods(List<AssessmentPeriod>... assessmentPeriods){
+        return withArraySetFieldByReflection("assessmentPeriods", assessmentPeriods);
+    }
+
     public CompetitionBuilder withLeadTechnologist(User leadTechnologist){
         return with(competition -> competition.setLeadTechnologist(leadTechnologist));
     }
@@ -144,11 +149,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public CompetitionBuilder withAssessorsNotifiedDate(ZonedDateTime... dates) {
-        return withArray((date, competition) -> competition.notifyAssessors(date), dates);
+        return withArray((date, competition) -> competition.notifyAssessors(date, competition.getAssessmentPeriods().get(0)), dates);
     }
 
     public CompetitionBuilder withAssessmentClosedDate(ZonedDateTime... dates) {
-        return withArray((date, competition) -> competition.closeAssessment(date), dates);
+        return withArray((date, competition) -> competition.closeAssessment(date, competition.getAssessmentPeriods().get(0)), dates);
     }
 
     public CompetitionBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
@@ -354,5 +359,13 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAlwaysOpen(boolean... alwaysOpen) {
         return withArraySetFieldByReflection("alwaysOpen", alwaysOpen);
+    }
+
+    @Override
+    protected void postProcess(int index, Competition competition) {
+        List<AssessmentPeriod> assessmentPeriods = competition.getAssessmentPeriods();
+        if (assessmentPeriods != null){
+            assessmentPeriods.forEach(assessmentPeriod -> assessmentPeriod.setCompetition(competition));
+        }
     }
 }

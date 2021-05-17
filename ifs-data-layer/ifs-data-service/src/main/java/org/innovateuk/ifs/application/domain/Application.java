@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
@@ -51,6 +52,7 @@ public class Application implements ProcessActivity {
     private String previousApplicationTitle;
     private ZonedDateTime manageFundingEmailDate;
     private Long previousApplicationId;
+    private ZonedDateTime feedbackReleased;
 
     @Min(0)
     private Long durationInMonths; // in months
@@ -63,6 +65,9 @@ public class Application implements ProcessActivity {
 
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
+
+    @OneToMany(mappedBy = "target")
+    private List<Assessment> assessments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competition", referencedColumnName = "id")
@@ -502,6 +507,15 @@ public class Application implements ProcessActivity {
         this.projectToBeCreated = projectToBeCreated;
     }
 
+    public ZonedDateTime getFeedbackReleased() {
+        return feedbackReleased;
+    }
+
+    public Application setFeedbackReleased(ZonedDateTime feedbackReleased) {
+        this.feedbackReleased = feedbackReleased;
+        return this;
+    }
+
     public AssessmentPeriod getAssessmentPeriod() {
         return assessmentPeriod;
     }
@@ -520,5 +534,13 @@ public class Application implements ProcessActivity {
                 .filter(Objects::nonNull)
                 .max(Integer::compareTo);
         return max;
+    }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
     }
 }

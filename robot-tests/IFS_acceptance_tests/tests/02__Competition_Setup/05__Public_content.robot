@@ -329,7 +329,7 @@ Publish public content: Publish once all sections are complete
     And the user clicks the button/link                 link = Edit
     Then the user should not see the element            jQuery = button:contains("Save and review")
     And the user should see the element                 jQuery = button:contains("Publish and review")
-    Then the user clicks the button/link                jQuery = a:contains("Public content")
+    Then the user clicks the button/link                jQuery = a:contains("Back to public content")
 
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262  IFS-5370
@@ -577,7 +577,7 @@ the user visits
     the user clicks the button/link  link = ${section}
     the user should see the element  jQuery = h1:contains("${title}")
     the user should not see an error in the page
-    the user clicks the button/link  link = Public content
+    the user clicks the button/link  link = Back to public content
 
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8

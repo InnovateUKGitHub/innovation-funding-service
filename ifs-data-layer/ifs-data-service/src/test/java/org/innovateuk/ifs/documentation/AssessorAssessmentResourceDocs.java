@@ -17,5 +17,6 @@ public class AssessorAssessmentResourceDocs {
             fieldWithPath("assigned").description("Assigned of the assessor assessment"),
             fieldWithPath("rejected").description("Rejected of the assessor assessment"),
             fieldWithPath("withdrawn").description("Wthdrawn of the assessor assessment"),
+            fieldWithPath("assessmentPeriodId").description("Assessment period id of the assessor assessment"),
     };
 }

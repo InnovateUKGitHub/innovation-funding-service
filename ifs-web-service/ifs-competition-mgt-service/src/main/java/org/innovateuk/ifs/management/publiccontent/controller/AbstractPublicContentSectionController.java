@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.publiccontent.modelpopulator.PublicContentV
 import org.innovateuk.ifs.management.publiccontent.saver.PublicContentFormSaver;
 import org.innovateuk.ifs.management.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.management.publiccontent.viewmodel.AbstractPublicContentViewModel;
+import org.innovateuk.ifs.navigation.ExcludeFromPageHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,16 +51,19 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     protected abstract PublicContentFormSaver<F> formSaver();
 
     @GetMapping("/{competitionId}")
+    @ExcludeFromPageHistory
     public String readOnly(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         return readOnly(competitionId, model, Optional.empty());
     }
 
     @GetMapping("/{competitionId}/edit")
+    @ExcludeFromPageHistory
     public String edit(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         return edit(competitionId, model, Optional.empty());
     }
 
     @PostMapping(value = "/{competitionId}/edit")
+    @ExcludeFromPageHistory
     public String markAsComplete(Model model,
                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                  @Valid @ModelAttribute(FORM_ATTR_NAME) F form,

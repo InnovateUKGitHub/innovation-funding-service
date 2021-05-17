@@ -60,7 +60,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private String earlyMetricsUrl;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
 
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
@@ -131,6 +131,10 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private ServiceResult<Void> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
 
         Application application = applicationRepository.findById(processRole.getApplicationId()).get();
+        if (application.getFeedbackReleased() == null) {
+            application.setFeedbackReleased(ZonedDateTime.now());
+            applicationRepository.save(application);
+        }
 
         NotificationTarget recipient =
                 new UserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());

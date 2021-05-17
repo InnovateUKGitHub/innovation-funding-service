@@ -1,1 +1,1 @@
-Competition 1: Notification regarding your application 1234: My Application
+Important message about your application 'My Application' for the competition 'Competition 1'

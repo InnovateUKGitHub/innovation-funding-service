@@ -1,17 +1,21 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -40,15 +44,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.CREATED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.assignedAssessmentStates;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_NOTIFY_FAILED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNONT_NOTIFY_BY_COMPETITION_WHEN_MULTIPLE_ASSESSMENT_PERIODS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
@@ -109,7 +117,13 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private AssessmentRepository assessmentRepository;
 
     @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
+
+    @Autowired
     private RoleProfileStatusRepository roleProfileStatusRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     @Override
     @Transactional
@@ -155,18 +169,26 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Override
     @Transactional
     public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
-        return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Assessment> assessments = assessmentRepository.findByActivityStateAndTargetCompetitionId(
-                    AssessmentState.CREATED,
-                    competitionId
-            );
-
-            return processAnyFailuresOrSucceed(simpleMap(assessments, this::attemptNotifyAssessorTransition))
-                    .andOnSuccess(() -> assessments.stream()
-                            .collect(Collectors.groupingBy(assessment -> assessment.getParticipant().getUser()))
-                            .forEach((user, userAssessments) -> sendNotificationToAssessor(user, competition))
-                    );
+        return getCompetition(competitionId).andOnSuccess(competition-> {
+            List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+            return assessmentPeriods.size() == 1 ?
+                    notifyAssessorsByAssessmentPeriodId(assessmentPeriods.get(0).getId()) :
+                    serviceFailure(CANNONT_NOTIFY_BY_COMPETITION_WHEN_MULTIPLE_ASSESSMENT_PERIODS);
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> notifyAssessorsByAssessmentPeriodId(long id) {
+        return find(assessmentPeriodRepository.findById(id), notFoundError(Assessment.class, id))
+                .andOnSuccess(assessmentPeriod -> {
+                    List<Assessment> assessmentsToNotify = assessmentRepository.findByTargetAssessmentPeriodIdAndAndActivityStateIn(assessmentPeriod.getId(), EnumSet.of(CREATED));
+                    return processAnyFailuresOrSucceed(simpleMap(assessmentsToNotify, this::attemptNotifyAssessorTransition))
+                            .andOnSuccess(() -> assessmentsToNotify.stream()
+                                    .collect(groupingBy(assessment -> assessment.getParticipant().getUser()))
+                                    .forEach((user, userAssessments) -> sendNotificationToAssessor(user, assessmentPeriod))
+                            );
+                });
     }
 
     @Override
@@ -217,9 +239,10 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> sendNotificationToAssessor(User user, Competition competition) {
+    private ServiceResult<Void> sendNotificationToAssessor(User user, AssessmentPeriod assessmentPeriod) {
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+        Competition competition = assessmentPeriod.getCompetition();
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
@@ -227,8 +250,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 asMap(
                         "name", user.getName(),
                         "competitionName", competition.getName(),
-                        "acceptsDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorAcceptsDate()).format(formatter),
-                        "assessmentDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorDeadlineDate()).format(formatter),
+                        "competitionId", competition.getId(),
+                        "acceptsDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorAcceptsDate(assessmentPeriod)).format(formatter),
+                        "assessmentDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorDeadlineDate(assessmentPeriod)).format(formatter),
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
         );
 
