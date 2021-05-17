@@ -129,8 +129,8 @@ public class AssessorDashboardModelPopulator {
                 .map(p -> new AssessorDashboardUpcomingCompetitionViewModel(
                         p.getCompetitionId(),
                         p.getCompetitionName(),
-                        p.getAssessorAcceptsDate().toLocalDate(),
-                        p.getAssessorDeadlineDate().toLocalDate(),
+                        p.getAssessorAcceptsDate() != null ? p.getAssessorAcceptsDate().toLocalDate() : null,
+                        p.getAssessorDeadlineDate() != null ? p.getAssessorDeadlineDate().toLocalDate() : null,
                         p.isCompetitionAlwaysOpen()
                 ))
                 .collect(toList());
