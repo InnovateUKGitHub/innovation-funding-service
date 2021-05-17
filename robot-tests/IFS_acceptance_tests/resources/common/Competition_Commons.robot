@@ -486,7 +486,9 @@ the user fills in the Public content and publishes
     # Save the dates
     the user clicks the button/link         link = Dates
     the user clicks the button/link         jQuery = button:contains("Save and review")
-    the user clicks the button/link         link = Return to public content
+    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element   link = Return to public content dates
+    Run Keyword If  '${status}' == 'PASS'   the user clicks the button/link         link = Return to public content dates
+    the user clicks the button/link         link = Back to public content
     the user should see the element         jQuery = div:contains("Dates") ~ .task-status-complete
     # Fill in the How to apply
     the user clicks the button/link         link = How to apply

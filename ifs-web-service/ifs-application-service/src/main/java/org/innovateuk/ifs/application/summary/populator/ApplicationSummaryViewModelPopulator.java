@@ -54,7 +54,7 @@ public class ApplicationSummaryViewModelPopulator {
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
         }
@@ -78,7 +78,7 @@ public class ApplicationSummaryViewModelPopulator {
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application, UserResource user) {
-        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
+        boolean feedbackReleased = application.isFeedbackReleased();
         if (competition.isKtp()) {
             return user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && feedbackReleased;
         }
@@ -88,7 +88,7 @@ public class ApplicationSummaryViewModelPopulator {
     }
 
     private boolean shouldDisplaySupporterFeedback(CompetitionResource competition, ApplicationResource application, UserResource user) {
-        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
+        boolean feedbackReleased = application.isFeedbackReleased();
         return competition.isKtp() && user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && application.isSubmitted() && feedbackReleased;
     }
 

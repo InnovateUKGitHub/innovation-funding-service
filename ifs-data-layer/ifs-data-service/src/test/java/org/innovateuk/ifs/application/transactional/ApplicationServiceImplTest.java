@@ -538,6 +538,28 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
+    public void setApplicationFundingEmailDateTime_alwaysOpen() {
+
+        comp.setAlwaysOpen(true);
+        Long applicationId = 1L;
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
+        ApplicationResource newApplication = newApplicationResource().build();
+
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
+            assertEquals(tomorrow, created.getManageFundingEmailDate());
+            assertNotNull(created.getFeedbackReleased());
+            return true;
+        }));
+        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+
+        ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
+
+        comp.setAlwaysOpen(false);
+        assertTrue(result.isSuccess());
+
+    }
+
+    @Test
     public void setApplicationFundingEmailDateTime_Failure() {
 
         Long applicationId = 1L;
