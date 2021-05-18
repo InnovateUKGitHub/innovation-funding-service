@@ -180,11 +180,21 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
-        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.withdraw(found)) {
-                return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
-            }
-            return serviceSuccess();
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
+                .andOnSuccess(found -> {
+                    Application application = found.getTarget();
+                    if (!assessmentWorkflowHandler.withdraw(found)) {
+                        return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
+                    }
+                    boolean allAssessmentsWithdrawn = application.getAssessments()
+                            .stream()
+                            .filter(assessment -> !assessment.getId().equals(assessmentId))
+                            .allMatch(assessment -> WITHDRAWN.equals(assessment.getProcessState()));
+                    if (allAssessmentsWithdrawn) {
+                        application.setAssessmentPeriod(null);
+                    }
+                    
+                    return serviceSuccess();
         });
     }
 

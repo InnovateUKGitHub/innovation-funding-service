@@ -14,12 +14,15 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
     private String displayLabel;
     private LocalDate assessmentPeriodDateFrom;
     private LocalDate assessmentPeriodDateTo;
+    private boolean competitionAlwaysOpen;
 
-    public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel, LocalDate assessmentPeriodDateFrom, LocalDate assessmentPeriodDateTo) {
+    public AssessorDashboardUpcomingCompetitionViewModel(Long competitionId, String displayLabel, LocalDate assessmentPeriodDateFrom,
+                                                         LocalDate assessmentPeriodDateTo, boolean competitionAlwaysOpen) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
     }
 
     public Long getCompetitionId() {
@@ -52,6 +55,10 @@ public class AssessorDashboardUpcomingCompetitionViewModel {
 
     public void setAssessmentPeriodDateTo(LocalDate assessmentPeriodDateTo) {
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
+    }
+
+    public boolean isCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
     }
 
     @Override

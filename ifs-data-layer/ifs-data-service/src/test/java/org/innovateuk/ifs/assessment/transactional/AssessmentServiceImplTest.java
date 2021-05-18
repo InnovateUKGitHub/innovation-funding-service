@@ -35,6 +35,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.Comparator.comparing;
@@ -394,7 +395,9 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     public void withdrawAssessment() {
         Assessment assessment = newAssessment()
                 .withProcessState(OPEN)
+                .withApplication(newApplication().build())
                 .build();
+        assessment.getTarget().setAssessments(newArrayList(assessment));
 
         when(assessmentRepository.findById(assessment.getId())).thenReturn(Optional.of(assessment));
         when(assessmentWorkflowHandler.withdraw(assessment)).thenReturn(true);

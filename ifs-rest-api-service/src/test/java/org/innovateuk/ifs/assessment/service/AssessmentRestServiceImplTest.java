@@ -180,7 +180,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     
     @Test
     public void createAssessment() {
-        AssessmentCreateResource resource = new AssessmentCreateResource(1L, 2L);
+        AssessmentCreateResource resource = new AssessmentCreateResource(1L, 2L, 3L);
         AssessmentResource assessment = new AssessmentResource();
 
         setupPostWithRestResultExpectations(assessmentRestURL, AssessmentResource.class, resource, assessment, OK);
@@ -191,7 +191,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
     @Test
     public void createAssessments() {
-        List<AssessmentCreateResource> resource = singletonList(new AssessmentCreateResource(1L, 2L));
+        List<AssessmentCreateResource> resource = singletonList(new AssessmentCreateResource(1L, 2L, 3L));
         List<AssessmentResource> assessment = singletonList(new AssessmentResource());
 
         setupPostWithRestResultExpectations(format("%s/bulk", assessmentRestURL), new ParameterizedTypeReference<List<AssessmentResource>>() {}, resource, assessment, OK);

@@ -111,7 +111,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
 
         List<AssessmentCreateResource> assessments = submittedSelectionForm.getSelectedApplications().stream()
                 .map(applicationId -> {
-                    AssessmentCreateResource a = new AssessmentCreateResource(applicationId, assessorId);
+                    AssessmentCreateResource a = new AssessmentCreateResource(applicationId, assessorId, assessmentPeriodId);
                     a.setAssessmentPeriodId(assessmentPeriodId);
                     return a;
                 })

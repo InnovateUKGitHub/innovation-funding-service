@@ -3,7 +3,7 @@ Documentation    IFS-7080  Add sort option to table: assign assessors to applica
 ...
 ...              IFS-7106 Add sort option to table: assign applications to assessors
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 *** Variables ***
@@ -65,9 +65,10 @@ Competition in Assessment: Assessor progress page Sort by: Application number
 
 Competition is Closed: Assign to application page Sort by: Total applications
     [Documentation]  IFS-7080
-    [Setup]  the user navigates to the page        ${server}/management/assessment/competition/${CLOSED_COMPETITION}/application/${CLOSED_COMPETITION_APPLICATION}/assessors
-    Given the user sorts by                        Total applications
-    When The table should be sorted by column      3
+    [Setup]  get assessment period id and set as suite variable     ${CLOSED_COMPETITION}
+    Given the user navigates to the page                            ${server}/management/assessment/competition/${CLOSED_COMPETITION}/application/${CLOSED_COMPETITION_APPLICATION}/period/${assessmentPeriodID}/assessors
+    When the user sorts by                                          Total applications
+    When The table should be sorted by column                       3
 
 Competition in Closed: Assign to application page Sort by: Assigned
     [Documentation]  IFS-7080
@@ -102,10 +103,22 @@ Competition in Closed: Assessor progress Sort by: Application number
 
 *** Keywords ***
 Custom suite setup
+    Set predefined date variables
+    Connect to database  @{database}
     The user logs-in in new browser  &{ifs_admin_user_credentials}
-    the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/application/${IN_ASSESSMENT_APPLICATION_4_NUMBER}/assessors
+    get assessment period id and set as suite variable     ${IN_ASSESSMENT_COMPETITION}
+    the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/application/${IN_ASSESSMENT_APPLICATION_4_NUMBER}/period/${assessmentPeriodID}/assessors
+
+Custom suite teardown
+    Close browser and delete emails
+    Disconnect from database
 
 The user sorts by
     [Arguments]  ${sortOption}
     the user selects the option from the drop-down menu  ${sortOption}  id = sort-by
     the user clicks the button/link                      jQuery = button:contains("Sort")
+
+get assessment period id and set as suite variable
+    [Arguments]  ${competitionID}
+    ${assessmentPeriodID} =   get assessment period using competition id   ${competitionID}
+    Set suite variable  ${assessmentPeriodID}
