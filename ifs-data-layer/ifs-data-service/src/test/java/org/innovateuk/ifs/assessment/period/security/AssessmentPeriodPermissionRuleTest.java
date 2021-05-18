@@ -65,7 +65,8 @@ public class AssessmentPeriodPermissionRuleTest extends BasePermissionRulesTest<
                 .build();
 
         when(assessmentParticipantRepository.getByAssessorId(assessorWithAcceptedInvite.getId()))
-                .thenReturn(Collections.singletonList(assessmentParticipant));
+                .thenReturn(Collections.singletonList(assessmentParticipant))
+                .thenReturn(Collections.emptyList());
 
         assertTrue(rules.userCanReadAssessmentPeriod(competitionResource, assessorWithAcceptedInvite));
         assertFalse(rules.userCanReadAssessmentPeriod(competitionResource, assessorWithoutInvite));
