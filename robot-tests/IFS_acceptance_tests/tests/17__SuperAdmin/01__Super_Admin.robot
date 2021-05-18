@@ -84,4 +84,4 @@ assessor re submits the assessment
 
 internal user filters the assessor
     the user enters text to a text field     id = assessorNameFilter   Wilson
-    the user clicks the button/link           jQuery = .govuk-button:contains("Filter")
+    the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
