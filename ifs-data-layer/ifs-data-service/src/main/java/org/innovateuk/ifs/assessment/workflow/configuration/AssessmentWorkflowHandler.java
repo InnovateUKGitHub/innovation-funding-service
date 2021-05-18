@@ -68,6 +68,10 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return fireEvent(assessmentMessage(assessment, WITHDRAW), assessment);
     }
 
+    public boolean unsubmitAssessment(Assessment assessment) {
+        return fireEvent(assessmentMessage(assessment, UNSUBMIT), assessment);
+    }
+
     public boolean submit(Assessment assessment) {
         return fireEvent(assessmentMessage(assessment, SUBMIT), assessment);
     }
