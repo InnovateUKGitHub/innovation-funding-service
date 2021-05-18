@@ -36,6 +36,8 @@ public interface AssessmentRestService {
 
     RestResult<Void> withdrawAssessment(long id);
 
+    RestResult<Void> unsubmitAssessment(long id);
+
     RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions);
 
     RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
