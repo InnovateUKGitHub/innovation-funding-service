@@ -7,6 +7,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValu
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -187,6 +189,12 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
                                             .withAssessmentClosedDate(now().plusDays(10L))
                                             .build()
                             )
+                            .withAssessmentPeriod(newAssessmentPeriod()
+                                    .withMilestones(newMilestone()
+                                            .withType(MilestoneType.ASSESSORS_NOTIFIED, MilestoneType.ASSESSMENT_CLOSED)
+                                            .withDate(now().minusDays(10L), now().plusDays(10L))
+                                            .build(2))
+                                    .build())
                             .build()
             );
 
