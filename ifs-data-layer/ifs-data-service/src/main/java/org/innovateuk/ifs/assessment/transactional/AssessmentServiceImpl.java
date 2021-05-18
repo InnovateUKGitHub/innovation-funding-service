@@ -6,14 +6,14 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -186,6 +186,21 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             }
             return serviceSuccess();
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> unsubmitAssessment(long assessmentId) {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.unsubmitAssessment(found) || isAssessmentClosed(found)) {
+                return serviceFailure(ASSESSMENT_UNSUBMIT_FAILED);
+            }
+            return serviceSuccess();
+        });
+    }
+
+    private boolean isAssessmentClosed(Assessment assessment) {
+        return assessment.getTarget().getCompetition().isAssessmentClosed();
     }
 
     @Override

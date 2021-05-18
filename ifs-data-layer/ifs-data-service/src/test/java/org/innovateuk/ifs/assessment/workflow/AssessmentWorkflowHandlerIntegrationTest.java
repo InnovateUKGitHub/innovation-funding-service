@@ -124,6 +124,11 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
+    public void unsubmitAssessment_submittedToReadyToSubmit() {
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.unsubmitAssessment(assessment), setupCompleteAssessment(SUBMITTED), READY_TO_SUBMIT);
+    }
+
+    @Test
     public void feedback_openToOpen() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupIncompleteAssessment(OPEN), OPEN);
     }
