@@ -48,6 +48,10 @@ public class ManageAssessmentsViewModel {
         this.pagination = new Pagination(assessmentPeriods);
     }
 
+    public boolean hasAssessmentPeriod(){
+        return assessmentPeriods == null || assessmentPeriods.size() == 0;
+    }
+
     public long getCompetitionId() {
         return competitionId;
     }
