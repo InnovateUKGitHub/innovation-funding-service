@@ -24,5 +24,5 @@ public interface DocumentsRestService {
 
     RestResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision);
 
-    RestResult<Void> resetAllDocuments(long projectId, long documentConfigId);
+    RestResult<Void> resetAllDocuments(long projectId);
 }

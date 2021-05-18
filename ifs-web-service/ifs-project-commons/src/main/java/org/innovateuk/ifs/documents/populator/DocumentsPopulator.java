@@ -61,22 +61,14 @@ public class DocumentsPopulator {
         return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement());
     }
 
-    public ResetDocumentsViewModel resetAllDocuments(long projectId, long loggedInUserId, Long documentConfigId) {
+    public ResetDocumentsViewModel resetAllDocuments(long projectId, long loggedInUserId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-
-        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetition(project.getCompetition()).getCompetitionDocuments();
-
-        CompetitionDocumentResource configuredProjectDocument =
-                simpleFindAny(configuredProjectDocuments,
-                        projectDocumentResource -> projectDocumentResource.getId().equals(documentConfigId))
-                        .get();
 
         return new ResetDocumentsViewModel(
                 project.getId(),
                 project.getCompetition(),
                 project.getName(),
                 project.getApplication(),
-                configuredProjectDocument.getId(),
                 isProjectManager(loggedInUserId, projectId),
                 project.getProjectState().isActive());
     }
