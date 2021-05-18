@@ -301,6 +301,31 @@
     </div>
 </th:block>
 
+<!-- Super admin user - Reset project documents -->
+<div th:fragment="modal-reset-grant-offer-letter">
+    <div class="modal-reset-documents" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+
+        <form th:action="'#'" method="post" novalidate="novalidate">
+            <th:block th:insert="fragments/modals :: modal-reset-documents-content" />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <div>
+                <button class="govuk-button"
+                        type="submit">
+                    Reset documents
+                </button>
+                <button type="button" class="js-close button-clear">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Super admin user - reset project documents confirmation content for modal and non-js page ======= -->
+<div th:fragment="modal-reset-documents-content">
+    <h2 class="govuk-heading-m govuk-!-margin-0">Are you sure you want to reset the project documents for this project?</h2>
+    <p class="govuk-body">TBA</p>
+</div>
+
 <th:block th:fragment="modal-confirm-grant-offer-letter">
     <div class="modal-confirm-grant-offer-letter" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />

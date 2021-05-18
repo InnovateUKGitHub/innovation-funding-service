@@ -52,5 +52,11 @@ public class DocumentsRestServiceImpl extends BaseRestService implements Documen
         String url = String.format("%s/%s/document/config/%s/decision", projectRestURL, projectId, documentConfigId);
         return postWithRestResult(url, decision, Void.class);
     }
+
+    @Override
+    public RestResult<Void> resetAllDocuments(long projectId, long documentConfigId) {
+        String url = String.format("%s/%s/document/config/%s/reset", projectRestURL, projectId, documentConfigId);
+        return postWithRestResult(url);
+    }
 }
 

@@ -57,6 +57,25 @@ public class DocumentsController {
         return "project/documents-all";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_DOCUMENTS_SECTION')")
+    @GetMapping("/config/{documentConfigId}/reset")
+    public String resetAllDocuments(@PathVariable("projectId") long projectId,
+                                    @PathVariable("documentConfigId") long documentConfigId,
+                                    Model model,
+                                    UserResource loggedInUser) {
+        model.addAttribute("model", populator.resetAllDocuments(projectId, loggedInUser.getId(), documentConfigId));
+        return "project/documents-all-reset";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_DOCUMENTS_SECTION')")
+    @PostMapping("/config/{documentConfigId}/reset")
+    public String resetAllDocuments(@PathVariable("projectId") long projectId,
+                                    @PathVariable("documentConfigId") long documentConfigId,
+                                    UserResource loggedInUser) {
+        documentsRestService.resetAllDocuments(projectId, documentConfigId);
+        return "project/documents-all-reset";
+    }
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/config/{documentConfigId}")
     public String viewDocument(@PathVariable("projectId") long projectId,
