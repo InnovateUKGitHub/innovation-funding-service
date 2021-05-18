@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <!--/*@thymesVar id="assessmentPeriods" type="java.util.List<org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodViewModel>"*/-->
-    <th:block th:fragment="choose-period(assessmentPeriods)">
-        <div th:if="${assessmentPeriods.size() < 6}" class="govuk-radios">
-            <div th:each="assessmentPeriod, index : ${assessmentPeriods}" class="govuk-radios__item">
-                <input th:id="${'assessment-period-' + index.index}"
-                       class="govuk-radios__input"
-                       th:value="${assessmentPeriod.assessmentPeriodId}"
-                       type="radio"
-                       name="assessmentPeriodId"
-                       required="required">
-                <label th:for="${'assessment-period-' + index.index}" class="govuk-label govuk-radios__label">
-                    <strong>Assessment period <th:block th:text="${index.index + 1}" /></strong>
-                    <br/>
-                    <th:block th:text="${assessmentPeriod.displayName}" />
-                </label>
+    <th:block th:fragment="choose-period(assessmentPeriods, form)">
+        <legend class="govuk-fieldset__legend govuk-visually-hidden" id="assessmentPeriodId">
+            <span class="govuk-fieldset__heading">Choose an assessment period</span>
+        </legend>
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.*}')} ? 'govuk-form-group--error'">
+            <div th:if="${assessmentPeriods.size() < 6}" class="govuk-radios">
+                <div th:each="assessmentPeriod, index : ${assessmentPeriods}" class="govuk-radios__item">
+                    <input th:id="${'assessment-period-' + index.index}"
+                           class="govuk-radios__input"
+                           th:value="${assessmentPeriod.assessmentPeriodId}"
+                           th:field="*{assessmentPeriodId}"
+                           type="radio"
+                           name="assessmentPeriodId"
+                           required="required">
+                    <label th:for="${'assessment-period-' + index.index}" class="govuk-label govuk-radios__label">
+                        <strong>Assessment period <th:block th:text="${index.index + 1}" /></strong>
+                        <br/>
+                        <th:block th:text="${assessmentPeriod.displayName}" />
+                    </label>
+                </div>
             </div>
-        </div>
-        <div class="govuk-input--width-35">
-            <select name="assessmentPeriodId" class="govuk-select" th:if="${assessmentPeriods.size() >= 6}" required="required">
-                <option value="" selected="selected">Please select...</option>
-                <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
-                        th:value="${assessmentPeriod.assessmentPeriodId}"
-                        th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"/>
-        </select>
+            <div class="govuk-input--width-35">
+                <select name="assessmentPeriodId" class="govuk-select" th:if="${assessmentPeriods.size() >= 6}" required="required">
+                    <option value="" selected="selected">Please select...</option>
+                    <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
+                            th:value="${assessmentPeriod.assessmentPeriodId}"
+                            th:field="*{assessmentPeriodId}"
+                            th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"/>
+                </select>
+            </div>
         </div>
         <button class="govuk-button govuk-!-margin-top-6">Save and continue</button>
     </th:block>
