@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
-import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
@@ -34,7 +33,6 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static com.google.common.collect.Lists.newArrayList;
 
 
 public class CompetitionParticipantControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionParticipantController> {
@@ -180,6 +178,48 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         assertEquals(0, participants.size());
     }
 
+    @Test
+    public void getParticipantsWithAssessmentPeriod() {
+        Competition competition1 = buildInAssessmentCompetitionWithAssessmentPeriods();
+        Competition competition2 = buildInAssessmentCompetitionWithAssessmentPeriods();
+
+        AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, SENT, ACCEPTED);
+        AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, SENT, ACCEPTED);
+
+        assessmentParticipantRepository.saveAll(newArrayList(
+                expectedParticipant1,
+                expectedParticipant2
+        ));
+
+        flushAndClearSession();
+
+        List<CompetitionParticipantResource> participants = controller.getAssessorParticipantsWithAssessmentPeriod(
+                getPaulPlum().getId())
+                .getSuccess();
+
+        assertEquals(4, participants.size());
+
+        assertEquals(expectedParticipant1.getProcess().getId(), participants.get(0).getCompetitionId());
+        assertEquals(getPaulPlum().getId(), participants.get(0).getUserId());
+        assertEquals(0L, participants.get(0).getSubmittedAssessments());
+        assertEquals(0L, participants.get(0).getTotalAssessments());
+
+        assertEquals(expectedParticipant1.getProcess().getId(), participants.get(1).getCompetitionId());
+        assertEquals(getPaulPlum().getId(), participants.get(1).getUserId());
+        assertEquals(0L, participants.get(1).getSubmittedAssessments());
+        assertEquals(0L, participants.get(1).getTotalAssessments());
+
+        assertEquals(expectedParticipant2.getProcess().getId(), participants.get(2).getCompetitionId());
+        assertEquals(getPaulPlum().getId(), participants.get(1).getUserId());
+        assertEquals(0L, participants.get(2).getSubmittedAssessments());
+        assertEquals(0L, participants.get(2).getTotalAssessments());
+
+        assertEquals(expectedParticipant2.getProcess().getId(), participants.get(3).getCompetitionId());
+        assertEquals(getPaulPlum().getId(), participants.get(3).getUserId());
+        assertEquals(0L, participants.get(3).getSubmittedAssessments());
+        assertEquals(0L, participants.get(3).getTotalAssessments());
+    }
+
     private Competition buildInAssessmentCompetition() {
         Competition competition = newCompetition()
                 .with(id(null))
@@ -189,6 +229,25 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                                         newArrayList(newMilestone().withType(ASSESSORS_NOTIFIED)
                                                 .build()))
                                 .build()))
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withAssessorsNotifiedDate(now())
+                .withAlwaysOpen(false)
+                .build();
+
+        competitionRepository.save(competition);
+
+        return competition;
+    }
+
+    private Competition buildInAssessmentCompetitionWithAssessmentPeriods() {
+        Competition competition = newCompetition()
+                .with(id(null))
+                .withAssessmentPeriods(newAssessmentPeriod()
+                        .withMilestones(newMilestone()
+                                .withType(ASSESSORS_NOTIFIED, ASSESSORS_NOTIFIED)
+                                .withDate(now().minusDays(1), now().minusDays(1))
+                                .build(2))
+                        .build(2))
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .withAssessorsNotifiedDate(now())
                 .withAlwaysOpen(false)
