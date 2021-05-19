@@ -235,7 +235,7 @@ Internal user makes changes to project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
     And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
-    And the user should see the element                     jQuery = td:contains("£231,244")
+    And the user should see the element                     jQuery = td:contains("£243,484")
 
 Internal user removes payment milestones
     [Documentation]   IFS-8944
@@ -243,27 +243,27 @@ Internal user removes payment milestones
     And the user clicks the button/link                      link = Edit payment milestones
     When the user removes a payment milestone
     Then the user should not see the element                 jQuery = button:contains("Milestone for month 21")
-    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("62.31%") ~ h3:contains("£165,171")
-#
-#Internal user adds payment milestones
-#    [Documentation]   IFS-8944
-#    Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-#    And the user clicks the button/link                      link = Edit payment milestones
-#    And the user clicks the button/link                      jQuery = button:contains("Open all")
-#    And the user clicks the button/link                      jQuery = button:contains("Close all")
-#    And the user clicks the button/link                      jQuery = button:contains("Add another project milestone")
-#    And the user clicks the button/link                      jQuery = div[id='accordion-finances'] div:nth-of-type(22) span:nth-of-type(4)
-#    When the user creates a new payment milestone
-#    And the user clicks the button/link                      jQuery = button:contains("Save and return to payment milestone check")
-#    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-#    Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£265,084")
-#
-#Applicant can view changes made to project finances
-#    [Documentation]  IFS-8944
-#    Given Log in as a different user                        &{becky_mason_credentials}
-#    When the user navigates to the page                     ${server}/project-setup/project/${SBRI_projectID}/finance-check
-#    And the user clicks the button/link                     link = view any changes to finances
-#    Then the user should see all project finance changes
+    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("67.84%") ~ h3:contains("£165,171")
+
+Internal user adds payment milestones
+    [Documentation]   IFS-8944
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    And the user clicks the button/link                      link = Edit payment milestones
+    And the user clicks the button/link                      jQuery = button:contains("Open all")
+    And the user clicks the button/link                      jQuery = button:contains("Close all")
+    And the user clicks the button/link                      jQuery = button:contains("Add another project milestone")
+    And the user clicks the button/link                      jQuery = div[id='accordion-finances'] div:nth-of-type(22) span:nth-of-type(4)
+    When the user creates a new payment milestone
+    And the user clicks the button/link                      jQuery = button:contains("Save and return to payment milestone check")
+    And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
+    Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£243,484")
+
+Applicant can view changes made to project finances
+    [Documentation]  IFS-8944
+    Given Log in as a different user                        &{becky_mason_credentials}
+    When the user navigates to the page                     ${server}/project-setup/project/${SBRI_projectID}/finance-check
+    And the user clicks the button/link                     link = view any changes to finances
+    Then the user should see all project finance changes
 
 *** Keywords ***
 Custom Suite Setup
@@ -414,9 +414,11 @@ the user makes changes to the payment milestones table
 
 the user makes changes to the project finances
     the user clicks the button/link     jQuery = a:contains("Edit project costs")
+    clear element text                  jQuery = div[id='accordion-finances'] div:nth-of-type(2) input[id^="procurementOverheadRows"][id$="projectCost"]
+    input text                          jQuery = div[id='accordion-finances'] div:nth-of-type(2) input[id^="procurementOverheadRows"][id$="projectCost"]   100
     the user clicks the button/link     jQuery = button:contains("Subcontracting")
     clear element text                  jQuery = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]
-    input text                          css = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]   80000
+    input text                          jQuery = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]   80000
     the user clicks the button/link     jQuery = button:contains("Other costs")
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
@@ -430,7 +432,7 @@ the user creates a new payment milestone
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="taskOrActivity"]    Task Or Activity 21
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="deliverable"]   Deliverable 21
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="successCriteria"]   Success Criteria 21
-    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) input[id^="milestones"][id$="payment"]   99913
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) input[id^="milestones"][id$="payment"]   78313
 
 the user should see all project finance changes
     the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")

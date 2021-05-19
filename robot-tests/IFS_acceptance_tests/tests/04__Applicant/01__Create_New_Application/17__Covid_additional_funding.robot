@@ -160,7 +160,7 @@ External project finance can raise a query
 
 External project finance can raise a note
     [Documentation]  IFS-7357
-    Given the user clicks the button/link   css = .eligibility-0
+    Given the user clicks the button/link   css =table.table-progress tr:nth-child(1) td:nth-child(7)
     When the user raises a note
     Then the user should see the element    jQuery = h2:contains("an eligibility note's title")
 
@@ -360,7 +360,6 @@ the user raises a query
     the user clicks the button/link                        css = .govuk-grid-column-one-half button[type = "submit"]  # Post query
 
 the user raises a note
-    the user clicks the button/link         jQuery = a:contains("Notes")
     the user should see the element         jQuery = h2:contains("Review notes")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create a new note")
     the user enters text to a text field    id = noteTitle    an eligibility note's title

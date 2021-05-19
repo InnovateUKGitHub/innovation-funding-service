@@ -688,12 +688,12 @@ Project Finance user can edit and save partner's 20% of labour costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user expands the section           Overhead costs
-    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
+    And the user clicks the button/link         jQuery = a:contains("Edit project costs")
     And the user clicks the button/link         css = [data-target = "overhead-default-percentage"] label
     Then verify percentage and total            Overhead costs  £11,886
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     And the user should see the element         jQuery = span:contains("£11,886") ~ #accordion-finances-heading-2
-    And the user should see the element              jQuery = a:contains("Edit project costs")
+    And the user should see the element         jQuery = a:contains("Edit project costs")
     Then verify total costs of project          £187,716
 
 Project Finance user can edit and save Partner's no overhead costs option
@@ -714,14 +714,14 @@ Project Finance user can edit and save in Partner's calculate overheads option
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     Then the user should see the element        jQuery = span:contains("0%") ~ #accordion-finances-heading-2
     And the user should see the element         jQuery = span:contains("0%") ~ #accordion-finances-heading-2
-    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
+    And the user clicks the button/link         jQuery = a:contains("Edit project costs")
     And the user enters text to a text field    id = overhead.totalSpreadsheet  ${empty}
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
 
 Project Finance user can enter overhead values for partner manually
     [Documentation]     INFUND-7577
     [Tags]
-    And the user clicks the button/link              jQuery = a:contains("Edit project costs")
+    And the user clicks the button/link         jQuery = a:contains("Edit project costs")
     And the user enters text to a text field    id = overhead.totalSpreadsheet  1954
     Then the user clicks the button/link        css = .govuk-button[name = "save-eligibility"]
     Then verify percentage and total            Overhead costs  £1,954
