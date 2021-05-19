@@ -241,29 +241,16 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return serviceSuccess();
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> resetDocuments(long projectId) {
-
-        return find(getProject(projectId))
-                .andOnSuccess(project -> validateProjectActive(project)
-                .andOnSuccess(() -> resetDocument(project))
-                );
-    }
-
-    private ServiceResult<Void> resetDocument(Project project) {
-        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
-
-        projectDocuments.forEach(document -> document.setStatus(SUBMITTED));
-        projectRepository.save(project);
-
-        return serviceSuccess();
-    }
-
-
-
     private ServiceResult<Void> applyDocumentDecision(Project project, long documentConfigId, ProjectDocumentDecision decision) {
         ProjectDocument projectDocument = getProjectDocument(project, documentConfigId);
+        if (APPROVED.equals(projectDocument.getStatus())) { // and project is not complete
+            projectDocument.setStatus(REJECTED);
+            projectDocument.setStatusComments(decision.getRejectionReason());
+            projectDocumentRepository.save(projectDocument);
+
+            return serviceSuccess();
+        }
+
         if (SUBMITTED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
@@ -272,9 +259,9 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 setOtherDocsApproved(project);
             }
             return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
         }
+
+        return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
     }
 
     private void setOtherDocsApproved(Project project) {
