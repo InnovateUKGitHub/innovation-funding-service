@@ -198,7 +198,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         3,
                         50,
                         false,
-                        1
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -294,7 +294,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         5,
                         16,
                         false,
-                        1
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -367,7 +367,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         0,
                         100,
                         false,
-                        1
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -575,7 +575,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         0,
                         100,
                         false,
-                        1
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
