@@ -241,6 +241,25 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return serviceSuccess();
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetDocuments(long projectId, DocumentStatus status) {
+
+        return find(getProject(projectId)
+                .andOnSuccess(project -> validateProjectActive(project)
+                        .andOnSuccess(() -> resetDocument(project))
+                });
+    }
+
+    private ServiceResult<Void> resetDocument(Project project) {
+        projectDocumentRepository.findAllByProjectId(project.getId())
+                .forEach(document -> document.setStatus(DocumentStatus.SUBMITTED));
+
+        return serviceSuccess();
+    }
+
+
+
     private ServiceResult<Void> applyDocumentDecision(Project project, long documentConfigId, ProjectDocumentDecision decision) {
         ProjectDocument projectDocument = getProjectDocument(project, documentConfigId);
         if (SUBMITTED.equals(projectDocument.getStatus())) {

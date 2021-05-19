@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -35,4 +36,6 @@ public interface DocumentsService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'REVIEW_DOCUMENT')")
     ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision);
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'RESET_DOCUMENT')")
+    ServiceResult<Void> resetDocuments(long projectId, DocumentStatus status);
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.transactional.DocumentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,12 @@ public class DocumentsController {
                                            @PathVariable("documentConfigId") long documentConfigId) throws IOException {
 
         return documentsService.deleteDocument(projectId, documentConfigId).toDeleteResponse();
+    }
+
+    @PostMapping(value = "/all/reset", produces = "application/json")
+    public RestResult<Void> resetDocuments(@PathVariable("projectId") long projectId,
+                                           @RequestBody final DocumentStatus status) {
+        return documentsService.resetDocuments(projectId, status).toDeleteResponse();
     }
 
     @PostMapping("/config/{documentConfigId}/submit")

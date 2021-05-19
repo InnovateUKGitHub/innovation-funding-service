@@ -71,7 +71,8 @@ public class DocumentsController {
     public String resetAllDocuments(@PathVariable("projectId") long projectId,
                                     UserResource loggedInUser) {
         documentsRestService.resetAllDocuments(projectId);
-        return "project/documents-all-reset";
+
+        return redirectToViewAllDocumentsPage(projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
@@ -133,5 +134,9 @@ public class DocumentsController {
 
     private String redirectToViewDocumentPage(long projectId, long documentConfigId) {
         return format("redirect:/project/%s/document/config/%s", projectId, documentConfigId);
+    }
+
+    private String redirectToViewAllDocumentsPage(long projectId) {
+        return format("redirect:/project/%s/document/all", projectId);
     }
 }
