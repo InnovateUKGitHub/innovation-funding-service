@@ -398,10 +398,8 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
     }
 
-
     @Override
     protected DocumentsService supplyServiceUnderTest() {
-        return  new DocumentsServiceImpl();
+        return new DocumentsServiceImpl();
     }
 }
-

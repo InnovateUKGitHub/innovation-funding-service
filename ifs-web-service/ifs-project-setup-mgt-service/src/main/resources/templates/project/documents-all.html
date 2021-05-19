@@ -6,7 +6,6 @@
 <body class="govuk-template__body competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-<th:block th:insert="fragments/modals :: modal-reset-documents" />
 
 <div class="govuk-width-container">
 
@@ -15,23 +14,6 @@
 
 	<main class="govuk-main-wrapper" id="main-content" role="main">
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
-
-<!--        <th:block th:if="${model.isSuperAdmin}">-->
-<!--            <th:block th:if="${model.isShowResetGrantOfferLetterButton()}">-->
-<!--                <th:block th:if="${model.grantOfferLetterFileContentAvailable}">-->
-                    <a class="govuk-button govuk-!-margin-bottom-1"
-                       data-js-modal="modal-reset-documents"
-                       th:href="${removeActionNonJs}"
-                       th:attr="data-modal-form-action=${removeAction}"
-                       th:with="removeAction=@{/project/{id}/document/all/reset(id=${model.projectId})},
-                                removeActionNonJs=@{/project/{id}/document/all/reset(id=${model.projectId})}">
-                        Reset documents
-                    </a>
-<!--                </th:block>-->
-<!--            </th:block>-->
-<!--        </th:block>-->
-
-
 	    <p class="govuk-body govuk-!-margin-top-6">Please review the documents uploaded by the Project Manager.</p>
 	    <p class="govuk-body govuk-!-margin-top-6">You must accept or reject these based on Innovate UK's requirements.</p>
 
