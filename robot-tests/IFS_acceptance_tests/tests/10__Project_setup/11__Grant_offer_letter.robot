@@ -64,7 +64,6 @@ Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${HighSpeedProjectName}       High-speed rail and its effects on water quality
-${NanoProjectName}            Energy saver- nano tech
 
 *** Test Cases ***
 Applicant able to update project location until GOL not generated
@@ -533,16 +532,15 @@ IFS Expert user can reset GOL in project setup
     [Setup]  Requesting Project ID of this Project
     Given Log in as a different user                    &{ifs_expert_user_credentials}
     When the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
-    And the user resets the GOL
+    And the expert user resets the GOL
     Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
 
-IFS Expert user can reject and re-upload GOL
+External user can re-upload GOL after it has been rejected by expert user
     [Documentation]  IFS-9611
-    [Setup]  Requesting Project ID of the GOL Project
-    Given the IFS expert user rejects the GOL           ${GOLProjectID}
-    And the user resets the GOL
-    And internal user uploads the GOL                   ${GOLProjectID}
-    Then the user should not see the element            jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
+    [Setup]  Requesting Project ID of this Project
+    Given Log in as a different user                     &{Research_lead_applicant_credentials}
+    When the external user uploads the GOL
+    Then the user should not see the element             jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
 
 *** Keywords ***
 the user uploads a file
@@ -554,20 +552,16 @@ Requesting Project ID of this Project
     ${HighSpeedProjectID} =  get project id by name   ${HighSpeedProjectName}
     Set suite variable    ${HighSpeedProjectID}
 
-Requesting Project ID of the GOL Project
-    ${GOLProjectID} =  get project id by name   ${NanoProjectName}
-    Set suite variable    ${GOLProjectID}
-
-the user resets the GOL
+the expert user resets the GOL
     the user clicks the button/link         jQuery = a:contains("Reset grant offer letter")
     the user clicks the button/link         jQuery = button:contains("Reset grant offer letter")
 
-the expert user uploads the GOL
-     [Arguments]  ${projectID}
-     the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
-     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
-     the user clicks the button/link       id = submit-gol-for-review
+the external user uploads the GOL
+    the user navigates to the page     ${server}/project-setup/project/${HighSpeedProjectID}/grant-offer-letter/send
+    the user uploads the file          grantOfferLetter  ${gol_pdf}
+    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
 
 the IFS expert user rejects the GOL
     [Arguments]  ${projectID}
