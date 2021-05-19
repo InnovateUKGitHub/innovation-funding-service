@@ -68,6 +68,10 @@ public interface AssessmentService {
     @SecuredBySpring(value = "WITHDRAW_ASSESSOR", description = "Comp Admins can withdraw an application from an assessor")
     ServiceResult<Void> withdrawAssessment(long assessmentId);
 
+    @PreAuthorize("hasAnyAuthority('super_admin_user')")
+    @SecuredBySpring(value = "UNSUBMIT_ASSESSMENT", description = "Super admin can unsubmit an assessor's assessment")
+    ServiceResult<Void> unsubmitAssessment(long assessmentId);
+
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(long assessmentId);
 

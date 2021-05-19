@@ -13,7 +13,10 @@ import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressUnsubmitViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
+import org.innovateuk.ifs.user.resource.Authority;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -67,9 +70,17 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                                    @RequestParam(value = "filterSearch", defaultValue = "") String filter,
                                    Model model,
                                    HttpServletRequest request,
-                                   HttpServletResponse response) {
+                                   HttpServletResponse response,
+                                   UserResource loggedInUser) {
         updateSelectionForm(request, response, competitionId, assessorId, selectionForm, filter);
-        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(competitionId, assessorId, assessmentPeriodId, page - 1, sort, filter));
+        model.addAttribute("model", assessorAssessmentProgressModelPopulator.populateModel(
+                competitionId,
+                assessorId,
+                assessmentPeriodId,
+                page - 1,
+                sort,
+                filter,
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER)));
         return "competition/assessor-progress";
     }
 
@@ -100,7 +111,7 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
 
         List<AssessmentCreateResource> assessments = submittedSelectionForm.getSelectedApplications().stream()
                 .map(applicationId -> {
-                    AssessmentCreateResource a = new AssessmentCreateResource(applicationId, assessorId);
+                    AssessmentCreateResource a = new AssessmentCreateResource(applicationId, assessorId, assessmentPeriodId);
                     a.setAssessmentPeriodId(assessmentPeriodId);
                     return a;
                 })
@@ -132,6 +143,28 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
                 assessmentPeriodId
         ));
         return "competition/assessor-progress-remove-confirm";
+    }
+
+    @PostMapping("/unsubmit/{assessmentId}")
+    public String unsubmitAssessment(@PathVariable long competitionId,
+                                     @PathVariable long assessorId,
+                                     @PathVariable long assessmentId) {
+        assessmentRestService.unsubmitAssessment(assessmentId).getSuccess();
+        return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
+    }
+
+    @GetMapping(value = "/unsubmit/{assessmentId}/confirm")
+    public String unsubmitAssessmentConfirm(
+            Model model,
+            @PathVariable long competitionId,
+            @PathVariable long assessorId,
+            @PathVariable long assessmentId) {
+        model.addAttribute("model", new AssessorAssessmentProgressUnsubmitViewModel(
+                competitionId,
+                assessorId,
+                assessmentId
+        ));
+        return "competition/assessor-progress-unsubmit-assessment-confirm";
     }
 
     @PostMapping(value = "/period/{assessmentPeriodId}", params = {"selectionId"})

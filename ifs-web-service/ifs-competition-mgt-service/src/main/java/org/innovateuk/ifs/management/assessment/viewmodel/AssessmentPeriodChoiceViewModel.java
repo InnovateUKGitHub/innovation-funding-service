@@ -6,12 +6,12 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class AssessorAssessmentPeriodChoiceViewModel {
+public class AssessmentPeriodChoiceViewModel {
     private final long competitionId;
     private final String competitionName;
     private final List<AssessmentPeriodViewModel> assessmentPeriods;
 
-    public AssessorAssessmentPeriodChoiceViewModel(long competitionId, String competitionName, List<AssessmentPeriodViewModel> assessmentPeriods) {
+    public AssessmentPeriodChoiceViewModel(long competitionId, String competitionName, List<AssessmentPeriodViewModel> assessmentPeriods) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.assessmentPeriods = assessmentPeriods;

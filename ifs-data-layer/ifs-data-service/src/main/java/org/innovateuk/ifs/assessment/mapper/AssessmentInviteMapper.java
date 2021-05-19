@@ -27,6 +27,7 @@ public abstract class AssessmentInviteMapper extends BaseMapper<AssessmentInvite
             @Mapping(source = "target.competitionAssessmentConfig.assessorPay", target = "assessorPay"),
             @Mapping(source = "target.assessorBriefingDate", target = "briefingDate"),
             @Mapping(source = "innovationAreaOrNull", target = "innovationArea"),
+            @Mapping(source = "target.alwaysOpen", target = "competitionAlwaysOpen"),
     })
     @Override
     public abstract CompetitionInviteResource mapToResource(AssessmentInvite domain);

@@ -40,4 +40,18 @@ public class CompetitionParticipantControllerTest extends BaseControllerMockMVCT
 
         verify(competitionParticipantService, times(1)).getCompetitionAssessors(1L);
     }
+
+    @Test
+    public void getParticipantsWithAssessmentPeriod() throws Exception {
+        List<CompetitionParticipantResource> competitionParticipants = newCompetitionParticipantResource()
+                .build(2);
+
+        when(competitionParticipantService.getCompetitionAssessorsWithAssessmentPeriod(1L)).thenReturn(serviceSuccess(competitionParticipants));
+
+        mockMvc.perform(get("/competitionparticipant/with-assessment-period/user/{userId}", 1L).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(toJson(competitionParticipants)))
+                .andExpect(status().isOk());
+
+        verify(competitionParticipantService, times(1)).getCompetitionAssessorsWithAssessmentPeriod(1L);
+    }
 }
