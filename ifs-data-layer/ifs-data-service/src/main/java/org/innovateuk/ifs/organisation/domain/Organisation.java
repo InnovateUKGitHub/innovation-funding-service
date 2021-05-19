@@ -50,7 +50,7 @@ public class Organisation {
     @OneToMany(mappedBy = "organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
-    @Column(name = "date_of_incorporation")
+    @Column(name = "date_of_incorporation", columnDefinition = "datetime")
     private LocalDate dateOfIncorporation;
 
     @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,

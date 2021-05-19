@@ -34,7 +34,7 @@ public class Profile extends AuditableEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @Column(name = "skills_areas")
+    @Column(name = "skills_areas", columnDefinition = "LONGTEXT")
     private String skillsAreas;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
