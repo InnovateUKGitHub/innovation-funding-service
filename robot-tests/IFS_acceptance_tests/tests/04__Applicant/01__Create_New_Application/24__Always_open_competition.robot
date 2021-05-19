@@ -55,7 +55,7 @@ the user fills in milestones without a submission date
     When the user completes milestones section
     Then the user should see the element             jQuery = td:contains("2. Submission date") + td:contains("-")+td:contains("-")+td:contains("None")
     And the user should see the element              jQuery = .panel:contains("Assessment dates are set after the competition has opened.")
-    And the user should see the element              jQuery = .panel:contains("Do not complete the 'Submission date' milestone when created open-ended competitions.")
+    And the user should see the element              jQuery = .panel:contains("Do not complete the 'Submission date' milestone when creating open-ended competitions.")
 
 the user should not see submission deadline date in public content dates
     [Documentation]  IFS-8848
