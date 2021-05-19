@@ -29,13 +29,14 @@
                     </div>
                 </div>
                 <div class="govuk-input--width-35">
-                    <select name="assessmentPeriodId" class="govuk-select" th:if="${assessmentPeriods.size() >= 6}" required="required">
+                    <select name="assessmentPeriodId" class="govuk-select" required="required"
+                            th:if="${assessmentPeriods.size() >= 6}"
+                            th:attr="data-required-errormessage=#{validation.assessmentPeriodForm.assessmentPeriodId.required}">
                         <option value="" selected="selected">Please select...</option>
                         <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
                                 th:value="${assessmentPeriod.assessmentPeriodId}"
                                 th:field="*{assessmentPeriodId}"
-                                th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"
-                                th:attr="data-required-errormessage=#{validation.assessmentPeriodForm.assessmentPeriodId.required}"/>
+                                th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"/>
                     </select>
                 </div>
             </fieldset>
