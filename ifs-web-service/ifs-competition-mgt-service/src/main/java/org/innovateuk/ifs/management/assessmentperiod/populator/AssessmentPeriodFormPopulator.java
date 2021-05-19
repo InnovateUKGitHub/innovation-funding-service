@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,7 +49,9 @@ public class AssessmentPeriodFormPopulator {
                 })
                 .collect(Collectors.toList());
         if (addAssessment){
-            assessmentPeriods.add(newAssessmentPeriodForm());
+            AssessmentPeriodForm newAssessmentPeriodForm = newAssessmentPeriodForm();
+            newAssessmentPeriodForm.setIndex((int)assessmentPeriodResources.getTotalElements() + 1);
+            assessmentPeriods.add(newAssessmentPeriodForm);
         }
         ManageAssessmentPeriodsForm form = new ManageAssessmentPeriodsForm();
         form.setAssessmentPeriods(assessmentPeriods);

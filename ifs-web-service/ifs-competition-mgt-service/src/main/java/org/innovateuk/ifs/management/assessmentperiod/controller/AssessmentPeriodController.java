@@ -117,8 +117,6 @@ public class AssessmentPeriodController {
                                       @RequestParam(value = "page", defaultValue = "1") int page,
                                       Model model,
                                       @PathVariable long competitionId) {
-        // TODO remove
-        saver.createNewAssessmentPeriod(competitionId);
         Supplier<String> successView = () -> redirectToLastPageToAddAssessmentPeriod(competitionId);
         return submit(form, validationHandler, page, model, competitionId, successView);
     }
