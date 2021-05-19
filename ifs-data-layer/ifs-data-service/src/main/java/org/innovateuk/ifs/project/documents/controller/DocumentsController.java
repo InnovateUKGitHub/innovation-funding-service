@@ -73,6 +73,11 @@ public class DocumentsController {
         return documentsService.deleteDocument(projectId, documentConfigId).toDeleteResponse();
     }
 
+    @PostMapping(value = "/all/reset", produces = "application/json")
+    public RestResult<Void> resetDocuments(@PathVariable("projectId") long projectId) {
+        return documentsService.resetDocuments(projectId).toPostResponse();
+    }
+
     @PostMapping("/config/{documentConfigId}/submit")
     public RestResult<Void> submitDocument(@PathVariable("projectId") long projectId,
                                            @PathVariable("documentConfigId") long documentConfigId) {

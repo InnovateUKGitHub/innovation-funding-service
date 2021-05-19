@@ -34,4 +34,7 @@ public interface DocumentsService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'REVIEW_DOCUMENT')")
     ServiceResult<Void> documentDecision(long projectId, long documentConfigId, ProjectDocumentDecision decision);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'RESET_DOCUMENT')")
+    ServiceResult<Void> resetDocuments(long projectId);
 }

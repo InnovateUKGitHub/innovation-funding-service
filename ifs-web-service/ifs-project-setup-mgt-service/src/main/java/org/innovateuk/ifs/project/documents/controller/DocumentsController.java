@@ -57,6 +57,24 @@ public class DocumentsController {
         return "project/documents-all";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_DOCUMENTS_SECTION')")
+    @GetMapping("/all/reset")
+    public String resetAllDocuments(@PathVariable("projectId") long projectId,
+                                    Model model,
+                                    UserResource loggedInUser) {
+        model.addAttribute("model", populator.resetAllDocuments(projectId, loggedInUser.getId()));
+        return "project/documents-all-reset";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_DOCUMENTS_SECTION')")
+    @PostMapping("/all/reset")
+    public String resetAllDocuments(@PathVariable("projectId") long projectId,
+                                    UserResource loggedInUser) {
+        documentsRestService.resetAllDocuments(projectId);
+
+        return redirectToViewAllDocumentsPage(projectId);
+    }
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_DOCUMENTS_SECTION')")
     @GetMapping("/config/{documentConfigId}")
     public String viewDocument(@PathVariable("projectId") long projectId,
@@ -116,5 +134,9 @@ public class DocumentsController {
 
     private String redirectToViewDocumentPage(long projectId, long documentConfigId) {
         return format("redirect:/project/%s/document/config/%s", projectId, documentConfigId);
+    }
+
+    private String redirectToViewAllDocumentsPage(long projectId) {
+        return format("redirect:/project/%s/document/all", projectId);
     }
 }

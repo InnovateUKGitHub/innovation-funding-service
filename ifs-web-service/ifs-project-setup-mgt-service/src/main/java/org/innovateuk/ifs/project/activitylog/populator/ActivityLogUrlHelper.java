@@ -34,6 +34,8 @@ public class ActivityLogUrlHelper {
             case DOCUMENT_APPROVED:
             case DOCUMENT_REJECTED:
                 return format("/project-setup-management/project/%d/document/config/%d", project.getId(), log.getDocumentConfig());
+            case DOCUMENTS_RESET:
+                return format("/project-setup-management/project/%d/document/all", project.getId());
             case MONITORING_OFFICER_ASSIGNED:
                 return format("/project-setup-management/project/%d/monitoring-officer", project.getId());
             case BANK_DETAILS_SUBMITTED:
