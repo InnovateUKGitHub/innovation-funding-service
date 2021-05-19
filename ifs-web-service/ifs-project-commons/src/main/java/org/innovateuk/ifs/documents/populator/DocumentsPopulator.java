@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.documents.viewModel.AllDocumentsViewModel;
 import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
-import org.innovateuk.ifs.documents.viewModel.ResetDocumentsViewModel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
@@ -59,18 +58,6 @@ public class DocumentsPopulator {
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
         return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement());
-    }
-
-    public ResetDocumentsViewModel resetAllDocuments(long projectId, long loggedInUserId) {
-        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-
-        return new ResetDocumentsViewModel(
-                project.getId(),
-                project.getCompetition(),
-                project.getName(),
-                project.getApplication(),
-                isProjectManager(loggedInUserId, projectId),
-                project.getProjectState().isActive());
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {

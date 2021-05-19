@@ -99,15 +99,6 @@ public class SetupSectionInternalUser {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessResetDocumentsSection(UserResource userResource) {
-
-        if (hasSuperAdminAuthority(userResource)) {
-            return ACCESSIBLE;
-        }
-
-        return NOT_ACCESSIBLE;
-    }
-
     public SectionAccess canAccessGrantOfferLetterSection(UserResource userResource) {
         if (!projectSetupProgressChecker.isGrantOfferLetterSent()) {
             return NOT_ACCESSIBLE;

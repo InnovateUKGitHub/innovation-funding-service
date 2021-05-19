@@ -54,12 +54,6 @@ public class DocumentsControllerSecurityTest extends BaseProjectSetupControllerS
                 permissionRules -> permissionRules.internalAdminUserCanApproveDocuments(eq(projectCompositeId), isA(UserResource.class)));
     }
 
-    @Test
-    public void resetAllDocuments() {
-        assertSecured(() -> classUnderTest.resetAllDocuments(projectCompositeId.id(), null, null),
-                permissionRules -> permissionRules.superAdminUserCanResetDocumentsSection(eq(projectCompositeId), isA(UserResource.class)));
-    }
-
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
         return permissionRules -> {

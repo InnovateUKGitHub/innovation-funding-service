@@ -55,11 +55,6 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isInternalAdmin(user) || hasIFSAdminAuthority(user);
     }
 
-    @PermissionRule(value = "RESET_DOCUMENT", description = "Super admin user can reset document")
-    public boolean superAdminCanResetDocument(ProjectResource project, UserResource user) {
-        return hasSuperAdminAuthority(user);
-    }
-
     private boolean userIsStakeholderOnProject(ProjectResource project, UserResource user) {
         return userIsStakeholderOnCompetitionForProject(project.getId(), user.getId());
     }
