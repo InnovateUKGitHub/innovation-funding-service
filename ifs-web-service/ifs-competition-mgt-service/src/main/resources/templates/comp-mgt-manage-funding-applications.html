@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage funding applications',hasFormErrors=${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage funding decisions and notifications',hasFormErrors=${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" />
 </head>
 
 <body class="govuk-template__body competition-management">
@@ -18,7 +18,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(fundingNotificationFilterForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage funding applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage funding decisions and notifications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
         <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
         <form method="GET" th:object="${fundingNotificationFilterForm}">

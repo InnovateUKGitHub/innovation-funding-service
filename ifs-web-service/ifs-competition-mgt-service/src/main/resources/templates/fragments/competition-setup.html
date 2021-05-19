@@ -148,10 +148,8 @@
                 <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
-
     </div>
 </div>
-
 
 <!-- ======== Comp admin - remove assigned assessor confirmation content for modal and non-js page ======= -->
 <div th:fragment="comp-setup-remove-assigned-assessor-content">
@@ -189,6 +187,28 @@
             </div>
         </form>
     </div>
+</div>
+
+<!-- ======== Super admin user - unsubmit assessment modal ======= -->
+<div th:fragment="comp-setup-unsubmit-assessment-assigned-assessor-modal">
+    <div class="unsubmit-assessment-assigned-assessor-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+
+        <form th:action="'#'" method="post" novalidate="novalidate">
+            <th:block th:insert="fragments/competition-setup :: comp-setup-unsubmit-assessment-assigned-assessor-content" />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+            <div>
+                <button class="govuk-button" type="submit">Unsubmit assessment</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ======== Super admin user - unsubmit assigned assessor assessment confirmation content for modal and non-js page ======= -->
+<div th:fragment="comp-setup-unsubmit-assessment-assigned-assessor-content">
+    <h2 class="govuk-heading-m govuk-!-margin-0">Are you sure you want to unsubmit this assessment from the application?</h2>
+    <p class="govuk-body">This will return the submitted assessment back to the assessor. This will allow the assessor to make changes to the assessment and re-submit it.</p>
 </div>
 
 <!-- ======== Comp admin - delete modal ======= -->
