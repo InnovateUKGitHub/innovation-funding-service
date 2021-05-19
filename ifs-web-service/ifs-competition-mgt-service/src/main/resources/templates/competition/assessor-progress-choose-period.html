@@ -20,38 +20,14 @@
                   th:with="pageTitle='Choose an assessment period to manage assessors',
                     subTitle=|${model.competitionId} : ${model.competitionName}|,
                     size='govuk-heading-xl'" />
-
-
-        <form method="GET"
-              th:action="@{/assessment/competition/{competitionId}/assessors/period(competitionId=${model.competitionId})}">
-
-            <div th:if="${model.assessmentPeriods.size() < 6}" class="govuk-radios">
-                <div th:each="assessmentPeriod, index : ${model.assessmentPeriods}" class="govuk-radios__item">
-                    <input th:id="${'assessment-period-' + index.index}"
-                           class="govuk-radios__input"
-                           th:value="${assessmentPeriod.assessmentPeriodId}"
-                           type="radio"
-                           name="assessmentPeriodId"
-                           required="required">
-                    <label th:for="${'assessment-period-' + index.index}"
-                           class="govuk-label govuk-radios__label"><strong>Assessment period <th:block th:text="${index.index + 1}" /></strong><br/><th:block th:text="${assessmentPeriod.displayName}" /></label>
-                </div>
-            </div>
-            <div class="govuk-input--width-35">
-                <select name="assessmentPeriodId" class="govuk-select" th:if="${model.assessmentPeriods.size() >= 6}" required="required">
-                    <option value="" selected="selected">Please select...</option>
-                    <option th:each="assessmentPeriod, index : ${model.assessmentPeriods}"
-                            th:value="${assessmentPeriod.assessmentPeriodId}"
-                            th:text="${'Assessment period ' + (index.index + 1) + ': ' + assessmentPeriod.displayName}"/>
-                </select>
-            </div>
-            <button class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+        <form method="GET" th:action="@{/assessment/competition/{competitionId}/assessors/period(competitionId=${model.competitionId})}">
+            <th:block th:insert="competition/choose-period-fragment :: choose-period(${model.assessmentPeriods})" />
         </form>
 
-        <p class="govuk-body">
-            <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
-               class="govuk-button govuk-button--secondary govuk-!-margin-0">Return to manage assessments</a>
-        </p>
+
+        <a th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
+           class="govuk-button govuk-button--secondary govuk-!-margin-0">Return to manage assessments</a>
+
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

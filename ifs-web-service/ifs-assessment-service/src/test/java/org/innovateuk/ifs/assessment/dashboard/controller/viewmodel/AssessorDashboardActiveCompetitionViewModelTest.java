@@ -34,7 +34,8 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 pendingAssessments,
                 submitDeadline.toLocalDate(),
                 0,
-                0);
+                0,
+                false);
 
         assertEquals((long) viewModel.getCompetitionId(), competitionId);
         assertEquals(viewModel.getProgressAssessed(), progressAssessed);
@@ -61,7 +62,8 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 pendingAssessments,
                 submitDeadline.toLocalDate(),
                 0,
-                0);
+                0,
+                false);
 
         assertEquals(viewModel.hasApplicationsToAssess(), false);
         assertEquals(viewModel.hasPendingAssessments(), true);
@@ -84,7 +86,8 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 pendingAssessments,
                 submitDeadline.toLocalDate(),
                 0,
-                0);
+                0,
+                false);
 
         assertEquals(viewModel.hasApplicationsToAssess(), true);
         assertEquals(viewModel.hasPendingAssessments(), false);
@@ -107,7 +110,8 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 pendingAssessments,
                 submitDeadline.toLocalDate(),
                 0,
-                0);
+                0,
+                false);
 
         assertEquals(viewModel.hasApplicationsToAssess(), true);
         assertEquals(viewModel.hasPendingAssessments(), true);

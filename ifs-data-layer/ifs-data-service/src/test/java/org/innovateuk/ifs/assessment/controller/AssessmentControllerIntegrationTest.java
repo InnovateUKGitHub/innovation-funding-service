@@ -36,8 +36,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_WITHDRAWN;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -74,7 +73,6 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource result = controller.findById(assessment.getId()).getSuccess();
         assertNotNull(result);
         assertEquals(assessment.getId(), result.getId());
-
     }
 
     @Test
@@ -201,8 +199,8 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findByUserAndCompetition_failure() {
-        Long userId = 3L;
-        Long competitionId = 1L;
+        long userId = 3L;
+        long competitionId = 1L;
 
         loginPaulPlum();
         RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
@@ -211,12 +209,12 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findByUserAndCompetition_success() {
-
-        Long userId = 3L;
-        Long competitionId = 1L;
+        long userId = 3L;
+        long competitionId = 1L;
 
         Competition competition = newCompetition().withId(competitionId)
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withAlwaysOpen(false)
                 .build();
 
         assessmentParticipantRepository.save(newAssessmentParticipant()
@@ -264,7 +262,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void recommend() {
-        Long assessmentId = 2L;
+        long assessmentId = 2L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccess();
@@ -320,7 +318,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void rejectInvitation() {
-        Long assessmentId = 2L;
+        long assessmentId = 2L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccess();
@@ -340,7 +338,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void rejectInvitation_eventNotAccepted() {
-        Long assessmentId = 2L;
+        long assessmentId = 2L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccess();
@@ -361,7 +359,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void accept() {
-        Long assessmentId = 4L;
+        long assessmentId = 4L;
         Long processRole = 17L;
 
         loginPaulPlum();
@@ -378,7 +376,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void withdrawAssessment() {
-        Long assessmentId = 4L;
+        long assessmentId = 4L;
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccess();
@@ -395,7 +393,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void withdrawCreatedAssessment() {
-        Long assessmentId = 9L;
+        long assessmentId = 9L;
 
         loginCompAdmin();
         RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
@@ -406,7 +404,6 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
         assertTrue(assessmentResult.getFailure().is(notFoundError(Assessment.class, assessmentId)));
-
     }
 
     private Assessment setUpAssessment(UserResource userResource, AssessmentState state) {

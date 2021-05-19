@@ -14,17 +14,19 @@ public class AssessorDashboardPendingInviteViewModel {
     private final String displayLabel;
     private final LocalDate assessmentPeriodDateFrom;
     private final LocalDate assessmentPeriodDateTo;
+    private final boolean competitionAlwaysOpen;
 
     public AssessorDashboardPendingInviteViewModel(
             String hash,
             String displayLabel,
             LocalDate assessmentPeriodDateFrom,
-            LocalDate assessmentPeriodDateTo
-    ) {
+            LocalDate assessmentPeriodDateTo,
+            boolean competitionAlwaysOpen) {
         this.hash = hash;
         this.displayLabel = displayLabel;
         this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
     }
 
     public String getHash() {
@@ -41,6 +43,10 @@ public class AssessorDashboardPendingInviteViewModel {
 
     public LocalDate getAssessmentPeriodDateTo() {
         return assessmentPeriodDateTo;
+    }
+
+    public boolean isCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
     }
 
     @Override

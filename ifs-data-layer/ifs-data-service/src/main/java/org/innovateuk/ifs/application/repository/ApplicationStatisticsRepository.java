@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -55,6 +56,11 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationProcess.activityState IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
+    String APPLICATION_BY_COMPETITION_AND_ASSESSMENT_PERIOD_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
+            "AND (a.assessmentPeriod IS NULL OR a.assessmentPeriod.id = :assessmentPeriodId) " +
+            "AND (a.applicationProcess.activityState IN :states) " +
+            "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+
     String SUM_ASSESSORS = "SUM(CASE WHEN assessment.id IS NOT NULL AND assessment.activityState NOT IN " + REJECTED_STATES_STRING + " THEN 1 ELSE 0 END)";
     String SUM_ACCEPTED = "SUM(CASE WHEN assessment.id IS NOT NULL AND assessment.activityState NOT IN " + NOT_ACCEPTED_STATES + " THEN 1 ELSE 0 END)";
     String SUM_SUBMITTED = "SUM(CASE WHEN assessment.id IS NOT NULL AND assessment.activityState IN " + SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END)";
@@ -72,11 +78,21 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
+    @ZeroDowntime(reference = "IFS-8853", description = "This can probably be removed")
     @Query(APPLICATION_FILTER)
     Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(@Param("compId") long competitionId,
                                                                                       @Param("states") Collection<ApplicationState> applicationStates,
                                                                                       @Param("filter") String filter,
                                                                                       Pageable pageable);
+    @Query(APPLICATION_BY_COMPETITION_AND_ASSESSMENT_PERIOD_FILTER)
+    Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateInAndAssessmentPeriodIn(@Param("compId") long competitionId,
+                                                                                      @Param("assessmentPeriodId") long assessmentPeriodId,
+                                                                                      @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                      @Param("filter") String filter,
+                                                                                      Pageable pageable);
+
+
+
 
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource(" +
             " application.id, " +

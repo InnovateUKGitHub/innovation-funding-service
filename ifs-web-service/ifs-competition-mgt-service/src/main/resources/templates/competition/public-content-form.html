@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})},dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
@@ -35,7 +35,13 @@
                         <a class="govuk-button" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
                     </div>
                     <div class="govuk-!-margin-top-6">
-                        <a class="govuk-button govuk-button--secondary" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+                        <a th:if="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                           th:href="${cookieBackLinkUrl}"
+                           class="govuk-button govuk-button--secondary"
+                           th:text="|Return to ${cookieBackLinkText.toLowerCase()}|">Return to dynamic page</a>
+                        <a th:unless="${cookieBackLinkUrl != null && cookieBackLinkText != null}"
+                           th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"
+                           class="govuk-button govuk-button--secondary">Return to public content</a>
                     </div>
                 </th:block>
                 <th:block th:unless="${model.readOnly}">
