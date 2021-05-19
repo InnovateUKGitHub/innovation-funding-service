@@ -19,6 +19,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8855 Always open competitions: manage notifications/release feedback
 ...
+...               IFS-9756 Typo in Comp milestones page
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -47,7 +49,7 @@ ${assessorEmail}                   another.person@gmail.com
 
 *** Test Cases ***
 the user fills in milestones without a submission date
-    [Documentation]  IFS-8848
+    [Documentation]  IFS-8848  IFS-9756
     Given The user logs-in in new browser            &{Comp_admin1_credentials}
     And the user navigates to the page               ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
