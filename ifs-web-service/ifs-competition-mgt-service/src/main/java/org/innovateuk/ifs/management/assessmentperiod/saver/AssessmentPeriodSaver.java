@@ -80,6 +80,7 @@ public class AssessmentPeriodSaver {
                 .collect(Collectors.toList());
     }
 
+    // TODO qqRP this needs to go.
     public void createNewAssessmentPeriod(long competitionId) {
         AssessmentPeriodResource period = new AssessmentPeriodResource();
         period.setCompetitionId(competitionId);

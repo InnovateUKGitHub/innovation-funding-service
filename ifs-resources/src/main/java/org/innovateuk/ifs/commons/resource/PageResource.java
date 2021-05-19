@@ -108,6 +108,10 @@ public class PageResource<PageableResource> {
         return totalPages > (number + 1);
     }
 
+    public boolean lastPageFull(){
+        return totalPages * size == totalElements;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

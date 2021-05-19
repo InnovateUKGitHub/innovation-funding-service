@@ -19,6 +19,11 @@ public class PaginationViewModel {
     private static final int EACH_SIDE = 2;
 
     /**
+     * Whether to add the query parameters to page links.
+     */
+    private boolean includeQueryParameters = true;
+
+    /**
      * The total number of elements across all pages.
      */
     private long totalElements;
@@ -59,6 +64,11 @@ public class PaginationViewModel {
     private long currentElementsFrom;
 
     public PaginationViewModel(PageResource pageResource) {
+        this(pageResource, true);
+    }
+
+    public PaginationViewModel(PageResource pageResource, boolean includeQueryParameters) {
+        this.includeQueryParameters = includeQueryParameters;
         this.totalElements = pageResource.getTotalElements();
         this.totalPages = pageResource.getTotalPages();
         this.currentPage = pageResource.getNumber() + 1; //Pages are 0 indexed.
@@ -123,7 +133,7 @@ public class PaginationViewModel {
                 .getRequestAttributes()).getRequest();
         String uri = request.getRequestURI();
         String query = request.getQueryString();
-        if (!isNullOrEmpty(query)) {
+        if (includeQueryParameters && !isNullOrEmpty(query)) {
             uri = uri + "?" + query;
         }
         URIBuilder builder = new URIBuilder(uri);
