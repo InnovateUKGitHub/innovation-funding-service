@@ -243,17 +243,19 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetDocuments(long projectId, DocumentStatus status) {
+    public ServiceResult<Void> resetDocuments(long projectId) {
 
-        return find(getProject(projectId)
+        return find(getProject(projectId))
                 .andOnSuccess(project -> validateProjectActive(project)
-                        .andOnSuccess(() -> resetDocument(project))
-                });
+                .andOnSuccess(() -> resetDocument(project))
+                );
     }
 
     private ServiceResult<Void> resetDocument(Project project) {
-        projectDocumentRepository.findAllByProjectId(project.getId())
-                .forEach(document -> document.setStatus(DocumentStatus.SUBMITTED));
+        List<ProjectDocument> projectDocuments = project.getProjectDocuments();
+
+        projectDocuments.forEach(document -> document.setStatus(SUBMITTED));
+        projectRepository.save(project);
 
         return serviceSuccess();
     }
