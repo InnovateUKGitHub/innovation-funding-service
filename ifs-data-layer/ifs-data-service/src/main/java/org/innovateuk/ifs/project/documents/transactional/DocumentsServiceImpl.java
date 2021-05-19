@@ -272,9 +272,17 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
                 setOtherDocsApproved(project);
             }
             return serviceSuccess();
-        } else {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
         }
+
+        if (APPROVED.equals(projectDocument.getStatus())) {
+            projectDocument.setStatus(REJECTED);
+            projectDocument.setStatusComments(decision.getRejectionReason());
+            projectDocumentRepository.save(projectDocument);
+
+            return serviceSuccess();
+        }
+
+        return serviceFailure(PROJECT_SETUP_PROJECT_DOCUMENT_CANNOT_BE_ACCEPTED_OR_REJECTED);
     }
 
     private void setOtherDocsApproved(Project project) {
