@@ -6,9 +6,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentPeriodChoiceViewModel;
-import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentPeriodChoiceViewModel.AssessmentPeriodViewModel;
-import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentPeriodChoiceViewModel.MilestoneViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodChoiceViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodChoiceViewModel.AssessmentPeriodViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessmentPeriodChoiceViewModel.MilestoneViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class AssessorAssessmentPeriodChoiceModelPopulator {
+public class AssessmentPeriodChoiceModelPopulator {
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -28,7 +28,7 @@ public class AssessorAssessmentPeriodChoiceModelPopulator {
     @Autowired
     private AssessmentPeriodService assessmentPeriodService;
 
-    public AssessorAssessmentPeriodChoiceViewModel populate(long competitionId) {
+    public AssessmentPeriodChoiceViewModel populate(long competitionId) {
 
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
 
@@ -54,7 +54,7 @@ public class AssessorAssessmentPeriodChoiceModelPopulator {
                 .collect(Collectors.toList());
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return new AssessorAssessmentPeriodChoiceViewModel(
+        return new AssessmentPeriodChoiceViewModel(
                 competitionId,
                 competitionResource.getName(),
                 assessmentPeriods

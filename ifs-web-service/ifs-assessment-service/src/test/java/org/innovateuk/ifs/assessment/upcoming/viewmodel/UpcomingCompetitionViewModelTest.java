@@ -26,6 +26,7 @@ public class UpcomingCompetitionViewModelTest {
         UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource);
 
         assertFalse(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isAlwaysOpenCompetition());
     }
 
     @Test
@@ -40,5 +41,21 @@ public class UpcomingCompetitionViewModelTest {
         UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource);
 
         assertTrue(viewModel.isKtpCompetition());
+        assertFalse(viewModel.isAlwaysOpenCompetition());
+    }
+
+    @Test
+    public void testAlwaysOpenCompetition() {
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withAlwaysOpen(true)
+                .build();
+
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = CompetitionAssessmentConfigResourceBuilder
+                .newCompetitionAssessmentConfigResource().build();
+
+        UpcomingCompetitionViewModel viewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource);
+
+        assertTrue(viewModel.isAlwaysOpenCompetition());
     }
 }

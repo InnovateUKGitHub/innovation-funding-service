@@ -171,7 +171,7 @@ comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
     the user adds an assessor to application    assessor-row-1
     the user clicks the button/link             jQuery = a:contains("Allocate applications")
-    the user clicks the button/link             jQuery = a:contains("Manage assessments")
+    the user clicks the button/link             jQuery = a:contains("Back to manage assessments")
     the user clicks the button/link             jQuery = a:contains("Competition")
     the user clicks the button/link             jQuery = button:contains("Notify assessors")
     the element should be disabled              jQuery = button:contains("Notify assessors")

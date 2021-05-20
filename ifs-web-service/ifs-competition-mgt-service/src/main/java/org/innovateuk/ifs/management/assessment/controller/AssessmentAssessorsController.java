@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
-import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentPeriodChoiceModelPopulator;
+import org.innovateuk.ifs.management.assessment.populator.AssessmentPeriodChoiceModelPopulator;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +36,7 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
     private AssessmentPeriodRestService assessmentPeriodRestService;
 
     @Autowired
-    private AssessorAssessmentPeriodChoiceModelPopulator assessorAssessmentPeriodChoiceModelPopulator;
+    private AssessmentPeriodChoiceModelPopulator assessmentPeriodChoiceModelPopulator;
 
     @GetMapping("/assessors")
     public String manageAssessors(Model model,
@@ -47,7 +47,7 @@ public class AssessmentAssessorsController extends BaseAssessmentController {
         List<AssessmentPeriodResource> assessmentPeriods = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId).getSuccess();
 
         if (assessmentPeriods.size() > 1) {
-            model.addAttribute("model", assessorAssessmentPeriodChoiceModelPopulator.populate(competitionId));
+            model.addAttribute("model", assessmentPeriodChoiceModelPopulator.populate(competitionId));
             return "competition/assessor-progress-choose-period";
         }
 
