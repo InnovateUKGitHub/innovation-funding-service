@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.survey.documentation;
 
-import org.innovateuk.ifs.MockMvcTest;
 import org.innovateuk.ifs.survey.Satisfaction;
 import org.innovateuk.ifs.survey.SurveyResource;
 import org.innovateuk.ifs.survey.SurveyTargetType;

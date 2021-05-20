@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.survey.mapper;
 
-import org.innovateuk.ifs.commons.mapper.BaseMapper;
-import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.survey.SurveyResource;
 import org.innovateuk.ifs.survey.domain.Survey;
 import org.mapstruct.Mapper;
