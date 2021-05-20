@@ -30,7 +30,7 @@ public class PageResource<PageableResource> {
      */
     private List<PageableResource> content;
     /**
-     * The current page number.
+     * The current page number. Zero based.
      */
     private int number;
     /**
@@ -139,7 +139,7 @@ public class PageResource<PageableResource> {
     }
 
     public boolean isLastPage(){
-        return number == totalPages;
+        return number + 1 == totalPages;
     }
 
     @Override

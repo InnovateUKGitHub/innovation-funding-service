@@ -149,7 +149,7 @@ public class AssessmentPeriodController {
     }
 
     private String redirectToLastPageToAddAssessmentPeriod(long competitionId) {
-        PageResource<AssessmentPeriodResource> page = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId, 1, PAGE_SIZE).getSuccess();
+        PageResource<AssessmentPeriodResource> page = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId, 0, PAGE_SIZE).getSuccess();
         return format("redirect:/assessment/competition/%s/assessment-period?page=%s&addAssessment=true",
                 competitionId,
                 page.isLastPageFull() ? page.getTotalPages() + 1: page.getTotalPages());

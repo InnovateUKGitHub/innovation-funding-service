@@ -62,8 +62,27 @@ public class PageResourceTest {
         assertEquals(3, pageSizeThreeAndNineResults.getTotalPages());
     }
 
+    @Test
+    public void testPageResourceWithDummyItemAddedToLastPage(){
+        PageResource<Integer> lastPagePageSizeThreeAndNineResults = new PageResource<>(9, 3, listXToY(7,9), 2, 3);
+        PageResource<Integer> secondLastPagePageSizeThreeAndTenResults = lastPagePageSizeThreeAndNineResults.pageResourceWithDummyItemAddedToLastPage(100);
+        assertEquals(2, secondLastPagePageSizeThreeAndTenResults.getNumber()); // We are still looking at the same page.
+        assertEquals(4, secondLastPagePageSizeThreeAndTenResults.getTotalPages()); // We added another page.
+        assertEquals(asList(7,8,9), secondLastPagePageSizeThreeAndTenResults.getContent()); // There was no room on this last page so we should not see the dummy.
+
+        PageResource<Integer> lastPagePageSizeThreeAndSevenResults = new PageResource<>(8, 3, listXToY(7, 7), 2, 3);
+        PageResource<Integer> lastPagePageSizeThreeAndEightResults = lastPagePageSizeThreeAndSevenResults.pageResourceWithDummyItemAddedToLastPage(100);
+        assertEquals(2, lastPagePageSizeThreeAndEightResults.getNumber()); // We are still looking at the same page.
+        assertEquals(3, lastPagePageSizeThreeAndEightResults.getTotalPages()); // We did not add another page.
+        assertEquals(asList(7,100), lastPagePageSizeThreeAndEightResults.getContent()); // There was room on this last page so we should see the dummy.
+    }
+
     private List<Integer> listToN(int n){
-        return rangeClosed(1, n).boxed().collect(toList());
+        return listXToY(1, n);
+    }
+
+    private List<Integer> listXToY(int x, int y){
+        return rangeClosed(x, y).boxed().collect(toList());
     }
 
 }
