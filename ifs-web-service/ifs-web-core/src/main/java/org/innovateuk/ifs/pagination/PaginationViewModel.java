@@ -128,6 +128,10 @@ public class PaginationViewModel {
         return currentElementsFrom;
     }
 
+    public boolean isLastPage(){
+        return currentPage == endPage;
+    }
+
     public String urlForPage(long page) throws URISyntaxException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes()).getRequest();

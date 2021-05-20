@@ -157,7 +157,8 @@
 
             </th:block>
 
-            <button type="submit"
+            <button th:if="${form.numberUnsavedAssessmentPeriods() == 0 && model.paginationViewModel.lastPage}"
+                    type="submit"
                     class="button-clear govuk-!-margin-bottom-6 float-right" name="add-assessment-period">+ Add new assessment period
             </button>
 
