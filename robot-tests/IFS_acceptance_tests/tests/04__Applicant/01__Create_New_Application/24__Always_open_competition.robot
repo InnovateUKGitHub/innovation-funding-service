@@ -21,6 +21,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9756 Typo in Comp milestones page
 ...
+...               IFS-9750 Empty heading is displayed when there is no assessment period attached to the competition
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -77,9 +79,14 @@ the user creates a new open ended competiton
     Then the user check for valid content on front end
     [Teardown]  get competition id and set open date to yesterday     ${openEndedCompName}
 
+the user should see the disabled send notification and release feedback button
+    [Documentation]  IFS-9750
+    Given the user navigates to the page       ${CA_Live}
+    When the user clicks the button/link       link = ${openEndedCompName}
+    Then the element should be disabled        jQuery = a:contains("Send notification and release feedback")
+
 Send the email invite to the assessor for the competition using new content
     [Documentation]  IFS-9009
-    Given the user navigates to the page        ${CA_Live}
     When comp admin sends invite to assesor
     Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${openEndedCompName}'  We invite you to assess applications for the competition:
 
@@ -187,7 +194,6 @@ the user completes milestones section
     the user clicks the button/link                    jQuery = button:contains("Done")
 
 comp admin sends invite to assesor
-    the user clicks the button/link          link = ${openEndedCompName}
     the user clicks the button/link          link = Invite assessors to assess the competition
     the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
