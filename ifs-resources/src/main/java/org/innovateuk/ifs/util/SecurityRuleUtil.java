@@ -41,10 +41,6 @@ public final class SecurityRuleUtil {
         return user.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
-    public static boolean hasSuperAdminAuthority(UserResource user) {
-        return user.hasAuthority(Authority.SUPER_ADMIN_USER);
-    }
-
     public static boolean isSupport(UserResource user) {
         return user.hasRole(SUPPORT); }
 
