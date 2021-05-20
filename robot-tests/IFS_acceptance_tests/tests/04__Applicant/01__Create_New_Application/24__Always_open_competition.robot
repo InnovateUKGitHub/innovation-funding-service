@@ -81,9 +81,9 @@ the user creates a new open ended competiton
 
 the user should see the disabled send notification and release feedback button
     [Documentation]  IFS-9750
-    Given the user navigates to the page       ${CA_Live}
-    When the user clicks the button/link       link = ${openEndedCompName}
-    Then the element should be disabled        jQuery = a:contains("Send notification and release feedback")
+    Given the user navigates to the page                      ${CA_Live}
+    When the user clicks the button/link                      link = ${openEndedCompName}
+    Then the user should see that the element is disabled     jQuery = a:contains("Send notification and release feedback")
 
 Send the email invite to the assessor for the competition using new content
     [Documentation]  IFS-9009
