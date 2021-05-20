@@ -43,20 +43,22 @@
                                 Funding type:
                                 <span th:text="${activeCompetition.fundingType.displayName}">FUNDING TYPE</span>
                             </div>
-                            <div class="status">
-                                <div class="status-msg msg-deadline"
-                                     th:attr="data-competition-id=${activeCompetition.competitionId}">
-                                    <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining"
-                                            th:text="${activeCompetition.daysLeft}"></strong>
-                                    <br/>
-                                    days left <br/>
-                                    Deadline
-                                    <span class="day"
-                                          th:text="${#temporals.day(activeCompetition.supporterDeadlineDate)}">END DAY</span>
-                                    <span class="month"
-                                          th:text="${#temporals.monthName(activeCompetition.supporterDeadlineDate)}">END MONTH</span>
+                            <th:block th:if="${activeCompetition.daysLeft != null}">
+                                <div class="status">
+                                    <div class="status-msg msg-deadline"
+                                         th:attr="data-competition-id=${activeCompetition.competitionId}">
+                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining"
+                                                th:text="${activeCompetition.daysLeft}"></strong>
+                                        <br/>
+                                        days left <br/>
+                                        Deadline
+                                        <span class="day"
+                                              th:text="${#temporals.day(activeCompetition.supporterDeadlineDate)}">END DAY</span>
+                                        <span class="month"
+                                              th:text="${#temporals.monthName(activeCompetition.supporterDeadlineDate)}">END MONTH</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </th:block>
                         </li>
                     </ul>
                 </div>
