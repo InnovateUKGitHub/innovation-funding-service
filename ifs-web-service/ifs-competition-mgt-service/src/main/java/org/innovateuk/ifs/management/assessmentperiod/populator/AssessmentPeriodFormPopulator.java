@@ -4,7 +4,6 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.assessmentperiod.form.ManageAssessmentPeriodsForm;
@@ -13,13 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 
 @Component
 public class AssessmentPeriodFormPopulator {
@@ -48,11 +44,6 @@ public class AssessmentPeriodFormPopulator {
                     return assessmentPeriodForm;
                 })
                 .collect(Collectors.toList());
-        if (addAssessment){
-            AssessmentPeriodForm newAssessmentPeriodForm = newAssessmentPeriodForm();
-            newAssessmentPeriodForm.setIndex((int)assessmentPeriodResources.getTotalElements() + 1);
-            assessmentPeriods.add(newAssessmentPeriodForm);
-        }
         ManageAssessmentPeriodsForm form = new ManageAssessmentPeriodsForm();
         form.setAssessmentPeriods(assessmentPeriods);
         return form;
@@ -64,18 +55,5 @@ public class AssessmentPeriodFormPopulator {
 
     private boolean isEditable(MilestoneResource milestone) {
         return milestone.getDate() == null || milestone.getDate().isAfter(ZonedDateTime.now());
-    }
-
-    private AssessmentPeriodForm newAssessmentPeriodForm(){
-        AssessmentPeriodForm form = new AssessmentPeriodForm();
-        LinkedMap<String, MilestoneRowForm> newMilestones = new LinkedMap<>();
-        for (MilestoneType milestoneType : EnumSet.of(ASSESSOR_BRIEFING, ASSESSORS_NOTIFIED, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE, ASSESSMENT_CLOSED)){
-            MilestoneRowForm milestoneRowForm = new MilestoneRowForm();
-            milestoneRowForm.setEditable(true);
-            milestoneRowForm.setMilestoneType(milestoneType);
-            newMilestones.put(milestoneType.name(), milestoneRowForm);
-        }
-        form.setMilestoneEntries(newMilestones);
-        return form;
     }
 }

@@ -29,6 +29,11 @@
               data-section="milestones"
               novalidate="novalidate"
               method="post">
+            <input type="hidden"
+                   required="required"
+                   id="page"
+                   name="page"
+                   th:value="${model.paginationViewModel.currentPage}"/>
             <th:block th:each="assessmentPeriod, pStat: ${form.assessmentPeriods}">
                 <input type="hidden"
                        required="required"
