@@ -123,7 +123,7 @@
                 </div>
             </th:block>
 
-            <th:block th:if="${model.isShowRejectDocumentWhenDocumentIsApproved()}">
+            <th:block th:if="${model.isShowRejectDocumentButtonWhenDocumentIsApproved()}">
                 <th:block th:if="${model.status.name() == 'APPROVED' and model.projectIsActive}">
                     <h2 class="govuk-heading-m govuk-!-margin-top-6">Reject document</h2>
                     <div class="govuk-form-group">

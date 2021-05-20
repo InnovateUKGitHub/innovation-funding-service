@@ -105,7 +105,7 @@ public class DocumentViewModel {
         return projectManager && status == DocumentStatus.UNSET;
     }
 
-    public boolean isShowRejectDocumentWhenDocumentIsApproved() {
+    public boolean isShowRejectDocumentWhenDocumentButtonIsApproved() {
         return isSuperAdminUser && projectIsActive;
     }
 
