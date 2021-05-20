@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.survey.mapper;
 
 
+import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+@LibraryCandidate
 public abstract class BaseMapper<D, R, I extends Serializable> {
     protected CrudRepository<D, I> repository;
     @Autowired

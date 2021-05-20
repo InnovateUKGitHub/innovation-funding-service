@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.survey.documentation;
 
+import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
  *
  * @param <ControllerType>
  */
+@LibraryCandidate
 abstract public class MockMvcTest<ControllerType> {
 
     protected MockMvc mockMvc;
