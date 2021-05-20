@@ -24,12 +24,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -120,6 +117,7 @@ public class AssessmentPeriodController {
                           Model model,
                           long competitionId,
                           Supplier<String> successView) {
+        form.orderMilestoneEnties();
         Supplier<String> failureView = () -> reshowPage(form, page, model, competitionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = saver.save(competitionId, form);
@@ -129,13 +127,6 @@ public class AssessmentPeriodController {
     }
 
     private String reshowPage(ManageAssessmentPeriodsForm form, int page, Model model, long competitionId){
-        form.getAssessmentPeriods().forEach(p -> p.setMilestoneEntries(
-                p.getMilestoneEntries()
-                        .entrySet()
-                        .stream()
-                        .sorted(Comparator.comparing(entry -> MilestoneType.valueOf(entry.getKey()).ordinal()))
-                        .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedMap::new))
-        ));
         PageResource<AssessmentPeriodResource> actualPageResult
                 = assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionId, page - 1, PAGE_SIZE).getSuccess();
         List<AssessmentPeriodResource> newAssessmentPeriodResources
