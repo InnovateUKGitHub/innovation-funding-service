@@ -2250,7 +2250,7 @@
                        id="section-total-associate-salary-costs"
                        th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"/>
-                <th:block th:if="${#bools.isFalse(model.fecModelEnabled)}">
+                <th:block th:if="${model.fecModelDisabled}">
                     <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
                     <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
                     <input type="hidden"
