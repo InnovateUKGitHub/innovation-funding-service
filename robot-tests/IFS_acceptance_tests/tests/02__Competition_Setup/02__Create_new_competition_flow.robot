@@ -212,7 +212,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     Given the user clicks the button/link     link = Terms and conditions
     When the user should see the element      link = Loans (opens in a new window)
     And the user clicks the button/link       jQuery = button:contains("Done")
-    And the user selects the radio button     termsAndConditionsId  23
+    And the user clicks the button twice      jQuery = label:contains("Loans")
     And the user clicks the button/link       jQuery = button:contains("Done")
     And the user should see the element       jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Loans")
     And the user should see the element       jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Loans")
