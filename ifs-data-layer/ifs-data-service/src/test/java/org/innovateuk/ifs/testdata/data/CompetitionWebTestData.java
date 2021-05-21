@@ -368,6 +368,10 @@ public class CompetitionWebTestData {
                         .withAlwaysOpen(true)
                         .withResubmission(true),
                 ktpCompetition()
+                        .withName("Always open ktp competition")
+                        .withAlwaysOpen(true)
+                        .withResubmission(true),
+                ktpCompetition()
                         .withName("FEC KTP competition"),
                 grantCompetition()
                         .withName("Improved organisation search performance competition"),
