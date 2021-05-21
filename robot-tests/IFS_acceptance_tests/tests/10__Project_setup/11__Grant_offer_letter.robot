@@ -535,12 +535,13 @@ IFS Expert user can reset GOL in project setup
     And the expert user resets the GOL
     Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
 
-External user can re-upload GOL after it has been rejected by expert user
-    [Documentation]  IFS-9611
-    [Setup]  Requesting Project ID of this Project
-    Given Log in as a different user                     &{Research_lead_applicant_credentials}
-    When the external user uploads the GOL
-    Then the user should not see the element             jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
+#External user can upload signed GOL after it has been reset by the expert user
+#    [Documentation]  IFS-9611
+#    [Setup]  Requesting Project ID of this Project
+#    Given Log in as a different user                     &{Research_lead_applicant_credentials}
+#    And the user navigates to the page                   ${server}/project-setup/project/${HighSpeedProjectID}/grant-offer-letter/send
+#    When the external user uploads the signed GOL
+#    Then the user should not see the element             jQuery =  p:contains("No files have been uploaded yet.")
 
 *** Keywords ***
 the user uploads a file
@@ -556,8 +557,8 @@ the expert user resets the GOL
     the user clicks the button/link         jQuery = a:contains("Reset grant offer letter")
     the user clicks the button/link         jQuery = button:contains("Reset grant offer letter")
 
-the external user uploads the GOL
-    the user navigates to the page     ${server}/project-setup/project/${HighSpeedProjectID}/grant-offer-letter/send
+the expert user uploads the GOL
+    the user navigates to the page     ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
