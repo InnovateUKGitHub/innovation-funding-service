@@ -182,12 +182,16 @@ public class ApplicationDetailsController {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        LocalDate projectStartDate = competition.isKtp()
-                ? TimeZoneUtil.toUkTimeZone(competition.getEndDate()).plusMonths(12).toLocalDate()
-                : convertMinLocalDateToNull(form.getStartDate());
+        if (competition.isKtp() &&!competition.isAlwaysOpen()) {
+            // For always open ktp competitions we set the start date when the application is submitted and so do
+            // nothing here. Otherwise we set the date as being 12 months from the end of the competition.
+            application.setStartDate(TimeZoneUtil.toUkTimeZone(competition.getEndDate()).plusMonths(12).toLocalDate());
+        } else {
+            // For non ktp competitions the applicant provides a start date.  
+            application.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
+        }
 
         application.setName(getName(form));
-        application.setStartDate(projectStartDate);
         application.setDurationInMonths(form.getDurationInMonths());
         application.setResubmission(form.getResubmission());
         application.setPreviousApplicationNumber(form.getResubmission() == TRUE ? form.getPreviousApplicationNumber() : null);
