@@ -530,19 +530,11 @@ Project is automatically sent to ACC if set up for the competition
 IFS Expert user can reset GOL in project setup
     [Documentation]  IFS-9611
     [Setup]  Requesting Project ID of this Project
-    Given Log in as a different user                    &{ifs_expert_user_credentials}
+    Given Log in as a different user                    &{superAdminCredentials}
     When the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
     And the expert user resets the GOL
     Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
-
-#External user can upload signed GOL after it has been reset by the expert user
-#    [Documentation]  IFS-9611
-#    [Setup]  Requesting Project ID of this Project
-#    Given Log in as a different user                     &{Research_lead_applicant_credentials}
-#    And the user navigates to the page                   ${server}/project-setup/project/${HighSpeedProjectID}/grant-offer-letter/send
-#    When the external user uploads the signed GOL
-#    Then the user should not see the element             jQuery =  p:contains("No files have been uploaded yet.")
-
+    
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}

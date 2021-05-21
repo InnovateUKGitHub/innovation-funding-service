@@ -15,7 +15,16 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8852 Always open competitions: assign assessors to applications
 ...
-
+...               IFS-8853 Always open competitions: assign applications to assessors in assessment period
+...
+...               IFS-8849 Always open competitions: internal comp dashboard
+...
+...               IFS-8855 Always open competitions: manage notifications/release feedback
+...
+...               IFS-9756 Typo in Comp milestones page
+...
+...               IFS-9750 Empty heading is displayed when there is no assessment period attached to the competition
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -44,7 +53,7 @@ ${assessorEmail}                   another.person@gmail.com
 
 *** Test Cases ***
 the user fills in milestones without a submission date
-    [Documentation]  IFS-8848
+    [Documentation]  IFS-8848  IFS-9756
     Given The user logs-in in new browser            &{Comp_admin1_credentials}
     And the user navigates to the page               ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
@@ -52,7 +61,7 @@ the user fills in milestones without a submission date
     When the user completes milestones section
     Then the user should see the element             jQuery = td:contains("2. Submission date") + td:contains("-")+td:contains("-")+td:contains("None")
     And the user should see the element              jQuery = .panel:contains("Assessment dates are set after the competition has opened.")
-    And the user should see the element              jQuery = .panel:contains("Do not complete the 'Submission date' milestone when created open-ended competitions.")
+    And the user should see the element              jQuery = .panel:contains("Do not complete the 'Submission date' milestone when creating open-ended competitions.")
 
 the user should not see submission deadline date in public content dates
     [Documentation]  IFS-8848
@@ -64,7 +73,7 @@ the user should not see submission deadline date in public content dates
 
 the user creates a new open ended competiton
     [Documentation]  IFS-8848
-    Given the user clicks the button/link                             link = Public content
+    Given the user clicks the button/link                             link = Back to public content
     And the user clicks the button/link                               link = Competition details
     And the competition admin creates open ended competition          ${business_type_id}  ${openEndedCompName}  Open ended  ${compType_Programme}  STATE_AID  GRANT  PROJECT_SETUP  yes  1  true  collaborative
     When the user navigates to the page                               ${frontDoor}
@@ -72,9 +81,14 @@ the user creates a new open ended competiton
     Then the user check for valid content on front end
     [Teardown]  get competition id and set open date to yesterday     ${openEndedCompName}
 
+the user should see the disabled send notification and release feedback button
+    [Documentation]  IFS-9750
+    Given the user navigates to the page     ${CA_Live}
+    When the user clicks the button/link     link = ${openEndedCompName}
+    Then the user should see the element     css = [disabled='disabled']
+
 Send the email invite to the assessor for the competition using new content
     [Documentation]  IFS-9009
-    Given the user navigates to the page        ${CA_Live}
     When comp admin sends invite to assesor
     Then the user reads his email               ${webTestAssessorEmailAddress}  Invitation to be an assessor for competition: '${openEndedCompName}'  We invite you to assess applications for the competition:
 
@@ -119,7 +133,7 @@ Comp admin updates the assessment period
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008  IFS-8852
+    [Documentation]  IFS-9008  IFS-8852  IFS-8853
     Given assign the application to assessor
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
@@ -134,11 +148,23 @@ Internal user closes assessment period one
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
 
+Internal user sees valid information on dashboard
+    [Documentation]  IFS-8849
+    When the user clicks the button/link                       link = Competition
+    Then the user sees valid open ended competition details
+
+internal user inputs the decision and send the notification with feedback
+    [Documentation]  IFS-8855
+    Given the user inputs the funding decision for applications
+    When the user sends notification and releases feedback
+    And the user navigates to the page                               ${server}/project-setup-management/competition//${webTestCompID}/status/all
+    Then the user refreshes until element appears on page            jQuery = tr div:contains("${webTestAppName}")
+
 Assessor has been assigned to the competition
     [Documentation]  IFS-8852
     Given log in as a different user             ${assessorEmail}   ${short_password}
     When the user clicks the button/link         jQuery = a:contains('Always open competition')
-    Then the user should see the element         jQuery = h2:contains('Assessment period: 20 Feb to 20 Mar 2021')
+    Then the user should see the element         jQuery = h2:contains('Assessing open-ended competitions')
 
 Comp admin manages the assessors
     [Documentation]  IFS-8852
@@ -147,8 +173,8 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Manage assessors
     When the user selects the radio button     assessmentPeriodId  99
     And the user clicks the button/link        jQuery = button:contains("Save and continue")
-    Then the user clicks the button/link       link = Assign
-    And the user should see the element        jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
+    And the user clicks the button/link        jQuery = td:contains("Another Person") ~ td a:contains("View progress")
+    Then the user should see the element       jQuery = h2:contains('Assigned') ~ div td:contains('Always open application decision pending')
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
@@ -171,7 +197,6 @@ the user completes milestones section
     the user clicks the button/link                    jQuery = button:contains("Done")
 
 comp admin sends invite to assesor
-    the user clicks the button/link          link = ${openEndedCompName}
     the user clicks the button/link          link = Invite assessors to assess the competition
     the user enters text to a text field     id = assessorNameFilter  ${webTestAssessor}
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
@@ -265,14 +290,39 @@ the user adds a partner organisation and application details
 
 assign the application to assessor
     the user clicks the button/link     link = Manage applications
-    the user clicks the button/link     link = Assign
+    the user clicks the button twice    jQuery = label:contains("Assessment period 1")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     jQuery = td:contains("Always open application decision pending") ~ td a:contains("View progress")
     the user selects the checkbox       assessor-row-1
     the user clicks the button/link     jQuery = button:contains("Add to application")
-    the user clicks the button/link     link = Allocate applications
-    the user clicks the button/link     link = Manage assessments
+    the user clicks the button/link     link = Back to manage applications
+    the user clicks the button/link     link = Back to choose an assessment period to manage applications
+    the user clicks the button/link     link = Back to manage assessments
 
 the assessor accepts an invite to an application
     logging in and error checking         ${assessorEmail}   ${short_password}
     the user clicks the button/link       link = ${webTestAppName}
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
+
+the user sees valid open ended competition details
+    the user should see the element      jQuery = a:contains("Send notification and release feedback")
+    the user should see the element      jQuery = a:contains("Input and review funding decision")
+    the user should see the element      jQuery = h3:contains("Submission date")+ p:contains("Open-ended")
+    the user should see the element      jQuery = h3:contains("Briefing event") + p a:contains("See public dates")
+    the user should see the element      jQuery = h3:contains("Assessment") + p:contains("Batch assessments")
+    the user should see the element      jQuery = h3:contains("Funding decision and assessment feedback")
+
+the user inputs the funding decision for applications
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     id = app-row-1
+    the user clicks the button/link     jQuery = button:contains("Successful")
+    the user clicks the button/link     link = Competition
+
+the user sends notification and releases feedback
+    the user clicks the button/link                                           jQuery = a:contains("Send notification and release feedback")
+    the user should see the element                                           jQuery = h1:contains("Manage funding decisions and notifications")
+    the user clicks the button/link                                           id = select-all-1
+    the user clicks the button/link                                           id = write-and-send-email
+    the user should see the element                                           jQuery = h1:contains("Send decision notification and release feedback")
+    the internal sends the descision notification email to all applicants     Open ended competition body text

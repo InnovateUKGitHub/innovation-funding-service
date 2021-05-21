@@ -4,7 +4,6 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
@@ -21,6 +20,6 @@ public class CompetitionInAssessmentGuard implements Guard<AssessmentState, Asse
         Assessment assessment = (Assessment) context.getMessageHeader("target");
         Competition competition = assessment.getTarget().getCompetition();
 
-        return competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
+        return assessment.getTarget().getAssessmentPeriod().isInAssessment();
     }
 }

@@ -13,7 +13,8 @@ public enum AssessmentEvent implements ProcessEvent {
     WITHDRAW("withdraw"),
     FEEDBACK("feedback"),
     FUNDING_DECISION("funding-decision"),
-    SUBMIT("submit");
+    SUBMIT("submit"),
+    UNSUBMIT("unsubmit");
 
     String event;
 

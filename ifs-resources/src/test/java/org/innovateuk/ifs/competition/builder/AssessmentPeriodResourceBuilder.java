@@ -32,6 +32,18 @@ public class AssessmentPeriodResourceBuilder extends BaseBuilder<AssessmentPerio
         return withArray((id, object) -> BaseBuilderAmendFunctions.setField("index", id, object), indexes);
     }
 
+    public AssessmentPeriodResourceBuilder withOpen(boolean... opens) {
+        return withArray((id, object) -> BaseBuilderAmendFunctions.setField("open", id, object), opens);
+    }
+
+    public AssessmentPeriodResourceBuilder withInAssessment(boolean... inAssessments) {
+        return withArray((id, object) -> BaseBuilderAmendFunctions.setField("inAssessment", id, object), inAssessments);
+    }
+
+    public AssessmentPeriodResourceBuilder withAssessmentClosed(boolean... assessmentCloses) {
+        return withArray((id, object) -> BaseBuilderAmendFunctions.setField("assessmentClosed", id, object), assessmentCloses);
+    }
+
     @Override
     protected AssessmentPeriodResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentPeriodResource>> actions) {
         return new AssessmentPeriodResourceBuilder(actions);
