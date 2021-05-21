@@ -9,7 +9,7 @@ public class EmployeesAndTurnover extends FinancialYearAccounts {
     @Column(columnDefinition = "double")
     private BigDecimal turnover;
 
-    @Column(columnDefinition = "int(11")
+    @Column(columnDefinition = "int(11)")
     private Long employees;
 
     public EmployeesAndTurnover() {
