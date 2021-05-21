@@ -21,6 +21,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8855 Always open competitions: manage notifications/release feedback
 ...
+...               IFS-9758 Comps to assess should have batch numbers
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -124,11 +126,11 @@ Comp admin updates the assessment period
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
 
 Internal user notify the assessors of their assigned applications
-    [Documentation]  IFS-9008  IFS-8852  IFS-8853
+    [Documentation]  IFS-9008  IFS-8852  IFS-8853  IFS-9758
     Given assign the application to assessor
     When the user clicks the button/link                     jQuery = button:contains("Notify assessors")
     And the user logs out if they are logged in
-    Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition 'Always open competition'  We have assigned applications for you to assess for this competition:   1
+    Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
     And the assessor accepts an invite to an application
 
 Internal user closes assessment period one
@@ -154,7 +156,7 @@ internal user inputs the decision and send the notification with feedback
 Assessor has been assigned to the competition
     [Documentation]  IFS-8852
     Given log in as a different user             ${assessorEmail}   ${short_password}
-    When the user clicks the button/link         jQuery = a:contains('Always open competition')
+    When the user clicks the button/link         jQuery = a:contains('${webTestCompName}')
     Then the user should see the element         jQuery = h2:contains('Assessing open-ended competitions')
 
 Comp admin manages the assessors
@@ -296,6 +298,9 @@ the assessor accepts an invite to an application
     the user clicks the button/link       link = ${webTestAppName}
     the user selects the radio button     assessmentAccept  true
     the user clicks the button/link       jQuery = button:contains("Confirm")
+    the user clicks the button/link       link = Assessments
+    the user should see the element       jQuery = strong:contains("Batch assessment 1") ~ h3:contains("${webTestCompName}")
+
 
 the user sees valid open ended competition details
     the user should see the element      jQuery = a:contains("Send notification and release feedback")
