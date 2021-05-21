@@ -23,6 +23,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9758 Comps to assess should have batch numbers
 ...
+...               IFS-9785 Supporter getting internal server error on login to dashboard without assessment periods
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -171,6 +173,16 @@ Comp admin manages the assessors
     And the user clicks the button/link        link = Back to manage assessors
     And the user clicks the button/link        link = Back to choose an assessment period to manage assessors
     And the user clicks the button/link        link = Back to manage assessments
+
+Supporter can review open ended ktp competition applications
+    [Documentation]  IFS-9785
+    Given log in as a different user          &{supporter_credentials}
+    And the user clicks the button/link       id = dashboard-link-SUPPORTER
+    When supporter reviews an application
+    Then the user should see the element      jQuery = button:contains("Edit")
+    And the user should see the element       jQuery = dt:contains("Your feedback")+dd:contains("This is the comment from the supporter")
+    And the user should see the element       jQuery = dt:contains("Are you interested in supporting this application?")+dd:contains("Yes")
+
 
 *** Keywords ***
 Custom suite setup
@@ -323,3 +335,10 @@ the user sends notification and releases feedback
     the user clicks the button/link                                           id = write-and-send-email
     the user should see the element                                           jQuery = h1:contains("Send decision notification and release feedback")
     the internal sends the descision notification email to all applicants     Open ended competition body text
+
+supporter reviews an application
+    the user clicks the button/link         link = Always open ktp competition
+    the user clicks the button/link         jQuery = li:nth-child(1) div a:contains("Review")
+    the user selects the radio button       decision  decision-yes
+    the user enters text to a text field    css = .editor  This is the comment from the supporter
+    the user clicks the button/link         jQuery = button:contains("Save and return to applications")
