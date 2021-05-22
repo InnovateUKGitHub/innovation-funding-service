@@ -90,7 +90,13 @@ property() {
 createEntitiesFromProperties() {
   echo "Creating entities from properties"
   for properties in ${CONFIG_DIR}/*.properties ; do
+
     DOMAIN=$(property DOMAIN ${properties})
+    ENTITY=$(property ENTITY ${properties})
+    CERT_TIMESTAMP=$(property CERT_TIMESTAMP ${properties})
+    ACS_URL_1=$(property ACS_URL_1 ${properties})
+    ACS_URL_2=$(property ACS_URL_2 ${properties})
+    ACS_URL_3=$(property ACS_URL_3 ${properties})
     PORT=$(property PORT ${properties})
     PROTOCOL=$(property PROTOCOL ${properties})
     CERTIFICATE_FILE=$(property CERTIFICATE_FILE ${properties})
@@ -104,7 +110,7 @@ createEntitiesFromProperties() {
     PORT_POSTFIX=$(createPortPostfix ${PORT} ${PROTOCOL})
     TEMPLATE=$(property TEMPLATE ${properties})
 
-    entityName="https://${DOMAIN}"
+    entityName="${PROTOCOL}://${DOMAIN}"
     entityNameHash=`echo -n ${entityName} | openssl sha1 | sed 's/^.* //'`
     echo "Creating entity ${entityName} using template ${TEMPLATE} : ${entityNameHash}"
 
@@ -112,6 +118,6 @@ createEntitiesFromProperties() {
     templateFileName=/etc/shibboleth/extras/templates/${TEMPLATE}
     cp ${templateFileName} ${entityFileName}
 
-    replacePlaceholders ${entityFileName} DOMAIN PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE
+    replacePlaceholders ${entityFileName} DOMAIN ENTITY CERT_TIMESTAMP PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE ACS_URL_1 ACS_URL_2 ACS_URL_3
   done
 }
