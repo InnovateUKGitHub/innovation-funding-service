@@ -320,6 +320,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .withOrganisationType(2L)
                 .build();
         when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(organisation));
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
 
         mockMvc.perform(get("/organisation/create/existing-organisation/1"))
                 .andExpect(status().is2xxSuccessful())
@@ -347,5 +348,19 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                         .andExpect(model().attribute("organisationForm", hasProperty("organisationName", equalTo("NOMENSA LTD"))))
                         .andExpect(model().attribute("organisationForm", hasProperty("organisationTypeId", equalTo(1L))))
                         .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(true))));
+    }
+
+    @Test
+    public void selectOrganisationForConfirmation() throws Exception {
+        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+
+        mockMvc.perform(get("/organisation/create/selected-organisation/" + COMPANY_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name( "registration/organisation/confirm-organisation"))
+                .andExpect(model().attributeExists("organisationForm"))
+                .andExpect(model().attribute("organisationForm", hasProperty("organisationTypeId", equalTo(1L))))
+                .andExpect(model().attribute("organisationForm", hasProperty("organisationName", equalTo(COMPANY_NAME))));
     }
 }
