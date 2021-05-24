@@ -12,6 +12,8 @@ public class VerificationCondition {
     private Long id;
     private String severity;
     private Integer code;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

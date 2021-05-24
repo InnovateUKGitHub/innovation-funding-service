@@ -22,6 +22,7 @@ public class ProjectToBeCreated {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String emailBody;
 
     @CreatedDate

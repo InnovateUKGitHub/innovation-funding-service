@@ -5,10 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.profile.domain.Profile;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * An agreement with main text and three appendices. The agreement is signed by assessors on registration (as part of
@@ -27,6 +24,7 @@ public class Agreement extends AuditableEntity {
 
     private boolean current;
 
+    @Column(name = "text", columnDefinition = "LONGTEXT")
     private String text;
 
     public Agreement() {
