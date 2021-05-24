@@ -77,6 +77,27 @@ public class PageResourceTest {
         assertEquals(asList(7,100), lastPagePageSizeThreeAndEightResults.getContent()); // There was room on this last page so we should see the dummy.
     }
 
+    @Test
+    public void testPageResourceWithDummyItemsAddedToLastPage(){
+        PageResource<Integer> lastPagePageSizeThreeAndNineResults = new PageResource<>(9, 3, listXToY(7,9), 2, 3);
+        PageResource<Integer> secondLastPagePageSizeThreeAndTenResults  = lastPagePageSizeThreeAndNineResults.pageResourceWithDummyItemsAddedToLastPage(listXToY(100, 101)); // 2 Items
+        assertEquals(2, secondLastPagePageSizeThreeAndTenResults.getNumber()); // We are still looking at the same page.
+        assertEquals(4, secondLastPagePageSizeThreeAndTenResults.getTotalPages()); // We added another page.
+        assertEquals(asList(7,8,9), secondLastPagePageSizeThreeAndTenResults.getContent()); // There was no room on this last page so we should not see the dummy.
+
+        PageResource<Integer> lastPagePageSizeThreeAndTenResults = new PageResource<>(10, 4, listXToY(10, 10), 3, 3);
+        PageResource<Integer> lastPagePageSizeThreeAndTwelveResults = lastPagePageSizeThreeAndTenResults.pageResourceWithDummyItemsAddedToLastPage(listXToY(100, 101));
+        assertEquals(3, lastPagePageSizeThreeAndTwelveResults.getNumber()); // We are still looking at the same page.
+        assertEquals(4, lastPagePageSizeThreeAndTwelveResults.getTotalPages()); // We did not add another page.
+        assertEquals(asList(10,100, 101), lastPagePageSizeThreeAndTwelveResults.getContent()); // There was room on this last page so we should see the dummies .
+
+        PageResource<Integer> lastPagePageSizeThreeAndThirteenResults = new PageResource<>(13, 5, listXToY(13, 13), 4, 3);
+        PageResource<Integer> lastPagePageSizeThreeAndSixteenResults = lastPagePageSizeThreeAndThirteenResults.pageResourceWithDummyItemsAddedToLastPage(listXToY(100,102));
+        assertEquals(4, lastPagePageSizeThreeAndSixteenResults.getNumber()); // We are still looking at the same page.
+        assertEquals(6, lastPagePageSizeThreeAndSixteenResults.getTotalPages()); // We added another page.
+        assertEquals(asList(13,100, 101), lastPagePageSizeThreeAndSixteenResults.getContent()); // There was room on this page so we should see some of the dummies.
+    }
+
     private List<Integer> listToN(int n){
         return listXToY(1, n);
     }

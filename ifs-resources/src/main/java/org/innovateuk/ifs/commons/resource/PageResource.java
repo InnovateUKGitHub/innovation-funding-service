@@ -130,7 +130,7 @@ public class PageResource<PageableResource> {
         } else if (toAdd.size() == 1) {
             return pageResourceWithDummyItemAddedToLastPage(toAdd.get(0));
         } else {
-            return pageResourceWithDummyItemsAddedToLastPage(toAdd.subList(1, toAdd.size() - 1)).pageResourceWithDummyItemAddedToLastPage(toAdd.get(0));
+            return pageResourceWithDummyItemAddedToLastPage(toAdd.get(0)).pageResourceWithDummyItemsAddedToLastPage(toAdd.subList(1, toAdd.size()));
         }
     }
 
