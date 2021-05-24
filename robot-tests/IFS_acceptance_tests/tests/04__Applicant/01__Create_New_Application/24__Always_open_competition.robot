@@ -21,6 +21,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-8855 Always open competitions: manage notifications/release feedback
 ...
+...               IFS-9757 Assessment period validations
+...
 ...               IFS-9756 Typo in Comp milestones page
 ...
 ...               IFS-9750 Empty heading is displayed when there is no assessment period attached to the competition
@@ -122,12 +124,19 @@ Lead applicant checks the dashboard content and the guidance after an assessor i
     When the user clicks the button/link                                link = ${webTestAppName}
     Then the user checks the status of the application in assessment
 
+Assessment period validations as internal user
+    [Documentation]  IFS-9757
+    Given Log in as a different user                       &{Comp_admin1_credentials}
+    And the user clicks the button/link                    link = ${webTestCompName}
+    When the user clicks the button/link                   link = Manage assessments
+    And the user clicks the button/link                    link = Manage assessors
+    And the user clicks the button/link                    jQuery = button:contains("Save and continue")
+    Then the user should see a field and summary error     Please select an assessment period
+
 Comp admin updates the assessment period
     [Documentation]  IFS-8851
-    Given Log in as a different user                           &{Comp_admin1_credentials}
-    When the user clicks the button/link                       link = ${webTestCompName}
-    And the user clicks the button/link                        link = Manage assessments
-    And the user clicks the button/link                        link = Manage assessment period
+    Given the user clicks the button/link                      link = Back to manage assessments
+    When the user clicks the button/link                       link = Manage assessment period
     Then the user checks the milestone validation messages
     And the user clicks the button/link                        link = Back to manage assessments
     And the user should see the element                        jQuery = .govuk-table__cell:contains('20/01/2021')
