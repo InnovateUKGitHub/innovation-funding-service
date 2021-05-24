@@ -15,8 +15,7 @@
             </ds:KeyInfo>
         </md:KeyDescriptor>
         <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
-        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_1}=00D3M0000008ae7&amp;sc=0LE3M000000CaaE" index="0" isDefault="true"/>
-        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_2}=00D3M0000008ae7&amp;sc=0LE3M000000CaaE" index="1"/>
-        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_3}=00D3M0000008ae7&amp;sc=0LE3M000000CaaE" index="2"/>
-    </md:SPSSODescriptor>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_1}?so=${SO}&amp;sc=${SC}" index="0" isDefault="true"/>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_2}?so=${SO}&amp;sc=${SC}" index="1"/>
+      </md:SPSSODescriptor>
 </md:EntityDescriptor>

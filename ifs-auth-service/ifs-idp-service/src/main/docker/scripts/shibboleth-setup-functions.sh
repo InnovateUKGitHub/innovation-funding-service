@@ -97,6 +97,8 @@ createEntitiesFromProperties() {
     ACS_URL_1=$(property ACS_URL_1 ${properties})
     ACS_URL_2=$(property ACS_URL_2 ${properties})
     ACS_URL_3=$(property ACS_URL_3 ${properties})
+    SO=$(property SO ${properties})
+    SC=$(property SC ${properties})
     PORT=$(property PORT ${properties})
     PROTOCOL=$(property PROTOCOL ${properties})
     CERTIFICATE_FILE=$(property CERTIFICATE_FILE ${properties})
@@ -118,6 +120,6 @@ createEntitiesFromProperties() {
     templateFileName=/etc/shibboleth/extras/templates/${TEMPLATE}
     cp ${templateFileName} ${entityFileName}
 
-    replacePlaceholders ${entityFileName} DOMAIN ENTITY CERT_TIMESTAMP PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE ACS_URL_1 ACS_URL_2 ACS_URL_3
+    replacePlaceholders ${entityFileName} DOMAIN ENTITY CERT_TIMESTAMP PROTOCOL PORT_POSTFIX CERTIFICATE ENCRYPTION_CERTIFICATE ACS_URL_1 ACS_URL_2 ACS_URL_3 SO SC
   done
 }
