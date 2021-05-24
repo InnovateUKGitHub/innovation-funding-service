@@ -2,10 +2,7 @@ package org.innovateuk.ifs.assessment.workflow.configuration;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.assessment.workflow.actions.FundingDecisionAction;
-import org.innovateuk.ifs.assessment.workflow.actions.RejectAction;
-import org.innovateuk.ifs.assessment.workflow.actions.SubmitAction;
-import org.innovateuk.ifs.assessment.workflow.actions.WithdrawCreatedAction;
+import org.innovateuk.ifs.assessment.workflow.actions.*;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentFundingDecisionOutcomeGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentRejectOutcomeGuard;
@@ -80,6 +77,7 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
         configureFundingDecision(transitions);
         configureSubmit(transitions);
         configureChoice(transitions);
+        configureReturnToAssessor(transitions);
     }
 
     private void configureNotify(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
@@ -145,6 +143,13 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .withExternal()
                 .source(READY_TO_SUBMIT).target(WITHDRAWN)
                 .event(WITHDRAW);
+    }
+
+    private void configureReturnToAssessor(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(SUBMITTED).target(READY_TO_SUBMIT)
+                .event(UNSUBMIT);
     }
 
     private void configureFeedback(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {

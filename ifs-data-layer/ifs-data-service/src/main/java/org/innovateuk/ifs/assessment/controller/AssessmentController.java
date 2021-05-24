@@ -93,6 +93,11 @@ public class AssessmentController {
         return assessmentService.withdrawAssessment(id).toPutResponse();
     }
 
+    @PutMapping("/{id}/unsubmit")
+    public RestResult<Void> unsubmitAssessment(@PathVariable("id") long id) {
+        return assessmentService.unsubmitAssessment(id).toPutResponse();
+    }
+
     @PutMapping("/submit-assessments")
     public RestResult<Void> submitAssessments(@RequestBody @Valid AssessmentSubmissionsResource assessmentSubmissionsResource) {
         return assessmentService.submitAssessments(assessmentSubmissionsResource).toPutResponse();

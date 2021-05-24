@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
@@ -42,7 +42,7 @@ public class AssessmentPeriodPermissionRule extends BasePermissionRules {
 
         competitionParticipantList = competitionParticipantList.stream()
                 .filter(participant -> participant.getProcess().getId().equals(competitionId))
-                .filter(participant -> participant.getStatus().equals(ParticipantStatusResource.ACCEPTED))
+                .filter(participant -> participant.getStatus().equals(ParticipantStatus.ACCEPTED))
                 .collect(toList());
 
         return !competitionParticipantList.isEmpty();
