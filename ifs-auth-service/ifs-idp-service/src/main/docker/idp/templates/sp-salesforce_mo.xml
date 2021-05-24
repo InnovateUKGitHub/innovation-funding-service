@@ -17,5 +17,5 @@
         <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
         <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_1}?so=${SO}&amp;sc=${SC}" index="0" isDefault="true"/>
         <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="${ACS_URL_2}?so=${SO}&amp;sc=${SC}" index="1"/>
-      </md:SPSSODescriptor>
+    </md:SPSSODescriptor>
 </md:EntityDescriptor>
