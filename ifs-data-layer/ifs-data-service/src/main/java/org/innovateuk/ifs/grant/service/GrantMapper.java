@@ -101,6 +101,9 @@ class GrantMapper {
         PartnerOrganisation leadOrganisation =
                 simpleFindFirstMandatory(project.getPartnerOrganisations(), PartnerOrganisation::isLeadOrganisation);
 
+        ProjectFinanceResource projectLeadOrganisationFinances = getProjectOrganisationFinances(project, leadOrganisation.getOrganisation());
+        grant.setFecModelEnabled(projectLeadOrganisationFinances.getFecModelEnabled());
+
         ProjectUser projectManager =
                 getOnlyElement(project.getProjectUsersWithRole(PROJECT_MANAGER));
 
@@ -152,9 +155,7 @@ class GrantMapper {
          */
         SpendProfileCalculations grantCalculator = new SpendProfileCalculations(profile);
 
-
-        ProjectFinanceResource projectFinanceResource = projectFinanceHandler.getProjectOrganisationFinances(new ProjectFinanceResourceId(project.getId(), organisation.getId()))
-                .getSuccess();
+        ProjectFinanceResource projectFinanceResource = getProjectOrganisationFinances(project, organisation);
 
         String organisationSizeOrAcademic = projectFinanceResource.getOrganisationSize() != null ?
                 projectFinanceResource.getOrganisationSize().name() : ACADEMIC_ORGANISATION_SIZE_VALUE;
@@ -174,6 +175,11 @@ class GrantMapper {
                 projectFinanceResource.getGrantClaimPercentage(),
                 grantCalculator.getOverheadPercentage(),
                 forecasts);
+    }
+
+    private ProjectFinanceResource getProjectOrganisationFinances(Project project, Organisation organisation) {
+        return projectFinanceHandler.getProjectOrganisationFinances(new ProjectFinanceResourceId(project.getId(), organisation.getId()))
+                    .getSuccess();
     }
 
     private static List<Forecast> forecastsForFinanceContact(SpendProfile spendProfile) {

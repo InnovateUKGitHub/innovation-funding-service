@@ -176,20 +176,32 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
         NotificationMessage application1LeadApplicantMessage = new NotificationMessage(application1LeadApplicantTarget, asMap(
                 "applicationName", application1.getName(),
+                "applicationId", application1.getId(),
                 "competitionName", application1.getCompetition().getName(),
-                "applicationId", application1.getId()));
+                "competitionId", application1.getCompetition().getId(),
+                "alwaysOpen", application1.getCompetition().isAlwaysOpen(),
+                "webBaseUrl", webBaseUrl
+            ));
 
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
         NotificationMessage application2LeadApplicantMessage = new NotificationMessage(application2LeadApplicantTarget, asMap(
                 "applicationName", application2.getName(),
+                "applicationId", application2.getId(),
                 "competitionName", application2.getCompetition().getName(),
-                "applicationId", application2.getId()));
+                "competitionId", application2.getCompetition().getId(),
+                "alwaysOpen", application2.getCompetition().isAlwaysOpen(),
+                "webBaseUrl", webBaseUrl
+        ));
 
         UserNotificationTarget application3LeadApplicantTarget = new UserNotificationTarget(application3LeadApplicant.getName(), application3LeadApplicant.getEmail());
         NotificationMessage application3LeadApplicantMessage = new NotificationMessage(application3LeadApplicantTarget, asMap(
                 "applicationName", application3.getName(),
+                "applicationId", application3.getId(),
                 "competitionName", application3.getCompetition().getName(),
-                "applicationId", application3.getId()));
+                "competitionId", application3.getCompetition().getId(),
+                "alwaysOpen", application3.getCompetition().isAlwaysOpen(),
+                "webBaseUrl", webBaseUrl
+        ));
 
         List<NotificationMessage> expectedLeadApplicants = newArrayList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
 
@@ -258,24 +270,41 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
         NotificationMessage application1LeadApplicantMessage = new NotificationMessage(application1LeadApplicantTarget,  asMap(
                 "applicationName", application1.getName(),
-                "competitionName", application1.getCompetition().getName(),
                 "applicationId", application1.getId(),
+                "competitionName", application1.getCompetition().getName(),
+                "competitionId", application1.getCompetition().getId(),
+                "alwaysOpen", application1.getCompetition().isAlwaysOpen(),
+                "webBaseUrl", webBaseUrl,
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore1.getScore() + "%"));
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
         NotificationMessage application2LeadApplicantMessage = new NotificationMessage(application2LeadApplicantTarget, asMap(
                 "applicationName", application2.getName(),
-                "competitionName", application2.getCompetition().getName(),
                 "applicationId", application2.getId(),
+                "competitionName", application2.getCompetition().getName(),
+                "competitionId", application2.getCompetition().getId(),
+                "alwaysOpen", application2.getCompetition().isAlwaysOpen(),
+                "webBaseUrl", webBaseUrl,
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore2.getScore() + "%"));
         UserNotificationTarget application3LeadApplicantTarget = new UserNotificationTarget(application3LeadApplicant.getName(), application3LeadApplicant.getEmail());
         NotificationMessage application3LeadApplicantMessage = new NotificationMessage(application3LeadApplicantTarget, asMap(
                 "applicationName", application3.getName(),
-                "competitionName", application3.getCompetition().getName(),
                 "applicationId", application3.getId(),
+                "competitionName", application3.getCompetition().getName(),
+                "competitionId", application3.getCompetition().getId(),
+                "alwaysOpen", application3.getCompetition().isAlwaysOpen(),
+                "webBaseUrl", webBaseUrl,
                 "averageAssessorScore", "Average assessor score: " + averageAssessorScore3.getScore() + "%"));
         List<NotificationMessage> expectedLeadApplicants = newArrayList(application1LeadApplicantMessage, application2LeadApplicantMessage, application3LeadApplicantMessage);
 
+/*
 
+                    perNotificationTargetArguments.put("applicationName", application.getName());
+                    perNotificationTargetArguments.put("applicationId", applicationId);
+                    perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
+                    perNotificationTargetArguments.put("competitionId", application.getCompetition().getId());
+                    perNotificationTargetArguments.put("alwaysOpen", application.getCompetition().isAlwaysOpen());
+                    perNotificationTargetArguments.put("webBaseUrl", webBaseUrl);
+ */
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
                 application2.getId(), FundingDecision.UNFUNDED,

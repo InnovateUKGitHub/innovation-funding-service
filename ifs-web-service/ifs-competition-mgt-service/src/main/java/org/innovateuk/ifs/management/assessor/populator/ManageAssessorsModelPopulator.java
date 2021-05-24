@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.assessor.populator;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.assessment.populator.BaseManageAssessmentsModelPopulator;
@@ -20,11 +21,20 @@ public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPop
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts) {
+    @Autowired
+    private AssessmentPeriodService assessmentPeriodService;
+
+    public ManageAssessorsViewModel populateModel(CompetitionResource competition, AssessorCountSummaryPageResource assessorCounts, long assessmentPeriodId) {
+
+        String assessmentPeriodName = assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competition.getId());
+
         return new ManageAssessorsViewModel(
                 competition.getId(), competition.getName(),
+                assessmentPeriodId,
+                assessmentPeriodName,
                 simpleMap(assessorCounts.getContent(), this::getRowViewModel),
                 competition.getCompetitionStatus() == IN_ASSESSMENT,
+                competition.isAlwaysOpen(),
                 categoryRestService.getInnovationSectors().getSuccess(),
                 new Pagination(assessorCounts));
     }

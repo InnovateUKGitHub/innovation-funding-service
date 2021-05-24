@@ -38,6 +38,8 @@ public class CompetitionInviteResource extends InviteResource {
 
     private InnovationAreaResource innovationArea;
 
+    private Boolean competitionAlwaysOpen;
+
     public Long getCompetitionId() {
         return competitionId;
     }
@@ -132,6 +134,14 @@ public class CompetitionInviteResource extends InviteResource {
 
     public void setHash(String hash) {
         this.hash = hash;
+    }
+
+    public Boolean getCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
+    }
+
+    public void setCompetitionAlwaysOpen(Boolean competitionAlwaysOpen) {
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
     }
 
     @Override

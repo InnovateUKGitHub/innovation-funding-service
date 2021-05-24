@@ -424,10 +424,11 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user selects the checkbox           app-row-9
     Set Focus To Element                    css = label[for = "app-row-10"]
     the user selects the checkbox           app-row-10
+    the user clicks the button/link         id = select-all-1
     the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
     the user refreshes until element appears on page         jQuery = td:contains("Sent")
-    the user should see the element         jQuery = h1:contains("Manage funding applications")
+    the user should see the element         jQuery = h1:contains("Manage funding decisions and notifications")
 
 lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}

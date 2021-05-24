@@ -551,17 +551,18 @@ the assessors accept the invitation to assess the subsidy control competition
     the user clicks the button/link                       jQuery = button:contains("Confirm")
 
 the application is assigned to be an assessor
-    log in as a different user            &{Comp_admin1_credentials}
-    the user navigates to the page        ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/assessors
-    the user selects the checkbox         assessor-row-1
-    the user clicks the button/link       jQuery = button:contains("Add to application")
-    the user navigates to the page        ${server}/management/competition/${subsidyControlCompetitionId}
-    the user clicks the button/link       jQuery = button:contains("Notify assessors")
-    log in as a different user            ${assessor1_email}   ${short_password}
-    the user navigates to the page        ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
-    the user clicks the button/link       link = ${leadSubsidyControlApplication}
-    the user selects the radio button     assessmentAccept  true
-    the user clicks the button/link       jQuery = button:contains("Confirm")
+    log in as a different user                             &{Comp_admin1_credentials}
+    get assessment period id and set as suite variable     ${subsidyControlCompetitionId}
+    the user navigates to the page                         ${server}/management/assessment/competition/${subsidyControlCompetitionId}/application/${leadSubsidyControlApplicationID}/period/${assessmentPeriodID}/assessors
+    the user selects the checkbox                          assessor-row-1
+    the user clicks the button/link                        jQuery = button:contains("Add to application")
+    the user navigates to the page                         ${server}/management/competition/${subsidyControlCompetitionId}
+    the user clicks the button/link                        jQuery = button:contains("Notify assessors")
+    log in as a different user                             ${assessor1_email}   ${short_password}
+    the user navigates to the page                         ${server}/assessment/assessor/dashboard/competition/${subsidyControlCompetitionId}
+    the user clicks the button/link                        link = ${leadSubsidyControlApplication}
+    the user selects the radio button                      assessmentAccept  true
+    the user clicks the button/link                        jQuery = button:contains("Confirm")
 
 assessor should see valid subsidy basis answers
     the user clicks the button/link                 jQuery = tr:nth-child(1) a:contains("View answers")
@@ -576,3 +577,8 @@ the user can see the terms and conditions for the lead and partner applicant
     the user should see the element      link = Innovate UK - Subsidy control
     the user should see the element      jQuery = td:contains("${partnerOrganisationName}")+ td:contains("State aid")
     the user should see the element      link = Innovate UK
+
+get assessment period id and set as suite variable
+    [Arguments]  ${competitionID}
+    ${assessmentPeriodID} =   get assessment period using competition id   ${competitionID}
+    Set suite variable  ${assessmentPeriodID}

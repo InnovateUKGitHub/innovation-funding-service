@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.invite.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.Clock;
@@ -31,8 +33,33 @@ public class CompetitionParticipantResource {
     private long submittedAssessments;
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
-
+    private Boolean competitionAlwaysOpen;
+    private AssessmentPeriodResource assessmentPeriod;
     private Clock clock = Clock.systemDefaultZone();
+
+    public CompetitionParticipantResource() {
+    }
+
+    public CompetitionParticipantResource(Long id, Long competitionId, Long userId, CompetitionInviteResource invite,
+                                          RejectionReasonResource rejectionReason, String rejectionReasonComment, CompetitionParticipantRoleResource role,
+                                          ParticipantStatusResource status, String competitionName, ZonedDateTime assessorAcceptsDate,
+                                          ZonedDateTime assessorDeadlineDate, CompetitionStatus competitionStatus, Boolean competitionAlwaysOpen,
+                                          AssessmentPeriodResource assessmentPeriod) {
+        this.id = id;
+        this.competitionId = competitionId;
+        this.userId = userId;
+        this.invite = invite;
+        this.rejectionReason = rejectionReason;
+        this.rejectionReasonComment = rejectionReasonComment;
+        this.role = role;
+        this.status = status;
+        this.competitionName = competitionName;
+        this.assessorAcceptsDate = assessorAcceptsDate;
+        this.assessorDeadlineDate = assessorDeadlineDate;
+        this.competitionStatus = competitionStatus;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
+        this.assessmentPeriod = assessmentPeriod;
+    }
 
     public String getCompetitionName() {
         return competitionName;
@@ -154,6 +181,22 @@ public class CompetitionParticipantResource {
         this.competitionStatus = competitionStatus;
     }
 
+    public Boolean getCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
+    }
+
+    public void setCompetitionAlwaysOpen(Boolean competitionAlwaysOpen) {
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
+    }
+
+    public AssessmentPeriodResource getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public void setAssessmentPeriod(AssessmentPeriodResource assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
+    }
+
     @JsonIgnore
     public boolean isAccepted() {
         return status == ParticipantStatusResource.ACCEPTED;
@@ -194,6 +237,10 @@ public class CompetitionParticipantResource {
         return isInAssessment() || isAnUpcomingAssessment();
     }
 
+    public boolean isCompetitionAlwaysOpen() {
+        return BooleanUtils.isTrue(competitionAlwaysOpen);
+    }
+
     private static long getDaysLeftPercentage(long daysLeft, long totalDays) {
         if (daysLeft <= 0) {
             return 100;
@@ -226,6 +273,8 @@ public class CompetitionParticipantResource {
                 .append(assessorAcceptsDate, that.assessorAcceptsDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
                 .append(competitionStatus, that.competitionStatus)
+                .append(competitionAlwaysOpen, that.competitionAlwaysOpen)
+                .append(assessmentPeriod, that.assessmentPeriod)
                 .append(clock, that.clock)
                 .isEquals();
     }
@@ -248,6 +297,8 @@ public class CompetitionParticipantResource {
                 .append(submittedAssessments)
                 .append(totalAssessments)
                 .append(competitionStatus)
+                .append(competitionAlwaysOpen)
+                .append(assessmentPeriod)
                 .append(clock)
                 .toHashCode();
     }

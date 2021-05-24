@@ -12,16 +12,19 @@ public class ApplicationAssessmentProgressRemoveViewModel {
     private long competitionId;
     private long applicationId;
     private long assessmentId;
+    private long assessmentPeriodId;
     private AvailableAssessorsSortFieldType sortField;
 
     public ApplicationAssessmentProgressRemoveViewModel(
             long competitionId,
             long applicationId,
             long assessmentId,
+            long assessmentPeriodId,
             AvailableAssessorsSortFieldType sortField) {
         this.competitionId = competitionId;
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
+        this.assessmentPeriodId = assessmentPeriodId;
         this.sortField = sortField;
     }
 
@@ -37,19 +40,19 @@ public class ApplicationAssessmentProgressRemoveViewModel {
         return assessmentId;
     }
 
+    public long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
+
     public AvailableAssessorsSortFieldType getSortField() {
         return sortField;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         ApplicationAssessmentProgressRemoveViewModel that = (ApplicationAssessmentProgressRemoveViewModel) o;
 
@@ -57,6 +60,7 @@ public class ApplicationAssessmentProgressRemoveViewModel {
                 .append(competitionId, that.competitionId)
                 .append(applicationId, that.applicationId)
                 .append(assessmentId, that.assessmentId)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .append(sortField, that.sortField)
                 .isEquals();
     }
@@ -67,6 +71,7 @@ public class ApplicationAssessmentProgressRemoveViewModel {
                 .append(competitionId)
                 .append(applicationId)
                 .append(assessmentId)
+                .append(assessmentPeriodId)
                 .append(sortField)
                 .toHashCode();
     }

@@ -21,12 +21,12 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        String expectedUrl = "/application-count-summary/find-by-competition-id/1?filter=filter&page=2&size=3";
+        String expectedUrl = "/application-count-summary/find-by-competition-id-and-assessment-period-id/1/2?filter=filter&page=2&size=3";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionId(1L, 2, 3, "filter").getSuccess();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(1L, 2, 2, 3, "filter").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 
@@ -37,7 +37,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 10L,2, Sort.ASSESSORS, "filter").getSuccess();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 10L, 2,  Sort.ASSESSORS, "filter").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 

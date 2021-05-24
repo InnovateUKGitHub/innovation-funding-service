@@ -93,7 +93,7 @@
                     <h2 class="govuk-heading-m" th:text="${model.applicationInProgressText}"/>
                     <ul>
                         <li th:each="inProgressView : ${model.inProgress}"
-                            th:classappend="|${inProgressView.assignedToMe ? 'assigned-to-me' : '' } ${inProgressView.shouldDisplayEndDate ? 'status-2-col' : ''}|">
+                            th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' } + ' ' + 'status-2-col'">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" class="govuk-link" />
@@ -132,6 +132,11 @@
                                             hours left<br/>
                                             Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
                                             <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
+                                        </div>
+                                    </th:block>
+                                    <th:block th:if="${!inProgressView.shouldDisplayEndDate && inProgressView.alwaysOpen}">
+                                        <div class="status-msg msg-deadline">
+                                            <div class="always-open-status"></div>
                                         </div>
                                     </th:block>
                                     <span class="status-msg msg-progress"

@@ -19,6 +19,12 @@ public class AssessmentCreateResource {
     public AssessmentCreateResource() {
     }
 
+    public AssessmentCreateResource(Long applicationId, Long assessorId, Long assessmentPeriodId) {
+        this.applicationId = applicationId;
+        this.assessorId = assessorId;
+        this.assessmentPeriodId = assessmentPeriodId;
+    }
+
     public AssessmentCreateResource(Long applicationId, Long assessorId) {
         this.applicationId = applicationId;
         this.assessorId = assessorId;
