@@ -101,18 +101,18 @@ public class PageResource<PageableResource> {
     }
 
     public boolean hasPrevious() {
-        return number > 0;
+        return number > 0; // Zero based
     }
 
     public boolean hasNext() {
-        return totalPages > (number + 1);
+        return totalPages > (number + 1); // Zero based
     }
 
     /**
      * This is useful for when we want to add a new item at the end of the pages, but that item has not yet been saved.
      * The pagination is then as if it had been saved.
-     * @param toAdd the item to be added to the last page, will be ignored if wouldn't end up being on this
-     *                         page.
+     * @param toAdd the item to be added to the last page, will be ignored if wouldn't end up being on this page.
+     *
      */
     public PageResource<PageableResource> pageResourceWithDummyItemAddedToLastPage(PageableResource toAdd) {
         long newTotalElements = totalElements + 1;
@@ -139,7 +139,7 @@ public class PageResource<PageableResource> {
     }
 
     public boolean isLastPage(){
-        return number + 1 == totalPages;
+        return number + 1 == totalPages; // Zero based
     }
 
     @Override

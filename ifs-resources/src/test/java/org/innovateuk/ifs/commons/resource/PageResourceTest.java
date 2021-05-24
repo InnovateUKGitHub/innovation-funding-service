@@ -10,6 +10,8 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.rangeClosed;
 import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class PageResourceTest {
 
@@ -96,6 +98,24 @@ public class PageResourceTest {
         assertEquals(4, lastPagePageSizeThreeAndSixteenResults.getNumber()); // We are still looking at the same page.
         assertEquals(6, lastPagePageSizeThreeAndSixteenResults.getTotalPages()); // We added another page.
         assertEquals(asList(13,100, 101), lastPagePageSizeThreeAndSixteenResults.getContent()); // There was room on this page so we should see some of the dummies.
+    }
+
+    @Test
+    public void testIsLastPage() {
+        PageResource<Integer> lastPagePageSizeThreeAndNineResults = new PageResource<>(9, 3, listXToY(7, 9), 2, 3);
+        assertTrue(lastPagePageSizeThreeAndNineResults.isLastPage());
+
+        PageResource<Integer> secondLastPagePageSizeThreeAndNineResults = new PageResource<>(9, 3, listXToY(4, 6), 1, 3);
+        assertFalse(secondLastPagePageSizeThreeAndNineResults.isLastPage());
+    }
+
+    @Test
+    public void testIsLastPageFull() {
+        PageResource<Integer> lastPagePageSizeThreeAndNineResults = new PageResource<>(9, 3, listXToY(7, 9), 2, 3);
+        assertTrue(lastPagePageSizeThreeAndNineResults.isLastPageFull());
+
+        PageResource<Integer> lastPagePageSizeThreeAndEightResults = new PageResource<>(8, 3, listXToY(7, 8), 2, 3);
+        assertFalse(lastPagePageSizeThreeAndEightResults.isLastPageFull());
     }
 
     private List<Integer> listToN(int n){
