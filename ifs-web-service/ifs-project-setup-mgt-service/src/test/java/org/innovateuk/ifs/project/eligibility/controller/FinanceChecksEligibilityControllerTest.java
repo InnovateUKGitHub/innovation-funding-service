@@ -8,10 +8,12 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.Labou
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -49,6 +51,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
@@ -721,20 +724,67 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     }
 
     @Test
+    public void testViewEligibilityEditFinances() throws Exception {
+
+        EligibilityResource eligibility = new EligibilityResource(EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
+        setUpViewEligibilityMocking(eligibility, project);
+
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility?editProjectCosts=true",
+                project.getId(), industrialOrganisation.getId())).
+                andExpect(model().attributeExists("model")).
+                andExpect(view().name("project/financecheck/eligibility")).
+                andExpect(status().isOk());
+    }
+
+    @Test
     public void testProjectFinanceFormSubmit() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
-        FinanceRowType rowType = FinanceRowType.LABOUR;
-        when(yourProjectCostsSaver.saveType(isA(YourProjectCostsForm.class), eq(rowType), eq(projectId), eq(organisationId), eq(false))).thenReturn(serviceSuccess());
+
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withFecEnabled(false)
+                .withOrganisation(organisationId)
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .withFinanceOrganisationDetails(asMap(
+                        FinanceRowType.LABOUR, newDefaultCostCategory().build(),
+                        FinanceRowType.OVERHEADS, newDefaultCostCategory().build(),
+                        FinanceRowType.MATERIALS, newDefaultCostCategory().build(),
+                        FinanceRowType.CAPITAL_USAGE, newDefaultCostCategory().build(),
+                        FinanceRowType.SUBCONTRACTING_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.TRAVEL, newDefaultCostCategory().build(),
+                        FinanceRowType.OTHER_COSTS, newDefaultCostCategory().build(),
+                        FinanceRowType.YOUR_FINANCE, newDefaultCostCategory().build(),
+                        FinanceRowType.FINANCE, newDefaultCostCategory().build(),
+                        FinanceRowType.OTHER_FUNDING, newDefaultCostCategory().build()))
+                        .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(123L)
+                .withFinanceRowTypes(FinanceRowType.getNonFecSpecificFinanceRowTypes())
+                .build();
+
+        when(projectFinanceRestService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinance));
+        when(competitionRestService.getCompetitionForProject(projectId)).thenReturn(restSuccess(competition));
+
+        List<FinanceRowType> financeRowTypes = competition.getFinanceRowTypesByFinance(Optional.of(projectFinance))
+                .stream()
+                .filter(FinanceRowType::isAppearsInProjectCostsAccordion)
+                .collect(Collectors.toList());
+
+        financeRowTypes.forEach(type -> yourProjectCostsFormValidator.validateType(isA(YourProjectCostsForm.class), eq(type), any(ValidationHandler.class)));
+        when(yourProjectCostsSaver.save(isA(YourProjectCostsForm.class), eq(projectId), eq(industrialOrganisation), eq(new ValidationMessages()))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
-                param("save-eligibility", rowType.name())).
+                param("save-eligibility", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
     }
 
     @Test
-    public void testEligibiltiyChanges() throws Exception {
+    public void testEligibilityChanges() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);

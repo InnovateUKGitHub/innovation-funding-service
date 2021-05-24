@@ -16,8 +16,13 @@ public abstract class ProcessOutcome<ProcessType extends Process> extends Audita
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     protected String outcome;
+
+    @Column(columnDefinition = "LONGTEXT")
     protected String description;
+
+    @Column(columnDefinition = "LONGTEXT")
     protected String comment;
+
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Process.class)
     @JoinColumn(name = "process_id", referencedColumnName = "id")
     private ProcessType process;
