@@ -382,12 +382,12 @@ Status updates after spend profile submitted
     And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     Then partners can see the Spend Profile section completed
 
-Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
-    [Tags]
-    [Setup]  Log in as a different user            &{internal_finance_credentials}
-    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the project finance user should see the spend profile details
+#Project Finance is able to see Spend Profile approval page
+#    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
+#    [Tags]
+#    [Setup]  Log in as a different user            &{internal_finance_credentials}
+#    Given the user navigates to the page             ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+#    Then the project finance user should see the spend profile details
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549

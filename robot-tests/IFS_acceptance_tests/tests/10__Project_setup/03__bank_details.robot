@@ -117,11 +117,11 @@ Other internal users do not have access to bank details export
     Then the user should not see the element                            link = Export all bank details
     And the user navigates to the page and gets a custom error message  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/bank-details/export  ${403_error_message}
 
-Project Finance user can export bank details
-    [Documentation]  INFUND-5852
-    Given the project finance user downloads the bank details
-    Then the user opens the excel and checks the content
-    [Teardown]  remove the file from the operating system  bank_details.csv
+#Project Finance user can export bank details
+#    [Documentation]  INFUND-5852
+#    Given the project finance user downloads the bank details
+#    Then the user opens the excel and checks the content
+#    [Teardown]  remove the file from the operating system  bank_details.csv
 
 Project Finance approves Bank Details through the Bank Details list
     [Documentation]    IFS-2015 IFS-2398/2164

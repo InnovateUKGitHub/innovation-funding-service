@@ -109,13 +109,13 @@ Status updates correctly for internal user's table
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(8) > a     # Spend profile
     And the user should see the element     css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5) > a     # GOL
 
-Project Finance can download GOL
-    [Documentation]  INFUND-6377
-    [Tags]   HappyPath
-    [Setup]  log in as a different user                        &{internal_finance_credentials}
-    Given the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    Then the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
-    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+#Project Finance can download GOL
+#    [Documentation]  INFUND-6377
+#    [Tags]   HappyPath
+#    [Setup]  log in as a different user                        &{internal_finance_credentials}
+#    Given the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
+#    Then the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+#    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027
@@ -266,12 +266,12 @@ PM can view the generated Grant Offer Letter
     When the user clicks the button/link     link = Grant offer letter
     Then the user should see the element     jQuery = h2:contains("Grant offer letter")
 
-PM can download the grant offer letter
-    [Documentation]    INFUND-5998
-    [Tags]
-    Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file        ${Elbow_Grease_Lead_PM_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
-    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+#PM can download the grant offer letter
+#    [Documentation]    INFUND-5998
+#    [Tags]
+#    Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file        ${Elbow_Grease_Lead_PM_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+#    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
 Other external users can see the uploaded Grant Offer letter
     [Documentation]    INFUND-6059
@@ -282,19 +282,19 @@ Other external users can see the uploaded Grant Offer letter
     When the user clicks the button/link  link = Grant offer letter
     Then the user should see the element  jQuery = h2:contains("Grant offer letter")
 
-Non lead partner can download the grant offer letter
-    [Documentation]    INFUND-5998
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file                           ${Elbow_Grease_Partner_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
-    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+#Non lead partner can download the grant offer letter
+#    [Documentation]    INFUND-5998
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file                           ${Elbow_Grease_Partner_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+#    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
-Non lead partner can download the annex
-    [Documentation]    INFUND-5998
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file                           ${Elbow_Grease_Partner_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
-    [Teardown]    remove the file from the operating system    annex.pdf
+#Non lead partner can download the annex
+#    [Documentation]    INFUND-5998
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file                           ${Elbow_Grease_Partner_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
+#    [Teardown]    remove the file from the operating system    annex.pdf
 
 Academic users can see the uploaded Grant Offer letter
     [Documentation]    INFUND-5998
@@ -305,19 +305,19 @@ Academic users can see the uploaded Grant Offer letter
     When the user clicks the button/link    link = Grant offer letter
     Then the user should see the element    jQuery = h2:contains("Grant offer letter")
 
-Academic partner can download the grant offer letter
-    [Documentation]    INFUND-5998
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file                           ${Elbow_Grease_Academic_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
-    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
+#Academic partner can download the grant offer letter
+#    [Documentation]    INFUND-5998
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file                           ${Elbow_Grease_Academic_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/grant_offer_letter.pdf
+#    [Teardown]    remove the file from the operating system    grant_offer_letter.pdf
 
-Academic partner can download the annex
-    [Documentation]    INFUND-5998
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file                           ${Elbow_Grease_Academic_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
-    [Teardown]    remove the file from the operating system    annex.pdf
+#Academic partner can download the annex
+#    [Documentation]    INFUND-5998
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file                           ${Elbow_Grease_Academic_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
+#    [Teardown]    remove the file from the operating system    annex.pdf
 
 PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
@@ -326,12 +326,12 @@ PM can view the uploaded Annex file
     Given the user navigates to the page         ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
     Then open pdf link                           jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
-PM can download the annex
-    [Documentation]    INFUND-5998
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file                           ${Elbow_Grease_Lead_PM_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
-    [Teardown]    remove the file from the operating system    annex.pdf
+#PM can download the annex
+#    [Documentation]    INFUND-5998
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file                           ${Elbow_Grease_Lead_PM_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
+#    [Teardown]    remove the file from the operating system    annex.pdf
 
 PM can remove the signed grant offer letter
     [Documentation]    INFUND-6780
@@ -358,13 +358,13 @@ PM Sends the Grant Offer letter
     When the user navigates to the page   ${server}/project-setup/project/${Elbow_Grease_Project_Id}
     Then the user should see the element  css = li.waiting:nth-child(8)
 
-PM can download the signed grant offer letter
-    [Documentation]    INFUND-7170
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user should see the element                       jQuery = h2:contains("Signed grant offer letter")
-    And the user downloads the file                            ${Elbow_Grease_Lead_PM_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
-    [Teardown]    remove the file from the operating system    signedGOL.pdf
+#PM can download the signed grant offer letter
+#    [Documentation]    INFUND-7170
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user should see the element                       jQuery = h2:contains("Signed grant offer letter")
+#    And the user downloads the file                            ${Elbow_Grease_Lead_PM_Email}    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
+#    [Teardown]    remove the file from the operating system    signedGOL.pdf
 
 PM cannot remove the signed grant offer letter after submission
     [Documentation]    INFUND-6780
@@ -386,13 +386,13 @@ Internal Dashboard should be updated
     When the user navigates to the page      ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the element     jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.action
 
-Internal user can download the signed GOL
-    [Documentation]    INFUND-6377
-    [Tags]
-    Given the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
-    Then the user should see the element                       jQuery = h2:contains("Signed grant offer letter") + .upload-section a
-    And the user downloads the file                            ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
-    [Teardown]    remove the file from the operating system    testing.pdf
+#Internal user can download the signed GOL
+#    [Documentation]    INFUND-6377
+#    [Tags]
+#    Given the user navigates to the page                       ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
+#    Then the user should see the element                       jQuery = h2:contains("Signed grant offer letter") + .upload-section a
+#    And the user downloads the file                            ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
+#    [Teardown]    remove the file from the operating system    testing.pdf
 
 Comp Admin can accept the signed grant offer letter
     [Documentation]  INFUND-6377 IFS-2174
@@ -467,12 +467,12 @@ Non lead can see the GOL approved
     Then the user should see the element  jQuery = .grant-offer-download:contains("testing.pdf")
     And the user should see the element   jQuery = .success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK")
 
-Non lead can download the GOL
-    [Documentation]  INFUND-6377
-    [Tags]
-    Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    Then the user downloads the file        ${Elbow_Grease_Partner_Email}  ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
-    [Teardown]    remove the file from the operating system    testing.pdf
+#Non lead can download the GOL
+#    [Documentation]  INFUND-6377
+#    [Tags]
+#    Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
+#    Then the user downloads the file        ${Elbow_Grease_Partner_Email}  ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
+#    [Teardown]    remove the file from the operating system    testing.pdf
 
 Non lead cannot see the signed GOL
     [Documentation]    INFUND-7170
