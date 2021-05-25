@@ -55,11 +55,15 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-7531 Ability to remove annex upload through remove link
 ...
+...               IFS-9611 IFS Expert user can remove uploaded Grant Offer Letter documents
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
 
+*** Variables ***
+${HighSpeedProjectName}       High-speed rail and its effects on water quality
 
 *** Test Cases ***
 Applicant able to update project location until GOL not generated
@@ -523,11 +527,44 @@ Project is automatically sent to ACC if set up for the competition
     Given log in as a different user         ${Elbow_Grease_Lead_PM_Email}   ${short_password}
     Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
 
+IFS Expert user can reset GOL in project setup
+    [Documentation]  IFS-9611
+    [Setup]  Requesting Project ID of this Project
+    Given Log in as a different user                    &{superAdminCredentials}
+    When the user navigates to the page                 ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
+    And the expert user resets the GOL
+    Then the user should see the element                jQuery = h2:contains("Grant offer letter upload") +* p:contains("No files have been uploaded yet.")
+    
 *** Keywords ***
 the user uploads a file
     [Arguments]  ${name}  ${file}
     the user uploads the file    name = ${name}    ${file}
     Wait Until Page Does Not Contain Without Screenshots    Uploading
+
+Requesting Project ID of this Project
+    ${HighSpeedProjectID} =  get project id by name   ${HighSpeedProjectName}
+    Set suite variable    ${HighSpeedProjectID}
+
+the expert user resets the GOL
+    the user clicks the button/link         jQuery = a:contains("Reset grant offer letter")
+    the user clicks the button/link         jQuery = button:contains("Reset grant offer letter")
+
+the expert user uploads the GOL
+    the user navigates to the page     ${server}/project-setup-management/project/${HighSpeedProjectID}/grant-offer-letter/send
+    the user uploads the file          grantOfferLetter  ${gol_pdf}
+    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
+
+the IFS expert user rejects the GOL
+    [Arguments]  ${projectID}
+    log in as a different user            &{ifs_expert_user_credentials}
+    the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button     REJECTED  rejectGOL
+    the user enters text to a text field  id = gol-reject-reason   Rejected
+    the user clicks the button/link       id = submit-button
+    the user clicks the button/link       jQuery = button:contains("Reject signed grant offer letter")
+    the user should see the element       jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
 
 the user is able to see the Grant Offer letter page
     Select Window                          title = Print version with CSS
