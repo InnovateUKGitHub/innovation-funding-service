@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.config.security;
 
-import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

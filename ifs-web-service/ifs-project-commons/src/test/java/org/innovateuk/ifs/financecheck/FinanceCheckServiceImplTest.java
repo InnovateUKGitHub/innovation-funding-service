@@ -24,20 +24,20 @@ public class FinanceCheckServiceImplTest {
     private FinanceCheckServiceImpl service;
 
     @Mock
-    private FinanceCheckRestService financeCheckRestServiceMock;
+    private FinanceCheckRestService financeCheckRestService;
 
     @Mock
-    private ProjectFinanceQueriesRestService projectFinanceQueriesRestServiceMock;
+    private ProjectFinanceQueriesRestService projectFinanceQueriesRestService;
 
     @Test
-    public void testGet(){
-        Long projectId = 123L;
-        Long organisationId = 456L;
+    public void get(){
+        long projectId = 123L;
+        long organisationId = 456L;
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
 
-        when(financeCheckRestServiceMock.getByProjectAndOrganisation(projectId, organisationId)).thenReturn(restSuccess(financeCheckResource));
+        when(financeCheckRestService.getByProjectAndOrganisation(projectId, organisationId)).thenReturn(restSuccess(financeCheckResource));
 
         FinanceCheckResource result = service.getByProjectAndOrganisation(key);
 
@@ -45,13 +45,13 @@ public class FinanceCheckServiceImplTest {
     }
 
     @Test
-    public void testCloseQuery(){
+    public void closeQuery(){
 
         Long queryId = 1L;
-        when(projectFinanceQueriesRestServiceMock.close(queryId)).thenReturn(restSuccess());
+        when(projectFinanceQueriesRestService.close(queryId)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.closeQuery(queryId);
         assertTrue(result.isSuccess());
-        verify(projectFinanceQueriesRestServiceMock).close(queryId);
+        verify(projectFinanceQueriesRestService).close(queryId);
     }
 }

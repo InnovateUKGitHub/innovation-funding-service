@@ -14,7 +14,7 @@ public class CompetitionApplicationConfig {
     @OneToOne(mappedBy = "competitionApplicationConfig",fetch = FetchType.LAZY)
     private Competition competition;
 
-    @Column
+    @Column(columnDefinition = "double")
     private BigDecimal maximumFundingSought;
 
     public CompetitionApplicationConfig() {

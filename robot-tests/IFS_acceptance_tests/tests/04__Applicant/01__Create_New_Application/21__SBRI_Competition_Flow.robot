@@ -60,7 +60,7 @@ ${inclusiveOfVATHeading}              Total project costs inclusive of VAT
 ${totalProjCosts}                     Total project cost
 ${vatRegistered}                      Are you VAT registered
 ${totalWithVAT}                       £265,084
-${totalWithoutVAT}                    £220,903
+${totalWithoutVAT}                    £265,084
 ${initialFunding}                     £265,084
 ${revisedFunding}                     £218,435
 ${vatTotal}                           £44,181

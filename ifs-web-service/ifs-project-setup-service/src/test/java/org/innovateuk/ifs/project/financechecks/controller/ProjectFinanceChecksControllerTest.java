@@ -276,6 +276,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertNull(viewModel.getFecModelEnabled());
+        assertFalse(viewModel.isCanEditProjectCosts());
     }
 
     @Test
@@ -338,6 +339,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         FinanceChecksProjectCostsViewModel projectCostViewModel = (FinanceChecksProjectCostsViewModel) model.get("model");
 
         assertNotNull(projectCostViewModel);
+        assertFalse(projectCostViewModel.isCanEditProjectCosts());
 
         assertThat(projectCostViewModel.getOrderedAccordionFinanceRowTypes(), containsInAnyOrder(expectedFinanceRowTypes.toArray()));
     }

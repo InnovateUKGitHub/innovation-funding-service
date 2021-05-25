@@ -11,6 +11,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -119,6 +120,11 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(false);
 
+        OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+        organisationTypeForm.setOrganisationType(selectedOrganisation.getOrganisationType());
+
+        registrationCookieService.saveToOrganisationIdCookie(selectedOrganisation.getId(), response);
+        registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute("subtitle", "Your organisation");
