@@ -25,6 +25,7 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -134,6 +135,12 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A stakeholder can access the Documents section once all documents have been approved")
     public boolean stakeholderCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isStakeholder);
+    }
+
+    // For feature toggle ifs.monitoringofficer.journey.update.enabled=false
+    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Comp admin or project finance users can approve or reject documents")
+    public boolean competitionAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
+        return SecurityRuleUtil.isInternalAdmin(user) || hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "APPROVE_DOCUMENTS", description = "IFS admin can approve or reject documents")

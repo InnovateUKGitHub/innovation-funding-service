@@ -50,6 +50,12 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isProjectManager(project.getId(), user.getId());
     }
 
+    // for feature toggle ifs.monitoringofficer.journey.update.enabled=false
+    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin and project finance users can approve or reject document")
+    public boolean competitionAdminCanApproveDocument(ProjectResource project, UserResource user) {
+        return isInternalAdmin(user) || hasProjectFinanceAuthority(user);
+    }
+
     @PermissionRule(value = "REVIEW_DOCUMENT", description = "IFS admin users can approve or reject document")
     public boolean internalAdminCanApproveDocument(ProjectResource project, UserResource user) {
         return hasIFSAdminAuthority(user);
