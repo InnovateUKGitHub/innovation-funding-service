@@ -88,10 +88,14 @@ import static org.mockito.Mockito.when;
  *
  *    In conjunction with "ifs.generate.test.data.competition.filter=BY_NAME", this parameter allows you to specify a
  *    single Competition to generate.
+ *
+ *    It looks as though spring starts up before we run table generation so it will fail the schema validation. So set
+ *    spring.jpa.hibernate.ddl-auto=none for this scenario only.
  */
 @ActiveProfiles({"integration-test","seeding-db"})
 @DirtiesContext
-@SpringBootTest(classes = GenerateTestDataConfiguration.class)
+@SpringBootTest(classes = GenerateTestDataConfiguration.class,
+        properties = {"spring.jpa.hibernate.ddl-auto=none"})
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);

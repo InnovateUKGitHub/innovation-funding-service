@@ -33,6 +33,8 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     private String description;
 
     private Integer quantity;
+
+    @Column(columnDefinition = "double")
     private BigDecimal cost;
 
     @Size(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)

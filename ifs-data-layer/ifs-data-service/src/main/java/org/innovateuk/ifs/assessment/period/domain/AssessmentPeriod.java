@@ -89,4 +89,9 @@ public class AssessmentPeriod {
                         .filter(milestone -> milestone.getDate() != null)
                         .filter(milestone -> milestone.isReached(now()));
     }
+
+    public boolean isOpen() {
+        return milestones.stream().anyMatch(m -> m.getType().equals(ASSESSORS_NOTIFIED))
+                && milestones.stream().noneMatch(m -> m.getType().equals(ASSESSMENT_CLOSED));
+    }
 }

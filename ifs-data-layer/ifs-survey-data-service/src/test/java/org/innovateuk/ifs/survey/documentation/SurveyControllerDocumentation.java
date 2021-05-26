@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.survey.documentation;
 
-import org.innovateuk.ifs.MockMvcTest;
+import org.innovateuk.ifs.commons.LibraryCandidate;
 import org.innovateuk.ifs.survey.Satisfaction;
 import org.innovateuk.ifs.survey.SurveyResource;
 import org.innovateuk.ifs.survey.SurveyTargetType;
@@ -21,6 +21,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@LibraryCandidate
 public class SurveyControllerDocumentation extends MockMvcTest<SurveyController> {
 
     @Mock

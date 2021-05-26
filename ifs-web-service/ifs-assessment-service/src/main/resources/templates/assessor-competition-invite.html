@@ -10,6 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
+            <th:block th:if="${model.alwaysOpenCompetition}" th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to assessments',linkUrl=@{/assessor/dashboard})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}"
@@ -24,25 +25,47 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|You are invited to assess the competition: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'd MMM yyyy' : 'd MMM'">
-                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Assessment period: ${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate, 'd MMM yyyy')}|">
-                        Assessment period: 21 Mar to 28 Mar 2017
-                    </h2>
+                <th:block th:unless="${model.alwaysOpenCompetition}">
+                    <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'd MMM yyyy' : 'd MMM'">
+                        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Assessment period: ${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate, 'd MMM yyyy')}|">
+                            Assessment period: 21 Mar to 28 Mar 2017
+                        </h2>
 
-                    <p class="govuk-body" th:classappend="${model.ktpCompetition} ? 'govuk-!-margin-top-2' : ''">
-                        <th:block th:unless="${model.assessorPay == null}">
-                            This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.
-                        </th:block>
-                        <th:block th:if="${model.assessorPay == null}">
-                            The assessment period is for reading, scoring, writing comments and submitting your assessment.
-                        </th:block>
-                    </p>
+                        <p class="govuk-body" th:classappend="${model.ktpCompetition} ? 'govuk-!-margin-top-2' : ''">
+                            <th:block th:unless="${model.assessorPay == null}">
+                                This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.
+                            </th:block>
+                            <th:block th:if="${model.assessorPay == null}">
+                                The assessment period is for reading, scoring, writing comments and submitting your assessment.
+                            </th:block>
+                        </p>
 
-                    <p class="govuk-body" th:if="${model.assessorPay != null && model.briefingDate != null}" th:text="|The assessor webinar briefing will last one hour,
+                        <p class="govuk-body" th:if="${model.assessorPay != null && model.briefingDate != null}" th:text="|The assessor webinar briefing will last one hour,
                     taking place on ${#temporals.format(model.briefingDate, 'd MMMM')}.|"></p>
 
-                    <p class="govuk-body" th:if="${model.assessorPay == null}">You may receive up to 10 applications to assess, depending on the number of applications we receive for this competition.</p>
-                </section>
+                        <p class="govuk-body" th:if="${model.assessorPay == null}">You may receive up to 10 applications to assess, depending on the number of applications we receive for this competition.</p>
+                    </section>
+                </th:block>
+                <th:block th:if="${model.alwaysOpenCompetition}">
+                    <section class="boxed govuk-!-margin-bottom-6">
+                        <h2 class="govuk-heading-m govuk-!-margin-0">
+                            Assessing open-ended competitions
+                        </h2>
+
+                        <p class="govuk-body govuk-!-margin-top-2">
+                            This is an open-ended competition where we will run batches of assessments with defined time periods for reading, scoring, writing comments and submitting your assessments.
+                        </p>
+
+                        <p class="govuk-body govuk-!-margin-top-2">
+                            Your assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.
+                        </p>
+                        <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-0">We will notify you with dates for the:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>assessor briefing</li>
+                            <li>assessment period for assessments assigned to you</li>
+                        </ul>
+                    </section>
+                </th:block>
 
                 <section>
                     <h2 class="govuk-heading-m">
@@ -58,10 +81,16 @@
                            rel="external noopener noreferrer">See the competition brief (opens in a new window)</a>
                     </p>
 
+                    <th:block th:if="${model.alwaysOpenCompetition}">
+                        <p class="govuk-body">If you have any queries, please contact Innovate UK <a href="mailto:competitions@innovate.ukri.org" class="govuk-link">competitions@innovate.ukri.org</a>.</p>
+                    </th:block>
+
                     <h3 class="govuk-heading-s">You should reject this invitation if:</h3>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>you are unavailable during the assessment period</li>
-                        <li>you cannot meet the assessment deadlines</li>
+                        <th:block th:unless="${model.alwaysOpenCompetition}">
+                            <li>you are unavailable during the assessment period</li>
+                            <li>you cannot meet the assessment deadlines</li>
+                        </th:block>
                         <li>this competition is not in your area of expertise</li>
                         <li>you have a direct conflict of interest, for example, you intend to apply for this competition yourself</li>
                     </ul>
