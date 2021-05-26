@@ -1,0 +1,9 @@
+resources:
+  # config-maps
+  - kustomize/cache-config.yml
+  - kustomize/db-config.yml
+  - kustomize/data-service-config.yml
+
+  # services
+  - kustomize/data-service.yml
+  - kustomize/data-service-deployment.yml
