@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -8,10 +9,20 @@ import java.time.LocalDate;
 public class GrowthTable extends FinancialYearAccounts {
 
     private LocalDate financialYearEnd;
+
+    @Column(columnDefinition = "double")
     private BigDecimal annualTurnover;
+
+    @Column(columnDefinition = "double")
     private BigDecimal annualProfits;
+
+    @Column(columnDefinition = "double")
     private BigDecimal annualExport;
+
+    @Column(columnDefinition = "double")
     private BigDecimal researchAndDevelopment;
+
+    @Column(columnDefinition = "int(11)")
     private Long employees;
 
     public GrowthTable() {

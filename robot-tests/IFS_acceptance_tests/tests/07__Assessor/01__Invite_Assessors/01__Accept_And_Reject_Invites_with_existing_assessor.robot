@@ -105,9 +105,13 @@ Upcoming competition should be visible
 
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
-    Given the assessment start period changes in the db in the past       ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    And the user should not see the element                               jQuery = h2:contains("Upcoming competitions to assess")
+    Given log in as a different user                                       &{Comp_admin1_credentials}
+    And update milestone to yesterday                                      ${UPCOMING_COMPETITION_TO_ASSESS_ID}  SUBMISSION_DATE
+    And the user navigates to the page                                     ${server}/management/competition/${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    When the user clicks the button/link                                   id = notify-assessors-button
+    And log in as a different user                                         &{existing_assessor1_credentials}
+    Then the assessor should see the date for submission of assessment     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    And the user should not see the element                                jQuery = h2:contains("Upcoming competitions to assess")
     [Teardown]  Reset milestones back to the original values
 
 Number of days remaining until assessment submission

@@ -35,7 +35,7 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
     @Test(expected = AccessDeniedException.class)
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 2L,0, 0, Sort.APPLICATION_NUMBER, "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 2L, 0, 0, Sort.APPLICATION_NUMBER, "");
     }
 
     @Override

@@ -20,16 +20,16 @@ public class ProcurementMilestone extends AuditableEntity {
     @Column
     private String description;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String taskOrActivity;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String deliverable;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String successCriteria;
 
-    @Column
+    @Column(columnDefinition = "int(11)")
     private BigInteger payment;
 
     public Long getId() {

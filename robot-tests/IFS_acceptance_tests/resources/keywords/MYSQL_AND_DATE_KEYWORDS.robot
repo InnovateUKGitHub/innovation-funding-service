@@ -8,7 +8,7 @@ Resource          ../defaultResources.robot
 the assessment start period changes in the db in the past
     [Arguments]   ${competition_id}
     ${yesterday} =    get yesterday
-    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
+    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id, parent_id) VALUES('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}', '3');
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     reload page
 
@@ -316,6 +316,13 @@ user inserts application into application migration table
 user queries migrated application id
     [Arguments]     ${application_id}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`application` WHERE `previous_application_id` = "${application_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
+
+get assessment period using competition id
+    [Arguments]  ${competition_id}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`assessment_period` WHERE `competition_id` = "${competition_id}";
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
     [Return]  ${id}

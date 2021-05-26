@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -81,6 +82,9 @@ public class FinanceChecksGenerator {
     @Autowired
     private ProjectProcurementMilestoneRepository projectProcurementMilestoneRepository;
 
+    @Autowired
+    private KtpFecFilter ktpFecFilter;
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
@@ -134,20 +138,22 @@ public class FinanceChecksGenerator {
             projectFinance.setMilestones(copyMilestones(applicationProcurementMilestones, projectFinanceForOrganisation));
         }
 
-        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
+        List<? extends FinanceRow> originalFinanceFigures = ktpFecFilter.filterKtpFecCostCategoriesIfRequired(applicationFinanceForOrganisation,
+                applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId()));
 
         List<ProjectFinanceRow> copiedFinanceFigures = simpleMap(originalFinanceFigures, original -> {
+            ApplicationFinanceRow originalApplicationFinanceRow = (ApplicationFinanceRow) original;
             ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
-            newRow.setApplicationRowId(original.getId());
-            newRow.setCost(original.getCost());
-            List<FinanceRowMetaValue> metaValues = simpleMap(original.getFinanceRowMetadata(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
+            newRow.setApplicationRowId(originalApplicationFinanceRow.getId());
+            newRow.setCost(originalApplicationFinanceRow.getCost());
+            List<FinanceRowMetaValue> metaValues = simpleMap(originalApplicationFinanceRow.getFinanceRowMetadata(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
             newRow.setFinanceRowMetadata(metaValues);
-            newRow.setDescription(original.getDescription());
+            newRow.setDescription(originalApplicationFinanceRow.getDescription());
             // map H2020 totals directly to conventional totals as they are treated exactly the same in project setup
-            newRow.setItem("HORIZON_2020_TOTAL".equals(original.getItem()) ? "TOTAL" : original.getItem());
-            newRow.setName(original.getName());
-            newRow.setQuantity(original.getQuantity());
-            newRow.setType(original.getType());
+            newRow.setItem("HORIZON_2020_TOTAL".equals(originalApplicationFinanceRow.getItem()) ? "TOTAL" : originalApplicationFinanceRow.getItem());
+            newRow.setName(originalApplicationFinanceRow.getName());
+            newRow.setQuantity(originalApplicationFinanceRow.getQuantity());
+            newRow.setType(originalApplicationFinanceRow.getType());
             return newRow;
         });
 

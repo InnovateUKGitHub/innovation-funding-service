@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
@@ -33,6 +34,7 @@ public class GrantClaimMaximum {
     @Enumerated(EnumType.STRING)
     private FundingRules fundingRules;
 
+    @Column(columnDefinition = "tinyint(4)")
     private Integer maximum;
 
     public GrantClaimMaximum() {}

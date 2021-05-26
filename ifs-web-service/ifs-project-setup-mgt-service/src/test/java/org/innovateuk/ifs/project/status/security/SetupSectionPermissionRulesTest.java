@@ -96,37 +96,34 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalAdminUserCanAccessDocumentsSectionIrrespectiveOfDocumentStatus() {
         assertTrue(doTestDocumentAccess(Role.COMP_ADMIN, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.internalAdminUserCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::internalAdminUserCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.COMP_ADMIN, ProjectActivityStates.NOT_STARTED,
-                (rules, projectCompositeId, user) -> rules.internalAdminUserCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::internalAdminUserCanAccessDocumentsSection));
 
     }
 
     @Test
     public void supportUserCanAccessDocumentsSectionOnlyWhenAllDocumentsAreApproved() {
         assertFalse(doTestDocumentAccess(Role.SUPPORT, ProjectActivityStates.ACTION_REQUIRED,
-                (rules, projectCompositeId, user) -> rules.supportUserCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::supportUserCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.SUPPORT, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.supportUserCanAccessDocumentsSection(projectCompositeId, user)));
-
+                SetupSectionsPermissionRules::supportUserCanAccessDocumentsSection));
     }
 
     @Test
     public void innovationLeadCanAccessDocumentsSectionOnlyWhenAllDocumentsAreApproved() {
         assertFalse(doTestDocumentAccess(Role.INNOVATION_LEAD, ProjectActivityStates.ACTION_REQUIRED,
-                (rules, projectCompositeId, user) -> rules.innovationLeadCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::innovationLeadCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.INNOVATION_LEAD, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.innovationLeadCanAccessDocumentsSection(projectCompositeId, user)));
-
+                SetupSectionsPermissionRules::innovationLeadCanAccessDocumentsSection));
     }
 
     @Test
     public void stakeholderCanAccessDocumentsSectionOnlyWhenAllDocumentsAreApproved() {
         assertFalse(doTestDocumentAccess(Role.STAKEHOLDER, ProjectActivityStates.ACTION_REQUIRED,
-                (rules, projectCompositeId, user) -> rules.stakeholderCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::stakeholderCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.STAKEHOLDER, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.stakeholderCanAccessDocumentsSection(projectCompositeId, user)));
-
+                SetupSectionsPermissionRules::stakeholderCanAccessDocumentsSection));
     }
 
     private boolean doTestDocumentAccess(Role role, ProjectActivityStates documentStatus,
@@ -165,5 +162,16 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
                 .build();
 
         return rules.internalAdminUserCanApproveDocuments(ProjectCompositeId.id(1L), user);
+    }
+
+    @Test
+    public void onlySuperAdminUserCanResetGrantOfferLetter() {
+        allGlobalRoleUsers.forEach(userResource -> {
+            if (userResource.hasRole(Role.SUPER_ADMIN_USER)) {
+                assertTrue(rules.superAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
+            } else {
+                assertFalse(rules.superAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
+            }
+        });
     }
 }

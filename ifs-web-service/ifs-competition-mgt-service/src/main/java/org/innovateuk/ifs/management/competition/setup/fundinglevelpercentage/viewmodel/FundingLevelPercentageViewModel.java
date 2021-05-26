@@ -46,4 +46,5 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
         return generalSetupViewModel.getCompetition().getFundingRules() != FundingRules.NOT_AID
                  && !dualFunding;
     }
+
 }

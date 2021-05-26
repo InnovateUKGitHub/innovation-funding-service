@@ -3,7 +3,6 @@ package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check Eligibility page
@@ -49,6 +47,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean resetableGolState;
     private final boolean showChangesLink;
     private final Boolean fecModelEnabled;
+    private final boolean canEditProjectCosts;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -69,7 +68,8 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean canEditAcademicFinances,
                                              List<ProjectFinanceResource> projectFinances,
                                              boolean resetableGolState,
-                                             boolean showChangesLink) {
+                                             boolean showChangesLink,
+                                             boolean canEditProjectCosts) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -98,6 +98,7 @@ public class FinanceChecksEligibilityViewModel {
         this.resetableGolState = resetableGolState;
         this.showChangesLink = showChangesLink;
         this.fecModelEnabled = hasFecModelEnabled(projectFinances, organisationId);
+        this.canEditProjectCosts = canEditProjectCosts;
     }
 
     public boolean isApproved() {
@@ -285,5 +286,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public Boolean getFecModelEnabled() {
         return fecModelEnabled;
+    }
+
+    public boolean isCanEditProjectCosts() {
+        return canEditProjectCosts;
     }
 }

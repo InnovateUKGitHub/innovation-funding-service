@@ -10,16 +10,18 @@ import java.util.List;
  * Interface for the action of retrieving application statistics
  */
 public interface ApplicationCountSummaryRestService {
-    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
-                                                                                                int pageIndex,
-                                                                                                int pageSize,
-                                                                                                String filter);
+
+    RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(long competitionId,
+                                                                                                                     long assessmentPeriodId,
+                                                                                                                     int pageIndex,
+                                                                                                                     int pageSize,
+                                                                                                                     String filter);
 
     RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(long competitionId,
-                                                                                                             long assessorId,
-                                                                                                             int page,
-                                                                                                             Sort sort,
-                                                                                                             String filter);
+                                                                                                              long assessorId,
+                                                                                                              int page,
+                                                                                                              Sort sort,
+                                                                                                              String filter);
 
     RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId,
                                                                          long assessorId,
