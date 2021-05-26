@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financecheck.transactional;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -27,14 +28,17 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -100,6 +104,9 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private KtpFecFilter ktpFecFilterMock;
 
     private Organisation organisation;
     private List<CostCategory> costCategories;
@@ -228,7 +235,6 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
 
         assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
-
     }
 
     @Test
@@ -426,9 +432,16 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(applicationFinance, originalApplicationFinanceRows)).thenAnswer(invocation -> {
+            List<? extends FinanceRow> financeRows = invocation.getArgument(1);
+            return financeRows.stream()
+                    .filter(cost -> BooleanUtils.isFalse(fecEnabled)
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(cost.getType())
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(cost.getType()))
+                    .collect(Collectors.toList());
+        });
 
         return newProjectFinanceRows;
-
     }
 
     private ProjectFinanceRow createSavedProjectFinanceRowExpectation(ProjectFinanceRow expected) {
@@ -455,6 +468,8 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         verify(projectFinanceRowRepositoryMock).save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2));
         verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow2.getFinanceRowMetadata().get(0)));
         verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow2.getFinanceRowMetadata().get(1)));
+
+        verify(ktpFecFilterMock).filterKtpFecCostCategoriesIfRequired(Mockito.any(), Mockito.any());
     }
 
     private FinanceRowMetaValue createSavedFinanceRowMetaValueExpectation(FinanceRowMetaValue original) {

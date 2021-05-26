@@ -97,9 +97,15 @@ public class OrganisationController implements RenameOrganisationV1Api {
         return organisationService.syncCompaniesHouseDetails(organisationResource).toPutWithBodyResponse();
     }
 
-    @Override
+    @PostMapping("/update-name-and-registration/{organisationId}")
     public RestResult<OrganisationResource> updateNameAndRegistration(
                 @PathVariable Long organisationId, @RequestParam String name, @RequestParam String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostWithBodyResponse();
     }
+
+    @Override
+    public RestResult<OrganisationResource> updateOrganisationName(Long organisationId, String name) {
+        return organisationService.updateOrganisationName(organisationId, name).toPostCreateResponse();
+    }
+
 }

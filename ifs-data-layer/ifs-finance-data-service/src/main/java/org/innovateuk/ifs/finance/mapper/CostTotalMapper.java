@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.mapper;
 
-import org.innovateuk.ifs.commons.mapper.BaseMapper;
-import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.finance.domain.CostTotal;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;

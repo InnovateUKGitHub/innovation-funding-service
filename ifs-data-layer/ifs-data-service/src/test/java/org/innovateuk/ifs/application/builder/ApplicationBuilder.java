@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -155,5 +156,9 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withPreviousApplicationTitle(String... titles) {
         return withArray((title, application) -> application.setPreviousApplicationTitle(title), titles);
+    }
+
+    public ApplicationBuilder withAssessmentPeriod(AssessmentPeriod... assessmentPeriods) {
+        return withArray((assessmentPeriod, application) -> application.setAssessmentPeriod(assessmentPeriod), assessmentPeriods);
     }
 }

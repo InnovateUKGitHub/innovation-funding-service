@@ -14,6 +14,8 @@ public abstract class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
     private Integer priority = 0;
 

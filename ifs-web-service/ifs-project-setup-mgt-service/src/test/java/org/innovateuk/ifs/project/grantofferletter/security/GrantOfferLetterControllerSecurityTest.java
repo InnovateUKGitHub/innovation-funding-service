@@ -27,7 +27,7 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
     public void lookupPermissionRules() {
         super.lookupPermissionRules();
         projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
-        projectCompositeId = ProjectCompositeId.id(123l);
+        projectCompositeId = ProjectCompositeId.id(123L);
         when(projectLookupStrategy.getProjectCompositeId(projectCompositeId.id())).thenReturn(projectCompositeId);
     }
 
@@ -37,57 +37,57 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
     }
 
     @Test
-    public void testDownloadAdditionalContractFile() {
+    public void downloadAdditionalContractFile() {
         assertSecured(() -> classUnderTest.downloadAdditionalContractFile(projectCompositeId.id()));
     }
 
     @Test
-    public void testDownloadGeneratedGrantOfferLetter() {
+    public void downloadGeneratedGrantOfferLetter() {
         assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(projectCompositeId.id()));
     }
 
     @Test
-    public void testViewGrantOfferLetterPage() {
-        assertSecured(() -> classUnderTest.viewGrantOfferLetterSend(projectCompositeId.id(), null));
+    public void viewGrantOfferLetterPage() {
+        assertSecured(() -> classUnderTest.viewGrantOfferLetterSend(projectCompositeId.id(), null, null));
     }
 
     @Test
-    public void testSendGrantOfferLetterPage() {
-        assertSecured(() -> classUnderTest.sendGrantOfferLetter(projectCompositeId.id(), null, null, null, null));
+    public void sendGrantOfferLetterPage() {
+        assertSecured(() -> classUnderTest.sendGrantOfferLetter(projectCompositeId.id(), null, null, null, null, null));
     }
 
     @Test
-    public void testUploadGrantOfferLetterFile() {
-        assertSecured(() -> classUnderTest.uploadGrantOfferLetterFile(projectCompositeId.id(), null, null, null, null));
+    public void uploadGrantOfferLetterFile() {
+        assertSecured(() -> classUnderTest.uploadGrantOfferLetterFile(projectCompositeId.id(), null, null, null, null, null));
     }
 
     @Test
-    public void testRemoveGrantOfferLetterFile() {
+    public void removeGrantOfferLetterFile() {
         assertSecured(() -> classUnderTest.removeGrantOfferLetterFile(projectCompositeId.id()));
     }
 
     @Test
-    public void testRemoveAdditionalContractFile() {
+    public void removeAdditionalContractFile() {
         assertSecured(() -> classUnderTest.removeAdditionalContractFile(projectCompositeId.id()));
     }
 
     @Test
-    public void testUploadAnnexPage() {
+    public void uploadAnnexPage() {
         assertSecured(() -> classUnderTest.uploadAnnexFile(projectCompositeId.id(), null, null, null, null, null));
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetter() {
+    public void approveOrRejectSignedGrantOfferLetter() {
         assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(projectCompositeId.id(), new GrantOfferLetterApprovalForm(ApprovalType.APPROVED, null)));
     }
 
     @Test
-    public void testDownloadSignedGrantOfferLetterFile() {
+    public void downloadSignedGrantOfferLetterFile() {
         assertSecured(() -> classUnderTest.downloadSignedGrantOfferLetterFile(projectCompositeId.id()));
     }
 
     @Test
-    public void testDownloadSignedAdditionalContractFile() {
+    public void downloadSignedAdditionalContractFile() {
         assertSecured(() -> classUnderTest.downloadSignedAdditionalContractFile(projectCompositeId.id()));
     }
 

@@ -342,7 +342,7 @@ the user completes assessment and moves to PS
     invite assessor the the assesment
     log in as a different user                     &{Comp_admin1_credentials}
     making the application a successful project    ${COVIDdeminimuscompetitionId}  ${COVIDdeminimusapplicationTitle1}
-    the user reads his email                       steve.smith@empire.com   	${COVIDdeminimuscompetitionTitle}: Notification regarding your application ${application_id}: ${COVIDdeminimusapplicationTitle1}  Average assessor score
+    the user reads his email                       steve.smith@empire.com   	Important message about your application '${COVIDdeminimusapplicationTitle1}' for the competition '${COVIDdeminimuscompetitionTitle}'   Average assessor score
     moving competition to Project Setup            ${COVIDdeminimuscompetitionId}
 
 the internal user can complete PS

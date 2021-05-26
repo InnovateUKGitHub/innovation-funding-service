@@ -27,18 +27,19 @@ public class AssessorCountSummaryControllerTest extends BaseControllerMockMVCTes
     @Test
     public void getAssessorCountSummariesByCompetitionId() throws Exception {
         final long competitionId = 1L;
+        final long assessmentPeriodId = 2L;
         final int pageNumber = 0;
         final int pageSize = 20;
         final String assessorFilter = "";
 
         AssessorCountSummaryPageResource pageResource = newAssessorCountSummaryPageResource().build();
 
-        when(assessorCountSummaryServiceMock.getAssessorCountSummariesByCompetitionId(competitionId, assessorFilter, pageNumber, pageSize)).thenReturn(serviceSuccess(pageResource));
+        when(assessorCountSummaryServiceMock.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, assessorFilter, pageNumber, pageSize)).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/assessor-count-summary/find-by-competition-id/{competitionId}", competitionId))
+        mockMvc.perform(get("/assessor-count-summary/find-by-competition-id-and-assessment-period-id/{competitionId}/{assessmentPeriodId}", competitionId, assessmentPeriodId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
-        verify(assessorCountSummaryServiceMock, only()).getAssessorCountSummariesByCompetitionId(competitionId, assessorFilter, pageNumber, pageSize);
+        verify(assessorCountSummaryServiceMock, only()).getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionId, assessmentPeriodId, assessorFilter, pageNumber, pageSize);
     }
 }

@@ -44,7 +44,7 @@ View the list of the applications
     [Documentation]    INFUND-7042
     Given comp admin navigate to manage applications
     Then the application list is correct before changes
-    [Teardown]  the user clicks the button/link  link = Manage assessments
+    [Teardown]  the user clicks the button/link  link = Back to manage assessments
 
 View the list of assessors
     [Documentation]  IFS-319
@@ -267,7 +267,7 @@ the user assign application to an assessor
 
 the comp admin notify an assessor
     the user clicks the button/link    link = Allocate applications
-    the user clicks the button/link    link = Manage assessments
+    the user clicks the button/link    link = Back to manage assessments
     the user clicks the button/link    link = Competition
     the user clicks the button/link    jQuery = button:contains("Notify assessors")
     the element should be disabled     jQuery = button:contains("Notify assessors")
