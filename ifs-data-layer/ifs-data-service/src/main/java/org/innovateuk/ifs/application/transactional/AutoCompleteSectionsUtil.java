@@ -16,7 +16,7 @@ public class AutoCompleteSectionsUtil {
     @Autowired
     private SectionStatusService sectionStatusService;
 
-    public void intitialiseCompleteSectionsForOrganisation(Application application, long organisationId, long processRoleId) {
+    public void initialiseCompleteSectionsForOrganisation(Application application, long organisationId, long processRoleId) {
         Competition competition = application.getCompetition();
         OrganisationResource lead = organisationService.findById(organisationId).getSuccess();
         competition.getSections().stream()

@@ -27,7 +27,6 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-
     protected List<Role> allRoles;
 
     protected List<UserResource> allGlobalRoleUsers;
@@ -84,6 +83,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(IFS_ADMINISTRATOR);
     }
 
+    protected UserResource superAdminUser() {
+        return getUserWithRole(SUPER_ADMIN_USER);
+    }
+
     protected UserResource ktaUser() {
         return getUserWithRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
@@ -100,8 +103,8 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
     public void setupSetsOfData() {
         allRoles = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRoleGlobal(role).build());
-        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser());
-        compAdminAndProjectFinance = asList(compAdminUser(), projectFinanceUser(), ifsAdminUser(), systemMaintenanceUser());
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser(), superAdminUser());
+        compAdminAndProjectFinance = asList(compAdminUser(), projectFinanceUser(), ifsAdminUser(), systemMaintenanceUser(), superAdminUser());
     }
 
     protected UserResource getUserWithRole(Role type) {

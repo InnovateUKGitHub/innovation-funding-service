@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
+import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressUnsubmitViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.util.CompressedCookieService;
@@ -77,6 +79,9 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
     @Mock
     private CompressedCookieService compressedCookieService;
 
+    @Mock
+    private AssessmentPeriodService assessmentPeriodService;
+
     @Before
     public void setUpCookies() {
         setupCompressedCookieService(compressedCookieService);
@@ -90,6 +95,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
     public void assessorProgress() throws Exception {
         long competitionId = 1L;
         long assessorId = 2L;
+        long assessmentPeriodId = 3L;
         long applicationId = 18L;
 
         AssessorProfileResource assessor = newAssessorProfileResource()
@@ -119,6 +125,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
                 .withState(SUBMITTED, ACCEPTED, REJECTED)
                 .withRejectionReason(null, null, CONFLICT_OF_INTEREST)
                 .withRejectionComment(null, null, "rejection comment")
+                .withAssessmentPeriodId(assessmentPeriodId, assessmentPeriodId, assessmentPeriodId)
                 .build(3);
 
         AssessorCompetitionSummaryResource assessorCompetitionSummaryResource = newAssessorCompetitionSummaryResource()
@@ -145,16 +152,14 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
 
-        AssessmentCreateResource assessmentCreateResource = new AssessmentCreateResource(applicationId, assessorId);
-        AssessmentResource assessmentResource = newAssessmentResource().build();
-
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
         when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, "")).thenReturn(restSuccess(asList(1L, 21L)));
+        when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionResource.getId())).thenReturn("name");
 
-        MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
+        MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}/period/{assessmentPeriodId}", competitionId, assessorId, assessmentPeriodId))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("competition/assessor-progress"))
                 .andReturn();
@@ -163,6 +168,8 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
 
         AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) result.getModelAndView().getModel().get("model");
 
+        assertEquals(assessmentPeriodId, model.getAssessmentPeriodId());
+        assertEquals("name", model.getAssessmentPeriodName());
         assertEquals("Paul Plum", model.getAssessorName());
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals("Test Competition", model.getCompetitionName());
@@ -205,7 +212,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         when(compressedCookieService.getCookieValue(any(), eq("applicationSelectionForm_comp_1"))).thenReturn(JsonTestUtil.toJson(form));
         when(assessmentRestService.createAssessments(singletonList(expectedAssessmentCreateResource))).thenReturn(restSuccess(singletonList(expectedAssessmentResource)));
 
-        mockMvc.perform(post("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
+        mockMvc.perform(post("/assessment/competition/{competitionId}/assessors/{assessorId}/period/{assessmentPeriodId}", competitionId, assessorId, assessmentPeriodId))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
     }
@@ -213,6 +220,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
     @Test
     public void assessorProgress_applications() throws Exception {
         long assessorId = 1L;
+        long assessmentPeriodId = 3L;
 
         AddressResource expectedAddress = getExpectedAddress();
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
@@ -240,10 +248,10 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
 
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionResource.getId())).thenReturn(restSuccess(summaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, 1, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId,  1, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
         when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, "")).thenReturn(restSuccess(asList(1L, 21L)));
-
-        AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}?page=2", competitionResource.getId(), assessorId))
+        when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionResource.getId())).thenReturn("name");
+        AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}/period/{assessmentPeriodId}?page=2", competitionResource.getId(), assessorId, assessmentPeriodId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/assessor-progress"))
                 .andExpect(model().attributeExists("model"))
@@ -252,6 +260,8 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         assertEquals((long) competitionResource.getId(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());
         assertTrue(model.getApplicationsView().getInAssessment());
+        assertEquals(assessmentPeriodId, model.getAssessmentPeriodId());
+        assertEquals("name", model.getAssessmentPeriodName());
         assertEquals(2, model.getApplicationsView().getApplications().size());
         assertEquals(2L, model.getApplicationsView().getApplications().get(0).getAccepted());
         assertEquals(3L, model.getApplicationsView().getApplications().get(0).getAssessors());
@@ -274,13 +284,14 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         long competitionId = 1L;
         long assessorId = 2L;
         long assessmentId = 3L;
+        long assessmentPeriodId = 2L;
 
         when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
 
         mockMvc.perform(
-                post("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}", competitionId, assessorId, assessmentId))
+                post("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}/period/{assessmentPeriodId}", competitionId, assessorId, assessmentId, assessmentPeriodId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s", competitionId, assessorId)));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s/period/%s", competitionId, assessorId, assessmentPeriodId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -292,6 +303,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         long competitionId = 1L;
         long assessorId = 2L;
         long assessmentId = 3L;
+        long assessmentPeriodId = 2L;
 
         AssessorAssessmentProgressRemoveViewModel expectedModel = new AssessorAssessmentProgressRemoveViewModel(
                 competitionId,
@@ -300,11 +312,49 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         );
 
         mockMvc.perform(
-                get("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
+                get("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}/period/{assessmentPeriodId}/confirm", competitionId, assessorId, assessmentId, assessmentPeriodId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("competition/assessor-progress-remove-confirm"));
+    }
+
+    @Test
+    public void unsubmitAssessment() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        when(assessmentRestService.unsubmitAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit/{assessmentId}", competitionId, assessorId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s", competitionId, assessorId)));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).unsubmitAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void unsubmitAssessmentConfirm() throws Exception {
+        long competitionId = 1L;
+        long assessorId = 2L;
+        long assessmentId = 3L;
+
+        AssessorAssessmentProgressUnsubmitViewModel expectedModel = new AssessorAssessmentProgressUnsubmitViewModel(
+                competitionId,
+                assessorId,
+                assessmentId
+        );
+
+        mockMvc.perform(
+                get("/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit/{assessmentId}/confirm", competitionId, assessorId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/assessor-progress-unsubmit-assessment-confirm"));
     }
 
     private AddressResource getExpectedAddress() {

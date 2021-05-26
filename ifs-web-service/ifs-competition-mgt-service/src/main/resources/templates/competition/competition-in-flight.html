@@ -14,6 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkUrl=@{/dashboard}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <input type="hidden" class="page-history-title-override" th:value="${model.competitionName}" />
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'"/>
         <div class="govuk-grid-row">
@@ -109,12 +110,10 @@
                             </li>
                             <li th:unless="${model.readOnly}">
                                 <a class="disabled govuk-link" aria-disabled="true"
-                                   th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
+                                   th:unless="${model.manageAssessmentLinkEnabled}">
                                     Manage assessments
                                 </a>
-                                <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
+                                <a th:if="${model.manageAssessmentLinkEnabled}"
                                    th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
                                    class="govuk-link">
                                     Manage assessments
@@ -159,7 +158,7 @@
                 <div class="govuk-grid-column-one-third">
                     <h2 class="govuk-heading-m govuk-!-margin-top-0">Competition milestones</h2>
                     <ul class="timeline-status">
-                        <th:block th:each="milestone : ${model.milestones}">
+                        <th:block th:unless="${model.alwaysOpen}" th:each="milestone : ${model.milestones}">
                             <li th:if="${milestone.milestoneType.presetDate}"
                                 th:class="${(milestone.passed ? 'done' : 'not-done')}">
                                 <h3 class="govuk-heading-s" th:text="${milestone.milestoneType.milestoneDescription}">
@@ -185,6 +184,16 @@
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
                                         class="govuk-button">Close assessment
                                 </button>
+                                <th:block th:if="${model.isSuperAdminUser}">
+                                    <button th:unless="${model.readOnly || model.keyStatistics.canManageFundingNotifications}"
+                                            type="submit"
+                                            id="reopen-assessment-period-button"
+                                            th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).LINE_DRAW}"
+                                            th:formaction="@{/competition/{competitionId}/reopen-assessment-period(competitionId=${model.competitionId})}"
+                                            th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                                            class="govuk-button">Reopen assessment
+                                    </button>
+                                </th:block>
                                 <th:block th:unless="${model.readOnly}"
                                           th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
                                           th:if="${model.fundingNotificationDisplayed}">
@@ -204,6 +213,43 @@
                                         class="govuk-button">Release feedback
                                 </button>
                             </th:block>
+                        </th:block>
+
+                        <th:block th:if="${model.alwaysOpen}">
+                            <li th:with="milestone=${model.findMilestoneByType(T(org.innovateuk.ifs.competition.resource.MilestoneType).OPEN_DATE)}"
+                                th:class="${(milestone.passed ? 'done' : 'not-done')}">
+                                <h3 class="govuk-heading-s">Open date</h3>
+                                <p class="govuk-body"
+                                   th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')}">
+                                    10 October 2017</p>
+                            </li>
+                            <li>
+                                <h3 class="govuk-heading-s">Briefing event</h3>
+                                <p class="govuk-body">
+                                    <a th:href="@{/competition/setup/public-content/dates/{competitionId}(competitionId=${model.competitionId})}"
+                                       class="govuk-link">See public dates</a>
+                                </p>
+                            </li>
+                            <li th:with="milestone=${model.findMilestoneByType(T(org.innovateuk.ifs.competition.resource.MilestoneType).SUBMISSION_DATE)}"
+                                th:class="${(milestone.passed ? 'done' : '')}">
+                                <h3 class="govuk-heading-s">Submission date</h3>
+                                <p class="govuk-body"
+                                   th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')} : 'Open-ended'">
+                                    10 October 2017</p>
+                            </li>
+                            <li>
+                                <h3 class="govuk-heading-s">Assessment</h3>
+                                <p class="govuk-body">Batch assessments</p>
+                            </li>
+                            <li>
+                                <h3 class="govuk-heading-s">Funding decision and assessment feedback</h3>
+                            </li>
+                            <a disabled="disabled" class="govuk-button govuk-!-margin-top-2" th:unless="${model.hasAClosedAssessmentPeriod()}">
+                                Send notification and release feedback</a>
+
+                            <a class="govuk-button govuk-!-margin-top-2" th:if="${model.hasAClosedAssessmentPeriod()}"
+                               th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
+                                Send notification and release feedback</a>
                         </th:block>
                     </ul>
                 </div>

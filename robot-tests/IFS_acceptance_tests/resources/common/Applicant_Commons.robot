@@ -904,7 +904,7 @@ the lead user completes project details, application questions and finances sect
     the user completes the application details section                              ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  25
     the applicant completes Application Team
     the applicant marks EDI question as complete
-    the user completes the research category
+    the user completes the research category                                        Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user clicks the button/link                                                 link = Your project finances
     the user marks the finances as complete                                         ${applicationName}  labour costs  54,000  yes
@@ -929,3 +929,57 @@ the user completes the application details section
     the user clicks the button/link             id = application-question-complete
     the user clicks the button/link             link = Back to application overview
     the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
+
+the user edits the KTP fec model
+    [Arguments]   ${fecModelID}
+    the user clicks the button/link        link = Your fEC model
+    the user clicks the button/link        jQuery = button:contains("Edit your fEC Model")
+    the user selects the radio button      fecModelEnabled  ${fecModelID}
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+
+the user completes the your funding section
+    [Arguments]   ${requestingFundingID}  ${value}   ${otherFundingID}
+    the user clicks the button/link        link = Your funding
+    the user selects the radio button      requestingFunding   ${requestingFundingID}
+    the user enters text to a text field   css = input[id^="grantClaimPercentage"]  ${value}
+    the user selects the radio button      otherFunding  ${otherFundingID}
+    the user clicks the button/link        jQuery = button:contains("Mark as complete")
+
+the user completes project costs table for non-fec model
+    [Arguments]  ${employmentDuration}  ${cost}  ${costType}  ${rowNumber}  ${travelCostDescription}  ${numberOfTrips}  ${text}  ${quantity}
+    the user enters text to a text field                    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${employmentDuration}
+    the user enters text to a text field                    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
+    the user enters text to a text field                    id = academicAndSecretarialSupportForm   ${cost}
+    the user selects the option from the drop-down menu     ${costType}  jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) select[name^="ktp"][name$="type"]
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) textarea[name^="ktp"][name$="description"]  ${travelCostDescription}
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="times"]  ${numberOfTrips}
+    the user enters text to a text field                    jQuery = div:contains(Travel and subsistence) tr:nth-of-type(${rowNumber}) input[name^="ktp"][name$="eachCost"]  ${cost}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="item"]  ${text}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="quantity"]      ${quantity}
+    the user enters text to a text field                    css = input[id^="consumableCost"][id$="cost"]       ${cost}
+    the user enters text to a text field                    css = textarea[id^="otherRows"][id$="description"]    ${text}
+    the user enters text to a text field                    css = input[id^="otherRows"][id$="estimate"]       ${cost}
+    the user clicks the button/link                         exceed-limit-no
+    the user clicks the button/link                         css = label[for="stateAidAgreed"]
+    the user clicks the button/link                         jQuery = button:contains("Mark as complete")
+
+the partner applicant marks Your project finances information as complete
+    [Arguments]   ${otherFundingID}  ${org_size}  ${month}   ${Year}
+    the user clicks the button/link                link = Other funding
+    the user selects the radio button              otherFunding  ${otherFundingID}
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user enters the project location
+    the user clicks the button/link                link = Your organisation
+    the user selects the radio button              organisationSize  ${org_size}
+    the user enters text to a text field           financialYearEndMonthValue    ${month}
+    the user enters text to a text field           financialYearEndYearValue    ${Year}
+    the user clicks the button/link                jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                link = Back to application overview
+
+The user completes the research category
+    [Arguments]  ${res_category}
+    the user clicks the button/link      link=Research category
+    the user clicks the button twice     jQuery = label:contains("${res_category}")
+    the user clicks the button/link      id=application-question-complete
+    the user clicks the button/link      link = Back to application overview
+    the user should see the element      jQuery=li:contains("Research category") > .task-status-complete

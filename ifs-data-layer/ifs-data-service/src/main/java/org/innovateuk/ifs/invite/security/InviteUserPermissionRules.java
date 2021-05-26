@@ -7,7 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Authority.IFS_ADMINISTRATOR;
 
 /**
  * Permission rules for Invite User Service
@@ -18,11 +18,11 @@ public class InviteUserPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "SAVE_USER_INVITE", description = "Only an IFS Administrator can save a new user invite")
     public boolean ifsAdminCanSaveNewUserInvite(final UserResource invitedUser, UserResource user) {
-        return user.hasRole(IFS_ADMINISTRATOR);
+        return user.hasAuthority(IFS_ADMINISTRATOR);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view pending internal user invites")
     public boolean internalUsersCanViewPendingInternalUserInvites(RoleInvitePageResource invite, UserResource user) {
-        return user.hasRole(IFS_ADMINISTRATOR);
+        return user.hasAuthority(IFS_ADMINISTRATOR);
     }
 }

@@ -82,8 +82,10 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
         LocalDate currentDate = LocalDate.now();
 
         if (isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
-            LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
-            rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
+            if (!(application.getCompetition().isAlwaysOpen() && application.getCompetition().isKtp())) {
+                LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
+                rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
+            }
         }
     }
 

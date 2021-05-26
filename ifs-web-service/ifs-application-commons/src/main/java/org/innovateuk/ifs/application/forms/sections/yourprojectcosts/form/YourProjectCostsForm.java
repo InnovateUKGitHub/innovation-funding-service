@@ -11,10 +11,12 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.IndirectCostsUtil.INDIRECT_COST_PERCENTAGE;
+
 public class YourProjectCostsForm {
 
     public static final BigDecimal VAT_RATE = BigDecimal.valueOf(20);
-    public final static BigDecimal INDIRECT_COST_PERCENTAGE = BigDecimal.valueOf(46);
 
     private LabourForm labour = new LabourForm();
 
@@ -316,7 +318,8 @@ public class YourProjectCostsForm {
     }
 
     public BigDecimal getTotalAcademicAndSecretarialSupportCosts() {
-        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm.getCost())
+        return new BigDecimal(Optional.ofNullable(academicAndSecretarialSupportForm)
+                .map(AcademicAndSecretarialSupportCostRowForm::getCost)
                 .orElse(BigInteger.valueOf(0)));
     }
 
@@ -407,6 +410,19 @@ public class YourProjectCostsForm {
         recalculateTotal(getEstateCostRows());
         recalculateTotal(getAssociateSupportCostRows());
         recalculateTotal(getKtpTravelCostRows());
+    }
+
+    public void orderAssociateCosts() {
+        setAssociateSalaryCostRows(
+                getAssociateSalaryCostRows().entrySet().stream()
+                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
+                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
+        );
+        setAssociateDevelopmentCostRows(
+                getAssociateDevelopmentCostRows().entrySet().stream()
+                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
+                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
+        );
     }
 
     private void recalculateTotal(Map<String, ? extends AbstractCostRowForm> rows) {

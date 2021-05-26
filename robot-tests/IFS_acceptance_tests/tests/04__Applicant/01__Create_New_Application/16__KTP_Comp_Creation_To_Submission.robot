@@ -97,6 +97,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
 ...
+...            IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -184,9 +186,9 @@ The applicants should not see knowledge based organisations when joining a non-k
     Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 Comp Admin creates an KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779  IFS-8847
     Given log in as a different user                    &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative  No
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -983,11 +985,12 @@ Internal user should not see the start date in the Edit Project screen
 
 Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
-    Given Log in as a different user            &{ifs_admin_user_credentials}
-    When the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/finance-check
-    And the user approves finance checks        ${ProjectID}  ${competitionId}
-    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
-    And the user should not see the element     jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+    Given Log in as a different user                            &{ifs_admin_user_credentials}
+    When the user navigates to the page                         ${server}/project-setup-management/project/${ProjectID}/finance-check
+    And the user approves funding rules of lead and partner
+    And the user approves finance checks                        ${ProjectID}  ${competitionId}
+    Then the user should see the element                        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+    And the user should not see the element                     jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
 
 Internal user can view status of the GOL section on making application sucessful after finance checks have been approved
     [Documentation]  IFS-8199  IFS-7146  IFS-7147  IFS-7148  IFS-8115
@@ -1266,14 +1269,6 @@ the user fills in the KTP Application details
     the user clicks the button twice               css = label[for="resubmission-no"]
     the user can mark the question as complete
     the user should see the element                jQuery = li:contains("Application details") > .task-status-complete
-
-The user completes the research category
-    [Arguments]  ${res_category}
-    the user clicks the button/link      link=Research category
-    the user selects the checkbox        researchCategory
-    the user clicks the button/link      jQuery=label:contains("${res_category}")
-    the user clicks the button/link      id=application-question-complete
-    the user should see the element      jQuery=li:contains("Research category") > .task-status-complete
 
 Custom Suite Setup
     Set predefined date variables

@@ -27,7 +27,8 @@ public abstract class OrganisationMapper extends BaseMapper<Organisation, Organi
     @Mappings({
             @Mapping(source = "organisationType.name", target = "organisationTypeName"),
             @Mapping(source = "organisationType.description", target = "organisationTypeDescription"),
-            @Mapping(target = "addresses", ignore = true)
+            @Mapping(target = "addresses", ignore = true),
+            @Mapping(target = "registrationNumber", ignore = true)
     })
     @Override
     public abstract OrganisationResource mapToResource(Organisation domain);

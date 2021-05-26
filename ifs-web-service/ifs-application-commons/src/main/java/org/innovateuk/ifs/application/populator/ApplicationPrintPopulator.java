@@ -62,7 +62,7 @@ public class ApplicationPrintPopulator {
     private boolean nonKtpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
         return user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER)
                 && !competition.isKtp()
-                && shouldDisplayFeedback(competition, application);
+                && shouldDisplayFeedback(application);
     }
 
     private boolean ktpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
@@ -72,22 +72,22 @@ public class ApplicationPrintPopulator {
 
         return isKta
                 && competition.isKtp()
-                && shouldDisplayFeedback(competition, application);
+                && shouldDisplayFeedback(application);
     }
 
     private boolean userCanViewSupporterFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
         return user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && shouldDisplaySupporterFeedback(competition, application);
     }
 
-    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
+    private boolean shouldDisplayFeedback(ApplicationResource application) {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
-        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
+        boolean feedbackAvailable = application.isFeedbackReleased() || isApplicationAssignedToInterview;
         return application.isSubmitted()
                 && feedbackAvailable;
     }
 
     private boolean shouldDisplaySupporterFeedback(CompetitionResource competition, ApplicationResource application) {
-        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased();
+        boolean feedbackAvailable = application.isFeedbackReleased();
         return competition.isKtp() && application.isSubmitted() && feedbackAvailable;
     }
 }

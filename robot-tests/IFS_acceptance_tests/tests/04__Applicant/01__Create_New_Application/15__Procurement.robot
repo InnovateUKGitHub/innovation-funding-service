@@ -33,6 +33,10 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-9359 Create new project IDs for successful applications to avoid duplication in IFS PA
 ...
+...             IFS-8945 SBRI milestones - Map milestones to IFS PA
+...
+...             IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -53,9 +57,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779  IFS-9124  IFS-8847
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  2  false  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  STATE_AID  PROCUREMENT  PROJECT_SETUP  no  2  false  single-or-collaborative  No
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
@@ -203,17 +207,16 @@ Project finance completes finance checks then reverts them
     And the user reverts the milestones eligibility and viability
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6368  IFS-8947
+    [Documentation]  IFS-6368  IFS-8947  IFS-8945
     Given internal user assign MO to loan project
     And internal user approve bank details
-    And internal user generate SP
+    And internal user approves the finance checks
 
 Internal user generate the contract
-    [Documentation]  IFS-6368
-    Given applicant send project spend profile
-    When the internal user approve SP and issue contract
-    Then Lead applicant upload the contract
-    And the internal user approve the contract               ${ProjectID}
+    [Documentation]  IFS-6368  IFS-8945
+    Given the internal user approve SP and issue contract
+    When Lead applicant upload the contract
+    Then the internal user approve the contract               ${ProjectID}
 
 Internal user makes changes to the finance payment milestones
     [Documentation]   IFS-8944
@@ -232,7 +235,7 @@ Internal user makes changes to project finances
     And the user navigates to the page                      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
     Then the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
     And the user should see the element                     jQuery = td:contains("1,100") + td:contains("11,100") + td:contains("+ 10,000")
-    And the user should see the element                     jQuery = td:contains("£265,084")
+    And the user should see the element                     jQuery = td:contains("£243,484")
 
 Internal user removes payment milestones
     [Documentation]   IFS-8944
@@ -240,7 +243,7 @@ Internal user removes payment milestones
     And the user clicks the button/link                      link = Edit payment milestones
     When the user removes a payment milestone
     Then the user should not see the element                 jQuery = button:contains("Milestone for month 21")
-    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("62.31%") ~ h3:contains("£165,171")
+    And the user should see the element                      jQuery = h3:contains("Total payment requested") ~ h3:contains("67.84%") ~ h3:contains("£165,171")
 
 Internal user adds payment milestones
     [Documentation]   IFS-8944
@@ -253,7 +256,7 @@ Internal user adds payment milestones
     When the user creates a new payment milestone
     And the user clicks the button/link                      jQuery = button:contains("Save and return to payment milestone check")
     And the user navigates to the page                       ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/procurement-milestones
-    Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£265,084")
+    Then the user should see the element                     jQuery = h3:contains("100%") ~ h3:contains("£243,484")
 
 Applicant can view changes made to project finances
     [Documentation]  IFS-8944
@@ -410,18 +413,18 @@ the user makes changes to the payment milestones table
     the user navigates to the page      ${server}/project-setup-management/project/${SBRI_projectID}/finance-check/organisation/${Dreambit_Id}/eligibility/changes
 
 the user makes changes to the project finances
+    the user clicks the button/link     jQuery = a:contains("Edit project costs")
+    clear element text                  jQuery = div[id='accordion-finances'] div:nth-of-type(2) input[id^="procurementOverheadRows"][id$="projectCost"]
+    input text                          jQuery = div[id='accordion-finances'] div:nth-of-type(2) input[id^="procurementOverheadRows"][id$="projectCost"]   100
     the user clicks the button/link     jQuery = button:contains("Subcontracting")
-    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) a
-    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(4) input
-    input text                          css = div[id='accordion-finances'] div:nth-of-type(4) input  80000
-    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(6) [class="govuk-button"]
+    clear element text                  jQuery = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]
+    input text                          jQuery = div[id='accordion-finances'] div:nth-of-type(6) input[id^="subcontractingRows"][id$="cost"]   80000
     the user clicks the button/link     jQuery = button:contains("Other costs")
-    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) a
-    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]
+    clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]
     clear element text                  css = div[id='accordion-finances'] div:nth-of-type(8) textarea
-    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows[9"]   11100
+    input text                          css = div[id='accordion-finances'] div:nth-of-type(8) input[id^="otherRows"][id$="estimate"]   11100
     input text                          css = div[id='accordion-finances'] div:nth-of-type(8) textarea   Some other costs
-    the user clicks the button/link     css = div[id='accordion-finances'] div:nth-of-type(8) [class="govuk-button"]
+    the user clicks the button/link     id = save-eligibility
 
 the user creates a new payment milestone
     the user selects the option from the drop-down menu       21   jQuery = div[id='accordion-finances'] div:nth-of-type(22) select
@@ -429,7 +432,7 @@ the user creates a new payment milestone
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="taskOrActivity"]    Task Or Activity 21
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="deliverable"]   Deliverable 21
     the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) textarea[id^="milestones"][id$="successCriteria"]   Success Criteria 21
-    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) input[id^="milestones"][id$="payment"]   99913
+    the user enters text to a text field                      css = div[id='accordion-finances'] div:nth-of-type(22) input[id^="milestones"][id$="payment"]   78313
 
 the user should see all project finance changes
     the user should see the element                    jQuery = td:contains("90,000") + td:contains("80,000") + td:contains("- 10,000")
@@ -447,7 +450,7 @@ internal user approve bank details
     the user clicks the button/link     jQuery = button:contains("Approve bank account details")
     the user clicks the button/link     id = submit-approve-bank-details
 
-internal user generate SP
+internal user approves the finance checks
     the user navigates to the page                        ${server}/project-setup-management/project/${ProjectID}/finance-check
     the user clicks the button/link                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
     the user selects the checkbox                         project-viable
@@ -462,11 +465,10 @@ internal user generate SP
     the user clicks the button/link                       css = [name="confirm-eligibility"]
     the user clicks the button/link                       link = Return to finance checks
     the user should see the element                       jQuery = table.table-progress tr:nth-child(1) td:nth-child(5) span:contains("Green")
-    And the user clicks the button/link                   jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
-    And the internal user approves payment milestone
+    the user clicks the button/link                       jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    the internal user approves payment milestone
     the user clicks the button/link                       link = Return to finance checks
-    the user clicks the button/link                       css = .generate-spend-profile-main-button
-    the user clicks the button/link                       css = #generate-spend-profile-modal-button
+    the user clicks the button/link                       jQuery = button:contains("Approve finance checks")
 
 applicant send project spend profile
     Log in as a different user            &{RTO_lead_applicant_credentials}
@@ -480,10 +482,6 @@ applicant send project spend profile
 
 the internal user approve SP and issue contract
     log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
-    the user selects the checkbox       approvedByLeadTechnologist
-    the user clicks the button/link     id = accept-profile
-    the user clicks the button/link     jQuery = button:contains("Approve")
     the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
     the user uploads the file           grantOfferLetter  ${valid_pdf}
     the user selects the checkbox       confirmation

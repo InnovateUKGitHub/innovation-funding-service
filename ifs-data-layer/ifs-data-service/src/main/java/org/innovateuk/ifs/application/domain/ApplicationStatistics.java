@@ -4,6 +4,7 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
@@ -38,6 +39,10 @@ public class ApplicationStatistics {
 
     @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="assessment_period_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
     @Where(clause = "process_type = 'Assessment'")
@@ -85,5 +90,9 @@ public class ApplicationStatistics {
 
     public int getSubmitted() {
         return assessments.stream().filter(a -> a.isInState(SUBMITTED)).mapToInt(e -> 1).sum();
+    }
+
+    public AssessmentPeriod getAssessmentPeriod() {
+        return assessmentPeriod;
     }
 }

@@ -24,7 +24,10 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
-import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
@@ -344,7 +347,7 @@ public class ProjectFinanceChecksController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
-        return doViewEligibility(application, project, isLeadPartnerOrganisation, organisation, model);
+        return doViewEligibility(application, project, isLeadPartnerOrganisation, organisation, model, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
@@ -462,7 +465,7 @@ public class ProjectFinanceChecksController {
         return attachments;
     }
 
-    private String doViewEligibility(ApplicationResource application, ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model) {
+    private String doViewEligibility(ApplicationResource application, ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, boolean canEditProjectCosts) {
 
         EligibilityResource eligibility = financeCheckRestService.getEligibility(project.getId(), organisation.getId()).getSuccess();
 
@@ -478,7 +481,10 @@ public class ProjectFinanceChecksController {
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypes(), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP));
+            Optional<ProjectFinanceResource> organisationProjectFinance = projectFinances.stream()
+                    .filter(projectFinance -> projectFinance.getOrganisation().equals(organisation.getId()))
+                    .findFirst();
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypesByFinance(organisationProjectFinance), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP, canEditProjectCosts));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
@@ -502,7 +508,8 @@ public class ProjectFinanceChecksController {
                 isUsingJesFinances,
                 false,
                 projectFinances, false,
-                showChangesLink));
+                showChangesLink,
+                false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

@@ -55,6 +55,14 @@ public class AssessmentController {
         return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
     }
 
+    @GetMapping("/state/{state}/assessment-period/{assessmentPeriodId}/count")
+    public RestResult<Integer> countByStateAndAssessmentPeriod(
+            @PathVariable("state") AssessmentState state,
+            @PathVariable("assessmentPeriodId") long assessmentPeriodId) {
+        return assessmentService.countByStateAndAssessmentPeriodId(state, assessmentPeriodId).toGetResponse();
+    }
+
+
     @GetMapping("/{id}/score")
     public RestResult<AssessmentTotalScoreResource> getTotalScore(@PathVariable("id") long id) {
         return assessmentService.getTotalScore(id).toGetResponse();
@@ -83,6 +91,11 @@ public class AssessmentController {
     @PutMapping("/{id}/withdraw")
     public RestResult<Void> withdrawAssessment(@PathVariable("id") long id) {
         return assessmentService.withdrawAssessment(id).toPutResponse();
+    }
+
+    @PutMapping("/{id}/unsubmit")
+    public RestResult<Void> unsubmitAssessment(@PathVariable("id") long id) {
+        return assessmentService.unsubmitAssessment(id).toPutResponse();
     }
 
     @PutMapping("/submit-assessments")

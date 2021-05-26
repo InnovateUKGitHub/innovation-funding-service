@@ -108,6 +108,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
 ...
+...               IFS-9482 Loans: Comp setup - new question in Project details section
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -208,7 +212,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     Given the user clicks the button/link     link = Terms and conditions
     When the user should see the element      link = Loans (opens in a new window)
     And the user clicks the button/link       jQuery = button:contains("Done")
-    And the user selects the radio button     termsAndConditionsId  23
+    And the user clicks the button twice      jQuery = label:contains("Loans")
     And the user clicks the button/link       jQuery = button:contains("Done")
     And the user should see the element       jQuery = dt:contains("Subsidy control terms and conditions") ~ dd:contains("Loans")
     And the user should see the element       jQuery = dt:contains("State aid terms and conditions") ~ dd:contains("Loans")
@@ -354,15 +358,17 @@ Funding eligibility: Mark as Done
     Then The user clicks the button/link          link = Return to setup overview
 
 Milestones: Page should contain the correct fields
-    [Documentation]    INFUND-2993
+    [Documentation]    INFUND-2993  IFS-8847
     [Tags]
-    Given the user clicks the button/link           link = Milestones
-    Then the user should see the element            jQuery = h1:contains("Completion stage")
-    And the user should see the element             jQuery = label:contains("Release feedback")
-    And the user should see the element             jQuery = label:contains("Project setup")
-    And the user selects the radio button           selectedCompletionStage  PROJECT_SETUP
-    And the user clicks the button/link             jQuery = button:contains("Done")
-    And the pre-field date should be correct
+    Given the user clicks the button/link         link = Milestones
+    And the user should see the element           jQuery = h1:contains("Completion stage")
+    And the user should see the element           jQuery = label:contains("Release feedback")
+    And the user should see the element           jQuery = label:contains("Project setup")
+    When the user selects the radio button        selectedCompletionStage  PROJECT_SETUP
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user clicks the button twice          jQuery = label:contains("No")
+    And the user clicks the button/link           jQuery = button:contains("Save and continue")
+    Then the pre-field date should be correct
 
 Milestones: Correct Weekdays should show
     [Documentation]    INFUND-2993
@@ -450,7 +456,16 @@ Application: Application details
     And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("84")
     [Teardown]  the user clicks the button/link     link = Application
 
-External user edits the EDI question.
+Project details: Business and financial information
+    [Documentation]  INF-9482
+    Given the user clicks the button/link           link = Business and financial information
+    And the user should see the element             jQuery = h1:contains("Business and financial information")
+    When the user enters text to a text field       id = question.guidanceTitle  Guidance title
+    And the user enters text to a text field        css = label[for="question.guidance"] + * .editor  Guidance text
+    And The user clicks the button/link             jQuery = button:contains('Done')
+    Then the user should see the element            jQuery = li:contains("Business and financial information") .task-status-complete
+
+External user edits the EDI question
     [Documentation]  IFS-7700  IFS-8522
     Given the user marks each question as complete     Equality, diversity and inclusion
     And the user clicks the button/link                link = Equality, diversity and inclusion
@@ -757,7 +772,7 @@ User deletes the competition
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
-    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative
+    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative  No
     When the user clicks the button/link                                  link = Delete competition
     And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
     And the user navigates to the page                                    ${CA_UpcomingComp}
@@ -998,7 +1013,7 @@ the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
 
 the comp admin creates competition with all sections details
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}   ${isOpenComp}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
@@ -1008,7 +1023,7 @@ the comp admin creates competition with all sections details
     the user fills in the CS Project eligibility                                     ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility                                     ${researchCategory}   ${compType}   ${fundingRule}
     the user selects the organisational eligibility to no                            false
-    the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}
+    the user fills in the CS Milestones                                              ${completionStage}   ${month}   ${nextyear}   ${isOpenComp}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done                                ${projectGrowth}  ${compType}  ${competition}

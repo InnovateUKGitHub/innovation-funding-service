@@ -17,6 +17,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
+import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -37,7 +38,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
@@ -258,7 +259,7 @@ public class CompetitionSetupController {
                                                   Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        if ("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())) {
+        if ("yes".equals(competitionSetupForm.getMultipleStream()) && ObjectUtils.isEmpty(competitionSetupForm.getStreamName())) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
 
@@ -288,6 +289,20 @@ public class CompetitionSetupController {
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
                 CompetitionSetupSection.COMPLETION_STAGE, loggedInUser, model);
+    }
+
+    @PostMapping("/{competitionId}/section/application-submission")
+    public String submitApplicationSubmissionSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationSubmissionForm competitionSetupForm,
+                                                            BindingResult bindingResult,
+                                                            ValidationHandler validationHandler,
+                                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                            UserResource loggedInUser,
+                                                            Model model) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
+                CompetitionSetupSection.APPLICATION_SUBMISSION, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/milestones")
@@ -390,7 +405,7 @@ public class CompetitionSetupController {
             return format("redirect:/competition/setup/%d", competition.getId());
         }
 
-        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
+        Supplier<String> successView = () -> competitionSetupService.getNextSetupSection(competitionSetupForm, competition, section).getSuccess();
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
             return "competition/setup";

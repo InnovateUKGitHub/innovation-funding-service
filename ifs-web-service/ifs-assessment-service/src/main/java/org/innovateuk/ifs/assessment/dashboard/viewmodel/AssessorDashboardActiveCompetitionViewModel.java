@@ -18,10 +18,11 @@ public class AssessorDashboardActiveCompetitionViewModel {
     private LocalDate submitDeadline;
     private long daysLeft;
     private long daysLeftPercentage;
+    private boolean competitionAlwaysOpen;
 
     public AssessorDashboardActiveCompetitionViewModel(long competitionId, String displayLabel, long progressAssessed,
                                                        long progressTotal, long pendingAssessments, LocalDate submitDeadline,
-                                                       long daysLeft, long daysLeftPercentage) {
+                                                       long daysLeft, long daysLeftPercentage, boolean competitionAlwaysOpen) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.progressAssessed = progressAssessed;
@@ -30,6 +31,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.submitDeadline = submitDeadline;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
+        this.competitionAlwaysOpen = competitionAlwaysOpen;
     }
 
     public long getCompetitionId() {
@@ -102,6 +104,10 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     public boolean hasApplicationsToAssess(){
         return progressTotal - progressAssessed != 0;
+    }
+
+    public boolean isCompetitionAlwaysOpen() {
+        return competitionAlwaysOpen;
     }
 
     @Override

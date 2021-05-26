@@ -114,10 +114,6 @@ I am a tester and I want to swap to a new branch for testing
 Running a gradle task for only web services (eg. test)
 
     ./gradlew test -p ifs-web-service
-
-Create asciidoc
-
-    ./gradlewe clean asciidoctorOnly
     
 Publish openshift configuration files to nexus (not to be used to publish from local machine), this task will publish all files under "os-files" folder.
 

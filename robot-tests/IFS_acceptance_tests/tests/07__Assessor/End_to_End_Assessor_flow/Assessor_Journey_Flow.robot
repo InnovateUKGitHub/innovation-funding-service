@@ -78,7 +78,7 @@ New assessor has one assessment to accept
 Assessor is notified by Email
     [Tags]  HappyPath
     [Setup]    The guest user opens the browser
-    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Your applications for the competition    You have been allocated some applications
+    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Applications assigned to you for competition    We have assigned applications for you to assess for this competition
 
 Assessor accepts the invite for the Application
     [Tags]  HappyPath
@@ -171,7 +171,7 @@ comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
     the user adds an assessor to application    assessor-row-1
     the user clicks the button/link             jQuery = a:contains("Allocate applications")
-    the user clicks the button/link             jQuery = a:contains("Manage assessments")
+    the user clicks the button/link             jQuery = a:contains("Back to manage assessments")
     the user clicks the button/link             jQuery = a:contains("Competition")
     the user clicks the button/link             jQuery = button:contains("Notify assessors")
     the element should be disabled              jQuery = button:contains("Notify assessors")

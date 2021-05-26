@@ -6,6 +6,8 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -43,30 +45,20 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
 
-    private AssessmentRepository assessmentRepository;
-    private AssessmentMapper assessmentMapper;
-    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
-    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
-    private AssessmentWorkflowHandler assessmentWorkflowHandler;
-    private CompetitionParticipantService competitionParticipantService;
-
-    public AssessmentServiceImpl() {
-    }
-
     @Autowired
-    public AssessmentServiceImpl(AssessmentRepository assessmentRepository,
-                                 AssessmentMapper assessmentMapper,
-                                 AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
-                                 AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
-                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
-                                 CompetitionParticipantService competitionParticipantService) {
-        this.assessmentRepository = assessmentRepository;
-        this.assessmentMapper = assessmentMapper;
-        this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
-        this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
-        this.assessmentWorkflowHandler = assessmentWorkflowHandler;
-        this.competitionParticipantService = competitionParticipantService;
-    }
+    private AssessmentRepository assessmentRepository;
+    @Autowired
+    private AssessmentMapper assessmentMapper;
+    @Autowired
+    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
+    @Autowired
+    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
+    @Autowired
+    private AssessmentWorkflowHandler assessmentWorkflowHandler;
+    @Autowired
+    private CompetitionParticipantService competitionParticipantService;
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -139,6 +131,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<Integer> countByStateAndAssessmentPeriodId(AssessmentState state, long assessmentPeriod) {
+        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetAssessmentPeriodIdAndParticipantUserStatusIn(state, assessmentPeriod, singletonList(UserStatus.ACTIVE)));
+    }
+
+    @Override
     public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
         return serviceSuccess(assessmentRepository.getTotalScore(assessmentId));
     }
@@ -183,12 +180,37 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
+                .andOnSuccess(found -> {
+                    Application application = found.getTarget();
+                    if (!assessmentWorkflowHandler.withdraw(found)) {
+                        return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
+                    }
+                    boolean allAssessmentsWithdrawn = application.getAssessments()
+                            .stream()
+                            .filter(assessment -> !assessment.getId().equals(assessmentId))
+                            .allMatch(assessment -> WITHDRAWN.equals(assessment.getProcessState()));
+                    if (allAssessmentsWithdrawn) {
+                        application.setAssessmentPeriod(null);
+                    }
+                    
+                    return serviceSuccess();
+        });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> unsubmitAssessment(long assessmentId) {
         return find(assessmentRepository.findById(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.withdraw(found)) {
-                return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
+            if (!assessmentWorkflowHandler.unsubmitAssessment(found) || isAssessmentClosed(found)) {
+                return serviceFailure(ASSESSMENT_UNSUBMIT_FAILED);
             }
             return serviceSuccess();
         });
+    }
+
+    private boolean isAssessmentClosed(Assessment assessment) {
+        return assessment.getTarget().getCompetition().isAssessmentClosed();
     }
 
     @Override
@@ -237,7 +259,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return getUser(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR))
+                        .andOnSuccess(application ->  createAssessment(assessor, application, ProcessRoleType.ASSESSOR, assessmentCreateResource.getAssessmentPeriodId()))
                 );
     }
 
@@ -250,14 +272,30 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
 
-    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role) {
+    private ServiceResult<AssessmentResource> createAssessment(User assessor, Application application, ProcessRoleType role, Long assessmentPeriodId) {
+
+        AssessmentPeriod assessmentPeriod = getAssessmentPeriodFromIdOrDefault(application.getCompetition().getId(), assessmentPeriodId);
+        if (assessmentPeriod != null) {
+            application.setAssessmentPeriod(assessmentPeriod);
+            applicationRepository.save(application);
+        }
 
         ProcessRole processRole = getExistingOrCreateNewProcessRole(assessor, application, role);
-
         Assessment assessment = new Assessment(application, processRole);
 
         return serviceSuccess(assessmentRepository.save(assessment))
-                .andOnSuccessReturn(assessmentMapper::mapToResource);
+                     .andOnSuccessReturn(assessmentMapper::mapToResource);
+    }
+
+    private AssessmentPeriod getAssessmentPeriodFromIdOrDefault(long competitionId, Long assessmentPeriodId) {
+        AssessmentPeriod assessmentPeriod;
+        if (assessmentPeriodId != null) {
+            assessmentPeriod = assessmentPeriodRepository.findById(assessmentPeriodId).orElse(null);
+        } else {
+            assessmentPeriod = assessmentPeriodRepository.findFirstByCompetitionId(competitionId)
+                    .orElse(null);
+        }
+        return assessmentPeriod;
     }
 
     private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, ProcessRoleType role) {

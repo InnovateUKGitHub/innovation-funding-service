@@ -11,7 +11,8 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='govuk-heading-xl'" />
 
     <div class="govuk-body panel">
-        Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+        <th:block th:unless="${model.general.competition.alwaysOpen}">Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.</th:block>
+        <th:block th:if="${model.general.competition.alwaysOpen}">Assessment dates are set after the competition has opened.<br />Do not complete the 'Submission date' milestone when creating open-ended competitions.</th:block>
     </div>
 
     <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
@@ -33,12 +34,15 @@
                 <tbody class="govuk-table__body">
                   <tr th:each="(milestoneEntry : ${competitionSetupForm.milestoneEntries})"
                       th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                      th:with="milestoneDescription=${model.general.competition.alwaysOpen ? milestoneEntry.value.milestoneType.alwaysOpenDescription : milestoneEntry.value.milestoneType.milestoneDescription},
+                               required=${!(model.general.competition.alwaysOpen and milestoneEntry.value.milestoneType == T(org.innovateuk.ifs.competition.resource.MilestoneType).SUBMISSION_DATE)}"
                       class="govuk-table__row date-group form-group-row"
                       data-future-date=""
-                      th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
+                      th:classappend="${required} ? '' : 'not-required-in-sequence'"
+                      th:attr="data-date-invalid-errormessage=${milestoneDescription + ': Please enter a valid date.'},
+                               data-date-future-errormessage=${milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
                       <th class="govuk-table__header" scope="row">
-                          <legend th:id="${'milestone-' + milestoneEntry.key}" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
+                          <legend th:id="${'milestone-' + milestoneEntry.key}" th:text="${milestoneDescription}" />
                       </th>
                       <td class="govuk-table__cell time">
                         <input type="hidden"
@@ -52,14 +56,14 @@
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   aria-labelledby="time"
                                   class="govuk-select"
-                                  required="required"
+                                  th:required="${required} ? 'required'"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
                               <option th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
                           <th:block th:if="${milestoneEntry.value.middayTime}" >
-                              12:00 pm
+                                  Midday
                             <input type="hidden"
                                 data-time="12"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
@@ -74,7 +78,7 @@
                                  min="1"
                                  max="31"
                                  data-maxlength-errormessage=""
-                                 required="required"
+                                 th:required="${required} ? 'required'"
                                  pattern="^[0-9]{1,2}$"
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="2"
@@ -91,7 +95,7 @@
                                 placeholder="MM"
                                 min="1"
                                 max="12"
-                                required="required"
+                                th:required="${required} ? 'required'"
                                 pattern="^[0-9]{1,2}$"
                                 data-prevent-input-regex="[^0-9]"
                                 maxlength="2"
@@ -113,7 +117,7 @@
                                  th:attr="aria-labelledby=|year milestone-${milestoneEntry.key}|,
                                  data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|,
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"
-                                 required="required"
+                                 th:required="${required} ? 'required'"
                                  class="govuk-input govuk-input--width-4"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
@@ -138,14 +142,19 @@
                 </thead>
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
-                        th:if="${milestoneEntry.value.milestoneType.presetDate}">
-                        <td class="govuk-table__cell" th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                        th:with="milestoneDescription=${model.general.competition.alwaysOpen ? milestoneEntry.value.milestoneType.alwaysOpenDescription : milestoneEntry.value.milestoneType.milestoneDescription}">
+                        <td class="govuk-table__cell" th:text="${milestoneDescription}"></td>
                         <td class="govuk-table__cell">
-                            <th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/>
-                            <th:block th:if="${milestoneEntry.value.middayTime}">12:00 pm</th:block>
+                            <th:block th:if="${milestoneEntry.value.timeOption and milestoneEntry.value.date != null}" th:text="${milestoneEntry.value.time.display}"/>
+                            <th:block th:if="${milestoneEntry.value.timeOption and milestoneEntry.value.date == null}">-</th:block>
+                            <th:block th:if="${milestoneEntry.value.middayTime}">Midday</th:block>
                         </td>
                         <td class="govuk-table__cell" th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                        <td class="govuk-table__cell" th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
+                        <td class="govuk-table__cell">
+                            <th:block th:if="${milestoneEntry.value.date}" th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"/>
+                            <th:block th:unless="${milestoneEntry.value.date}">None</th:block>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -156,9 +165,9 @@
     <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to previous part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='completion-stage')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath=${model.applicationSubmissionEnabled ? 'application-submission' : 'completion-stage'})}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Completion stage</span>
+                <span class="pagination-part-title" th:text="${model.applicationSubmissionEnabled ? 'Application submission' : 'Completion stage'}">Completion stage</span>
             </a>
         </li>
         <li class="next">

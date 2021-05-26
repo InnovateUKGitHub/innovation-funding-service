@@ -4,10 +4,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 import org.innovateuk.ifs.questionnaire.config.repository.QuestionnaireRepository;
@@ -65,7 +65,7 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
             return competitionTypeSections;
         }
 
-        if (northernIrelandSubsidyControlModeDisabled() || generatingWebtestDataForComp(competition)) {
+        if (!northernIrelandSubsidyControlToggle || generatingWebtestDataForComp(competition)) {
             insertNorthernIrelandTacticalDeclaration(competitionTypeSections);
         } else if (northernIrelandSubsidyControlToggle) {
             competitionTypeSections.get(0)
@@ -88,13 +88,9 @@ public class SubsidyControlTemplate implements FundingRulesTemplate {
                 && competition.getName().contains("Subsidy control tactical");
     }
 
-    private boolean northernIrelandSubsidyControlModeDisabled() {
-        return !northernIrelandSubsidyControlToggle;
-    }
-
     private static void insertNorthernIrelandTacticalDeclaration(List<SectionBuilder> sectionBuilders) {
         sectionBuilders.stream()
-                .filter(section -> "Project details".equals(section.getName()))
+                .filter(section -> SectionType.PROJECT_DETAILS == section.getType())
                 .findAny()
                 .ifPresent(section -> section.getQuestions().add(0, northernIrelandTacticalDeclaration()));
     }

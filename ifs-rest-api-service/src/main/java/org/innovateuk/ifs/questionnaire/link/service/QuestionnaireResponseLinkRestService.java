@@ -12,7 +12,7 @@ public interface QuestionnaireResponseLinkRestService {
                                                                                                long applicationId,
                                                                                                long organisationId);
 
-    RestResult<StringResource> getResponseIdByProjectIdAndOrganisationIdAndQuestionnaireId(long projectId,
+    RestResult<StringResource> getResponseIdByProjectIdAndQuestionnaireIdAndOrganisationId(long projectId,
                                                                                            long questionnaireId,
                                                                                            long organisationId);
 

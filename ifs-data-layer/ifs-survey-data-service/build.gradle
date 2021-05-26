@@ -4,7 +4,6 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 
@@ -12,7 +11,6 @@ processResources.dependsOn applyProfiles
 
 
 apply from: "../flyway.gradle"
-apply plugin: 'org.asciidoctor.convert'
 
 project.version = nexusVersion
 tagDocker.tag = nexusVersion
@@ -81,7 +79,6 @@ prepareDockerBaseInput {
 
     dependsOn ":ifs-commons:build"
     dependsOn ":ifs-resources:build"
-    dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-security:build"
 
 }
@@ -94,7 +91,6 @@ dependencies {
     compile project(':ifs-resources')
     compile project(':ifs-resources:ifs-survey-resources')
     compile project(':ifs-security')
-    compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
@@ -102,7 +98,6 @@ dependencies {
     testCompile project(path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 }
 
 test {
@@ -110,12 +105,6 @@ test {
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
-    finalizedBy asciidoctor
-
-    if (targetBuild == 'docker' && enabled) {
-        dependsOn ":docker:ifs-mysql:ifs-survey-database:initDB"
-    }
-
 }
 
 flywayClean.dependsOn applyProfiles

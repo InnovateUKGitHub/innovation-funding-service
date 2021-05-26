@@ -141,6 +141,11 @@ public class SetupSectionsPermissionRules {
         return SecurityRuleUtil.isInternalAdmin(user);
     }
 
+    @PermissionRule(value = "RESET_GRANT_OFFER_LETTER", description = "Super admin user can reset the grant offer letter section")
+    public boolean superAdminUserCanResetGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
+        return SecurityRuleUtil.hasSuperAdminAuthority(user);
+    }
+
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "An internal user can access the Grant Offer Letter send " +
             "section when the lead partner submits the documents")
     public boolean internalCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {

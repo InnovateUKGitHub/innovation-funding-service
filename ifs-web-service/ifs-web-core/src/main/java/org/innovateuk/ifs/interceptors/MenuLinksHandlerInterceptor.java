@@ -88,13 +88,13 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addShowManageUsersAttribute(UserResource user, ModelAndView modelAndView) {
-        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT));
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT, SUPER_ADMIN_USER));
     }
 
     private void addShowManageAssessorsAttribute(UserResource user, ModelAndView modelAndView) {
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR,
                         user != null &&
-                        !user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) &&
+                        !user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT, SUPER_ADMIN_USER) &&
                         user.hasAuthority(Authority.COMP_ADMIN));
     }
 

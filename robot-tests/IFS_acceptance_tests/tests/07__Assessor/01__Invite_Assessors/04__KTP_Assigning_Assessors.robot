@@ -52,7 +52,7 @@ ${KTPapplicationId}                         ${application_ids["${KTPapplication}
 ${KTPcompetiton}                            KTP in panel
 ${ktpLead}                                  bob@knowledge.base
 ${ktpPartner}                               jessica.doe@ludlow.co.uk
-${uploadedPdf}                              fec-file363.pdf
+${uploadedPdf}                              fec-file
 
 *** Test Cases ***
 Comp admin can find the registered KTA in system

@@ -66,7 +66,7 @@ public class PreviousCompetitionController {
                 applicationSummaryRestService.getPreviousApplications(competitionId).getSuccess(),
                 internalProjectSetupRows,
                 user.hasAuthority(Authority.PROJECT_FINANCE),
-                user.hasRole(Role.IFS_ADMINISTRATOR),
+                user.hasAuthority(Authority.IFS_ADMINISTRATOR),
                 user.hasRole(Role.EXTERNAL_FINANCE))
         );
         return "competition/previous";

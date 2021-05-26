@@ -6,13 +6,13 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.IndustrialCostFinanceHandler;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.in;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -40,6 +41,8 @@ import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newF
 import static org.innovateuk.ifs.finance.builder.IndirectCostBuilder.newIndirectCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.finance.builder.SubcontractingCostBuilder.newSubContractingCost;
 import static org.innovateuk.ifs.finance.builder.VATCostBuilder.newVATCost;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
@@ -106,7 +109,17 @@ public class IndustrialCostFinanceHandlerTest {
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Mock
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Mock
+    private ProjectFinanceRowRepository projectFinanceRowRepositoryMock;
+
+    @Mock
+    private KtpFecFilter ktpFecFilterMock;
+
     private ApplicationFinance applicationFinance;
+    private ProjectFinance projectFinance;
     private Materials material;
     private FinanceRow materialCost;
     private AcademicAndSecretarialSupport academicAndSecretarialSupport;
@@ -123,6 +136,7 @@ public class IndustrialCostFinanceHandlerTest {
                 associateSupportCostHandler, consumableHandler, estateCostHandler, knowledgeBaseCostHandler, academicAndSecretarialSupportHandler, indirectCostHandler));
 
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
+        when(projectFinanceRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
         when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
 
         setupGrantCompetitionFinance();
@@ -145,6 +159,8 @@ public class IndustrialCostFinanceHandlerTest {
 
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(applicationFinance, costs))
+                .thenAnswer(invocation -> invocation.getArgument(1));
     }
 
     private List<ApplicationFinanceRow> initialiseFinanceTypesAndCost(ApplicationFinance applicationFinance) {
@@ -158,7 +174,110 @@ public class IndustrialCostFinanceHandlerTest {
             }
         }
 
-        CapitalUsage capitalUsage = newCapitalUsage()
+        CapitalUsage capitalUsage = buildCapitalUsage(applicationFinance);
+        FinanceRowMetaField financeRowMetaField = buildFinanceRowMetaField(3L, "existing", "String");
+        FinanceRowMetaField financeRowMetaField2 = buildFinanceRowMetaField(4L, "residual_value", "BigDecimal");
+        FinanceRowMetaField financeRowMetaField3 = buildFinanceRowMetaField(5L, "utilisation", "Integer");
+        FinanceRowMetaValue financeRowMetaValue1 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField, financeRowMetaField2)
+                .withValue("Yes", String.valueOf(new BigDecimal(100000)))
+                .build();
+        FinanceRowMetaValue financeRowMetaValue2 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField3, null)
+                .withValue(String.valueOf(20), String.valueOf(20))
+                .build();
+        FinanceRow capitalUsageCost = industrialCostFinanceHandler.toApplicationDomain(capitalUsage);
+        capitalUsageCost.setTarget(applicationFinance);
+        capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue1);
+        capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue2);
+        costs.add((ApplicationFinanceRow) capitalUsageCost);
+
+        SubContractingCost subContracting = buildSubContractingCost(BigDecimal.ONE, applicationFinance);
+        FinanceRowMetaField financeRowMetaField4 = buildFinanceRowMetaField(1L, "country", "france");
+        FinanceRowMetaValue financeRowMetaValue3 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField4)
+                .withValue("frane")
+                .build();
+        FinanceRow subContractingCost = industrialCostFinanceHandler.toApplicationDomain(subContracting);
+        subContractingCost.getFinanceRowMetadata().add(financeRowMetaValue3);
+        subContractingCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) subContractingCost);
+
+        SubContractingCost subContracting2 = buildSubContractingCost(BigDecimal.TEN, applicationFinance);
+        FinanceRowMetaField financeRowMetaField5 = buildFinanceRowMetaField(2L, "country", "france");
+        FinanceRowMetaValue financeRowMetaValue4 = newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField5)
+                .withValue("frane")
+                .build();
+        FinanceRow subContractingCost2 = industrialCostFinanceHandler.toApplicationDomain(subContracting2);
+        subContractingCost2.getFinanceRowMetadata().add(financeRowMetaValue4);
+        subContractingCost2.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) subContractingCost2);
+
+        LabourCost labour = buildLabourCost();
+        FinanceRow labourCost = industrialCostFinanceHandler.toApplicationDomain(labour);
+        labourCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) labourCost);
+
+        material = buildMaterials(applicationFinance);
+        materialCost = industrialCostFinanceHandler.toApplicationDomain(material);
+        materialCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) materialCost);
+
+        Vat vat = buildVat(applicationFinance);
+        FinanceRow vatCost = industrialCostFinanceHandler.toApplicationDomain(vat);
+        vatCost.setTarget(applicationFinance);
+        costs.add((ApplicationFinanceRow) vatCost);
+
+        return costs;
+    }
+
+    private Vat buildVat(Finance finance) {
+        return newVATCost()
+                .withRegistered(false)
+                .withTargetId(finance.getId())
+                .build();
+    }
+
+    private Materials buildMaterials(Finance finance) {
+        return newMaterials()
+                .withCost(BigDecimal.valueOf(100))
+                .withItem("Screws")
+                .withQuantity(5)
+                .withTargetId(finance.getId())
+                .build();
+    }
+
+    private LabourCost buildLabourCost() {
+        return newLabourCost()
+                .withLabourDays(300)
+                .withGrossEmployeeCost(BigDecimal.valueOf(50000))
+                .withRole("Developer")
+                .withDescription("")
+                .build();
+    }
+
+    private SubContractingCost buildSubContractingCost(BigDecimal cost, Finance finance) {
+        return newSubContractingCost()
+                .withId((Long) null)
+                .withCost(cost)
+                .withCountry("France")
+                .withName("Name")
+                .withRole("Role")
+                .withTargetId(finance.getId())
+                .build();
+    }
+
+    private FinanceRowMetaField buildFinanceRowMetaField(long id, String title, String type) {
+        return newFinanceRowMetaField()
+                .withId(id)
+                .withTitle(title)
+                .withType(type)
+                .build();
+    }
+
+    private CapitalUsage buildCapitalUsage(Finance finance) {
+        return newCapitalUsage()
                 .withId((Long) null)
                 .withDeprecation(20)
                 .withDescription("Description")
@@ -166,125 +285,8 @@ public class IndustrialCostFinanceHandlerTest {
                 .withNpv(BigDecimal.valueOf(100000))
                 .withResidualValue(BigDecimal.valueOf(200000))
                 .withUtilisation(20)
-                .withTargetId(applicationFinance.getId())
+                .withTargetId(finance.getId())
                 .build();
-
-        FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField()
-                .withId(3L)
-                .withTitle("existing")
-                .withType("String")
-                .build();
-
-        FinanceRowMetaField financeRowMetaField2 = newFinanceRowMetaField()
-                .withId(4L)
-                .withTitle("residual_value")
-                .withType("BigDecimal")
-                .build();
-
-        FinanceRowMetaField financeRowMetaField3 = newFinanceRowMetaField()
-                .withId(5L)
-                .withTitle("utilisation")
-                .withType("Integer")
-                .build();
-
-        FinanceRowMetaValue financeRowMetaValue1 = newFinanceRowMetaValue()
-                .withFinanceRowMetaField(financeRowMetaField, financeRowMetaField2)
-                .withValue("Yes", String.valueOf(new BigDecimal(100000)))
-                .build();
-
-        FinanceRowMetaValue financeRowMetaValue2 = newFinanceRowMetaValue()
-                .withFinanceRowMetaField(financeRowMetaField3, null)
-                .withValue(String.valueOf(20), String.valueOf(20))
-                .build();
-
-        FinanceRow capitalUsageCost = industrialCostFinanceHandler.toApplicationDomain(capitalUsage);
-        capitalUsageCost.setTarget(applicationFinance);
-        capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue1);
-        capitalUsageCost.getFinanceRowMetadata().add(financeRowMetaValue2);
-        costs.add((ApplicationFinanceRow) capitalUsageCost);
-
-        SubContractingCost subContracting = newSubContractingCost()
-                .withId((Long) null)
-                .withCost(BigDecimal.ONE)
-                .withCountry("France")
-                .withName("Name")
-                .withRole("Role")
-                .withTargetId(applicationFinance.getId())
-                .build();
-
-        FinanceRowMetaField financeRowMetaField4 = newFinanceRowMetaField()
-                .withId(1L)
-                .withTitle("country")
-                .withType("france")
-                .build();
-
-        FinanceRowMetaValue financeRowMetaValue3 = newFinanceRowMetaValue()
-                .withFinanceRowMetaField(financeRowMetaField4)
-                .withValue("frane")
-                .build();
-
-        FinanceRow subContractingCost = industrialCostFinanceHandler.toApplicationDomain(subContracting);
-        subContractingCost.getFinanceRowMetadata().add(financeRowMetaValue3);
-        subContractingCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow) subContractingCost);
-
-        SubContractingCost subContracting2 = newSubContractingCost()
-                .withId((Long) null)
-                .withCost(BigDecimal.TEN)
-                .withCountry("France")
-                .withName("Name")
-                .withRole("Role")
-                .withTargetId(applicationFinance.getId())
-                .build();
-
-        FinanceRowMetaField financeRowMetaField5 = newFinanceRowMetaField()
-                .withId(2L)
-                .withTitle("country")
-                .withType("france")
-                .build();
-
-        FinanceRowMetaValue financeRowMetaValue4 = newFinanceRowMetaValue()
-                .withFinanceRowMetaField(financeRowMetaField5)
-                .withValue("frane")
-                .build();
-
-        FinanceRow subContractingCost2 = industrialCostFinanceHandler.toApplicationDomain(subContracting2);
-        subContractingCost2.getFinanceRowMetadata().add(financeRowMetaValue4);
-        subContractingCost2.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow) subContractingCost2);
-
-        LabourCost labour = newLabourCost()
-                .withLabourDays(300)
-                .withGrossEmployeeCost(BigDecimal.valueOf(50000))
-                .withRole("Developer")
-                .withDescription("")
-                .build();
-
-        FinanceRow labourCost = industrialCostFinanceHandler.toApplicationDomain(labour);
-        labourCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow) labourCost);
-
-        material = newMaterials()
-                .withCost(BigDecimal.valueOf(100))
-                .withItem("Screws")
-                .withQuantity(5)
-                .withTargetId(applicationFinance.getId())
-                .build();
-
-        materialCost = industrialCostFinanceHandler.toApplicationDomain(material);
-        materialCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow) materialCost);
-
-        Vat vat = newVATCost()
-                .withRegistered(false)
-                .withTargetId(applicationFinance.getId())
-                .build();
-
-        FinanceRow vatCost = industrialCostFinanceHandler.toApplicationDomain(vat);
-        vatCost.setTarget(applicationFinance);
-        costs.add((ApplicationFinanceRow) vatCost);
-
-        return costs;
     }
 
     @Test
@@ -408,6 +410,38 @@ public class IndustrialCostFinanceHandlerTest {
         return costs;
     }
 
+    private List<ProjectFinanceRow> initialiseKtpProjectFinanceTypesAndCost(ProjectFinance projectFinance) {
+        List<ProjectFinanceRow> costs = new ArrayList<>();
+
+        Iterable<ProjectFinanceRow> init;
+        for (FinanceRowType costType : FinanceRowType.getKtpFinanceRowTypes()) {
+            init = industrialCostFinanceHandler.initialiseCostType(projectFinance, costType);
+            if (init != null) {
+                init.forEach(costs::add);
+            }
+        }
+
+        academicAndSecretarialSupport = newAcademicAndSecretarialSupport()
+                .withId((Long) null)
+                .withCost(BigInteger.TEN)
+                .withTargetId(projectFinance.getId())
+                .build();
+        academicAndSecretarialSupportCost = academicAndSecretarialSupportHandler.toProjectDomain(academicAndSecretarialSupport);
+        academicAndSecretarialSupportCost.setTarget(projectFinance);
+        costs.add((ProjectFinanceRow) academicAndSecretarialSupportCost);
+
+        indirect = newIndirectCost()
+                .withId((Long) null)
+                .withCost(BigInteger.ONE)
+                .withTargetId(projectFinance.getId())
+                .build();
+        indirectCost = indirectCostHandler.toProjectDomain(indirect);
+        indirectCost.setTarget(projectFinance);
+        costs.add((ProjectFinanceRow) indirectCost);
+
+        return costs;
+    }
+
     private void setupKtpCompetitionFinance(boolean fecModelEnabled) {
         Competition competition = newCompetition()
                 .withFundingType(FundingType.KTP)
@@ -425,6 +459,33 @@ public class IndustrialCostFinanceHandlerTest {
 
         when(applicationFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(applicationFinance));
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(applicationFinance, costs)).thenAnswer(invocation -> {
+            List<? extends FinanceRow> financeRows = invocation.getArgument(1);
+            return financeRows.stream()
+                    .filter(cost -> fecModelEnabled
+                            ? !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(cost.getType())
+                            : !FinanceRowType.getFecSpecificFinanceRowTypes().contains(cost.getType()))
+                    .collect(Collectors.toList());
+        });
+
+        Project project = newProject().withApplication(application).build();
+        projectFinance = newProjectFinance()
+                .withProject(project)
+                .withFecModelEnabled(fecModelEnabled)
+                .build();
+
+        List<ProjectFinanceRow> projectCosts = initialiseKtpProjectFinanceTypesAndCost(projectFinance);
+
+        when(projectFinanceRepository.findById(any())).thenReturn(Optional.ofNullable(projectFinance));
+        when(projectFinanceRowRepositoryMock.findByTargetId(projectFinance.getId())).thenReturn(projectCosts);
+        when(ktpFecFilterMock.filterKtpFecCostCategoriesIfRequired(projectFinance, projectCosts)).thenAnswer(invocation -> {
+            List<? extends FinanceRow> financeRows = invocation.getArgument(1);
+            return financeRows.stream()
+                    .filter(cost -> fecModelEnabled
+                            ? !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(cost.getType())
+                            : !FinanceRowType.getFecSpecificFinanceRowTypes().contains(cost.getType()))
+                    .collect(Collectors.toList());
+        });
     }
 
     @Test
@@ -538,5 +599,63 @@ public class IndustrialCostFinanceHandlerTest {
         final FinanceRowItem costItem = industrialCostFinanceHandler.toResource(indirectCost);
         assertEquals(costItem.getTotal(), indirectCost.getCost().multiply(new BigDecimal(indirectCost.getQuantity())));
         assertEquals(costItem.getId(), indirectCost.getId());
+    }
+
+    @Test
+    public void getProjectOrganisationNonFecFinancesForKtp() {
+        setupKtpCompetitionFinance(false);
+
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getProjectOrganisationFinances(projectFinance.getId());
+        List<FinanceRowType> financeRowTypes = organisationFinances.entrySet().stream()
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        assertNotNull(financeRowTypes.size());
+        assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
+        assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
+    public void getProjectOrganisationFecFinancesForKtp() {
+        setupKtpCompetitionFinance(true);
+
+        List<FinanceRowType> expectedFinanceRowTypes = FinanceRowType.getKtpFinanceRowTypes().stream()
+                .filter(financeRowType -> !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                .collect(Collectors.toList());
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getProjectOrganisationFinances(projectFinance.getId());
+        List<FinanceRowType> financeRowTypes = organisationFinances.entrySet().stream()
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        assertNotNull(financeRowTypes.size());
+        assertEquals(expectedFinanceRowTypes.size(), financeRowTypes.size());
+        assertThat(financeRowTypes, containsInAnyOrder(expectedFinanceRowTypes.toArray()));
+    }
+
+    @Test
+    public void getProjectOrganisationFinancesAcademicAndSecretarialSupport() {
+        setupKtpCompetitionFinance(false);
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getProjectOrganisationFinances(projectFinance.getId());
+        DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinances.get(ACADEMIC_AND_SECRETARIAL_SUPPORT);
+        assertEquals(1, defaultCostCategory.getCosts().size());
+        assertEquals(ACADEMIC_AND_SECRETARIAL_SUPPORT, defaultCostCategory.getCosts().get(0).getCostType());
+        assertEquals(0, BigDecimal.TEN.compareTo(defaultCostCategory.getCosts().get(0).getTotal()));
+    }
+
+    @Test
+    public void getProjectOrganisationFinancesIndirectCost() {
+        setupKtpCompetitionFinance(false);
+
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getProjectOrganisationFinances(projectFinance.getId());
+        DefaultCostCategory defaultCostCategory = (DefaultCostCategory) organisationFinances.get(INDIRECT_COSTS);
+        assertEquals(1, defaultCostCategory.getCosts().size());
+        assertEquals(INDIRECT_COSTS, defaultCostCategory.getCosts().get(0).getCostType());
+        assertEquals(0, BigDecimal.ONE.compareTo(defaultCostCategory.getCosts().get(0).getTotal()));
     }
 }

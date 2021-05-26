@@ -274,6 +274,20 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
                 .andOnSuccessReturn(organisationMapper::mapToResources);
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<OrganisationResource> updateOrganisationName(Long organisationId, String organisationName) {
+        return getOrganisation(organisationId)
+            .andOnSuccess(org -> {
+                if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
+                    org.setName(decodeOrganisationName(organisationName));
+                    organisationRepository.save(org);
+                    return serviceSuccess(organisationMapper.mapToResource(org));
+                }
+                return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);
+            });
+    }
+
     public ServiceResult<List<OrganisationResource>> findOrganisationsByCompaniesHouseId(String companiesHouseNumber) {
         return find(organisationRepository.findByCompaniesHouseNumberOrderById(companiesHouseNumber), notFoundError(Organisation.class, companiesHouseNumber))
                 .andOnSuccessReturn(organisationMapper::mapToResources);

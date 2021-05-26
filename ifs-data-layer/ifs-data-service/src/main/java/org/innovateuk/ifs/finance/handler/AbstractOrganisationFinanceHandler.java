@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -41,6 +41,9 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
 
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+
+    @Autowired
+    private KtpFecFilter ktpFecFilter;
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType) {
@@ -85,31 +88,27 @@ public abstract class AbstractOrganisationFinanceHandler implements Organisation
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId)).andOnSuccessReturn(finance -> {
-            List<ApplicationFinanceRow> costs = getCosts(applicationFinanceId, finance);
+            List<? extends FinanceRow> costs = getApplicationCosts(applicationFinanceId, finance);
             return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getApplication().getCompetition(), finance));
         }).getSuccess();
     }
 
-    private List<ApplicationFinanceRow> getCosts(long applicationFinanceId, ApplicationFinance finance) {
-        List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
-
-        if (finance.getApplication().getCompetition().isKtp()) {
-            costs = costs.stream()
-                    .filter(applicationFinanceRow -> BooleanUtils.isFalse(finance.getFecModelEnabled())
-                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType())
-                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(applicationFinanceRow.getType()))
-                    .collect(Collectors.toList());
-        }
-
-        return costs;
+    private List<? extends FinanceRow> getApplicationCosts(long applicationFinanceId, ApplicationFinance finance) {
+        List<ApplicationFinanceRow> applicationFinanceRows = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
+        return ktpFecFilter.filterKtpFecCostCategoriesIfRequired(finance, applicationFinanceRows);
     }
 
     @Override
     public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(long projectFinanceId) {
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccessReturn(finance -> {
-            List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+            List<? extends FinanceRow> costs = getProjectCosts(projectFinanceId, finance);
             return updateCostCategoryValuesForTotals(addCostsAndTotalsToCategories(costs, finance.getProject().getApplication().getCompetition(), finance));
         }).getSuccess();
+    }
+
+    private List<? extends FinanceRow> getProjectCosts(long projectFinanceId, ProjectFinance finance) {
+        List<ProjectFinanceRow> projectFinanceRows = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+        return ktpFecFilter.filterKtpFecCostCategoriesIfRequired(finance, projectFinanceRows);
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<? extends FinanceRow> costs, Competition competition, Finance finance) {

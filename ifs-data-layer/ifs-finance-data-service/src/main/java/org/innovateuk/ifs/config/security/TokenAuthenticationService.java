@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.config.security;
 
 import org.apache.commons.io.IOUtils;
-import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

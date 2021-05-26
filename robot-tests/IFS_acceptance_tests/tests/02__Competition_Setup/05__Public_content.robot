@@ -23,6 +23,10 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-8847  Always open competitions: new comp setup configuration
+...
+...               IFS-8848  Always open competitions: comp setup milestones
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -227,12 +231,12 @@ Scope: Add, remove sections and submit
     Then the user should see the element  css = li:nth-child(4) .task-status-complete
 
 Dates: Add, remove dates and submit
-    [Documentation]    INFUND-6919
+    [Documentation]    INFUND-6919  IFS-8848
     [Tags]
     When the user clicks the button/link           link = Dates
     Then the user should see the element           jQuery = h2:contains("${tomorrowMonthWord} ${nextyear}")
     And the user should see the element            jQuery = .govuk-body:contains("Competition opens")
-    And the user should see the element            jQuery = .govuk-body:contains("Submission deadline, competition closed.")
+    And the user should see the element            jQuery = .govuk-body:contains("Submission deadline - competition closes")
     And the user should see the element            jQuery = .govuk-body:contains("Applicants notified")
     And the user can add and remove multiple event groups
     And the user should see the element            css = li:nth-child(5) .task-status-complete
@@ -325,7 +329,7 @@ Publish public content: Publish once all sections are complete
     And the user clicks the button/link                 link = Edit
     Then the user should not see the element            jQuery = button:contains("Save and review")
     And the user should see the element                 jQuery = button:contains("Publish and review")
-    Then the user clicks the button/link                jQuery = a:contains("Public content")
+    Then the user clicks the button/link                jQuery = a:contains("Back to public content")
 
 User can view the competition url for invite only competitions
     [Documentation]    IFS-262  IFS-5370
@@ -476,7 +480,7 @@ User creates a new competition
     When the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
     When the user fills in the CS Initial details     ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
     And the user selects the Terms and Conditions     ${compType_Programme}  SUBSIDY_CONTROL
-    And the user fills in the CS Milestones           PROJECT_SETUP   ${month}   ${nextyear}
+    And the user fills in the CS Milestones           PROJECT_SETUP   ${month}   ${nextyear}   No
 
 the user enters valid data in the summary details
     The user enters text to a text field    css = .editor  This is a Summary description
@@ -534,7 +538,7 @@ the user can add and remove multiple event groups
     And the user clicks the button/link        jQuery = button:contains("Save and review")
     Then The user should see a summary error   ${enter_a_valid_date}
     #TODO add keywork to check field error check when IFS-3126 done
-    And The user should see a field and summary error    Please enter valid content.
+    And The user should see a field and summary error    Please enter valid event description.
     And the user enters text to a text field   id = dates[0].day      60
     And the user enters text to a text field   id = dates[0].month    -6
     And the user enters text to a text field   id = dates[0].year     22
@@ -573,7 +577,7 @@ the user visits
     the user clicks the button/link  link = ${section}
     the user should see the element  jQuery = h1:contains("${title}")
     the user should not see an error in the page
-    the user clicks the button/link  link = Public content
+    the user clicks the button/link  link = Back to public content
 
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
@@ -22,6 +23,7 @@ public abstract class GrantClaimMaximumMapper extends BaseMapper<GrantClaimMaxim
     @Autowired
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
 
+    @Mapping(target = "competitions", ignore = true)
     public abstract GrantClaimMaximum mapToDomain(GrantClaimMaximumResource grantClaimMaximumResource);
 
     public abstract GrantClaimMaximumResource mapToResource(GrantClaimMaximum grantClaimMaximum);

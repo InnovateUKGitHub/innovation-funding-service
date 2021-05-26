@@ -3,15 +3,16 @@ package org.innovateuk.ifs.competition.resource;
 public class AssessmentPeriodResource {
 
     private Long id;
-    private Integer index;
     private Long competitionId;
+    private boolean open;
+    private boolean inAssessment;
+    private boolean assessmentClosed;
 
     public AssessmentPeriodResource() {
     }
 
-    public AssessmentPeriodResource(Long competitionId, Integer index) {
+    public AssessmentPeriodResource(Long competitionId) {
         this.competitionId = competitionId;
-        this.index = index;
     }
 
     public Long getId() {
@@ -22,19 +23,35 @@ public class AssessmentPeriodResource {
         this.id = id;
     }
 
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
     public Long getCompetitionId() {
         return competitionId;
     }
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public boolean isInAssessment() {
+        return inAssessment;
+    }
+
+    public void setInAssessment(boolean inAssessment) {
+        this.inAssessment = inAssessment;
+    }
+
+    public boolean isAssessmentClosed() {
+        return assessmentClosed;
+    }
+
+    public void setAssessmentClosed(boolean assessmentClosed) {
+        this.assessmentClosed = assessmentClosed;
     }
 }

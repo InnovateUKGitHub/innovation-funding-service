@@ -46,6 +46,7 @@ public class ApplicationDocs {
             fieldWithPath("lastStateChangeDate").description("Date when the application state was last modified").optional(),
             fieldWithPath("fundingDecision").description("The funding decision of the application").optional(),
             fieldWithPath("assessmentPeriodId").description("Assessment period associated").optional(),
+            fieldWithPath("feedbackReleased").description("The date the feedback was released").optional(),
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {
@@ -72,5 +73,5 @@ public class ApplicationDocs {
             .withLeadOrganisationId(1L)
             .withNoInnovationAreaApplicable(false)
             .withCollaborationLevel(SINGLE_OR_COLLABORATIVE)
-            .withAssessmentPeriod(null);
+            .withAssessmentPeriod((Long) null);
 }

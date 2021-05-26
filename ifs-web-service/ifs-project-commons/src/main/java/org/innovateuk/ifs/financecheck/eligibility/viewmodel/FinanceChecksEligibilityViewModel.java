@@ -46,6 +46,8 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean ktp;
     private final boolean resetableGolState;
     private final boolean showChangesLink;
+    private final Boolean fecModelEnabled;
+    private final boolean canEditProjectCosts;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -66,7 +68,8 @@ public class FinanceChecksEligibilityViewModel {
                                              boolean canEditAcademicFinances,
                                              List<ProjectFinanceResource> projectFinances,
                                              boolean resetableGolState,
-                                             boolean showChangesLink) {
+                                             boolean showChangesLink,
+                                             boolean canEditProjectCosts) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -94,6 +97,8 @@ public class FinanceChecksEligibilityViewModel {
         this.ktp = competition.isKtp();
         this.resetableGolState = resetableGolState;
         this.showChangesLink = showChangesLink;
+        this.fecModelEnabled = hasFecModelEnabled(projectFinances, organisationId);
+        this.canEditProjectCosts = canEditProjectCosts;
     }
 
     public boolean isApproved() {
@@ -269,5 +274,21 @@ public class FinanceChecksEligibilityViewModel {
 
     public LocalDate getResetDate() {
         return resetDate;
+    }
+
+    private Boolean hasFecModelEnabled(List<ProjectFinanceResource> finances, Long organisationId) {
+        return finances.stream()
+                .filter(projectFinance -> projectFinance.getOrganisation().equals(organisationId))
+                .findFirst()
+                .map(leadProjectFinance -> leadProjectFinance.getFecModelEnabled())
+                .orElse(null);
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public boolean isCanEditProjectCosts() {
+        return canEditProjectCosts;
     }
 }

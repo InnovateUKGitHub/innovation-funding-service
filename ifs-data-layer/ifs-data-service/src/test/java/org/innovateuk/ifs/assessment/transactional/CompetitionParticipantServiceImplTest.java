@@ -7,6 +7,9 @@ import org.innovateuk.ifs.assessment.mapper.AssessmentParticipantMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.junit.Test;
@@ -17,10 +20,13 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodResourceBuilder.newAssessmentPeriodResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
@@ -86,16 +92,30 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         Long assessorId = 1L;
         Long userId = 1L;
         Long competitionId = 2L;
+        Long assessmentPeriodId = 3L;
 
         List<AssessmentParticipant> competitionParticipants = new ArrayList<>();
         AssessmentParticipant competitionParticipant = new AssessmentParticipant();
         competitionParticipants.add(competitionParticipant);
+
+        AssessmentPeriod assesmentPeriod = newAssessmentPeriod()
+                .withId(assessmentPeriodId)
+                .build();
+
+        AssessmentPeriodResource assessmentPeriodResource = newAssessmentPeriodResource()
+                .withId(assessmentPeriodId)
+                .withOpen(true)
+                .withInAssessment(true)
+                .withAssessmentClosed(false)
+                .build();
 
         CompetitionParticipantResource expected = newCompetitionParticipantResource()
                 .withUser(userId)
                 .withCompetition(competitionId)
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .withCompetitionStatus(IN_ASSESSMENT)
+                .withAssessmentPeriod(assessmentPeriodResource)
+                .withCompetitionAlwaysOpen(false)
                 .build();
 
         List<Assessment> assessments = newAssessment()
@@ -174,6 +194,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
                 .withCompetition(competitionId)
                 .withStatus(ParticipantStatusResource.ACCEPTED)
                 .withCompetitionStatus(READY_TO_OPEN)
+                .withCompetitionAlwaysOpen(false)
                 .build();
 
         when(assessmentParticipantRepositoryMock.getByAssessorId(userId)).thenReturn(competitionParticipants);

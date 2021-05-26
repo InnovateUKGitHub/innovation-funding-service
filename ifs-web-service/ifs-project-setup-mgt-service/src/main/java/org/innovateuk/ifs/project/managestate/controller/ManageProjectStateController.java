@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.managestate.viewmodel.ManageProjectStateViewMo
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +47,7 @@ public class ManageProjectStateController {
         model.addAttribute("resumedFromOnHold", resumedFromOnHold);
         model.addAttribute("model",
                 new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(),
-                        user.hasRole(Role.IFS_ADMINISTRATOR)));
+                        user.hasAuthority(Authority.IFS_ADMINISTRATOR)));
         return "project/manage-project-state";
     }
 
