@@ -302,11 +302,11 @@ spec:
             requests:
               cpu: 400m
               memory: 1500M
-          volumeMounts:
-            - mountPath: /mnt/ifs_storage
-              name: dir-1
-      volumes:
-        - name: dir-1
-          persistentVolumeClaim:
-            claimName: ${FILE_UPLOAD_CLAIM}
+#          volumeMounts:
+#            - mountPath: /mnt/ifs_storage
+#              name: dir-1
+#      volumes:
+#        - name: dir-1
+#          persistentVolumeClaim:
+#            claimName: file-upload-claim
 status: {}

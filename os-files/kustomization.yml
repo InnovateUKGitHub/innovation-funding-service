@@ -3,7 +3,15 @@ resources:
   - kustomize/cache-config.yml
   - kustomize/db-config.yml
   - kustomize/data-service-config.yml
+  - kustomize/feature-toggle-config.yml
+  - kustomize/new-relic-config.yml
+  - kustomize/spring-config.yml
+  - kustomize/web-config.yml
+  - kustomize/docusign-config.yml
+  - kustomize/flyway-config.yml
 
   # services
   - kustomize/data-service.yml
   - kustomize/data-service-deployment.yml
+
+configMapGenerator:
