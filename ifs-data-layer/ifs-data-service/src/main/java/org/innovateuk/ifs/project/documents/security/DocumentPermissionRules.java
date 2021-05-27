@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
@@ -14,6 +15,9 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 @PermissionRules
 @Component
 public class DocumentPermissionRules extends BasePermissionRules {
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     @PermissionRule(value = "UPLOAD_DOCUMENT", description = "Project Manager can upload document for their project")
     public boolean projectManagerCanUploadDocument(ProjectResource project, UserResource user) {
@@ -50,15 +54,9 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isProjectManager(project.getId(), user.getId());
     }
 
-    // for feature toggle ifs.monitoringofficer.journey.update.enabled=false
-    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin and project finance users can approve or reject document")
-    public boolean competitionAdminCanApproveDocument(ProjectResource project, UserResource user) {
-        return isInternalAdmin(user) || hasProjectFinanceAuthority(user);
-    }
-
-    @PermissionRule(value = "REVIEW_DOCUMENT", description = "IFS admin users can approve or reject document")
+    @PermissionRule(value = "REVIEW_DOCUMENT", description = "Comp admin, project finance and IFS admin users can approve or reject document")
     public boolean internalAdminCanApproveDocument(ProjectResource project, UserResource user) {
-        return hasIFSAdminAuthority(user);
+        return isMOJourneyUpdateEnabled ? hasIFSAdminAuthority(user) : isInternalAdmin(user) || hasIFSAdminAuthority(user);
     }
 
     private boolean userIsStakeholderOnProject(ProjectResource project, UserResource user) {
