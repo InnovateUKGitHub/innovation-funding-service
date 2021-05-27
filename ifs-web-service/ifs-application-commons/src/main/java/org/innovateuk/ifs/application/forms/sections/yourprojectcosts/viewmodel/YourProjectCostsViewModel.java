@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
@@ -275,6 +276,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public Boolean getFecModelEnabled() {
         return fecModelEnabled;
+    }
+
+    public boolean isFecModelDisabled() {
+        return BooleanUtils.isFalse(fecModelEnabled);
     }
 
     public BigDecimal getGrantClaimPercentage() {

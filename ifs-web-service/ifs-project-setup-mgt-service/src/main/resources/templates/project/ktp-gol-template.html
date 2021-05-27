@@ -525,7 +525,7 @@
                 <th></th>
                 <th></th>
             </tr>
-            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
                 <tr>
                     <td>e. Knowledge base supervisor</td>
                     <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.knowledgeBaseSupervisor')"></th:block>
@@ -545,7 +545,7 @@
                 <th></th>
                 <th></th>
             </tr>
-            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
                 <tr>
                     <td>h. Additional associate support</td>
                     <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.additionalSupportCosts')"></th:block>
@@ -701,7 +701,7 @@
                 <th>Directly Allocated Costs</th>
                 <th></th>
             </tr>
-            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
                 <tr>
                     <td>v Knowledge base supervisor</td>
                     <td th:text="${model.ktpFinanceModel.knowledgeBaseSupervisor.cost}"></td>
@@ -719,7 +719,7 @@
                 <th>Indirect Costs</th>
                 <th></th>
             </tr>
-            <th:block th:unless="${#bools.isFalse(model.ktpFinanceModel.fecModelEnabled)}">
+            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
                 <tr>
                     <td>viii Additional Associate Support</td>
                     <td th:text="${model.ktpFinanceModel.additionalSupportCosts.cost}"></td>
