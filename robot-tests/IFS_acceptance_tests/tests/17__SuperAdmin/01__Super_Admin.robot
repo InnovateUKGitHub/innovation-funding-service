@@ -63,14 +63,14 @@ Super admin can reject an approved document
     [Documentation]  IFS-9692
     Given the user navigates to the page      ${server}/project-setup-management/project/${projectID}/document/all
     And the user should see the element       jQuery = li:nth-child(1) span:contains("Approved")
-    When the user rejects the document        209
+    When the user rejects the document
     Then the user should see the element      jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
     And the user clicks the button/link       jQuery = a:contains("Return to documents")
     And the user should see the element       jQuery = div span:contains("Rejected")
 
 Super admin user cannot reject a document once the project is completed
     [Documentation]  IFS-9692
-    Given the applicant submits the document          209
+    Given the applicant submits the document
     And compAdmin user approves uploaded documents
     And compAdmin user approves the GOL
     When log in as a different user                   &{superAdminCredentials}
@@ -110,8 +110,8 @@ internal user filters the assessor
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
 
 the user rejects the document
-    [Arguments]  ${documentConfigID}
-    the user navigates to the page          ${server}/project-setup-management/project/${projectID}/document/config/${documentConfigID}
+    the user navigates to the page          ${server}/project-setup-management/project/${projectID}/document/all
+    the user clicks the button/link         jQuery = a:contains("Collaboration agreement")
     the user should see the element         jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
     the user selects the radio button       approved   false
     the user enters text to a text field    id = document-reject-reason   Test string
@@ -119,9 +119,9 @@ the user rejects the document
     the user clicks the button/link         id = reject-document
 
 the applicant submits the document
-    [Arguments]  ${documentConfigID}
     log in as a different user                                           &{ExistingLeadCredentials}
-    the user navigates to the page                                       ${server}/project-setup/project/${projectID}/document/config/${documentConfigID}
+    the user navigates to the page                                       ${server}/project-setup/project/${projectID}/document/all
+    the user clicks the button/link                                      jQuery = a:contains("Collaboration agreement")
     the user clicks the button/link                                      jQuery = button:contains("Remove")
     Wait Until Page Does Not Contain Without Screenshots                 Removing
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
@@ -139,7 +139,7 @@ compAdmin user approves uploaded documents
     the user clicks the button/link      id = accept-document
 
 compAdmin user approves the GOL
-    the user navigates to the page       ${SERVER}/project-setup-management/project/58/grant-offer-letter/send
+    the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user selects the radio button    approvalType  acceptGOL
     the user clicks the button/link      jQuery = button:contains("Submit")
     the user clicks the button/link      jQuery = button[type = "submit"]:contains("Accept signed grant offer letter")
