@@ -48,11 +48,13 @@ table {
   &[disabled]{
     text-decoration: none;
     background: transparent;
+    color: $govuk-secondary-text-colour;
+    cursor: default;
 
     &:hover,
     &:focus {
       background-color: transparent;
-      color: $govuk-link-hover-colour;
+      color: $govuk-secondary-text-colour;
     }
   }
 
