@@ -9,9 +9,8 @@ resources:
   - kustomize/web-config.yml
   - kustomize/docusign-config.yml
   - kustomize/flyway-config.yml
+  - kustomize/mysql.yml
 
   # services
   - kustomize/data-service.yml
   - kustomize/data-service-deployment.yml
-
-configMapGenerator:
