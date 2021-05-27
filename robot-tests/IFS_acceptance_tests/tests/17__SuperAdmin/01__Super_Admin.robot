@@ -74,7 +74,6 @@ Super admin user cannot reject a document once the project is completed
     And compAdmin user approves uploaded documents
     And compAdmin user approves the GOL
     When log in as a different user                   &{superAdminCredentials}
-#    And the user navigates to the page                ${server}/project-setup-management/project/${projectID}/document/config/209
     And the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID}/document/all
     And the user clicks the button/link               link = Collaboration agreement
     Then the user should not see the element          jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
