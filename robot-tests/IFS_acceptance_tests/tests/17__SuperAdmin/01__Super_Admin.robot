@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-9604 IFS Expert user can return assessment to assessor
 ...
+...               IFS-9692 IFS Expert User can change status of approved documents to rejected
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Administrator  CompAdmin
@@ -14,6 +16,9 @@ ${assessmentResetCompetitionName}     Sustainable living models for the future
 ${assessmentResetCompetitionID}       ${competition_ids["${assessmentResetCompetitionName}"]}
 ${assessmentResetApplicationName}     Living with Augmented Reality
 ${assessmentResetApplicationName}     ${application_ids["${assessmentResetApplicationName}"]}
+${projectName}                        Live project application
+${projectID}                          ${project_ids["${projectName}"]}
+&{ExistingLeadCredentials}            email=${existing_lead_ktp_email}  password=${short_password}
 
 *** Test Cases ***
 Super admin can unsubmit assessment of an application already submitted
@@ -54,6 +59,24 @@ Super admin can reopen the assessment
     Then the user should see the element     id = close-assessment-button
     And the user should see the element      jQuery = h1:contains("In assessment") > span:contains("${assessmentResetCompetitionName}")
 
+Super admin can reject an approved document
+    [Documentation]  IFS-9692
+    Given the user navigates to the page      ${server}/project-setup-management/project/${projectID}/document/all
+    And the user should see the element       jQuery = li:nth-child(1) span:contains("Approved")
+    When the user rejects the document        209
+    Then the user should see the element      jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
+    And the user clicks the button/link       jQuery = a:contains("Return to documents")
+    And the user should see the element       jQuery = div span:contains("Rejected")
+
+Super admin user cannot reject a document once the project is completed
+    [Documentation]  IFS-9692
+    Given the applicant submits the document          209
+    And compAdmin user approves uploaded documents
+    And compAdmin user approves the GOL
+    When log in as a different user                   &{superAdminCredentials}
+    And the user navigates to the page                ${server}/project-setup-management/project/${projectID}/document/config/209
+    Then the user should not see the element          jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
+
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
@@ -85,3 +108,39 @@ assessor re submits the assessment
 internal user filters the assessor
     the user enters text to a text field     id = assessorNameFilter   Wilson
     the user clicks the button/link          jQuery = .govuk-button:contains("Filter")
+
+the user rejects the document
+    [Arguments]  ${documentConfigID}
+    the user navigates to the page          ${server}/project-setup-management/project/${projectID}/document/config/${documentConfigID}
+    the user should see the element         jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
+    the user selects the radio button       approved   false
+    the user enters text to a text field    id = document-reject-reason   Test string
+    the user clicks the button/link         id = submit-button
+    the user clicks the button/link         id = reject-document
+
+the applicant submits the document
+    [Arguments]  ${documentConfigID}
+    log in as a different user                                           &{ExistingLeadCredentials}
+    the user navigates to the page                                       ${server}/project-setup/project/${projectID}/document/config/${documentConfigID}
+    the user clicks the button/link                                      jQuery = button:contains("Remove")
+    Wait Until Page Does Not Contain Without Screenshots                 Removing
+    the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
+    the user should see the element                                      jQuery = .upload-section:contains("Collaboration agreement") a:contains("${valid_pdf}")
+    the user clicks the button/link                                      jQuery = button:contains("Submit"):nth(1)
+    the user clicks the button/link                                      jQuery = .modal-configured-partner-document button:contains("Submit")
+    the user should not see an error in the page
+
+compAdmin user approves uploaded documents
+    log in as a different user           &{Comp_admin1_credentials}
+    the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID}/document/all
+    the user clicks the button/link      link = Collaboration agreement
+    the user selects the radio button    approved   true
+    the user clicks the button/link      id = submit-button
+    the user clicks the button/link      id = accept-document
+
+compAdmin user approves the GOL
+    the user navigates to the page       ${SERVER}/project-setup-management/project/58/grant-offer-letter/send
+    the user selects the radio button    approvalType  acceptGOL
+    the user clicks the button/link      jQuery = button:contains("Submit")
+    the user clicks the button/link      jQuery = button[type = "submit"]:contains("Accept signed grant offer letter")
+    the user should see the element      jQuery = .success-alert h2:contains("These documents have been approved.")
