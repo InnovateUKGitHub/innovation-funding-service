@@ -360,7 +360,7 @@ the user should see empty assessment periods
     the user should see the element     name = assessmentPeriods[0].milestoneEntries[ASSESSOR_BRIEFING].day
     the user should see the element     name = assessmentPeriods[0].milestoneEntries[ASSESSOR_ACCEPTS].day
     the user should see the element     name = assessmentPeriods[0].milestoneEntries[ASSESSOR_DEADLINE].day
-    #the user should see the element    jQuery = .disabled:contains("+ Add new assessment period")
+    the element should be disabled      jQuery = button:contains("+ Add new assessment period")
 
 validation messages displaying on saving empty assessment periods
     the user clicks the button/link         jQuery = button:contains("Save and return to manage assessments")
