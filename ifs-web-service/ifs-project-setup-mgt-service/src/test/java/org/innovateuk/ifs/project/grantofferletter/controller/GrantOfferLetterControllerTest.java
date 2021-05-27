@@ -281,7 +281,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void uploadGrantOfferLetterFile() throws Exception {
 
-        Long projectId = 123L;
+        long projectId = 123L;
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
 
@@ -360,6 +360,20 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send"));
 
         verify(grantOfferLetterService).removeGrantOfferLetter(projectId);
+    }
+
+    @Test
+    public void resetGrantOfferLetter() throws Exception {
+        Long projectId = 123L;
+
+        when(grantOfferLetterService.resetGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/reset"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(String.format("/project/%d/grant-offer-letter/send", projectId)))
+                .andReturn();
+
+        verify(grantOfferLetterService).resetGrantOfferLetter(projectId);
     }
 
     @Test

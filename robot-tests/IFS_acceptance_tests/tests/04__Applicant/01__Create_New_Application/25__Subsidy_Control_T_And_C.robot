@@ -3,7 +3,7 @@ Documentation     IFS-8994  Two new sets of terms & conditions required
 ...
 ...               IFS-9137  Update Subsidy control T&Cs for Innovate UK & ATI
 ...
-...               IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...               IFS-9124 Add dual T&Cs to Subsidy Control Competitions
 ...
 ...               IFS-9116 Applicant Subsidy Basis Questionnaire and Declaration Confirmation (Application)
 ...
@@ -83,7 +83,8 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     [Documentation]  IFS-8994  IFS-9137
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  44
+#    And the user selects the radio button       termsAndConditionsId  44
+    And the user clicks the button twice        jQuery = label:contains("Innovate UK - Subsidy control")
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user selects the radio button       termsAndConditionsId  34
     Then the user clicks the button/link        jQuery = button:contains("Done")

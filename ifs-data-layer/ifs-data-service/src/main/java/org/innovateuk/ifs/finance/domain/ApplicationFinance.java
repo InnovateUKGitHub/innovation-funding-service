@@ -25,6 +25,7 @@ public class ApplicationFinance extends Finance {
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
 
+    @Column(name = "justification", columnDefinition = "LONGTEXT")
     private String justification;
 
     @OneToMany(mappedBy="applicationFinance")

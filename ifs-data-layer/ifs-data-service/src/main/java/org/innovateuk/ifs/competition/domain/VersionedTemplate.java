@@ -28,6 +28,7 @@ public abstract class VersionedTemplate extends AuditableEntity {
     private String template;
 
     @SuppressWarnings("unused")
+    @Column(columnDefinition = "smallint(20)")
     private int version;
 
     public Long getId() {

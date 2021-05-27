@@ -28,7 +28,8 @@ public class Survey {
     @Column(name = "satisfaction")
     private Satisfaction satisfaction;
 
-    @Column(name = "comments", length = 5000)
+    @Lob
+    @Column(name = "comments", length = 5000, columnDefinition = "LONGTEXT")
     private String comments;
 
     public Long getId() {

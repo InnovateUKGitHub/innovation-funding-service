@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.survey.repository;
 
-import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
 import org.innovateuk.ifs.survey.Satisfaction;
 
 import javax.persistence.Converter;

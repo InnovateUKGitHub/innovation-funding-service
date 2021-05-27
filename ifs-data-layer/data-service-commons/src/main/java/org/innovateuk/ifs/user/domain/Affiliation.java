@@ -33,6 +33,7 @@ public class Affiliation extends AuditableEntity {
 
     private String position;
 
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     public Long getId() {

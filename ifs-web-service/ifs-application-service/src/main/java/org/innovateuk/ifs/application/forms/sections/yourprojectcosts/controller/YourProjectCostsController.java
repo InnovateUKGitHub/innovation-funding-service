@@ -35,13 +35,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
@@ -233,23 +230,10 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
         form.recalculateTotals();
-        orderAssociateCosts(form);
+        form.orderAssociateCosts();
         YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         return VIEW;
-    }
-
-    private void orderAssociateCosts(YourProjectCostsForm form) {
-        form.setAssociateSalaryCostRows(
-                form.getAssociateSalaryCostRows().entrySet().stream()
-                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
-        );
-        form.setAssociateDevelopmentCostRows(
-                form.getAssociateDevelopmentCostRows().entrySet().stream()
-                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
-                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
-        );
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
