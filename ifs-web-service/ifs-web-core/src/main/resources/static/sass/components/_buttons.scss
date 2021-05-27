@@ -46,7 +46,6 @@ table {
 
   &.disabled,
   &[disabled]{
-    text-decoration: none;
     background: transparent;
     color: $govuk-secondary-text-colour;
     cursor: default;
