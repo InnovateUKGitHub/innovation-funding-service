@@ -9,7 +9,7 @@ public enum ProjectSetupStage {
     FINANCE_CHECKS("Finance checks", 6),
     SPEND_PROFILE("Spend profile", 7), //Some competitions don't have this stage. They automatically approve the spend profile.
     GRANT_OFFER_LETTER("GOL", 8),
-    PROJECT_SETUP_COMPLETE("Complete project setup", 9);
+    PROJECT_SETUP_COMPLETE("Project setup complete", 9);
 
     private int priority;
     private String shortName;
