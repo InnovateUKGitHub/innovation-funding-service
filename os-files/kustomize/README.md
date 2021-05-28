@@ -4,6 +4,10 @@ Deploy overlays - go to os-files/kustomize folder and run below command
 
     kubectl kustomize overlays/<overlays_name e.g local> | kubectl apply -f - 
 
+Get all pods details
+
+    kubectl get pods
+
 Get logs from pod
     
     kubectl logs -f  <pod_name>
