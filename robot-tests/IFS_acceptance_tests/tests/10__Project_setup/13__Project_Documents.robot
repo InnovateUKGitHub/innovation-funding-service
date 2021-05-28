@@ -37,6 +37,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-9575 MO documents: MO notification of submission
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -106,10 +108,11 @@ Non pdf files not allowed for either document
     And the user should not see the element              jQuery = .govuk-error-message:contains("${text_file}")
 
 PM can upload both documents
-    [Documentation]  INFUND-3011  IFS-2371-2258
+    [Documentation]  INFUND-3011  IFS-2371-2258 IFS-9575
     [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
     Given PM uploads the project documents    ${Grade_Crossing_Project_Id}
+    And the user reads his email              ${monitoring_officer_two_credentials["email"]}     You have a new document to review for project ${Grade_Crossing_Application_Title}     A new document has been uploaded by the project manager for this project:
 
 Lead partner can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
