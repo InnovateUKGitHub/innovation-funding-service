@@ -52,6 +52,7 @@ public class DocumentsPopulator {
 
     public AllDocumentsViewModel populateAllDocuments(long projectId, long loggedInUserId) {
 
+        UserResource loggedInUser = userRestService.retrieveUserById(loggedInUserId).getSuccess();
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         CompetitionResource competition = getCompetition(project.getCompetition());
@@ -71,9 +72,9 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        boolean isMOCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled && isMonitoringOfficer(loggedInUserId, projectId);
+        boolean userCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled && (loggedInUser.hasRole(IFS_ADMINISTRATOR) || isMonitoringOfficer(loggedInUserId, projectId));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), isMOCanApproveOrRejectDocuments);
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), userCanApproveOrRejectDocuments);
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {

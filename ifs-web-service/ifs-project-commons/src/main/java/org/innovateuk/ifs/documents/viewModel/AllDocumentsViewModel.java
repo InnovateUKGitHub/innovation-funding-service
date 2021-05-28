@@ -20,9 +20,9 @@ public class AllDocumentsViewModel {
     private boolean projectManager;
     private boolean collaborativeProject;
     private boolean isProcurement;
-    private boolean isMOCanApproveOrRejectDocuments;
+    private boolean userCanApproveOrRejectDocuments;
 
-    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager, boolean IsProcurement, boolean isMOCanApproveOrRejectDocuments) {
+    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager, boolean IsProcurement, boolean userCanApproveOrRejectDocuments) {
         this.competitionId = project.getCompetition();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -31,7 +31,7 @@ public class AllDocumentsViewModel {
         this.projectManager = projectManager;
         this.collaborativeProject = project.isCollaborativeProject();
         this.isProcurement = IsProcurement;
-        this.isMOCanApproveOrRejectDocuments = isMOCanApproveOrRejectDocuments;
+        this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
     }
 
     public long getCompetitionId() {
@@ -66,8 +66,8 @@ public class AllDocumentsViewModel {
         return isProcurement;
     }
 
-    public boolean isMOCanApproveOrRejectDocuments() {
-        return isMOCanApproveOrRejectDocuments;
+    public boolean isUserCanApproveOrRejectDocuments() {
+        return userCanApproveOrRejectDocuments;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class AllDocumentsViewModel {
                 .append(documents, that.documents)
                 .append(projectManager, that.projectManager)
                 .append(isProcurement, that.isProcurement)
-                .append(isMOCanApproveOrRejectDocuments, that.isMOCanApproveOrRejectDocuments)
+                .append(userCanApproveOrRejectDocuments, that.userCanApproveOrRejectDocuments)
                 .isEquals();
     }
 
@@ -100,7 +100,7 @@ public class AllDocumentsViewModel {
                 .append(documents)
                 .append(projectManager)
                 .append(isProcurement)
-                .append(isMOCanApproveOrRejectDocuments)
+                .append(userCanApproveOrRejectDocuments)
                 .toHashCode();
     }
 }
