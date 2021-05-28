@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to document overview',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <th:block th:unless="${model.isMonitoringOfficer}">
+        <th:block th:unless="${model.userCanApproveOrRejectDocuments}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
@@ -127,7 +127,7 @@
         </th:block>
 
         <form th:object="${form}"
-              th:if="${model.isMonitoringOfficer}"
+              th:if="${model.userCanApproveOrRejectDocuments}"
               th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId},id=${model.projectId})}"
               id="other-documents-form"
               method="post"

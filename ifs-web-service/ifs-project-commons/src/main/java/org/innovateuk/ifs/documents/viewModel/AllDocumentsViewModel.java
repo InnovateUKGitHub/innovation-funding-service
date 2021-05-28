@@ -20,9 +20,9 @@ public class AllDocumentsViewModel {
     private boolean projectManager;
     private boolean collaborativeProject;
     private boolean isProcurement;
-    private boolean isMonitoringOfficer;
+    private boolean isMOCanApproveOrRejectDocuments;
 
-    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager, boolean IsProcurement, boolean isMonitoringOfficer) {
+    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager, boolean IsProcurement, boolean isMOCanApproveOrRejectDocuments) {
         this.competitionId = project.getCompetition();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -31,7 +31,7 @@ public class AllDocumentsViewModel {
         this.projectManager = projectManager;
         this.collaborativeProject = project.isCollaborativeProject();
         this.isProcurement = IsProcurement;
-        this.isMonitoringOfficer = isMonitoringOfficer;
+        this.isMOCanApproveOrRejectDocuments = isMOCanApproveOrRejectDocuments;
     }
 
     public long getCompetitionId() {
@@ -66,8 +66,8 @@ public class AllDocumentsViewModel {
         return isProcurement;
     }
 
-    public boolean isMonitoringOfficer() {
-        return isMonitoringOfficer;
+    public boolean isMOCanApproveOrRejectDocuments() {
+        return isMOCanApproveOrRejectDocuments;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class AllDocumentsViewModel {
                 .append(documents, that.documents)
                 .append(projectManager, that.projectManager)
                 .append(isProcurement, that.isProcurement)
-                .append(isMonitoringOfficer, that.isMonitoringOfficer)
+                .append(isMOCanApproveOrRejectDocuments, that.isMOCanApproveOrRejectDocuments)
                 .isEquals();
     }
 
@@ -100,7 +100,7 @@ public class AllDocumentsViewModel {
                 .append(documents)
                 .append(projectManager)
                 .append(isProcurement)
-                .append(isMonitoringOfficer)
+                .append(isMOCanApproveOrRejectDocuments)
                 .toHashCode();
     }
 }

@@ -149,7 +149,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateViewDocument() {
 
-        DocumentViewModel viewModel = populator.populateViewDocument(projectId, documentConfigId1, loggedInUser);
+        DocumentViewModel viewModel = populator.populateViewDocument(projectId, documentConfigId1, loggedInUser.getId());
 
         assertEquals(projectId, viewModel.getProjectId());
         assertEquals(projectName, viewModel.getProjectName());

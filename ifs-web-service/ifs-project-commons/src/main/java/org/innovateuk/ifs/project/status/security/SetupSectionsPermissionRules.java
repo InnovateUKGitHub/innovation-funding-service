@@ -149,7 +149,7 @@ public class SetupSectionsPermissionRules {
 
     @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Internal users can approve or reject documents")
     public boolean internalAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isMOJourneyUpdateEnabled ? hasIFSAdminAuthority(user) || isMonitoringOfficer(user) : isInternalAdmin(user) || hasIFSAdminAuthority(user);
+        return isMOJourneyUpdateEnabled ? (hasIFSAdminAuthority(user) || isMonitoringOfficer(user)) : (isInternalAdmin(user) || hasIFSAdminAuthority(user));
     }
 
     @PermissionRule(value = "RESET_GRANT_OFFER_LETTER", description = "Super admin user can reset the grant offer letter section")

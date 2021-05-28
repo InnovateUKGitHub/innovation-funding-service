@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,9 @@ public class DocumentsPopulator {
     @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
+    @Autowired
+    private UserRestService userRestService;
+
     @Value("${ifs.monitoringofficer.journey.update.enabled}")
     private boolean isMOJourneyUpdateEnabled;
 
@@ -67,7 +71,9 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), monitoringOfficerDocumentDecisionEnabled(loggedInUserId, projectId));
+        boolean isMOCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled && isMonitoringOfficer(loggedInUserId, projectId);
+
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), isMOCanApproveOrRejectDocuments);
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -77,8 +83,9 @@ public class DocumentsPopulator {
                 .orElse(DocumentStatus.UNSET);
     }
 
-    public DocumentViewModel populateViewDocument(long projectId, long documentConfigId, UserResource userResource) {
+    public DocumentViewModel populateViewDocument(long projectId, long documentConfigId, long loggedInUserId) {
 
+        UserResource userResource = userRestService.retrieveUserById(loggedInUserId).getSuccess();
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         List<CompetitionDocumentResource> configuredProjectDocuments = getCompetition(project.getCompetition()).getCompetitionDocuments();
@@ -96,7 +103,7 @@ public class DocumentsPopulator {
                 .orElse(null);
 
         // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin can approve.
-        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? userResource.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : userResource.hasRole(IFS_ADMINISTRATOR);
+        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? userResource.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : userResource.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER);
 
         return new DocumentViewModel(project.getId(),
                 project.getName(),
@@ -109,8 +116,7 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(userResource.getId(), projectId),
                 project.getProjectState().isActive(),
-                userCanApproveOrRejectDocuments,
-                monitoringOfficerDocumentDecisionEnabled(userResource.getId(), projectId));
+                userCanApproveOrRejectDocuments);
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {
@@ -125,11 +131,6 @@ public class DocumentsPopulator {
     private boolean isMonitoringOfficer(long loggedInUserId, long projectId) {
         return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUserId).getSuccess();
     }
-
-    private boolean monitoringOfficerDocumentDecisionEnabled(long loggedInUserId, long projectId) {
-        return isMOJourneyUpdateEnabled ? isMonitoringOfficer(loggedInUserId, projectId) : false;
-    }
-
 
     private CompetitionResource getCompetition(long competitionId) {
         return competitionRestService.getCompetitionById(competitionId).getSuccess();

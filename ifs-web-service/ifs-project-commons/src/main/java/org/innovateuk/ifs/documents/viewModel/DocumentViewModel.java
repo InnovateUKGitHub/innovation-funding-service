@@ -22,7 +22,6 @@ public class DocumentViewModel {
     private final boolean projectManager;
     private final boolean projectIsActive;
     private final boolean userCanApproveOrRejectDocuments;
-    private final boolean isMonitoringOfficer;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -35,8 +34,7 @@ public class DocumentViewModel {
                              String statusComments,
                              boolean projectManager,
                              boolean projectIsActive,
-                             boolean userCanApproveOrRejectDocuments,
-                             boolean isMonitoringOfficer) {
+                             boolean userCanApproveOrRejectDocuments) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -49,7 +47,6 @@ public class DocumentViewModel {
         this.projectManager = projectManager;
         this.projectIsActive = projectIsActive;
         this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
-        this.isMonitoringOfficer = isMonitoringOfficer;
     }
 
     public long getProjectId() {
@@ -108,10 +105,6 @@ public class DocumentViewModel {
         return projectManager && status == DocumentStatus.UNSET;
     }
 
-    public boolean isMonitoringOfficer() {
-        return isMonitoringOfficer;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,7 +123,7 @@ public class DocumentViewModel {
                 .append(guidance, that.guidance)
                 .append(projectManager, that.projectManager)
                 .append(projectIsActive, that.projectIsActive)
-                .append(isMonitoringOfficer, that.isMonitoringOfficer)
+                .append(userCanApproveOrRejectDocuments, that.userCanApproveOrRejectDocuments)
                 .isEquals();
     }
 
@@ -146,7 +139,7 @@ public class DocumentViewModel {
                 .append(guidance)
                 .append(projectManager)
                 .append(projectIsActive)
-                .append(isMonitoringOfficer)
+                .append(userCanApproveOrRejectDocuments)
                 .toHashCode();
     }
 }
