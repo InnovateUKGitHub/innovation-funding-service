@@ -86,6 +86,10 @@ public class KtpFinanceModel {
         return fecModelEnabled;
     }
 
+    public boolean isFecModelDisabled() {
+        return BooleanUtils.isFalse(fecModelEnabled);
+    }
+
     public Integer getTable1TotalCost() {
         return table1Rows().stream().map(KtpFinanceRowModel::getCost).reduce(0, Integer::sum);
     }

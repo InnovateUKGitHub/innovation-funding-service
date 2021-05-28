@@ -37,10 +37,12 @@ public class BankDetails {
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
+    @Column(columnDefinition = "bit")
     private short companyNameScore;
 
     private boolean registrationNumberMatched;
 
+    @Column(columnDefinition = "bit")
     private short addressScore;
 
     private boolean manualApproval;
