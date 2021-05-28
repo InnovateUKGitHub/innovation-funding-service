@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: flyway-config
+data:
+  FLYWAY_LOCATIONS: "${FLYWAY_LOCATIONS}"
+  SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
+  FLYWAY_TABLE: "${FLYWAY_TABLE}"
