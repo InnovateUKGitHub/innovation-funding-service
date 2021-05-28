@@ -12,7 +12,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkUrl=@{/project/{id}/document/all/(id=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to documents',linkUrl=@{/project/{id}/document/all/(id=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -53,7 +53,7 @@
                 <h2 class="govuk-heading-m">No file uploaded</h2>
             </th:block>
 
-            <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive}">
+            <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive and model.userCanApproveOrRejectDocuments}">
 
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
                  <div class="govuk-form-group">
@@ -118,6 +118,11 @@
                 <p class="govuk-body" th:text="${model.statusComments}"></p>
             </th:block>
             <th:block th:unless="${model.status.name() == 'SUBMITTED'}">
+                <div class="govuk-!-margin-top-6">
+                    <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
+                </div>
+            </th:block>
+            <th:block th:if="${model.status.name() == 'SUBMITTED' and !model.userCanApproveOrRejectDocuments}">
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
                 </div>

@@ -21,6 +21,7 @@ public class DocumentViewModel {
     private final String statusComments;
     private final boolean projectManager;
     private final boolean projectIsActive;
+    private final boolean userCanApproveOrRejectDocuments;
     private final boolean isMonitoringOfficer;
 
     public DocumentViewModel(long projectId,
@@ -34,6 +35,7 @@ public class DocumentViewModel {
                              String statusComments,
                              boolean projectManager,
                              boolean projectIsActive,
+                             boolean userCanApproveOrRejectDocuments,
                              boolean isMonitoringOfficer) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -46,6 +48,7 @@ public class DocumentViewModel {
         this.statusComments = statusComments;
         this.projectManager = projectManager;
         this.projectIsActive = projectIsActive;
+        this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
         this.isMonitoringOfficer = isMonitoringOfficer;
     }
 
@@ -91,6 +94,10 @@ public class DocumentViewModel {
 
     public boolean isProjectIsActive() {
         return projectIsActive;
+    }
+
+    public boolean isUserCanApproveOrRejectDocuments() {
+        return userCanApproveOrRejectDocuments;
     }
 
     public boolean isEditable() {

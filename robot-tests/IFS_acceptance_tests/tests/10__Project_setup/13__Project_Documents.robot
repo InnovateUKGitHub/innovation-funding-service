@@ -279,7 +279,7 @@ CompAdmin can see uploaded files
     When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link     link = Collaboration agreement
     And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
-    When the user goes to documents page    Documents  Exploitation plan
+    When the user goes to documents page    Back to documents  Exploitation plan
     Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 IfsAdmin adds a partner organisation and all partners can see rejected documents

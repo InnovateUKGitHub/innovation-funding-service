@@ -16,6 +16,7 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasIFSAdminAuthority;
 
 /**
  * Permission checker around the access to various sections within the Project Setup process
@@ -40,6 +43,9 @@ public class SetupSectionsPermissionRules {
 
     @Autowired
     private ProjectService projectService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "An internal user can access the Project Details section when submitted by Partners (Individual)")
     public boolean internalCanAccessProjectDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
@@ -141,9 +147,9 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isMonitoringOfficer);
     }
 
-    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Comp admin or project finance users can approve or reject documents")
+    @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Internal users can approve or reject documents")
     public boolean internalAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
-        return SecurityRuleUtil.isInternalAdmin(user);
+        return isMOJourneyUpdateEnabled ? hasIFSAdminAuthority(user) || isMonitoringOfficer(user) : isInternalAdmin(user) || hasIFSAdminAuthority(user);
     }
 
     @PermissionRule(value = "RESET_GRANT_OFFER_LETTER", description = "Super admin user can reset the grant offer letter section")
