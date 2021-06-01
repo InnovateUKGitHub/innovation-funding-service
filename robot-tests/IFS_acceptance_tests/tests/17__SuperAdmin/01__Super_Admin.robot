@@ -16,9 +16,9 @@ ${assessmentResetCompetitionName}     Sustainable living models for the future
 ${assessmentResetCompetitionID}       ${competition_ids["${assessmentResetCompetitionName}"]}
 ${assessmentResetApplicationName}     Living with Augmented Reality
 ${assessmentResetApplicationName}     ${application_ids["${assessmentResetApplicationName}"]}
-${projectName}                        Live project application
+${projectName}                        New Test Application for UK Lead International Users
 ${projectID}                          ${project_ids["${projectName}"]}
-&{ExistingLeadCredentials}            email=${existing_lead_ktp_email}  password=${short_password}
+&{lead_applicant_credentials}         email=${existing_lead_ktp_email}  password=${short_password}
 
 *** Test Cases ***
 Super admin can unsubmit assessment of an application already submitted
