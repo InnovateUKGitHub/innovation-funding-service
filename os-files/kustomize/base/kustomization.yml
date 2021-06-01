@@ -5,10 +5,6 @@ commonAnnotations:
   deployedWith: kustomize
   environment: base
 namePrefix: base-
-configMapGenerator:
-  - name: spring-profile-env
-    literals:
-      - SPRING_PROFILES_ACTIVE=BASE
 
 resources:
   # config-maps
