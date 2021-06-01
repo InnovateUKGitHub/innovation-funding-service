@@ -28,8 +28,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${management.endpoints.web.base-path}")
     private String monitoringEndpoint;
 
+    private final String[] ADDITIONAL_WHITELIST;
+
+    public SecurityConfig(String[] additionalWhitelist, boolean disableDefaults) {
+        super(disableDefaults);
+        ADDITIONAL_WHITELIST = additionalWhitelist;
+    }
+
     public SecurityConfig() {
         super(true);
+        ADDITIONAL_WHITELIST = new String[]{};
     }
 
     @Override
@@ -43,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/silstub/**").permitAll()
                 .antMatchers(monitoringEndpoint+"/**").permitAll()
                 .antMatchers("/benchmark/**").permitAll()
+                .antMatchers(ADDITIONAL_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()
