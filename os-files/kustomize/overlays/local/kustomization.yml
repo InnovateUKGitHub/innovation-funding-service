@@ -1,5 +1,12 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
+commonAnnotations:
+  deployedWith: kustomize
+commonLabels:
+  environment: local
+namePrefix: local-
+configMapGenerator:
+  - name: spring-profile-env
+    literals:
+      - SPRING_PROFILES_ACTIVE=LOCAL
 
 bases:
   - ../../base
@@ -17,4 +24,4 @@ patchesStrategicMerge:
   - web-config.yml
   - docusign-config.yml
   - flyway-config.yml
-  - data-service-deployment.yml
+

@@ -1,3 +1,14 @@
+commonAnnotations:
+  deployedWith: kustomize
+commonLabels:
+  environment: perf
+namePrefix: perf-
+configMapGenerator:
+  - name: spring-profile-env
+    literals:
+      - SPRING_PROFILES_ACTIVE=PERF
+
+
 bases:
   - ../../base
 

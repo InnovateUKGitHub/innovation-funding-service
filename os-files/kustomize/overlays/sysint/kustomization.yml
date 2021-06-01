@@ -1,5 +1,13 @@
+commonAnnotations:
+  deployedWith: kustomize
+commonLabels:
+  environment: sysint
+namePrefix: sysint-
+configMapGenerator:
+  - name: spring-profile-env
+    literals:
+      - SPRING_PROFILES_ACTIVE=SYSINT
+
 bases:
   - ../../base
 
-patchesStrategicMerge:
-  - data-service-deployment.yml
