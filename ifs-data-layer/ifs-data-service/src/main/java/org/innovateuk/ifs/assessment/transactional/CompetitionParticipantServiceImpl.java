@@ -108,7 +108,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     private boolean isUpcomingOrInAssessment(CompetitionParticipantResource competitionParticipant) {
-        if (competitionParticipant.getCompetitionAlwaysOpen()) {
+        if (competitionParticipant.isCompetitionAlwaysOpen()) {
             return competitionParticipant.getAssessmentPeriod().isInAssessment()
                     || !competitionParticipant.getAssessmentPeriod().isAssessmentClosed();
         } else {
@@ -132,7 +132,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     }
 
     private boolean isInAssessment(CompetitionParticipantResource competitionParticipant) {
-        if (competitionParticipant.getCompetitionAlwaysOpen()) {
+        if (competitionParticipant.isCompetitionAlwaysOpen()) {
             return competitionParticipant.getAssessmentPeriod() != null
                 && competitionParticipant.getAssessmentPeriod().isInAssessment();
         } else {
