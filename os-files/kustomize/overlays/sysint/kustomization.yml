@@ -1,0 +1,12 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: sysint
+namePrefix: sysint-
+configMapGenerator:
+  - name: spring-profile-env
+    literals:
+      - SPRING_PROFILES_ACTIVE=SYSINT
+
+bases:
+  - ../../base
+

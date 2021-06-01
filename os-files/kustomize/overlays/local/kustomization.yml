@@ -1,0 +1,26 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: local
+namePrefix: local-
+configMapGenerator:
+  - name: spring-profile-env
+    literals:
+      - SPRING_PROFILES_ACTIVE=LOCAL
+
+bases:
+  - ../../base
+
+resources:
+  - mysql.yml
+
+patchesStrategicMerge:
+  - cache-config.yml
+  - db-config.yml
+  - data-service-config.yml
+  - feature-toggle-config.yml
+  - new-relic-config.yml
+  - spring-config.yml
+  - web-config.yml
+  - docusign-config.yml
+  - flyway-config.yml
+

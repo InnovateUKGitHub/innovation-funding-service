@@ -1,0 +1,14 @@
+commonAnnotations:
+  deployedWith: kustomize
+  environment: uat
+namePrefix: uat-
+configMapGenerator:
+  - name: spring-profile-env
+    literals:
+      - SPRING_PROFILES_ACTIVE=UAT
+
+bases:
+  - ../../base
+
+patchesStrategicMerge:
+  - data-service-deployment.yml
