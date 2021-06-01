@@ -76,6 +76,19 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id";
 
+    String NOT_ASSIGNED_APPLICATION_FILTER_FOR_ASSESSORS =
+            " FROM Application application " +
+                    " JOIN ProcessRole leadRole ON leadRole.applicationId = application.id AND leadRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT " +
+                    " JOIN Organisation lead ON lead.id = leadRole.organisationId " +
+                    " LEFT JOIN Assessment assessment ON assessment.target.id = application.id AND type(assessment) = Assessment " +
+                    "WHERE application.competition.id = :competitionId " +
+                    "AND (application.applicationProcess.activityState IN " + SUBMITTED_APPLICATION_STATES + ") " +
+                    "AND (assessment.id IS NULL) " +
+                    "AND (application.assessmentPeriod.id IS NULL) " +
+                    "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = application.id) " +
+                    "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
+                    "GROUP BY application.id";
+
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
     @ZeroDowntime(reference = "IFS-8853", description = "This can probably be removed")
@@ -102,7 +115,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             SUM_ACCEPTED + ", " +
             SUM_SUBMITTED +
             ")" +
-            ASSESSOR_FILTER)
+            NOT_ASSIGNED_APPLICATION_FILTER_FOR_ASSESSORS)
     Page<ApplicationCountSummaryResource> findStatisticsForApplicationsNotAssignedTo(
             long competitionId,
             long assessorId,
