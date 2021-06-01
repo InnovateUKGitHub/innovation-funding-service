@@ -1,6 +1,5 @@
 commonAnnotations:
   deployedWith: kustomize
-commonLabels:
   environment: sysint
 namePrefix: sysint-
 configMapGenerator:

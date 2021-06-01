@@ -3,7 +3,6 @@ kind: Kustomization
 
 commonAnnotations:
   deployedWith: kustomize
-commonLabels:
   environment: base
 namePrefix: base-
 configMapGenerator:

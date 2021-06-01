@@ -1,6 +1,5 @@
 commonAnnotations:
   deployedWith: kustomize
-commonLabels:
   environment: local
 namePrefix: local-
 configMapGenerator:
