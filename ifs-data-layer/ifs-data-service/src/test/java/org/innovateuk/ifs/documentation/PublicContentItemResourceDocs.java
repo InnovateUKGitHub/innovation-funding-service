@@ -11,6 +11,8 @@ public class PublicContentItemResourceDocs {
             fieldWithPath("content").description("List of public content items found on this page"),
             fieldWithPath("number").description("The number of the current page"),
             fieldWithPath("size").description("The size of the current page"),
+            fieldWithPath("lastPage").description("Is this the last page."),
+            fieldWithPath("lastPageFull").description("Is the last page full."),
     };
 
     public static final FieldDescriptor[] publicContentItemResourceFields = {

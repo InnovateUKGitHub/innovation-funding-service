@@ -188,7 +188,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                                 .orElseGet(() -> assessmentPeriodRepository.findFirstByCompetitionId(competition.getId()))
                         .orElseGet(() -> assessmentPeriodRepository.save(new AssessmentPeriod(competition)));
             }
-            Milestone milestone = new Milestone(milestoneResource.getType(), competition, assessmentPeriod);
+            Milestone milestone = milestoneMapper.mapToDomain(milestoneResource);
+            milestone.setAssessmentPeriod(assessmentPeriod);
             return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
         });
     }
