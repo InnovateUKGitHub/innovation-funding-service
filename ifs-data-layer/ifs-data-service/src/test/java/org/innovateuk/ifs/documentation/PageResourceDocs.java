@@ -12,5 +12,7 @@ public abstract class PageResourceDocs
             fieldWithPath("size").description("The maximum size of any page's list of items."),
             fieldWithPath("totalElements").description("The total number of elements across all pages."),
             fieldWithPath("totalPages").description("The total number of all pages."),
+            fieldWithPath("lastPageFull").description("Is the last page of results full"),
+            fieldWithPath("lastPage").description("Is this the last page"),
     };
 }

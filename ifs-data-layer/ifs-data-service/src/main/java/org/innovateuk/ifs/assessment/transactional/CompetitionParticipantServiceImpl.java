@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.google.common.collect.Streams;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessmentInviteMapper;
@@ -20,12 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 
 /**
  * Service for managing {@link CompetitionParticipant}s.
@@ -75,9 +80,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     public ServiceResult<List<CompetitionParticipantResource>> getCompetitionAssessorsWithAssessmentPeriod(long userId) {
 
         List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByAssessorId(userId).stream()
-                .flatMap(assessmentParticipant -> assessmentParticipant.getProcess().getAssessmentPeriods().stream()
-                        .map(assessmentPeriod -> buildCompetitionParticipantResource(assessmentParticipant, assessmentPeriod))
-                )
+                .flatMap(assessmentParticipant -> buildAssessmentParticipant(assessmentParticipant))
                 .filter(competitionParticipant -> !competitionParticipant.isRejected() && isUpcomingOrInAssessment(competitionParticipant))
                 .collect(toList());
 
@@ -86,14 +89,22 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
         return serviceSuccess(competitionParticipantResources);
     }
 
-    private CompetitionParticipantResource buildCompetitionParticipantResource(AssessmentParticipant assessmentParticipant, AssessmentPeriod assessmentPeriod) {
+    private Stream<CompetitionParticipantResource> buildAssessmentParticipant(AssessmentParticipant assessmentParticipant) {
+        return Streams
+                .mapWithIndex(sort(assessmentParticipant.getProcess().getAssessmentPeriods(), Comparator.comparingLong(o -> o.getId())).stream(),
+                        (assessmentPeriod, index) -> buildCompetitionParticipantResource(assessmentParticipant, assessmentPeriod, index+1));
+    }
+
+    private CompetitionParticipantResource buildCompetitionParticipantResource(AssessmentParticipant assessmentParticipant,
+                                                                               AssessmentPeriod assessmentPeriod,
+                                                                               long assessmentPeriodNumber) {
         return new CompetitionParticipantResource(assessmentParticipant.getId(), assessmentParticipant.getProcess().getId(),
                 assessmentParticipant.getUser().getId(), assessmentInviteMapper.mapToResource(assessmentParticipant.getInvite()),
                 rejectionReasonMapper.mapToResource(assessmentParticipant.getRejectionReason()), assessmentParticipant.getRejectionReasonComment(),
                 competitionParticipantRoleMapper.mapToResource(assessmentParticipant.getRole()), participantStatusMapper.mapToResource(assessmentParticipant.getStatus()),
                 assessmentParticipant.getProcess().getName(), assessmentParticipant.getProcess().getAssessorAcceptsDate(assessmentPeriod),
                 assessmentParticipant.getProcess().getAssessorDeadlineDate(assessmentPeriod), assessmentParticipant.getProcess().getCompetitionStatus(),
-                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriodMapper.mapToResource(assessmentPeriod));
+                assessmentParticipant.getProcess().getAlwaysOpen(), assessmentPeriodMapper.mapToResource(assessmentPeriod), assessmentPeriodNumber);
     }
 
     private boolean isUpcomingOrInAssessment(CompetitionParticipantResource competitionParticipant) {
