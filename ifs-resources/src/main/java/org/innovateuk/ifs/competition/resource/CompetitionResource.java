@@ -36,6 +36,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
 
     private Long id;
+    private List<Long> assessmentPeriods = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
     private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
@@ -189,6 +190,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || isProcurement();
+    }
+
+    public List<Long> getAssessmentPeriods() {
+        return assessmentPeriods;
+    }
+
+    public void setAssessmentPeriods(List<Long> assessmentPeriods) {
+        this.assessmentPeriods = assessmentPeriods;
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -915,6 +924,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(modifiedOn, that.modifiedOn)
                 .append(alwaysOpen, that.alwaysOpen)
                 .append(subsidyControl, that.subsidyControl)
+                .append(assessmentPeriods, that.assessmentPeriods)
                 .isEquals();
     }
 
@@ -981,6 +991,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(modifiedOn)
                 .append(alwaysOpen)
                 .append(subsidyControl)
+                .append(assessmentPeriods)
                 .toHashCode();
     }
 
