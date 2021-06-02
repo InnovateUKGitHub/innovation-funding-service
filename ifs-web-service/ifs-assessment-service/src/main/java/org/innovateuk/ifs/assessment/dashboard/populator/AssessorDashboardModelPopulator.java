@@ -13,7 +13,10 @@ import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.RoleProfileState;
+import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.springframework.stereotype.Component;
 
@@ -113,7 +116,8 @@ public class AssessorDashboardModelPopulator {
                         cpr.getAssessorDeadlineDate().toLocalDate(),
                         cpr.getAssessmentDaysLeft(),
                         cpr.getAssessmentDaysLeftPercentage(),
-                        cpr.isCompetitionAlwaysOpen()
+                        cpr.isCompetitionAlwaysOpen(),
+                        cpr.getAssessmentPeriodNumber()
                 ))
                 .collect(toList());
     }

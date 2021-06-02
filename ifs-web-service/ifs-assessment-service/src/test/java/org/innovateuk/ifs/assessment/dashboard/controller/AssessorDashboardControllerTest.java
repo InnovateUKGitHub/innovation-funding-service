@@ -197,7 +197,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         now.plusDays(4).toLocalDate(),
                         3,
                         50,
-                        false
+                        false,
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -292,7 +293,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         now.plusDays(5).toLocalDate(),
                         5,
                         16,
-                        false
+                        false,
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -364,7 +366,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         ZonedDateTime.now().plusDays(0).toLocalDate(),
                         0,
                         100,
-                        false
+                        false,
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
@@ -571,7 +574,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                         ZonedDateTime.now().plusDays(0).toLocalDate(),
                         0,
                         100,
-                        false
+                        false,
+                        0
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource, RoleProfileState.ACTIVE);
