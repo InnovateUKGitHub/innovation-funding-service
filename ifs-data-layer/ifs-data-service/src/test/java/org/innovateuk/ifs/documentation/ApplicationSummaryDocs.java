@@ -18,6 +18,8 @@ public class ApplicationSummaryDocs {
             fieldWithPath("totalPages").description("Total number of pages"),
             fieldWithPath("number").description("Page number - zero indexed"),
             fieldWithPath("size").description("Page size"),
+            fieldWithPath("lastPage").description("Is this the last page"),
+            fieldWithPath("lastPageFull").description("Is the last page full"),
             fieldWithPath("content[].id").description("Application id"),
             fieldWithPath("content[].name").description("Application name"),
             fieldWithPath("content[].lead").description("Lead organisation"),

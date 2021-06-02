@@ -2225,6 +2225,8 @@
                           data-mirror="#section-total-associate-salary-costs"
                           th:text="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"></span>
                 </h4>
+                <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
+                <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
                 <input type="hidden"
                        data-calculation-fields=".associate-salary-costs-totals"
                        data-calculation-operations="+"
@@ -2232,8 +2234,6 @@
                        th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"/>
                 <th:block th:if="${model.fecModelDisabled}">
-                    <input type="hidden" name="fecModelEnabled" th:value="${model.fecModelEnabled}" />
-                    <input type="hidden" name="grantClaimPercentage" th:value="${model.grantClaimPercentage}" />
                     <input type="hidden"
                            data-calculation-operations="*,/"
                            id="total-grant-associate-salary-costs"
