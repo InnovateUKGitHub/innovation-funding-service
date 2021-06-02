@@ -30,7 +30,7 @@ public class PageResource<PageableResource> {
      */
     private List<PageableResource> content;
     /**
-     * The current page number.
+     * The current page number. Zero based.
      */
     private int number;
     /**
@@ -101,11 +101,45 @@ public class PageResource<PageableResource> {
     }
 
     public boolean hasPrevious() {
-        return number > 0;
+        return number > 0; // Zero based
     }
 
     public boolean hasNext() {
-        return totalPages > (number + 1);
+        return totalPages > (number + 1); // Zero based
+    }
+
+    /**
+     * This is useful for when we want to add a new item at the end of the pages, but that item has not yet been saved.
+     * The pagination is then as if it had been saved.
+     * @param toAdd the item to be added to the last page, will be ignored if wouldn't end up being on this page.
+     *
+     */
+    public PageResource<PageableResource> pageResourceWithDummyItemAddedToLastPage(PageableResource toAdd) {
+        long newTotalElements = totalElements + 1;
+        int newTotalPages  = isLastPageFull() ? totalPages + 1 : totalPages;
+        List<PageableResource> newContent = new ArrayList<>(content);
+        if (!isLastPageFull() && isLastPage()){
+            newContent.add(toAdd);
+        }
+        return new PageResource<>(newTotalElements, newTotalPages, newContent, number, size);
+    }
+
+    public PageResource<PageableResource> pageResourceWithDummyItemsAddedToLastPage(List<PageableResource> toAdd) {
+        if (toAdd.isEmpty()){
+            return this;
+        } else if (toAdd.size() == 1) {
+            return pageResourceWithDummyItemAddedToLastPage(toAdd.get(0));
+        } else {
+            return pageResourceWithDummyItemAddedToLastPage(toAdd.get(0)).pageResourceWithDummyItemsAddedToLastPage(toAdd.subList(1, toAdd.size()));
+        }
+    }
+
+    public boolean isLastPageFull(){
+        return totalPages * size == totalElements;
+    }
+
+    public boolean isLastPage(){
+        return number + 1 == totalPages; // Zero based
     }
 
     @Override

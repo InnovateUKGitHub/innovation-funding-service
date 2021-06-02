@@ -89,9 +89,9 @@ The user can complete the business and financial information application questio
     Then the user should see the element           jQuery = div:contains("Business and financial information") ~ .task-status-complete
 
 Loan application shows correct T&C's
-    [Documentation]    IFS-6205  IFS-9483
+    [Documentation]    IFS-6205  IFS-9483  IFS-9716
     Given the user clicks the button/link   link = Loan terms and conditions
-    And the user should see the element     jQuery = h1:contains("Loan terms and conditions")
+    And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
     Then the user should see the element    jQuery = li:contains("Loan terms and conditions") .task-status-complete
 
