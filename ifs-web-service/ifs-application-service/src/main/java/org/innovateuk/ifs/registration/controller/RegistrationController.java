@@ -281,6 +281,7 @@ public class RegistrationController {
                 .withInvitee(false)
                 .withTermsRequired(true)
                 .withPhoneRequired(true)
+                .withRole(Role.APPLICANT.name())
                 .build());
         return false;
     }

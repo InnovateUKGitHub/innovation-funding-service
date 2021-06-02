@@ -91,6 +91,10 @@ public class RegistrationViewModel {
         return organisation;
     }
 
+    public boolean isInContextOfOrganisation(){
+        return role != null && role.equals(Role.APPLICANT.name());
+    }
+
     public static RegistrationViewModel anInvitedUserViewModel() {
         return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true).withRole(Role.APPLICANT.name()).build();
     }
@@ -111,10 +115,6 @@ public class RegistrationViewModel {
         private String organisation;
 
         private RegistrationViewModelBuilder() {
-        }
-
-        public boolean isInContextOfOrganisation(){
-            return role != null && role.equals(Role.APPLICANT.name());
         }
 
         public static RegistrationViewModelBuilder aRegistrationViewModel() {
