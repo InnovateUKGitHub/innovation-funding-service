@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
 /**
  * Contains the information required when sending an email to notify of an application funding decision.
  */
+@SuppressWarnings("unchecked")
 public class FundingNotificationResource {
     private String messageBody;
     private Map<Long, FundingDecision> fundingDecisions;

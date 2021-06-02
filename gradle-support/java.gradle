@@ -55,7 +55,6 @@ compileJava {
 
 compileTestJava {
     options.compilerArgs += '-parameters'
-    options.compilerArgs += '-Xlint:unchecked'
 }
 
 test.finalizedBy jacocoTestReport

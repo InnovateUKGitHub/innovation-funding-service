@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  *
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Companies House API site</a>
  */
+@SuppressWarnings("unchecked")
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "", matchIfMissing = true)
 public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
