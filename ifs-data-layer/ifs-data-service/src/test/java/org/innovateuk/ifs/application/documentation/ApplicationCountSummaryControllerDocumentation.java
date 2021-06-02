@@ -95,7 +95,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
 
         when(applicationCountSummaryServiceMock.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId,"")).thenReturn(serviceSuccess(emptyList()));
 
-        mockMvc.perform(get("/application-count-summary/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}?filter={filter}", competitionId, assessorId, filter)
+        mockMvc.perform(get("/application-count-summary/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}/{assessmentPeriodId}?filter={filter}", competitionId, assessorId, assessmentPeriodId, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
