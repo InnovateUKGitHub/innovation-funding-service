@@ -29,6 +29,11 @@
               data-section="milestones"
               novalidate="novalidate"
               method="post">
+            <input type="hidden"
+                   required="required"
+                   id="page"
+                   name="page"
+                   th:value="${model.paginationViewModel.currentPage}"/>
             <th:block th:each="assessmentPeriod, pStat: ${form.assessmentPeriods}">
                 <input type="hidden"
                        required="required"
@@ -151,16 +156,18 @@
                 </table>
 
             </th:block>
+                <button th:if="${model.paginationViewModel.lastPage}"
+                        th:disabled="${form.numberUnsavedAssessmentPeriods() &gt; 0}"
+                        type="submit"
+                        class="button-clear govuk-!-margin-bottom-6 float-right" name="add-assessment-period">+ Add new assessment period
+                </button>
 
-            <button type="submit"
-                    class="button-clear govuk-!-margin-bottom-6 float-right" name="add-assessment-period">+ Add new assessment period
-            </button>
 
-            <th:block th:insert="fragments/elements :: pagination(pagination=${model.paginationViewModel})" />
+                <th:block th:insert="fragments/elements :: pagination(pagination=${model.paginationViewModel})" />
 
-            <button type="submit"
-                    class="govuk-button govuk-!-margin-top-6">Save and return to manage assessments
-            </button>
+                <button type="submit"
+                        class="govuk-button govuk-!-margin-top-6">Save and return to manage assessments
+                </button>
        </form>
 
 
