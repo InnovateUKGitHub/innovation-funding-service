@@ -16,9 +16,8 @@ ${assessmentResetCompetitionName}     Sustainable living models for the future
 ${assessmentResetCompetitionID}       ${competition_ids["${assessmentResetCompetitionName}"]}
 ${assessmentResetApplicationName}     Living with Augmented Reality
 ${assessmentResetApplicationName}     ${application_ids["${assessmentResetApplicationName}"]}
-${projectName}                        New Test Application for UK Lead International Users
+${projectName}                        Live project application
 ${projectID}                          ${project_ids["${projectName}"]}
-&{lead_applicant_credentials}         email=${existing_lead_ktp_email}  password=${short_password}
 
 *** Test Cases ***
 Super admin can unsubmit assessment of an application already submitted
@@ -120,7 +119,7 @@ the user rejects the document
     the user clicks the button/link         id = reject-document
 
 the applicant submits the document
-    log in as a different user                                           &{ExistingLeadCredentials}
+    log in as a different user                                           &{troy_ward_crendentials}
     the user navigates to the page                                       ${server}/project-setup/project/${projectID}/document/all
     the user clicks the button/link                                      jQuery = a:contains("Collaboration agreement")
     the user clicks the button/link                                      jQuery = button:contains("Remove")
