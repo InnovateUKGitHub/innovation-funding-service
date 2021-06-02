@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
+import org.innovateuk.ifs.user.resource.Role;
+
 public class RegistrationViewModel {
     private static final String DEFAULT_PHONE_GUIDANCE = "We may use this to contact you about the application.";
     private static final String DEFAULT_POSTCODE_GUIDANCE = "Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.";
@@ -90,7 +92,7 @@ public class RegistrationViewModel {
     }
 
     public static RegistrationViewModel anInvitedUserViewModel() {
-        return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true).build();
+        return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true).withRole(Role.APPLICANT.name()).build();
     }
 
     public static final class RegistrationViewModelBuilder {
@@ -109,6 +111,10 @@ public class RegistrationViewModel {
         private String organisation;
 
         private RegistrationViewModelBuilder() {
+        }
+
+        public boolean isInContextOfOrganisation(){
+            return role != null && role.equals(Role.APPLICANT.name());
         }
 
         public static RegistrationViewModelBuilder aRegistrationViewModel() {
