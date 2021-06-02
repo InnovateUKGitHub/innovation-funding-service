@@ -112,7 +112,7 @@ PM can upload both documents
     [Tags]  HappyPath
     [Setup]    log in as a different user     &{lead_applicant_credentials_bd}
     Given PM uploads the project documents    ${Grade_Crossing_Project_Id}
-    And the user reads his email              ${monitoring_officer_two_credentials["email"]}     You have a new document to review for project ${Grade_Crossing_Application_Title}     A new document has been uploaded by the project manager for this project:
+#    And the user reads his email              ${monitoring_officer_two_credentials["email"]}     You have a new document to review for project ${Grade_Crossing_Application_Title}     A new document has been uploaded by the project manager for this project:
 
 Lead partner can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
@@ -445,6 +445,12 @@ Sole applicant can see documents approval
     Then the user should see the element   jQuery = li:contains("Documents") span:contains("Completed")
     When the user goes to documents page   Documents  Exploitation plan
     Then the user should see the element   jQuery = .success-alert h2:contains("This document has been approved by us.")
+
+Lead uploads documents and the MO receives an email
+    [Documentation]    IFS-9575
+    [Setup]    log in as a different user     phillip.ramos@katz.example.com     Passw0rd1357
+    Given PM uploads the project documents    ${PS_Point_Project_Id}
+    And the user reads his email              rachel.henning@umon.example.com     You have a new document to review for project ${Grade_Crossing_Application_Title}     A new document has been uploaded by the project manager for this project:
 
 *** Keywords ***
 the user removes and reuploads project files
