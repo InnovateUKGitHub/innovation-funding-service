@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.projectinvite.controller.AcceptProjectInviteController.*;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModelBuilder;
 
 @Controller
 @SecuredBySpring(value = "Controller",
@@ -60,7 +61,7 @@ public class ProjectRegistrationController {
                     if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
-                    model.addAttribute("model", anInvitedUserViewModel());
+                    model.addAttribute("model", anInvitedUserViewModelBuilder().withInContextOfOrganisation(true).build());
                     model.addAttribute("form", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }

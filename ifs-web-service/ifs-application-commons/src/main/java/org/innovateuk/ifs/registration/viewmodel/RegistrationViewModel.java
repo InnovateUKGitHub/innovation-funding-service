@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-import org.innovateuk.ifs.user.resource.Role;
-
 public class RegistrationViewModel {
     private static final String DEFAULT_PHONE_GUIDANCE = "We may use this to contact you about the application.";
     private static final String DEFAULT_POSTCODE_GUIDANCE = "Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.";
@@ -19,11 +17,12 @@ public class RegistrationViewModel {
     private final String postcodeGuidance;
     private final String buttonText;
     private final String organisation;
+    private final boolean inContextOfOrganisation;
     private final boolean phoneRequired;
     private final boolean termsRequired;
     private final boolean addressRequired;
 
-    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired) {
+    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired, boolean inContextOfOrganisation) {
         this.pageTitle = pageTitle == null ? DEFAULT_PAGE_TITLE : pageTitle;
         this.subTitle = subTitle == null ? DEFAULT_SUB_TITLE : subTitle;
         this.invitee = invitee;
@@ -37,6 +36,7 @@ public class RegistrationViewModel {
         this.phoneRequired = phoneRequired;
         this.termsRequired = termsRequired;
         this.addressRequired = addressRequired;
+        this.inContextOfOrganisation = inContextOfOrganisation;
     }
 
     public String getPageTitle() {
@@ -92,11 +92,15 @@ public class RegistrationViewModel {
     }
 
     public boolean isInContextOfOrganisation(){
-        return role != null && role.equals(Role.APPLICANT.name());
+        return inContextOfOrganisation;
+    }
+
+    public static RegistrationViewModelBuilder anInvitedUserViewModelBuilder() {
+        return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true);
     }
 
     public static RegistrationViewModel anInvitedUserViewModel() {
-        return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true).withRole(Role.APPLICANT.name()).build();
+        return anInvitedUserViewModelBuilder().build();
     }
 
     public static final class RegistrationViewModelBuilder {
@@ -113,6 +117,7 @@ public class RegistrationViewModel {
         private boolean termsRequired;
         private boolean addressRequired;
         private String organisation;
+        private boolean inContextOfOrganisation;
 
         private RegistrationViewModelBuilder() {
         }
@@ -186,8 +191,13 @@ public class RegistrationViewModel {
             return this;
         }
 
+        public RegistrationViewModelBuilder withInContextOfOrganisation(boolean inContextOfOrganisation) {
+            this.inContextOfOrganisation = inContextOfOrganisation;
+            return this;
+        }
+
         public RegistrationViewModel build() {
-            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired);
+            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired, inContextOfOrganisation);
         }
     }
 }

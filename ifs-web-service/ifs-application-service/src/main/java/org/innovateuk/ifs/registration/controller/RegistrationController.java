@@ -54,6 +54,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModelBuilder;
 
 @Controller
 @RequestMapping("/registration")
@@ -257,7 +258,7 @@ public class RegistrationController {
             if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
                 ApplicationInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
-                model.addAttribute("model", anInvitedUserViewModel());
+                model.addAttribute("model", anInvitedUserViewModelBuilder().withInContextOfOrganisation(true).build());
                 return true;
             } else {
                 LOG.debug("Invite already accepted.");
@@ -270,7 +271,7 @@ public class RegistrationController {
             if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
                 SentProjectPartnerInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
-                model.addAttribute("model", anInvitedUserViewModel());
+                model.addAttribute("model", anInvitedUserViewModelBuilder().withInContextOfOrganisation(true).build());
                 return true;
             } else {
                 LOG.debug("Invite already accepted.");
@@ -281,7 +282,7 @@ public class RegistrationController {
                 .withInvitee(false)
                 .withTermsRequired(true)
                 .withPhoneRequired(true)
-                .withRole(Role.APPLICANT.name())
+                .withInContextOfOrganisation(true)
                 .build());
         return false;
     }
