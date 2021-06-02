@@ -59,21 +59,23 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() throws Exception {
         long competitionId = 1L;
         long assessorId = 2L;
+        long assessmentPeriodId = 1L;
         Sort sortField = Sort.APPLICATION_NUMBER;
         String filter = "";
         ApplicationCountSummaryResource applicationCountSummaryResource = applicationCountSummaryResourceBuilder.build();
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, 20, sortField, "")).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId, 0, 20, sortField, "")).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}?sort={sortField}&filter={filter}", competitionId, assessorId, sortField, filter)
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}/{assessmentPeriodId}?sort={sortField}&filter={filter}", competitionId, assessorId, sortField, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("applicationCountSummary/{method-name}",
                         pathParameters(
                                 parameterWithName("assessorId").description("Id of assessor to exclude results for"),
-                                parameterWithName("competitionId").description("Id of competition")
+                                parameterWithName("competitionId").description("Id of competition"),
+                                parameterWithName("assessmentPeriodId").description("AssessmentPeriodId of application")
                         ),
                         requestParameters(
                                 parameterWithName("sort").description("Field to sort by"),
@@ -81,16 +83,17 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId,0, 20, sortField, "");
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId,assessmentPeriodId, 0, 20, sortField, "");
     }
 
     @Test
     public void getApplicationIdsByCompetitionIdAndAssessorId() throws Exception {
         long competitionId = 1L;
         long assessorId = 2L;
+        long assessmentPeriodId = 1L;
         String filter = "";
 
-        when(applicationCountSummaryServiceMock.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, "")).thenReturn(serviceSuccess(emptyList()));
+        when(applicationCountSummaryServiceMock.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId,"")).thenReturn(serviceSuccess(emptyList()));
 
         mockMvc.perform(get("/application-count-summary/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}?filter={filter}", competitionId, assessorId, filter)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -98,13 +101,14 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                 .andDo(document("applicationCountSummary/{method-name}",
                         pathParameters(
                                 parameterWithName("assessorId").description("Id of assessor to exclude results for"),
-                                parameterWithName("competitionId").description("Id of competition")
+                                parameterWithName("competitionId").description("Id of competition"),
+                                parameterWithName("assessmentPeriodId").description("AssessmentPeriodId of application")
                         ),
                         requestParameters(
                                 parameterWithName("filter").description("String to filter applications")
                         ),
                         responseFields(fieldWithPath("[]").description("Ids"))));
 
-        verify(applicationCountSummaryServiceMock).getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, "");
+        verify(applicationCountSummaryServiceMock).getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId,"");
     }
 }
