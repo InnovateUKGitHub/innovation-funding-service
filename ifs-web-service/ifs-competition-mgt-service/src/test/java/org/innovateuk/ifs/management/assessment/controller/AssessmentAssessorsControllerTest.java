@@ -4,8 +4,10 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.application.service.AssessorCountSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPeriodService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.AssessmentPeriodRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.populator.ManageAssessorsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.ManageAssessorsViewModel;
@@ -15,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
@@ -41,7 +44,13 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
     private CategoryRestService categoryRestServiceMock;
 
     @Mock
+    private AssessmentPeriodRestService assessmentPeriodRestService;
+
+    @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private AssessmentPeriodService assessmentPeriodService;
 
     @Override
     protected AssessmentAssessorsController supplyControllerUnderTest() {
@@ -52,6 +61,8 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
     public void manageAssessors() throws Exception {
         final int pageNumber = 1;
         final int pageSize = 20;
+
+        long assessmentPeriodId = 3L;
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName("name")
@@ -69,12 +80,15 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
 
         AssessorCountSummaryPageResource expectedPageResource = new AssessorCountSummaryPageResource(41, 3, summaryResources, pageNumber, pageSize);
 
+        when(assessmentPeriodRestService.getAssessmentPeriodByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(Collections.emptyList()));
+
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(newInnovationSectorResource().build(2)));
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionId(competitionResource.getId(), "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessorCountSummaryRestService.getAssessorCountSummariesByCompetitionIdAndAssessmentPeriodId(competitionResource.getId(), assessmentPeriodId,  "", pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+        when(assessmentPeriodService.assessmentPeriodName(assessmentPeriodId, competitionResource.getId())).thenReturn("name");
 
-        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors?page=1", competitionResource.getId())
+        ManageAssessorsViewModel model = (ManageAssessorsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/period?assessmentPeriodId={assessmentPeriodId}&page=1", competitionResource.getId(), assessmentPeriodId)
                 .param("assessorNameFilter",""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-assessors"))
@@ -83,6 +97,8 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
 
         assertEquals(competitionResource.getId().longValue(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());
+        assertEquals(assessmentPeriodId, model.getAssessmentPeriodId());
+        assertEquals("name", model.getAssessmentPeriodName());
 
         assertTrue(model.isInAssessment());
         assertEquals(2, model.getAssessors().size());
@@ -107,6 +123,6 @@ public class AssessmentAssessorsControllerTest extends BaseControllerMockMVCTest
         assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
         assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
         assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
-        assertEquals("?page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals("?assessmentPeriodId=3&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }

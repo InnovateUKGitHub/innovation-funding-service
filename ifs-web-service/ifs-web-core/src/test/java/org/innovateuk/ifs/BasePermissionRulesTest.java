@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -55,7 +54,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTest {
     @Before
     public void setupSetsOfData() {
         allRolesResources = asList(Role.values());
-        allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+        allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRoleGlobal(role).build());
     }
 
     protected UserResource getUserWithRole(Role type) {

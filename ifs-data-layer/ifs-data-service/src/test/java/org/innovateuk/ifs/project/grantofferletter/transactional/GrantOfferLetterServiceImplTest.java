@@ -7,14 +7,11 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.docusign.resource.DocusignType;
 import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
-import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -25,12 +22,10 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -44,7 +39,7 @@ import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,11 +77,11 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
@@ -153,22 +148,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private CostRepository costRepository;
 
     @Mock
-    private GrantProcessService grantProcessService;
-
-    @Mock
     private DocusignService docusignService;
-
-    @Mock
-    private CompetitionRepository competitionRepository;
-
-    @Mock
-    private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
-
-    @Mock
-    private ProjectUserRepository projectUserRepository;
-
-    @Mock
-    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Before
     public void setUp() {
@@ -190,7 +170,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisations.get(0).getId()).
-                withRole(Role.LEADAPPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -256,6 +236,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
+    public void createSignedAdditionalContractFileEntry() {
+        assertCreateFile(
+                project::getSignedAdditionalContractFile,
+                (fileToCreate, inputStreamSupplier) ->
+                        service.createSignedAdditionalContractFileEntry(123L, fileToCreate, inputStreamSupplier));
+    }
+
+    @Test
     public void createGrantOfferLetterFileEntry() {
         assertCreateFile(
                 project::getGrantOfferLetter,
@@ -293,6 +281,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
+    public void getSignedAdditionalContractFileEntryDetails() {
+        assertGetFileDetails(
+                project::setSignedAdditionalContractFile,
+                () -> service.getSignedAdditionalContractFileEntryDetails(123L));
+    }
+
+    @Test
     public void getAdditionalContractFileContents() {
         assertGetFileContents(
                 project::setAdditionalContractFile,
@@ -311,6 +306,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertGetFileContents(
                 project::setSignedGrantOfferLetter,
                 () -> service.getSignedGrantOfferLetterFileAndContents(123L));
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileContents() {
+        assertGetFileContents(
+                project::setSignedAdditionalContractFile,
+                () -> service.getSignedAdditionalContractFileAndContents(123L));
     }
 
     @Test
@@ -450,7 +452,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertEquals(existingGOLFile, project.getGrantOfferLetter());
 
         verify(golWorkflowHandler).removeGrantOfferLetter(project, internalUser);
-        verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
+        verify(fileServiceMock, never()).deleteFileIgnoreNotFound(existingGOLFile.getId());
     }
 
     @Test
@@ -473,6 +475,28 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         verify(golWorkflowHandler).removeSignedGrantOfferLetter(project, user);
         verify(fileServiceMock).deleteFileIgnoreNotFound(existingSignedGOLFile.getId());
+    }
+
+    @Test
+    public void removeSignedAdditionalContractFileEntry() {
+
+        UserResource externalUser = newUserResource().build();
+        setLoggedInUser(externalUser);
+
+        FileEntry existingAdditionalContractFile = newFileEntry().build();
+        project.setSignedAdditionalContractFile(existingAdditionalContractFile);
+
+        when(userRepository.findById(externalUser.getId())).thenReturn(Optional.of(user));
+        when(projectWorkflowHandler.getState(project)).thenReturn(SETUP);
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingAdditionalContractFile.getId())).thenReturn(serviceSuccess(existingAdditionalContractFile));
+        when(golWorkflowHandler.removeSignedAdditionalContract(project, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.removeSignedAdditionalContractFileEntry(123L);
+        assertTrue(result.isSuccess());
+        assertNull(project.getSignedAdditionalContractFile());
+
+        verify(golWorkflowHandler).removeSignedAdditionalContract(project, user);
+        verify(fileServiceMock).deleteFileIgnoreNotFound(existingAdditionalContractFile.getId());
     }
 
     @Test

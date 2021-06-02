@@ -4,7 +4,6 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
-apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 
@@ -12,7 +11,6 @@ processResources.dependsOn applyProfiles
 
 
 apply from: "../flyway.gradle"
-apply plugin: 'org.asciidoctor.convert'
 
 project.version = nexusVersion
 tagDocker.tag = nexusVersion
@@ -47,6 +45,7 @@ createContainer.networkAliases = ["ifs-survey-data-service"]
 
 pullImageAndCreateContainer.portBindings = ['9013:8000', '8087:8080']
 pullImageAndCreateContainer.networkAliases = ["ifs-survey-data-service"]
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 if (enabled) {
     deploy.dependsOn ":docker:ifs-mysql:ifs-survey-database:wait"
@@ -67,7 +66,6 @@ ext {
 }
 
 buildDocker.dependsOn prepareDockerInput
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
@@ -81,7 +79,6 @@ prepareDockerBaseInput {
 
     dependsOn ":ifs-commons:build"
     dependsOn ":ifs-resources:build"
-    dependsOn ":ifs-data-layer:data-service-commons:build"
     dependsOn ":ifs-security:build"
 
 }
@@ -89,24 +86,18 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
     compile project(':ifs-resources:ifs-survey-resources')
     compile project(':ifs-security')
-    compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile 'com.h2database:h2'
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
-
-    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
 
 test {
@@ -114,12 +105,6 @@ test {
     if (project.hasProperty('excludeTests')) {
         exclude "${project.excludeTests}"
     }
-    finalizedBy asciidoctor
-
-    if (targetBuild == 'docker' && enabled) {
-        dependsOn ":docker:ifs-mysql:ifs-survey-database:initDB"
-    }
-
 }
 
 flywayClean.dependsOn applyProfiles

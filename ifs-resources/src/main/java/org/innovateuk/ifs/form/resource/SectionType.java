@@ -3,34 +3,24 @@ package org.innovateuk.ifs.form.resource;
 import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
-import java.util.Optional;
-
 /**
  * This enum marks sections as a given type.
  */
 public enum SectionType {
-	FINANCE,
-	PROJECT_COST_FINANCES(FINANCE),
-    PROJECT_LOCATION(FINANCE),
-	ORGANISATION_FINANCES(FINANCE),
-	FUNDING_FINANCES(FINANCE),
-    OVERVIEW_FINANCES,
+    PROJECT_DETAILS,
+    APPLICATION_QUESTIONS,
+    FINANCES,
+	FINANCE, //Your project finances
+	PROJECT_COST_FINANCES, //Your project costs
+    PROJECT_LOCATION, // Your project location
+	ORGANISATION_FINANCES, // Your organisation
+	FUNDING_FINANCES, // Your funding
+    PAYMENT_MILESTONES, // Your payment milestones
+    OVERVIEW_FINANCES, // Finance Overview
 	GENERAL,
     TERMS_AND_CONDITIONS,
-    KTP_ASSESSMENT;
-
-    private final SectionType parent;
-
-    SectionType() {
-        this.parent = null;
-    }
-    SectionType(SectionType parent) {
-        this.parent = parent;
-    }
-
-    public Optional<SectionType> getParent() {
-        return Optional.ofNullable(parent);
-    }
+    KTP_ASSESSMENT,
+    FEC_COSTS_FINANCES;
 
     public String getNameLower() {
         return this.name().toLowerCase();
@@ -41,7 +31,7 @@ public enum SectionType {
             if (lead) {
                 return this == ORGANISATION_FINANCES;
             } else {
-                return this == PROJECT_COST_FINANCES;
+                return (this == PROJECT_COST_FINANCES || this == FEC_COSTS_FINANCES);
             }
         }
         if (this == SectionType.TERMS_AND_CONDITIONS) {

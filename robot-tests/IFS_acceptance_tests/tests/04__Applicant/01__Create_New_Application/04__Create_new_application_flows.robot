@@ -13,6 +13,10 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...
 ...               IFS-8646 Comp 730 - App 97191 - Unable to access application
 ...
+...               IFS-8826 Applicants with assessor roles cannot add a funding level in an application
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -22,7 +26,7 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Non registered users non companies house route
-    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
+    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page                         ${frontDoor}
     And the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}
@@ -30,9 +34,6 @@ Non registered users non companies house route
     And the user clicks the button/link                          link = Continue and create an account
     And the user selects the radio button                        organisationTypeId    radio-1
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
-    When the user clicks the Not on companies house link         org2
-    Then the user clicks the button/link                         jQuery = .govuk-button:contains("Save and continue")
-    And The user should see the element                          jQuery = h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -58,18 +59,28 @@ Applicant can still access the application from dashboard on saving the apllicat
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
     [Tags]  HappyPath
-    When the user edits the application title                      ${test_title}
-    Then the user should see the element                          jQuery = h1 span:contains("${test_title}")
+    When the user edits the application title                        ${test_title}
+    Then the user should see the element                             jQuery = h1 span:contains("${test_title}")
     And the progress indicator should show 0
-    And the user clicks the button/link                           link = Application team
-    And the user should see the element                           jQuery = h1:contains("Application team")
-    And the user can see this new application on their dashboard  ${test_title}
+    And the user clicks the button/link                              link = Application team
+    And the user should see the element                              jQuery = h1:contains("Application team")
+    And the user can see this new application on their dashboard     ${test_title}
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243
     [Tags]  HappyPath
     When the user navigates to the page    ${edit_profile_url}
     Then Checkbox Should Be Selected       allowMarketingEmails
+
+The user with assessor and applicant roles can add a funding level in the application
+    [Documentation]   IFS-8826
+    Given log in as a different user                               jo.peters@ntag.example.com   ${short_password}
+    And the user select the competition and starts application     KTP new competition
+    And the user apply with knowledge base organisation            Reading    The University of Reading
+    When the user completes funding level in application
+    Then the user should see the element                           jQuery = dt:contains("Funding level")+dd:contains("100.00%")
+    And the user should see the element                            jQuery = p:contains("No other funding")
+
 
 *** Keywords ***
 the new application should be visible in the dashboard page
@@ -115,3 +126,4 @@ the user is redirected to overview page if he has been there already
     the user should see the element      jQuery = h1:contains("Application overview")
     the user clicks the button/link      link = Application team
     logout as user
+

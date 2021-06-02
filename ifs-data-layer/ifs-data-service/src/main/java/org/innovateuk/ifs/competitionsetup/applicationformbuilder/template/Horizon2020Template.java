@@ -4,7 +4,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,6 @@ public class Horizon2020Template implements CompetitionTemplate {
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
-    @Autowired
-    private CommonBuilders commonBuilders;
-
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.HORIZON_2020;
@@ -32,7 +28,6 @@ public class Horizon2020Template implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon 2020"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);

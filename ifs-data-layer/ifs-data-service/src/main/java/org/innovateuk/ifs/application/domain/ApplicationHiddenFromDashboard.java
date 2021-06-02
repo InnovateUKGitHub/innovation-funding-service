@@ -47,8 +47,16 @@ public class ApplicationHiddenFromDashboard {
         return createdOn;
     }
 
+    public void setCreatedOn(ZonedDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
     public Application getApplication() {
         return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public User getUser() {

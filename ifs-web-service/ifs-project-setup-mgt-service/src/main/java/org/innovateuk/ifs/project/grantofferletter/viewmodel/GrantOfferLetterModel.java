@@ -16,7 +16,9 @@ public class GrantOfferLetterModel {
     private final String title;
     private final String shortTitle;
     private final long competitionId;
+    private final boolean procurement;
     private final boolean h2020;
+    private final boolean ktp;
     private final FileDetailsViewModel grantOfferLetterFile;
     private final FileDetailsViewModel additionalContractFile;
     private final long projectId;
@@ -25,15 +27,19 @@ public class GrantOfferLetterModel {
     private final boolean grantOfferLetterFileContentAvailable;
     private final boolean additionalContractFileContentAvailable;
     private final FileDetailsViewModel signedGrantOfferLetterFile;
+    private final FileDetailsViewModel signedAdditionalContractFile;
     private final GrantOfferLetterStateResource grantOfferState;
     private final String grantOfferLetterRejectionReason;
     private final ProjectState projectState;
     private final boolean useDocusignForGrantOfferLetter;
+    private final boolean isSuperAdmin;
 
     public GrantOfferLetterModel(String title,
                                  String shortTitle,
                                  long competitionId,
+                                 boolean procurement,
                                  boolean h2020,
+                                 boolean ktp,
                                  FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel additionalContractFile,
                                  Long projectId,
@@ -42,14 +48,18 @@ public class GrantOfferLetterModel {
                                  boolean grantOfferLetterFileContentAvailable,
                                  boolean additionalContractFileContentAvailable,
                                  FileDetailsViewModel signedGrantOfferLetterFile,
+                                 FileDetailsViewModel signedAdditionalContractFile,
                                  GrantOfferLetterStateResource grantOfferState,
                                  String grantOfferLetterRejectionReason,
                                  ProjectState projectState,
-                                 boolean useDocusignForGrantOfferLetter) {
+                                 boolean useDocusignForGrantOfferLetter,
+                                 boolean isSuperAdmin) {
         this.title = title;
         this.shortTitle = shortTitle;
         this.competitionId = competitionId;
+        this.procurement = procurement;
         this.h2020 = h2020;
+        this.ktp = ktp;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
         this.projectId = projectId;
@@ -58,10 +68,12 @@ public class GrantOfferLetterModel {
         this.grantOfferLetterFileContentAvailable = grantOfferLetterFileContentAvailable;
         this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
+        this.signedAdditionalContractFile = signedAdditionalContractFile;
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
         this.projectState = projectState;
         this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
+        this.isSuperAdmin = isSuperAdmin;
     }
 
     public String getTitle() {
@@ -76,8 +88,16 @@ public class GrantOfferLetterModel {
         return competitionId;
     }
 
+    public boolean isProcurement() {
+        return procurement;
+    }
+
     public boolean isH2020() {
         return h2020;
+    }
+
+    public boolean isKtp() {
+        return ktp;
     }
 
     public GrantOfferLetterStateResource getGrantOfferState() {
@@ -110,6 +130,10 @@ public class GrantOfferLetterModel {
 
     public FileDetailsViewModel getSignedGrantOfferLetterFile() { return signedGrantOfferLetterFile; }
 
+    public FileDetailsViewModel getSignedAdditionalContractFile() {
+        return signedAdditionalContractFile;
+    }
+
     public boolean getSignedGrantOfferLetterApproved() { return grantOfferState.isSignedGrantOfferLetterApproved(); }
 
     public boolean getSignedGrantOfferLetterRejected() {
@@ -122,8 +146,17 @@ public class GrantOfferLetterModel {
 
     public boolean getSignedGrantOfferLetterFileAvailable() { return grantOfferState.isSignedGrantOfferLetterReceivedByInternalTeam(); }
 
+    public boolean getSignedAdditionalContractFileAvailable() {
+        return getSignedGrantOfferLetterFileAvailable() && (signedAdditionalContractFile != null);
+    }
+
     public boolean isShowRemoveOfferLetterButton() {
         return grantOfferLetterFile != null && !grantOfferState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
+    }
+
+    public boolean isShowResetGrantOfferLetterButton() {
+        return !getSignedGrantOfferLetterApproved() &&
+               !getSignedGrantOfferLetterFileAvailable();
     }
 
     public boolean isOnHold() {
@@ -136,6 +169,10 @@ public class GrantOfferLetterModel {
 
     public boolean isUseDocusignForGrantOfferLetter() {
         return useDocusignForGrantOfferLetter;
+    }
+
+    public boolean isSuperAdmin() {
+        return isSuperAdmin;
     }
 
     @Override

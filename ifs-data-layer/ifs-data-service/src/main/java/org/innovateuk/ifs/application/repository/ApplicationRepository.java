@@ -40,8 +40,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.applicationProcess.activityState IN :states) " +
             "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
             "AND (:funding IS NULL " +
-            "	OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
-            "	OR a.fundingDecision = :funding " +
+            "OR ( str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL AND a.applicationProcess.activityState <> org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
+            "OR a.fundingDecision = :funding " +
             "   OR ( str(:funding) = 'FUNDED' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED ) " +
             ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
@@ -51,10 +51,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.fundingDecision IS NOT NULL) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
             "AND (:sent IS NULL " +
-            "	OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) " +
-            "	OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
+            "OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) " +
+            "OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
             "AND (:funding IS NULL " +
-            "	OR (a.fundingDecision = :funding))";
+            "OR (a.fundingDecision = :funding))";
 
     String SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL = "SELECT a FROM Application a " +
             "WHERE " +
@@ -105,6 +105,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(long competitionId);
 
+    List<Application> findByAssessmentPeriodId(long assessmentPeriodId);
+
     Optional<Application> findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
@@ -136,6 +138,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                  Pageable pageable);
 
     List<Application> findByCompetitionIdAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
+
+    List<Application> findByCompetitionIdAndAssessmentPeriodIdAndApplicationProcessActivityStateIn(long competitionId, long assessmentPeriodId, Collection<ApplicationState> applicationStates);
 
     Stream<Application> findByApplicationProcessActivityStateIn(Collection<ApplicationState> applicationStates);
 
@@ -213,7 +217,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             " JOIN Organisation lead " +
             "   ON lead.id = pr.organisationId" +
             PREVIOUS_WHERE_CLAUSE +
-            " AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT ")
+            " AND pr.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT ")
     List<PreviousApplicationResource> findPrevious(long competitionId);
 
     String PREVIOUS_WHERE_CLAUSE =  " WHERE project.id IS NULL " +
@@ -234,7 +238,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            " LEFT JOIN ProcessRole pr " +
            "    ON app.id = pr.applicationId " +
            "        AND pr.user.id=:userId " +
-           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR, org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER) " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT, org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR, org.innovateuk.ifs.user.resource.ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER) " +
            " LEFT JOIN Project proj " +
            "    ON proj.application.id = app.id " +
            " LEFT JOIN ProjectUser pu " +
@@ -255,4 +259,5 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             " and not (a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is not null)")
     List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
 
+    Optional<Application> findByPreviousApplicationId(long previousApplicationId);
 }

@@ -32,7 +32,6 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
@@ -150,28 +149,4 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.size() > 0);
     }
 
-    @Test
-    public void getFinanceChecksTotals_willCreateFinances() {
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(Optional.empty());
-
-        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
-                withCostCategoryGroup(newCostCategoryGroup().
-                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
-                        build()).
-                build();
-
-        when(costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectFinanceResourceId.getProjectId(),
-                projectFinanceResourceId.getOrganisationId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
-        when(financeChecksGenerator.createMvpFinanceChecksFigures(project, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
-        when(financeChecksGenerator.createFinanceChecksFigures(project, organisation)).thenReturn(serviceSuccess(projectFinance));
-
-        List<ProjectFinanceResource> result = handler.getFinanceChecksTotals(projectId);
-        assertTrue(result.size() > 0);
-
-        verify(costCategoryTypeStrategy).getOrCreateCostCategoryTypeForSpendProfile(projectFinanceResourceId.getProjectId(),
-                projectFinanceResourceId.getOrganisationId());
-        verify(financeChecksGenerator).createMvpFinanceChecksFigures(project, organisation, costCategoryTypeForOrganisation);
-        verify(financeChecksGenerator).createFinanceChecksFigures(project, organisation);
-
-    }
 }

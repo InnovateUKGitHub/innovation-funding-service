@@ -19,6 +19,7 @@ public class GeneralSetupViewModel {
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
             CompetitionSetupSection.ADDITIONAL_INFO,
             CompetitionSetupSection.PROJECT_ELIGIBILITY,
+            CompetitionSetupSection.FUNDING_ELIGIBILITY,
             CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY,
             CompetitionSetupSection.APPLICATION_FORM);
 
@@ -26,6 +27,7 @@ public class GeneralSetupViewModel {
             CompetitionSetupSection.ASSESSORS);
 
     private boolean editable;
+    private boolean firstTimeInForm;
     private CompetitionResource competition;
     private CompetitionSetupSection currentSection;
     private String currentSectionFragment;
@@ -34,10 +36,11 @@ public class GeneralSetupViewModel {
     private CompetitionStateSetupViewModel state;
     private boolean ifsAdmin;
 
-    public GeneralSetupViewModel(boolean editable, CompetitionResource competition,
+    public GeneralSetupViewModel(boolean editable, boolean firstTimeInForm, CompetitionResource competition,
                                  CompetitionSetupSection section,
                                  CompetitionSetupSection[] allSections, boolean isInitialComplete, boolean ifsAdmin) {
         this.editable = editable;
+        this.firstTimeInForm = firstTimeInForm;
         this.competition = competition;
         this.currentSection = section;
         this.allSections = allSections;
@@ -55,6 +58,10 @@ public class GeneralSetupViewModel {
 
     public boolean isEditable() {
         return editable;
+    }
+
+    public boolean isFirstTimeInForm() {
+        return firstTimeInForm;
     }
 
     public CompetitionResource getCompetition() {

@@ -40,4 +40,8 @@ public class SupporterAssignmentResourceBuilder extends BaseBuilder<SupporterAss
     public SupporterAssignmentResourceBuilder withComments(String... comments) {
         return withArray((comment, assignment) -> assignment.setComments(comment), comments);
     }
+
+    public SupporterAssignmentResourceBuilder withUserSimpleOrganisation(String... userSimpleOrganisations) {
+        return withArray((userSimpleOrganisation, assignment) -> assignment.setUserSimpleOrganisation(userSimpleOrganisation), userSimpleOrganisations);
+    }
 }

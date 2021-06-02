@@ -20,7 +20,7 @@ artifacts {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-freemarker:2.0.5.RELEASE"
+    compile "org.springframework.boot:spring-boot-starter-freemarker"
 
     compile project(":ifs-data-layer:data-service-commons")
     compile project(":ifs-sil-resources")

@@ -13,7 +13,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,10 +46,10 @@ public class Horizon2020CostsController extends AsyncAdaptor {
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder')")
     @SecuredBySpring(value = "VIEW_H2020_COSTS", description = "Applicants and internal users can view the Your project costs page")
     public String viewHorizon2020Costs(Model model,
                                        UserResource user,
@@ -120,7 +120,7 @@ public class Horizon2020CostsController extends AsyncAdaptor {
     }
 
     private ProcessRoleResource getProcessRole(long applicationId, long userId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess();
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
     }
 
 }

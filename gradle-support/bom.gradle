@@ -1,0 +1,75 @@
+
+ext {
+    bomSpringBootVersion = '2.4.1'
+    bomSpringCloudVersion = '2020.0.1'
+}
+
+dependencies {
+
+    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
+    implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
+
+    implementation('org.apache.commons:commons-text') {
+        version {
+            strictly '1.3'
+        }
+    }
+
+    implementation('commons-beanutils:commons-beanutils') {
+        version {
+            strictly '1.9.3'
+        }
+    }
+
+    implementation('commons-io:commons-io') {
+        version {
+            strictly '2.6'
+        }
+    }
+
+    implementation('com.google.guava:guava') {
+        version {
+            // Tika wants this one
+            strictly '29.0-jre'
+        }
+    }
+
+    implementation('org.jsoup:jsoup') {
+        version {
+            strictly '1.12.1'
+        }
+    }
+
+    implementation('javax.mail:mail') {
+        version {
+            strictly '1.4.7'
+        }
+    }
+
+    implementation('com.opencsv:opencsv') {
+        version {
+            strictly '4.3.2'
+        }
+    }
+
+    implementation('javax.validation:validation-api') {
+        version {
+            strictly '2.0.1.Final'
+        }
+    }
+
+    testImplementation('com.jayway.awaitility:awaitility') {
+        version() {
+            strictly '1.7.0'
+        }
+    }
+
+    testImplementation('junit:junit') {
+
+    }
+
+    testImplementation('org.mockito:mockito-core') {
+
+    }
+
+}

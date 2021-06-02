@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.application.form;
 
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,11 @@ public abstract class AbstractQuestionForm extends CompetitionSetupForm {
     @NotNull
     private CompetitionSetupQuestionResource question;
 
+    private MultipartFile templateDocumentFile;
+
     private TypeOfQuestion typeOfQuestion;
+
+    private Integer numberOfUploads;
 
     public CompetitionSetupQuestionResource getQuestion() {
         return question;
@@ -39,4 +44,22 @@ public abstract class AbstractQuestionForm extends CompetitionSetupForm {
     }
 
     public boolean isRemovable() { return false; }
+
+    public Integer getNumberOfUploads() {
+        return numberOfUploads;
+    }
+
+    public void setNumberOfUploads(Integer numberOfUploads) {
+        this.numberOfUploads = numberOfUploads;
+    }
+
+
+    public MultipartFile getTemplateDocumentFile() {
+        return templateDocumentFile;
+    }
+
+    public void setTemplateDocumentFile(MultipartFile templateDocumentFile) {
+        this.templateDocumentFile = templateDocumentFile;
+    }
+
 }

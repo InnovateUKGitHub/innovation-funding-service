@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -20,10 +21,10 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Question findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(Long competitionId, Long sectionId);
-    List<Question> findByCompetitionIdAndSectionNameOrderByPriorityAsc(Long competitionId, String sectionName);
-    Question findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(Long competitionId, String sectionName);
+    List<Question> findByCompetitionIdAndSectionTypeOrderByPriorityAsc(Long competitionId, SectionType sectionType);
+    Question findFirstByCompetitionIdAndSectionTypeOrderByPriorityDesc(Long competitionId, SectionType sectionType);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(Long competitionId, Long sectionId);
-    List<Question> findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, String sectionName, Integer priority);
+    List<Question> findByCompetitionIdAndSectionTypeAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, SectionType sectionType, Integer priority);
     Question findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Integer priority);
     Question findFirstByCompetitionIdAndQuestionSetupType(long competitionId, QuestionSetupType
             questionSetupType);
@@ -35,4 +36,6 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
         return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
     }
     long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
+
+    Question findByQuestionnaireId(long id);
 }

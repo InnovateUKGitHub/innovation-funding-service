@@ -50,6 +50,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
         competition = competitionRepository.save(newCompetition()
                 .with(id(null))
                 .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
+                .withAlwaysOpen(false)
                 .build());
 
         milestoneRepository.saveAll(newMilestone()

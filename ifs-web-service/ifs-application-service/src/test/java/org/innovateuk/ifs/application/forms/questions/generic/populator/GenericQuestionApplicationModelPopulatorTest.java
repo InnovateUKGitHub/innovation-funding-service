@@ -8,7 +8,6 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -32,8 +32,10 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -56,6 +58,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                         newQuestionResource()
                                 .withQuestionNumber("1")
                                 .withDescription("desc")
+                                .withDescription2("desc2")
                                 .withShortName("short")
                                 .withName("name")
                                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
@@ -71,7 +74,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                 )
                 .withCurrentApplicant(
                         newApplicantResource()
-                                .withProcessRole(newProcessRoleResource().withRole(Role.LEADAPPLICANT).build())
+                                .withProcessRole(newProcessRoleResource().withRole(LEADAPPLICANT).build())
                                 .build()
                 )
                 .withCurrentUser(
@@ -82,6 +85,15 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                 .withStatus(newQuestionStatusResource().build())
                                 .build(1)
                 )
+                .withApplicants(
+                        asList(
+                                newApplicantResource()
+                                        .withProcessRole(
+                                                newProcessRoleResource()
+                                                        .withRole(LEADAPPLICANT).build())
+                                        .withOrganisation(newOrganisationResource()
+                                                .build())
+                                        .build()))
                 .withApplicantFormInputs(asList(
                         newApplicantFormInputResource()
                                 .withFormInput(newFormInputResource()
@@ -135,7 +147,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         when(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, false)).thenReturn(assignButtonsViewModel);
         when(assignButtonsViewModel.getAssignableApplicants()).thenReturn(newProcessRoleResource().build(1));
 
-        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion);
+        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion, Optional.empty());
 
         assertEquals((Long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
         assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());
@@ -146,6 +158,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals("1", viewModel.getQuestionNumber());
         assertEquals("name", viewModel.getQuestionSubtitle());
         assertEquals("desc", viewModel.getQuestionDescription());
+        assertEquals("desc2", viewModel.getQuestionDescription2());
         assertEquals("Title", viewModel.getQuestionGuidanceTitle());
         assertEquals("Guidance", viewModel.getQuestionGuidance());
         assertEquals(QuestionSetupType.ASSESSED_QUESTION, viewModel.getQuestionType());
@@ -215,7 +228,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                 )
                 .withCurrentApplicant(
                         newApplicantResource()
-                                .withProcessRole(newProcessRoleResource().withRole(Role.LEADAPPLICANT).build())
+                                .withProcessRole(newProcessRoleResource().withRole(LEADAPPLICANT).build())
                                 .build()
                 )
                 .withCurrentUser(
@@ -246,13 +259,23 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .build(1))
                                 .build()
                 ))
+                .withApplicants(
+                        asList(
+                                newApplicantResource()
+                                        .withProcessRole(
+                                                newProcessRoleResource()
+                                                        .withRole(LEADAPPLICANT).build())
+                                        .withOrganisation(newOrganisationResource()
+                                                .build())
+                                .build())
+                )
                 .build();
 
         AssignButtonsViewModel assignButtonsViewModel = mock(AssignButtonsViewModel.class);
         when(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, false)).thenReturn(assignButtonsViewModel);
         when(assignButtonsViewModel.getAssignableApplicants()).thenReturn(newProcessRoleResource().build(1));
 
-        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion);
+        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion, Optional.empty());
 
         assertEquals((Long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
         assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());

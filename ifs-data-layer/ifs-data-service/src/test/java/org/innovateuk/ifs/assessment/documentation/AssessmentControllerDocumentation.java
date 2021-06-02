@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest<AssessmentController> {
 
     @Mock
-    private AssessmentService assessmentServiceMock;
+    private AssessmentService assessmentService;
 
     @Override
     protected AssessmentController supplyControllerUnderTest() {
@@ -44,7 +44,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         long assessmentId = 1L;
         AssessmentResource assessmentResource = assessmentResourceBuilder.build();
 
-        when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
+        when(assessmentService.findById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
         mockMvc.perform(get("/assessment/{id}", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -64,7 +64,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         long assessmentId = 1L;
         AssessmentResource assessmentResource = assessmentResourceBuilder.build();
 
-        when(assessmentServiceMock.findAssignableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
+        when(assessmentService.findAssignableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
         mockMvc.perform(get("/assessment/{id}/assign", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -84,7 +84,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         long assessmentId = 1L;
         AssessmentResource assessmentResource = assessmentResourceBuilder.build();
 
-        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
+        when(assessmentService.findRejectableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
 
         mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -105,7 +105,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         long competitionId = 2L;
         List<AssessmentResource> assessmentResources = assessmentResourceBuilder.build(2);
 
-        when(assessmentServiceMock.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
+        when(assessmentService.findByUserAndCompetition(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
 
         mockMvc.perform(get("/assessment/user/{userId}/competition/{competitionId}", userId, competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -129,7 +129,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
         long applicationId = 2L;
         List<AssessmentResource> assessmentResources = assessmentResourceBuilder.build(2);
 
-        when(assessmentServiceMock.findByUserAndApplication(userId, applicationId)).thenReturn(serviceSuccess(assessmentResources));
+        when(assessmentService.findByUserAndApplication(userId, applicationId)).thenReturn(serviceSuccess(assessmentResources));
 
         mockMvc.perform(get("/assessment/user/{userId}/application/{applicationId}", userId, applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -149,10 +149,10 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
     @Test
     public void getTotalScore() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         AssessmentTotalScoreResource assessmentTotalScoreResource = assessmentTotalScoreResourceBuilder.build();
 
-        when(assessmentServiceMock.getTotalScore(assessmentId)).thenReturn(serviceSuccess(assessmentTotalScoreResource));
+        when(assessmentService.getTotalScore(assessmentId)).thenReturn(serviceSuccess(assessmentTotalScoreResource));
 
         mockMvc.perform(get("/assessment/{id}/score", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -167,11 +167,11 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
     @Test
     public void recommend() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
                 assessmentFundingDecisionOutcomeResourceBuilder.build();
 
-        when(assessmentServiceMock.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -194,7 +194,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
 
-        when(assessmentServiceMock.getApplicationFeedback(applicationId)).thenReturn(serviceSuccess(expectedResource));
+        when(assessmentService.getApplicationFeedback(applicationId)).thenReturn(serviceSuccess(expectedResource));
 
         mockMvc.perform(get("/assessment/application/{id}/feedback", applicationId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -211,10 +211,10 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
     @Test
     public void reject() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = assessmentRejectOutcomeResourceBuilder.build();
 
-        when(assessmentServiceMock.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(serviceSuccess());
+        when(assessmentService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/reject-invitation", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -231,9 +231,9 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
     @Test
     public void accept() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
-        when(assessmentServiceMock.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
+        when(assessmentService.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/accept-invitation", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -247,9 +247,9 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
     @Test
     public void withdrawAssessment() throws Exception {
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
-        when(assessmentServiceMock.withdrawAssessment(assessmentId)).thenReturn(serviceSuccess());
+        when(assessmentService.withdrawAssessment(assessmentId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/withdraw", assessmentId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -261,11 +261,27 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 ));
     }
 
+    @Test
+    public void unsubmitAssessment() throws Exception {
+        long assessmentId = 1L;
+
+        when(assessmentService.unsubmitAssessment(assessmentId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessment/{id}/unsubmit", assessmentId)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the assessment for which to unsubmit")
+                        )
+                ));
+    }
+
 
     @Test
     public void submitAssessments() throws Exception {
         AssessmentSubmissionsResource assessmentSubmissions = assessmentSubmissionsResourceBuilder.build();
-        when(assessmentServiceMock.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
+        when(assessmentService.submitAssessments(assessmentSubmissions)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/submit-assessments")
                 .header("IFS_AUTH_TOKEN", "123abc")

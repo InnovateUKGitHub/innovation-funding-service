@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.questionnaire.config.domain.Questionnaire;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public final class QuestionBuilder {
     private String name;
     private String shortName;
     private String description;
+    private String description2;
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
@@ -20,6 +22,7 @@ public final class QuestionBuilder {
     private QuestionType type = QuestionType.GENERAL;
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
+    private Questionnaire questionnaire;
 
     private QuestionBuilder() {
     }
@@ -54,13 +57,30 @@ public final class QuestionBuilder {
         return name;
     }
 
+    public Questionnaire getQuestionnaire() {
+        return questionnaire;
+    }
+
     public QuestionBuilder withShortName(String shortName) {
         this.shortName = shortName;
         return this;
     }
 
+    public String getShortName() {
+        return shortName;
+    }
+
     public QuestionBuilder withDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public QuestionBuilder withDescription2(String description2) {
+        this.description2 = description2;
         return this;
     }
 
@@ -103,6 +123,12 @@ public final class QuestionBuilder {
         return this;
     }
 
+    public QuestionBuilder withQuestionnaire(Questionnaire questionnaire) {
+        this.questionnaire = questionnaire;
+        return this;
+    }
+
+
     public QuestionSetupType getQuestionSetupType() {
         return questionSetupType;
     }
@@ -117,6 +143,7 @@ public final class QuestionBuilder {
         question.setName(name);
         question.setShortName(shortName);
         question.setDescription(description);
+        question.setDescription2(description2);
         question.setMarkAsCompletedEnabled(markAsCompletedEnabled);
         question.setAssignEnabled(assignEnabled);
         question.setMultipleStatuses(multipleStatuses);
@@ -125,6 +152,7 @@ public final class QuestionBuilder {
         question.setType(type);
         question.setQuestionSetupType(questionSetupType);
         question.setAssessorMaximumScore(assessorMaximumScore);
+        question.setQuestionnaire(questionnaire);
         return question;
     }
 }

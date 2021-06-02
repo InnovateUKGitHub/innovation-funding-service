@@ -14,7 +14,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -56,9 +56,6 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Override
@@ -93,7 +90,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
             }
         }
 
-        List<ProcessRole> rolesToRemove = application.getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).collect(Collectors.toList());
+        List<ProcessRole> rolesToRemove = application.getProcessRoles().stream().filter(pr -> pr.getRole().isKta()).collect(Collectors.toList());
         if (!rolesToRemove.isEmpty()) {
             processRoleRepository.deleteAll(rolesToRemove);
         }
@@ -153,7 +150,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
         return getByHash(hash)
                 .andOnSuccess(invite -> {
                     applicationKtaInviteRepository.save(invite.open());
-                    ProcessRole ktaProcessRole = new ProcessRole(invite.getUser(), invite.getTarget().getId(), Role.KNOWLEDGE_TRANSFER_ADVISER);
+                    ProcessRole ktaProcessRole = new ProcessRole(invite.getUser(), invite.getTarget().getId(), ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER);
                     processRoleRepository.save(ktaProcessRole);
                     return serviceSuccess();
 

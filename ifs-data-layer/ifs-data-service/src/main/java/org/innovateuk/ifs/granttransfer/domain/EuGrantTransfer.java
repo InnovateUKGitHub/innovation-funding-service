@@ -28,6 +28,7 @@ public class EuGrantTransfer {
 
     private LocalDate projectEndDate;
 
+    @Column(columnDefinition = "bigint(20)")
     private BigDecimal fundingContribution;
 
     private Boolean projectCoordinator;

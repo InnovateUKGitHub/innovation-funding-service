@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
@@ -41,8 +42,7 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,6 +74,9 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
     @Mock
     private CompaniesHouseRestService companiesHouseRestService;
 
+    @Mock
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     @Override
     protected OrganisationDetailsWithoutGrowthTableController supplyControllerUnderTest() {
         return new OrganisationDetailsWithoutGrowthTableController();
@@ -93,6 +96,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         project = getProject();
         organisation = getOrganisation();
         competition = new CompetitionResource();
+        competition.setId(competitionId);
 
         OrganisationFinancesWithoutGrowthTableResource finances = getFinances();
         form = getForm();
@@ -112,6 +116,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
         when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionId)).thenReturn(restSuccess(false));
     }
 
     private MvcResult callEndpoint() throws Exception {
@@ -168,7 +173,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
 
         sharedAssertions(result, new AddressResource("", "", "", "", "", ""));
 
-        assertNotEquals("yourOrganisation", result.getModelAndView().getModel());
+        assertFalse(result.getModelAndView().getModel().containsKey("yourOrganisation"));
     }
 
     private OrganisationFinancesWithoutGrowthTableResource getFinances() {

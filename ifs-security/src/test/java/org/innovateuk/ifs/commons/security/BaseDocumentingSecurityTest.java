@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.assertj.core.util.Lists.newArrayList;
@@ -311,15 +310,25 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
 
     protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, Role... roles){
         EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(newArrayList(roles));
-        if (rolesThatShouldSucceed.contains(Role.ASSESSOR)) {
-            rolesThatShouldSucceed.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        }
-        if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE) || rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+        if (rolesThatShouldSucceed.contains(Role.COMP_ADMIN)) {
+            rolesThatShouldSucceed.add(Role.PROJECT_FINANCE);
+            rolesThatShouldSucceed.add(Role.IFS_ADMINISTRATOR);
+            rolesThatShouldSucceed.add(Role.SUPER_ADMIN_USER);
             rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        } else if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE)) {
+            rolesThatShouldSucceed.add(Role.IFS_ADMINISTRATOR);
+            rolesThatShouldSucceed.add(Role.SUPER_ADMIN_USER);
+            rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        } else if (rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+            rolesThatShouldSucceed.add(Role.SUPER_ADMIN_USER);
+            rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        }
+        if (rolesThatShouldSucceed.contains(Role.ASSESSOR) || rolesThatShouldSucceed.contains(Role.MONITORING_OFFICER)) {
+            rolesThatShouldSucceed.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
         }
         EnumSet<Role> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRoleGlobal(role).build());
             try {
                 functionToCall.run();
                 fail("Should not have been able to run the function given the role: " + role);
@@ -336,7 +345,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
             // expected behaviour
         }
         rolesThatShouldSucceed.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRoleGlobal(role).build());
             try {
                 functionToCall.run();
                 // Should not throw

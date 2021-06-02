@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
@@ -33,7 +34,6 @@ import static org.hibernate.Hibernate.initialize;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.researchCategory;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -83,6 +83,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         setupResource.setShortTitle(question.getShortName());
         setupResource.setTitle(question.getName());
         setupResource.setSubTitle(question.getDescription());
+        setupResource.setSubTitle2(question.getDescription2());
         setupResource.setQuestionId(question.getId());
         setupResource.setType(question.getQuestionSetupType());
 
@@ -125,6 +126,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setChoices(formInput.getMultipleChoiceOptions().stream()
                         .map(choice -> new MultipleChoiceOptionResource(choice.getId(), choice.getText()))
                         .collect(Collectors.toList()));
+                break;
+            default:
+                // do nothing
         }
     }
 
@@ -146,6 +150,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             case ASSESSOR_RESEARCH_CATEGORY:
                 setupResource.setResearchCategoryQuestion(formInput.getActive());
                 break;
+            default:
+                // do nothing
         }
     }
 
@@ -358,8 +364,8 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     }
 
     private ServiceResult<Question> saveNewResearchCategoryQuestionForCompetition(Competition competition) {
-        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS
-                .getName()), notFoundError(Section.class)).andOnSuccessReturn(section -> {
+        return find(sectionRepository.findByTypeAndCompetitionId(SectionType.PROJECT_DETAILS, competition.getId()), notFoundError(Section.class))
+                .andOnSuccessReturn(section -> {
             Question question = researchCategory().build();
             question.setSection(section);
             question.setCompetition(competition);

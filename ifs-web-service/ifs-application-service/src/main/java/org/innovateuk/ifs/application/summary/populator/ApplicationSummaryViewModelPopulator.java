@@ -12,10 +12,11 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,23 +44,25 @@ public class ApplicationSummaryViewModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
-        ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user));
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user))
+                .setIncludeAllSupporterFeedback(shouldDisplaySupporterFeedback(competition, application, user));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
         }
 
         OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
-        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         List<OrganisationResource> collaboratorOrganisations = processRoleResources.stream()
-                .filter(pr -> Role.COLLABORATOR == pr.getRole())
+                .filter(pr -> ProcessRoleType.COLLABORATOR == pr.getRole())
                 .map(pr -> pr.getOrganisationId())
                 .distinct()
                 .map(orgId -> organisationRestService.getOrganisationById(orgId).getSuccess())
@@ -75,13 +78,18 @@ public class ApplicationSummaryViewModelPopulator {
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application, UserResource user) {
-        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
+        boolean feedbackReleased = application.isFeedbackReleased();
         if (competition.isKtp()) {
             return user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && feedbackReleased;
         }
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
         boolean feedbackAvailable = feedbackReleased || isApplicationAssignedToInterview;
         return application.isSubmitted() && feedbackAvailable;
+    }
+
+    private boolean shouldDisplaySupporterFeedback(CompetitionResource competition, ApplicationResource application, UserResource user) {
+        boolean feedbackReleased = application.isFeedbackReleased();
+        return competition.isKtp() && user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && application.isSubmitted() && feedbackReleased;
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

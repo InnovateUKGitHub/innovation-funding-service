@@ -4,6 +4,9 @@ Documentation     INFUND-6794: As an applicant I will be invited to add funding 
 ...               INFUND-6895: As a lead applicant I will be advised that changing my 'Research category' after completing 'Funding level' will reset the 'Funding level'
 ...
 ...               IFS-2659: UJ - External - Finances - Able to submit without Other funding
+...
+...               IFS-8991 Applicant journey - update content - 'Research category' & 'Your organisation'
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -51,15 +54,15 @@ Other funding validations
     And the user clicks the button/link                 jQuery = button:contains("Mark as complete")
 
 If funding is complete. application details has a warning message
-    [Documentation]    INFUND-6895
+    [Documentation]    INFUND-6895  IFS-8991
     ...
     ...    INFUND-6823
     [Tags]  HappyPath
-    Given the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link    link = ${openCompetitionRTOApplication1Name}
-    When the user clicks the button/link   link = Research category
-    And the user clicks the button/link    jQuery = button:contains(Edit)
-    Then the user should see the element   jQuery = .message-alert p:contains("Changing the research category will reset the funding level for all business participants.")
+    Given the user navigates to the page       ${APPLICANT_DASHBOARD_URL}
+    And the user clicks the button/link        link = ${openCompetitionRTOApplication1Name}
+    When the user clicks the button/link       link = Research category
+    And the user clicks the button/link        jQuery = button:contains(Edit)
+    Then the user should not see the element   jQuery = .message-alert p:contains("Changing the research category will reset the funding level for all business participants.")
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895

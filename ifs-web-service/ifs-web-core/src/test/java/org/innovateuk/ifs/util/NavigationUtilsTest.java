@@ -46,11 +46,6 @@ public class NavigationUtilsTest {
     }
 
     @Test
-    public void getRedirectToDashboardUrlForNoLandingPageRole() {
-        assertEquals("redirect:/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(COMP_EXEC));
-    }
-
-    @Test
     public void getRedirectToDashboardUrlForNullRole() {
         assertEquals("redirect:/dashboard", navigationUtils.getRedirectToDashboardUrlForRole(null));
     }

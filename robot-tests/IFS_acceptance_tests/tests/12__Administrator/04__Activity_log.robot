@@ -83,11 +83,11 @@ The user completes documents
 The user completes project team
     the user clicks the button/link     link = Project team
     the user clicks the button/link     jQuery = a:contains("Project"):contains("manager")
-    the user selects the radio button   projectManager   53
-    the user clicks the button/link     jQuery = button:contains("Save project manager")
+    the user selects the radio button   projectManager   54
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     jQuery = a:contains("Your finance contact")
-    the user selects the radio button   financeContact   53
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user selects the radio button   financeContact   54
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 The admin navigates to project activity log
     the user navigates to the page     ${AdminPsActivityLogCompUrl}

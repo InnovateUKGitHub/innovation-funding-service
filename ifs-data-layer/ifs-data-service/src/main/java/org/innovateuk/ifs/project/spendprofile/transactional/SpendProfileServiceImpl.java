@@ -24,6 +24,7 @@ import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
@@ -32,6 +33,7 @@ import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -129,6 +131,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+    @Autowired
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
     @Autowired
@@ -138,7 +142,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
     @Autowired
-    private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
+    private ProcurementMilestonesSpendProfileFigureDistributer procurementMilestonesSpendProfileFigureDistributer;
     @Autowired
     private CompetitionService competitionService;
 
@@ -189,6 +193,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isFundingRulesApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project))
                 .andOnSuccess(() -> areThereNoPendingPartnersOnProject(project));
     }
@@ -229,6 +234,24 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         }
     }
 
+    private ServiceResult<Void> isFundingRulesApprovedOrNotApplicable(Project project) {
+
+        if (!project.getApplication().getCompetition().isSubsidyControl()) {
+            return serviceSuccess();
+        }
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                FundingRulesState.REVIEW == fundingRulesWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FUNDING_RULES_APPROVED);
+        }
+    }
+
     private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
         if (!spendProfileWorkflowHandler.isAlreadyGenerated(project)) {
             return serviceSuccess();
@@ -266,7 +289,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
-        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project, organisation);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findById(spendProfileCostCategorySummaries.getCostCategoryType().getId()).orElse(null);
         SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
         spendProfileRepository.save(spendProfile);
@@ -304,10 +327,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
+    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project, Organisation organisation) {
         List<List<Cost>> costs;
-        if (project.getApplication().getCompetition().isSbriPilot()) {
-            costs = sbriPilotSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
+        if (project.getApplication().getCompetition().isProcurementMilestones()) {
+            costs = procurementMilestonesSpendProfileFigureDistributer.distributeCosts(summaryPerCategory, project, organisation);
         } else {
             costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
         }

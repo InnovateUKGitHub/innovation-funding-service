@@ -35,7 +35,7 @@ public class GrantOfferLetterServiceImplTest {
     private GrantOfferLetterRestService grantOfferLetterRestService;
 
     @Test
-    public void testGetGrantOfferLetterFile() {
+    public void getGrantOfferLetterFile() {
 
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
         when(grantOfferLetterRestService.getGrantOfferFile(123L)).thenReturn(restSuccess(content));
@@ -45,7 +45,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGetGrantOfferLetterFileDetails() {
+    public void getGrantOfferLetterFileDetails() {
 
         FileEntryResource returnedFile = newFileEntryResource().build();
 
@@ -57,7 +57,19 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testAddSignedGrantOfferLetter() {
+    public void getSignedAdditionalContractFileDetails() {
+
+        FileEntryResource returnedFile = newFileEntryResource().build();
+
+        Optional<FileEntryResource> response = Optional.of(returnedFile);
+        when(grantOfferLetterRestService.getSignedAdditionalContractFileDetails(123L)).thenReturn(restSuccess(response));
+
+        Optional<FileEntryResource> result = grantOfferLetterService.getSignedAdditionalContractFileDetails(123L);
+        assertEquals(response, result);
+    }
+
+    @Test
+    public void addSignedGrantOfferLetter() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
@@ -72,7 +84,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testAddGrantOfferLetter() {
+    public void addGrantOfferLetter() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
@@ -87,7 +99,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testRemoveGrantOfferLetter() {
+    public void removeGrantOfferLetter() {
         long projectId = 123L;
 
         when(grantOfferLetterRestService.removeGrantOfferLetter(projectId)).thenReturn(restSuccess());
@@ -98,7 +110,18 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testRemoveAdditionalContractFile() {
+    public void resetGrantOfferLetter() {
+        long projectId = 123L;
+
+        when(grantOfferLetterRestService.resetGrantOfferLetter(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = grantOfferLetterService.resetGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void removeAdditionalContractFile() {
         long projectId = 123L;
 
         when(grantOfferLetterRestService.removeAdditionalContractFile(projectId)).thenReturn(restSuccess());
@@ -109,7 +132,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testRemoveSignedGrantOfferLetter() {
+    public void removeSignedGrantOfferLetter() {
         long projectId = 123L;
 
         when(grantOfferLetterRestService.removeSignedGrantOfferLetter(projectId)).thenReturn(restSuccess());
@@ -120,7 +143,18 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testSubmitGrantOfferLetter() {
+    public void removeSignedAdditionalContractFile() {
+        long projectId = 123L;
+
+        when(grantOfferLetterRestService.removeSignedAdditionalContractFile(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = grantOfferLetterService.removeSignedAdditionalContract(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void submitGrantOfferLetter() {
         long projectId = 123L;
 
         when(grantOfferLetterRestService.submitGrantOfferLetter(projectId)).thenReturn(restSuccess());
@@ -131,7 +165,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGetAdditionalContractFile() {
+    public void getAdditionalContractFile() {
 
         Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
         when(grantOfferLetterRestService.getAdditionalContractFile(123L)).thenReturn(restSuccess(content));
@@ -141,7 +175,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testAddAdditionalContractFile() {
+    public void addAdditionalContractFile() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
@@ -158,7 +192,34 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetter() {
+    public void addSignedAdditionalContractFile() {
+
+        FileEntryResource createdFile = newFileEntryResource().build();
+
+        when(grantOfferLetterRestService.addSignedAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes())).
+                thenReturn(restSuccess(createdFile));
+
+        ServiceResult<FileEntryResource> result =
+                grantOfferLetterService.addSignedAdditionalContract(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+
+        assertTrue(result.isSuccess());
+        assertEquals(createdFile, result.getSuccess());
+
+        verify(grantOfferLetterRestService).addSignedAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
+    }
+
+    @Test
+    public void getSignedAdditionalContractFile() {
+
+        Optional<ByteArrayResource> content = Optional.of(new ByteArrayResource("My content!".getBytes()));
+        when(grantOfferLetterRestService.getSignedAdditionalContractFile(123L)).thenReturn(restSuccess(content));
+
+        Optional<ByteArrayResource> result = grantOfferLetterService.getSignedAdditionalContractFile(123L);
+        assertEquals(content, result);
+    }
+
+    @Test
+    public void approveOrRejectSignedGrantOfferLetter() {
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
         when(grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(123L, grantOfferLetterApprovalResource)).thenReturn(restSuccess());
@@ -172,7 +233,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testSendGrantOfferLetter() {
+    public void sendGrantOfferLetter() {
 
         when(grantOfferLetterRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
 
@@ -185,7 +246,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGetGrantOfferLetterState() {
+    public void getGrantOfferLetterState() {
 
         Long projectId = 123L;
 

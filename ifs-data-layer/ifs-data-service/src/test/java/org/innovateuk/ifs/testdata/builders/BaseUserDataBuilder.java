@@ -53,6 +53,32 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         });
     }
 
+    public S activateUser() {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                UserResource user = data.getUser();
+                registrationService.activateUser(user.getId());
+            });
+        });
+    }
+
+    public S addAdditionalRoles(List<Role> roles) {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                roles.forEach(role -> {
+                    long id = data.getUser().getId();
+                    userRepository.findById(id).ifPresent(
+                            user -> {
+                                user.addRole(role);
+                                userRepository.save(user);
+                            }
+                    );
+                });
+            });
+        });
+    }
+
+
     private void updateUserInUserData(T data, Long userId) {
         UserResource user = baseUserService.getUserById(userId).getSuccess();
         data.setUser(user);

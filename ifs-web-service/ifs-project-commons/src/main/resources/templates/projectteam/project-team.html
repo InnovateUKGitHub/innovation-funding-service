@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:unless="${model.internal}">
         <th:block th:insert="fragments/layout :: header-sub"
-                  th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
+                  th:with="linkTitle='Back to project setup',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
     </th:block>
 
     <th:block th:if="${model.internal}">
@@ -33,17 +33,34 @@
                   th:with="pageTitle='Project team',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.collaborativeProject}">
-            <p class="govuk-body">The lead partner must choose a project manager who will be responsible for setting up
-                the project. Each partner must provide a finance contact. We will contact the assigned person with any
-                finance queries.</p>
-            <th:block th:if="${model.internalUserView}">
-                <p class="govuk-body">Everyone below can view all of project setup. If they add a new person they will
-                    show as pending until they register for the website.</p>
+            <th:block th:if="${model.ktpCompetition}">
+                <th:block th:if="${model.userLeadPartner or model.internal}">
+                    <p class="govuk-body">The knowledge base partner chooses a project manager who is responsible for
+                        setting up the project, and a finance contact to answer finance queries.
+                    </p>
+                </th:block>
+                <p class="govuk-body">Each team member can view everything in the project setup section.</p>
+                <p class="govuk-body">When a new person is invited to the team, their status will show as
+                    'pending' until they create an Innovation Funding Service account. Their role can only
+                    be assigned after they have created an account.
+                </p>
             </th:block>
-            <th:block th:unless="${model.internalUserView}">
-                <p class="govuk-body">Everyone below can view all of project setup. If you add a new person they will
-                    show as pending until they register for the website.
-                    Once they register you can assign them a role.</p>
+
+            <th:block th:unless="${model.ktpCompetition}">
+                <p class="govuk-body">The lead partner must choose a project manager who will be responsible for setting up
+                    the project. Each partner must provide a finance contact. We will contact the assigned person with any
+                    finance queries.
+                </p>
+
+                <th:block th:if="${model.internalUserView}">
+                    <p class="govuk-body">Everyone below can view all of project setup. If they add a new person they will
+                        show as pending until they register for the website.</p>
+                </th:block>
+                <th:block th:unless="${model.internalUserView}">
+                    <p class="govuk-body">Everyone below can view all of project setup. If you add a new person they will
+                        show as pending until they register for the website.
+                        Once they register you can assign them a role.</p>
+                </th:block>
             </th:block>
         </th:block>
 
@@ -67,7 +84,8 @@
             </th:block>
         </th:block>
 
-        <th:block th:unless="${model.internal or model.readOnly}">
+
+        <th:block th:unless="${model.internal or model.readOnly or model.ktpCompetition && !model.userLeadPartner}">
             <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
         </th:block>
 
@@ -102,7 +120,7 @@
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">
-                            <th:block th:if="${model.internal}">Role</th:block>
+                            <th:block th:if="${model.displayRoleHeader(organisation.lead)}">Role</th:block>
                             <span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
@@ -124,6 +142,8 @@
                 <th:block th:if="${organisation.canAddUsers}">
                     <th:block th:insert="projectteam/project-team-fragments :: invite-form(${model}, ${organisation})"/>
                 </th:block>
+
+                <th:block th:unless="${model.ktpCompetition && model.internal}">
                 <span th:if="${!organisation.lead and model.canRemovePartnerOrganisation and organisation.canAddUsers}"
                       class="vertical-align-baseline govuk-body govuk-!-margin-left-1 govuk-!-margin-right-1 hint">|</span>
                 <th:block th:if="${!organisation.lead and model.canRemovePartnerOrganisation}">
@@ -148,16 +168,19 @@
                     </button>
                 </th:block>
             </th:block>
+            </th:block>
         </form>
 
 
-        <p th:if="${model.canInvitePartnerOrganisation}"
-           class="govuk-body">
-            <a th:href="@{/competition/{competitionId}/project/{projectId}/team/partner(competitionId=${model.competitionId}, projectId=${model.projectId})}"
-               class="govuk-link">Add a partner organisation</a>
-        </p>
+        <th:block th:unless="${model.ktpCompetition && model.internal}">
+            <p th:if="${model.canInvitePartnerOrganisation}"
+                class="govuk-body">
+                    <a th:href="@{/competition/{competitionId}/project/{projectId}/team/partner(competitionId=${model.competitionId}, projectId=${model.projectId})}"
+                        class="govuk-link">Add a partner organisation</a>
+            </p>
+        </th:block>
         <th:block th:unless="${model.internal}">
-            <a th:href="@{/project/{id}(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to setup your project</a>
+            <a th:href="@{/project/{id}(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to set up your project</a>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

@@ -31,7 +31,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='View partner details',subTitle=|${model.projectId}: ${model.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle='View partner details',subTitle=|${model.projectName}|,size='govuk-heading-xl'"/>
 
         <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
               th:object="${form}">

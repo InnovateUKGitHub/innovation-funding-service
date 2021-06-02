@@ -68,7 +68,7 @@ public class AcceptProjectInviteControllerTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource);
+        mockMvc = setupMockMvc(acceptProjectInviteController, () -> loggedInUser, env, messageSource, a -> {});
         setupEncryptedCookieService(cookieUtil);
     }
 

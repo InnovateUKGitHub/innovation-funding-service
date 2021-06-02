@@ -33,14 +33,14 @@ public class CompaniesHouseControllerIntegrationTest extends BaseControllerInteg
 
     @Test
     public void search_companiesHouseName() {
-        RestResult<List<OrganisationSearchResult>> companies = controller.search(COMPANY_NAME);
+        RestResult<List<OrganisationSearchResult>> companies = controller.search(COMPANY_NAME, 0);
         assertTrue(companies.isSuccess());
         assertEquals(1, companies.getSuccess().size());
     }
 
     @Test
     public void search_companiesHouseNumber() {
-        RestResult<List<OrganisationSearchResult>> companies = controller.search(COMPANY_ID);
+        RestResult<List<OrganisationSearchResult>> companies = controller.search(COMPANY_ID, 0);
         assertTrue(companies.isSuccess());
         assertEquals(1, companies.getSuccess().size());
         OrganisationSearchResult company = companies.getSuccess().get(0);

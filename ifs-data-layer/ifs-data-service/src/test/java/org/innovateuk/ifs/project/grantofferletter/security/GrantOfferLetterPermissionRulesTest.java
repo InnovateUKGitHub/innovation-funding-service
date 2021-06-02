@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -59,7 +60,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     @Before
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
-        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
+        innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRoleGlobal(innovationLeadRole).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
@@ -366,7 +367,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
+            if (user.hasAuthority(Authority.COMP_ADMIN)) {
                 assertTrue(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
             } else {
                 assertFalse(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));

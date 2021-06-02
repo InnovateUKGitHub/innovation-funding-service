@@ -8,6 +8,7 @@ import org.innovateuk.ifs.management.admin.form.InviteUserForm;
 import org.innovateuk.ifs.management.admin.form.InviteUserView;
 import org.innovateuk.ifs.management.admin.form.SelectExternalRoleForm;
 import org.innovateuk.ifs.management.admin.form.validation.Primary;
+import org.innovateuk.ifs.management.admin.populator.InviteUserModelPopulator;
 import org.innovateuk.ifs.management.admin.viewmodel.InviteUserViewModel;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -40,10 +41,13 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 public class InviteUserController {
 
     private static final String FORM_ATTR_NAME = "form";
-    private static final String Model_ATTR_NAME = "model";
+    private static final String MODEL_ATTR_NAME = "model";
 
     @Autowired
     private InviteUserService inviteUserService;
+
+    @Autowired
+    private InviteUserModelPopulator inviteUserModelPopulator;
 
     @GetMapping("/select-external-role")
     public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
@@ -82,11 +86,12 @@ public class InviteUserController {
         return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role));
     }
 
-    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
-        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles);
+    private String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
+
+        InviteUserViewModel viewModel = inviteUserModelPopulator.populate(type, roles);
 
         model.addAttribute(FORM_ATTR_NAME, form);
-        model.addAttribute(Model_ATTR_NAME, viewModel);
+        model.addAttribute(MODEL_ATTR_NAME, viewModel);
 
         return "admin/invite-new-user";
     }

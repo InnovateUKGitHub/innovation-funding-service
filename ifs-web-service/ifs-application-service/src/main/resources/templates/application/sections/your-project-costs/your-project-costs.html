@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+              th:with="linkTitle= ${model.projectCostSectionLocked ? 'Back to your project finances' : 'Your project finances'},linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -29,111 +29,132 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Your project costs',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
-        <form th:object="${form}"
-              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
+        <th:block th:if="${model.projectCostSectionLocked}">
+            <p class="govuk-body">
+                Before you can supply your project costs you must:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li th:if="${model.yourFecCostRequired}">
+                    mark the
+                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.applicationId}, sectionId=${model.yourFecCostSectionId})}"
+                       class="govuk-link" th:text="${'your fEC model'}"></a>
+                    <span class="govuk-body">page as complete</span>
+                </li>
+                <li th:if="${model.yourFundingRequired}">
+                    mark the
+                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.applicationId}, sectionId=${model.yourFundingSectionId})}"
+                       class="govuk-link" th:text="${'your funding'}"></a>
+                    <span class="govuk-body">page as complete</span>
+                </li>
+            </ul>
+        </th:block>
+        <th:block th:unless="${model.projectCostSectionLocked}">
+            <form th:object="${form}"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+                  th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                        data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"
-              enctype="multipart/form-data"
-              novalidate="novalidate"
-              method="POST">
-            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
-            <input type="hidden" id="cacheTest" value=""/>
+                  enctype="multipart/form-data"
+                  novalidate="novalidate"
+                  method="POST">
+                <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+                <input type="hidden" id="cacheTest" value=""/>
 
-            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
-                <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
-            </div>
-            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showCovidGuidance}">
-                <p class="govuk-body">Only use the 'Other costs' category to enter the details of costs you have incurred as a direct result
-                 of the Covid-19 pandemic, which threaten the delivery of your project. Leave all other categories as &pound;0.</p>
-            </div>
+                <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
+                    <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
+                </div>
+                <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showCovidGuidance}">
+                    <p class="govuk-body">Only use the 'Other costs' category to enter the details of costs you have incurred as a direct result
+                        of the Covid-19 pandemic, which threaten the delivery of your project. Leave all other categories as &pound;0.</p>
+                </div>
 
 
-            <th:block th:unless="${model.isKtpCompetition()}">
-                <h2 class="govuk-heading-m govuk-!-margin-0"
-                    th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
-                <p class="govuk-body">Only your organisation can see this level of detail. All members of your
-                    organisation can access and edit your project finances. We recommend assigning completion of your project finances
-                    to one member of your team.</p>
-            </th:block>
-            <th:block th:if="${model.isKtpCompetition()}">
-                <p class="govuk-body"><span>We recommend you
+                <th:block th:unless="${model.isKtpCompetition()}">
+                    <h2 class="govuk-heading-m govuk-!-margin-0"
+                        th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
+                    <p class="govuk-body">Only your organisation can see this level of detail. All members of your
+                        organisation can access and edit your project finances. We recommend assigning completion of your project finances
+                        to one member of your team.</p>
+                </th:block>
+                <th:block th:if="${model.isKtpCompetition()}">
+                    <p class="govuk-body"><span>We recommend you
                 <a target="_blank"
                    href="https://www.gov.uk/guidance/costs-guidance-for-knowledge-transfer-partnership-projects"
                    class="govuk-link"
                    aria-describedby="project-costs-hint">read our detailed guidance on KTP project costs (opens in a new window)</a> before completing this section.
                 </span></p>
-                <p class="govuk-body">Only members of the knowledge base can edit project finance details. Members of both the knowledge base and business partner can view the full project finance details.</p>
-            </th:block>
-
-            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
-                <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
-                    <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
+                    <p class="govuk-body">Only members of the knowledge base can edit project finance details. Members of both the knowledge base and business partner can view the full project finance details.</p>
                 </th:block>
-            </div>
 
-            <div class="govuk-grid-row total-cost">
-                <div class="govuk-grid-column-one-half">
-                    <label for="total-cost" class="govuk-heading-m"
-                           th:text="|'${model.organisationName}' Total project costs|">'Bobs' Total project costs</label>
+                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
+                    <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
+                        <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
+                    </th:block>
                 </div>
-                <div class="govuk-grid-column-one-half alignright">
-                    <input type="text"
-                           id="total-cost"
-                           readonly="readonly"
-                           class="govuk-heading-m alignright"
-                           data-calculation-fields="[id*=section-total]"
-                           data-calculation-operations="+"
-                           th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
-                </div>
-            </div>
 
-            <th:block th:insert="application/your-project-costs-fragments :: vat"/>
-
-            <th:block th:insert="application/your-project-costs-fragments :: justification"/>
-
-            <th:block th:insert="application/your-project-costs-fragments :: additional_company_costs"/>
-
-            <div th:unless="${model.readOnly}" class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
-                <th:block th:if="${#fields.hasErrors('eligibleAgreement')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('eligibleAgreement')}"
-                          th:text="${err}"/>
-                </th:block>
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="stateAidAgreed"
-                               class="govuk-checkboxes__input"
-                               th:field="${form.eligibleAgreement}"
-                               type="checkbox"
-                               value="true"
-                               data-switches-button-status="#mark-all-as-complete"
-                               data-autosave-disabled/>
-                        <th:block th:insert="application/your-project-costs-fragments :: ${model.getStateAidCheckboxLabelFragment()}"/>
+                <div class="govuk-grid-row total-cost">
+                    <div class="govuk-grid-column-one-half">
+                        <label for="total-cost" class="govuk-heading-m"
+                               th:text="|'${model.organisationName}' Total project costs|">'Bobs' Total project costs</label>
+                    </div>
+                    <div class="govuk-grid-column-one-half alignright">
+                        <input type="text"
+                               id="total-cost"
+                               readonly="readonly"
+                               class="govuk-heading-m alignright"
+                               data-calculation-fields="[id*=section-total]"
+                               data-calculation-operations="+"
+                               th:value="'£' + ${#ifsUtil.formatInteger(form.organisationFinanceTotal)}"/>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-footer" th:if="${model.open}">
-                <div class="form-footer__actions">
-                    <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
-                            class="button-clear" value="true">Mark as complete
-                    </button>
-                    <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear" value="true">
-                        Edit your project costs
+                <th:block th:insert="application/your-project-costs-fragments :: vat"/>
+
+                <th:block th:insert="application/your-project-costs-fragments :: justification"/>
+
+                <th:block th:insert="application/your-project-costs-fragments :: additional_company_costs"/>
+
+                <div th:unless="${model.readOnly}" class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
+                    <th:block th:if="${#fields.hasErrors('eligibleAgreement')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('eligibleAgreement')}"
+                          th:text="${err}"/>
+                    </th:block>
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="stateAidAgreed"
+                                   class="govuk-checkboxes__input"
+                                   th:field="${form.eligibleAgreement}"
+                                   type="checkbox"
+                                   value="true"
+                                   data-switches-button-status="#mark-all-as-complete"
+                                   data-autosave-disabled/>
+                            <th:block th:insert="application/your-project-costs-fragments :: ${model.getStateAidCheckboxLabelFragment()}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer" th:if="${model.open}">
+                    <div class="form-footer__actions">
+                        <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
+                                class="button-clear" value="true">Mark as complete
+                        </button>
+                        <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear" value="true">
+                            Edit your project costs
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <a th:href="${model.financesUrl}"
+                       th:if="${model.readOnly}"
+                       class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
+                    </a>
+                    <button type="submit" th:unless="${model.readOnly}"
+                            class="govuk-!-margin-top-6 govuk-button">
+                        Save and return to finances
                     </button>
                 </div>
-            </div>
-            <div>
-                <a th:href="${model.financesUrl}"
-                   th:if="${model.readOnly}"
-                   class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
-                </a>
-                <button type="submit" th:unless="${model.readOnly}"
-                        class="govuk-!-margin-top-6 govuk-button">
-                    Save and return to finances
-                </button>
-            </div>
-        </form>
+            </form>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

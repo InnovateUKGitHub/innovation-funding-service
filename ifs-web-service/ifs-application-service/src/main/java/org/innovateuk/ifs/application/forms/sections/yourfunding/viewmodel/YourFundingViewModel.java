@@ -31,9 +31,13 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final boolean yourOrganisationRequired;
 
+    private final boolean subsidyBasisQuestionRequired;
+
     private final Long researchCategoryQuestionId;
 
     private final long yourOrganisationSectionId;
+
+    private final Long subsidyBasisQuestionId;
 
     private final Integer maximumFundingLevel;
 
@@ -58,8 +62,10 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 boolean fundingSectionLocked,
                                 boolean researchCategoryRequired,
                                 boolean yourOrganisationRequired,
+                                boolean subsidyBasisQuestionRequired,
                                 Long researchCategoryQuestionId,
                                 long yourOrganisationSectionId,
+                                Long subsidyBasisQuestionId,
                                 Integer maximumFundingLevel,
                                 String financesUrl,
                                 boolean overridingFundingRules,
@@ -78,8 +84,10 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.fundingSectionLocked = fundingSectionLocked;
         this.researchCategoryRequired = researchCategoryRequired;
         this.yourOrganisationRequired = yourOrganisationRequired;
+        this.subsidyBasisQuestionRequired = subsidyBasisQuestionRequired;
         this.researchCategoryQuestionId = researchCategoryQuestionId;
         this.yourOrganisationSectionId = yourOrganisationSectionId;
+        this.subsidyBasisQuestionId = subsidyBasisQuestionId;
         this.maximumFundingLevel = maximumFundingLevel;
         this.financesUrl = financesUrl;
         this.overridingFundingRules = overridingFundingRules;
@@ -141,12 +149,20 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         return yourOrganisationRequired;
     }
 
+    public boolean isSubsidyBasisQuestionRequired() {
+        return subsidyBasisQuestionRequired;
+    }
+
     public Long getResearchCategoryQuestionId() {
         return researchCategoryQuestionId;
     }
 
     public long getYourOrganisationSectionId() {
         return yourOrganisationSectionId;
+    }
+
+    public Long getSubsidyBasisQuestionId() {
+        return subsidyBasisQuestionId;
     }
 
     public Integer getMaximumFundingLevel() {

@@ -12,7 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -68,7 +68,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
     private SectionService sectionServiceMock;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Test
     public void populate() {
@@ -182,7 +182,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
             user = newUserResource()
                     .withRoleGlobal(Role.APPLICANT)
                     .build();
-            when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(newProcessRoleResource()
+            when(processRoleRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(newProcessRoleResource()
             .withOrganisation(organisationId)
             .build()));
         }

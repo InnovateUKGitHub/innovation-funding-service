@@ -4,6 +4,7 @@ import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -325,6 +326,84 @@ public class ProjectPartnerInviteServiceImplTest {
         verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
         verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
         verify(pendingPartnerProgressRepository, times(1)).save(any());
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
+    }
+
+    @Test
+    public void acceptInviteForKtpProjectAsKB() {
+        long inviteId = 1L;
+        long organisationId = 2L;
+
+        Competition competition = newCompetition().withFundingType(FundingType.KTP).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectPartnerInvite invite = new ProjectPartnerInvite();
+        InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
+        invite.setInviteOrganisation(inviteOrganisation);
+        invite.setProject(project);
+        invite.send(newUser().withId(1l).build(), ZonedDateTime.now());
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE)
+                .build();
+
+        when(organisationRepository.findById(organisationId)).thenReturn(of(organisation));
+        when(projectPartnerInviteRepository.findById(inviteId)).thenReturn(of(invite));
+        when(partnerOrganisationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(projectUserRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ServiceResult<Void> result = service.acceptInvite(inviteId, organisationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(inviteOrganisation.getOrganisation(), organisation);
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
+        verify(projectFinanceService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(pendingPartnerProgressRepository, times(1)).save(any());
+
+        // KB exempt from viability checks for KTP comp
+        verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(viabilityWorkflowHandler, times(1)).viabilityNotApplicable(any(), any());
+
+        verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
+    }
+
+    @Test
+    public void acceptInviteForKtpProjectAsPartner() {
+        long inviteId = 1L;
+        long organisationId = 2L;
+
+        Competition competition = newCompetition().withFundingType(FundingType.KTP).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectPartnerInvite invite = new ProjectPartnerInvite();
+        InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
+        invite.setInviteOrganisation(inviteOrganisation);
+        invite.setProject(project);
+        invite.send(newUser().withId(1l).build(), ZonedDateTime.now());
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS)
+                .build();
+
+        when(organisationRepository.findById(organisationId)).thenReturn(of(organisation));
+        when(projectPartnerInviteRepository.findById(inviteId)).thenReturn(of(invite));
+        when(partnerOrganisationRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(projectUserRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ServiceResult<Void> result = service.acceptInvite(inviteId, organisationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(inviteOrganisation.getOrganisation(), organisation);
+        verify(projectPartnerChangeService, times(1)).updateProjectWhenPartnersChange(project.getId());
+        verify(projectFinanceService, times(1)).createProjectFinance(project.getId(), organisationId);
+        verify(pendingPartnerProgressRepository, times(1)).save(any());
+
+        // Partner exempt from eligbility checks for KTP comp
+        verify(viabilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).projectCreated(any(), any());
+        verify(eligibilityWorkflowHandler, times(1)).notRequestingFunding(any(), any());
+
         verifyNoMoreInteractions(projectPartnerChangeService, projectFinanceService, viabilityWorkflowHandler, eligibilityWorkflowHandler, pendingPartnerProgressRepository);
     }
 }

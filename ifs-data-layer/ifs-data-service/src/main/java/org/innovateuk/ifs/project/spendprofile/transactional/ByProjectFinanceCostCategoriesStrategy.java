@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.CostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
+import org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -62,8 +62,8 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                                 andOnSuccess((finances) -> {
                                     CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    if (competition.isSbriPilot()) {
-                                        costCategoryGenerators = sort(allOf(SbriPilotCostCategoryGenerator.class));
+                                    if (competition.isProcurement()) {
+                                        costCategoryGenerators = sort(allOf(ProcurementCostCategoryGenerator.class));
                                     } else if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());

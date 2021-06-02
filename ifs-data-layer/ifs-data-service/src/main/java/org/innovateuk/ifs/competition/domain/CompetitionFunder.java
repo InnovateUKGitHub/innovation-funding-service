@@ -25,6 +25,7 @@ public class CompetitionFunder {
     @Enumerated(STRING)
     private Funder funder;
 
+    @Column(columnDefinition = "bigint(20)")
     private BigInteger funderBudget;
 
     private Boolean coFunder;

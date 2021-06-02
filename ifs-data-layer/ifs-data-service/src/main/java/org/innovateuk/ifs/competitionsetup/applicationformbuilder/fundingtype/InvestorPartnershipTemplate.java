@@ -34,6 +34,11 @@ public class InvestorPartnershipTemplate implements FundingTypeTemplate {
     }
 
     @Override
+    public Competition setGolTemplate(Competition competition) {
+        return commonBuilders.getGolTemplate(competition);
+    }
+
+    @Override
     public Competition initialiseFinanceTypes(Competition competition) {
         List<FinanceRowType> types = newArrayList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, FINANCE, OTHER_FUNDING, YOUR_FINANCE);
         return commonBuilders.saveFinanceRows(competition, types);

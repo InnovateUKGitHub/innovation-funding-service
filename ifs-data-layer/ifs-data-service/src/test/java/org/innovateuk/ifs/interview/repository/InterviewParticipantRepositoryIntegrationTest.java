@@ -20,7 +20,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,7 +216,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         flushAndClearSession();
 
         assertEquals(4, repository.count());
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<InterviewParticipant> pagedResult = repository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
@@ -268,7 +268,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         ProcessRole processRole = newProcessRole()
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.INTERVIEW_ASSESSOR)
+                .withRole(ProcessRoleType.INTERVIEW_ASSESSOR)
                 .build();
 
         processRoleRepository.save(processRole);
@@ -286,7 +286,7 @@ public class InterviewParticipantRepositoryIntegrationTest extends BaseRepositor
         flushAndClearSession();
 
         assertEquals(1, repository.count());
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         Page<InterviewAcceptedAssessorsResource> pagedResult = repository.getInterviewAcceptedAssessorsByCompetition(
                 competition.getId(),

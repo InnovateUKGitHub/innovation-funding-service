@@ -24,6 +24,7 @@ public class Post {
     private User author;
 
     @NotNull
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     @OneToMany

@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -44,6 +46,20 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
     }
 
     @Test
+    public void getGrantClaimMaximumByCompetitionId() throws Exception {
+        long competitionId = 1L;
+        List<GrantClaimMaximumResource> gcm = newGrantClaimMaximumResource().build(1);
+
+        when(grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competitionId)).thenReturn(serviceSuccess(gcm));
+
+        mockMvc.perform(get("/grant-claim-maximum/competition/{id}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(gcm)));
+
+        verify(grantClaimMaximumService, only()).getGrantClaimMaximumByCompetitionId(competitionId);
+    }
+
+    @Test
     public void getGrantClaimMaximumByIdNotFound() throws Exception {
         when(grantClaimMaximumService.getGrantClaimMaximumById(1L)).thenReturn(serviceFailure(notFoundError(GrantClaimMaximum.class, 1L)));
         mockMvc.perform(get("/grant-claim-maximum/{id}", 1L))
@@ -51,19 +67,6 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
 
         verify(grantClaimMaximumService, only()).getGrantClaimMaximumById(1L);
     }
-//
-//    @Test
-//    public void getGrantClaimMaximumsForCompetitionType() throws Exception {
-//        Long competitionType = 1L;
-//        Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
-//        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType)).thenReturn(serviceSuccess(expectedGcms));
-//
-//        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json(toJson(expectedGcms)));
-//
-//        verify(grantClaimMaximumService, only()).getGrantClaimMaximumsForCompetitionType(competitionType);
-//    }
 
     @Test
     public void save() throws Exception {
@@ -84,7 +87,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
         long competitionId = 1L;
         boolean expectedResult = true;
 
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess
                 (expectedResult));
 
         mockMvc.perform(get("/grant-claim-maximum/maximum-funding-level-overridden/{competitionId}", competitionId)
@@ -92,6 +95,6 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
                 .andExpect(content().string(String.valueOf(expectedResult)))
                 .andExpect(status().isOk());
 
-        verify(grantClaimMaximumService).isMaximumFundingLevelOverridden(competitionId);
+        verify(grantClaimMaximumService).isMaximumFundingLevelConstant(competitionId);
     }
 }

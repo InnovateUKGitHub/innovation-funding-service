@@ -154,7 +154,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveInternalUserInviteWhenRoleSpecifiedIsNotInternalRole() {
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, COLLABORATOR, "");
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, APPLICANT, "");
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
@@ -350,7 +350,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInviteResource roleInviteResource = new RoleInviteResource();
         roleInviteResource.setName("Arden Pimenta");
         roleInviteResource.setEmail("Arden.Pimenta@innovateuk.test");
-        roleInviteResource.setRoleName("ifs_administrator");
 
         when(roleInviteRepositoryMock.findByEmailContainsAndStatus("", SENT, pageable)).thenReturn(page);
         when(roleInviteMapperMock.mapToResource(Mockito.any(RoleInvite.class))).thenReturn(roleInviteResource);

@@ -166,7 +166,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         DashboardInProgressRowResource inProgress = new DashboardApplicationInProgressResourceBuilder()
                 .withTitle("Title")
                 .withEndDate(TOMORROW)
-                .withDaysLeft(1)
+                .withDaysLeft(1L)
                 .withApplicationProgress(99)
                 .withAssignedToInterview(FALSE)
                 .withApplicationId(6L)
@@ -183,7 +183,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertEquals(format("%d%% complete", 99), inProgressViewModel.getProgressMessage());
         assertEquals("Title", inProgressViewModel.getTitle());
         assertEquals(99, inProgressViewModel.getApplicationProgress());
-        assertEquals(1, inProgressViewModel.getDaysLeft());
+        assertEquals((Long) 1L, inProgressViewModel.getDaysLeft());
         assertEquals(23, inProgressViewModel.getHoursLeftBeforeSubmit());
         assertEquals(FALSE, inProgressViewModel.isApplicationComplete());
         assertEquals(FALSE, inProgressViewModel.isAssignedToInterview());

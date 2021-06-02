@@ -4,13 +4,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.management.assessment.populator.ManageAssessmentsModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,9 +49,9 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
 
-        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId())).thenReturn(expectedModel);
+        when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId(), 0, 2)).thenReturn(expectedModel);
 
         mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))
                 .andExpect(status().isOk())

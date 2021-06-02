@@ -1,1 +1,1 @@
-${competitionName}: Notification regarding your application ${applicationId?c}: ${applicationName}
+Important message about your application '${applicationName}' for the competition '${competitionName}'

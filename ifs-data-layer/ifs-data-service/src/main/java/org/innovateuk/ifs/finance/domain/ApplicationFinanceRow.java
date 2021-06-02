@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import javax.persistence.Entity;

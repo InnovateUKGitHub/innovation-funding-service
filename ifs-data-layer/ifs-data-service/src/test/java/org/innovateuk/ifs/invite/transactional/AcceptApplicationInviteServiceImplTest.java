@@ -14,7 +14,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -191,7 +191,7 @@ public class AcceptApplicationInviteServiceImplTest {
         ProcessRole expectedProcessRole = new ProcessRole(
                 user,
                 invite.getTarget().getId(),
-                Role.COLLABORATOR,
+                ProcessRoleType.COLLABORATOR,
                 usersCurrentOrganisation.getId()
         );
 
@@ -205,7 +205,7 @@ public class AcceptApplicationInviteServiceImplTest {
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
-        verify(autoCompleteSectionsUtil).intitialiseCompleteSectionsForOrganisation(invite.getTarget(), usersCurrentOrganisation.getId(), expectedProcessRole.getId());
+        verify(autoCompleteSectionsUtil).initialiseCompleteSectionsForOrganisation(invite.getTarget(), usersCurrentOrganisation.getId(), expectedProcessRole.getId());
         expectedProcessRole.setId(null);
         verify(processRoleRepositoryMock).save(expectedProcessRole);
         verify(applicationProgressService).updateApplicationProgress(invite.getTarget().getId());
@@ -231,7 +231,7 @@ public class AcceptApplicationInviteServiceImplTest {
         ApplicationInvite invite = newApplicationInvite()
                 .withEmail("james@test.com")
                 .withApplication(newApplication()
-                        .withProcessRoles(newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(50L).build())
+                        .withProcessRoles(newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(50L).build())
                         .build())
                 .withInviteOrganisation(inviteOrganisation)
                 .build();

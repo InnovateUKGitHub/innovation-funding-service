@@ -24,7 +24,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     private static final String projectRestURL = "/project";
 
     @Test
-    public void testGetSignedGrantOfferLetterFileContent() {
+    public void getSignedGrantOfferLetterFileContent() {
 
         String expectedUrl = projectRestURL + "/123/signed-grant-offer";
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
@@ -37,7 +37,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testGetSignedGrantOfferLetterFileContentEmptyIfNotFound() {
+    public void getSignedGrantOfferLetterFileContentEmptyIfNotFound() {
 
         String expectedUrl = projectRestURL + "/123/signed-grant-offer";
 
@@ -49,7 +49,32 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testGetGeneratedGrantOfferLetterFileContent() {
+    public void getSignedAdditionalContractFileContent() {
+
+        String expectedUrl = projectRestURL + "/123/signed-additional-contract";
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        ByteArrayResource retrievedFileEntry = service.getSignedAdditionalContractFile(123L).getSuccess().get();
+
+        assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileContentEmptyIfNotFound() {
+
+        String expectedUrl = projectRestURL + "/123/signed-additional-contract";
+
+        setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
+
+        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedAdditionalContractFile(123L).getSuccess();
+
+        assertFalse(retrievedFileEntry.isPresent());
+    }
+
+    @Test
+    public void getGeneratedGrantOfferLetterFileContent() {
 
         String expectedUrl = projectRestURL + "/123/grant-offer";
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
@@ -62,7 +87,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testGetGeneratedGrantOfferLetterFileContentEmptyIfNotFound() {
+    public void getGeneratedGrantOfferLetterFileContentEmptyIfNotFound() {
 
         String expectedUrl = projectRestURL + "/123/grant-offer";
 
@@ -74,7 +99,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testRemoveGeneratedGrantOfferLetter() {
+    public void removeGeneratedGrantOfferLetter() {
 
         Long projectId = 123L;
         String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer";
@@ -89,7 +114,22 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testRemoveAdditionalContractFile() {
+    public void resetGrantOfferLetter() {
+
+        Long projectId = 123L;
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer/reset";
+
+        setupDeleteWithRestResultExpectations(nonBaseUrl);
+
+        RestResult<Void> result = service.resetGrantOfferLetter(projectId);
+
+        assertTrue(result.isSuccess());
+
+        setupDeleteWithRestResultVerifications(nonBaseUrl);
+    }
+
+    @Test
+    public void removeAdditionalContractFile() {
 
         Long projectId = 123L;
         String nonBaseUrl = projectRestURL + "/" + projectId + "/additional-contract";
@@ -104,7 +144,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testRemoveSignedGrantOfferLetter() {
+    public void removeSignedGrantOfferLetter() {
 
         Long projectId = 123L;
         String nonBaseUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter";
@@ -119,7 +159,22 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testSubmitGrantOfferLetter() {
+    public void removeSignedAdditionalContractFile() {
+
+        Long projectId = 123L;
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/signed-additional-contract";
+
+        setupDeleteWithRestResultExpectations(nonBaseUrl);
+
+        RestResult<Void> result = service.removeSignedAdditionalContractFile(projectId);
+
+        assertTrue(result.isSuccess());
+
+        setupDeleteWithRestResultVerifications(nonBaseUrl);
+    }
+
+    @Test
+    public void submitGrantOfferLetter() {
         long projectId = 123L;
         String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/submit";
         setupPostWithRestResultExpectations(expectedUrl, OK);
@@ -130,7 +185,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testSendGrantOfferLetter() {
+    public void sendGrantOfferLetter() {
         long projectId = 123L;
 
         String expectedUrl = projectRestURL + "/" + projectId + "/grant-offer/send";
@@ -142,7 +197,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetter() {
+    public void approveSignedGrantOfferLetter() {
         long projectId = 123L;
 
         GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
@@ -157,7 +212,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testGetGrantOfferLetterState() {
+    public void getGrantOfferLetterState() {
         long projectId = 123L;
 
         String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/current-state";

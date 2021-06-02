@@ -86,8 +86,40 @@ public class FinanceFileEntryServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(
                 () -> classUnderTest.getFileContents(applicationFinanceId),
                 () -> {
-                    verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules).internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).canViewApplication(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testcreateFECFileEntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.createFECFileEntry(applicationFinanceId, null, null),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testDeleteFECCertificateFileEntryntry() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.deleteFECCertificateFileEntry(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testGetFECCertificateFileContents() {
+        final Long applicationFinanceId = 1L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getFECCertificateFileContents(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).canViewApplication(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 

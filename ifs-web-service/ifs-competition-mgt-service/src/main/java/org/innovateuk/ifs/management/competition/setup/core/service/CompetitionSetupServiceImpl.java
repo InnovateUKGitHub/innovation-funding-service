@@ -128,14 +128,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     @Override
-    public CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
-                                                   CompetitionSetupSection section) {
+    public CompetitionSetupFormPopulator getSectionFormPopulator(CompetitionSetupSection section) {
         CompetitionSetupFormPopulator populator = formPopulators.get(section);
         if (populator == null) {
             LOG.error("unable to populate form for section " + section);
             throw new IllegalArgumentException();
         }
-        return populator.populateForm(competitionResource);
+        return populator;
     }
 
     @Override
@@ -171,6 +170,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
             }
             return serviceSuccess();
         });
+    }
+
+    @Override
+    public ServiceResult<String> getNextSetupSection(CompetitionSetupForm competitionSetupForm,
+                                                     CompetitionResource competitionResource,
+                                                     CompetitionSetupSection section) {
+        CompetitionSetupSectionUpdater saver = sectionSavers.get(section);
+        return serviceSuccess(saver.getNextSection(competitionSetupForm, competitionResource, section));
     }
 
     @Override
@@ -290,6 +297,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
         requiredSections.add(PROJECT_ELIGIBILITY);
         requiredSections.add(ORGANISATIONAL_ELIGIBILITY);
+        requiredSections.add(FUNDING_ELIGIBILITY);
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);

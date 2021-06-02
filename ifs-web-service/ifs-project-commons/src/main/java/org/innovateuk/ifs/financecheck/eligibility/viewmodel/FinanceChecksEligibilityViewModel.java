@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
@@ -24,11 +25,14 @@ public class FinanceChecksEligibilityViewModel {
     private Long projectId;
     private Long organisationId;
 
-    private boolean eligibilityApproved;
+    private EligibilityState eligibilityState;
     private EligibilityRagStatus eligibilityRagStatus;
     private String approverFirstName;
     private String approverLastName;
     private LocalDate approvalDate;
+    private String resetFirstName;
+    private String resetLastName;
+    private LocalDate resetDate;
 
     private boolean externalView;
     private boolean isUsingJesFinances;
@@ -39,6 +43,11 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean collaborativeProject;
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
+    private final boolean ktp;
+    private final boolean resetableGolState;
+    private final boolean showChangesLink;
+    private final Boolean fecModelEnabled;
+    private final boolean canEditProjectCosts;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -46,15 +55,21 @@ public class FinanceChecksEligibilityViewModel {
                                              String organisationName,
                                              boolean leadPartnerOrganisation,
                                              Long organisationId,
-                                             boolean eligibilityApproved,
+                                             EligibilityState eligibilityState,
                                              EligibilityRagStatus eligibilityRagStatus,
                                              String approverFirstName,
                                              String approverLastName,
                                              LocalDate approvalDate,
+                                             String resetFirstName,
+                                             String resetLastName,
+                                             LocalDate resetDate,
                                              boolean externalView,
                                              boolean isUsingJesFinances,
                                              boolean canEditAcademicFinances,
-                                             List<ProjectFinanceResource> projectFinances) {
+                                             List<ProjectFinanceResource> projectFinances,
+                                             boolean resetableGolState,
+                                             boolean showChangesLink,
+                                             boolean canEditProjectCosts) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -67,19 +82,27 @@ public class FinanceChecksEligibilityViewModel {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.organisationId = organisationId;
-        this.eligibilityApproved = eligibilityApproved;
+        this.eligibilityState = eligibilityState;
         this.eligibilityRagStatus = eligibilityRagStatus;
         this.approverFirstName = approverFirstName;
         this.approverLastName = approverLastName;
         this.approvalDate = approvalDate;
+        this.resetFirstName = resetFirstName;
+        this.resetLastName = resetLastName;
+        this.resetDate = resetDate;
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.canEditAcademicFinances = canEditAcademicFinances;
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
+        this.ktp = competition.isKtp();
+        this.resetableGolState = resetableGolState;
+        this.showChangesLink = showChangesLink;
+        this.fecModelEnabled = hasFecModelEnabled(projectFinances, organisationId);
+        this.canEditProjectCosts = canEditProjectCosts;
     }
 
     public boolean isApproved() {
-        return eligibilityApproved;
+        return EligibilityState.APPROVED == eligibilityState;
     }
 
     public boolean isCanEditAcademicFinances() {
@@ -90,9 +113,18 @@ public class FinanceChecksEligibilityViewModel {
         return isApproved();
     }
 
+    public boolean isShowResetMessage() {
+        return EligibilityState.REVIEW == eligibilityState && resetDate != null && resetLastName != null;
+    }
+
     public String getApproverName()
     {
         return StringUtils.trim(getApproverFirstName() + " " + getApproverLastName());
+    }
+
+    public String getResetName()
+    {
+        return StringUtils.trim(resetFirstName + " " + resetLastName);
     }
 
     public FinanceCheckEligibilityResource getEligibilityOverview() {
@@ -141,14 +173,6 @@ public class FinanceChecksEligibilityViewModel {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
-    }
-
-    public boolean isEligibilityApproved() {
-        return eligibilityApproved;
-    }
-
-    public void setEligibilityApproved(boolean eligibilityApproved) {
-        this.eligibilityApproved = eligibilityApproved;
     }
 
     public EligibilityRagStatus getEligibilityRagStatus() {
@@ -228,15 +252,43 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowChangesLink() {
-        return isProcurement() ? false: eligibilityOverview.isHasApplicationFinances();
+        return showChangesLink;
     }
 
     public boolean isEligibilityReadyToConfirm() {
         return eligibilityReadyToConfirm;
     }
 
+    public boolean isKtp(){
+        return ktp;
+    }
+
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
         return finances.stream().allMatch(finance ->
             BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
+    }
+
+    public boolean isCanReset() {
+        return isApproved() && projectIsActive && resetableGolState;
+    }
+
+    public LocalDate getResetDate() {
+        return resetDate;
+    }
+
+    private Boolean hasFecModelEnabled(List<ProjectFinanceResource> finances, Long organisationId) {
+        return finances.stream()
+                .filter(projectFinance -> projectFinance.getOrganisation().equals(organisationId))
+                .findFirst()
+                .map(leadProjectFinance -> leadProjectFinance.getFecModelEnabled())
+                .orElse(null);
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public boolean isCanEditProjectCosts() {
+        return canEditProjectCosts;
     }
 }

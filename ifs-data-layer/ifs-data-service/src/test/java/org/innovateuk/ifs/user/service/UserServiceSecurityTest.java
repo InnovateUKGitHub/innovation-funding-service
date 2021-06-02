@@ -15,11 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.EnumSet;
+
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceSecurityTest.verifyApplicationRead;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -141,7 +142,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findActive("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActive("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActive("", PageRequest.of(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -152,7 +153,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findInactive("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactive("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactive("", PageRequest.of(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -163,7 +164,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findActiveExternal("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActiveExternal("", PageRequest.of(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -174,7 +175,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         when(classUnderTestMock.findInactiveExternal("", PageRequest.of(0, 5)))
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactiveExternal("", PageRequest.of(0, 5)), () -> {
             verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -182,11 +183,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findByProcessRolesAndSearchCriteria() {
-        when(classUnderTestMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory
+        when(classUnderTestMock.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), "%aar%", SearchCategory
                 .NAME))
                 .thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
 
-        classUnderTest.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory.NAME);
+        classUnderTest.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), "%aar%", SearchCategory.NAME);
 
         verify(userRules, times(2))
                 .internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));

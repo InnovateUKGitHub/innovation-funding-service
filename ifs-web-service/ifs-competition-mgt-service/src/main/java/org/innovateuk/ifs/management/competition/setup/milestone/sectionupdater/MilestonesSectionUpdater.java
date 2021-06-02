@@ -24,8 +24,6 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -79,7 +77,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
             filteredMilestoneEntries = CollectionFunctions.simpleFilter(milestoneEntries, (name, form) -> futureTypes.contains(form.getMilestoneType()));
         }
 
-        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(filteredMilestoneEntries);
+        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(competition, filteredMilestoneEntries);
         if (!errors.isEmpty()) {
             return errors;
         }

@@ -53,6 +53,9 @@ public class ApplicationResource {
     private CompanyPrimaryFocus companyPrimaryFocus;
     private String event;
     private ZonedDateTime lastStateChangeDate;
+    private FundingDecision fundingDecision;
+    private Long assessmentPeriodId;
+    private ZonedDateTime feedbackReleased;
 
     public Long getId() {
         return id;
@@ -138,7 +141,10 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean canBeReopened() {
-        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED || applicationState == ApplicationState.SUBMITTED;
+        return applicationState == ApplicationState.OPENED
+                || applicationState == ApplicationState.CREATED
+                || applicationState == ApplicationState.SUBMITTED
+                && fundingDecision == null;
     }
 
     @JsonIgnore
@@ -319,6 +325,34 @@ public class ApplicationResource {
         this.lastStateChangeDate = lastStateChangeDate;
     }
 
+    public FundingDecision getFundingDecision() {
+        return fundingDecision;
+    }
+
+    public void setFundingDecision(FundingDecision fundingDecision) {
+        this.fundingDecision = fundingDecision;
+    }
+
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
+    }
+
+    public void setAssessmentPeriodId(Long assessmentPeriodId) {
+        this.assessmentPeriodId = assessmentPeriodId;
+    }
+
+    public ZonedDateTime getFeedbackReleased() {
+        return feedbackReleased;
+    }
+
+    public void setFeedbackReleased(ZonedDateTime feedbackReleased) {
+        this.feedbackReleased = feedbackReleased;
+    }
+
+    public boolean isFeedbackReleased() {
+        return feedbackReleased != null && ZonedDateTime.now().isAfter(feedbackReleased);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -354,6 +388,7 @@ public class ApplicationResource {
                 .append(companyPrimaryFocus, that.companyPrimaryFocus)
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .isEquals();
     }
 
@@ -386,6 +421,7 @@ public class ApplicationResource {
                 .append(companyPrimaryFocus)
                 .append(event)
                 .append(lastStateChangeDate)
+                .append(assessmentPeriodId)
                 .toHashCode();
     }
 }

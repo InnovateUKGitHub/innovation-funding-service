@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResourc
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -36,9 +37,9 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
 
     @Override
     protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section) {
-        boolean nonIfs = competitionRestService.getCompetitionById(publicContentResource.getCompetitionId())
-                .getSuccess()
-                .isNonIfs();
+        CompetitionResource competition = competitionRestService.getCompetitionById(publicContentResource.getCompetitionId()).getSuccess();
+
+        boolean nonIfs = competition.isNonIfs();
 
         List<MilestoneResource> milestones = milestoneRestService
                 .getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId())
@@ -51,7 +52,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
         List<DateViewModel> dates = new ArrayList<>();
         milestones.stream()
                 .filter(milestoneResource -> filterOutNotificationsIfEmpty(milestoneResource))
-                .forEach(milestoneResource -> dates.add(mapMilestoneToDateViewModel(milestoneResource)));
+                .forEach(milestoneResource -> dates.add(mapMilestoneToDateViewModel(milestoneResource, competition)));
 
         if(model.isReadOnly()) {
             publicContentResource.getContentEvents().forEach(publicContentEventResource ->
@@ -83,7 +84,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
         return dateViewModel;
     }
 
-    private DateViewModel mapMilestoneToDateViewModel(MilestoneResource milestoneResource) {
+    private DateViewModel mapMilestoneToDateViewModel(MilestoneResource milestoneResource, CompetitionResource competition) {
         DateViewModel dateViewModel = new DateViewModel();
         dateViewModel.setDateTime(milestoneResource.getDate());
         switch (milestoneResource.getType()) {
@@ -91,7 +92,12 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
                 dateViewModel.setContent("Competition opens");
                 break;
             case SUBMISSION_DATE:
-                dateViewModel.setContent("Submission deadline, competition closed.");
+                if (competition.isAlwaysOpen() && milestoneResource.getDate() == null) {
+                    dateViewModel.setContent("This is open-ended competition and applications can be submitted at any time.");
+                    dateViewModel.setNullDateText("No submission deadline");
+                } else {
+                    dateViewModel.setContent("Submission deadline - competition closes");
+                }
                 break;
             case REGISTRATION_DATE:
                 dateViewModel.setContent("Registration closes");
@@ -99,6 +105,8 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
             case NOTIFICATIONS:
                 dateViewModel.setContent("Applicants notified");
                 break;
+            default:
+                return dateViewModel;
         }
 
         return dateViewModel;

@@ -140,8 +140,9 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         userRepository.saveAll(asList(paulPlum, felixWilson));
 
         ktpCompetition = competitionRepository.save(newCompetition()
-                .withId(null)
+                .withId((Long) null)
                 .withFundingType(FundingType.KTP)
+                .withAlwaysOpen(false)
                 .build());
     }
 
@@ -910,7 +911,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         addTestAssessors();
         String assessorFilter = "James";
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "firstName"));
         Optional<Long> innovationArea = Optional.of(5L);
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, assessorFilter)
@@ -933,7 +934,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         addTestKtas();
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "firstName"));
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(ktpCompetition.getId(), pageable, "")
                 .getSuccess();
 
@@ -958,7 +959,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         addTestAssessors();
 
-        Pageable pageable = PageRequest.of(1, 2, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(1, 2, Sort.by(ASC, "firstName"));
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, assessorFilter)
                 .getSuccess();
@@ -981,7 +982,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         String assessorFilter = "";
         addTestAssessors();
 
-        Pageable pageable = PageRequest.of(0, 6, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 6, Sort.by(ASC, "firstName"));
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, assessorFilter)
                 .getSuccess();
@@ -1038,7 +1039,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         flushAndClearSession();
 
-        Pageable pageable = PageRequest.of(0, 10, new Sort(ASC, "firstName", "lastName"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(ASC, "firstName", "lastName"));
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, assessorFilter)
                 .getSuccess();
@@ -1138,7 +1139,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         addTestCreatedInvites();
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         AssessorCreatedInvitePageResource createdInvitesPageResource = controller.getCreatedInvites(competition.getId(), pageable)
                 .getSuccess();
@@ -1165,7 +1166,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         addTestCreatedInvites();
 
-        Pageable pageable = PageRequest.of(1, 2, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(1, 2, Sort.by(ASC, "name"));
 
         AssessorCreatedInvitePageResource createdInvitesPageResource = controller.getCreatedInvites(competition.getId(), pageable)
                 .getSuccess();
@@ -1364,7 +1365,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> hasContract = of(TRUE);
         Optional<String> assessorName = of("");
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         AssessorInviteOverviewPageResource pageResource = controller.getInvitationOverview(
                 competition.getId(),

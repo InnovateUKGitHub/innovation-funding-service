@@ -8,9 +8,10 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -32,15 +33,15 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'supporter')")
+@SecuredBySpring(value = "Controller", description = "ApplicationDownloadController")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'assessor', 'monitoring_officer', 'supporter', 'support', 'innovation_lead')")
 public class ApplicationDownloadController {
 
     @Autowired
     private FinanceService financeService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -57,7 +58,7 @@ public class ApplicationDownloadController {
             @PathVariable("formInputId") final Long formInputId,
             @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) {
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
         ProcessRoleResource processRole = processRoles.stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()
@@ -68,11 +69,11 @@ public class ApplicationDownloadController {
     }
 
     private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
-        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER)) {
-                return processRoles.stream()
-                        .filter(pr -> pr.getRole().equals(Role.LEADAPPLICANT))
-                        .findFirst()
-                        .orElseThrow(this::roleNotFound);
+        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER) || user.hasRole(Role.INNOVATION_LEAD)) {
+            return processRoles.stream()
+                    .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
+                    .findFirst()
+                    .orElseThrow(this::roleNotFound);
         } else {
             throw roleNotFound();
         }
@@ -88,6 +89,16 @@ public class ApplicationDownloadController {
 
         final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccess();
         final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
+        return getFileResponseEntity(resource, fileDetails);
+    }
+
+    @GetMapping("/{applicationFinanceId}/view-fec-certificate")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> viewFECCertificateFile(
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
+
+        final ByteArrayResource resource = financeService.getFECCertifcateFileByApplicationFinance(applicationFinanceId).getSuccess();
+        final FileEntryResource fileDetails = financeService.getFECEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
         return getFileResponseEntity(resource, fileDetails);
     }
 }

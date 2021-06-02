@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -31,10 +32,10 @@ import static org.mockito.Mockito.when;
 public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<SetupSectionsPermissionRules> {
 
     @Mock
-    private ProjectService projectServiceMock;
+    private ProjectService projectService;
 
     @Mock
-    private StatusService statusServiceMock;
+    private StatusService statusService;
 
     @Override
     protected SetupSectionsPermissionRules supplyPermissionRulesUnderTest() {
@@ -44,113 +45,110 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalCanAccessFinanceChecksAddQuery() {
         Role role = Role.PROJECT_FINANCE;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
-        ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
+        ProjectUserResource projectUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withProjectState(LIVE).withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
-        when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
-        when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
+        when(projectService.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
+        when(statusService.getProjectStatus(1L)).thenReturn(projectStatus);
         assertTrue(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
     public void internalCanAccessFinanceChecksAddQueryNotFinanceTeam() {
         Role role = Role.COMP_ADMIN;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
-        ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
+        ProjectUserResource projectUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withProjectState(LIVE).withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
-        when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
-        when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
+        when(projectService.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
+        when(statusService.getProjectStatus(1L)).thenReturn(projectStatus);
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
     public void internalCanAccessFinanceChecksAddQueryNotInternal() {
-        Role role = Role.LEADAPPLICANT;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
-        ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
+        Role role = Role.APPLICANT;
+        UserResource user = newUserResource().withRoleGlobal(role).build();
+        ProjectUserResource projectUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
-        when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
-        when(statusServiceMock.getProjectStatus(1L)).thenReturn(projectStatus);
+        when(projectService.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
+        when(statusService.getProjectStatus(1L)).thenReturn(projectStatus);
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
     public void internalCanAccessFinanceChecksAddQueryNoFinanceContact() {
         Role role = Role.COMP_ADMIN;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
-        ProjectUserResource projectUser = newProjectUserResource().withRole(Role.PARTNER).withOrganisation(2L).build();
-        when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
+        UserResource user = newUserResource().withRoleGlobal(role).build();
+        ProjectUserResource projectUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_PARTNER).withOrganisation(2L).build();
+        when(projectService.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
     public void internalCanAccessFinanceChecksAddQueryNotInOrganisation() {
         Role role = Role.COMP_ADMIN;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
-        ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(3L).build();
-        when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
+        UserResource user = newUserResource().withRoleGlobal(role).build();
+        ProjectUserResource projectUser = newProjectUserResource().withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).withOrganisation(3L).build();
+        when(projectService.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
     }
 
     @Test
     public void internalAdminUserCanAccessDocumentsSectionIrrespectiveOfDocumentStatus() {
         assertTrue(doTestDocumentAccess(Role.COMP_ADMIN, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.internalAdminUserCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::internalAdminUserCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.COMP_ADMIN, ProjectActivityStates.NOT_STARTED,
-                (rules, projectCompositeId, user) -> rules.internalAdminUserCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::internalAdminUserCanAccessDocumentsSection));
 
     }
 
     @Test
     public void supportUserCanAccessDocumentsSectionOnlyWhenAllDocumentsAreApproved() {
         assertFalse(doTestDocumentAccess(Role.SUPPORT, ProjectActivityStates.ACTION_REQUIRED,
-                (rules, projectCompositeId, user) -> rules.supportUserCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::supportUserCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.SUPPORT, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.supportUserCanAccessDocumentsSection(projectCompositeId, user)));
-
+                SetupSectionsPermissionRules::supportUserCanAccessDocumentsSection));
     }
 
     @Test
     public void innovationLeadCanAccessDocumentsSectionOnlyWhenAllDocumentsAreApproved() {
         assertFalse(doTestDocumentAccess(Role.INNOVATION_LEAD, ProjectActivityStates.ACTION_REQUIRED,
-                (rules, projectCompositeId, user) -> rules.innovationLeadCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::innovationLeadCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.INNOVATION_LEAD, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.innovationLeadCanAccessDocumentsSection(projectCompositeId, user)));
-
+                SetupSectionsPermissionRules::innovationLeadCanAccessDocumentsSection));
     }
 
     @Test
     public void stakeholderCanAccessDocumentsSectionOnlyWhenAllDocumentsAreApproved() {
         assertFalse(doTestDocumentAccess(Role.STAKEHOLDER, ProjectActivityStates.ACTION_REQUIRED,
-                (rules, projectCompositeId, user) -> rules.stakeholderCanAccessDocumentsSection(projectCompositeId, user)));
+                SetupSectionsPermissionRules::stakeholderCanAccessDocumentsSection));
         assertTrue(doTestDocumentAccess(Role.STAKEHOLDER, ProjectActivityStates.COMPLETE,
-                (rules, projectCompositeId, user) -> rules.stakeholderCanAccessDocumentsSection(projectCompositeId, user)));
-
+                SetupSectionsPermissionRules::stakeholderCanAccessDocumentsSection));
     }
 
     private boolean doTestDocumentAccess(Role role, ProjectActivityStates documentStatus,
                                          TriFunction<SetupSectionsPermissionRules, ProjectCompositeId, UserResource, Boolean> rule) {
         Long projectId = 1L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectStatusResource projectStatus = newProjectStatusResource()
                 .withDocumentsStatus(documentStatus)
                 .withProjectState(LIVE)
                 .build();
-        when(statusServiceMock.getProjectStatus(projectId)).thenReturn(projectStatus);
+        when(statusService.getProjectStatus(projectId)).thenReturn(projectStatus);
         return rule.apply(rules, ProjectCompositeId.id(projectId), user);
     }
 
     @Test
     public void onlyInternalAdminUserCanApproveDocuments() {
 
-        assertTrue(stream(Role.values()).filter(role -> asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE).contains(role))
+        assertTrue(stream(Role.values()).filter(role -> asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR, Role.SUPER_ADMIN_USER, Role.SYSTEM_MAINTAINER).contains(role))
                 .map(this::doTestApproveDocumentsAccess)
                 .filter(Boolean.FALSE::equals)
                 .collect(Collectors.toList())
                 .isEmpty());
 
-        assertTrue(stream(Role.values()).filter(role -> !(asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE).contains(role)))
+        assertTrue(stream(Role.values()).filter(role -> !(asList(Role.COMP_ADMIN, Role.PROJECT_FINANCE, Role.IFS_ADMINISTRATOR, Role.SUPER_ADMIN_USER, Role.SYSTEM_MAINTAINER).contains(role)))
                 .map(this::doTestApproveDocumentsAccess)
                 .filter(Boolean.TRUE::equals)
                 .collect(Collectors.toList())
@@ -164,5 +162,16 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
                 .build();
 
         return rules.internalAdminUserCanApproveDocuments(ProjectCompositeId.id(1L), user);
+    }
+
+    @Test
+    public void onlySuperAdminUserCanResetGrantOfferLetter() {
+        allGlobalRoleUsers.forEach(userResource -> {
+            if (userResource.hasRole(Role.SUPER_ADMIN_USER)) {
+                assertTrue(rules.superAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
+            } else {
+                assertFalse(rules.superAdminUserCanResetGrantOfferLetter(ProjectCompositeId.id(1L), userResource));
+            }
+        });
     }
 }

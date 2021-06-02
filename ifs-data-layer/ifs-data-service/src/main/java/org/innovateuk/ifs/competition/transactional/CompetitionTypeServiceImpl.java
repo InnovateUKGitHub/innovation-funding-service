@@ -23,6 +23,6 @@ public class CompetitionTypeServiceImpl extends BaseTransactionalService impleme
 
     @Override
     public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
-        return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAll()));
+        return serviceSuccess((List) competitionTypeMapper.mapToResource(competitionTypeRepository.findAllByOrderByNameAsc()));
     }
 }

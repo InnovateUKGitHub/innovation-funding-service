@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -36,6 +37,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +70,7 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -134,7 +136,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        Role leadApplicantRole = Role.LEADAPPLICANT;
+        ProcessRoleType leadApplicantRole = ProcessRoleType.LEADAPPLICANT;
 
         long userId = 7L;
         User user = newUser().
@@ -160,6 +162,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         long applicationId = 456L;
         application = newApplication().
                 withId(applicationId).
+                withApplicationState(ApplicationState.APPROVED).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withCompetition(competition).
@@ -195,7 +198,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         User internalUser = newUser().withRoles(singleton(COMP_ADMIN)).build();
         when(userRepository.findById(internalUser.getId())).thenReturn(Optional.of(internalUser));
-        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRoleGlobal(COMP_ADMIN).build());
 
         competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
     }
@@ -267,13 +270,14 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         List<ProcessRole> applicantProcessRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.COLLABORATOR)
                 .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())
                 .build(3);
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2))
+                .withActivityState(ApplicationState.APPROVED)
                 .build(3);
 
         List<ProjectUser> projectUsers = newProjectUser()
@@ -345,8 +349,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      true
+                                                      false
         );
 
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -383,11 +386,10 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -427,8 +429,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      true
+                                                      false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
@@ -469,8 +470,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      true
+                                                      false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
@@ -515,8 +515,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                false,
-                true
+                false
         );
         Organisation o = newOrganisation().withId(organisationId).withInternational(true).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
@@ -561,11 +560,10 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -605,7 +603,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
 
@@ -640,8 +637,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      true,
-                                                      false
+                                                      true
         );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
@@ -667,6 +663,29 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
     }
+    @Test
+    public void getProjectStatusResourceByProjectGolApplicationNoFundingDecision() {
+        long projectId = 2345L;
+
+        Project project = createProjectStatusResource(projectId,
+                ApprovalType.APPROVED,
+                false,
+                false,
+                false,
+                true
+        );
+        project.getApplication().getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
+
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
+        when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+    }
 
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
@@ -677,7 +696,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       true,
-                                                      false,
                                                       false
         );
 
@@ -714,7 +732,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
 
@@ -750,7 +767,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
 
@@ -784,7 +800,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,
@@ -828,7 +843,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -855,7 +869,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       ApprovalType.APPROVED,
                                                       false,
                                                       true,
-                                                      false,
                                                       false,
                                                       false
         );
@@ -884,7 +897,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -912,7 +924,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -937,7 +948,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       ApprovalType.APPROVED,
                                                       false,
                                                       true,
-                                                      false,
                                                       false,
                                                       false
         );
@@ -968,7 +978,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -993,11 +1002,10 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1034,12 +1042,11 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
         Organisation o2 = newOrganisation().withId(organisationId2).build();
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build(), newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o2).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1076,11 +1083,10 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                false,
                 false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1117,13 +1123,12 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                false,
                 false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
         Organisation o2 = newOrganisation().withId(organisationId2).build();
         o2.setInternational(true);
-        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build(), newPartnerOrganisation().withInternationalLocation("Italy").withOrganisation(o).withOrganisation(o2).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1155,8 +1160,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                 Boolean golReadyToApprove,
                                                 Boolean golIsSent,
                                                 Boolean golIsApproved,
-                                                Boolean golRejected,
-                                                boolean locationPerPartnerRequired) {
+                                                Boolean golRejected) {
 
         long competitionId = 112L;
 
@@ -1166,15 +1170,15 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         Competition competition = CompetitionBuilder.newCompetition()
                 .withId(competitionId)
                 .withCompetitionDocuments(competitionDocuments)
-                .withLocationPerPartner(locationPerPartnerRequired)
                 .build();
         competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
 
         Application application = newApplication()
                 .withCompetition(competition)
+                .withApplicationState(ApplicationState.APPROVED)
                 .build();
         Organisation organisation = newOrganisation().build();
-        Role role = Role.LEADAPPLICANT;
+        ProcessRoleType role = ProcessRoleType.LEADAPPLICANT;
         ProcessRole processRole = newProcessRole().
                 withRole(role).
                 withApplication(application).
@@ -1228,11 +1232,10 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());

@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -26,7 +25,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String USERS_URL = "/user";
-    private static final String PROCESS_ROLE_REST_URL = "/processrole";
 
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
@@ -46,18 +44,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertEquals(2, users.size());
         assertEquals(user1, users.get(0));
         assertEquals(user2, users.get(1));
-    }
-
-    @Test
-    public void test_findProcessRoleByUserId() {
-        List<ProcessRoleResource> processRoleList = newProcessRoleResource().build(10);
-        Long userId = 249L;
-
-        setupGetWithRestResultExpectations(PROCESS_ROLE_REST_URL + "/find-by-user-id/" + userId, processRoleResourceListType(), processRoleList);
-
-        List<ProcessRoleResource> response = service.findProcessRoleByUserId(userId).getSuccess();
-        assertEquals(10, response.size());
-        assertEquals(processRoleList, response);
     }
 
     @Test
@@ -95,18 +81,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         setupPutWithRestResultAnonymousExpectations(USERS_URL + "/resend-email-verification-notification/" + emailAddress + "/", null, OK);
         final RestResult<Void> result = service.resendEmailVerificationNotification(emailAddress);
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void userHasApplicationForCompetition() {
-        Long userId = 1L;
-        Long competitionId = 2L;
-        Boolean expected = true;
-
-        setupGetWithRestResultExpectations(format("%s/user-has-application-for-competition/%s/%s", PROCESS_ROLE_REST_URL, userId, competitionId), Boolean.class, expected, OK);
-
-        Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccess();
-        assertEquals(expected, response);
     }
 
     @Test

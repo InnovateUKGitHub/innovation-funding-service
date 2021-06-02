@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
-
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
@@ -20,6 +19,7 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.service.MappingMessageThreadService;
 import org.innovateuk.ifs.threads.service.MessageThreadService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -34,9 +35,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_U
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -88,7 +88,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
             Optional<ProjectUser> financeContact = getFinanceContact(projectFinance.getProject(), projectFinance.getOrganisation());
             if (financeContact.isPresent()) {
                 ServiceResult<Void> result = service.addPost(post, threadId);
-                if (result.isSuccess() && post.author.hasRole(PROJECT_FINANCE)) {
+                if (result.isSuccess() && post.author.hasAuthority(Authority.PROJECT_FINANCE)) {
                     Project project = projectFinance.getProject();
                     return sendResponseNotification(financeContact.get().getUser(), project)
                             .andOnSuccessReturn(() -> query);
@@ -112,12 +112,11 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                         ServiceResult<Long> result = service.create(query);
                         if (result.isSuccess()) {
                             Project project = projectFinance.getProject();
-                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT);
+                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT, PROJECT_MANAGER);
                             List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> Objects.equals(pu.getOrganisation().getId(), projectFinance.getOrganisation().getId()));
-
-                            Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
-                            if (financeContact.isPresent()) {
-                                ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), project);
+                            Set<User> usersToNotify = financeContacts.stream().map(ProjectUser::getUser).collect(Collectors.toSet());
+                            for (User user: usersToNotify) {
+                                ServiceResult<Void> notificationResult = sendNewQueryNotification(user, project);
 
                                 if (!notificationResult.isSuccess()) {
                                     return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);

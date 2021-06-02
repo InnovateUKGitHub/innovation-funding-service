@@ -6,6 +6,13 @@ Documentation  IFS-5158 - Competition Template
 ...            IFS-5700 - Create new project team page to manage roles in project setup
 ...
 ...            IFS-7195  Organisational eligibility category in Competition setup
+...
+...            IFS-6775 Initial details type ahead
+...
+...            IFS-9214 Add dual T&Cs to Subsidy Control Competitions
+...
+...            IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -21,33 +28,36 @@ ${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
-    [Documentation]  IFS-5158
+    [Documentation]  IFS-5158  IFS-6775  IFS-8847
     Given a user starts a new competition
     When the user clicks the button/link                               link = Initial details
-    Then the user selects the option from the drop-down menu           Horizon 2020   name = competitionTypeId
+    Then the user selects the option from the drop-down menu           ${compType_H2020}   name = competitionTypeId
     And the user is able to complete Initial details section
     And the user should see the read-only view of the initial details
     [Teardown]  the user clicks the button/link                        link = Return to setup overview
 
 User can populate the Completion Stage, Milestones and Public content
     [Documentation]  IFS-5158
-     Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}
+     Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}   No
      When the user clicks the button/link                                           link = Public content
      Then The user completes Public content for H2020 registration and publishes
      [Teardown]  the user clicks the button/link                                    link = Return to setup overview
 
 User can populate Terms and Conditions
-    [Documentation]  IFS-5158
-    Given the user clicks the button/link                   link = Terms and conditions
-    Then the user clicks the button/link                    jQuery = button:contains("Done")
-    [Teardown]  the user clicks the button/link             link = Return to setup overview
+    [Documentation]  IFS-5158  IFS-9124
+    Given the user clicks the button/link           link = Terms and conditions
+    When the user selects the radio button          termsAndConditionsId  24
+    Then the user clicks the button/link            jQuery = button:contains("Done")
+    And the user should see the element             jQuery = p:contains("Horizon 2020 (opens in a new window)")
+    [Teardown]  the user clicks the button/link     link = Return to setup overview
 
 User can populate Funding information and Project eligibility
     [Documentation]  IFS-5158
-    Given the user clicks the button/link                                 link = Funding information
+    Given the user clicks the button/link                                       link = Funding information
     When the user completes funding information
-    Then the user clicks the button/link                                  link = Return to setup overview
-    And the user fills in the Competition Setup Project eligibility section       ${BUSINESS_TYPE_ID}  4
+    Then the user clicks the button/link                                        link = Return to setup overview
+    And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
+    And the user fills in the CS funding eligibility                            false   ${compType_H2020}   STATE_AID
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -147,7 +157,7 @@ Internal user is able to approve Finance checks and generate spend profile
 User is able to submit the spend profile
     [Documentation]  IFS-5700
     [Setup]  log in as a different user      &{collaborator1_credentials}
-    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review  
+    Given the user navigates to the page     ${server}/project-setup/project/${HProjectID}/partner-organisation/${organisationLudlowId}/spend-profile/review
     When the user submits the spend profile
     Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
@@ -237,28 +247,28 @@ A user starts a new competition
     the user clicks the button/link       jQuery = .govuk-button:contains("Create competition")
 
 The user is able to complete Initial details section
-    the user enters text to a text field                            css = #title  ${competitionTitle}
-    the user selects the radio button                               fundingType  GRANT
-    the user selects the option from the drop-down menu             None  id = innovationSectorCategoryId
-    the user selects the value from the drop-down menu              67  name = innovationAreaCategoryIds[0]
-    the user enters text to a text field                            id = openingDateDay    10
-    the user enters text to a text field                            id = openingDateMonth    1
-    the user enters text to a text field                            id = openingDateYear     ${nextyear}
-    the user selects the option from the drop-down menu             Ian Cooper    id = innovationLeadUserId
-    the user selects the option from the drop-down menu             John Doe   id = executiveUserId
-    the user clicks the button twice                                css = label[for = "stateAid2"]
-    the user clicks the button/link                                 jQuery = button:contains("Done")
+    the user enters text to a text field                              css = #title  ${competitionTitle}
+    the user selects the radio button                                 fundingType  GRANT
+    And the user selects the radio button                             fundingRule  STATE_AID
+    the user selects the option from the drop-down menu               None  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu                67  name = innovationAreaCategoryIds[0]
+    the user enters text to a text field                              id = openingDateDay    10
+    the user enters text to a text field                              id = openingDateMonth    1
+    the user enters text to a text field                              id = openingDateYear     ${nextyear}
+    the user selects option from type ahead                           innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                           executiveUserId  j  John Doe
+    the user clicks the button/link                                   jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
 The user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("H2020 Grant Transfer")
     the user should see the element    jQuery = dt:contains("Funding type") ~ dd:contains("Grant")
+    the user should see the element    jQuery = dt:contains("Competition funding rules") ~ dd:contains("State aid")
     the user should see the element    jQuery = dd:contains("None")
     the user should see the element    jQuery = dd:contains("None")
     the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
-    the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
     the user clicks the button/link         id = generate-code
@@ -370,8 +380,6 @@ The user fills in the Competition Setup Project eligibility section
     [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link                      link = Project eligibility
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
-    the user selects the radio button                    researchCategoriesApplicable    false
-    the user selects the option from the drop-down menu  100%  fundingLevelPercentage
     the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  None     researchParticipation
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
@@ -468,7 +476,7 @@ The user is able to complete your project costs section
 The user is able to validate conversion spredsheet links works
     the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = Page not found – UKRI
-    the user should see the element                 link = Who we fund
+    the user should see the element                 link = Contact us
     the user closes the last opened tab
 
 The user is able to submit the application

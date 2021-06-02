@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -27,8 +29,8 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.ProfileRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,6 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -103,6 +104,9 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     private OrganisationRepository organisationRepository;
 
     @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
+
+    @Autowired
     @Override
     protected void setRepository(ApplicationStatisticsRepository repository) {
         this.repository = repository;
@@ -140,17 +144,20 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         assertEquals(0, statisticsPage.getNumber());
     }
 
-
     @Test
     public void findStatisticsForApplicationsNotAssignedTo() {
         long competitionId = 1L;
         long assessorId = 20L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
 
         Application application = newApplication()
                 .with(id(null))
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
                 .withCompetition(competitionRepository.findById(competitionId).get())
+                .withAssessmentPeriod(assessmentPeriod)
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
@@ -159,7 +166,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
                 .withApplication(application)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(3L)
                 .withUser(userMapper.mapToDomain(getSteveSmith()))
                 .build();
@@ -167,7 +174,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         processRoleRepository.save(processRole);
         flushAndClearSession();
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "id"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "id"));
 
         Page<ApplicationCountSummaryResource> statisticsPage = repository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, "", pageable);
         assertEquals(6, statisticsPage.getTotalElements());
@@ -179,6 +186,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition() {
         long competitionId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -212,12 +223,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -240,7 +251,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, "", pageable);
+                repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(competitionId, assessmentPeriodId, "", pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -259,6 +270,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_sortByFirstName() {
         long competitionId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -292,12 +307,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -320,7 +335,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = PageRequest.of(pageNumber, pageSize, SORT_BY_FIRSTNAME);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, "", pageable);
+                repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(competitionId, assessmentPeriodId,  "", pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -343,6 +358,9 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
 
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         List<Profile> profiles = newProfile()
                 .with(id(null))
@@ -377,12 +395,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -405,7 +423,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, "Tom", pageable);
+                repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(competitionId, assessmentPeriodId, "Tom", pageable);
 
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -424,6 +442,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_accepted() {
         long competitionId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -457,12 +479,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -484,7 +506,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         final int pageNumber = 0;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, "", pageable);
+        Page<AssessorCountSummaryResource> statisticsPage = repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(competitionId, assessmentPeriodId,  "", pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -503,6 +525,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_otherCompetition() {
         long competitionId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -548,12 +574,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         assessmentParticipantRepository.saveAll(otherCompetitionParticipants);
 
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -576,7 +602,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(otherCompetition.getId(), "",  pageable);
+                repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(otherCompetition.getId(), assessmentPeriodId,  "",  pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -595,6 +621,10 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     @Test
     public void getAssessorCountSummaryByCompetition_submitted() {
         long competitionId = 1L;
+
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
 
         loginCompAdmin();
         Competition competition = competitionRepository.findById(competitionId).get();
@@ -628,12 +658,12 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         assessmentParticipantRepository.saveAll(competitionParticipants);
 
-        Application application = newApplication().withCompetition(competition).with(id(null)).build();
+        Application application = newApplication().withCompetition(competition).withAssessmentPeriod(assessmentPeriod).with(id(null)).build();
         applicationRepository.save(application);
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(application)
                 .withUser(users.get(0))
                 .build();
@@ -656,7 +686,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, "", pageable);
+                repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(competitionId, assessmentPeriodId,  "", pageable);
 
         assertEquals(2, statisticsPage.getTotalElements());
         assertEquals(1, statisticsPage.getTotalPages());
@@ -683,12 +713,16 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     public void getAssessorCountSummaryByCompetition_noAssessorsOnCompetition() {
         final long competitionId = 1L;
 
+        List<AssessmentPeriod> assessmentPeriods = assessmentPeriodRepository.findByCompetitionId(competitionId);
+        AssessmentPeriod assessmentPeriod = assessmentPeriods.get(0);
+        long assessmentPeriodId = assessmentPeriod.getId();
+
         final int pageSize = 10;
         final int pageNumber = 0;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         Page<AssessorCountSummaryResource> statisticsPage =
-                repository.getAssessorCountSummaryByCompetitionAndAssessorNameLike(competitionId, "", pageable);
+                repository.getAssessorCountSummaryByCompetitionAndAssessmentPeriodIdAndAssessorNameLike(competitionId, assessmentPeriodId,  "", pageable);
 
         assertEquals(0, statisticsPage.getTotalElements());
         assertEquals(0, statisticsPage.getTotalPages());

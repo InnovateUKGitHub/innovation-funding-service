@@ -2,17 +2,20 @@ package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.viewmodel.*;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,6 +51,8 @@ public class ProjectTeamViewModelPopulator {
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         List<ProjectUserResource> projectUsers = projectService.getDisplayProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
@@ -86,7 +91,8 @@ public class ProjectTeamViewModelPopulator {
                 true,
                 !project.getProjectState().isActive(),
                 userCanAddAndRemoveOrganisations,
-                canInvitePartnerOrganisation(project, loggedInUser));
+                canInvitePartnerOrganisation(project, loggedInUser),
+                competition.isKtp());
     }
 
     private List<ProjectTeamOrganisationViewModel> partnerOrganisationInvites(long projectId, boolean userCanAddAndRemoveOrganisations) {
@@ -108,20 +114,20 @@ public class ProjectTeamViewModelPopulator {
         boolean isSingle = competitionRestService.getCompetitionById(project.getCompetition())
                 .getSuccess()
                 .getCollaborationLevel() == CollaborationLevel.SINGLE;
-        return !isSingle && user.hasRole(PROJECT_FINANCE)
+        return !isSingle && user.hasAuthority(Authority.PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }
 
     private boolean userCanAddAndRemoveOrganisations(ProjectResource project, UserResource user) {
-        return user.hasRole(PROJECT_FINANCE)
+        return user.hasAuthority(Authority.PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
+        return simpleFindFirst(projectUsers, pu -> ProjectParticipantRole.PROJECT_MANAGER == pu.getRole());
     }
 
     private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(long projectId, List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean userCanAddAndResend) {

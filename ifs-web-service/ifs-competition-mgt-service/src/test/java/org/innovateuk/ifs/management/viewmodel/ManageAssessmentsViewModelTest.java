@@ -7,7 +7,9 @@ import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewM
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
+import static org.innovateuk.ifs.commons.resource.PageResource.fromListZeroBased;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,7 +28,7 @@ public class ManageAssessmentsViewModelTest {
     private ManageAssessmentsViewModel manageAssessmentsViewModel;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(expectedCompetitionId)
                 .withName(expectedCompetitionName)
@@ -39,8 +41,8 @@ public class ManageAssessmentsViewModelTest {
                 .withAssessmentsStarted(expectedAssessmentsStarted)
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
+        manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, fromListZeroBased(emptyList(), 0, 2));
 
-        manageAssessmentsViewModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
     }
 
     @Test

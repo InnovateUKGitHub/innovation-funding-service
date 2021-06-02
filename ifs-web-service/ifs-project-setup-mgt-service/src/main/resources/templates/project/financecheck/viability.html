@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -23,8 +23,13 @@
         <hr th:unless="${model.procurementCompetition}" class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.isShowApprovalMessage()}">
-            <div class="success-alert">
+            <div class="success-alert govuk-!-margin-bottom-8">
                 <p class="govuk-body">The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
+            </div>
+        </th:block>
+        <th:block th:if="${model.isShowResetMessage()}">
+            <div class="message-alert govuk-!-margin-bottom-8">
+                <p class="govuk-body">The partner's finance viability has been reset by <span th:text="${model.getResetName()}"></span>, <span th:text="${#temporals.format(model.getResetDate(), 'd MMMM yyyy')}"></span></p>
             </div>
         </th:block>
 
@@ -38,12 +43,19 @@
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
                 <th:block th:if="${model.hasGrantClaimPercentage}">
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">
+                        <th:block th:if="${model.ktpCompetition}">
+                            Funding sought (&pound;)
+                        </th:block>
+                        <th:block th:unless="${model.ktpCompetition}">
+                            Grant applied for (&pound;)
+                        </th:block>
+                    </th>
                 </th:block>
-                <th:block th:unless="${model.loanCompetition}">
+                <th:block th:unless="${model.loanCompetition || model.ktpCompetition}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
                 </th:block>
-                <th:block th:if="${model.loanCompetition}">
+                <th:block th:if="${model.loanCompetition || model.ktpCompetition}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other funding (&pound;)</th>
                 </th:block>
             </tr>
@@ -65,7 +77,7 @@
         </table>
 
         <h2 class="govuk-heading-m">Organisation information</h2>
-        <dl class="standard-definition-list">
+        <dl class="standard-definition-list column-definition-list">
 
           <dt>Company name</dt>
           <dd th:text="${model.organisationName}">Aptrans Ltd</dd>
@@ -105,6 +117,35 @@
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary">Notes</a>
           </div>
+          <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
+              <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                      Reset viability check
+                    </span>
+              </summary>
+              <div class="govuk-details__text">
+                  <p class="govuk-body">Reset viability check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                  <div class="govuk-form-group govuk-!-margin-top-6">
+                      <label class="govuk-label govuk-!-font-weight-bold"
+                             for="retractionReason">Reason for retracting approval</label>
+                      <div class="textarea-wrapped">
+                          <div class="govuk-form-group"
+                               th:classappend="${#fields.hasErrors('retractionReason')} ? 'govuk-form-group--error'">
+                              <th:block th:if="${#fields.hasErrors('retractionReason')}">
+                                  <span class="govuk-error-message" th:each="err : ${#fields.errors('retractionReason')}" th:text="${err}"></span>
+                              </th:block>
+                          <textarea id="retractionReason"
+                                  rows="8"
+                                  class="govuk-textarea"
+                                  th:field="*{retractionReason}"
+                                  th:errorclass="govuk-textarea--error">
+                          </textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <button class="govuk-button" name="reset-viability">Reset viability check</button>
+              </div>
+          </details>
           <th:block th:unless="${model.isReadOnly()}">
               <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
               <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>

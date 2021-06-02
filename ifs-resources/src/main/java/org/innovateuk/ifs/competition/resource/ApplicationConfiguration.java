@@ -7,16 +7,13 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 
 /**
  * Interface to be shared between the Competition and CompetitionResource to declare methods that define the configuration
  * of an application form.
  */
 public interface ApplicationConfiguration {
-
-    String SBRI_PILOT = "The Sustainable Innovation Fund: SBRI phase 1";
 
     boolean isFullyFunded();
 
@@ -30,7 +27,7 @@ public interface ApplicationConfiguration {
 
     Boolean getIncludeYourOrganisationSection();
 
-    boolean isSbriPilot();
+    boolean isProcurementMilestones();
 
     default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> maximumFundingLevelOverridden) {
         return LOAN == getFundingType() ||
@@ -50,10 +47,15 @@ public interface ApplicationConfiguration {
     default boolean applicantShouldSeeYourOrganisationSection(OrganisationTypeEnum organisationType) {
         return RESEARCH != organisationType ||
                 Boolean.TRUE.equals(getIncludeYourOrganisationSection())
-                && getFundingType() == GRANT;
+                        && getFundingType() == GRANT;
     }
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
-        return isH2020() || applicantShouldUseJesFinances(organisationType);
+        return isH2020() || applicantShouldUseJesFinances(organisationType) ||
+                (organisationType.equals(OrganisationTypeEnum.KNOWLEDGE_BASE) && this.isKtp());
+    }
+
+    default boolean applicantNotRequiredForEligibilityChecks(OrganisationTypeEnum organisationTypeEnum) {
+        return !organisationTypeEnum.equals(KNOWLEDGE_BASE) && this.isKtp();
     }
 }

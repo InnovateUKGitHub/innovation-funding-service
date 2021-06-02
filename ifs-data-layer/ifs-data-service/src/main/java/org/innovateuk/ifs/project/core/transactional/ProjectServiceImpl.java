@@ -11,13 +11,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
@@ -25,6 +26,8 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -33,9 +36,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +57,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -103,6 +106,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceChecksGenerator financeChecksGenerator;
+
+    @Autowired
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
+
+    @Autowired
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -293,7 +302,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 }
                 project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_FINANCE_CONTACT));
             });
-            Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).findAny();
+            Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole().isKta()).findAny();
             ktaRole.ifPresent(role -> project.setProjectMonitoringOfficer(new MonitoringOfficer(role.getUser(), project)));
         }
         return serviceSuccess();
@@ -340,13 +349,39 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> eligibilityProcesses = createEligibilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+        ServiceResult<Void> milestonePaymentProcesses = createMilestonePaymentProcesses(newProject, originalLeadApplicantProjectUser);
+        ServiceResult<Void> fundingRulesProcesses = createFundingRulesProcesses(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> spendProfileProcess = createSpendProfileProcess(newProject, originalLeadApplicantProjectUser);
 
         projectRepository.refresh(newProject);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess, spendProfileProcess);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, fundingRulesProcesses, golProcess, projectProcess, spendProfileProcess);
+    }
+
+    private ServiceResult<Void> createMilestonePaymentProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
+        if (project.getApplication().getCompetition().isProcurementMilestones()) {
+            List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
+                    paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                            serviceSuccess() :
+                            serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+            return aggregate(results).andOnSuccessReturnVoid();
+        }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> createFundingRulesProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
+        if (project.getApplication().getCompetition().isSubsidyControl()) {
+            List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
+                    fundingRulesWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                            serviceSuccess() :
+                            serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+            return aggregate(results).andOnSuccessReturnVoid();
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {

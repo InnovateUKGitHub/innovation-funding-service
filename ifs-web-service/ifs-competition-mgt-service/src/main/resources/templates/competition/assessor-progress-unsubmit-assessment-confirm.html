@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm unsubmit'" />
+</head>
+
+<body class="govuk-template__body unsubmit-assessment-assigned-assessor-confirm">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor progress',linkUrl=@{/competition/{competitionId}/assessors/{assessorId} (competitionId=${model.competitionId},assessorId=${model.assessorId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm unsubmit',size='govuk-heading-xl'" />
+
+        <form th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/unsubmit/{assessmentId}(
+                      competitionId=${model.competitionId},
+                      assessorId=${model.assessorId},
+                      assessmentId=${model.assessmentId})}"
+              method="post" novalidate="novalidate">
+            <th:block th:insert="fragments/competition-setup :: comp-setup-unsubmit-assessment-assigned-assessor-content" />
+
+            <div class="alignright-button">
+                <a th:href="@{/assessment/competition/{competitionId}/assessors/{assessorId}(
+                            competitionId=${model.competitionId},
+                            assessorId=${model.assessorId})}"
+                   class="button-clear large">Cancel</a>
+                <button class="govuk-button" type="submit">Unsubmit assessment</button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

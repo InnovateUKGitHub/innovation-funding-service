@@ -1,0 +1,1 @@
+ALTER TABLE grant_claim_maximum MODIFY COLUMN maximum tinyint(4) DEFAULT NULL;

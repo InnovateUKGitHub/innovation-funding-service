@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -23,7 +22,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CompetitionTypeServiceSecurityTest extends BaseServiceSecurityTest<CompetitionTypeService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER));
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE, SYSTEM_MAINTAINER, IFS_ADMINISTRATOR, SUPER_ADMIN_USER));
 
     private CompetitionLookupStrategy competitionLookupStrategy;
 
@@ -45,14 +44,14 @@ public class CompetitionTypeServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void testCompAdminAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
 
         classUnderTest.findAllTypes();
     }
 
     @Test
     public void testProjectFinanceAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         classUnderTest.findAllTypes();
     }
@@ -62,7 +61,7 @@ public class CompetitionTypeServiceSecurityTest extends BaseServiceSecurityTest<
         NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(role)).build());
+                    newUserResource().withRoleGlobal(role).build());
 
             assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> verifyNoMoreInteractions(rules));
         });

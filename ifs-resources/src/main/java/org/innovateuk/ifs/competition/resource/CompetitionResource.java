@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import javax.validation.constraints.Max;
@@ -14,10 +17,8 @@ import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
@@ -35,6 +36,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
 
     private Long id;
+    private List<Long> assessmentPeriods = new ArrayList<>();
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
     private List<CompetitionDocumentResource> competitionDocuments = new ArrayList<>();
@@ -89,8 +91,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
-    private boolean locationPerPartner = true;
-    private Boolean stateAid;
+    private GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions;
+    private GolTemplateResource golTemplate;
+    private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
     private Set<Long> grantClaimMaximums;
     private ApplicationFinanceType applicationFinanceType;
@@ -106,7 +109,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
+    private boolean procurementMilestones;
     private CovidType covidType;
+    private boolean alwaysOpen;
+    private boolean subsidyControl;
+    private boolean hasBusinessAndFinancialInformationQuestion;
 
     public CompetitionResource() {
     }
@@ -185,6 +192,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return isH2020() || isProcurement();
     }
 
+    public List<Long> getAssessmentPeriods() {
+        return assessmentPeriods;
+    }
+
+    public void setAssessmentPeriods(List<Long> assessmentPeriods) {
+        this.assessmentPeriods = assessmentPeriods;
+    }
+
     public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }
@@ -202,6 +217,21 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     public List<FinanceRowType> getFinanceRowTypes() {
+        return financeRowTypes;
+    }
+
+    public List<FinanceRowType> getFinanceRowTypesByFinance(Optional<? extends BaseFinanceResource> finance) {
+        List<FinanceRowType> financeRowTypes = this.getFinanceRowTypes();
+
+        if (this.isKtp() && finance.isPresent()) {
+            BaseFinanceResource orgFinance = finance.get();
+            financeRowTypes = financeRowTypes.stream()
+                    .filter(financeRowType -> BooleanUtils.isFalse(orgFinance.getFecModelEnabled())
+                            ? !FinanceRowType.getFecSpecificFinanceRowTypes().contains(financeRowType)
+                            : !FinanceRowType.getNonFecSpecificFinanceRowTypes().contains(financeRowType))
+                    .collect(Collectors.toList());
+        }
+
         return financeRowTypes;
     }
 
@@ -344,9 +374,17 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionTypeEnum = competitionTypeEnum;
     }
 
+    public GolTemplateResource getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplateResource golTemplate) {
+        this.golTemplate = golTemplate;
+    }
+
     @JsonIgnore
-    public long getDaysLeft() {
-        return DAYS.between(ZonedDateTime.now(), this.endDate);
+    public Long getDaysLeft() {
+        return this.endDate == null ? null : DAYS.between(ZonedDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
@@ -361,6 +399,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isClosingSoon() {
+        if (this.endDate == null) {
+            return false;
+        }
         long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(ZonedDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
@@ -368,11 +409,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public long getAssessmentTotalDays() {
         return DAYS.between(this.assessorAcceptsDate, this.assessorDeadlineDate);
-    }
-
-    @JsonIgnore
-    public long getStartDateToEndDatePercentage() {
-        return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
     }
 
     @JsonIgnore
@@ -649,12 +685,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
+    public GrantTermsAndConditionsResource getOtherFundingRulesTermsAndConditions() {
+        return otherFundingRulesTermsAndConditions;
     }
 
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
+    public void setOtherFundingRulesTermsAndConditions(GrantTermsAndConditionsResource otherFundingRulesTermsAndConditions) {
+        this.otherFundingRulesTermsAndConditions = otherFundingRulesTermsAndConditions;
     }
 
     public Integer getMinProjectDuration() {
@@ -673,12 +709,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(final Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -785,9 +821,34 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public void setAlwaysOpen(boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
+
+    @Override
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
+    }
+
+    public void setProcurementMilestones(boolean procurementMilestones) {
+        this.procurementMilestones = procurementMilestones;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
+    }
+
+    public boolean isSubsidyControl() {
+        return subsidyControl;
+    }
+
+    public void setSubsidyControl(boolean subsidyControl) {
+        this.subsidyControl = subsidyControl;
     }
 
     @Override
@@ -805,7 +866,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return new EqualsBuilder()
                 .append(setupComplete, that.setupComplete)
                 .append(nonIfs, that.nonIfs)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -850,7 +910,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(stateAid, that.stateAid)
+                .append(otherFundingRulesTermsAndConditions, that.otherFundingRulesTermsAndConditions)
+                .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
@@ -861,6 +922,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
+                .append(alwaysOpen, that.alwaysOpen)
+                .append(subsidyControl, that.subsidyControl)
+                .append(assessmentPeriods, that.assessmentPeriods)
                 .isEquals();
     }
 
@@ -913,8 +977,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
-                .append(locationPerPartner)
-                .append(stateAid)
+                .append(otherFundingRulesTermsAndConditions)
+                .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
@@ -925,6 +989,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn)
                 .append(modifiedBy)
                 .append(modifiedOn)
+                .append(alwaysOpen)
+                .append(subsidyControl)
+                .append(assessmentPeriods)
                 .toHashCode();
     }
 
@@ -947,10 +1014,13 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 );
     }
 
-    @JsonIgnore
-    @Override
-    public boolean isSbriPilot() {
-        return SBRI_PILOT.equals(name);
+
+    public boolean isHasBusinessAndFinancialInformationQuestion() {
+        return hasBusinessAndFinancialInformationQuestion;
     }
 
+    public CompetitionResource setHasBusinessAndFinancialInformationQuestion(boolean hasBusinessAndFinancialInformationQuestion) {
+        this.hasBusinessAndFinancialInformationQuestion = hasBusinessAndFinancialInformationQuestion;
+        return this;
+    }
 }

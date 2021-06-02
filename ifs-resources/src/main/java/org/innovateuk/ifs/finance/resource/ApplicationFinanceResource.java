@@ -29,6 +29,10 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.financeFileEntry = financeFileEntry;
     }
 
+    public ApplicationFinanceResource(Boolean fecModelEnabled, Long fecFileEntry) {
+        super(fecModelEnabled, fecFileEntry);
+    }
+
     public ApplicationFinanceResource(long id,
                                       long organisation,
                                       long application,

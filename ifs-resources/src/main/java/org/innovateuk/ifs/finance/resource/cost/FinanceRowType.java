@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.google.common.collect.Sets;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.COST;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.INCLUDE_IN_SPEND_PROFILE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.APPEARS_IN_PROJECT_COSTS_ACCORDION;
@@ -41,7 +45,9 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ESTATE_COSTS("estate_costs", "Estate", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     KTP_TRAVEL("travel", "Travel and subsistence", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs"),
-    PREVIOUS_FUNDING("previous_funding", "Other funding");
+    PREVIOUS_FUNDING("previous_funding", "Other funding"),
+    ACADEMIC_AND_SECRETARIAL_SUPPORT("academic_and_secretarial_support", "Academic and secretarial support", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
+    INDIRECT_COSTS("indirect costs", "Indirect costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION);
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,
@@ -60,7 +66,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     FinanceRowType(String type, String displayName, FinanceRowOptions... options) {
         this.type = type;
         this.displayName = displayName;
-        this.financeRowOptionsList = asSet(options);
+        this.financeRowOptionsList = Sets.newHashSet(options);
     }
 
     public String getType() {
@@ -96,5 +102,38 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
                 FinanceRowType.values(),
                 frt -> frt.getDisplayName().equals(name)
         );
+    }
+
+    public static List<FinanceRowType> getFecSpecificFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.KNOWLEDGE_BASE
+                        || financeRowType == FinanceRowType.ASSOCIATE_SUPPORT
+                        || financeRowType == FinanceRowType.ESTATE_COSTS))
+                .collect(Collectors.toList());
+    }
+
+    public static List<FinanceRowType> getNonFecSpecificFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT
+                        || financeRowType == FinanceRowType.INDIRECT_COSTS))
+                .collect(Collectors.toList());
+    }
+
+    public static List<FinanceRowType> getKtpFinanceRowTypes() {
+        return Stream.of(values())
+                .filter(financeRowType -> (financeRowType == FinanceRowType.OTHER_COSTS
+                        || financeRowType == FinanceRowType.FINANCE
+                        || financeRowType == FinanceRowType.ASSOCIATE_SALARY_COSTS
+                        || financeRowType == FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS
+                        || financeRowType == FinanceRowType.CONSUMABLES
+                        || financeRowType == FinanceRowType.ASSOCIATE_SUPPORT
+                        || financeRowType == FinanceRowType.KNOWLEDGE_BASE
+                        || financeRowType == FinanceRowType.ESTATE_COSTS
+                        || financeRowType == FinanceRowType.KTP_TRAVEL
+                        || financeRowType == FinanceRowType.ADDITIONAL_COMPANY_COSTS
+                        || financeRowType == FinanceRowType.PREVIOUS_FUNDING
+                        || financeRowType == FinanceRowType.ACADEMIC_AND_SECRETARIAL_SUPPORT
+                        || financeRowType == FinanceRowType.INDIRECT_COSTS))
+                .collect(Collectors.toList());
     }
 }

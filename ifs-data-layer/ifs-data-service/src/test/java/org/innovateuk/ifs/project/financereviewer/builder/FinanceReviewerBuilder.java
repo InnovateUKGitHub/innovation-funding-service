@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.financereviewer.builder;
 
 import org.innovateuk.ifs.project.core.builder.ProjectParticipantBuilder;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 
 import java.util.EnumSet;

@@ -119,7 +119,7 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowClosedMessage() {
-        return competitionCloseDate.isBefore(ZonedDateTime.now());
+        return competitionCloseDate != null && competitionCloseDate.isBefore(ZonedDateTime.now());
     }
 
     public boolean isShowRegistrationClosedMessage() {

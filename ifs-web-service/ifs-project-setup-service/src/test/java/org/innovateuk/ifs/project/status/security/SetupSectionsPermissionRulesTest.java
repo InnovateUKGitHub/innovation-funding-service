@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
@@ -37,6 +38,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -69,7 +71,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     private StatusService statusService;
 
     private UserResource user = newUserResource().build();
-    private UserResource monitoringOfficer = newUserResource().withRoleGlobal(MONITORING_OFFICER).build();
+    private UserResource monitoringOfficer = newUserResource().withRoleGlobal(Role.MONITORING_OFFICER).build();
 
     private CompetitionResource competition = newCompetitionResource().build();
 
@@ -124,9 +126,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         setUpPartnerProjectLocationRequiredMocking();
 
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, true),
+                setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation),
                 () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(activeProject.getId()), user));
-        verify(projectService, times(2)).getById(activeProject.getId());
+        verify(projectService).getById(activeProject.getId());
     }
 
     @Test
@@ -134,9 +136,9 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         setUpPartnerProjectLocationRequiredMocking();
 
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, true),
+                setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation),
                 () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(activeProject.getId()), user));
-        verify(projectService, times(2)).getById(activeProject.getId());
+        verify(projectService).getById(activeProject.getId());
     }
 
     private void setUpPartnerProjectLocationRequiredMocking() {
@@ -256,14 +258,14 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void monitoringOfficerSectionAccessUnavailableForWithdrawnProject() {
         setUpPartnerProjectLocationRequiredMocking();
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectService, times(2)).getById(withdrawnProject.getId());
+        verify(projectService).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectLocationSectionAccessUnavailableForWithdrawnProject() {
         setUpPartnerProjectLocationRequiredMocking();
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectService, times(2)).getById(withdrawnProject.getId());
+        verify(projectService).getById(withdrawnProject.getId());
     }
 
     @Test
@@ -354,7 +356,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void partnerAccess() {
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(PARTNER)).build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -362,7 +364,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
         List<ProjectUserResource> pu = newProjectUserResource().withProject(activeProject.getId()).withOrganisation(o.getId()).withUser(user.getId()).build(1);
-        pu.get(0).setRoleName(PARTNER.getName());
+        pu.get(0).setRoleName(PROJECT_PARTNER.getName());
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(singletonList(partnerStatus)).build();
 
@@ -381,7 +383,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(PARTNER)).build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -389,7 +391,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
         List<ProjectUserResource> pu = newProjectUserResource().withProject(activeProject.getId()).withOrganisation(o.getId()).withUser(user.getId()).build(1);
-        pu.get(0).setRoleName(PARTNER.getName());
+        pu.get(0).setRoleName(PROJECT_PARTNER.getName());
 
         when(projectService.getById(activeProject.getId())).thenReturn(activeProject);
 
@@ -407,7 +409,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void financeContactAccess() {
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(FINANCE_CONTACT)).build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -415,8 +417,8 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
         List<ProjectUserResource> pu = newProjectUserResource().withProject(activeProject.getId()).withOrganisation(o.getId()).withUser(user.getId()).build(2);
-        pu.get(0).setRoleName(PARTNER.getName());
-        pu.get(1).setRoleName(FINANCE_CONTACT.getName());
+        pu.get(0).setRoleName(PROJECT_PARTNER.getName());
+        pu.get(1).setRoleName(PROJECT_FINANCE_CONTACT.getName());
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(singletonList(partnerStatus)).build();
 
@@ -489,7 +491,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(user.getId()).
                 withOrganisation(789L).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         when(projectService.getById(activeProject.getId())).thenReturn(activeProject);
@@ -535,7 +537,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(user.getId()).
                 withOrganisation(789L).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         when(projectService.getById(activeProject.getId())).thenReturn(activeProject);
@@ -592,7 +594,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(user.getId()).
                 withOrganisation(789L).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         when(projectService.getById(activeProject.getId())).thenReturn(activeProject);

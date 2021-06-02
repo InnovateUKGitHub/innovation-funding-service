@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -33,7 +34,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
-
 
 /**
  * Service provides notification emails functions to send emails for {@link Application}s.
@@ -60,15 +60,16 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private String earlyMetricsUrl;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
 
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
-                .flatMap(x -> x.getProcessRoles().stream())
-                .filter(ProcessRole::isLeadApplicantOrCollaborator)
-                .collect(toList());
+                .flatMap(x -> x.getCompetition().isKtp()
+                        ? x.getProcessRolesByRoles(ImmutableSet.of(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).stream()
+                        : x.getProcessRolesByRoles(ImmutableSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)).stream())
+                .collect(Collectors.toList());
 
         for (ProcessRole applicant : applicants) {
             if (applicant.getUser().isActive()) {
@@ -130,14 +131,21 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private ServiceResult<Void> sendAssessorFeedbackPublishedNotification(ProcessRole processRole) {
 
         Application application = applicationRepository.findById(processRole.getApplicationId()).get();
+        if (application.getFeedbackReleased() == null) {
+            application.setFeedbackReleased(ZonedDateTime.now());
+            applicationRepository.save(application);
+        }
 
         NotificationTarget recipient =
                 new UserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());
 
+        Competition competition = application.getCompetition();
+
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
-                Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                competition.isKtp() ? Notifications.KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED
+                        : Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
                         "applicationId", application.getId(),
@@ -160,6 +168,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
                     Competition competition = application.getCompetition();
                     Notification notification;
+
                     if (competition.isH2020()) {
                         notification = horizon2020GrantTransferNotification(from, to, application);
                     } else if (LOAN.equals(competition.getFundingType())) {
@@ -267,6 +276,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+        KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,

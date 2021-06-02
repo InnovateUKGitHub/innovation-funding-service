@@ -13,6 +13,14 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-7793 Partner organisation can not upload a new appendices file
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...               IFS-7723 Improvement to company search results
+...
+...               IFS-9289 PCR - Applicant NI Declaration Questionnaire and Funding Rules Confirmation (Project Setup)
+...
+...               IFS-8847 Always open competitions: new comp setup configuration
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -51,22 +59,22 @@ ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
 ${addressLine1}                                        7 Fisher House, Sydney,
 ${newAddress}                                          7 Fisher House
 ${partnerOrganisationNameNonUKBased}                   Test Empire
-${zeroFundingPartnerOrgnaisationName}                  UNIVERSITY OF LIVERPOOL
-${partnerOrganisationNameUKBased}                      INNOVATE LTD
+${zeroFundingPartnerOrgnaisationName}                  CINEWORLD LIMITED
+${partnerOrganisationNameUKBased}                      ROYAL MAIL PLC
 ${leadApplicantOrganisationName}                       New Empire 1
-${ukLeadOrganisationName}                              Organisation2
+${ukLeadOrganisationName}                              SAGA PLC
 ${internationalPartnerOrganisation}                    New Empire
-${ukBasedOrganisationName}                             NOMENSA LTD
+${ukBasedOrganisationName}                             FIRSTGROUP PLC
 ${ods_file}                                            file_example_ODS.ods
 ${excel_file}                                          testing.xlsx
 
 
 *** Test Cases ***
 Comp admin can only access organisational eligibility category after intial details entered
-     [Documentation]  IFS-7195
+     [Documentation]  IFS-7195  IFS-8779
      Given the user navigates to the page              ${CA_UpcomingComp}
      And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
-     When the user fills in the CS Initial details     ${internationalLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     When the user fills in the CS Initial details     ${internationalLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      Then the user should see the enabled element      link = ${organisationalEligibilityTitle}
      And the user should not see the element           jQuery = li:contains("${organisationalEligibilityTitle}") .task-status-complete
 
@@ -74,20 +82,20 @@ Eligibility is changed to project eligibility in project eligibility category
      [Documentation]  IFS-7195
      When the user clicks the button/link                 link = ${projectEligibilityLink}
      Then the user should see the text in the element     jQuery = h1:contains("${projectEligibilityLink}")        ${ProjectEligibilityLink}
-     And the user should see the element                  jQuery = span:contains("${organisationalEligibilityTitle}")
+     And the user should see the element                  jQuery = span:contains("${fundingEligibilityTitle}")
 
 Eligibility is changed to project eligibility in pagination
      [Documentation]  IFS-7195
      Given the user clicks the button/link                css = a[rel="Prev"]
      When the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
      And the user clicks the button/link                  jQuery = span:contains("${projectEligibilityLink}")
-     And the user clicks the button/link                  jQuery = span:contains("${organisationalEligibilityTitle}")
+     And the user clicks the button/link                  jQuery = span:contains("${fundingEligibilityTitle}")
      Then the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
 
 Comp admin can not complete the competition setup without organisational eligibility category completetion
-     [Documentation]  IFS-7195
-     Given the user clicks the button/link                                                 link = Return to setup overview
-     When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative
+     [Documentation]  IFS-7195  IFS-8847
+     Given the user clicks the button/link          link = Return to setup overview
+     When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
      Then The user should see the element                                                  css = #compCTA[disabled]
 
 Comp admin can access the Organisational eligibility category and check for all required fields
@@ -150,7 +158,7 @@ Comp admin sets lead organisations can lead international competitions and sets 
      Then the user should see the element                        jQuery = h2:contains('Open') ~ ul a:contains('${internationalLeadInternationalCompetition}')
 
 Comp admin sets lead organisations can not lead international competitions and sets competition to live
-     [Documentation]  IFS-7246
+     [Documentation]  IFS-7246  IFS-8847
      Given the user navigates to the page                                                  ${CA_UpcomingComp}
      When comp admin sets lead organisation can not lead the international competition
      And Get competition id and set open date to yesterday                                 ${ukLeadInternationalCompetition}
@@ -166,10 +174,10 @@ Non registered UK based users apply for an international competition
     Then UK-based user sees these page elements
 
 Non registered UK based users confirm their organisation details and create an account
-    [Documentation]    IFS-7199
+    [Documentation]    IFS-7199  IFS-7723
     [Tags]  HappyPath
-    Given the user provides uk based organisation details             Nomensa  ${ukBasedOrganisationName}
-    And the user verifies uk based organisation details
+    Given the user provides uk based organisation details             FIRSTGROUP  ${ukBasedOrganisationName}
+    And the user verifies their organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
     Then the user should not see an error in the page
@@ -207,13 +215,17 @@ Registered users applying for an international competition see only UK based org
      And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
-    [Documentation]    IFS-7197
+    [Documentation]    IFS-7197  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business                            radio-1
-    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-    Then the user verifies uk based organisation details
-    And the user clicks the button/link                                            name = save-organisation
+# TODO should be implemented on ifs-7224
+#    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
+#   Then the user verifies uk based organisation details
+# TODO Should be removed on completing ifs-7224
+    Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
+# TODO should be implemented on ifs-7224
+    #And the user clicks the button/link                                           name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
@@ -241,10 +253,10 @@ Registered user(Partner organisation) logs in and select where their organisatio
     Then the user should see the element              jQuery = dt:contains("Golden Valley Research Ltd")
 
 Partner user provides UK based organisation details and verifies them
-    [Documentation]    IFS-7198 IFS-7199
+    [Documentation]    IFS-7198 IFS-7199  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                    link = Join with a different organisation
-    When the user provides uk based organisation details     Nomensa  ${ukBasedOrganisationName}
+    When the user provides uk based organisation details     FIRSTGROUP  ${ukBasedOrganisationName}
     Then the user should see the element                     jQuery = p:contains("This is the organisation that you will join the application with.")
     And the user clicks the button/link                      name = save-organisation
     And the user should see the element                      jQuery = h2:contains("Application progress")
@@ -425,7 +437,7 @@ Internal user is able to add a new international partner organisation
     Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
-    [Documentation]  IFS-7197
+    [Documentation]  IFS-7197  IFS-9289
     [Tags]  HappyPath
     When partner user provide organisation detail and create account     ${international_invite_email}
     And the user clicks the button/link                                  link = ${internationalApplicationTitle}
@@ -436,7 +448,7 @@ Partner organisation is able to see organisation address details in project team
     [Tags]  HappyPath
     Given the user clicks the button/link                                                    link = Project team
     And the user completes project team and can see international organisation addresses
-    Then the user clicks the button/link                                                     link = Return to setup your project
+    Then the user clicks the button/link                                                     link = Return to set up your project
     And the user should see the element                                                      jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
 
 Lead organisation can see international organisation address details in project team and cannot edit it
@@ -454,7 +466,7 @@ Partner organisation can see international organisation address details in proje
     And the user clicks the button/link                                                       link = ${internationalApplicationTitle}
     And the user clicks the button/link                                                       link = Project team
     When the user completes project team and can see international organisation addresses
-    Then the user clicks the button/link                                                      link = Return to setup your project
+    Then the user clicks the button/link                                                      link = Return to set up your project
     [Teardown]  logout as user
 
 Internal user can view address details
@@ -533,7 +545,7 @@ non-uk based partner applicant can see the read only view of the corresponding a
     Then the user should see read only view of completed correspondence address details
 
 External dashboard - lead applicant - view status of partners - bank details not required message should display for international lead applicant organisation
-    [Documentation]    IFS - 7163
+    [Documentation]    IFS - 7163  IFS-9289
     [Tags]
     Given lead applicant invites new partner and accepts invitation
     And partner organisation sets funding level to zero
@@ -623,7 +635,7 @@ the user checks for organisational eligibility fields
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-yes"]
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-no"]
     the user should see the element           jQuery = button:contains("Save and continue")
-    the user should see the element           jQuery = span:contains("${projectEligibilityLink}")
+    the user should see the element           jQuery = span:contains("Funding eligibility")
     the user should see the element           link = Back to competition details
     the user should see the element           link = Return to setup overview
 
@@ -638,11 +650,12 @@ the user checks for lead organisations fields
     the user should see the element           link = Return to setup overview
 
 the user completes all categories except organisational eligibility category
-    [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user selects the Terms and Conditions
+    [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}  ${fundingRule}   ${isOpenComp}
+    the user selects the Terms and Conditions               ${compType}            ${fundingRule}
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}
+    the user fills in the CS funding eligibility            ${researchCategory}    ${compType}                 ${fundingRule}
+    the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}          ${isOpenComp}
     the user marks the Application as done                  ${projectGrowth}       ${compType}                 ${internationalLeadInternationalCompetition}
     the user fills in the CS Assessors                      GRANT
     the user clicks the button/link                         link = Public content
@@ -662,9 +675,9 @@ comp admin can view organisation eligibility response question and answer
 
 comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
-     the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      the user selects the organisational eligibility                                   true    false
-     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative
+     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative  SUBSIDY_CONTROL  No
      the user clicks the button/link                                                   jQuery = a:contains("Complete")
      the user clicks the button/link                                                   jQuery = button:contains('Done')
 
@@ -899,7 +912,7 @@ Lead applicant submits project team details
     the user clicks the button/link             id = save-project-manager-button
     the user navigates to the page              ${server}/project-setup/project/${ProjectID}/team
     The user selects their finance contact      financeContact1
-    the user clicks the button/link             link = Set up your project
+    the user clicks the button/link             link = Back to project setup
 
 zero funding parter submits the project and team details
     Log in as a different user                &{partnerApplicantCredentialsZeroFunding}
@@ -926,11 +939,14 @@ lead applicant invites new partner and accepts invitation
     Log in as a different user                                              &{ifs_admin_user_credentials}
     the user navigates to the page                                          ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/team/partner
     the user adds a new partner organisation                                university    jsonsmith    ${zero_funding_partner_email}
-    a new organisation is able to accept project invite in project setup    json  smith   ${zero_funding_partner_email}  UNIVERSITY   ${zeroFundingPartnerOrgnaisationName}    ${ApplicationID}    ${internationalApplicationTitle}   isNotInternational
+    a new organisation is able to accept project invite in project setup    json  smith   ${zero_funding_partner_email}  CINEWORLD   ${zeroFundingPartnerOrgnaisationName}    ${ApplicationID}    ${internationalApplicationTitle}   isNotInternational
 
 partner organisation sets funding level to zero
     The new partner can complete Your organisation
     the user clicks the button/link                          link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   link = Subsidy basis
+    Run Keyword If  '${status}' == 'PASS'  run keywords      the user completes subsidy basis as subsidy control
+    ...                                    AND               the user clicks the button/link                  link = Your funding
     the user selects the radio button                        requestingFunding   false
     the user selects the radio button                        otherFunding  false
     the user clicks the button/link                          jQuery = button:contains("Mark as complete")
@@ -938,6 +954,7 @@ partner organisation sets funding level to zero
     the user clicks the button/link                          id = submit-join-project-button
 
 partner completes all sections to join the project
+    the user completes subsidy basis as subsidy control
     The new partner can complete Your organisation
     the user clicks the button/link                          link = Your funding
     the user selects the radio button                        requestingFunding   true
@@ -968,8 +985,8 @@ the user should see project location details in project finances
 
 No action required should display for non uk based and zero funding organisations
     the user should see the element     css = li.read-only:nth-child(1) div.task-status > span:nth-child(1)
-    the user should see the element     css = li:nth-child(2) strong
-    the user should see the element     css = li.read-only:nth-child(3) div.task-status > span:nth-child(1)
+    the user should see the element     css = li.read-only:nth-child(2) div.task-status > span:nth-child(1)
+    the user should see the element     css = li:nth-child(3) strong
     the user should see the element     css = li.read-only:nth-child(4) div.task-status > span:nth-child(1)
 
 lead and partner applicants completes the project and bank details
@@ -977,7 +994,7 @@ lead and partner applicants completes the project and bank details
     zero funding parter submits the project and team details
     partner submits the project and team details                ${international_invite_email}  ${short_password}  ${ProjectID}
     partner submits the project and team details                ${partner_org}   ${correct_password}   ${ProjectID}
-    the user clicks the button/link                             link = Return to setup your project
+    the user clicks the button/link                             link = Return to set up your project
     the user enters bank details
 
 bank details not required message should display for non uk based and zero funding partner organisations
@@ -1076,12 +1093,19 @@ the user complete all sections of the project setup and generates GOL
     project finance approves Eligibility                                ${organisationTestEmpireOneID}        ${organistaionTestEmpireID}    ${organistaionInnovateID}   ${ProjectID}
     project finance approves Eligibility for Innovate uk organisation   ${organisationUiveristyOfLiverPoolId}
     the user clicks the button/link                                     link = Return to finance checks
+    the user approves funding rules of lead and partner organisations
     the user clicks the button/link                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                     css = #generate-spend-profile-modal-button
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
     proj finance approves the spend profiles                            ${ProjectID}
+
+the user approves funding rules of lead and partner organisations
+    the user approves funding rules     table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
+    the user approves funding rules     table.table-progress tr:nth-child(4) td:nth-child(2) a:contains("Review")
 
 a new organisation is able to accept project invite in project setup
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}  ${applicationID}  ${appTitle}  ${organisationBase}
@@ -1122,12 +1146,12 @@ Requesting uk lead international organisation IDs
     ${organistaionNewEmpireID} =  get organisation id by name           ${internationalPartnerOrganisation}
     Set suite variable      ${organistaionNewEmpireID}
 
-Requesting nomensa organisation IDs
-    ${nomensaLtdOrganisationName} =  get organisation id by name     ${ukBasedOrganisationName}
-    Set suite variable      ${nomensaLtdOrganisationName}
+Requesting firstgroup organisation IDs
+    ${firstGroupLtdOrganisationName} =  get organisation id by name     ${ukBasedOrganisationName}
+    Set suite variable      ${firstGroupLtdOrganisationName}
 
 uk lead applicant completes application form
-    Requesting nomensa organisation IDs
+    Requesting firstgroup organisation IDs
     log in as a different user                                      &{ukLeadOrganisationCredentials}
     the user navigates to the page                                  ${APPLICANT_DASHBOARD_URL}
     the user clicks the application tile if displayed
@@ -1135,7 +1159,7 @@ uk lead applicant completes application form
     the user clicks the button/link                                 link = Application details
     the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link                                 link = Application team
-    the user clicks the button/link                                 id = remove-organisation-${nomensaLtdOrganisationName}
+    the user clicks the button/link                                 id = remove-organisation-${firstGroupLtdOrganisationName}
     the user clicks the button/link                                 name = remove-team-member
     the user clicks the button/link                                 id = application-question-complete
     the user clicks the button/link                                 link = Return to application overview
@@ -1196,6 +1220,7 @@ Uk lead completes project setup details and generated GOL
     project finance approves Viability for                                              ${organistaionNewEmpireID}    ${ukLeadApplicationProjectID}
     project finance approves Eligibility for uk based lead and international partner    ${organistaionOrg2}   ${organistaionNewEmpireID}   ${ukLeadApplicationProjectID}
     the user clicks the button/link                                                     link = Return to finance checks
+    the user approves funding rules of lead and partner
     the user clicks the button/link                                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
     Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}

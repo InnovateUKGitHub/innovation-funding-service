@@ -36,18 +36,29 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5686 MO - external user view
 ...
 ...               IFS-5859 MO View: Show Spend Profile navigation of all partners
+...
+...               IFS-8753 515 - 73652 - Monitoring Officer unable to view application feedback
+...
+...               IFS-8958  SBRI Milestones - Application overview / summary
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
-${Assign_Project}      Climate control solution
-${Assign_Project_ID}   ${application_ids["${Assign_Project}"]}
-${Assign_Project2}     High Performance Gasoline Stratified
-${Assign_Project2_ID}  ${application_ids["${Assign_Project2}"]}
-${New_Mo}          tom@poly.io
+${Successful_Monitoring_Officer_Page}     ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+${Assign_Project}                         Climate control solution
+${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
+${Assign_Project2}                        High Performance Gasoline Stratified
+${sbri_applicaton_name}                   SBRI application
+${sbri_application_id}                    ${application_ids["${sbri_applicaton_name}"]}
+${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
+${New_Mo}                                 tom@poly.io
+${PSCapplicationTitle}                    PSC application 15
+${PSCapplicationID}                       ${application_ids["${PSCapplicationTitle}"]}
+${PSC_Competition_Name}                   Project Setup Comp 15
+${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -59,32 +70,32 @@ Before Monitoring Officer is assigned
     And the user should not see the element             css = ul li.complete:nth-child(4)
     And the user should see the element                 css = ul li.waiting:nth-child(4)
     When the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
-    And the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a monitoring officer.")
+    And the user should not see the element             jQuery = .success-alert:contains("We have assigned a monitoring officer to your project.")
     When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
-    [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the user should see the element   css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
-    And the user should see the element    css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
-    And the user should see the element    css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
+    [Setup]    log in as a different user       &{Comp_admin1_credentials}
+    When the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(4) td:nth-of-type(1)                               # Project details
+    And the user should see the element         css = #table-project-status tr:nth-of-type(4) td:nth-of-type(2)                               # Project team
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(3)                       # Documents
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(4)                       # Monitoring Officer
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(5)                       # Bank details
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td.govuk-table__cell.status.action    # Finance checks
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(7)                       # Spend Profile
+    And the user should see the element         css = #table-project-status > tbody > tr:nth-child(4) > td:nth-child(8)                       # GOL
 
 Search for an MO
     [Documentation]  IFS-5428  IFS-5418  IFS-5686
-    [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    When the user clicks the button/link    css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-    Then search for MO    Orvill  Orville Gibbs
-    And the user should see the element  jQuery = span:contains("Assign projects to Monitoring Officer")
-    And the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
+    [Setup]  log in as a different user             &{internal_finance_credentials}
+    Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link            css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
+    Then search for MO                              Orvill  Orville Gibbs
+    And the user should see the element             jQuery = span:contains("Assign projects to Monitoring Officer")
+    And the internal user assign project to MO      ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
@@ -102,7 +113,7 @@ MO details can be edited and viewed in the Set up your project page
     [Setup]    Log in as a different user              &{Comp_admin1_credentials}
     Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-    When the user clicks the button/link               link = Change Monitoring Officer
+    When the user clicks the button/link               link = Change monitoring officer
     And the user edits the MO details
     When Log in as a different user                    &{lead_applicant_credentials_bd}
     Then the user should see assigned MO details
@@ -138,8 +149,8 @@ Monitoring officer see the project setup veiw for assigned project
 
 MO sees the application feedback
     [Documentation]  IFS-5298  IFS-8066
-    Given the user clicks the button/link  link = view application feedback
-    Then the user should see the element   jQuery = h1:contains("Application overview")
+    Given the user clicks the button/link       link = view application feedback
+    Then the user should see the element        jQuery = h1:contains("Application overview")
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
@@ -245,6 +256,29 @@ Comp admin assign project existing IFS user MO
     And logout as user
     Then the user logs in and checks for assigned projects
 
+Internal user assigns a MO to a new project and removes a partner organisation
+    [Documentation]    IFS-8753
+    When Log in as a different user                      &{internal_finance_credentials}
+    Then internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
+    And Internal user removes a partner organisation
+
+MO can now check the application feedback
+    [Documentation]    IFS-8753
+    Given Log in as a different user                           &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    When The user clicks the button/link                       link = ${PSCapplicationTitle}
+    and the user clicks the button/link                        link = view application feedback
+    Then The user should see the element                       jQuery = h1:contains("Application overview")
+
+MO can now view payment milestones in SBRI application
+    [Documentation]   IFS-8958
+    Given Requesting IDs of this application
+    When the SBRI MO assignee has been changed
+    And Log in as a different user                                          &{monitoring_officer_one_credentials}
+    And the user navigates to the page                                      ${server}/project-setup/project/${sbri_projectID}
+    And the user clicks the button/link                                     link = view application feedback
+    Then the payment milestone table is visible in application overview
+
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
@@ -271,6 +305,16 @@ The user is able to see Spend profile section
     the user clicks the button/link   link = Spend profile
     the user clicks the button/link   jQuery = a:contains("Set up your project")
 
+Requesting IDs of this application
+    ${sbri_projectID} =  get project id by name    ${sbri_applicaton_name}
+    Set suite variable    ${sbri_projectID}
+
+The SBRI MO assignee has been changed
+    log in as a different user                  &{Comp_admin1_credentials}
+    the user navigates to the page              ${server}/project-setup-management/project/${sbri_projectID}/monitoring-officer
+    the user clicks the button/link             link = Change monitoring officer
+    internal user assigns mo to application     ${sbri_application_id}      ${sbri_applicaton_name}     Orvill    Orville Gibbs
+
 Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}
     the user should see a field error       ${enter_a_valid_email}
@@ -294,7 +338,7 @@ The user should not see the validation error
 The user edits the MO details
     search for MO   Orvill  Orville Gibbs
     the user clicks the button/link    jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td a:contains("Remove")
-    the user clicks the button/link    link = Back
+    the user clicks the button/link    link = Back to assign monitoring officers
     search for MO  Nilesh  Nilesh Patti
     the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
@@ -322,6 +366,12 @@ The user enters the details
     the user enters text to a text field    id = firstName  Tom
     the user enters text to a text field    id = lastName   Poly
     the user enters text to a text field    id = phoneNumber  123456789
+
+The payment milestone table is visible in application overview
+    the user expands the section                Funding breakdown
+    the user should see the element             jQuery = h1:contains("Application overview")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£265,084") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£265,084")
 
 MO enter details and create account
     the user enters the details
@@ -407,7 +457,7 @@ The user should see assigned MO details
     the user should see the element                css = ul li.complete:nth-child(4)
     the user should see the text in the element    css = ul li.complete:nth-child(4) p    Your Monitoring Officer for this project is Nilesh Patti.
     the user clicks the button/link                link = Monitoring Officer
-    the user should see the element                jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    the user should see the element                jQuery = .success-alert:contains("We have assigned a monitoring officer to your project.")
     the user should see the element                jQuery = .govuk-body:contains("Nilesh Patti")
     the user should see the element                jQuery = .govuk-body:contains("nilesh.patti@gmail.com")
     the user should see the element                jQuery = .govuk-body:contains("449890325459")
@@ -425,3 +475,10 @@ release feedback on inform comp
     ...                              AND    the user clicks the button/link  jQuery = button:contains("Release feedback")
     log in as a different user     tom@poly.io   ${short_password}
     the user clicks the button/link  link = ${Assign_Project2}
+
+Internal user removes a partner organisation
+    the user navigates to the page          ${server}/project-setup-management/competition/${PSC_Competition_Id}/status/all
+    the user clicks the button/link         jQuery = tbody tr:nth-of-type(1) td:nth-of-type(2)
+    the user clicks the button/link         jQuery = h2:contains("SmithZone")~ button:contains("Remove organisation"):first
+    the user clicks the button/link         jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element     jQuery = h2:contains("SmithZone")

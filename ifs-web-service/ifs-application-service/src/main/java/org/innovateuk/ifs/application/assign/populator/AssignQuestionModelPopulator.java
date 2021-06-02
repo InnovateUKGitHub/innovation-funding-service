@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,7 +24,7 @@ public class AssignQuestionModelPopulator {
     private ApplicationRestService applicationRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private QuestionRestService questionRestService;
@@ -32,7 +32,7 @@ public class AssignQuestionModelPopulator {
     public AssignQuestionViewModel populateModel(long questionId, long applicationId) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        List<ProcessRoleResource> processRoles = userRestService.findAssignableProcessRoles(application.getId()).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findAssignableProcessRoles(application.getId()).getSuccess();
         QuestionResource question = questionRestService.findById(questionId).getSuccess();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("applicationId", singletonList(valueOf(applicationId)));

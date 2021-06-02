@@ -6,7 +6,9 @@ import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -20,7 +22,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,8 +79,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     static {
         Map<String, Sort> applicationSortFieldMap = new HashMap<>();
-        applicationSortFieldMap.put("id", new Sort(ASC, "id"));
-        applicationSortFieldMap.put("name", new Sort(ASC, "name", "id"));
+        applicationSortFieldMap.put("id", Sort.by(ASC, "id"));
+        applicationSortFieldMap.put("name", Sort.by(ASC, "name", "id"));
 
         APPLICATION_SORT_FIELD_MAP = Collections.unmodifiableMap(applicationSortFieldMap);
     }
@@ -95,7 +97,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition, organisationId));
     }
 
-    private void generateProcessRolesForApplication(User user, Role role, Application application, long organisationId) {
+    private void generateProcessRolesForApplication(User user, ProcessRoleType role, Application application, long organisationId) {
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisationId);
         processRoleRepository.save(processRole);
         List<ProcessRole> processRoles = new ArrayList<>();
@@ -115,7 +117,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         setInnovationArea(application, competition);
 
         application = applicationRepository.save(application);
-        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, application, organisationId);
+        generateProcessRolesForApplication(user, ProcessRoleType.LEADAPPLICANT, application, organisationId);
 
         linkAddressesToOrganisation(organisationId, application.getId());
 
@@ -184,6 +186,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                                                  final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             application.setManageFundingEmailDate(fundingEmailDateTime);
+            if (application.getCompetition().isAlwaysOpen()) {
+                application.setFeedbackReleased(fundingEmailDateTime);
+            }
             Application savedApplication = applicationRepository.save(application);
             return applicationMapper.mapToResource(savedApplication);
         });
@@ -207,22 +212,28 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<Void> reopenApplication(long applicationId) {
-        return find(application(applicationId)).andOnSuccess((application) -> {
-            return validateCompetitionIsOpen(application).andOnSuccess(() -> {
-                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
-                    validateApplicationIsSubmitted(application).andOnSuccess(() -> {
-                        applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
-                        application.setSubmittedDate(null);
-                        applicationRepository.save(application);
-                        return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
-                    });
-                });
-            });
-        });
+        return find(application(applicationId)).andOnSuccess(application ->
+                validateCompetitionIsNotAlwaysOpen(application).andOnSuccess(() ->
+                        validateCompetitionIsOpen(application).andOnSuccess(() ->
+                                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() ->
+                                        validateApplicationIsSubmitted(application).andOnSuccess(() -> {
+                                            applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
+                                            application.setSubmittedDate(null);
+                                            applicationRepository.save(application);
+                                            return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
+                                        })
+                                )
+                        )
+                )
+        );
     }
 
     private ServiceResult<Void> validateCompetitionIsOpen(Application application) {
         return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) ? serviceSuccess() : serviceFailure(COMPETITION_NOT_OPEN);
+    }
+
+    private ServiceResult<Void> validateCompetitionIsNotAlwaysOpen(Application application) {
+        return !application.getCompetition().isAlwaysOpen() ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_REOPENED);
     }
 
     private ServiceResult<Void> validateApplicationIsSubmitted(Application application) {
@@ -235,7 +246,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,
                                                        final Long userId,
-                                                       Role role) {
+                                                       ProcessRoleType role) {
         boolean contains = false;
         int i = 0;
         while (!contains && i < roles.size()) {
@@ -310,7 +321,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                             final Long userId,
-                                                                                            final Role role) {
+                                                                                            final ProcessRoleType role) {
         List<Application> allApps = applicationRepository.findAll();
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));

@@ -102,7 +102,7 @@ function loadSpDataFromAws() {
 # Create a file with aws credentials which mounted to the aws-cli docker image.
 docker stop ssm-access-container || true
 docker image rm ssm-access-image || true
-docker build --tag="ssm-access-image" docker/aws-cli
+docker tag docker-ifs.devops.innovateuk.org/releases/aws-cli:1.16.302 "ssm-access-image"
 
 if [[ "$USE_IAM" = "false" ]]; then
     # Use the local developer AWS credentials as the mount point for this container

@@ -182,7 +182,7 @@ Support User can see the read only view of Your organisation
     When the user clicks the button/link           jQuery = a:contains("Your project finances")
     Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
     When the user clicks the button/link           link = Your organisation
-    Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
+    Then the user should see the element           jQuery = dt:contains("Organisation size") + dd:contains("Micro")
     And the user should see the element            jQuery = dt:contains("Turnover") + dd:contains("0")
 
 Support User can see the read only view of Your funding
@@ -242,7 +242,7 @@ Innovation lead can see read only view of Your organisation
     When the user clicks the button/link           jQuery = a:contains("Your project finances")
     Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your organisation")
-    Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
+    Then the user should see the element           jQuery = dt:contains("Organisation size") + dd:contains("Micro")
     And the user should see the element            jQuery = strong:contains("1")
     And the user should see the element            jQuery = strong:contains("2020")
     And the user should see the element            jQuery = td:contains("Annual turnover") + td:contains("100,000")
@@ -335,7 +335,7 @@ Lead enters a valid research participation value
     run keyword and ignore error without screenshots  the user clicks the button/link  jQuery = .button-clear:contains("Edit")
     the user clicks the button/link                   jQuery = button:contains("Labour")
     the user clicks the button/link                   jQuery = button:contains("Open all")
-    the user should see the element                   name = add_cost
+    the user should see the element                   name = add_row
     the user clicks the button/link                   jQuery = button:contains('Add another role')
     the user should see the element                   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field              css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input  Test

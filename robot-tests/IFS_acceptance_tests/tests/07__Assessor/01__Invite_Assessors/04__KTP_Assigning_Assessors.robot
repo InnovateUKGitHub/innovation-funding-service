@@ -11,6 +11,14 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8617  Assessment overview - missing print link and spacing of score assessment
 ...
+...              IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...              IFS-8548  KTP project setup banners
+...
+...              IFS-8550 Release supporter feedback to KTA
+...
+...              IFS-9246 KTP fEC/Non-fEC: application changes for read-only viewers
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -20,7 +28,6 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${ktpAssessmentCompetitionName}             KTP assessment
 ${ktpAssessmentCompetitionID}               ${competition_ids['${ktpAssessmentCompetitionName}']}
 ${ktpAssessmentApplicationName}             KTP assessment application
 ${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
@@ -38,6 +45,14 @@ ${nonKTPOverviewFinanceApplicationName}     Non KTP Application
 ${nonKTPOverviewFinanceApplicationID}       ${application_ids['${nonKTPOverviewFinanceApplicationName}']}
 ${ktaEmail}                                 Amy.Colin@ktn-uk.test
 ${existingKTAEmail}                         john.fenton@ktn-uk.test
+${monitoringOfficerEmail}                   hermen.mermen@ktn-uk.test
+${KTPapplication}  	                        KTP in panel application
+${ktpProjectID}                             ${project_ids["${KTPapplication}"]}
+${KTPapplicationId}                         ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}                            KTP in panel
+${ktpLead}                                  bob@knowledge.base
+${ktpPartner}                               jessica.doe@ludlow.co.uk
+${uploadedPdf}                              fec-file
 
 *** Test Cases ***
 Comp admin can find the registered KTA in system
@@ -64,7 +79,7 @@ Invite the KTA to assess the KTP competition
     Given the user selects the checkbox       assessor-row-1
     And the user clicks the button/link       id = add-selected-assessors-to-invite-list-button
     When the user clicks the button/link      id = review-and-send-assessor-invites-button
-    And the user clicks the button/link       jQuery = button:contains("Send invite")
+    And the user clicks the button/link       jQuery = button:contains("Send invitation")
     Then the user should see the element      link = Amy Colin
 
 Assessor accept the inviation to assess the KTP competition
@@ -98,9 +113,15 @@ Assessor can see lead organisation project finances when all option selected in 
     And the user should see the element       link = Your project location
     And the user should see the element       link = Your funding
 
+Assessor can view the read-only view for 'Yes' selected fEC declaration
+    [Documentation]  IFS-9246
+    Given the user clicks the button/link                           link = Your fEC model
+    Then the user should see read only view for FEC declaration
+
 Assessor can see partner organisation project finances when all option selected in assessor view of fiannces in competition setup
     [Documentation]  IFS-8453
-    Given the user clicks the button/link     link = Back to finances overview
+    Given the user clicks the button/link     link = Back to your project finances
+    And the user clicks the button/link       link = Back to finances overview
     When the user clicks the button/link      jQuery = div:contains("Ludlow") ~ a:contains("View finances")
     Then the user should see the element      link = Your organisation
     And the user should see the element       link = Your project location
@@ -233,11 +254,11 @@ Assessor can submit the KTP application assessment
     Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
 
 Deafult value of assessor view finance config set to all for ktp competitions
-    [Documentation]   IFS-8594
+    [Documentation]   IFS-8594  IFS-8779
     Given Log in as a different user                 &{Comp_admin1_credentials}
     When the user navigates to the page              ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  1  KTP
+    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
     And the user clicks the button/link              link = Assessors
     Then radio button should be set to               assessorFinanceView   ALL
 
@@ -294,6 +315,63 @@ Assessor can see partner organisation finances for non ktp compettition when all
     And the user should see the element       link = Your project location
     And the user should see the element       link = Your funding
 
+KTA can see application successfull banner and feedback information with date on making the application successful, before the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS Admin makes the application decision           ${ktpAssessmentCompetitionName}  Successful
+    And IFS Admin notifies all applicants
+    When MO navigates to application overview page           ${ktpAssessmentApplicationName}  This application was successful.
+    Then the user should see the element                     jQuery = h2:contains("This application was successful.")
+    And the user should see the element                      jQuery = p:contains("All application feedback will be available here from ${ktpAssessmentCompetitionReleaseFeedbackDayMonthYear}.")
+
+KTA can see application successful banner and feedback information after the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS admin releases feedback to the applicant    ${ktpAssessmentCompetitionName}
+    When MO navigates to application overview page        ${ktpAssessmentApplicationName}  This application was successful.
+    Then the user should see the element                  jQuery = h2:contains("This application was successful.")
+    And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
+
+KTA can see application unsuccessful banner and feedback information with date on making the application unsuccessful, before the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS Admin makes the application decision        ${ktpDetailsFinanceCompetitionName}  Unsuccessful
+    And IFS Admin notifies all applicants
+    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}  This application was unsuccessful.
+    Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
+    And the user should see the element                   jQuery = p:contains("All application feedback will be available here from ${ktpDetailsFinanceCompetitionReleaseFeedbackDayMonthYear}.")
+
+KTA can see application unsuccessful banner and feedback information after the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS admin releases feedback to the applicant    ${ktpDetailsFinanceCompetitionName}
+    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}  This application was unsuccessful.
+    Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
+    And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
+
+KTA receives a notification email that assessor and supporter feedback is available on release feedback
+    [Documentation]  IFS-8550
+    Given log in as a different user                                     &{ifs_admin_user_credentials}
+    And the user clicks the button/link                                  link = ${KTPcompetiton}
+    When IFS admin releases feedback on making application sucessful
+    Then the user reads his email and clicks the link                    ${monitoringOfficerEmail}   ${KTPcompetiton}: Feedback for application ${KTPapplicationId} is now available.   You can now view the feedback for this application  1
+
+KTA can view written feedback from assessors and supporters on release feedback
+    [Documentation]  IFS-8550
+    Given log in as a different user                        ${monitoringOfficerEmail}   ${short_password}
+    When the user navigates to application overview         ${KTPapplication}
+    Then KTA should see assessors and supporters feedback
+
+Project lead should not see assessor or supporter feedback
+    [Documentation]  IFS-8550
+    Given log in as a different user                                               ${ktpLead}  ${short_password}
+    When the user navigates to the page                                            ${server}/project-setup/project/${ktpProjectID}
+    And the user clicks the button/link                                            link = view application overview
+    Then the project team member should not see assessor or supporter feedback
+
+Project partner should not see assessor or supporter feedback
+    [Documentation]  IFS-8550
+    Given log in as a different user                                               ${ktpPartner}  ${short_password}
+    When the user navigates to the page                                            ${server}/project-setup/project/${ktpProjectID}
+    And the user clicks the button/link                                            link = view application overview
+    Then the project team member should not see assessor or supporter feedback
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -314,7 +392,7 @@ KTA accepts the invitation to assess the application
 
 KTA accepts to assess the KTP application
     [Arguments]   ${compettitionName}                    ${ktaEmail}  ${short_password}
-    log in as a different user           ${ktaEmail}  ${short_password}
+    log in as a different user                           ${ktaEmail}  ${short_password}
     the user clicks the assessment tile if displayed
     the user clicks the button/link                       link = ${compettitionName}
     the user clicks the button/link                       link = Accept or reject
@@ -327,10 +405,10 @@ Assessor completes the KTP category
     The user enters text to a text field                    css = .editor    ${feedbackText}
     Wait for autosave
     mouse out  css = .editor
-    the user should see the element                         jQuery = span:contains("Saved!")
-    The user clicks the button/link                         jQuery = button:contains("Save and return to assessment overview")
-    ${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
-    Run Keyword If    '${error}' == 'True'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
+    the user should see the element                                    jQuery = span:contains("Saved!")
+    The user clicks the button/link                                    jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 Assessor should see the category details
     [Arguments]   ${category}   ${score}   ${percentage}
@@ -345,10 +423,10 @@ Assessor completes the scope section of an application
     The user enters text to a text field                    css = .editor    Testing feedback text
     Wait for autosave
     mouse out  css = .editor
-    the user should see the element                         jQuery = span:contains("Saved!")
-    the user clicks the button/link                         jQuery = button:contains("Save and return to assessment overview")
-    ${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
-    Run Keyword If    '${error}' == 'True'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
+    the user should see the element                                    jQuery = span:contains("Saved!")
+    the user clicks the button/link                                    jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status without screenshots     page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                             the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 Assessor should review the assessment category details
     [Arguments]   ${sectionStatus}   ${score}   ${idSelector}   ${feedbackText}
@@ -380,7 +458,7 @@ Invite KTA to assess the competition
     ...                              ELSE     the user selects the checkbox     assessor-row-1
     the user clicks the button/link                          id = add-selected-assessors-to-invite-list-button
     the user clicks the button/link                          id = review-and-send-assessor-invites-button
-    the user clicks the button/link                          jQuery = button:contains("Send invite")
+    the user clicks the button/link                          jQuery = button:contains("Send invitation")
     KTA accepts the invitation to assess the application     ${competitionName}  ${email}   ${short_password}
     Log in as a different user                               &{ifs_admin_user_credentials}
     the user navigates to the page                           ${server}/management/assessment/competition/${competitionID}/applications
@@ -391,3 +469,93 @@ Invite KTA to assess the competition
     the user clicks the button/link                          id = notify-assessors-changes-since-last-notify-button
     KTA accepts to assess the KTP application                ${competitionName}    ${email}  ${short_password}
     the user clicks the button/link                          link = ${applicationTitle}
+
+IFS Admin makes the application decision
+    [Arguments]   ${competitionName}  ${decision}
+    log in as a different user                            &{ifs_admin_user_credentials}
+    the user clicks the button/link                       link = ${competitionName}
+    the user clicks the button/link                       id = close-assessment-button
+    IFS admin inputs the funding decision                 ${decision}
+
+IFS admin inputs the funding decision
+    [Arguments]   ${decision}
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     id = select-all-1
+    the user clicks the button/link     jQuery = button:contains("${decision}")
+    the user clicks the button/link     link = Competition
+
+IFS Admin notifies all applicants
+    the user clicks the button/link                      link = Manage funding notifications
+    the user clicks the button/link                      id = select-all-1
+    the user clicks the button/link                      id = write-and-send-email
+    the user clicks the button/link                      id = send-email-to-all-applicants
+    the user clicks the button/link                      id = send-email-to-all-applicants-button
+    the user refreshes until element appears on page     jQuery = td:contains("Sent")
+
+IFS admin releases feedback to the applicant
+    [Arguments]  ${competitionName}
+    log in as a different user          &{ifs_admin_user_credentials}
+    the user clicks the button/link     link = ${competitionName}
+    the user clicks the button/link     id = release-feedback-button
+
+MO navigates to application overview page
+    [Arguments]  ${applicationName}  ${message}
+    log in as a different user                            ${monitoringOfficerEmail}  ${short_password}
+    the user navigates to application overview            ${applicationName}
+    the user refreshes until element appears on page      jQuery = h2:contains("${message}")
+
+the user navigates to application overview
+    [Arguments]  ${applicationName}
+    the user navigates to the page                       ${server}/project-setup/monitoring-officer/dashboard
+    the user refreshes until element appears on page     link = ${applicationName}
+    the user clicks the button/link                      link = ${applicationName}
+    the user clicks the button/link                      link = view application overview
+
+KTA should see assessors and supporters feedback
+    the user clicks the button/link     jQuery = .govuk-heading-m:contains("Score assessment") + div button:contains("Open all")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Impact") + div h3:contains("Assessor 1") + p:contains("This is the impact feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Impact") + div h3:contains("Assessor 2") + p:contains("This is the impact feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Impact") span:contains("Average score 7.0 / 10")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Innovation") + div h3:contains("Assessor 1") + p:contains("This is the innovation feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Innovation") + div h3:contains("Assessor 2") + p:contains("This is the innovation feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Innovation") span:contains("Average score 7.0 / 10")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Challenge") + div h3:contains("Assessor 1") + p:contains("This is the challenge feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Challenge") + div h3:contains("Assessor 2") + p:contains("This is the challenge feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Challenge") span:contains("Average score 7.0 / 10")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Cohesiveness") + div h3:contains("Assessor 1") + p:contains("This is the cohesiveness feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Cohesiveness") + div h3:contains("Assessor 2") + p:contains("This is the cohesiveness feedback")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Cohesiveness") span:contains("Average score 7.0 / 10")
+    the user should see the element     jQuery = h3:contains("Application score: 70.0%")
+    the user clicks the button/link     jQuery = .govuk-heading-m:contains("Application feedback") + div button:contains("Open all")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Assessor feedback") + div ul li:contains("Assessor 1") p:contains("Perfect application")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Assessor feedback") + div ul li:contains("Assessor 2") p:contains("Perfect application")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Anarchy inc.") p:contains("This application is extraordinary I'd love to fund it")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Money inc.") p:contains("This application is extraordinary I'd love to fund it")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Evil inc.") p:contains("This application is extraordinary I'd hate to fund it")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Guest inc.") p:contains("This application is extraordinary I'd hate to fund it")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Connolly inc.")
+    the user should see the element     jQuery = .govuk-accordion__section-header:contains("Supporter feedback") + div ul li span:contains("Alston inc.")
+
+the project team member should not see assessor or supporter feedback
+    the user should not see the element    jQuery = .govuk-accordion__section-header:contains("Assessor feedback")
+    the user should not see the element    jQuery = .govuk-accordion__section-header:contains("Supporter feedback")
+    the user should not see the element    jQuery = h2:contains("Score assessment")
+
+IFS admin releases feedback on making application sucessful
+    IFS admin inputs the funding decision                Successful
+    IFS Admin notifies all applicants
+    the user clicks the button/link                      link = Competition
+    the user refreshes until element appears on page     id = release-feedback-button
+    the user clicks the button/link                      id = release-feedback-button
+
+the user should see read only view for FEC declaration
+    the user should not see the element                     jQuery = button:contains("Edit your fEC Model")
+    the user checks the read-only page
+
+the user checks the read-only page
+    # Due to us testing webtest data here, the file does not exist so we check for only no internal server errors. Page not found is OK in this case.
+    the user should see the element                                  jQuery = legend:contains("Will you be using the full economic costing (fEC) funding model?") > p:contains("Yes")
+    the user clicks the button/link                                  jQuery = h3:contains("View fEC certificate") ~ div a:contains("${uploadedPdf}")
+    Select Window                                                    NEW
+    the user should not see internal server and forbidden errors
+    the user closes the last opened tab

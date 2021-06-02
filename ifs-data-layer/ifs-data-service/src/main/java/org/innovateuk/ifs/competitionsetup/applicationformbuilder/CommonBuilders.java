@@ -1,23 +1,20 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
-import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
+import org.innovateuk.ifs.project.grantofferletter.template.repository.GolTemplateRepository;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +39,13 @@ public class CommonBuilders {
     public static final String EDI_QUESTION_PATTERN = "<a href=\"%s\" target=\"_blank\" rel=\"external\">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>";
 
     @Autowired
-    private ResearchCategoryRepository categoryRepository;
-
-    @Autowired
     private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private GolTemplateRepository golTemplateRepository;
 
     /*
     Tech debt.
@@ -62,7 +59,7 @@ public class CommonBuilders {
     public static SectionBuilder projectDetails() {
         return aSection()
                 .withName("Project details")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.PROJECT_DETAILS)
                 .withDescription("Please provide information about your project. This section is not scored but will provide background to the project.")
                 .withAssessorGuidanceDescription("These sections give important background information on the project. They do not need scoring however you do need to mark the scope.");
     }
@@ -70,7 +67,7 @@ public class CommonBuilders {
     public static SectionBuilder applicationQuestions() {
         return aSection()
                 .withName("Application questions")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.APPLICATION_QUESTIONS)
                 .withDescription("These are the questions which will be marked by the assessors.")
                 .withAssessorGuidanceDescription("Each question should be given a score out of 10. Written feedback should also be given.");
     }
@@ -78,7 +75,7 @@ public class CommonBuilders {
     public static SectionBuilder finances() {
         return aSection()
                 .withName("Finances")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.FINANCES)
                 .withAssessorGuidanceDescription("Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the Finances overview section")
                 .withChildSections(newArrayList(
                         aSubSection()
@@ -349,23 +346,6 @@ public class CommonBuilders {
                 Function.identity());
     }
 
-    public List<GrantClaimMaximum> getDefaultGrantClaimMaximums() {
-        ResearchCategory feasibilityStudies = categoryRepository.findById(33L).get();
-        ResearchCategory industrialResearch = categoryRepository.findById(34L).get();
-        ResearchCategory experimentalDevelopment = categoryRepository.findById(35L).get();
-        return newArrayList(
-                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, 70),
-                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, 60),
-                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.LARGE, 50),
-                new GrantClaimMaximum(industrialResearch, OrganisationSize.SMALL, 70),
-                new GrantClaimMaximum(industrialResearch, OrganisationSize.MEDIUM, 60),
-                new GrantClaimMaximum(industrialResearch, OrganisationSize.LARGE, 50),
-                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, 45),
-                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, 35),
-                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, 25)
-        );
-    }
-
     public static Competition addDefaultProjectSetupColumns(Competition competition) {
         addProjectSetupStage(competition, PROJECT_DETAILS);
         addProjectSetupStage(competition, PROJECT_TEAM);
@@ -392,9 +372,55 @@ public class CommonBuilders {
     }
 
     public Competition overrideTermsAndConditions(Competition competition) {
-        GrantTermsAndConditions grantTermsAndConditions =
+        GrantTermsAndConditions termsAndConditions =
                 grantTermsAndConditionsRepository.getLatestForFundingType(competition.getFundingType());
-        competition.setTermsAndConditions(grantTermsAndConditions);
+
+        if (FundingRules.SUBSIDY_CONTROL == competition.getFundingRules()) {
+            String subsidyControlTemplateName = competition.getFundingType().getDefaultTermsName() + " - Subsidy control";
+            GrantTermsAndConditions subsidyControlTermsAndConditions =
+                    grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc(subsidyControlTemplateName);
+
+            if (subsidyControlTermsAndConditions != null) {
+                competition.setTermsAndConditions(subsidyControlTermsAndConditions);
+            } else {
+                competition.setTermsAndConditions(termsAndConditions);
+            }
+
+            competition.setOtherFundingRulesTermsAndConditions(termsAndConditions);
+
+        } else {
+            competition.setTermsAndConditions(termsAndConditions);
+        }
+
         return competition;
+    }
+
+    public static Competition setDefaultOrganisationConfig(Competition competition) {
+        if (competition.getCompetitionOrganisationConfig() == null) {
+            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
+            competitionOrganisationConfig.setCompetition(competition);
+            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
+        }
+
+        return competition;
+    }
+
+    public static Competition setDefaultApplicationConfig(Competition competition) {
+        if (competition.getCompetitionApplicationConfig() == null) {
+            CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
+            competitionApplicationConfig.setCompetition(competition);
+            competition.setCompetitionApplicationConfig(competitionApplicationConfig);
+        }
+
+        return competition;
+    }
+
+    public Competition getGolTemplate(Competition competition) {
+        String templateName = competition.getFundingType().getGolType();
+        GolTemplate golTemplate =
+                golTemplateRepository.findFirstByNameOrderByVersionDesc(templateName);
+        competition.setGolTemplate(golTemplate);
+        return competition;
+
     }
 }

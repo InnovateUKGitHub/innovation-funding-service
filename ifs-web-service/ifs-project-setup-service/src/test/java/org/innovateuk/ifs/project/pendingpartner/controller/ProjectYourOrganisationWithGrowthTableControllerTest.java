@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -106,7 +106,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
             .andExpect(view().name(VIEW_WITH_GROWTH_TABLE_PAGE))
             .andReturn();
 
-        Future<YourOrganisationViewModel> viewModelRequest = (Future<YourOrganisationViewModel>) result.getModelAndView().getModel().get("model");
+        Future<ApplicationYourOrganisationViewModel> viewModelRequest = (Future<ApplicationYourOrganisationViewModel>) result.getModelAndView().getModel().get("model");
         assertEquals(viewModelRequest.get(), yourOrganisationViewModel);
 
         Future<YourOrganisationWithGrowthTableForm> formRequest = (Future<YourOrganisationWithGrowthTableForm>) result.getModelAndView().getModel().get("form");
@@ -149,7 +149,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
             .andExpect(view().name(VIEW_WITH_GROWTH_TABLE_PAGE))
             .andReturn();
 
-        YourOrganisationViewModel viewModelRequest = (YourOrganisationViewModel) result.getModelAndView().getModel().get("model");
+        ApplicationYourOrganisationViewModel viewModelRequest = (ApplicationYourOrganisationViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(viewModelRequest, yourOrganisationViewModel);
 
         YourOrganisationWithGrowthTableForm formRequest = (YourOrganisationWithGrowthTableForm) result.getModelAndView().getModel().get("form");

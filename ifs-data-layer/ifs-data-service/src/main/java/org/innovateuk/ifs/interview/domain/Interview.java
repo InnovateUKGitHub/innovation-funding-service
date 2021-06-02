@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -32,7 +32,7 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     }
 
     public Interview(Application application, InterviewParticipant interviewParticipant) {
-        this.participant = new ProcessRole(interviewParticipant.getUser(), application.getId(), Role.INTERVIEW_ASSESSOR);
+        this.participant = new ProcessRole(interviewParticipant.getUser(), application.getId(), ProcessRoleType.INTERVIEW_ASSESSOR);
         this.target = application;
     }
 

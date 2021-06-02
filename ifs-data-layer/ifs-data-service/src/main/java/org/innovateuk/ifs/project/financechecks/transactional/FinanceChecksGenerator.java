@@ -9,12 +9,17 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
+import org.innovateuk.ifs.procurement.milestone.domain.ProjectProcurementMilestone;
+import org.innovateuk.ifs.procurement.milestone.repository.ProjectProcurementMilestoneRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.util.KtpFecFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,6 +62,9 @@ public class FinanceChecksGenerator {
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
@@ -70,6 +78,12 @@ public class FinanceChecksGenerator {
 
     @Autowired
     private KtpFinancialYearsRepository ktpFinancialYearsRepository;
+
+    @Autowired
+    private ProjectProcurementMilestoneRepository projectProcurementMilestoneRepository;
+
+    @Autowired
+    private KtpFecFilter ktpFecFilter;
 
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
@@ -97,32 +111,49 @@ public class FinanceChecksGenerator {
         if (ktpFinancialYears != null) {
             ktpFinancialYears = ktpFinancialYearsRepository.save(new KtpFinancialYears(ktpFinancialYears));
         }
-        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover, ktpFinancialYears);
+
+        ProjectFinance projectFinance = new ProjectFinance(organisation,
+                applicationFinanceForOrganisation.getOrganisationSize(),
+                newProject, growthTable, employeesAndTurnover, ktpFinancialYears,
+                applicationFinanceForOrganisation.getNorthernIrelandDeclaration(),
+                applicationFinanceForOrganisation.getFecModelEnabled(), applicationFinanceForOrganisation.getFecFileEntry());
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
-        if(competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+        if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
+        }
+
+        if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
+            PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
+            eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
         }
 
         ProjectFinance projectFinanceForOrganisation =
                 projectFinanceRepository.save(projectFinance);
 
-        List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
+        List<ApplicationProcurementMilestone> applicationProcurementMilestones = applicationFinanceForOrganisation.getMilestones();
+        if (applicationProcurementMilestones != null && !applicationProcurementMilestones.isEmpty()) {
+            projectFinance.setMilestones(copyMilestones(applicationProcurementMilestones, projectFinanceForOrganisation));
+        }
+
+        List<? extends FinanceRow> originalFinanceFigures = ktpFecFilter.filterKtpFecCostCategoriesIfRequired(applicationFinanceForOrganisation,
+                applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId()));
 
         List<ProjectFinanceRow> copiedFinanceFigures = simpleMap(originalFinanceFigures, original -> {
+            ApplicationFinanceRow originalApplicationFinanceRow = (ApplicationFinanceRow) original;
             ProjectFinanceRow newRow = new ProjectFinanceRow(projectFinanceForOrganisation);
-            newRow.setApplicationRowId(original.getId());
-            newRow.setCost(original.getCost());
-            List<FinanceRowMetaValue> metaValues = simpleMap(original.getFinanceRowMetadata(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
+            newRow.setApplicationRowId(originalApplicationFinanceRow.getId());
+            newRow.setCost(originalApplicationFinanceRow.getCost());
+            List<FinanceRowMetaValue> metaValues = simpleMap(originalApplicationFinanceRow.getFinanceRowMetadata(), costValue -> copyFinanceRowMetaValue(newRow, costValue));
             newRow.setFinanceRowMetadata(metaValues);
-            newRow.setDescription(original.getDescription());
+            newRow.setDescription(originalApplicationFinanceRow.getDescription());
             // map H2020 totals directly to conventional totals as they are treated exactly the same in project setup
-            newRow.setItem("HORIZON_2020_TOTAL".equals(original.getItem()) ? "TOTAL" : original.getItem());
-            newRow.setName(original.getName());
-            newRow.setQuantity(original.getQuantity());
-            newRow.setType(original.getType());
+            newRow.setItem("HORIZON_2020_TOTAL".equals(originalApplicationFinanceRow.getItem()) ? "TOTAL" : originalApplicationFinanceRow.getItem());
+            newRow.setName(originalApplicationFinanceRow.getName());
+            newRow.setQuantity(originalApplicationFinanceRow.getQuantity());
+            newRow.setType(originalApplicationFinanceRow.getType());
             return newRow;
         });
 
@@ -136,6 +167,14 @@ public class FinanceChecksGenerator {
             });
         });
         return serviceSuccess(projectFinance);
+    }
+
+    private List<ProjectProcurementMilestone> copyMilestones(List<ApplicationProcurementMilestone> applicationProcurementMilestones, ProjectFinance projectFinance) {
+        List<ProjectProcurementMilestone> projectProcurementMilestones = new ArrayList<>();
+        applicationProcurementMilestones.forEach(milestone ->
+                projectProcurementMilestones.add(projectProcurementMilestoneRepository.save(new ProjectProcurementMilestone(milestone, projectFinance)))
+        );
+        return projectProcurementMilestones;
     }
 
     private FinanceCheck createMvpFinanceCheckEmptyCosts(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {

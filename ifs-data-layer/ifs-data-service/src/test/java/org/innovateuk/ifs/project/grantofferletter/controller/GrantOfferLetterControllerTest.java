@@ -77,6 +77,17 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
     }
 
     @Test
+    public void getSignedAdditionalContractFileContents() throws Exception {
+
+        Function<GrantOfferLetterService, ServiceResult<FileAndContents>> serviceCallToUpload =
+                (service) -> service.getSignedAdditionalContractFileAndContents(projectId);
+
+        assertGetFileContents("/project/{projectId}/signed-additional-contract", new Object[] {projectId},
+                emptyMap(), grantOfferLetterService, serviceCallToUpload).
+                andDo(documentFileGetContentsMethod("project/{method-name}"));
+    }
+
+    @Test
     public void getGrantOfferLetterFileEntryDetails() throws Exception {
 
         Function<GrantOfferLetterService, ServiceResult<FileEntryResource>> serviceCallToUpload =
@@ -95,6 +106,18 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
                 (service) -> service.getAdditionalContractFileEntryDetails(projectId);
 
         assertGetFileDetails("/project/{projectId}/additional-contract/details", new Object[] {projectId},
+                emptyMap(),
+                grantOfferLetterService, serviceCallToUpload).
+                andDo(documentFileGetDetailsMethod("project/{method-name}"));
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileEntryDetails() throws Exception {
+
+        Function<GrantOfferLetterService, ServiceResult<FileEntryResource>> serviceCallToUpload =
+                (service) -> service.getSignedAdditionalContractFileEntryDetails(projectId);
+
+        assertGetFileDetails("/project/{projectId}/signed-additional-contract/details", new Object[] {projectId},
                 emptyMap(),
                 grantOfferLetterService, serviceCallToUpload).
                 andDo(documentFileGetDetailsMethod("project/{method-name}"));
@@ -147,6 +170,16 @@ public class GrantOfferLetterControllerTest extends BaseFileControllerMockMVCTes
         when(grantOfferLetterService.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
+                andExpect(status().isNoContent()).
+                andDo(document("project/{method-name}"));
+    }
+
+    @Test
+    public void removeSignedAdditionalContractFile() throws Exception {
+
+        when(grantOfferLetterService.removeSignedAdditionalContractFileEntry(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/signed-additional-contract", projectId)).
                 andExpect(status().isNoContent()).
                 andDo(document("project/{method-name}"));
     }

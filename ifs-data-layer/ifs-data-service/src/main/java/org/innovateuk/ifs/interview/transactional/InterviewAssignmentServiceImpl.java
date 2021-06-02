@@ -12,7 +12,7 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -195,7 +195,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
         if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateIn(application.getId(), singletonList(CREATED))) {
-            final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
+            final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), ProcessRoleType.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
             final InterviewAssignment panel = new InterviewAssignment(application, pr);
 
             interviewAssignmentRepository.save(panel);

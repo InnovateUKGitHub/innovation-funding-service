@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.competition.domain;
 
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
+import static org.innovateuk.ifs.competition.resource.MilestoneType.assessmentPeriodValues;
+
 /**
- * A {@link Competition} Milestone, with or without a preset date.
+ * Represents a {@link Competition} Milestone, with or without a preset date.
+ * {@link Milestone}s may have an assessment period {@link AssessmentPeriod} attached to them.
  */
 @Entity
 public class Milestone {
@@ -23,6 +27,10 @@ public class Milestone {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="parent_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
 
     private Milestone() {
     }
@@ -43,6 +51,20 @@ public class Milestone {
         this.type = type;
         this.date = date;
         this.competition = competition;
+    }
+
+    public Milestone(MilestoneType type, Competition competition, AssessmentPeriod assessmentPeriod) {
+        if (type == null) { throw new IllegalArgumentException("type cannot be null"); }
+        if (competition == null) { throw new IllegalArgumentException("competition cannot be null"); }
+        if (assessmentPeriod != null) {
+            if (!assessmentPeriodValues().contains(type)) {
+                throw new IllegalArgumentException("Only assessment period milestones can be linked to an assessment period");
+            }
+        }
+
+        this.type = type;
+        this.competition = competition;
+        this.assessmentPeriod = assessmentPeriod;
     }
 
     public Long getId() {
@@ -75,6 +97,14 @@ public class Milestone {
 
     public void setDate(ZonedDateTime date) {
         this.date = date;
+    }
+
+    public AssessmentPeriod getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public void setAssessmentPeriod(AssessmentPeriod assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
     }
 
     public boolean isSet() {

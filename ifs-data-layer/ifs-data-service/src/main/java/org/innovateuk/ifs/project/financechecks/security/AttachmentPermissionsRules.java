@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
@@ -19,9 +18,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isExternalFinanceUser;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasProjectFinanceAuthority;
 
 /*
   Provides the Permission Rules to manage Queries' Attachments under the context of a ProjectFinance.
@@ -45,12 +44,9 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
     @Autowired
     private ProjectFinanceQueryPermissionRules projectFinanceQueryPermissionRules;
 
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project Finance can upload attachments.")
     public boolean projectFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Competition Finance can upload attachments.")
@@ -70,7 +66,7 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment saved with a post, or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean projectFinanceUsersCanFetchAnyAttachment(AttachmentResource attachment, UserResource user) {
-        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : isProjectFinanceUser(user);
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Competition Finance users can fetch any Attachment saved with a post, or any attachment they have uploaded that has yet to be saved with a post.")
@@ -92,7 +88,7 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Project Finance users can download any Attachment saved with a post or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean projectFinanceUsersCanDownloadAnyAttachment(AttachmentResource attachment, UserResource user) {
-        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : isProjectFinanceUser(user);
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")

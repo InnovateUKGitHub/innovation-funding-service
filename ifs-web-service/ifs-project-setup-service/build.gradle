@@ -2,18 +2,12 @@ apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 buildscript {
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
     ext {
         serverContext = '/project-setup'
     }
@@ -40,11 +34,13 @@ createContainer.hostName = "project-setup-svc"
 createContainer.containerName = "project-setup-svc"
 createContainer.containerId = "project-setup-svc"
 createContainer.portBindings = ['9005:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 pullImageAndCreateContainer.hostName = "project-setup-svc"
 pullImageAndCreateContainer.containerName = "project-setup-svc"
 pullImageAndCreateContainer.containerId = "project-setup-svc"
 pullImageAndCreateContainer.portBindings = ['9005:8000']
+createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
 
 def enabled = project.hasProperty('ifs.project-setup-service.enabled') ? project.property('ifs.project-setup-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.project-setup-service.pull.nexus.image') ? project.property('ifs.project-setup-service.pull.nexus.image').toBoolean() : false
@@ -83,7 +79,7 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-web-service:ifs-project-commons", configuration: 'testArtifacts')
 
-    testCompile "com.opencsv:opencsv:4.3.2"
+    testCompile "com.opencsv:opencsv"
 }
 
 processResources {

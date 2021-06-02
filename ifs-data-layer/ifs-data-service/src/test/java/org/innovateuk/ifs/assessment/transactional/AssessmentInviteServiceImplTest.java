@@ -193,6 +193,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Competition competition = newCompetition().withName("my competition")
                 .withMilestones(milestones)
                 .withSetupComplete(true)
+                .withAlwaysOpen(false)
                 .build();
 
         innovationArea = newInnovationArea().build();
@@ -228,6 +229,59 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
+    public void getAlwaysOpenInvitesToSend(){
+        List<String> emails = asList("john@email.com", "peter@email.com");
+        List<String> names = asList("John Barnes", "Peter Jones");
+
+        Competition competition = newCompetition()
+                .withName("my competition")
+                .withId(1L)
+                .withAlwaysOpen(true)
+                .build();
+
+        List<AssessmentInvite> invites = newAssessmentInvite()
+                .withCompetition(competition)
+                .withEmail(emails.get(0), emails.get(1))
+                .withHash(Invite.generateInviteHash())
+                .withInnovationArea(innovationArea)
+                .withName(names.get(0), names.get(1))
+                .withStatus(CREATED)
+                .withUser(user)
+                .build(2);
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "competitionName", competition.getName()
+        );
+
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
+
+        String templatePath = PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_preview_text.txt";
+
+        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
+        when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
+                expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
+
+        AssessorInvitesToSendResource expectedAssessorInviteToSendResource = newAssessorInvitesToSendResource()
+                .withContent("content")
+                .withCompetitionId(competition.getId())
+                .withCompetitionName(competition.getName())
+                .withRecipients(names)
+                .build();
+
+        AssessorInvitesToSendResource result = service.getAllInvitesToSend(competition.getId()).getSuccess();
+        assertEquals(expectedAssessorInviteToSendResource, result);
+
+        InOrder inOrder = inOrder(competitionRepositoryMock,
+                assessmentInviteRepositoryMock, notificationTemplateRendererMock);
+        inOrder.verify(competitionRepositoryMock).findById(competition.getId());
+        inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
+                templatePath, expectedNotificationArguments);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void getAllInvitesToSend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
@@ -239,6 +293,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -298,6 +353,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -356,6 +412,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         AssessmentInvite invite = setUpCompetitionInvite(competition, email, name, CREATED, innovationArea, null);
@@ -363,6 +420,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Map<String, Object> expectedNotificationArguments = asMap(
                 "name", name,
                 "competitionName", "my competition",
+                "competitionId", competition.getId(),
                 "acceptsDate", acceptsDate.format(inviteFormatter),
                 "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
@@ -404,6 +462,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(acceptsDate)
                 .withAssessorDeadlineDate(deadlineDate)
+                .withAlwaysOpen(false)
                 .build();
 
         AssessmentInvite invite = setUpCompetitionInvite(competition, email, name, SENT, innovationArea, null);
@@ -411,6 +470,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         Map<String, Object> expectedNotificationArguments = asMap(
                 "name", name,
                 "competitionName", "my competition",
+                "competitionId", competition.getId(),
                 "acceptsDate", acceptsDate.format(inviteFormatter),
                 "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
@@ -885,6 +945,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -903,6 +964,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
+                "competitionId", invites.get(0).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(0).getHash(),
@@ -913,6 +975,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
+                "competitionId", invites.get(1).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(1).getHash(),
@@ -967,6 +1030,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .withAlwaysOpen(false)
                 .build();
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -994,6 +1058,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
+                "competitionId", invites.get(0).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(0).getHash(),
@@ -1004,6 +1069,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
+                "competitionId", invites.get(1).getTarget().getId(),
                 "acceptsDate", "24 May 2017",
                 "deadlineDate", "30 May 2017",
                 "inviteUrl", "https://ifs-local-dev/assessment/invite/competition/" + invites.get(1).getHash(),
@@ -1049,6 +1115,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withName("my competition")
                 .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .withAlwaysOpen(false)
                 .build();
 
         List<User> existingUsers = newUser()
@@ -1255,7 +1322,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<User> expectedPage = new PageImpl<>(assessors, pageable, 2L);
 
@@ -1288,7 +1355,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         long innovationAreaId = 10L;
         String assessorFilter = "";
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
@@ -1314,7 +1381,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         int pageSize = 20;
         String assessorFilter = "";
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
@@ -1531,6 +1598,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Competition competition = newCompetition()
                 .withName("competition name")
+                .withAlwaysOpen(false)
                 .build();
 
         ExistingUserStagedInviteResource existingAssessor = newExistingUserStagedInviteResource()
@@ -1579,6 +1647,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         Competition competition = newCompetition()
                 .withName("competition name")
+                .withAlwaysOpen(false)
                 .build();
 
         List<ExistingUserStagedInviteResource> existingAssessors = newExistingUserStagedInviteResource()
@@ -1609,7 +1678,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         String newAssessorName = "tom baldwin";
         String newAssessorEmail = "tom@poly.io";
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition()
+                .withAlwaysOpen(false)
+                .build();
 
         InnovationArea innovationArea = newInnovationArea()
                 .withName("machine learning")
@@ -1783,7 +1854,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withEmail(testEmail1, testEmail2)
                 .build(2);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 
@@ -1839,7 +1910,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withCompetitionId(competition.getId())
                 .build(2);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         List<AssessmentInvite> pagedResult = newAssessmentInvite()
                 .withId(1L,2L)
@@ -1961,7 +2032,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withEmail(testEmail1, testEmail2)
                 .build(2);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 

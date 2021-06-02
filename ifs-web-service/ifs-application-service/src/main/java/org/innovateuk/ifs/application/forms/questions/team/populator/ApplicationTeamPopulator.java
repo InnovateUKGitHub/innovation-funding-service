@@ -17,13 +17,13 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +39,8 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 
 @Component
 public class ApplicationTeamPopulator {
@@ -54,7 +55,7 @@ public class ApplicationTeamPopulator {
     private ApplicationService applicationService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -71,7 +72,7 @@ public class ApplicationTeamPopulator {
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
         List<ProcessRoleResource> applicantProcessRoles = processRoles
                 .stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
@@ -103,7 +104,7 @@ public class ApplicationTeamPopulator {
         ApplicationKtaInviteResource ktaInvite = null;
 
         Optional<ProcessRoleResource> kta = processRoles.stream()
-                .filter(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER).findAny();
+                .filter(pr -> pr.getRole().isKta()).findAny();
 
         if (kta.isPresent()) {
             ktaProcessRole = kta.get();

@@ -1,9 +1,8 @@
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
+
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-apply from: rootProject.file("gradle-support/asciidoc.gradle")
-apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
 
@@ -19,8 +18,8 @@ dependencies {
     compile project(":ifs-rest-util")
 
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile 'javax.mail:mail:1.4.7'
-    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:2.0.2.RELEASE"
+    compile 'javax.mail:mail'
+    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
 
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
@@ -35,7 +34,6 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
-    finalizedBy asciidoctor
 }
 
 prepareDockerBaseInput {
@@ -48,7 +46,6 @@ prepareDockerBaseInput {
     dependsOn ":ifs-security:build"
 }
 
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerBaseInput
 
 buildDocker.inputDir = project.file("$project.buildDir/docker")

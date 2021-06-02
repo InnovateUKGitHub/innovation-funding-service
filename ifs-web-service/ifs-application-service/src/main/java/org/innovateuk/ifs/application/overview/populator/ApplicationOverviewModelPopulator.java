@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
+import org.innovateuk.ifs.application.ApplicationUrlHelper;
 import org.innovateuk.ifs.application.overview.ApplicationOverviewData;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewRowViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
@@ -19,7 +20,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,6 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
-import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
@@ -45,29 +45,32 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final CompetitionRestService competitionRestService;
     private final SectionRestService sectionRestService;
     private final QuestionRestService questionRestService;
-    private final UserRestService userRestService;
+    private final ProcessRoleRestService processRoleRestService;
     private final MessageSource messageSource;
     private final OrganisationRestService organisationRestService;
     private final QuestionStatusRestService questionStatusRestService;
     private final SectionStatusRestService sectionStatusRestService;
     private final QuestionService questionService;
+    private final ApplicationUrlHelper applicationUrlHelper;
 
     public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
                                              SectionRestService sectionRestService, QuestionRestService questionRestService,
-                                             UserRestService userRestService, MessageSource messageSource,
+                                             ProcessRoleRestService processRoleRestService, MessageSource messageSource,
                                              OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
                                              SectionStatusRestService sectionStatusRestService,
-                                             QuestionService questionService) {
+                                             QuestionService questionService,
+                                             ApplicationUrlHelper applicationUrlHelper) {
         super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
         this.sectionRestService = sectionRestService;
         this.questionRestService = questionRestService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.messageSource = messageSource;
         this.organisationRestService = organisationRestService;
         this.questionStatusRestService = questionStatusRestService;
         this.sectionStatusRestService = sectionStatusRestService;
         this.questionService = questionService;
+        this.applicationUrlHelper = applicationUrlHelper;
     }
 
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, UserResource user) {
@@ -75,7 +78,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         Future<CompetitionResource> competition = async(() -> competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
         Future<List<SectionResource>> sections = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
         Future<List<QuestionResource>> questions = async(() -> questionRestService.findByCompetition(application.getCompetition()).getSuccess());
-        Future<List<ProcessRoleResource>> processRoles = async(() -> userRestService.findProcessRole(application.getId()).getSuccess());
+        Future<List<ProcessRoleResource>> processRoles = async(() -> processRoleRestService.findProcessRole(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> statuses = async(() -> questionStatusRestService.findByApplicationAndOrganisation(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<List<Long>> completedSectionIds = async(() -> sectionStatusRestService.getCompletedSectionIds(application.getId(), resolve(organisation).getId()).getSuccess());
         Future<Map<Long, Set<Long>>> completedSectionsByOrganisation = async(() -> sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess());
@@ -134,29 +137,30 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
         String messageCode;
 
-        switch (section.getName()) {
-            case "Finances":
+        switch (section.getType()) {
+            case FINANCES:
                 messageCode = getFinanceSectionSubTitle(competition);
                 break;
-            case "Project details":
+            case PROJECT_DETAILS:
                 if (competition.isKtp()) {
                     messageCode = "ifs.section.projectDetails.ktp.description";
                 } else {
                     messageCode = "ifs.section.projectDetails.description";
                 }
                 break;
-            case "Terms and conditions":
+            case TERMS_AND_CONDITIONS:
                 if (competition.isExpressionOfInterest()) {
                     messageCode = "ifs.section.termsAndConditionsEoi.description";
                 } else {
                     messageCode = "ifs.section.termsAndConditions.description";
                 }
                 break;
-            case "Application questions":
+            case APPLICATION_QUESTIONS:
                 if (!competition.isKtp()) {
                     messageCode = "ifs.section.applicationQuestions.description";
                     break;
                 }
+                return null;
             default:
                 return null;
         }
@@ -164,7 +168,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return messageSource.getMessage(messageCode, null, Locale.getDefault());
     }
 
-    private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
+    private ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
         boolean complete = section.isTermsAndConditions() ?
                 isTermsAndConditionsComplete(data, question, section) :
                 data.getStatuses().get(question.getId())
@@ -190,8 +194,8 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 );
     }
 
-    private static String getRowUrlFromQuestion(QuestionResource question, ApplicationOverviewData data) {
-        return getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId())
+    private String getRowUrlFromQuestion(QuestionResource question, ApplicationOverviewData data) {
+        return applicationUrlHelper.getQuestionUrl(question.getQuestionSetupType(), question.getId(), data.getApplication().getId(), data.getOrganisation().getId())
                 .orElse(format("/application/%d/form/question/%d", data.getApplication().getId(), question.getId()));
     }
 

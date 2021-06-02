@@ -1,16 +1,20 @@
 package org.innovateuk.ifs.management.competition.setup.core.form;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.util.DateUtil;
 import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.thymeleaf.util.StringUtils;
 
-import java.time.DateTimeException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+
 
 /**
  * Default Milestone Form Entry without any validations for the Milestones form.
@@ -19,10 +23,11 @@ public class GenericMilestoneRowForm {
 
     private static final Log LOG = LogFactory.getLog(GenericMilestoneRowForm.class);
 
-    protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
-    protected static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
+    public static final Set<MilestoneType> WITH_TIME_TYPES = ImmutableSet.of(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
+    public static final Set<MilestoneType> WITH_MIDDAY_TIME = ImmutableSet.of(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
-    @Range(min=2000, max = 9999, message = "{validation.standard.date.format}")
+    @Min(value = 2000, message = "{validation.standard.date.format}")
+    @Max(value = 9999, message = "{validation.standard.date.format}")
     protected Integer year;
     protected Integer month;
     protected Integer day;
@@ -109,6 +114,10 @@ public class GenericMilestoneRowForm {
         return MilestoneType.OPEN_DATE.equals(milestoneType);
     }
 
+    public boolean isFirstAssessmentPeriodMilestone() {
+        return MilestoneType.ASSESSOR_BRIEFING.equals(milestoneType);
+    }
+
     public ZonedDateTime getDate() {
         return date;
     }
@@ -142,30 +151,11 @@ public class GenericMilestoneRowForm {
     }
 
     protected String getNameOfDay() {
-        String dayName =  getMilestoneDate(day, month, year);
-        if(dayName == null) {
-            dayOfWeek = "-";
-        }
-        else {
-            try {
-                dayOfWeek = dayName.substring(0, 1) + dayName.substring(1, 3).toLowerCase();
-            } catch (Exception e) {
-                LOG.trace(e);
-            }
-        }
-        return dayOfWeek;
+        return DateUtil.getNameOfDay(day, month, year);
     }
 
     protected String getMilestoneDate (Integer day, Integer month, Integer year) {
-        if (day != null && month != null && year != null) {
-            try {
-                return TimeZoneUtil.fromUkTimeZone(year, month, day).getDayOfWeek().name();
-            } catch (DateTimeException e) {
-                LOG.trace(e);
-            }
-        }
-
-        return null;
+        return DateUtil.getDayOfWeek(day, month, year).map(DayOfWeek::name).orElse(null);
     }
 
     public ZonedDateTime getMilestoneAsZonedDateTime() {

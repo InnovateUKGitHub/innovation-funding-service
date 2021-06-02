@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYour
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
@@ -50,11 +50,11 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
     public void viewPageAsKta() throws Exception {
         OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource = newOrganisationFinancesKtpYearsResource().build();
         CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = mock(CommonYourProjectFinancesViewModel.class);
-        YourOrganisationViewModel yourOrganisationViewModel = mock(YourOrganisationViewModel.class);
+        ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = mock(ApplicationYourOrganisationViewModel.class);
         YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
 
         when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
-        when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(applicationYourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
         when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);
 
@@ -73,11 +73,11 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
     public void viewPageAsSupporter() throws Exception {
         OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource = newOrganisationFinancesKtpYearsResource().build();
         CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = mock(CommonYourProjectFinancesViewModel.class);
-        YourOrganisationViewModel yourOrganisationViewModel = mock(YourOrganisationViewModel.class);
+        ApplicationYourOrganisationViewModel applicationYourOrganisationViewModel = mock(ApplicationYourOrganisationViewModel.class);
         YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
 
         when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
-        when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(applicationYourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
         when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);
 

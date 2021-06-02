@@ -22,6 +22,7 @@ public class ProjectToBeCreated {
     @JoinColumn(name="applicationId", referencedColumnName="id")
     private Application application;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String emailBody;
 
     @CreatedDate
@@ -73,5 +74,9 @@ public class ProjectToBeCreated {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 }

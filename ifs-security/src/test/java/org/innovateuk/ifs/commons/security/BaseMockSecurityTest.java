@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -258,13 +257,15 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     protected void assertRolesCanPerform(Runnable actionFn, List<Role> supportedRoles) {
         if (supportedRoles.contains(Role.ASSESSOR)) {
             supportedRoles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        } else if (supportedRoles.contains(Role.PROJECT_FINANCE) || supportedRoles.contains(Role.IFS_ADMINISTRATOR)) {
+        } else if (supportedRoles.contains(Role.PROJECT_FINANCE)
+                || supportedRoles.contains(Role.IFS_ADMINISTRATOR)
+                || supportedRoles.contains(Role.SUPER_ADMIN_USER)) {
             supportedRoles.add(Role.SYSTEM_MAINTAINER);
         }
 
         asList(Role.values()).forEach(role -> {
 
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
+            UserResource userWithRole = newUserResource().withRoleGlobal(role).build();
             setLoggedInUser(userWithRole);
 
             if (supportedRoles.contains(role)) {

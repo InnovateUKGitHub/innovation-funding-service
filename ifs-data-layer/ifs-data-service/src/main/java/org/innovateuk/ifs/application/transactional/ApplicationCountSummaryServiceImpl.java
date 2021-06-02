@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -37,15 +38,16 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
     static {
         Map<String, Sort> sortFieldToDbSortFields = new HashMap<>();
-        sortFieldToDbSortFields.put("id", new Sort(ASC, "id"));
-        sortFieldToDbSortFields.put("appTitle", new Sort(ASC, "name", "id"));
-        sortFieldToDbSortFields.put("leadOrg", new Sort(ASC, "leadOrganisation", "id"));
-        sortFieldToDbSortFields.put("assignedApps", new Sort(ASC, "assessors", "id"));
-        sortFieldToDbSortFields.put("completedApps", new Sort(ASC, "submitted", "id"));
+        sortFieldToDbSortFields.put("id", Sort.by(ASC, "id"));
+        sortFieldToDbSortFields.put("appTitle", Sort.by(ASC, "name", "id"));
+        sortFieldToDbSortFields.put("leadOrg", Sort.by(ASC, "leadOrganisation", "id"));
+        sortFieldToDbSortFields.put("assignedApps", Sort.by(ASC, "assessors", "id"));
+        sortFieldToDbSortFields.put("completedApps", Sort.by(ASC, "submitted", "id"));
 
         SORT_FIELD_TO_DB_SORT_FIELDS = Collections.unmodifiableMap(sortFieldToDbSortFields);
     }
 
+    @ZeroDowntime(reference = "IFS-8853", description = "This can probably be removed")
     @Override
     public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(long competitionId,
                                                                                                           int pageIndex,
@@ -60,18 +62,31 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(
-                                                                                        long competitionId,
-                                                                                        long assessorId,
-                                                                                        int page,
-                                                                                        int size,
-                                                                                        ApplicationCountSummaryResource.Sort sort,
-                                                                                        String filter) {
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessmentPeriodId(long competitionId,
+                                                                                                          long assessmentPeriodId,
+                                                                                                          int pageIndex,
+                                                                                                          int pageSize,
+                                                                                                          Optional<String> filter) {
 
+        String filterStr = filter.map(String::trim).orElse("");
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+        Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateInAndAssessmentPeriodIn(competitionId, assessmentPeriodId, SUBMITTED_STATES, filterStr, pageable);
+
+        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
+    }
+
+    @Override
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(
+            long competitionId,
+            long assessorId,
+            int page,
+            int size,
+            ApplicationCountSummaryResource.Sort sort,
+            String filter) {
         Pageable pageable = PageRequest.of(page, size, getApplicationSummarySortField(sort));
 
         Page<ApplicationCountSummaryResource> result =
-        applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, filter, pageable);
+                applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, filter, pageable);
 
         return serviceSuccess(new ApplicationCountSummaryPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize()));
     }

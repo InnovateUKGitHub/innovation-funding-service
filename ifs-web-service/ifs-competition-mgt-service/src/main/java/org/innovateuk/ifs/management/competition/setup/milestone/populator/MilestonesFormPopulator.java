@@ -4,6 +4,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Form populator for the milestones competition setup section.
@@ -43,7 +45,10 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
         if (milestonesByCompetition.isEmpty()) {
             milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionResource.getId()).getSuccess());
         } else {
-            milestonesByCompetition.sort(Comparator.comparing(MilestoneResource::getType));
+            milestonesByCompetition = milestonesByCompetition.stream()
+                    .filter(m -> !competitionResource.isAlwaysOpen() || MilestoneType.alwaysOpenCompSetupMilestones().contains(m.getType()))
+                    .sorted(Comparator.comparing(MilestoneResource::getType))
+                    .collect(Collectors.toList());
         }
 
         LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
@@ -62,7 +67,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return !competitionResource.isSetupAndLive() || milestone.getDate().isAfter(ZonedDateTime.now());
+        return !competitionResource.isSetupAndLive() || milestone.getDate() == null || milestone.getDate().isAfter(ZonedDateTime.now());
     }
 }
 

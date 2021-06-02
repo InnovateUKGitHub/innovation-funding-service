@@ -12,6 +12,7 @@ public class QuestionDocs {
             fieldWithPath("name").description("Question name").optional(),
             fieldWithPath("shortName").description("short version of the question name").optional(),
             fieldWithPath("description").description("question description").optional(),
+            fieldWithPath("description2").description("question description2").optional(),
             fieldWithPath("markAsCompletedEnabled").description("boolean to indicate if the question can be marked as complete").optional(),
             fieldWithPath("assignEnabled").description("boolean to indicate if the question can be assigned").optional(),
             fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses").optional(),
@@ -21,7 +22,8 @@ public class QuestionDocs {
             fieldWithPath("competition").description("Id of the competition").optional(),
             fieldWithPath("type").description("The type of question").optional(),
             fieldWithPath("questionSetupType").description("The setup type of question").optional(),
-            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor").optional()
+            fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor").optional(),
+            fieldWithPath("questionnaireId").description("Id of the questionnaire completed as part of this question.").optional()
     };
 
     public static final QuestionResourceBuilder questionBuilder = newQuestionResource()

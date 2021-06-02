@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.assessment.period.mapper.AssessmentPeriodMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
@@ -23,7 +24,8 @@ import org.mapstruct.Mappings;
                 FileEntryMapper.class,
                 ResearchCategoryMapper.class,
                 InnovationAreaMapper.class,
-                IneligibleOutcomeMapper.class
+                IneligibleOutcomeMapper.class,
+                AssessmentPeriodMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
@@ -42,8 +44,10 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "applicationProcess.ineligibleOutcomes", target = "ineligibleOutcome"),
             @Mapping(source = "leadOrganisationId", target = "leadOrganisationId"),
             @Mapping(source = "competition.collaborationLevel", target = "collaborationLevel"),
-            @Mapping(source = "applicationProcess.processEvent", target ="event"),
-            @Mapping(source = "applicationProcess.lastModified", target ="lastStateChangeDate")
+            @Mapping(source = "applicationProcess.processEvent", target = "event"),
+            @Mapping(source = "applicationProcess.lastModified", target = "lastStateChangeDate"),
+            @Mapping(target = "assessmentPeriodId", ignore = true),
+            @Mapping(target = "stateAidAgreed", ignore = true)
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
@@ -55,7 +59,11 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(target = "applicationFinances", ignore = true),
             @Mapping(target = "processRoles", ignore = true),
             @Mapping(target = "manageFundingEmailDate", ignore = true),
-            @Mapping(target = "project", ignore = true)
+            @Mapping(target = "project", ignore = true),
+            @Mapping(target = "assessmentPeriod", ignore = true),
+            @Mapping(target = "previousApplicationId", ignore = true),
+            @Mapping(target = "projectToBeCreated", ignore = true),
+            @Mapping(target = "applicantProcessRoles", ignore = true)
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);

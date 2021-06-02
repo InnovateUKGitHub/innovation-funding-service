@@ -279,7 +279,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.COLLABORATOR);
+        ServiceResult<UserResource> result = service.editInternalUser(userToEdit, Role.APPLICANT);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.finance.builder.ConsumablesBuilder.newConsumabl
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.EstateCostBuilder.newEstateCost;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.IndirectCostBuilder.newIndirectCost;
 import static org.innovateuk.ifs.finance.builder.KnowledgeBaseCostBuilder.newKnowledgeBaseCost;
 import static org.innovateuk.ifs.finance.builder.KtpTravelCostBuilder.newKtpTravelCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
@@ -66,6 +68,10 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
 
     public S withOrganisationSize(OrganisationSize... value) {
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
+    }
+
+    public S withNorthernIrelandDeclaration(Boolean... value) {
+        return withArray((v, finance) -> finance.setNorthernIrelandDeclaration(v), value);
     }
 
     public S withFinancialYearAccounts(FinancialYearAccountsResource... financialYearAccounts) {
@@ -174,6 +180,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         newAssociateSalaryCost().
                                 withId(1L, 2L).
                                 withRole("Role 1", "Role 2").
+                                withDuration(5, 10).
                                 withCost(new BigInteger("100"), new BigInteger("200")).
                                 build(2))
                         .build(),
@@ -228,6 +235,21 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 withCost(new BigInteger("123")).
                                 withDescription("Something").
                                 build(6))
+                        .build(),
+                FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory().withCosts(
+                        Collections.singletonList(
+                                newIndirectCost()
+                                        .withId(1L)
+                                        .withCost(BigInteger.ZERO)
+                                        .build())
+                        ).build()
+                )
+        );
+    }
+
+    public S withEmptyIndirectCosts() {
+        return withFinanceOrganisationDetails(asMap(
+                FinanceRowType.INDIRECT_COSTS, newDefaultCostCategory()
                         .build())
         );
     }
@@ -305,5 +327,13 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                                 build(2))
                         .build())
         );
+    }
+
+    public S withFecEnabled(Boolean enabled) {
+        return with(finance -> finance.setFecModelEnabled(enabled));
+    }
+
+    public S withFecFileEntry(Long fecFileEntry) {
+        return with(finance -> finance.setFecFileEntry(fecFileEntry));
     }
 }

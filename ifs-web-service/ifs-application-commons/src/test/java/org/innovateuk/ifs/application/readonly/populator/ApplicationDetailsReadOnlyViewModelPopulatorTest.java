@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationDetailsReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -13,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.LocalDate;
 
 import static java.util.Collections.emptyList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -44,16 +44,18 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Competition name")
-                .withInnovationAreas(asSet(1L, 2L))
+                .withInnovationAreas(ImmutableSet.of(1L, 2L))
                 .withFundingType(PROCUREMENT)
                 .build();
         QuestionResource question = newQuestionResource()
                 .withShortName("Application details")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList(), emptyList());
 
-        ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
+        ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(
+                question, data, defaultSettings());
 
         assertEquals("Application name", viewModel.getApplicationName());
         assertEquals("Competition name", viewModel.getCompetitionName());
@@ -87,16 +89,17 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
                 .build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Competition name")
-                .withInnovationAreas(asSet(1L, 2L))
+                .withInnovationAreas(ImmutableSet.of(1L, 2L))
                 .withFundingType(KTP)
                 .build();
         QuestionResource question = newQuestionResource()
                 .withShortName("Application details")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList(), emptyList());
 
-        ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
+        ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
 
         assertEquals("Application name", viewModel.getApplicationName());
         assertEquals("Competition name", viewModel.getCompetitionName());

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
@@ -112,7 +114,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
             }
         });
 
-        verify(competitionRepository, times(2)).findById(competitionId);
+        verify(competitionRepository, times(5)).findById(competitionId);
     }
 
     @Test
@@ -121,6 +123,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         stream(CompetitionStatus.values()).forEach(status -> {
 
             Competition competitionInSetup = newCompetition().
+                    withAssessmentPeriods(newAssessmentPeriod().build(1)).
                     withCompetitionStatus(status).
                     build();
 
@@ -134,7 +137,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
                 }
             });
 
-            verify(competitionRepository, times(2)).findById(competitionId);
+            verify(competitionRepository, times(5)).findById(competitionId);
             reset(competitionRepository);
         });
     }

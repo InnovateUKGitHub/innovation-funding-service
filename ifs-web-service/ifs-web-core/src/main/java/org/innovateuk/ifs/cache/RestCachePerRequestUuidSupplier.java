@@ -29,7 +29,6 @@ public class RestCachePerRequestUuidSupplier implements RestCacheUuidSupplier {
             setUuid(uuid);
         }
         return (String)getRequestAttributes().getAttribute(REQUEST_UUID_KEY, SCOPE_REQUEST);
-
     }
 
     private void setUuid(String uuid) {

@@ -14,6 +14,7 @@ import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.repository.MessageThreadRepository;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,11 +28,10 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -67,9 +67,9 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         projectResource = newProjectResource().withId(77L).build();
         attachmentResource = new AttachmentResource(9283L, "fileName", "application/json", 1024, null);
         projectFinanceUser = projectFinanceUser();
-        projectPartnerUser = getUserWithRole(PARTNER);
+        projectPartnerUser = getUserWithRole(Role.APPLICANT);
 
-        intruder = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
+        intruder = newUserResource().withId(1993L).withRoleGlobal(Role.APPLICANT).build();
         intruder.setId(1993L);
     }
 

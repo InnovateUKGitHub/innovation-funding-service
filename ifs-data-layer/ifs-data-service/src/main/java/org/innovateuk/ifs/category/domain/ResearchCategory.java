@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue("RESEARCH_CATEGORY")
 public class ResearchCategory extends Category {
+    public static final long FEASIBILITY_STUDIES_ID = 33L;
+    public static final long INDUSTRIAL_RESEARCH_ID = 34L;
+    public static final long EXPERIMENTAL_DEVELOPMENT_ID = 35L;
 
     public ResearchCategory() {
         // default constructor

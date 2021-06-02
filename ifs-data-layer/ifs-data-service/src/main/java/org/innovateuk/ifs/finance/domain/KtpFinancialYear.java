@@ -10,13 +10,28 @@ public class KtpFinancialYear {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "int(11)")
     private Integer year;
+
+    @Column(columnDefinition = "double")
     private BigDecimal turnover;
+
+    @Column(columnDefinition = "double")
     private BigDecimal preTaxProfit;
+
+    @Column(columnDefinition = "double")
     private BigDecimal currentAssets;
+
+    @Column(columnDefinition = "double")
     private BigDecimal liabilities;
+
+    @Column(columnDefinition = "double")
     private BigDecimal shareholderValue;
+
+    @Column(columnDefinition = "double")
     private BigDecimal loans;
+
+    @Column(columnDefinition = "int(11)")
     private Long employees;
 
     @ManyToOne(fetch = FetchType.LAZY)

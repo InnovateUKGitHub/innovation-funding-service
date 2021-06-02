@@ -121,7 +121,7 @@ public class LandingModelPopulatorTest {
 
         List<SectionResource> sections = newSectionResource()
                 .withName("Application questions")
-                .withType(SectionType.GENERAL)
+                .withType(SectionType.APPLICATION_QUESTIONS)
                 .withQuestions(asList(questionId))
                 .build(1);
         when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
@@ -141,6 +141,6 @@ public class LandingModelPopulatorTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-        return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
+        return new GeneralSetupViewModel(Boolean.FALSE, false, competition, CompetitionSetupSection.APPLICATION_FORM, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
     }
 }

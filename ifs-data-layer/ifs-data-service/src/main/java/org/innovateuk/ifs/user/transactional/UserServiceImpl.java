@@ -89,7 +89,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    @Value("${ifs.system.external.user.email.domain}")
+    @Value("${ifs.system.kta.user.email.domain}")
     private String externalUserEmailDomain;
 
     @Autowired
@@ -166,7 +166,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
-                .filter(r -> "leadapplicant".equals(r.getRole().getName()) || "collaborator".equals(r.getRole().getName()))
+                .filter(r -> ProcessRoleType.LEADAPPLICANT == r.getRole() || ProcessRoleType.COLLABORATOR == r.getRole())
                 .map(ProcessRole::getUser)
                 .map(userMapper::mapToResource)
                 .collect(toSet());
@@ -287,18 +287,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 && tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId()).isPresent();
     }
 
-    private boolean userIsExternalNotOnlyAssessor(UserResource user) {
-        return user
-                .getRoles()
-                .stream()
-                .anyMatch(r -> COLLABORATOR == r ||
-                             APPLICANT == r ||
-                             FINANCE_CONTACT == r ||
-                             LEADAPPLICANT == r ||
-                             PARTNER == r ||
-                             PROJECT_MANAGER == r);
-    }
-
     @Override
     public ServiceResult<ManageUserPageResource> findActive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
@@ -325,10 +313,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findDistinctByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
-                externalRoles()
-                        .stream()
-                        .map(r -> Role.getByName(r.getName()))
-                        .collect(toSet()),
+                externalRoles(),
                 pageable
         );
         List<ManageUserResource> userResources = pagedResult.getContent()
@@ -528,7 +513,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setEmail(emailToUpdate);
         User user = userRepository.save(existingUser);
         return identityProviderService.updateUserEmail(existingUser.getUid(), emailToUpdate)
-                .andOnSuccessReturnVoid(() -> logEmailChange(existingUser.getEmail(), emailToUpdate))
+                .andOnSuccessReturnVoid(() -> logEmailChange(oldEmail, emailToUpdate))
                 .andOnSuccess(() -> notifyEmailChange(oldEmail, emailToUpdate, user))
                 .andOnSuccessReturn(() -> user);
     }

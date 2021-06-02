@@ -15,7 +15,7 @@ public class ApplicationSummarisationServiceSecurityTest extends
     @Test
     public void testTotalProjectCostAllowedIfGlobalCompAdminRole() {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
         classUnderTest.getTotalProjectCost(null);
     }
 
@@ -44,7 +44,7 @@ public class ApplicationSummarisationServiceSecurityTest extends
 
     @Test
     public void testFundingSoughtAllowedIfGlobalCompAdminRole() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
         classUnderTest.getFundingSought(null);
     }
 

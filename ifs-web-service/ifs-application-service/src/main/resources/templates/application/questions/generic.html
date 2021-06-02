@@ -67,8 +67,16 @@
         </div>
 
         <th:block th:unless="${model.readOnly}">
-            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"></div>
-
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"/>
+            <div th:if="${model.questionType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).LOAN_BUSINESS_AND_FINANCIAL_INFORMATION}" class="govuk-body">
+                <a class="govuk-link"
+                    target="_blank"
+                    th:href="@{https://innovateuk.eu.qualtrics.com/jfe/form/SV_8JtoEompki2GcUS(
+                    CompanyName=${model.leadOrganisationName},
+                    CompanyNumber=${model.leadOrganisationCompaniesHouseNumber},
+                    IFSApplicationNumber=${model.applicationId})}">Complete the online business survey (opens in a new window)</a>
+                </div>
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription2 != null}" ifs:utext="${model.questionDescription2}"/>
             <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
                 <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">
                     <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
@@ -243,12 +251,12 @@
             <div class="form-footer govuk-!-margin-top-8">
                 <div th:if="${model.open}" class="form-footer__actions">
                     <th:block th:unless="${model.complete or !model.assignButtonsViewModel.assignedToCurrentUser}">
-                        <button th:if="${model.leadApplicant}"
+                        <button th:if="${model.leadApplicant OR model.questionHasMultipleStatuses}"
                                 id="application-question-complete" type="submit"
                                 name="complete"
                                 class="button-clear">Mark as complete
                         </button>
-                        <button th:unless="${model.leadApplicant}"
+                        <button th:unless="${model.leadApplicant OR model.questionHasMultipleStatuses}"
                                 type="submit"
                                 name="assign"
                                 class="button-clear">Assign to lead for review

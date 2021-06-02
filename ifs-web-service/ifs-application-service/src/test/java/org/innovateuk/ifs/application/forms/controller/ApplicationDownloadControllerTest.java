@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -58,6 +59,44 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
+    public void downloadApplicationFinanceFileAsInnovationLead() throws Exception {
+        UserResource userResource = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
+        setLoggedInUser(userResource);
+        Long questionId = 1L;
+        Long formInputId = 1L;
+        Long fileEntryId = 1L;
+        Long leadApplicantProcessRoleId = 2L;
+        String fileName = "finance-file.pdf";
+
+        ApplicationResource app = applications.get(0);
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withId(leadApplicantProcessRoleId)
+                .withRole(ProcessRoleType.LEADAPPLICANT).build();
+        MultipartFile file = new MockMultipartFile(fileName, fileName.getBytes());
+        ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
+        FileEntryResource fileEntryResource = newFileEntryResource().withMediaType("application/pdf").build();
+        FormInputResponseFileEntryResource formInputResponseFileEntryResource = newFormInputResponseFileEntryResource()
+                .withFileEntryResource(fileEntryResource)
+                .build();
+
+        when(processRoleRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
+        when(formInputResponseRestService.getFile(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(byteArrayResource));
+        when(formInputResponseRestService.getFileDetails(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(formInputResponseFileEntryResource));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/form/question/" + questionId + "/forminput/"
+                + formInputId + "/file/" + fileEntryId + "/download"))
+                .andExpect(status().isOk());
+
+        verify(formInputResponseRestService).getFile(anyLong(), anyLong(), fileProcessRoleArgumentCaptor.capture(), anyLong());
+        Long impersonatedFileProcessRoleId = fileProcessRoleArgumentCaptor.getValue();
+        assertEquals(leadApplicantProcessRoleId, impersonatedFileProcessRoleId);
+
+        verify(formInputResponseRestService).getFileDetails(anyLong(), anyLong(), fileDetailsProcessRoleArgumentCaptor.capture(), anyLong());
+        Long impersonatedFileDetailsProcessRoleId = fileDetailsProcessRoleArgumentCaptor.getValue();
+        assertEquals(leadApplicantProcessRoleId, impersonatedFileDetailsProcessRoleId);
+    }
+
+    @Test
     public void downloadApplicationFinanceFileAsSupporter() throws Exception {
         Long questionId = 1L;
         Long formInputId = 1L;
@@ -69,7 +108,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
         ApplicationResource app = applications.get(0);
         ProcessRoleResource processRoleResource = newProcessRoleResource()
                 .withId(leadApplicantProcessRoleId)
-                .withRole(Role.LEADAPPLICANT).build();
+                .withRole(ProcessRoleType.LEADAPPLICANT).build();
         MultipartFile file = new MockMultipartFile(fileName, fileName.getBytes());
         ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
         FileEntryResource fileEntryResource = newFileEntryResource().withMediaType("application/pdf").build();
@@ -77,7 +116,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
                 .withFileEntryResource(fileEntryResource)
                 .build();
 
-        when(userRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
+        when(processRoleRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
         when(formInputResponseRestService.getFile(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(byteArrayResource));
         when(formInputResponseRestService.getFileDetails(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(formInputResponseFileEntryResource));
 

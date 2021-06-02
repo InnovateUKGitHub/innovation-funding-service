@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.AutoCompleteSectionsUtil;
 import org.innovateuk.ifs.application.workflow.actions.AutoCompleteSectionsAction;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -111,7 +112,7 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod, Consumer<ApplicationProcess> additionalVerifications) {
         Application application = newApplication()
                 .withCompetition(newCompetition().withCompetitionType(newCompetitionType().build()).build())
-                .withProcessRoles(newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(100L).build())
+                .withProcessRoles(newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(100L).build())
                 .withApplicationState(initialApplicationState).build();
         ApplicationProcess applicationProcess = application.getApplicationProcess();
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);

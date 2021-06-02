@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionTermsViewModel;
@@ -70,9 +71,21 @@ public class CompetitionController {
         return "competition/info/" + termsAndConditions.getTemplate();
     }
 
+    @GetMapping("info/state-aid-terms-and-conditions")
+    public String stateAidTermsAndConditions(@PathVariable("competitionId") final long competitionId, Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && !competition.isExpressionOfInterest()) {
+            GrantTermsAndConditionsResource termsAndConditions = competition.getOtherFundingRulesTermsAndConditions();
+            model.addAttribute("model", new CompetitionTermsViewModel(competitionId));
+            return "competition/info/" + termsAndConditions.getTemplate();
+        }
+        return "redirect:/competition/setup/" + competitionId;
+    }
+
     @GetMapping("info/terms-and-conditions/full")
     public @ResponseBody ResponseEntity<ByteArrayResource> additionalTerms(@PathVariable("competitionId") final long competitionId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         return getFileResponseEntity(competitionRestService.downloadTerms(competitionId).getSuccess(), competition.getCompetitionTerms());
     }
+
 }

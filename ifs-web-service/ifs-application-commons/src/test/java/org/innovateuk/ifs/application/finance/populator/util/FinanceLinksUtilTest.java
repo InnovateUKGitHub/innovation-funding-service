@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestSer
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.HttpServletUtil;
@@ -90,7 +91,7 @@ public class FinanceLinksUtilTest {
         organisation = newOrganisationResource().withId(organisationId).build();
         processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(organisationId)
                 .build();
     }
@@ -164,7 +165,7 @@ public class FinanceLinksUtilTest {
     public void financesLinkForLeadApplicant() {
         UserResource user = newUserResource()
                 .withId(userId)
-                .withRoleGlobal(Role.LEADAPPLICANT)
+                .withRoleGlobal(Role.APPLICANT)
                 .build();
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
@@ -181,7 +182,7 @@ public class FinanceLinksUtilTest {
 
         UserResource user = newUserResource()
                 .withId(userId)
-                .withRoleGlobal(Role.COLLABORATOR)
+                .withRoleGlobal(Role.APPLICANT)
                 .build();
         organisation = newOrganisationResource().withId(organisationId).build();
         CompetitionAssessmentConfigResource assessmentConfigResource = newCompetitionAssessmentConfigResource().build();
@@ -202,7 +203,7 @@ public class FinanceLinksUtilTest {
                 .build();
         processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build();
         CompetitionAssessmentConfigResource assessmentConfigResource = newCompetitionAssessmentConfigResource()
                 .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
@@ -224,7 +225,7 @@ public class FinanceLinksUtilTest {
                 .build();
         processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build();
         CompetitionAssessmentConfigResource assessmentConfigResource = newCompetitionAssessmentConfigResource()
                 .withAssessorFinanceView(AssessorFinanceView.ALL).build();

@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.roleListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleTypeListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectParticipantRoleListType;
 import static org.junit.Assert.assertEquals;
 
 public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestServiceUnitTest<GoogleAnalyticsDataLayerRestServiceImpl> {
@@ -88,15 +90,15 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
     @Test
     public void getApplicationRolesById() {
         long applicationId = 123L;
-        List<Role> expectedRoles = singletonList(Role.COLLABORATOR);
+        List<ProcessRoleType> expectedRoles = singletonList(ProcessRoleType.LEADAPPLICANT);
 
         setupGetWithRestResultExpectations(
                 format("%s/%s/%d/user-roles", restUrl, "application", applicationId),
-                roleListType(),
+                processRoleTypeListType(),
                 expectedRoles
         );
 
-        List<Role> roles = service.getRolesByApplicationId(applicationId).getSuccess();
+        List<ProcessRoleType> roles = service.getRolesByApplicationId(applicationId).getSuccess();
 
         assertEquals(expectedRoles, roles);
     }
@@ -104,14 +106,14 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
     @Test
     public void getProjectRolesById() {
         long projectId = 999L;
-        List<Role> expectedRoles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
+        List<ProjectParticipantRole> expectedRoles = asList(ProjectParticipantRole.PROJECT_PARTNER);
         setupGetWithRestResultExpectations(
                 format("%s/%s/%d/user-roles", restUrl, "project", projectId),
-                roleListType(),
+                projectParticipantRoleListType(),
                 expectedRoles
         );
 
-        List<Role> roles = service.getRolesByProjectId(projectId).getSuccess();
+        List<ProjectParticipantRole> roles = service.getRolesByProjectId(projectId).getSuccess();
 
         assertEquals(expectedRoles, roles);
     }

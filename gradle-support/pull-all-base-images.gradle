@@ -1,0 +1,54 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+
+apply from: "gradle-support/java.gradle"
+apply from: "gradle-support/openshift-util.gradle"
+
+
+def getNexusCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    dockerRegistryCredentials.url = project.nexusRegistry
+    dockerRegistryCredentials.username = project.findProperty("nexus_username")
+    dockerRegistryCredentials.password =project.findProperty("nexus_password")
+    return dockerRegistryCredentials
+}
+
+task pullImageNexusBASE(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "ifs-base-image:latest"
+}
+task pullImageNexusOPENJDK(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "openjdk:latest"
+}
+
+
+task pullImageNexusCACHEPROV(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "cache-provider:"+cacheProviderVersion
+}
+task pullImageNexusMAILSINK(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "mail-sink:"+mailsinkVersion
+}
+task pullImageNexusMYSQL(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "ifs-mysql:"+sqlVersion
+}
+task pullImageNexusMYSQLC(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "ifs-mysql-client:"+sqlVersion
+}
+
+task pullImageNexusAWSCLI(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/releases/" + "aws-cli:"+awsCliVersion
+}
+
+
+task pullBaseImageNexus {
+    dependsOn pullImageNexusBASE, pullImageNexusOPENJDK, pullImageNexusCACHEPROV, pullImageNexusMAILSINK, pullImageNexusMYSQL, pullImageNexusMYSQLC, pullImageNexusAWSCLI
+}

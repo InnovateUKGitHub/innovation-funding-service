@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessment periods'"/>
+</head>
+
+<body class="govuk-template__body competition-management">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to manage assessments', linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"/>
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+         aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+    </div>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Manage assessment period', size='govuk-heading-xl'"/>
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              th:object="${form}"
+              th:attr="data-competition=${model.competitionId}"
+              data-section="milestones"
+              novalidate="novalidate"
+              method="post">
+            <input type="hidden"
+                   required="required"
+                   id="page"
+                   name="page"
+                   th:value="${model.paginationViewModel.currentPage}"/>
+            <th:block th:each="assessmentPeriod, pStat: ${form.assessmentPeriods}">
+                <input type="hidden"
+                       required="required"
+                       id="assessmentPeriodId"
+                       th:field="*{assessmentPeriods[__${pStat.index}__].assessmentPeriodId}"
+                />
+                <table class="govuk-table milestones-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <input type="hidden"
+                               th:field="*{assessmentPeriods[__${pStat.index}__].index}"/>
+                        <th class="govuk-table__header" scope="col" id="milestone" th:text="'Assessment Period ' + ${assessmentPeriod.index}">Assessment Period</th>
+                        <th class="govuk-table__header" scope="col" id="time">Time</th>
+                        <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
+                        <th class="govuk-table__header" scope="col" id="day">Day</th>
+                        <th class="govuk-table__header" scope="col" id="month">Month</th>
+                        <th class="govuk-table__header" scope="col" id="year">Year</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr th:each="(milestoneEntry : ${assessmentPeriod.milestoneEntries})"
+                        th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                        th:with="path=${'assessmentPeriods[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__]'}"
+                        th:classappend="${#fields.hasErrors('__${path}__')} ? 'govuk-form-group--error'"
+                        class="govuk-table__row date-group form-group-row"
+                        data-future-date=""
+                        th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription() + ': Please enter a valid date.'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()  + ': ' + (milestoneEntry.value.firstAssessmentPeriodMilestone ? 'Please enter a future date' : 'You must enter a date later than the previous milestone') + '.'}">
+                        <th class="govuk-table__header" scope="row">
+                            <legend class="govuk-!-padding-left-3" th:id="${path}"
+                                    th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
+                        </th>
+                        <td class="govuk-table__cell time">
+                            <input type="hidden"
+                                   required="required"
+                                   th:field="*{__${path}__.milestoneType}"/>
+                            <input type="hidden"
+                                   th:field="*{__${path}__.editable}"/>
+                            <th:block th:if="${milestoneEntry.value.middayTime}">
+                                Midday
+                                <input type="hidden"
+                                       data-time="12"
+                                       th:field="*{__${path}__.time}">
+                            </th:block>
+                        </td>
+                        <td class="govuk-table__cell js-addWeekDay"
+                            th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}"
+                            th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                        <td class="govuk-table__cell day">
+                            <input type="text"
+                                   placeholder="DD"
+                                   min="1"
+                                   max="31"
+                                   data-maxlength-errormessage=""
+                                   required="required"
+                                   pattern="^[0-9]{1,2}$"
+                                   data-prevent-input-regex="[^0-9]"
+                                   maxlength="2"
+                                   minlength="1"
+                                   class="govuk-input govuk-input--width-4"
+                                   th:classappend="${#fields.hasErrors('__${path}__')} ? 'govuk-input--error'"
+                                   th:attr="aria-labelledby=|day milestone-${milestoneEntry.key}|,
+                                            data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|"
+                                   th:field="*{__${path}__.day}"
+                                   th:unless="${milestoneEntry.value.readonly}"
+                            />
+                            <th:block  th:if="${milestoneEntry.value.readonly}">
+                                <input type="hidden"
+                                       th:field="*{__${path}__.day}" />
+                                <th:block th:text="${milestoneEntry.value.day}"></th:block>
+                            </th:block>
+                        </td>
+                        <td class="govuk-table__cell month">
+                            <input type="text"
+                                   placeholder="MM"
+                                   min="1"
+                                   max="12"
+                                   required="required"
+                                   pattern="^[0-9]{1,2}$"
+                                   data-prevent-input-regex="[^0-9]"
+                                   maxlength="2"
+                                   minlength="1"
+                                   class="govuk-input govuk-input--width-4"
+                                   th:classappend="${#fields.hasErrors('__${path}__')} ? 'govuk-input--error'"
+                                   th:attr="aria-labelledby=|day milestone-${milestoneEntry.key}|,
+                                            data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|"
+                                   th:field="*{__${path}__.month}"
+                                   th:unless="${milestoneEntry.value.readonly}"
+                            />
+                            <th:block  th:if="${milestoneEntry.value.readonly}">
+                                <input type="hidden"
+                                       th:field="*{__${path}__.month}"/>
+                                <th:block th:text="${milestoneEntry.value.month}"></th:block>
+                            </th:block>
+                        </td>
+                        <td class="govuk-table__cell year">
+                            <input type="text"
+                                   placeholder="YYYY"
+                                   pattern="[0-9]{4,}"
+                                   data-prevent-input-regex="[^0-9]"
+                                   maxlength="4"
+                                   minlength="4"
+                                   th:classappend="${#fields.hasErrors('__${path}__')} ? 'govuk-input--error'"
+                                   th:attr="aria-labelledby=|year milestone-${milestoneEntry.key}|,
+                                            data-date=|${milestoneEntry.value.day}-${milestoneEntry.value.month}-${milestoneEntry.value.year}|,
+                                            min=${#dates.format(#dates.createNow(), 'yyyy')}"
+                                   required="required"
+                                   class="govuk-input govuk-input--width-4"
+                                   th:field="*{__${path}__.year}"
+                                   th:unless="${milestoneEntry.value.readonly}"
+                            />
+                            <th:block  th:if="${milestoneEntry.value.readonly}">
+                                <input type="hidden"
+                                       th:field="*{__${path}__.year}"/>
+                                <th:block th:text="${milestoneEntry.value.year}"></th:block>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </th:block>
+                <button th:if="${model.paginationViewModel.lastPage}"
+                        th:disabled="${form.numberUnsavedAssessmentPeriods() &gt; 0}"
+                        type="submit"
+                        class="button-clear govuk-!-margin-bottom-6 float-right" name="add-assessment-period">+ Add new assessment period
+                </button>
+
+
+                <th:block th:insert="fragments/elements :: pagination(pagination=${model.paginationViewModel})" />
+
+                <button type="submit"
+                        class="govuk-button govuk-!-margin-top-6">Save and return to manage assessments
+                </button>
+       </form>
+
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+
+</body>
+</html>

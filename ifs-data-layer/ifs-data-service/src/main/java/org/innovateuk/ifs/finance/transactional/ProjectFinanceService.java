@@ -23,8 +23,9 @@ public interface ProjectFinanceService {
     ServiceResult<Double> getResearchParticipationPercentageFromProject(long projectId);
 
     @PreAuthorize("hasPermission(#projectFinanceResource, 'UPDATE_PROJECT_FINANCE')")
-    ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource);
+    ServiceResult<ProjectFinanceResource> updateProjectFinance(ProjectFinanceResource projectFinanceResource);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     ServiceResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
+
 }

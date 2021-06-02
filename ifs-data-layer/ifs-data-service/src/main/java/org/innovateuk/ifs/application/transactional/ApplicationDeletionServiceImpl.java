@@ -7,12 +7,12 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,9 +45,6 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
@@ -67,6 +64,9 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private ApplicationInviteRepository applicationInviteRepository;
 
     @Override
     @Transactional
@@ -88,6 +88,8 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         applicationHiddenFromDashboardRepository.deleteByApplicationId(application.getId());
         processHistoryRepository.deleteByProcessId(application.getApplicationProcess().getId());
         applicationRepository.delete(application);
+        applicationInviteRepository.deleteAll(application.getInvites());
+
         return serviceSuccess();
     }
 

@@ -7,7 +7,14 @@ import java.util.List;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-    public FinanceChecksProjectCostsViewModel(long applicationId, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, boolean ktpCompetition) {
+    private final boolean canEditProjectCosts;
+
+    public FinanceChecksProjectCostsViewModel(long applicationId, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, boolean ktpCompetition, boolean canEditProjectCosts) {
         super(false, false, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
+        this.canEditProjectCosts = canEditProjectCosts;
+    }
+
+    public boolean isCanEditProjectCosts() {
+        return canEditProjectCosts;
     }
 }

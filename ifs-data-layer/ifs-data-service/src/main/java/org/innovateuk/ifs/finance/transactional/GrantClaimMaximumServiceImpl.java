@@ -1,21 +1,29 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import com.google.common.collect.Lists;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -28,7 +36,9 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     @Autowired
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     @Autowired
-    private CommonBuilders commonBuilders;
+    private ResearchCategoryRepository researchCategoryRepository;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
@@ -37,33 +47,35 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    @Transactional
-    public ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
-        GrantClaimMaximum gcm = grantClaimMaximumRepository.save(grantClaimMaximumMapper.mapToDomain(grantClaimMaximumResource));
-        return serviceSuccess(grantClaimMaximumMapper.mapToResource(gcm));
+    public ServiceResult<List<GrantClaimMaximumResource>> getGrantClaimMaximumByCompetitionId(long competitionId) {
+        return find(grantClaimMaximumRepository.findByCompetitionsId(competitionId), notFoundError(GrantClaimMaximum.class, competitionId))
+                .andOnSuccessReturn(maximums ->
+                        maximums.stream().map(grantClaimMaximumMapper::mapToResource)
+                        .collect(Collectors.toList()));
     }
 
     @Override
-    public ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
+    @Transactional
+    public ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
+        return find(grantClaimMaximumRepository.findById(grantClaimMaximumResource.getId()), notFoundError(GrantClaimMaximum.class, grantClaimMaximumResource.getId())).andOnSuccessReturn((maximum) -> {
+            maximum.setMaximum(grantClaimMaximumResource.getMaximum());
+            return grantClaimMaximumMapper.mapToResource(grantClaimMaximumRepository.save(maximum));
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isMaximumFundingLevelConstant(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
             if (competition.isNonFinanceType()) {
                 return false;
             }
-            List<GrantClaimMaximum> competitionGrantClaimMaximums = competition.getGrantClaimMaximums();
-            List<GrantClaimMaximum> defaultGrantClaimMaximums = commonBuilders.getDefaultGrantClaimMaximums();
-            if (competitionGrantClaimMaximums.size() == defaultGrantClaimMaximums.size()) {
-                boolean mismatchFound = false;
-                for (GrantClaimMaximum competitionMaximum : competitionGrantClaimMaximums) {
-                    mismatchFound = defaultGrantClaimMaximums.stream().noneMatch(
-                            defaultMaximum ->
-                                    defaultMaximum.getMaximum().equals(competitionMaximum.getMaximum())
-                                    && defaultMaximum.getResearchCategory().getId().equals(competitionMaximum.getResearchCategory().getId())
-                                    && defaultMaximum.getOrganisationSize() == competitionMaximum.getOrganisationSize()
-                    );
-                }
-                return mismatchFound;
-            }
-            return true;
+            long count = competition.getGrantClaimMaximums().stream()
+                    .map(GrantClaimMaximum::getMaximum)
+                    .filter(Objects::nonNull)
+                    .filter(max -> !Integer.valueOf(0).equals(max))
+                    .distinct()
+                    .count();
+            return count == 1;
         });
     }
 
@@ -71,12 +83,77 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     @Transactional
     public ServiceResult<Set<Long>> revertToDefault(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            if (competition.isNonFinanceType()) {
+                return emptySet();
+            }
+            List<GrantClaimMaximum> maximums;
+            if (competition.getFundingRules() == FundingRules.STATE_AID && !competition.getResearchCategories().isEmpty()) {
+                maximums = getStateAidGrantClaimMaxmimums();
+            } else if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle) {
+                maximums = getDualMaximumsForFundingRules(competition);
+            } else {
+                maximums = getBlankGrantClaimMaxmimums();
+            }
+            competition.getGrantClaimMaximums().clear();
             Set<Long> ids = new HashSet<>();
-            commonBuilders.getDefaultGrantClaimMaximums().forEach(maximum -> {
+                maximums.forEach(maximum -> {
                 maximum.setCompetitions(Lists.newArrayList(competition));
                 ids.add(grantClaimMaximumRepository.save(maximum).getId());
+                competition.getGrantClaimMaximums().add(maximum);
             });
             return ids;
         });
+    }
+
+    private List<GrantClaimMaximum> getDualMaximumsForFundingRules(Competition competition) {
+        List<GrantClaimMaximum> maximums = new ArrayList<>();
+        boolean subsidyControlAlreadyDefined = competition.getGrantClaimMaximums().stream().anyMatch(max -> max.getFundingRules() == FundingRules.SUBSIDY_CONTROL);
+        if (subsidyControlAlreadyDefined) {
+            competition.getGrantClaimMaximums().stream()
+                    .filter(max -> max.getFundingRules() == FundingRules.SUBSIDY_CONTROL)
+                    .forEach(max -> maximums.add(new GrantClaimMaximum(max.getResearchCategory(), max.getOrganisationSize(), max.getFundingRules(), max.getMaximum())));
+        } else {
+            maximums.addAll(getBlankGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.SUBSIDY_CONTROL)).collect(toList()));
+        }
+        if (!competition.getResearchCategories().isEmpty()) {
+            maximums.addAll(getStateAidGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.STATE_AID)).collect(toList()));
+        } else {
+            maximums.addAll(getBlankGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.STATE_AID)).collect(toList()));
+        }
+        return maximums;
+    }
+
+    private List<GrantClaimMaximum> getStateAidGrantClaimMaxmimums() {
+        ResearchCategory feasibilityStudies = researchCategoryRepository.findById(FEASIBILITY_STUDIES_ID).get();
+        ResearchCategory industrialResearch = researchCategoryRepository.findById(INDUSTRIAL_RESEARCH_ID).get();
+        ResearchCategory experimentalDevelopment = researchCategoryRepository.findById(EXPERIMENTAL_DEVELOPMENT_ID).get();
+        return newArrayList(
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, 70),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, 60),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.LARGE, 50),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.SMALL, 70),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.MEDIUM, 60),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.LARGE, 50),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, 45),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, 35),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, 25)
+        );
+    }
+
+    private List<GrantClaimMaximum> getBlankGrantClaimMaxmimums() {
+        ResearchCategory feasibilityStudies = researchCategoryRepository.findById(FEASIBILITY_STUDIES_ID).get();
+        ResearchCategory industrialResearch = researchCategoryRepository.findById(INDUSTRIAL_RESEARCH_ID).get();
+        ResearchCategory experimentalDevelopment = researchCategoryRepository.findById(EXPERIMENTAL_DEVELOPMENT_ID).get();
+        return newArrayList(
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, null),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, null),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.LARGE, null),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.SMALL, null),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.MEDIUM, null),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.LARGE, null),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, null),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, null),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, null)
+        );
     }
 }

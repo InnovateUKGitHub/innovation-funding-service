@@ -24,7 +24,7 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
         return with(data -> {
             doAs(ifsAdmin(), () -> {
                 String hash = null;
-                if (role != Role.APPLICANT) {
+                if (Role.externalRolesToInvite().contains(role)) {
                     UserResource invite = new UserResource();
                     invite.setFirstName(firstName);
                     invite.setLastName(lastName);

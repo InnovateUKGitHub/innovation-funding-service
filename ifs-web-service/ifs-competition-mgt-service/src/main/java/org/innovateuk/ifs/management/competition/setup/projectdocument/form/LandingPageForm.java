@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -20,9 +19,6 @@ public class LandingPageForm extends BaseBindingResultTarget {
 
     public void setEnabledIds(Set<Long> enabledIds) {
         this.enabledIds = enabledIds;
-    }
-
-    public LandingPageForm() {
     }
 
     @Override

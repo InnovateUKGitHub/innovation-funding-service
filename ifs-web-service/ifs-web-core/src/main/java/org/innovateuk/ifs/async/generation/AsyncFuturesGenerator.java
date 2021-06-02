@@ -168,7 +168,7 @@ public class AsyncFuturesGenerator {
         return awaitAll(randomName(), future1, future2, future3, future4);
     }
 
-    public CompletableFutureTupleNHandler<?> awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+    public CompletableFutureTupleNHandler awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
         return awaitAll(randomName(), future1, future2, future3, future4, moreFutures);
     }
 
@@ -192,7 +192,7 @@ public class AsyncFuturesGenerator {
         return new CompletableFutureTuple4Handler<>(futureName, getExecutorForChainedFutures(), timeoutValue, future1, future2, future3, future4);
     }
 
-    public CompletableFutureTupleNHandler<?> awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
+    public CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?> future4, CompletableFuture<?>... moreFutures) {
         List<CompletableFuture<?>> allFutures = combineLists(asList(future1, future2, future3, future4), moreFutures);
         return new CompletableFutureTupleNHandler(futureName, getExecutorForChainedFutures(), timeoutValue, allFutures);
     }
@@ -206,9 +206,7 @@ public class AsyncFuturesGenerator {
     }
 
     /**
-     * Choose an appropriate Task Executor for executing any chained futures.  If sleuth is enabled, the
-     * SleuthExecutorFactory will be used to create an Executor, allowing child threads to record their
-     * data service calls under a parent thread's Span.  Otherwise, a default Executor will be used.
+     * Choose an appropriate Task Executor for executing any chained futures.
      */
     private Executor getExecutorForChainedFutures() {
         return executorFactory.createAsyncExecutor();

@@ -11,6 +11,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingrules.SubsidyControlTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.KtpTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.LoanTemplate;
@@ -34,7 +36,6 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,16 +46,16 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Mock
-    private CompetitionTypeRepository competitionTypeRepositoryMock;
+    private CompetitionTypeRepository competitionTypeRepository;
 
     @Mock
-    private CompetitionRepository competitionRepositoryMock;
+    private CompetitionRepository competitionRepository;
 
     @Mock
-    private AssessorCountOptionRepository assessorCountOptionRepositoryMock;
+    private AssessorCountOptionRepository assessorCountOptionRepository;
 
     @Mock
-    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepositoryMock;
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     @Mock
     private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
@@ -75,6 +76,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private KtpTemplate ktpTemplate;
 
     @Mock
+    private SubsidyControlTemplate subsidyControlTemplate;
+    @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Before
@@ -83,8 +86,10 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(loanTemplate.type()).thenReturn(FundingType.LOAN);
         when(grantTemplate.type()).thenReturn(FundingType.GRANT);
         when(ktpTemplate.type()).thenReturn(FundingType.KTP);
+        when(subsidyControlTemplate.type()).thenReturn(FundingRules.SUBSIDY_CONTROL);
         service.setCompetitionTemplates(newArrayList(programmeTemplate));
         service.setFundingTypeTemplates(newArrayList(loanTemplate, grantTemplate, ktpTemplate));
+        service.setFundingRulesTemplates(newArrayList(subsidyControlTemplate));
     }
 
     @Test
@@ -92,9 +97,9 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.empty());
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.empty());
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
@@ -107,9 +112,9 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.empty());
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.empty());
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
@@ -122,9 +127,9 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         CompetitionType competitionType = newCompetitionType().withId(1L).build();
         Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).withId(3L).build();
 
-        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
@@ -143,6 +148,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withId(3L)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withFundingType(FundingType.GRANT)
+                .withFundingRules(FundingRules.SUBSIDY_CONTROL)
                 .build();
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
@@ -150,9 +156,10 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(grantTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(grantTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(grantTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
-        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+        when(grantTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
                 .thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
@@ -160,6 +167,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         verify(programmeTemplate).copyTemplatePropertiesToCompetition(competition);
+        verify(subsidyControlTemplate).sections(any(), any());
     }
 
     @Test
@@ -176,17 +184,18 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withFundingType(FundingType.LOAN)
                 .build();
 
-        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
+        when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(loanTemplate.sections(any())).thenReturn(newArrayList(aSection()));
         when(loanTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(loanTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(loanTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
-        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+        when(loanTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
                 .thenReturn(Optional.empty());
-        when(competitionRepositoryMock.save(competition)).thenReturn(competition);
+        when(competitionRepository.save(competition)).thenReturn(competition);
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
@@ -210,17 +219,18 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withFundingType(FundingType.KTP)
                 .build();
 
-        when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
+        when(grantTermsAndConditionsRepository.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(ktpTemplate.sections(any())).thenReturn(newArrayList(aSection()));
         when(ktpTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(ktpTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(ktpTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
-        when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
-        when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+        when(ktpTemplate.setGolTemplate(any())).thenReturn(competition);
+        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
                 .thenReturn(Optional.empty());
-        when(competitionRepositoryMock.save(competition)).thenReturn(competition);
+        when(competitionRepository.save(competition)).thenReturn(competition);
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 

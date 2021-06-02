@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.finance.service;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -19,6 +18,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.pro
 @Service
 public class ProjectFinanceRestServiceImpl extends BaseRestService implements ProjectFinanceRestService {
     private static final String PROJECT_FINANCE_REST_URL = "/project";
+    private static final String PARTNER_ORGANISATION = "/partner-organisation/";
 
     @Override
     public RestResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
@@ -30,43 +30,24 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
         return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/organisation/" + organisationId + "/finance-details", ProjectFinanceResource.class);
     }
 
-    @Override
-    public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
-    }
-
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/viability/{viability}")
     public RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
 
-        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + PARTNER_ORGANISATION + organisationId +
                 "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
     }
 
     @Override
-    public RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/eligibility", EligibilityResource.class);
-    }
-
-    @Override
-    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
-
-        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
-
-        return postWithRestResult(postUrl, Void.class);
-    }
-
-    @Override
     public RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId) {
-        String url = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report";
+        String url = PROJECT_FINANCE_REST_URL + "/" + projectId + PARTNER_ORGANISATION + organisationId + "/credit-report";
         return getWithRestResult(url, Boolean.class);
     }
 
     @Override
     public RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
-        String url = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report/" + confirmed;
+        String url = PROJECT_FINANCE_REST_URL + "/" + projectId + PARTNER_ORGANISATION + organisationId + "/credit-report/" + confirmed;
         return postWithRestResult(url);
     }
 
@@ -76,12 +57,12 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
-        throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
+    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
+        return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance/has-organisation-size-changed"), Boolean.class);
     }
 
     @Override
-    public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
-        return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance/has-organisation-size-changed"), Boolean.class);
+    public RestResult<ProjectFinanceResource> update(ProjectFinanceResource projectFinance) {
+        return putWithRestResult(PROJECT_FINANCE_REST_URL + "/project-finance", projectFinance, ProjectFinanceResource.class);
     }
 }

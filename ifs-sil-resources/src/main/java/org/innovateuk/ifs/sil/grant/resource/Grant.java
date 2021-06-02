@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.innovateuk.ifs.sil.grant.resource.json.LocalDateDeserializer;
-import org.innovateuk.ifs.sil.grant.resource.json.LocalDateSerializer;
+import org.innovateuk.ifs.sil.common.json.LocalDateDeserializer;
+import org.innovateuk.ifs.sil.common.json.LocalDateSerializer;
 import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeDeserializer;
 import org.innovateuk.ifs.sil.grant.resource.json.ZonedDateTimeSerializer;
 
@@ -44,6 +44,9 @@ public class Grant {
     private LocalDate startDate;
 
     private long duration;
+
+    @JsonProperty("fecModelEnabled")
+    private Boolean fecModelEnabled;
 
     @JsonProperty("participant")
     private Collection<Participant> participants;
@@ -136,6 +139,14 @@ public class Grant {
 
     public void setSourceSystem(String sourceSystem) {
         this.sourceSystem = sourceSystem;
+    }
+
+    public Boolean getFecModelEnabled() {
+        return fecModelEnabled;
+    }
+
+    public void setFecModelEnabled(Boolean fecModelEnabled) {
+        this.fecModelEnabled = fecModelEnabled;
     }
 
     @Override

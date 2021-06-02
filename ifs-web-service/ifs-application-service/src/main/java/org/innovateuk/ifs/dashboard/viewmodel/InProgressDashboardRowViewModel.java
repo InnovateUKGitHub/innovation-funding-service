@@ -24,12 +24,13 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
     private final ZonedDateTime endDate;
-    private final long daysLeft;
+    private final Long daysLeft;
     private final int applicationProgress;
     private final boolean assignedToInterview;
     private final LocalDate startDate;
     private final boolean showReopenLink;
     private final boolean hasAssessmentStage;
+    private final boolean alwaysOpen;
 
     public InProgressDashboardRowViewModel(String title,
                                            long applicationId,
@@ -38,12 +39,13 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
                                            ApplicationState applicationState,
                                            boolean leadApplicant,
                                            ZonedDateTime endDate,
-                                           long daysLeft,
+                                           Long daysLeft,
                                            int applicationProgress,
                                            boolean assignedToInterview,
                                            LocalDate startDate,
                                            boolean showReopenLink,
-                                           boolean hasAssessmentStage) {
+                                           boolean hasAssessmentStage,
+                                           boolean alwaysOpen) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -55,6 +57,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.startDate = startDate;
         this.showReopenLink = showReopenLink;
         this.hasAssessmentStage = hasAssessmentStage;
+        this.alwaysOpen = alwaysOpen;
     }
 
     public InProgressDashboardRowViewModel (DashboardInProgressRowResource resource){
@@ -69,6 +72,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         this.startDate = resource.getStartDate();
         this.showReopenLink = resource.isShowReopenLink();
         this.hasAssessmentStage = resource.isHasAssessmentStage();
+        this.alwaysOpen = resource.isAlwaysOpen();
     }
 
     public boolean isAssignedToMe() {
@@ -83,7 +87,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         return endDate;
     }
 
-    public long getDaysLeft() {
+    public Long getDaysLeft() {
         return daysLeft;
     }
 
@@ -107,7 +111,16 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         return showReopenLink;
     }
 
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
     /* view logic */
+
+    public boolean isShouldDisplayEndDate() {
+        return hasAssessmentStage && daysLeft != null;
+    }
+
     public boolean isSubmitted() {
         return SUBMITTED.equals(applicationState) ||
                 INELIGIBLE.equals(applicationState);

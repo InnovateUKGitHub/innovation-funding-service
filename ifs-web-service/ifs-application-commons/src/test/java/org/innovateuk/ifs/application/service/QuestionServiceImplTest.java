@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,12 +32,12 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
     private QuestionStatusRestService questionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     protected QuestionService supplyServiceUnderTest() {
         return new QuestionServiceImpl(questionRestService,
-                questionStatusRestService, userRestService);
+                questionStatusRestService, processRoleRestService);
     }
 
     @Test

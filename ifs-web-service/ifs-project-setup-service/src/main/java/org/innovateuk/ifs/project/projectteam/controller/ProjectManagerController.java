@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectteam.viewmodel.ProjectManagerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -25,7 +26,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -84,7 +84,7 @@ public class ProjectManagerController {
 
     private Optional<ProjectUserResource> getProjectManager(long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
+        return simpleFindFirst(projectUsers, pu -> ProjectParticipantRole.PROJECT_MANAGER == pu.getRole());
     }
 
     private String doViewProjectManager(Model model, long projectId, UserResource loggedInUser) {
@@ -111,7 +111,7 @@ public class ProjectManagerController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName(), competition.isLoan());
+        ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName(), competition.isLoan(), competition.isKtp());
         model.addAttribute("model", viewModel);
     }
 

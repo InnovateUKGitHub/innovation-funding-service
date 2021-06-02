@@ -4,6 +4,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -39,6 +40,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
     @Autowired
     private CompaniesHouseRestService companiesHouseRestService;
 
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     @GetMapping
     public String viewOrganisationDetails(@PathVariable long competitionId,
                                           @PathVariable long projectId,
@@ -50,23 +54,28 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
+        boolean ktpCompetition = competition.isKtp();
 
         model.addAttribute("organisationDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
                 getAddress(organisation),
-                project.isCollaborativeProject()));
+                project.isCollaborativeProject(),
+                ktpCompetition));
 
         if (includeYourOrganisationSection) {
-            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(), competition.getName(),false,
-                    false,
+            boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
+                    organisation::getOrganisationTypeEnum,
+                    () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
+            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(
+                    project.getApplication(),
+                    competition,
+                    organisation,
+                    isMaximumFundingLevelConstant,
                     false,
                     projectId,
                     project.getName(),
-                    organisationId,
                     true,
-                    false,
-                    competition.isProcurement(),
                     loggedInUser,
                     isAllEligibilityAndViabilityInReview(projectId)));
 

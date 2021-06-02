@@ -3,18 +3,15 @@ package org.innovateuk.ifs.project.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.user.resource.UserResource;
-
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 
 public class ProjectUserResource {
     private Long id;
     private Long user;
     private String userName;
     private Long project;
-    private Long role;
+    private ProjectParticipantRole role;
     private String roleName;
     private Long organisation;
     private String email;
@@ -26,12 +23,12 @@ public class ProjectUserResource {
     	// no-arg constructor
     }
 
-    public ProjectUserResource(Long id, UserResource user, ProjectResource project, Role role, OrganisationResource organisation, ProjectUserInviteResource invite) {
+    public ProjectUserResource(Long id, UserResource user, ProjectResource project, ProjectParticipantRole role, OrganisationResource organisation, ProjectUserInviteResource invite) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
         this.project = project.getId();
-        this.role = role.getId();
+        this.role = role;
         this.roleName = role.getName();
         this.organisation = organisation.getId();
         this.email = user.getEmail();
@@ -49,7 +46,7 @@ public class ProjectUserResource {
         return userName;
     }
 
-    public Long getRole() {
+    public ProjectParticipantRole getRole() {
         return role;
     }
 
@@ -77,7 +74,7 @@ public class ProjectUserResource {
         this.project = project;
     }
 
-    public void setRole(Long role) {
+    public void setRole(ProjectParticipantRole role) {
         this.role = role;
     }
 
@@ -95,12 +92,12 @@ public class ProjectUserResource {
 
     @JsonIgnore
     public boolean isFinanceContact() {
-        return role.equals(FINANCE_CONTACT.getId());
+        return role == ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
     }
 
     @JsonIgnore
     public boolean isProjectManager() {
-        return role.equals(PROJECT_MANAGER.getId());
+        return role == ProjectParticipantRole.PROJECT_MANAGER;
     }
 
     public String getEmail() {

@@ -9,14 +9,15 @@ import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
-import static org.springframework.util.StringUtils.isEmpty;
 
 
 /**
@@ -29,11 +30,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     private static final String USER_REST_URL = "/user";
 
-    private static final String PROCESS_ROLE_REST_URL = "/processrole";
-
     @Override
     public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
-        if(isEmpty(uid))
+        if(ObjectUtils.isEmpty(uid))
             return restFailure(CommonErrors.notFoundError(UserResource.class, uid));
 
         return getWithRestResultAnonymous(USER_REST_URL + "/uid/" + uid, UserResource.class);
@@ -50,7 +49,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> checkPasswordResetHash(String hash) {
 
-        if(isEmpty(hash))
+        if(ObjectUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
         return getWithRestResultAnonymous(USER_REST_URL + "/"+ URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
@@ -60,7 +59,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     public RestResult<Void> resetPassword(String hash, String password) {
 
 
-        if(isEmpty(hash))
+        if(ObjectUtils.isEmpty(hash))
             return restFailure(CommonErrors.badRequestError("Missing the hash to reset the password with"));
 
         return postWithRestResultAnonymous(String.format("%s/%s/%s", USER_REST_URL, URL_PASSWORD_RESET, hash), password,  Void.class);
@@ -68,7 +67,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<UserResource> findUserByEmail(String email) {
-        if (isEmpty(email)) {
+        if (ObjectUtils.isEmpty(email)) {
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
@@ -137,38 +136,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<ProcessRoleResource> findProcessRole(long userId, long applicationId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-user-application/" + userId + "/" + applicationId, ProcessRoleResource.class);
-    }
-
-    @Override
-    public Future<RestResult<ProcessRoleResource>> findProcessRoleById(long processRoleId) {
-        return getWithRestResultAsync(PROCESS_ROLE_REST_URL + "/" + processRoleId, ProcessRoleResource.class);
-    }
-
-    @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRole(long applicationId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-application-id/" + applicationId, processRoleResourceListType());
-    }
-
-    @Override
-    public RestResult<List<ProcessRoleResource>> findProcessRoleByUserId(long userId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-by-user-id/" + userId, processRoleResourceListType());
-    }
-
-    @Override
     public RestResult<List<UserResource>> findAssignableUsers(long applicationId){
         return getWithRestResult(USER_REST_URL + "/find-assignable-users/" + applicationId, userListType());
-    }
-
-    @Override
-    public RestResult<List<ProcessRoleResource>> findAssignableProcessRoles(long applicationId){
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-assignable/" + applicationId, processRoleResourceListType());
-    }
-
-    @Override
-    public RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId) {
-        return getWithRestResult(PROCESS_ROLE_REST_URL + "/user-has-application-for-competition/" + userId + "/" + competitionId, Boolean.class);
     }
 
     @Override
@@ -190,7 +159,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setAllowMarketingEmails(allowMarketingEmails);
-        if(!isEmpty(title)) {
+        if(!ObjectUtils.isEmpty(title)) {
             user.setTitle(Title.valueOf(title));
         }
         user.setPhoneNumber(phoneNumber);

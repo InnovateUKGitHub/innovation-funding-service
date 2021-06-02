@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.management.competition.setup.application.form.DetailsForm;
+import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupPopulator;
@@ -37,6 +38,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -157,11 +159,9 @@ public class CompetitionSetupServiceImplTest {
 
         service.setCompetitionSetupFormPopulators(asList(matchingPopulator, otherPopulator));
 
-        CompetitionSetupForm result = service.getSectionFormData(competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
+        CompetitionSetupFormPopulator result = service.getSectionFormPopulator(CompetitionSetupSection.ADDITIONAL_INFO);
 
-        assertEquals(matchingForm, result);
-        verify(matchingPopulator).populateForm(competitionResource);
-        verify(otherPopulator, never()).populateForm(competitionResource);
+        assertEquals(matchingPopulator, result);
     }
 
     @Test
@@ -238,7 +238,8 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
                 CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
-                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE)
+                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE)
         );
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
@@ -293,6 +294,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -431,8 +433,29 @@ public class CompetitionSetupServiceImplTest {
         verify(competitionSetupRestService, never()).delete(isA(Long.class));
     }
 
+    @Test
+    public void getNextSetupSection() {
+        CompetitionSetupForm competitionSetupForm = new CompletionStageForm();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
+                .build();
+
+        CompetitionSetupSectionUpdater matchingSaver = mock(CompetitionSetupSectionUpdater.class);
+        when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.COMPLETION_STAGE);
+        when(matchingSaver.supportsForm(CompletionStageForm.class)).thenReturn(true);
+
+        when(matchingSaver.getNextSection(competitionSetupForm, competitionResource, CompetitionSetupSection.COMPLETION_STAGE)).thenReturn(CompetitionSetupSection.MILESTONES.getPath());
+
+        service.setCompetitionSetupSectionSavers(singleton(matchingSaver));
+
+        service.getNextSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.COMPLETION_STAGE);
+
+        verify(matchingSaver).getNextSection(competitionSetupForm, competitionResource, CompetitionSetupSection.COMPLETION_STAGE);
+    }
+
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
-        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, false, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
         generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
         generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, CompetitionStatus.COMPETITION_SETUP));
 

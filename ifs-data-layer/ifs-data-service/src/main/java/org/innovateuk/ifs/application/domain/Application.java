@@ -4,19 +4,23 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -24,9 +28,9 @@ import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -47,6 +51,8 @@ public class Application implements ProcessActivity {
     private String previousApplicationNumber;
     private String previousApplicationTitle;
     private ZonedDateTime manageFundingEmailDate;
+    private Long previousApplicationId;
+    private ZonedDateTime feedbackReleased;
 
     @Min(0)
     private Long durationInMonths; // in months
@@ -59,6 +65,9 @@ public class Application implements ProcessActivity {
 
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
+
+    @OneToMany(mappedBy = "target")
+    private List<Assessment> assessments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competition", referencedColumnName = "id")
@@ -82,6 +91,10 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="assessment_period_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
+
     private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
@@ -103,6 +116,7 @@ public class Application implements ProcessActivity {
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private ProjectToBeCreated projectToBeCreated;
 
+
     public Application() {
     }
 
@@ -116,6 +130,29 @@ public class Application implements ProcessActivity {
         this.name = name;
         this.processRoles = processRoles;
         this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
+    }
+
+    public Application(Application application) {
+        this.name = application.getName();
+        this.startDate = application.getStartDate();
+        this.submittedDate = application.getSubmittedDate();
+        this.resubmission = application.getResubmission();
+        this.previousApplicationNumber = application.getPreviousApplicationNumber();
+        this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.manageFundingEmailDate = application.getManageFundingEmailDate();
+        this.previousApplicationId = application.getId();
+        this.durationInMonths = application.getDurationInMonths();
+        this.completion = application.getCompletion();
+        setNoInnovationAreaApplicable(application.getNoInnovationAreaApplicable());
+        this.inAssessmentReviewPanel = application.isInAssessmentReviewPanel();
+        this.competition = application.getCompetition();
+        this.fundingDecision = application.getFundingDecision();
+        setResearchCategory(application.getResearchCategory());
+        setInnovationArea(application.getInnovationArea());
+        this.assessmentPeriod = application.getAssessmentPeriod();
+        this.competitionReferralSource = application.getCompetitionReferralSource();
+        this.companyAge = application.getCompanyAge();
+        this.companyPrimaryFocus = application.getCompanyPrimaryFocus();
     }
 
     protected boolean canEqual(Object other) {
@@ -243,6 +280,12 @@ public class Application implements ProcessActivity {
                 .collect(toList());
     }
 
+    public List<ProcessRole> getProcessRolesByRoles(Set<ProcessRoleType> roles) {
+        return this.processRoles.stream()
+                .filter(processRole -> roles.contains(processRole.getRole()))
+                .collect(Collectors.toList());
+    }
+
     public User getLeadApplicant() {
         return getLeadProcessRole().map(ProcessRole::getUser).orElse(null);
     }
@@ -297,6 +340,14 @@ public class Application implements ProcessActivity {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public Long getPreviousApplicationId() {
+        return previousApplicationId;
+    }
+
+    public void setPreviousApplicationId(Long previousApplicationId) {
+        this.previousApplicationId = previousApplicationId;
     }
 
     public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {
@@ -454,5 +505,42 @@ public class Application implements ProcessActivity {
 
     public void setProjectToBeCreated(ProjectToBeCreated projectToBeCreated) {
         this.projectToBeCreated = projectToBeCreated;
+    }
+
+    public ZonedDateTime getFeedbackReleased() {
+        return feedbackReleased;
+    }
+
+    public Application setFeedbackReleased(ZonedDateTime feedbackReleased) {
+        this.feedbackReleased = feedbackReleased;
+        return this;
+    }
+
+    public AssessmentPeriod getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public void setAssessmentPeriod(AssessmentPeriod assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
+    }
+
+    public Optional<Integer> getMaxMilestoneMonth(){
+        Optional<Integer> max = Optional.of(getApplicationFinances())
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .map(ApplicationFinance::getMilestones)
+                .flatMap(Collection::stream)
+                .map(ProcurementMilestone::getMonth)
+                .filter(Objects::nonNull)
+                .max(Integer::compareTo);
+        return max;
+    }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
     }
 }

@@ -37,7 +37,8 @@ public class CompetitionInviteDocs {
             fieldWithPath("deadlineDate").description("Date of assessor deadline").optional(),
             fieldWithPath("briefingDate").description("Date of assessor briefing").optional(),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess").optional(),
-            fieldWithPath("innovationArea").description("Innovation area of the invitee").optional()
+            fieldWithPath("innovationArea").description("Innovation area of the invitee").optional(),
+            fieldWithPath("competitionAlwaysOpen").description("Always open state of competition")
     };
 
     public static final FieldDescriptor[] competitionRejectionFields = {

@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +127,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withId()
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withApplication(applications.get(0), applications.get(1), applications.get(2), applications.get(0), applications.get(1))
                 .withUser(paulPlum, paulPlum, paulPlum, felixWilson, felixWilson)
                 .build(5);
@@ -141,7 +142,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         processRoles.addAll(
                 newProcessRole()
-                        .withRole(Role.LEADAPPLICANT)
+                        .withRole(ProcessRoleType.LEADAPPLICANT)
                         .withApplication(applications.get(0), applications.get(1), applications.get(2))
                         .withUser(steveSmith)
                         .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())

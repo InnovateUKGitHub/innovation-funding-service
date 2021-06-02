@@ -17,9 +17,8 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -57,13 +56,13 @@ public class AcademicCostsController {
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'assessor')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'stakeholder', 'assessor')")
     @SecuredBySpring(value = "VIEW_ACADEMIC_COSTS", description = "Applicants and internal users can view the academic project costs page")
     public String viewAcademicCosts(Model model,
                                     UserResource user,
@@ -72,12 +71,8 @@ public class AcademicCostsController {
                                     @PathVariable long sectionId,
                                     @ModelAttribute("form") AcademicCostForm form) {
         formPopulator.populate(form, applicationId, organisationId);
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, isApplicant(user)));
+        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, user));
         return VIEW;
-    }
-
-    private boolean isApplicant(UserResource user) {
-        return !(user.isInternalUser() || user.hasRole(Role.ASSESSOR));
     }
 
     @PostMapping
@@ -158,7 +153,7 @@ public class AcademicCostsController {
             form.setFilename(result.getSuccess().getName());
         }
 
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, true));
+        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, user));
         return VIEW;
     }
 
@@ -188,6 +183,6 @@ public class AcademicCostsController {
     }
 
     private ProcessRoleResource getProcessRole(long applicationId, long userId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess();
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
     }
 }

@@ -28,7 +28,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +41,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
  * This controller will handle all requests that are related to management of users by IFS Administrators.
@@ -107,8 +105,9 @@ public class UserManagementController extends AsyncAdaptor {
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'VIEW_USER_PAGE')")
     @GetMapping("/user/{userId}/active")
-    public String viewActiveUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
+    public String viewActiveUser(@PathVariable long userId, @RequestParam(required = false, defaultValue = "false") boolean showEmailUpdateSuccess, Model model, UserResource loggedInUser) {
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        model.addAttribute("showEmailUpdateSuccess", showEmailUpdateSuccess);
         model.addAttribute(FORM_ATTR_NAME, populateForm(user));
         return viewActiveUser(model, user, loggedInUser);
     }
@@ -130,7 +129,7 @@ public class UserManagementController extends AsyncAdaptor {
         validateUser(form, user);
 
         Supplier<String> failureView = () -> viewActiveUser(model, user, loggedInUser);
-        Supplier<String> noEmailChangeSuccess = () -> redirectToActiveUsersTab();
+        Supplier<String> noEmailChangeSuccess = () -> redirectToActiveUsersTab(false);
         Supplier<String> emailChangeSuccess = () -> {
             cookieService.saveToCookie(response, NEW_EMAIL_COOKIE, form.getEmail());
             if (orgNameChange) {
@@ -199,14 +198,12 @@ public class UserManagementController extends AsyncAdaptor {
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
                                          HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         RedirectAttributes redirectAttributes) {
+                                         HttpServletResponse response) {
         Supplier<String> failureView = () -> confirmEmailChange(userId, model, form, bindingResult, request);
         Supplier<String> successView = () -> {
             cookieService.removeCookie(response, NEW_EMAIL_COOKIE);
             cookieService.removeCookie(response, NEW_ORG_COOKIE);
-            redirectAttributes.addFlashAttribute("showEmailUpdateSuccess", true);
-            return redirectToActiveUsersTab();
+            return redirectToActiveUsersTab(true);
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -249,12 +246,7 @@ public class UserManagementController extends AsyncAdaptor {
         EditUserForm form = new EditUserForm();
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
-
-        if (user.getRoles().contains(IFS_ADMINISTRATOR)) {
-            form.setRole(IFS_ADMINISTRATOR);
-        } else {
-            form.setRole(user.getRoles().stream().findFirst().get());
-        }
+        form.setRole(user.getRoles().stream().findFirst().get());
 
         if (user.getRoles().contains(SUPPORTER)) {
            UserProfileResource userProfileResource = profileRestService.getUserProfile(user.getId()).getSuccess();
@@ -292,8 +284,9 @@ public class UserManagementController extends AsyncAdaptor {
         return externalRoleLinkEnabled && !userResource.getRoles().containsAll(Role.inviteExternalRoles());
     }
 
-    private String redirectToActiveUsersTab() {
-        return "redirect:/admin/users/active";
+    private String redirectToActiveUsersTab(boolean showEmailUpdateSuccess) {
+        String showEmailUpdatePart = showEmailUpdateSuccess ? "?showEmailUpdateSuccess=true" : "";
+        return "redirect:/admin/users/active" + showEmailUpdatePart;
     }
 
     private String redirectToActivePage(long userId) {

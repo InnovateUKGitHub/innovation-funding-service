@@ -12,13 +12,15 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -38,6 +40,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -94,10 +97,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).withId(organisationId).build();
 
-    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(singletonList(PROJECT_FINANCE)).build();
+    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRoleGlobal(PROJECT_FINANCE).build();
     UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
 
-    ProjectUserResource financeContactProjectUser = newProjectUserResource().withOrganisation(organisationId).withUserName("User1").withUser(financeContactUser.getId()).withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
+    ProjectUserResource financeContactProjectUser = newProjectUserResource().withOrganisation(organisationId).withUserName("User1").withUser(financeContactUser.getId()).withEmail("e@mail.com").withPhoneNumber("0117").withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).build();
 
     ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
             .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
@@ -141,10 +144,13 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     private StatusService statusService;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private FinanceCheckRestService financeCheckRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -197,12 +203,12 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess((projectFinanceResource)));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(1));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -220,15 +226,15 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Test
     public void testViewFinanceChecksWithQueries() throws Exception {
         setLoggedInUser(financeContactUser);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(organisationId).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(1));
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, financeContactUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -305,10 +311,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -324,7 +330,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testDownloadAttachmentFailsNoContent() throws Exception {
 
         when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-checks/attachment/{attachmentId}", 123, 1))
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/attachment/{attachmentId}", 123, 1))
                 .andExpect(status().isForbidden())
                 .andExpect(view().name("forbidden"))
                 .andReturn();
@@ -344,7 +350,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         when(financeCheckServiceMock.downloadFile(1L)).thenReturn(bytes);
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenThrow(new ForbiddenActionException());
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/attachment/1"))
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check/attachment/1"))
                 .andExpect(status().isForbidden())
                 .andExpect(view().name("forbidden"))
                 .andReturn();
@@ -363,11 +369,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response"))
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check/1/new-response"))
                 .andExpect(view().name("project/finance-checks"))
                 .andReturn();
 
@@ -377,7 +383,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals(organisationId, responseViewModel.getOrganisationId());
         assertEquals(projectId, responseViewModel.getProjectId());
         assertEquals(1L, responseViewModel.getQueryId().longValue());
-        assertEquals("/project/{projectId}/finance-checks", responseViewModel.getBaseUrl());
+        assertEquals("/project/{projectId}/finance-check", responseViewModel.getBaseUrl());
         assertEquals(4000, responseViewModel.getMaxQueryCharacters());
         assertEquals(400, responseViewModel.getMaxQueryWords());
         assertEquals(0, responseViewModel.getNewAttachmentLinks().size());
@@ -387,10 +393,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testSaveNewResponse() throws Exception {
         when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
 
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query text"))
-                .andExpect(redirectedUrlPattern("/project/123/finance-checks/**"))
+                .andExpect(redirectedUrlPattern("/project/123/finance-check/**"))
                 .andReturn();
 
         verify(financeCheckServiceMock).saveQueryPost(savePostArgumentCaptor.capture(), eq(1L));
@@ -411,11 +417,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", ""))
                 .andExpect(view().name("project/finance-checks"))
@@ -442,11 +448,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", tooLong))
                 .andExpect(view().name("project/finance-checks"))
@@ -474,11 +480,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", tooManyWords))
                 .andExpect(view().name("project/finance-checks"))
@@ -510,11 +516,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
         MvcResult result = mockMvc.perform(
-                fileUpload("/project/123/finance-checks/1/new-response").
+                fileUpload("/project/123/finance-check/1/new-response").
                         file(uploadedFile).
                         param("uploadAttachment", ""))
                 .andExpect(cookie().exists("query_new_response_attachments_123_234_1"))
@@ -527,15 +533,14 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
                 getDecryptedCookieValue(result.getResponse().getCookies(), "query_new_response_attachments_123_234_1"));
 
         FinanceChecksQueryResponseForm form = (FinanceChecksQueryResponseForm) result.getModelAndView().getModel().get("form");
-        assertEquals(uploadedFile, form.getAttachment());
-
+        MultipartFileAssertionUtil.assertMultipartFile(uploadedFile, form.getAttachment());
     }
 
     @Test
     public void testDownloadResponseAttachmentFailsNoContent() throws Exception {
         when(financeCheckServiceMock.downloadFile(1L)).thenThrow(new ForbiddenActionException());
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response/attachment/1"))
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check/1/new-response/attachment/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("404"))
                 .andReturn();
@@ -558,9 +563,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response/cancel")
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check/1/new-response/cancel")
                 .cookie(ck))
-                .andExpect(redirectedUrlPattern("/project/123/finance-checks/**"))
+                .andExpect(redirectedUrlPattern("/project/123/finance-check/**"))
                 .andReturn();
 
         Optional<Cookie> cookieFound = Arrays.stream(result.getResponse().getCookies())
@@ -579,7 +584,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(fileEntryResource);
@@ -589,7 +594,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
         Cookie cookie = new Cookie("query_new_response_attachments_123_234_1", encryptedData);
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check/1/new-response")
                 .cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("project/finance-checks"))
@@ -600,7 +605,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals("Project1", queryViewModel.getProjectName());
         assertEquals(organisationId, queryViewModel.getOrganisationId());
         assertEquals(projectId, queryViewModel.getProjectId());
-        assertEquals("/project/{projectId}/finance-checks", queryViewModel.getBaseUrl());
+        assertEquals("/project/{projectId}/finance-check", queryViewModel.getBaseUrl());
         assertEquals(4000, queryViewModel.getMaxQueryCharacters());
         assertEquals(400, queryViewModel.getMaxQueryWords());
         assertEquals(1L, queryViewModel.getQueryId().longValue());
@@ -614,7 +619,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
@@ -622,7 +627,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .param("removeAttachment", "1")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -649,7 +654,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
@@ -660,7 +665,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         Cookie cookie = createAttachmentsCookie(attachmentIds);
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/1/new-response")
                 .param("removeAttachment", "2")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -686,11 +691,12 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
-        MvcResult result = mockMvc.perform(post("/project/123/finance-checks/5/new-response")
+
+        MvcResult result = mockMvc.perform(post("/project/123/finance-check/5/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
                 .andExpect(view().name("project/finance-checks"))

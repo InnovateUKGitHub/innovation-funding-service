@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
@@ -11,9 +10,8 @@ import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -27,12 +25,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
  */
 @PermissionRules
 public class InviteOrganisationPermissionRules extends BasePermissionRules {
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @PermissionRule(value = "SEND", description = "lead applicant can send an organisation invite for the application")
     public boolean leadApplicantCanInviteAnOrganisationToTheApplication(InviteOrganisationResource inviteOrganisation, UserResource user) {
@@ -143,15 +135,15 @@ public class InviteOrganisationPermissionRules extends BasePermissionRules {
     }
 
     private boolean isApplicationCollaborator(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
-        return checkProcessRole(userResource, applicationInviteResource.getApplication(), COLLABORATOR, processRoleRepository);
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), ProcessRoleType.COLLABORATOR, processRoleRepository);
     }
 
     private boolean isApplicationCollaboratorForOrganisation(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
-        return checkProcessRole(userResource, applicationInviteResource.getApplication(), inviteOrganisationResource.getOrganisation(), COLLABORATOR, processRoleRepository);
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), inviteOrganisationResource.getOrganisation(), ProcessRoleType.COLLABORATOR, processRoleRepository);
     }
 
     private boolean isLeadApplicant(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
-        return checkProcessRole(userResource, applicationInviteResource.getApplication(), LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), ProcessRoleType.LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean allInviteApplicationIdsMatch(InviteOrganisationResource inviteOrganisation) {

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -13,9 +14,9 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -23,13 +24,12 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
-import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
-import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
+import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
@@ -64,6 +64,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
@@ -77,7 +78,10 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.form.resource.SectionType.PAYMENT_MILESTONES;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -112,7 +116,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private SpendProfileRepository spendProfileRepository;
-    
+
     @Mock
     private ProjectFinanceService projectFinanceService;
 
@@ -123,7 +127,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Mock
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
+
+    @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Mock
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
 
     @Mock
     private ProjectFinanceRepository projectFinanceRepository;
@@ -188,15 +198,18 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(financeCheck.getCostGroup().getCosts().get(0).getCostCategory().getId(), result.getSuccess().getCostGroup().getCosts().get(0).getCostCategory().getId());
     }
 
-
     @Test
     public void getFinanceCheckSummary(){
-        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
+        Competition competition = newCompetition()
+                .withSections(Arrays.asList(section))
+                .withFundingType(PROCUREMENT).withMaxResearchRatio(2).build();
+
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
@@ -234,6 +247,18 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(1), ViabilityState.NOT_APPLICABLE));
         when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(2), ViabilityState.REVIEW));
 
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisations.get(0))).thenReturn(new PaymentMilestoneProcess(projectFinanceUser, partnerOrganisations.get(0), PaymentMilestoneState.REVIEW));
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new PaymentMilestoneProcess(projectFinanceUser, partnerOrganisations.get(1), PaymentMilestoneState.REVIEW));
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new PaymentMilestoneProcess(projectFinanceUser, partnerOrganisations.get(2), PaymentMilestoneState.REVIEW));
+
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+
+        when(fundingRulesWorkflowHandler.getProcess(partnerOrganisations.get(0))).thenReturn(new FundingRulesProcess(projectFinanceUser, partnerOrganisations.get(0), FundingRulesState.REVIEW));
+        when(fundingRulesWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new FundingRulesProcess(projectFinanceUser, partnerOrganisations.get(1), FundingRulesState.REVIEW));
+        when(fundingRulesWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new FundingRulesProcess(projectFinanceUser, partnerOrganisations.get(2), FundingRulesState.REVIEW));
+
         ProjectFinance projectFinanceInDB1 = new ProjectFinance();
         projectFinanceInDB1.setViabilityStatus(ViabilityRagStatus.AMBER);
         when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(Optional.of(projectFinanceInDB1));
@@ -255,6 +280,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -268,20 +294,23 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
         assertEquals(ViabilityState.NOT_APPLICABLE, organisation1Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation1Results.getViabilityRagStatus());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation1Results.getPaymentMilestoneState());
         assertFalse(organisation1Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
         assertEquals(ViabilityState.APPROVED, organisation2Results.getViability());
         assertEquals(ViabilityRagStatus.AMBER, organisation2Results.getViabilityRagStatus());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation2Results.getPaymentMilestoneState());
         assertTrue(organisation2Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(ViabilityState.REVIEW, organisation3Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation3Results.getViabilityRagStatus());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation3Results.getPaymentMilestoneState());
         assertFalse(organisation3Results.isAwaitingResponse());
     }
 
-    private <T> boolean organisationsOrderedWithLeadOnTopAndPartnersAlphabetically(List<PartnerOrganisation> beforeOrdered, List<String> organisationsNames) {
+    private boolean organisationsOrderedWithLeadOnTopAndPartnersAlphabetically(List<PartnerOrganisation> beforeOrdered, List<String> organisationsNames) {
         PartnerOrganisation leadPartner = simpleFindFirst(beforeOrdered, PartnerOrganisation::isLeadOrganisation).get();
         List<PartnerOrganisation> orderedPartnerOrganisations = new PrioritySorting<>(beforeOrdered, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         return organisationsNames.equals(simpleMap(orderedPartnerOrganisations, po -> po.getOrganisation().getName()));
@@ -310,8 +339,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, PENDING);
 
         when(projectFinanceRepository.findByProjectId(project.getId())).thenReturn(singletonList(projectFinance));
-        when(viabilityWorkflowHandler.viabilityReset(partnerOrganisation, internalUser)).thenReturn(true);
-        when(eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, internalUser)).thenReturn(true);
+        when(viabilityWorkflowHandler.viabilityReset(partnerOrganisation, internalUser, null)).thenReturn(true);
+        when(eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, internalUser, null)).thenReturn(true);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(grantOfferLetterProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
@@ -329,7 +358,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId).withName("Organisation1").build();
 
         Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
         projectFinances.forEach((type, category) -> category.calculateTotal());
@@ -349,7 +378,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         FinanceCheckEligibilityResource eligibility = result.getSuccess();
 
-        assertEquals((long) eligibility.getDurationInMonths(), 5L);
+        assertEquals((long) eligibility.getDurationInMonths(), 6L);
         assertEquals(projectFinanceResource.getTotal(), eligibility.getTotalCost());
         assertEquals(projectFinanceResource.getGrantClaimPercentage(), eligibility.getPercentageGrant());
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());
@@ -365,7 +394,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
@@ -384,7 +413,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
@@ -405,7 +434,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
@@ -426,7 +455,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
@@ -446,7 +475,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         List<QueryResource> queries = Collections.emptyList();
 
@@ -466,7 +495,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
         when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
@@ -485,7 +514,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
         when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
@@ -504,7 +533,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -571,7 +600,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -638,7 +667,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -951,7 +980,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
 
         verify(eligibilityWorkflowHandler, never()).eligibilityApproved(partnerOrganisationInDB, user);
-
     }
 
     @Test
@@ -1065,9 +1093,36 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
+    public void getViabilityForKtpAsKB() {
+
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.UNSET, null, null, true, true);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertGetViabilityResults(result.getSuccess(), ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.UNSET,
+                null, null, null);
+    }
+
+    @Test
+    public void getViabilityForKtpAsNonKBOrg() {
+
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, null, null, true, false);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertGetViabilityResults(result.getSuccess(), ViabilityState.APPROVED, ViabilityRagStatus.GREEN,
+                null, null, null);
+    }
+
+
+    @Test
     public void getViabilityWhenViabilityStateIsReviewInDB() {
 
-        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null);
+        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1083,7 +1138,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getViabilityWhenViabilityStateIsNotApplicableInDB() {
 
-        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null);
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1107,7 +1162,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 .withLastName("Bowman")
                 .build();
 
-        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now());
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now(), false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1121,9 +1176,17 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     private void setUpGetViabilityMocking(ViabilityState viabilityStateInDB, ViabilityRagStatus viabilityRagStatusInDB,
-                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate) {
+                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate, boolean isKtp, boolean asKB) {
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        Competition competition = newCompetition().withFundingType(isKtp ? FundingType.KTP : FundingType.LOAN).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(asKB ? KNOWLEDGE_BASE : BUSINESS)
+                        .build())
+                .build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB, viabilityStateInDB);
@@ -1170,7 +1233,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getEligibilityWhenEligibilityIsReviewInDB() {
 
-        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null);
+        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1187,7 +1250,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getEligibilityWhenEligibilityIsNotApplicableInDB() {
 
-        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null);
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1212,7 +1275,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 .withLastName("Bowman")
                 .build();
 
-        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now(), false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1226,10 +1289,136 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
-    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
-                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate) {
+    @Test
+    public void getEligibilityForKtpAsNonKB() {
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET, null, null, true, false);
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertGetEligibilityResults(result.getSuccess(), EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET,
+                null, null, null);
+    }
+
+    @Test
+    public void getEligibilityForKtpAsKB() {
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, null, null, true, true);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertGetEligibilityResults(result.getSuccess(), EligibilityState.APPROVED, EligibilityRagStatus.GREEN,
+                null, null, null);
+    }
+
+    @Test
+    public void approvePaymentMilestoneState() {
+        Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
+        Competition competition = newCompetition()
+                .withSections(Arrays.asList(section))
+                .withFundingType(PROCUREMENT).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
+
+        User user = newUser().withId(1l).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
+
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisationInDB, user)).thenReturn(true);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ServiceResult<Void> result = service.approvePaymentMilestoneState(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void resetPaymentMilestoneState() {
+        Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
+        Competition competition = newCompetition()
+                .withSections(Arrays.asList(section))
+                .withFundingType(PROCUREMENT).build();
+
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, PENDING);
+
+        User user = newUser().withId(1l).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
+
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisationInDB, user, "reason")).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(grantOfferLetterProcessRepository.findOneByTargetId(projectId)).thenReturn(currentGOLProcess);
+
+        ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId, "reason");
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getPaymentMilestone() {
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
+
+        User user = newUser().withId(1l).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
+
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ServiceResult<PaymentMilestoneResource> result = service.getPaymentMilestone(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
+                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate, boolean isKtp, boolean asKB) {
+        Competition competition = newCompetition().withFundingType(isKtp ? FundingType.KTP : FundingType.LOAN).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(asKB ? KNOWLEDGE_BASE : BUSINESS)
+                        .build())
+                .build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         EligibilityProcess eligibilityProcess = new EligibilityProcess(eligibilityApprovalUser, partnerOrganisationInDB, eligibilityStateInDB);

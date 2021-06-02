@@ -32,7 +32,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.sil.experian.resource.*;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -262,7 +262,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         Competition competition = newCompetition().withName("Greener Jet Engines").build();
         Application application = newApplication().withCompetition(competition).build();
         organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
-        ProcessRole leadApplicantRole = newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
+        ProcessRole leadApplicantRole = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
         Project project = newProject().withId(projectId).withApplication(application).build();
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));

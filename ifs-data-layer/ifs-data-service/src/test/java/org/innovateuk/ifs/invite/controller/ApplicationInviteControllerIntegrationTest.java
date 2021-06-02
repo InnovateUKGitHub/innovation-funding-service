@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.controller.UserController;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
@@ -70,6 +71,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         app.setId(APPLICATION_ID);
         processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(app).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
+        user.addRole(Role.APPLICANT);
         processRoles.get(0).setUser(user);
         userResource = userMapper.mapToResource(user);
         swapOutForUser(userResource);

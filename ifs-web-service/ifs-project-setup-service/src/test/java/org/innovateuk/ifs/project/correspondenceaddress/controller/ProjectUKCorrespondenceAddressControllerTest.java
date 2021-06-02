@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.correspondenceaddress.form.ProjectDetailsAddressForm;
@@ -48,6 +49,8 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
     @Mock
     private ProjectDetailsService projectDetailsService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected ProjectUKCorrespondenceAddressController supplyControllerUnderTest() {
@@ -59,10 +62,12 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
         OrganisationResource organisationResource = newOrganisationResource().build();
         AddressResource addressResource = newAddressResource().build();
         ApplicationResource applicationResource = newApplicationResource().build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();
+        CompetitionResource competition = newCompetitionResource().build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withCompetition(competition.getId()).withAddress(addressResource).build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address/UK", project.getId())).
@@ -120,10 +125,11 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
         OrganisationResource leadOrganisation = newOrganisationResource().build();
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).build();
+        ProjectResource project = newProjectResource().withApplication(applicationResource).withCompetition(competitionResource.getId()).build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(post("/project/{id}/details/project-address/UK", project.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)

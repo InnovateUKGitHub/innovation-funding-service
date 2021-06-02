@@ -250,6 +250,10 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
             throw new InviteExpiredException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(COMPETITION_CANNOT_REOPEN_ASSESSMENT_PERIOD)) {
+            throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
+        }
+
         if (restFailure.has(COMPETITION_CANNOT_RELEASE_FEEDBACK)) {
             throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
         }
@@ -515,7 +519,6 @@ public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure>
     public static RestResult<Void> toDeleteResponse() {
         return restSuccess(NO_CONTENT);
     }
-
 
     /**
      * Aggregate a {@link List} of {@link RestResult} into a {@link RestResult} containing a {@list List}

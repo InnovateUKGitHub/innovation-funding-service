@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        Print version with CSS
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+</head>
+<body>
+<main>
+    <style>
+        @media print {
+            .letter-size {
+                padding: 4em;
+            }
+
+            .letter-image {
+                max-width: 12em;
+                padding: 0 0 4em 0;
+            }
+        }
+
+        .letter-logo {
+            margin: 0 auto;
+        }
+
+        .letter-page-break {
+            page-break-before: always
+        }
+
+        .letter-size,
+        .letter-size * {
+            font-family: "Arial", "Helvetica", sans-serif;
+            /*font-size: 16px;*/
+            font-size: 10pt;
+        }
+
+        .letter-image {
+            /*max-width: 300px;*/
+            padding: 0 0 60px 0;
+        }
+
+        .letter-table {
+            border-collapse: collapse;
+            max-width: 100%;
+            font-size: 12px;
+        }
+
+        .letter-table th,
+        .letter-table td {
+            padding: 4px;
+            border: 1px solid #000;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .letter-table strong {
+            font-size: 12px;
+        }
+
+        .letter-table .letter-table--right {
+            text-align: right;
+        }
+
+        .letter-list {
+        }
+
+        .letter-list li,
+        .terms-and-conditions li {
+            padding: 4px 0
+        }
+
+        .letter-size--terms,
+        .letter-size--terms * {
+            font-size: 10pt;
+        }
+
+        ol.list-alpha {
+            counter-reset: item;
+            padding: 15px 0;
+        }
+
+        ol.list-alpha li {
+            display: block;
+            padding: 10px 0 10px 45px;
+            counter-increment: item;
+        }
+
+        ol.list-alpha li:before {
+            position: absolute;
+            content: counter(item, upper-alpha);
+            margin-left: -45px;
+        / / negative of the ol li padding
+        }
+
+        ol.ifs-list--number {
+            list-style-type: none;
+            counter-reset: item;
+            margin: 0;
+            padding: 0;
+        }
+
+        ol.ifs-list--number > li {
+            display: table;
+            counter-increment: item;
+            margin-bottom: 0.6em;
+        }
+
+        ol.ifs-list--number > li:not(.regular) {
+            font-weight: bold;
+        }
+
+        ol.ifs-list--number > li.regular {
+            font-weight: normal;
+        }
+
+        ol.ifs-list--number > li:before {
+            content: counters(item, ".") ". ";
+            display: table-cell;
+            padding-right: 0.6em;
+        }
+
+        ol.ifs-list--number > li ol.ifs-list--number {
+            list-style-type: none;
+            counter-reset: item;
+            margin: 0;
+            padding: 0;
+        }
+
+        ol.ifs-list--number > li ol.ifs-list--number > li {
+            margin: 0;
+            font-weight: normal;
+        }
+
+        ol.ifs-list--number > li ol.ifs-list--number > li:before {
+            content: counters(item, ".") " ";
+        }
+    </style>
+    <!-- TODO fragments. -->
+    <div class="letter-size">
+        <p>AGREEMENT</p>
+        <p>BETWEEN</p>
+        <p>INNOVATE UK part of UK Research and Innovation</p>
+        <p>AND</p>
+        <p th:text="${model.organisationName}">Contractor</p>
+        <p>Project Ref.
+            <th:block th:text="${model.applicationId}">xxx</th:block>
+        </p>
+    </div>
+    <div class="letter-size">
+        <p><strong>Section 1 : Form of Agreement</strong></p>
+        <p><strong>This Agreement</strong> is made between</p>
+        <p>(1) INNOVATE UK - a part of UK Research and Innovation (UKRI-Innovate UK), a body corporate established by statute pursuant to the commencement of section 91 of the Higher Education and Research Act 2017 whose principal place of business is at Polaris House, North Star Avenue, Swindon, SN2 1FL (the “Authority“);</p>
+        <p>and</p>
+        <p>(2) [<th:block th:text="${model.organisationName}"></th:block>] ("the Contractor")
+        </p>
+        <p>the Authority and the Contractor being together called "the Parties".</p>
+        <p><strong>IT IS AGREED</strong> as follows:</p>
+        <ol class="govuk-list ifs-list--number">
+            <li class="regular">The Contractor will undertake an innovation and development project entitled '<th:block th:text="${model.projectName}"/>' in accordance with the specification as detailed in Section 3 (“the Project") as part of a competitive research and development in phases project carried out by the Authority under the Pre-Commercial Procurement principles.
+            </li>
+            <li class="regular">The Authority will pay the Contractor the Approved Cost as set out in Section 4 for:
+                <ol class="govuk-list ifs-list--number">
+                    <li>undertaking the Project; and</li>
+                    <li>in respect of any assignment of any Intellectual Property rights in the Material to the Authority on behalf of the Crown made pursuant to Clauses 17 and 18 of Section 2.</li>
+                </ol>
+            </li>
+            <li class="regular">No payments will be made until the approvals sought pursuant to Clause 3.3 of Section 2 are obtained unconditionally.</li>
+            <li class="regular">Payments made under this agreement are inclusive of VAT and any other taxes and duties which shall (if applicable) be payable by a party at the rate and in the manner from time to time prescribed by law.</li>
+            <li class="regular">This Form of Agreement (Section 1) together with the attached Sections 2 to 6 inclusive are the documents which collectively form “the Agreement". If there is any inconsistency between Sections 3 to 6 of the Agreement and this Section 1 or the Terms and Conditions set out in Section 2, the provisions of Section 1 and 2 shall prevail.</li>
+            <li class="regular">The contract effected by the signing of this Form of Agreement constitutes the whole agreement between the Parties and supersedes all prior negotiations, agreements, representations or understandings between them relating to the subject matter of this Agreement.</li>
+            <li class="regular">Each party acknowledges that, in entering into the Agreement, it does not rely on any statement, representation, assurance or warranty (“Representation") of any person (whether a party to this Agreement or not) other than as expressly set out in the Agreement. Each party agrees that the only remedies available to it arising out of or in connection with a Representation shall be for breach of contract.</li>
+            <li class="regular">Nothing in this Agreement shall limit or exclude any liability for fraud.</li>
+        </ol>
+        <p>Signed by the duly authorised signatory</p>
+        <p>of the Authority: ……………………………………………………………</p>
+        <p>Signature</p>
+        <p>……………………………………………………………</p>
+        <p>Full Name</p>
+        <p>……………………………………………………………</p>
+        <p>Position Held</p>
+        <p>……………………………………………………………</p>
+        <p>Date</p>
+        <p>Signed by the duly authorised signatory</p>
+        <p>of the Contractor: ……………………………………………………………</p>
+        <p>Signature</p>
+        <p>……………………………………………………………</p>
+        <p>Full Name</p>
+        <p>……………………………………………………………</p>
+        <p>Position Held</p>
+        <p>……………………………………………………………</p>
+        <p>Date</p>
+    </div>
+    <div class="letter-size">
+        <p><strong>SECTION 2</strong></p>
+        <p><strong>TERMS AND CONDITIONS</strong></p>
+        <p>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </p>
+    </div>
+    <div class="letter-size">
+        <p><strong>SCHEDULE A</strong></p>
+        <p><strong>VARIATION TO CONTRACT FORM</strong></p>
+        <p>Project Title : <th:block th:text="${model.projectName}"></th:block>.</p>
+        <p>Project Application No:  <th:block th:text="${model.applicationId}"></th:block>.</p>
+        <p>Contract between the [ ] (“the Authority") and</p>
+        <p>[<th:block th:text="${model.organisationName}"></th:block>] (“the Contractor")</p>
+        <p>dated (“the Contract")</p>
+        <p>Variation No: _____________________________</p>
+        <p>Date: _____________________________</p>
+        <p>1. The Contract is varied as follows:</p>
+        <p>2. Words and expressions in this Variation shall have the meanings given to them in the Contract.</p>
+        <p>3. The Contract, including any previous Variations, shall remain effective and unaltered except as amended by this Variation.</p>
+        <p>SIGNED:</p>
+        <p>For: The Authority</p>
+        <p>By:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Full Name:</p>
+        <p> …………………………………………………………………………….</p>
+        <p>Position:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Date</p>
+        <p>…………………………………………………………………………….</p>
+        <p>For: The Contractor</p>
+        <p>By:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Full Name:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Position:</p>
+        <p>…………………………………………………………………………….</p>
+        <p>Date</p>
+        <p>…………………………………………………………………………….</p>
+    </div>
+    <div class="letter-size">
+        <p>SECTION 3</p>
+        <p>PROJECT</p>
+        <p>The Contractor shall undertake the activity proposed in their application and submitted on Innovate UK’s Innovation Funding Service Platform for the SBRI competition:<th:block th:text="${model.competitionName}"></th:block></p>
+        <p>Any corrections, adjustments, or new additions to the timing, cost or activity required by the contracting authority and set out in this contract (including at section 4) shall supersede the original proposal.</p>
+        <p>Commencement Date:</p>
+        <p>Completion Date:</p>
+        <p>Authority’s Contract Manager:</p>
+        <p>Contractor’s Project Manager:<th:block th:text="${model.projectManagerName}"></th:block></p>
+        <p>Approved Project Milestones:</p>
+    </div>
+
+    <table class="letter-table">
+        <thead>
+        <tr>
+            <th>Milestone number</th>
+            <th>Milestone and/or deliverable</th>
+            <th>Completion date</th>
+            <th>Success criteria</th>
+            <th>Required payment month</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="milestone, iStat : ${model.milestones}">
+            <th th:text="${iStat.index + 1}">1</th>
+            <td><p th:text="${milestone.description}">desc</p><p th:text="${milestone.task}">task</p><p th:text="${milestone.deliverable}">deliverable</p></td>
+            <td th:text="${#temporals.format(milestone.completionDate)}"></td>
+            <td th:text="${milestone.successCriteria}">Evidence sources clearly identified</td>
+            <td th:text="${milestone.month}">1</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="letter-size">
+        <p>SECTION 4</p>
+        <p>FINANCIAL ARRANGEMENTS</p>
+    </div>
+    <div class="letter-size">
+        <p>It is intended that the indicated amounts will be paid by the Authority to the Contractor within 30 days subject to contract conditions being met.</p>
+        <p>Maximum Total Contract Value (inclusive of VAT):</p>
+    </div>
+
+    <table class="letter-table">
+        <thead>
+        <tr>
+            <th>Project month</th>
+            <th th:each="milestone : ${model.milestoneMonths}" th:text="${milestone.month}">1</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th>Invoice net</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.invoiceNet}" />
+            </td>
+        </tr>
+        <tr>
+            <th>VAT</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.vat}" />
+            </td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                £<th:block th:text="${milestone.total}" />
+            </td>
+        </tr>
+        <tr>
+            <th>Milestone Nos.</th>
+            <td th:each="milestone : ${model.milestoneMonths}">
+                <th:block th:text="${milestone.numbers}" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="letter-size">
+        <p>SECTION 5</p>
+        <p>KEY STAFF</p>
+        <p>[The Contractor's representative]</p>
+        <p>[The Authority's representative]</p>
+    </div>
+    <div class="letter-size">
+        <p>SECTION 6</p>
+        <p>DOCUMENTS</p>
+        <p>DOCUMENT TYPE: REFERENCES TO QUOTE</p>
+        <p>Documents not included above are intentionally excluded from this Agreement</p>
+    </div>
+</main>
+</body>
+</html>

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -26,7 +27,6 @@ import static org.innovateuk.ifs.user.builder.ManageUserResourceBuilder.newManag
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
@@ -239,7 +239,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userService.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userService.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -258,7 +258,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
                 ));
 
-        verify(userService).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        verify(userService).findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
     }
 
     @Test

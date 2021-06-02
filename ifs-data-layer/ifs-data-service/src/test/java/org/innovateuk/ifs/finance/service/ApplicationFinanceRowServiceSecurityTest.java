@@ -87,8 +87,6 @@ public class ApplicationFinanceRowServiceSecurityTest extends BaseServiceSecurit
                 () -> {
                     verify(applicationFinanceRules)
                             .consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules)
-                            .internalUserCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 

@@ -29,6 +29,7 @@ function applyConfigMaps {
     oc apply -f $(getBuildLocation)/config-maps/shibboleth-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/survey-db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/web-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/spring-config.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
 function applyRoutes {
@@ -41,12 +42,12 @@ function applyRoutes {
 }
 
 function applyGlusterConfig {
+    oc apply -f $(getBuildLocation)/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
     if $(isNamedEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
-        oc apply -f $(getBuildLocation)/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
         oc apply -f $(getBuildLocation)/gluster/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
     else
-        oc apply -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/gluster/12-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 }
 
@@ -54,4 +55,3 @@ function applyGlusterConfig {
 applyConfigMaps
 applyRoutes
 applyGlusterConfig
-

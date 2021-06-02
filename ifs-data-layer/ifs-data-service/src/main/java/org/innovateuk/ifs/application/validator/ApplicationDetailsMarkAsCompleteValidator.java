@@ -29,60 +29,28 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        LocalDate currentDate = LocalDate.now();
-
         LOG.debug("do ApplicationDetailsMarkAsComplete Validation");
 
         Application application = (Application) target;
 
-        if (isEmpty(application.getName())) {
-            LOG.debug("MarkAsComplete application details validation message for name: " + application.getName());
-            rejectValue(errors, "name", "validation.project.name.must.not.be.empty");
-        }
+        validateApplication(errors, application);
+    }
 
-        if (isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
-            LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
-            rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
-        }
+    private void validateApplication(Errors errors,Application application) {
+        validateName(errors, application);
+        validateStateDate(errors, application);
+        validateProjectDuration(application, errors);
 
         Competition competition = application.getCompetition();
-        if (isEmpty(application.getDurationInMonths())) {
-            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
-            rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
-        } else if (application.getDurationInMonths() < competition.getMinProjectDuration()
-                || application.getDurationInMonths() > competition.getMaxProjectDuration()) {
-            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
-            rejectValue(
-                    errors,
-                    "durationInMonths",
-                    "validation.project.duration.input.invalid",
-                    competition.getMinProjectDuration(),
-                    competition.getMaxProjectDuration()
-            );
-        }
-
         if (competition.getFundingType() == PROCUREMENT) {
-            if (isEmpty(application.getCompetitionReferralSource())) {
-                LOG.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
-                rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
-            }
-
-            if (isEmpty(application.getCompanyAge())) {
-                LOG.debug("MarkAsComplete application details validation message for company age: " + application.getName());
-                rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
-            }
-
-            if (isEmpty(application.getCompanyPrimaryFocus())) {
-                LOG.debug("MarkAsComplete application details validation message for company primary focus: " + application.getName());
-                rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
-            }
+            validateProcurement(errors, application);
         }
 
-        if (!applicationInnovationAreaIsInCorrectState(application)) {
-            LOG.debug("MarkAsComplete application details validation message for innovation area: " + application.getInnovationArea());
-            rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
-        }
+        validateInnovationArea(errors, application);
+        validateResubmission(errors, application, competition);
+    }
 
+    private void validateResubmission(Errors errors, Application application, Competition competition) {
         if (competition.getResubmission() && application.getResubmission() == null) {
             LOG.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
             rejectValue(errors, "resubmission", "validation.application.must.indicate.resubmission.or.not");
@@ -98,6 +66,75 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
                     LOG.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
                     rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
                 }
+            }
+        }
+    }
+
+    private void validateInnovationArea(Errors errors, Application application) {
+        if (!applicationInnovationAreaIsInCorrectState(application)) {
+            LOG.debug("MarkAsComplete application details validation message for innovation area: " + application.getInnovationArea());
+            rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
+        }
+    }
+
+    private void validateStateDate(Errors errors, Application application) {
+
+        LocalDate currentDate = LocalDate.now();
+
+        if (isEmpty(application.getStartDate()) || (application.getStartDate().isBefore(currentDate))) {
+            if (!(application.getCompetition().isAlwaysOpen() && application.getCompetition().isKtp())) {
+                LOG.debug("MarkAsComplete application details validation message for start date: " + application.getStartDate());
+                rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
+            }
+        }
+    }
+
+    private void validateName(Errors errors, Application application) {
+        if (isEmpty(application.getName())) {
+            LOG.debug("MarkAsComplete application details validation message for name: " + application.getName());
+            rejectValue(errors, "name", "validation.project.name.must.not.be.empty");
+        }
+    }
+
+    private void validateProcurement(Errors errors, Application application) {
+        if (isEmpty(application.getCompetitionReferralSource())) {
+            LOG.debug("MarkAsComplete application details validation message for competition Referral Source: " + application.getName());
+            rejectValue(errors, "competitionReferralSource", "validation.application.procurement.competitionreferralsource.required");
+        }
+
+        if (isEmpty(application.getCompanyAge())) {
+            LOG.debug("MarkAsComplete application details validation message for company age: " + application.getName());
+            rejectValue(errors, "companyAge", "validation.application.procurement.companyage.required");
+        }
+
+        if (isEmpty(application.getCompanyPrimaryFocus())) {
+            LOG.debug("MarkAsComplete application details validation message for company primary focus: " + application.getName());
+            rejectValue(errors, "companyPrimaryFocus", "validation.application.procurement.companyprimaryfocus.required");
+        }
+    }
+
+
+    private void validateProjectDuration(Application application, Errors errors) {
+        if (isEmpty(application.getDurationInMonths())) {
+            rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
+        } else {
+            Competition competition = application.getCompetition();
+            int maxMonths = competition.getMaxProjectDuration();
+            int minMonths = Math.max(application.getMaxMilestoneMonth().orElse(0), competition.getMinProjectDuration());
+            boolean minDictatedByCompetition = minMonths == competition.getMinProjectDuration();
+            if (application.getDurationInMonths() > maxMonths ||
+                    (minDictatedByCompetition && application.getDurationInMonths() < minMonths)) {
+                rejectValue(
+                        errors,
+                        "durationInMonths",
+                        "validation.project.duration.input.invalid",
+                        minMonths,
+                        maxMonths);
+            } else if (application.getDurationInMonths() < minMonths) {
+                rejectValue(
+                        errors,
+                        "durationInMonths",
+                        "validation.project.duration.must.be.greater.than.milestones");
             }
         }
     }

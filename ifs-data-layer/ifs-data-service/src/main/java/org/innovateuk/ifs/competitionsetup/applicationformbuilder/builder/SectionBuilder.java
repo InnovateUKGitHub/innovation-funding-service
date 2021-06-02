@@ -74,6 +74,11 @@ public final class SectionBuilder {
         return this;
     }
 
+    public SectionBuilder addChildSection(SectionBuilder childSection) {
+        this.childSections.add(childSection);
+        return this;
+    }
+
     public List<QuestionBuilder> getQuestions() {
         return questions;
     }
@@ -88,6 +93,10 @@ public final class SectionBuilder {
 
     public String getAssessorGuidanceDescription() {
         return assessorGuidanceDescription;
+    }
+
+    public List<SectionBuilder> getChildSections() {
+        return childSections;
     }
 
     public Section build() {

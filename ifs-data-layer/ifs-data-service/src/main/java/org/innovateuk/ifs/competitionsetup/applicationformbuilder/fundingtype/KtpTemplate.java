@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
@@ -15,6 +15,7 @@ import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,13 +25,19 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestionWithMultipleStatuses;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSubSection;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 @Component
 public class KtpTemplate implements FundingTypeTemplate {
 
     private static final Integer MAXIMUM_ASSESSOR_SCORE = 10;
+
+    @Value("${ifs.ktp.fec.finance.model.enabled}")
+    private boolean fecFinanceModel;
 
     @Autowired
     private CommonBuilders commonBuilders;
@@ -43,21 +50,78 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
-        competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
+        competitionTypeSections.stream().filter(section -> section.getType() == SectionType.FINANCES)
                 .findAny()
                 .ifPresent(financeSection ->
-                        financeSection.withAssessorGuidanceDescription("The knowledge base partner is required to submit their project finance details."));
+                {
+                    financeSection.withAssessorGuidanceDescription("The knowledge base partner is required to submit their project finance details.");
+                    if (fecFinanceModel) {
+                        financeSection.getChildSections().stream().filter(childSection ->
+                                childSection.getName().equals("Your project finances")).findAny().ifPresent(yourProjectFinancesSection ->
+                                yourProjectFinancesSection.withChildSections(fecChildSections()));
+                    }
+                });
+
         competitionTypeSections.add(
                 ktpAssessmentSection()
                         .withQuestions(ktpDefaultQuestions())
         );
 
         return overrideApplicationQuestionFormInputs(competitionTypeSections);
+   }
+
+    public List<SectionBuilder> fecChildSections() {
+        return
+        newArrayList(
+                aSubSection()
+                        .withName("Your fEC model")
+                        .withType(SectionType.FEC_COSTS_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses())),
+                aSubSection()
+                        .withName("Your funding")
+                        .withType(SectionType.FUNDING_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )),
+                aSubSection()
+                        .withName("Your project costs")
+                        .withType(SectionType.PROJECT_COST_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )),
+                aSubSection()
+                        .withName("Your project location")
+                        .withType(SectionType.PROJECT_LOCATION)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )),
+                aSubSection()
+                        .withName("Your organisation")
+                        .withType(SectionType.ORGANISATION_FINANCES)
+                        .withQuestions(newArrayList(
+                                aQuestionWithMultipleStatuses()
+                        )))
+                ;
+
+    }
+
+    @Override
+    public Competition initialiseProjectSetupColumns(Competition competition) {
+        addKtpProjectSetupColumns(competition);
+        return competition;
     }
 
     @Override
     public Competition initialiseFinanceTypes(Competition competition) {
-        List<FinanceRowType> types = newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING);
+        List<FinanceRowType> types;
+
+        if (fecFinanceModel) {
+            types = newArrayList(ASSOCIATE_SALARY_COSTS, ACADEMIC_AND_SECRETARIAL_SUPPORT, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, INDIRECT_COSTS);
+        } else {
+            types = newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING);
+        }
+
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
@@ -66,9 +130,23 @@ public class KtpTemplate implements FundingTypeTemplate {
         return commonBuilders.overrideTermsAndConditions(competition);
     }
 
+    @Override
+    public Competition setGolTemplate(Competition competition) {
+        return commonBuilders.getGolTemplate(competition);
+    }
+
+    private void addKtpProjectSetupColumns(Competition competition) {
+        commonBuilders.addProjectSetupStage(competition, PROJECT_DETAILS);
+        commonBuilders.addProjectSetupStage(competition, PROJECT_TEAM);
+        commonBuilders.addProjectSetupStage(competition, MONITORING_OFFICER);
+        commonBuilders.addProjectSetupStage(competition, BANK_DETAILS);
+        commonBuilders.addProjectSetupStage(competition, FINANCE_CHECKS);
+        commonBuilders.addProjectSetupStage(competition, GRANT_OFFER_LETTER);
+    }
+
     private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {
         Optional<SectionBuilder> applicationQuestionSection = sections.stream()
-                .filter(sectionBuilder -> sectionBuilder.getName().equals("Application questions"))
+                .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.APPLICATION_QUESTIONS)
                 .findFirst();
 
         applicationQuestionSection.ifPresent(sectionBuilder -> {

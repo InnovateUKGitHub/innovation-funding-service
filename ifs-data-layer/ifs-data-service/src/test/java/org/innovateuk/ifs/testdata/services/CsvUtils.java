@@ -9,13 +9,14 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
@@ -56,6 +57,10 @@ public class CsvUtils {
         return simpleMap(readCsvLines("organisations"), OrganisationLine::new);
     }
 
+    public static List<QuestionnaireResponseLine> readQuestionnaireResponseLines(){
+        return simpleMap(readCsvLines("questionnaire-responses"), QuestionnaireResponseLine::new);
+    }
+
     public static List<ExternalUserLine> readExternalUsers() {
         return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
     }
@@ -68,12 +73,12 @@ public class CsvUtils {
         return simpleMap(readCsvLines("assessor-users"), AssessorUserLine::new);
     }
 
-    public static List<CompetitionLine> readCompetitions() {
-        return simpleMapWithIndex(readCsvLines("competitions"), CompetitionLine::new);
-    }
-
     public static List<CompetitionOrganisationConfigLine> readCompetitionOrganisationConfig() {
         return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
+    }
+
+    public static List<AssessmentPeriodLine> readCompetitionAssessmentPeriods() {
+        return simpleMapWithIndex(readCsvLines("assessment-periods"), AssessmentPeriodLine::new);
     }
 
     public static List<CompetitionFunderLine> readCompetitionFunders() {
@@ -231,7 +236,7 @@ public class CsvUtils {
 
                 String categoryCell = currentLine.get(1);
 
-                if (asList("Working days per year", "Grant claim", "Organisation size", "Work postcode").contains(categoryCell)) {
+                if (asList("Working days per year", "Grant claim", "Organisation size", "Work postcode", "Fec model enabled", "Fec file uploaded").contains(categoryCell)) {
                     organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, singletonList(currentLine.get(2))));
                 } else {
 
@@ -452,92 +457,33 @@ public class CsvUtils {
         }
     }
 
-    public static class CompetitionLine {
+    public static class QuestionnaireResponseLine {
 
-        public int lineNumber;
-        public String name;
-        public String type;
-        public List<String> innovationAreas;
-        public String innovationSector;
-        public List<String> researchCategory;
-        public String collaborationLevel;
-        public List<OrganisationTypeEnum> leadApplicantTypes;
-        public Integer researchRatio;
-        public Boolean resubmission;
-        public Boolean multiStream;
-        public CompetitionStatus competitionStatus;
-        public String leadTechnologist;
-        public String compExecutive;
-        public boolean setupComplete;
-        public String budgetCode;
-        public String code;
-        public String pafCode;
-        public String activityCode;
-        public Integer assessorCount;
-        public BigDecimal assessorPay;
-        public Boolean hasAssessmentPanel;
-        public Boolean hasInterviewStage;
-        public AssessorFinanceView assessorFinanceView;
-        public boolean published;
-        public String shortDescription;
-        public String fundingRange;
-        public String eligibilitySummary;
-        public String competitionDescription;
-        public FundingType fundingType;
-        public String projectSize;
-        public List<String> keywords;
-        public boolean inviteOnly;
-        public boolean nonIfs;
-        public String nonIfsUrl;
-        public CompetitionCompletionStage competitionCompletionStage;
-        public Boolean includeJesForm;
-        public ApplicationFinanceType applicationFinanceType;
-        public Boolean includeProjectGrowth;
-        public Boolean includeYourOrganisation;
+        public String user;
+        public String competitionName;
+        public String applicationName;
+        public String organisationName;
+        public QuestionSetupType questionSetupType;
+        public List<String> options;
 
-        private CompetitionLine(List<String> line, int lineNumber) {
-
-            this.lineNumber = lineNumber;
+        private QuestionnaireResponseLine(List<String> line) {
             int i = 0;
-            name = nullable(line.get(i++));
-            type = nullable(line.get(i++));
-            innovationAreas = nullableSplitOnNewLines(line.get(i++));
-            innovationSector = nullable(line.get(i++));
-            researchCategory = nullableSplitOnNewLines(line.get(i++));
-            collaborationLevel = nullable(line.get(i++));
-            leadApplicantTypes = simpleMap(nullableSplitOnNewLines(line.get(i++)), OrganisationTypeEnum::valueOf);
-            researchRatio = nullableInteger(line.get(i++));
-            resubmission = nullableBoolean(line.get(i++));
-            multiStream = nullableBoolean(line.get(i++));
-            competitionStatus = CompetitionStatus.valueOf(line.get(i++));
-            leadTechnologist = nullable((line.get(i++)));
-            compExecutive = nullable((line.get(i++)));
-            setupComplete = nullableBoolean(line.get(i++));
-            pafCode = nullable(line.get(i++));
-            budgetCode = nullable(line.get(i++));
-            activityCode = nullable(line.get(i++));
-            code = nullable(line.get(i++));
-            assessorCount = nullableInteger(line.get(i++));
-            assessorPay = nullableBigDecimal(line.get(i++));
-            hasAssessmentPanel = nullableBoolean(line.get(i++));
-            hasInterviewStage = nullableBoolean(line.get(i++));
-            assessorFinanceView = nullableEnum(line.get(i++), AssessorFinanceView::valueOf);
-            published = nullableBoolean(line.get(i++));
-            shortDescription = nullable(line.get(i++));
-            fundingRange = nullable(line.get(i++));
-            eligibilitySummary = nullable(line.get(i++));
-            competitionDescription = nullable(line.get(i++));
-            fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
-            projectSize = nullable(line.get(i++));
-            keywords = nullableSplittableString(line.get(i++));
-            inviteOnly = nullableBoolean(line.get(i++));
-            nonIfs = nullableBoolean(line.get(i++));
-            nonIfsUrl = nullable(line.get(i++));
-            competitionCompletionStage = CompetitionCompletionStage.valueOf(line.get(i++));
-            includeJesForm = nullableBoolean(line.get(i++));
-            applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
-            includeProjectGrowth = nullableBoolean(line.get(i++));
-            includeYourOrganisation = nullableBoolean(line.get(i++));
+            user = line.get(i++);
+            competitionName = line.get(i++);
+            applicationName = line.get(i++);
+            organisationName = line.get(i++);
+            questionSetupType = QuestionSetupType.valueOf(line.get(i++));
+            options= asList(line.get(i++).split(","));
+
+        }
+
+        public QuestionnaireResponseLine(String user, String competitionName, String applicationName, String organisationName, QuestionSetupType questionSetupType, List<String> options) {
+            this.user = user;
+            this.competitionName = competitionName;
+            this.applicationName = applicationName;
+            this.organisationName = organisationName;
+            this.questionSetupType = questionSetupType;
+            this.options = options;
         }
     }
 
@@ -637,6 +583,11 @@ public class CsvUtils {
         public String companyRegistrationNumber;
         public Boolean isInternational;
         public String internationalRegistrationNumber;
+        public LocalDate dateOfIncorporation;
+        public List<OrganisationSicCodeResource> sicCodes;
+        public String organisationNumber;
+        public List<OrganisationExecutiveOfficerResource> executiveOfficers;
+        public String businessType;
 
         private OrganisationLine(List<String> line) {
 
@@ -656,6 +607,17 @@ public class CsvUtils {
             companyRegistrationNumber = nullable(line.get(i++));
             isInternational = nullableBoolean(line.get(i++));
             internationalRegistrationNumber = nullable(line.get(i++));
+            dateOfIncorporation = nullableDate(line.get(i++));
+            String sicCodesLine = nullable(line.get(i++));
+            sicCodes = sicCodesLine != null ?
+                    simpleMap(asList(sicCodesLine.split(";")), OrganisationSicCodeResource::new) :
+                    emptyList();
+            organisationNumber = nullable(line.get(i++));
+            String executiveOfficersLine = nullable(line.get(i++));
+            executiveOfficers = executiveOfficersLine != null ?
+                    simpleMap(asList(executiveOfficersLine.split(";")), OrganisationExecutiveOfficerResource::new) :
+                    emptyList();
+            businessType  = nullable(line.get(i++));
         }
     }
 
@@ -750,6 +712,7 @@ public class CsvUtils {
 
     public static class ExternalUserLine extends UserLine {
         public Role role;
+        public List<Role> additionalRoles;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
@@ -757,6 +720,7 @@ public class CsvUtils {
         @Override
         protected void processLine(List<String> line, int i) {
             this.role = nullableEnum(line.get(i++), Role::valueOf);
+            this.additionalRoles = nullableSplitOnNewLines(line.get(i++)).stream().map(Role::valueOf).collect(Collectors.toList());
         }
 
     }
@@ -772,6 +736,45 @@ public class CsvUtils {
         @Override
         protected void processLine(List<String> line, int i) {
             this.role = nullable(line.get(i++));
+        }
+    }
+
+    public static class SicCodesLine {
+        public String sicCode;
+        public String organisationName;
+
+        private SicCodesLine(List<String> line) {
+            int i = 0;
+            sicCode = nullable(line.get(i++));
+            organisationName = nullable(line.get(i++));
+        }
+    }
+
+    public static class ExecutiveOfficersLine {
+        public String name;
+        public String organisationName;
+
+        private ExecutiveOfficersLine(List<String> line) {
+            int i = 0;
+            name = nullable(line.get(i++));
+            organisationName = nullable(line.get(i++));
+        }
+    }
+
+    public static class AssessmentPeriodLine {
+        public int lineNumber;
+        public String competition;
+        public ZonedDateTime assessorBriefing;
+        public ZonedDateTime assessorAccepts;
+        public ZonedDateTime assessorDeadline;
+
+        private AssessmentPeriodLine(List<String> line , int lineNumber) {
+            this.lineNumber = lineNumber;
+            int i = 0;
+            competition = nullable(line.get(i++));
+            assessorBriefing = nullableDateTime(line.get(i++));
+            assessorAccepts  = nullableDateTime(line.get(i++));
+            assessorDeadline = nullableDateTime(line.get(i++));
         }
     }
 

@@ -12,7 +12,7 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -50,7 +50,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
                     .withProcessRoles(
                             newProcessRole()
                                     .withUser(newUser().build())
-                                    .withRole(Role.LEADAPPLICANT)
+                                    .withRole(ProcessRoleType.LEADAPPLICANT)
                                     .withOrganisationId(LEAD_ORGANISATION.getId())
                                     .build()
                     )
@@ -96,7 +96,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         List<InterviewAssignment> expectedInterviewPanels = newInterviewAssignment()
                 .withParticipant(
                         newProcessRole()
-                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
+                                .withRole(ProcessRoleType.INTERVIEW_LEAD_APPLICANT)
                                 .withOrganisationId(LEAD_ORGANISATION.getId())
                                 .build()
                 )
@@ -205,7 +205,7 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
             ProcessRole participant = interviewPanel.getParticipant();
             assertEquals(application.getId().longValue(), interviewPanel.getTarget().getId().longValue());
             assertEquals(application.getId().longValue(), participant.getApplicationId());
-            assertSame(participant.getRole(), Role.INTERVIEW_LEAD_APPLICANT);
+            assertSame(participant.getRole(), ProcessRoleType.INTERVIEW_LEAD_APPLICANT);
             assertEquals(participant.getUser(), application.getLeadApplicant());
             assertEquals(participant.getOrganisationId(), application.getLeadOrganisationId());
         });

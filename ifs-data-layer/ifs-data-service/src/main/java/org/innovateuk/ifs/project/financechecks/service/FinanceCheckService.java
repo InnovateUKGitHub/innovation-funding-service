@@ -5,6 +5,7 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
@@ -50,11 +51,11 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_VIABILITY')")
     @Activity(projectId = "projectId", type = ActivityType.VIABILITY_RESET)
-    ServiceResult<Void> resetViability(Long projectId);
+    ServiceResult<Void> resetViability(Long projectId, Long organisationId, String reason);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_ELIGIBILITY')")
     @Activity(projectId = "projectId", type = ActivityType.ELIGIBILITY_RESET)
-    ServiceResult<Void> resetEligibility(Long projectId);
+    ServiceResult<Void> resetEligibility(Long projectId, Long organisationId, String reason);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_FINANCE_CHECKS')")
     @Activity(projectId = "projectId", type = ActivityType.FINANCE_CHECKS_RESET)
@@ -82,4 +83,27 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(long projectId, long organisationId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_MILESTONE_CHECK')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.PAYMENT_MILESTONES_APPROVED)
+    ServiceResult<Void> approvePaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'RESET_MILESTONE_CHECK')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.PAYMENT_MILESTONES_RESET)
+    ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId, String reason);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
+    ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_FUNDING_RULES')")
+    ServiceResult<FundingRulesResource> getFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.FUNDING_RULES_UPDATED)
+    ServiceResult<Void> saveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId, FundingRules fundingRules);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_FUNDING_RULES')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.FUNDING_RULES_APPROVED)
+    ServiceResult<Void> approveFundingRules(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
 }

@@ -44,13 +44,29 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
+    public RestResult<FileEntryResource> addSignedAdditionalContractFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        String url = projectRestURL + "/" + projectId + "/signed-additional-contract?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
     public RestResult<Void> removeGrantOfferLetter(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/grant-offer");
     }
 
     @Override
+    public RestResult<Void> resetGrantOfferLetter(Long projectId) {
+        return deleteWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/reset");
+    }
+
+    @Override
     public RestResult<Void> removeAdditionalContractFile(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/additional-contract");
+    }
+
+    @Override
+    public RestResult<Void> removeSignedAdditionalContractFile(Long projectId) {
+        return deleteWithRestResult(projectRestURL + "/" + projectId + "/signed-additional-contract");
     }
 
     @Override
@@ -94,8 +110,18 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
+    public RestResult<Optional<ByteArrayResource>> getSignedAdditionalContractFile(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-additional-contract", ByteArrayResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
     public RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract/details", FileEntryResource.class).toOptionalIfNotFound();
+    }
+
+    @Override
+    public RestResult<Optional<FileEntryResource>> getSignedAdditionalContractFileDetails(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-additional-contract/details", FileEntryResource.class).toOptionalIfNotFound();
     }
 
     @Override

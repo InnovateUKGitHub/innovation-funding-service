@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.period.domain.AssessmentPeriod;
+import org.innovateuk.ifs.assessment.period.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -20,10 +22,12 @@ import org.springframework.test.annotation.Rollback;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.builder.AssessmentPeriodBuilder.newAssessmentPeriod;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -36,20 +40,28 @@ import static org.mockito.Mockito.*;
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl> {
     @InjectMocks
     private MilestoneServiceImpl service;
+
     @Mock
     private CompetitionRepository competitionRepository;
+
     @Mock
     private MilestoneRepository milestoneRepository;
+
     @Mock
     private MilestoneMapper milestoneMapper;
 
+    @Mock
+    private AssessmentPeriodRepository assessmentPeriodRepository;
+
     @Before
     public void setUp() {
+
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
                         .withId(1L)
                         .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                         .withNonIfs(false)
+                        .withAlwaysOpen(false)
                         .build()));
 
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {
@@ -84,7 +96,6 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         ServiceResult<Void> result = service.updateMilestones(milestones);
 
         assertTrue(result.isSuccess());
-        verify(milestoneRepository, times(1)).saveAll(milestonesToSave);
     }
 
     @Test
@@ -364,6 +375,56 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .build();
 
         when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId()))
+                .thenReturn(Collections.singletonList(newAssessmentPeriod()
+                        .withCompetition(competition)
+                        .build()));
+
+        ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void createMilestoneWithAssessmentPeriod() {
+        Long competitionId = 1L;
+        Long assessmentPeriodId = 2L;
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .withAlwaysOpen(true)
+                .build();
+
+        AssessmentPeriod assessmentPeriod = newAssessmentPeriod().build();
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findById(assessmentPeriodId)).thenReturn(Optional.of(assessmentPeriod));
+        when(milestoneRepository.save(any(Milestone.class))).thenReturn(newMilestone().build());
+        when(milestoneMapper.mapToResource(any(Milestone.class))).thenReturn(newMilestoneResource().build());
+
+        ServiceResult<MilestoneResource> result = service.create(new MilestoneResource(ASSESSOR_ACCEPTS, null, competitionId, assessmentPeriodId));
+
+        assertTrue(result.isSuccess());
+
+        verify(competitionRepository).findById(competitionId);
+        verify(assessmentPeriodRepository).findById(assessmentPeriodId);
+        verify(milestoneRepository).save(any(Milestone.class));
+        verify(milestoneMapper).mapToResource(any(Milestone.class));
+    }
+
+    @Test
+    @Rollback
+    public void updateCompletionStageCreatesNewMileStone() {
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .build();
+
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
+        when(assessmentPeriodRepository.findByCompetitionId(competition.getId()))
+                .thenReturn(Collections.emptyList());
+        when(assessmentPeriodRepository.save(any(AssessmentPeriod.class)))
+                .thenReturn(newAssessmentPeriod().build());
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
 

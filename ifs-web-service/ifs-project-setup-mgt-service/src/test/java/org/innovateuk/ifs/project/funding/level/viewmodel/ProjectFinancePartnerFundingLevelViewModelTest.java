@@ -20,7 +20,8 @@ public class ProjectFinancePartnerFundingLevelViewModelTest {
         BigDecimal.ZERO,
         BigDecimal.ZERO,
         BigDecimal.ZERO,
-        new BigDecimal("0"));
+        new BigDecimal("0"),
+        false);
 
         assertTrue(model.isTotalGrantZero());
     }
@@ -36,7 +37,8 @@ public class ProjectFinancePartnerFundingLevelViewModelTest {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                new BigDecimal("0.00"));
+                new BigDecimal("0.00"),
+                false);
 
         assertTrue(model.isTotalGrantZero());
     }
@@ -52,7 +54,8 @@ public class ProjectFinancePartnerFundingLevelViewModelTest {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                new BigDecimal("1000"));
+                new BigDecimal("1000"),
+                false);
 
         assertFalse(model.isTotalGrantZero());
     }
@@ -68,7 +71,8 @@ public class ProjectFinancePartnerFundingLevelViewModelTest {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                new BigDecimal("1000.00"));
+                new BigDecimal("1000.00"),
+                false);
 
         assertFalse(model.isTotalGrantZero());
     }

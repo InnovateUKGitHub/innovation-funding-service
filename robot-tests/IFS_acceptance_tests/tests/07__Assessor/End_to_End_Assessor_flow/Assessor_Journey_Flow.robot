@@ -78,7 +78,7 @@ New assessor has one assessment to accept
 Assessor is notified by Email
     [Tags]  HappyPath
     [Setup]    The guest user opens the browser
-    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Your applications for the competition    You have been allocated some applications
+    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Applications assigned to you for competition    We have assigned applications for you to assess for this competition
 
 Assessor accepts the invite for the Application
     [Tags]  HappyPath
@@ -147,13 +147,13 @@ comp admin logs in and navigate to invite assessor page
 comp admin send invite to an assessor
     the user clicks the button/link          jQuery = a:contains("Review and send invites")
     the user enters text to a text field     id = message    This is custom text
-    the user clicks the button/link          jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link          jQuery = .govuk-button:contains("Send invitation")
     the user should see the element          jQuery = h2:contains("View assessors who have not yet responded or have declined the invite.")
 
 comp admin resend invite to an assessor
     the user clicks the button/link      jQuery = tr:contains("EtoE") label
     the user clicks the button/link      jQuery = button:contains("Resend invites")
-    the user clicks the button/link      jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link      jQuery = .govuk-button:contains("Send invitation")
 
 Resent email can be read by the invited user
     the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:  1
@@ -171,7 +171,7 @@ comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
     the user adds an assessor to application    assessor-row-1
     the user clicks the button/link             jQuery = a:contains("Allocate applications")
-    the user clicks the button/link             jQuery = a:contains("Manage assessments")
+    the user clicks the button/link             jQuery = a:contains("Back to manage assessments")
     the user clicks the button/link             jQuery = a:contains("Competition")
     the user clicks the button/link             jQuery = button:contains("Notify assessors")
     the element should be disabled              jQuery = button:contains("Notify assessors")

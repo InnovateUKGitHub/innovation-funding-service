@@ -5,9 +5,10 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -19,12 +20,14 @@ public class InterviewFeedbackViewModelPopulator {
 
     private InterviewResponseRestService interviewResponseRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
-    public InterviewFeedbackViewModelPopulator(InterviewResponseRestService interviewResponseRestService, InterviewAssignmentRestService interviewAssignmentRestService, UserRestService userRestService) {
+    public InterviewFeedbackViewModelPopulator(InterviewResponseRestService interviewResponseRestService,
+                                               InterviewAssignmentRestService interviewAssignmentRestService,
+                                               ProcessRoleRestService processRoleRestService) {
         this.interviewResponseRestService = interviewResponseRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
     }
 
     public InterviewFeedbackViewModel populate(long applicationId, String competitionName, UserResource userResource, boolean isFeedbackReleased) {
@@ -32,7 +35,7 @@ public class InterviewFeedbackViewModelPopulator {
                 .map(FileEntryResource::getName)
                 .orElse(null);
 
-        Optional<ProcessRoleResource> role = userRestService.findProcessRole(userResource.getId(), applicationId).getOptionalSuccessObject();
+        Optional<ProcessRoleResource> role = processRoleRestService.findProcessRole(userResource.getId(), applicationId).getOptionalSuccessObject();
 
         String feedbackFilename = ofNullable(interviewAssignmentRestService.findFeedback(applicationId).getSuccess())
                 .map(FileEntryResource::getName)
@@ -42,7 +45,7 @@ public class InterviewFeedbackViewModelPopulator {
                 competitionName,
                 responseFilename,
                 feedbackFilename,
-                role.map(ProcessRoleResource::getRole).map(Role::isLeadApplicant).orElse(false),
+                role.map(ProcessRoleResource::getRole).map(ProcessRoleType::isLeadApplicant).orElse(false),
                 isFeedbackReleased,
                 userResource.hasRole(Role.ASSESSOR) || userResource.hasAnyRoles(Role.internalRoles())
         );

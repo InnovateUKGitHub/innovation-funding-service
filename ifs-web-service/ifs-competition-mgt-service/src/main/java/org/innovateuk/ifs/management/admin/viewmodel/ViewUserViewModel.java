@@ -3,10 +3,7 @@ package org.innovateuk.ifs.management.admin.viewmodel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.resource.ProfileRole;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +33,7 @@ public class ViewUserViewModel {
     }
 
     public boolean isIfsAdmin() {
-        return loggedInUser.hasRole(Role.IFS_ADMINISTRATOR);
+        return loggedInUser.hasAuthority(Authority.IFS_ADMINISTRATOR);
     }
 
     public boolean isSupport() {

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -47,14 +47,14 @@ public class AutoCompleteSectionsUtilTest {
                 .build();
         Application application = newApplication()
                 .withCompetition(competition)
-                .withProcessRoles(newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build())
+                .withProcessRoles(newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).build())
                 .build();
         long processRoleId = 2L;
         when(type.isSectionTypeNotRequiredForOrganisationAndCompetition(competition, OrganisationTypeEnum.BUSINESS, true)).thenReturn(true);
         when(sectionStatusService.markSectionAsNotRequired(section.getId(), application.getId(), processRoleId)).thenReturn(serviceSuccess());
         when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
 
-        util.intitialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRoleId);
+        util.initialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRoleId);
 
         verify(sectionStatusService).markSectionAsNotRequired(section.getId(), application.getId(), processRoleId);
     }

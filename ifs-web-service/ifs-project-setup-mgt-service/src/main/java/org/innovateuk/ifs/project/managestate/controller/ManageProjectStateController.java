@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.managestate.viewmodel.ManageProjectStateViewMo
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.service.ProjectStateRestService;
 import org.innovateuk.ifs.project.state.OnHoldReasonResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/manage-status")
@@ -41,11 +41,13 @@ public class ManageProjectStateController {
     public String manageProjectState(@ModelAttribute(value = "form", binding = false) ManageProjectStateForm form,
                                      BindingResult result,
                                      @PathVariable long projectId,
+                                     @RequestParam(required = false, defaultValue = "false") boolean resumedFromOnHold,
                                      Model model,
                                      UserResource user) {
+        model.addAttribute("resumedFromOnHold", resumedFromOnHold);
         model.addAttribute("model",
                 new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(),
-                        user.hasRole(Role.IFS_ADMINISTRATOR)));
+                        user.hasAuthority(Authority.IFS_ADMINISTRATOR)));
         return "project/manage-project-state";
     }
 
@@ -58,7 +60,7 @@ public class ManageProjectStateController {
                                   Model model,
                                   UserResource user) {
         validate(form, result);
-        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model, user);
+        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, false, model, user);
         Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -77,8 +79,9 @@ public class ManageProjectStateController {
                 return projectStateRestService.completeProjectOffline(projectId);
             case ON_HOLD:
                 return projectStateRestService.putProjectOnHold(projectId, new OnHoldReasonResource(form.getOnHoldReason(), form.getOnHoldDetails()));
+            default:
+                throw new IFSRuntimeException("Unknown project state");
         }
-        throw new IFSRuntimeException("Unknown project state");
     }
 
     private void validate(@Valid ManageProjectStateForm form, BindingResult result) {

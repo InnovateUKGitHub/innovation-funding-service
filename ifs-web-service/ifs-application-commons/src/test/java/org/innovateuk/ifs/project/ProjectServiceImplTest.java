@@ -3,12 +3,12 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -253,7 +253,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         setLoggedInUser(userResource);
 
         when(projectService.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRole(Role.PARTNER).build()));
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRole(ProjectParticipantRole.PROJECT_PARTNER).build()));
 
         boolean result = projectService.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
 

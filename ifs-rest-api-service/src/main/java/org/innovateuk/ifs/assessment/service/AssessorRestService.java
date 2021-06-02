@@ -16,4 +16,8 @@ public interface AssessorRestService {
     RestResult<Boolean> hasApplicationsAssigned(long assessorId);
 
     RestResult<Void> notifyAssessors(long competitionId);
+
+    RestResult<Void> notifyAssessorsByAssessmentPeriod(long assessmentPeriodId);
+
+    RestResult<Void> closeAssessmentByAssessmentPeriod(long assessmentPeriodId);
 }

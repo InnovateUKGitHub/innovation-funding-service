@@ -12,6 +12,8 @@ import javax.persistence.*;
 @DiscriminatorValue("INNOVATION_AREA")
 public class InnovationArea extends Category {
 
+    public static final long DIGITAL_MANUFACTORING_ID = 22L;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name="parent_id")
     private InnovationSector sector;

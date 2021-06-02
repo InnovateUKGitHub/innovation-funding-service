@@ -12,6 +12,7 @@ public class KtpFinancialYears extends FinancialYearAccounts {
     @OneToMany(mappedBy="ktpFinancialYears", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<KtpFinancialYear> years;
 
+    @Column(columnDefinition = "int(11)")
     private Long groupEmployees;
 
     private LocalDate financialYearEnd;

@@ -2,9 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.core.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -19,24 +17,38 @@ public class TermsAndConditionsFormPopulatorTest extends BaseUnitTest {
     private TermsAndConditionsFormPopulator service;
 
     @Test
-    public void testSectionToFill() {
-        CompetitionSetupSection result = service.sectionToFill();
-        assertEquals(CompetitionSetupSection.TERMS_AND_CONDITIONS, result);
-    }
-
-    @Test
     public void testGetSectionFormDataTermsAndConditions() {
         GrantTermsAndConditionsResource termsAndConditions = newGrantTermsAndConditionsResource().build();
 
         CompetitionResource competition = newCompetitionResource()
                 .withTermsAndConditions(termsAndConditions).build();
 
-        CompetitionSetupForm result = service.populateForm(competition);
+        TermsAndConditionsForm result = service.populateForm(competition);
 
-        assertTrue(result instanceof TermsAndConditionsForm);
-        TermsAndConditionsForm form = (TermsAndConditionsForm) result;
+        assertNotNull(result.getTermsAndConditionsId());
+        assertEquals(result.getTermsAndConditionsId(), termsAndConditions.getId());
+    }
 
-        assertNotNull(form.getTermsAndConditionsId());
-        assertEquals(form.getTermsAndConditionsId(), termsAndConditions.getId());
+    @Test
+    public void testGetSectionFormDataStateAidTermsAndConditions() {
+        GrantTermsAndConditionsResource termsAndConditions = newGrantTermsAndConditionsResource().build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withOtherFundingRulesTermsAndConditions(termsAndConditions).build();
+
+        TermsAndConditionsForm result = service.populateFormForStateAid(competition);
+
+        assertNotNull(result.getTermsAndConditionsId());
+        assertEquals(result.getTermsAndConditionsId(), termsAndConditions.getId());
+    }
+
+    @Test
+    public void testGetSectionFormDataNullStateAidTermsAndConditions() {
+        CompetitionResource competition = newCompetitionResource()
+                .withOtherFundingRulesTermsAndConditions((GrantTermsAndConditionsResource) null).build();
+
+        TermsAndConditionsForm result = service.populateFormForStateAid(competition);
+
+        assertNull(result.getTermsAndConditionsId());
     }
 }

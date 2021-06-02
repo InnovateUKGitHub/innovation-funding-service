@@ -13,6 +13,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,22 +88,22 @@ import static org.junit.Assert.assertThat;
 
 
     private TestData setupTestData() {
-        Competition competition = competitionRepository.save(newCompetition().withId(null).build());
+        Competition competition = competitionRepository.save(newCompetition().withId((Long) null).build());
         List<Application> applications =
-                newArrayList(applicationRepository.saveAll(newApplication().withName("1", "2", "3").withId(null).withCompetition(competition).build(3)));
+                newArrayList(applicationRepository.saveAll(newApplication().withName("1", "2", "3").withId((Long) null).withCompetition(competition).build(3)));
         List<Organisation> organisations =
-                newArrayList(organisationRepository.saveAll(newOrganisation().withName("1", "2", "3").withId(null).build(3)));
+                newArrayList(organisationRepository.saveAll(newOrganisation().withName("1", "2", "3").withId((Long) null).build(3)));
 
         processRoleRepository.saveAll(
                 newProcessRole().withApplication(toArray(applications, Application.class))
                         .withOrganisation(toArray(organisations, Organisation.class))
-                        .withUser(userRepository.save(newUser().withId(null).withEmailAddress("asd@gmail").withUid("asdasd").build()))
-                        .withRole(Role.LEADAPPLICANT)
+                        .withUser(userRepository.save(newUser().withId((Long) null).withEmailAddress("asd@gmail").withUid("asdasd").build()))
+                        .withRole(ProcessRoleType.LEADAPPLICANT)
                         .build(3)
         );
 
         User supporter = userRepository.save(newUser()
-                .withId(null)
+                .withId((Long) null)
                 .withUid("1")
                 .withEmailAddress("supporter1@gmail.com")
                 .withFirstName("Bob")

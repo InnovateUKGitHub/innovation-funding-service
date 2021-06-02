@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.AutoCompleteSectionsUtil;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,7 +31,7 @@ public class AutoCompleteSectionsActionTest {
 
     @Test
     public void doExecute() {
-        ProcessRole processRole = newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(1L).build();
+        ProcessRole processRole = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(1L).build();
         Application application = newApplication()
                 .withCompetition(newCompetition()
                         .withCompetitionType(newCompetitionType().withName("Expression of interest").build())
@@ -42,6 +42,6 @@ public class AutoCompleteSectionsActionTest {
 
         autoCompleteSectionsAction.doExecute(application, stateContext);
 
-        verify(autoCompleteSectionsUtil).intitialiseCompleteSectionsForOrganisation(application, processRole.getOrganisationId(), processRole.getId());
+        verify(autoCompleteSectionsUtil).initialiseCompleteSectionsForOrganisation(application, processRole.getOrganisationId(), processRole.getId());
     }
 }

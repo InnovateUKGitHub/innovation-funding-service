@@ -22,6 +22,8 @@ public interface AssessmentRestService {
 
     RestResult<Long> countByStateAndCompetition(AssessmentState state, long competitionId);
 
+    RestResult<Long> countByStateAndAssessmentPeriod(AssessmentState state, long assessmentPeriodId);
+
     RestResult<AssessmentTotalScoreResource> getTotalScore(long id);
 
     RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
@@ -33,6 +35,8 @@ public interface AssessmentRestService {
     RestResult<Void> acceptInvitation(long id);
 
     RestResult<Void> withdrawAssessment(long id);
+
+    RestResult<Void> unsubmitAssessment(long id);
 
     RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions);
 

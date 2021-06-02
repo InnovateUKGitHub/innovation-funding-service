@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -44,11 +43,10 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     public void generateSpendProfile() {
 
         asList(Role.values()).forEach(role -> {
-            Role roleResource = Role.getByName(role.getName());
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            UserResource userWithRole = newUserResource().withRoleGlobal(role).build();
             setLoggedInUser(userWithRole);
 
-            if (role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE || role == SYSTEM_MAINTAINER) {
+            if (role == SUPER_ADMIN_USER || role == IFS_ADMINISTRATOR || role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE || role == SYSTEM_MAINTAINER) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
@@ -143,7 +141,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         List<Role> nonCompAdminRoles = getNonProjectFinanceUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.approveOrRejectSpendProfile(1L, ApprovalType.APPROVED);
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
@@ -159,10 +157,10 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         List<Role> nonCompAdminRoles = getNonInternalAdminOrSupportUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRoleGlobal(role).build());
             try {
                 classUnderTest.getSpendProfileStatusByProjectId(1L);
-                Assert.fail("Should not have been able to obtain status for spend profile with role " + role.getName());
+                Assert.fail("Should not have been able to obtain status for spend profile with role " + role.name());
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
@@ -221,7 +219,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     private List<Role> getNonProjectFinanceUserRoles() {
-        return Arrays.stream(Role.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SYSTEM_MAINTAINER)
+        return Arrays.stream(Role.values())
+                .filter(type -> type != PROJECT_FINANCE &&
+                        type != COMP_ADMIN &&
+                        type != SYSTEM_MAINTAINER &&
+                        type != IFS_ADMINISTRATOR &&
+                        type != SUPER_ADMIN_USER)
                 .collect(toList());
     }
 }

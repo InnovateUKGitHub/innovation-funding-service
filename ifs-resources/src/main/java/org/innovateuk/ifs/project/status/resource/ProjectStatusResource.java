@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
@@ -26,6 +27,7 @@ public class ProjectStatusResource {
     private ProjectActivityStates projectSetupCompleteStatus;
     private boolean grantOfferLetterSent;
     private ProjectState projectState;
+    private ApplicationState applicationState;
     private boolean sentToIfsPa;
 
     public ProjectStatusResource(String projectTitle,
@@ -46,6 +48,7 @@ public class ProjectStatusResource {
                                  ProjectActivityStates projectSetupCompleteStatus,
                                  boolean grantOfferLetterSent,
                                  ProjectState projectState,
+                                 ApplicationState applicationState,
                                  boolean sentToIfsPa) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
@@ -65,6 +68,7 @@ public class ProjectStatusResource {
         this.projectSetupCompleteStatus = projectSetupCompleteStatus;
         this.grantOfferLetterSent = grantOfferLetterSent;
         this.projectState = projectState;
+        this.applicationState = applicationState;
         this.sentToIfsPa = sentToIfsPa;
     }
 
@@ -220,6 +224,14 @@ public class ProjectStatusResource {
         this.sentToIfsPa = sentToIfsPa;
     }
 
+    public ApplicationState getApplicationState() {
+        return applicationState;
+    }
+
+    public void setApplicationState(ApplicationState applicationState) {
+        this.applicationState = applicationState;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -230,6 +242,7 @@ public class ProjectStatusResource {
 
         return new EqualsBuilder()
                 .append(grantOfferLetterSent, that.grantOfferLetterSent)
+                .append(sentToIfsPa, that.sentToIfsPa)
                 .append(projectTitle, that.projectTitle)
                 .append(projectNumber, that.projectNumber)
                 .append(formattedProjectNumber, that.formattedProjectNumber)
@@ -247,7 +260,7 @@ public class ProjectStatusResource {
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
                 .append(projectSetupCompleteStatus, that.projectSetupCompleteStatus)
                 .append(projectState, that.projectState)
-                .append(sentToIfsPa, that.sentToIfsPa)
+                .append(applicationState, that.applicationState)
                 .isEquals();
     }
 
@@ -272,6 +285,7 @@ public class ProjectStatusResource {
                 .append(projectSetupCompleteStatus)
                 .append(grantOfferLetterSent)
                 .append(projectState)
+                .append(applicationState)
                 .append(sentToIfsPa)
                 .toHashCode();
     }
@@ -297,6 +311,7 @@ public class ProjectStatusResource {
                 .append("projectSetupCompleteStatus", projectSetupCompleteStatus)
                 .append("grantOfferLetterSent", grantOfferLetterSent)
                 .append("projectState", projectState)
+                .append("applicationState", applicationState)
                 .append("sentToIfsPa", sentToIfsPa)
                 .toString();
     }

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -69,6 +71,12 @@ public class OrganisationPermissionRules {
         return getMonitoringOfficersOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations attached to the application on their projects")
+    public boolean monitoringOfficersCanSeeApplicationOrganisations(OrganisationResource organisation, UserResource user) {
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
+        return getMonitoringOfficersApplicationOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
+    }
+
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
     public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isSystemRegistrationUser(user);
@@ -115,6 +123,11 @@ public class OrganisationPermissionRules {
         return isSystemRegistrationUser(user) && !organisationLinkedToAnApplication(organisation);
     }
 
+    @PermissionRule(value = "SYNC_COMPANIES_HOUSE_DETAILS", description = "The System Registration User can sync Organisations details on companies house update")
+    public boolean systemRegistrationUserCanSyncOrganisationDetailsForCompaniesHouseUpdate(OrganisationResource organisation, UserResource user) {
+        return isSystemRegistrationUser(user) || isMemberOfOrganisation(organisation, user);
+    }
+
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
     public boolean memberOfOrganisationCanUpdateOwnOrganisation(OrganisationResource organisation, UserResource user) {
         return isMemberOfOrganisation(organisation, user);
@@ -128,7 +141,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "A project finance user can update any Organisation")
     public boolean projectFinanceUserCanUpdateAnyOrganisation(OrganisationResource organisation, UserResource user) {
-        return isProjectFinanceUser(user);
+        return hasProjectFinanceAuthority(user);
     }
 
     @PermissionRule(value = "READ", description = "Project Partners can see the Partner Organisations within their Projects")
@@ -156,6 +169,18 @@ public class OrganisationPermissionRules {
             pmo.getProject()
                     .getPartnerOrganisations()
                     .forEach(partnerOrganisation -> monitoringOfficersOrganisationIds.add(partnerOrganisation.getOrganisation().getId()));
+        });
+
+        return monitoringOfficersOrganisationIds;
+    }
+
+    private List<Long> getMonitoringOfficersApplicationOrganisationIds(List<MonitoringOfficer> projectMonitoringOfficers) {
+        List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
+        projectMonitoringOfficers.forEach(pmo -> {
+            pmo.getProject().getApplication().getApplicantProcessRoles().stream()
+                    .map(ProcessRole::getOrganisationId)
+                    .distinct()
+                    .collect(Collectors.toCollection(() -> monitoringOfficersOrganisationIds));
         });
 
         return monitoringOfficersOrganisationIds;

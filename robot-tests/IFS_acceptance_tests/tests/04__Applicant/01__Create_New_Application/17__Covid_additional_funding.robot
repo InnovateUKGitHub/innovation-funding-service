@@ -160,7 +160,7 @@ External project finance can raise a query
 
 External project finance can raise a note
     [Documentation]  IFS-7357
-    Given the user clicks the button/link   css = .eligibility-0
+    Given the user clicks the button/link   css =table.table-progress tr:nth-child(1) td:nth-child(7)
     When the user raises a note
     Then the user should see the element    jQuery = h2:contains("an eligibility note's title")
 
@@ -210,7 +210,7 @@ Competition goes into previous
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDcompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
-    Then the user should see the element     link = ${COVIDcompetitionTitle}
+    Then The user should see the element in the paginated list       link = ${COVIDcompetitionTitle}
 
 *** Keywords ***
 Custom Suite Setup
@@ -319,7 +319,7 @@ the user can send successful funding notification
     the user clicks the button/link    link = Manage funding notifications
     the user selects the checkbox      app-row-${application_id}
     the user clicks the button/link    id = write-and-send-email
-    the user clicks the button/link    jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    the user clicks the button/link    jQuery = button:contains("Send notification")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email")
     the user refreshes until element appears on page         jQuery = td:contains("${COVIDapplicationTitle1}") ~ td:contains("Sent")
 
@@ -336,7 +336,7 @@ Complete all PS steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Return to set up your project
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}
@@ -360,7 +360,6 @@ the user raises a query
     the user clicks the button/link                        css = .govuk-grid-column-one-half button[type = "submit"]  # Post query
 
 the user raises a note
-    the user clicks the button/link         jQuery = a:contains("Notes")
     the user should see the element         jQuery = h2:contains("Review notes")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create a new note")
     the user enters text to a text field    id = noteTitle    an eligibility note's title

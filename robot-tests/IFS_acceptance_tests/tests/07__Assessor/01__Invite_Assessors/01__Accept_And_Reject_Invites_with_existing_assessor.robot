@@ -40,7 +40,7 @@ ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competiti
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
 ${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
 ${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
-${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_YEAR} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DAY_MONTH_YEAR}
+${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_DATE} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DAY_MONTH_YEAR}
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 # ${IN_ASSESSMENT_COMPETITION_NAME} is the Sustainable living models for the future
@@ -105,9 +105,13 @@ Upcoming competition should be visible
 
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
-    Given the assessment start period changes in the db in the past       ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
-    And the user should not see the element                               jQuery = h2:contains("Upcoming competitions to assess")
+    Given log in as a different user                                       &{Comp_admin1_credentials}
+    And update milestone to yesterday                                      ${UPCOMING_COMPETITION_TO_ASSESS_ID}  SUBMISSION_DATE
+    And the user navigates to the page                                     ${server}/management/competition/${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    When the user clicks the button/link                                   id = notify-assessors-button
+    And log in as a different user                                         &{existing_assessor1_credentials}
+    Then the assessor should see the date for submission of assessment     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    And the user should not see the element                                jQuery = h2:contains("Upcoming competitions to assess")
     [Teardown]  Reset milestones back to the original values
 
 Number of days remaining until assessment submission

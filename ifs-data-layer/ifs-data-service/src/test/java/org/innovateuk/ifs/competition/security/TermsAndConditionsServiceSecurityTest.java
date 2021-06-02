@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -30,7 +29,7 @@ public class TermsAndConditionsServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test
     public void getLatestVersionsForAllTermsAndConditions() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
         classUnderTest.getLatestVersionsForAllTermsAndConditions();
     }
 
@@ -42,13 +41,13 @@ public class TermsAndConditionsServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test(expected = AccessDeniedException.class)
     public void getLatestVersionsForAllTermsAndConditions_wrongUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
         classUnderTest.getLatestVersionsForAllTermsAndConditions();
     }
 
     @Test
     public void getById() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
         classUnderTest.getById(1L);
     }
 
@@ -60,7 +59,7 @@ public class TermsAndConditionsServiceSecurityTest extends BaseServiceSecurityTe
 
     @Test(expected = AccessDeniedException.class)
     public void getById_wrongUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.APPLICANT).build());
         classUnderTest.getById(1L);
     }
 }

@@ -8,6 +8,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
+import org.innovateuk.ifs.competition.resource.FundingRules;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -22,12 +24,14 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.util.ProjectUsersHelper;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.FundingRulesState;
 import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.FundingRulesWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -67,6 +71,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -81,6 +86,7 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SUBSIDY_BASIS;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -107,6 +113,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @Mock
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Mock
+    private FundingRulesWorkflowHandler fundingRulesWorkflowHandler;
+    @Mock
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
     @Mock
     private SpendProfileRepository spendProfileRepository;
@@ -129,9 +137,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @InjectMocks
     @Spy
     private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
-    @InjectMocks
-    @Spy
-    private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
 
     @Test
     public void generateSpendProfile() {
@@ -230,80 +235,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
-    public void generateSbriPilotSpendProfile() {
-
-        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
-
-        Project project = generateSpendProfileData.getProject();
-        project.getPartnerOrganisations().removeIf(po -> po.getOrganisation().getId().equals(generateSpendProfileData.getOrganisation2().getId()));
-        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
-        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
-        CostCategoryType sbriPilotCategoryType = generateSpendProfileData.getSbriPilotCategoryType();
-        CostCategory sbriPilotCategoryOtherCosts = generateSpendProfileData.sbriPilotCategoryOtherCosts;
-        CostCategory sbriPilotCategoryVat = generateSpendProfileData.sbriPilotCategoryVat;
-        Competition competition = project.getApplication().getCompetition();
-        competition.setProjectStages(new ArrayList<>());
-        competition.setName(ApplicationConfiguration.SBRI_PILOT);
-
-        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, null);
-
-        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
-        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
-        when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
-
-        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
-                organisation1.getId())).thenReturn(Optional.empty());
-
-        User generatedBy = generateSpendProfileData.getUser();
-
-        List<Cost> expectedOrganisation1EligibleCosts = asList(
-                new Cost("100").withCategory(sbriPilotCategoryOtherCosts),
-                new Cost("200").withCategory(sbriPilotCategoryVat));
-
-        List<Cost> expectedOrganisation1SpendProfileFigures = asList(
-                new Cost("25").withCategory(sbriPilotCategoryOtherCosts).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("0").withCategory(sbriPilotCategoryOtherCosts).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("75").withCategory(sbriPilotCategoryOtherCosts).withTimePeriod(2, MONTH, 1, MONTH),
-                new Cost("50").withCategory(sbriPilotCategoryVat).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("0").withCategory(sbriPilotCategoryVat).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("150").withCategory(sbriPilotCategoryVat).withTimePeriod(2, MONTH, 1, MONTH));
-
-        Calendar generatedDate = Calendar.getInstance();
-
-        SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, sbriPilotCategoryType,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
-
-        when(spendProfileRepository.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
-
-        //Expectations for mark as complete
-        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisation1.getId())).thenReturn(Optional.of(expectedOrganisation1Profile));
-
-        //Expectations for submit
-        when(spendProfileWorkflowHandler.submit(project)).thenReturn(true);
-
-        //Expectations for approve
-        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
-        Long userId = 1234L;
-        UserResource loggedInUser = newUserResource().withId(userId).build();
-        User user = newUser().withId(loggedInUser.getId()).build();
-        setLoggedInUser(loggedInUser);
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(spendProfileWorkflowHandler.spendProfileApproved(project, user)).thenReturn(true);
-
-        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
-        assertTrue(generateResult.isSuccess());
-
-        assertTrue(expectedOrganisation1Profile.isMarkedAsComplete());
-        verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(spendProfileWorkflowHandler).submit(project);
-        verify(spendProfileWorkflowHandler).spendProfileApproved(project, user);
-
-        verifyZeroInteractions(notificationService);
-    }
-
-    @Test
     public void generateSpendProfileButNotAllViabilityApproved() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
@@ -377,6 +308,38 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
         assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
+
+        verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepository);
+    }
+
+    @Test
+    public void generateSpendProfileWhenNotAllFundingRulesApproved() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+        project.getApplication().getCompetition().setFundingRules(FundingRules.SUBSIDY_CONTROL);
+        Question question = newQuestion().withQuestionSetupType(SUBSIDY_BASIS).build();
+        project.getApplication().getCompetition().getQuestions().add(question);
+
+        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
+        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
+
+        when(viabilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        when(fundingRulesWorkflowHandler.getState(partnerOrganisation1)).thenReturn(FundingRulesState.APPROVED);
+        when(fundingRulesWorkflowHandler.getState(partnerOrganisation2)).thenReturn(FundingRulesState.REVIEW);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FUNDING_RULES_APPROVED));
 
         verify(spendProfileRepository, never()).save(isA(SpendProfile.class));
         verifyNoMoreInteractions(spendProfileRepository);
@@ -547,30 +510,20 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         }
         when(partnerOrganisationService.getProjectPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
 
-        if (!generateSpendProfileData.getProject().getApplication().getCompetition().isSbriPilot()) {
-
-            // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
-            when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
+        // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
+        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
+                new SpendProfileCostCategorySummaries(
+                        asList(
+                                new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
+                                new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
+                        costCategoryType1)));
+        if (organisation2 != null) {
+            when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
                     new SpendProfileCostCategorySummaries(
-                            asList(
-                                    new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
-                                    new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
-                            costCategoryType1)));
-            if (organisation2 != null) {
-                when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
-                        new SpendProfileCostCategorySummaries(
-                                singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
-                                costCategoryType2)));
-            }
-        } else {
-            // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
-            when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
-                    new SpendProfileCostCategorySummaries(
-                            asList(
-                                    new SpendProfileCostCategorySummary(generateSpendProfileData.sbriPilotCategoryOtherCosts, new BigDecimal("100.00"), project.getDurationInMonths()),
-                                    new SpendProfileCostCategorySummary(generateSpendProfileData.sbriPilotCategoryVat, new BigDecimal("200.00"), project.getDurationInMonths())),
-                            costCategoryType1)));
+                            singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
+                            costCategoryType2)));
         }
+
     }
 
     @Test
@@ -1232,33 +1185,46 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     private boolean costsMatch(Cost expectedCost, Cost actualCost) {
-        try {
-            CostGroup expectedCostGroup = expectedCost.getCostGroup();
-            CostGroup actualCostGroup = actualCost.getCostGroup();
-            assertEquals(expectedCostGroup != null, actualCostGroup != null);
-
-            if (expectedCostGroup != null) {
-                assertEquals(expectedCostGroup.getDescription(), actualCostGroup.getDescription());
-            }
-
-            assertEquals(expectedCost.getValue(), actualCost.getValue());
-            assertEquals(expectedCost.getCostCategory(), actualCost.getCostCategory());
-
-            CostTimePeriod expectedTimePeriod = expectedCost.getCostTimePeriod();
-            CostTimePeriod actualTimePeriod = actualCost.getCostTimePeriod();
-            assertEquals(expectedTimePeriod != null, actualTimePeriod != null);
-
-            if (expectedTimePeriod != null) {
-                assertEquals(expectedTimePeriod.getOffsetAmount(), actualTimePeriod.getOffsetAmount());
-                assertEquals(expectedTimePeriod.getOffsetUnit(), actualTimePeriod.getOffsetUnit());
-                assertEquals(expectedTimePeriod.getDurationAmount(), actualTimePeriod.getDurationAmount());
-                assertEquals(expectedTimePeriod.getDurationUnit(), actualTimePeriod.getDurationUnit());
-            }
-
-            return true;
-        } catch (AssertionError e) {
+        CostGroup expectedCostGroup = expectedCost.getCostGroup();
+        CostGroup actualCostGroup = actualCost.getCostGroup();
+        if ((expectedCostGroup != null) != (actualCostGroup != null)) {
             return false;
         }
+        if (expectedCostGroup != null) {
+            if (!(expectedCostGroup.getDescription().equals(actualCostGroup.getDescription()))) {
+                return false;
+            }
+        }
+
+        if (!(expectedCost.getValue().equals(actualCost.getValue()))) {
+            return false;
+        }
+        if (!(expectedCost.getCostCategory().equals(actualCost.getCostCategory()))) {
+            return false;
+        }
+
+        CostTimePeriod expectedTimePeriod = expectedCost.getCostTimePeriod();
+        CostTimePeriod actualTimePeriod = actualCost.getCostTimePeriod();
+        if ((expectedTimePeriod != null) != (actualTimePeriod != null)) {
+                return false;
+        }
+
+        if (expectedTimePeriod != null) {
+            if (!(expectedTimePeriod.getOffsetAmount().equals(actualTimePeriod.getOffsetAmount()))) {
+                return false;
+            }
+            if (!(expectedTimePeriod.getOffsetUnit().equals(actualTimePeriod.getOffsetUnit()))) {
+                return false;
+            }
+            if (!(expectedTimePeriod.getDurationAmount().equals(actualTimePeriod.getDurationAmount()))) {
+                return false;
+            }
+            if (!(expectedTimePeriod.getDurationUnit().equals(actualTimePeriod.getDurationUnit()))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private List<SpendProfile> getSpendProfilesAndSetWhenSpendProfileRepositoryMock(Long projectId) {
@@ -1282,13 +1248,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         private Organisation organisation2;
         private CostCategoryType costCategoryType1;
         private CostCategoryType costCategoryType2;
-        private CostCategoryType sbriPilotCategoryType;
 
         private CostCategory type1Cat1;
         private CostCategory type1Cat2;
         private CostCategory type2Cat1;
-        private CostCategory sbriPilotCategoryOtherCosts;
-        private CostCategory sbriPilotCategoryVat;
         private User user;
 
         public Project getProject() {
@@ -1309,10 +1272,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         public CostCategoryType getCostCategoryType2() {
             return costCategoryType2;
-        }
-
-        public CostCategoryType getSbriPilotCategoryType() {
-            return sbriPilotCategoryType;
         }
 
         public User getUser() {
@@ -1375,17 +1334,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                                     .build())
                     .build();
 
-            sbriPilotCategoryVat = newCostCategory().withName(VAT.getDisplayName()).build();
-            sbriPilotCategoryOtherCosts = newCostCategory().withName(OTHER_COSTS.getDisplayName()).build();
-
-            sbriPilotCategoryType = newCostCategoryType()
-                    .withName("Sbri pilot")
-                    .withCostCategoryGroup(
-                            newCostCategoryGroup()
-                                    .withDescription("Group 1")
-                                    .withCostCategories(asList(sbriPilotCategoryVat, sbriPilotCategoryOtherCosts))
-                                    .build())
-                    .build();
             // set basic repository lookup expectations
             when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
             when(organisationRepository.findById(organisation1.getId())).thenReturn(Optional.of(organisation1));
@@ -1393,11 +1341,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             when(costCategoryRepository.findById(type1Cat1.getId())).thenReturn(Optional.of(type1Cat1));
             when(costCategoryRepository.findById(type1Cat2.getId())).thenReturn(Optional.of(type1Cat2));
             when(costCategoryRepository.findById(type2Cat1.getId())).thenReturn(Optional.of(type2Cat1));
-            when(costCategoryRepository.findById(sbriPilotCategoryVat.getId())).thenReturn(Optional.of(sbriPilotCategoryVat));
-            when(costCategoryRepository.findById(sbriPilotCategoryOtherCosts.getId())).thenReturn(Optional.of(sbriPilotCategoryOtherCosts));
             when(costCategoryTypeRepository.findById(costCategoryType1.getId())).thenReturn(Optional.of(costCategoryType1));
             when(costCategoryTypeRepository.findById(costCategoryType2.getId())).thenReturn(Optional.of(costCategoryType2));
-            when(costCategoryTypeRepository.findById(sbriPilotCategoryType.getId())).thenReturn(Optional.of(sbriPilotCategoryType));
 
             return this;
         }
