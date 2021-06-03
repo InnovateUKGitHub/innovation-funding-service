@@ -446,11 +446,11 @@ Sole applicant can see documents approval
     When the user goes to documents page   Documents  Exploitation plan
     Then the user should see the element   jQuery = .success-alert h2:contains("This document has been approved by us.")
 
-Lead uploads documents and the MO receives an email
+PM uploads documents and the MO receives an email
     [Documentation]    IFS-9575
-    [Setup]    log in as a different user     phillip.ramos@katz.example.com     Passw0rd1357
+    [Setup]    log in as a different user     phillip.ramos@katz.example.com     ${short_password}
     Given PM uploads the project documents    ${PS_Point_Project_Id}
-    And the user reads his email              rachel.henning@umon.example.com     You have a new document to review for project ${Grade_Crossing_Application_Title}     A new document has been uploaded by the project manager for this project:
+    And the user reads his email              nilesh.patti@gmail.com     You have a new document to review for project Point control and automated monitoring     A new document has been uploaded by the project manager for this project:
 
 *** Keywords ***
 the user removes and reuploads project files
