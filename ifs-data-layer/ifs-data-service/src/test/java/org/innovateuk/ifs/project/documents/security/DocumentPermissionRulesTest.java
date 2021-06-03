@@ -231,18 +231,5 @@ public class DocumentPermissionRulesTest extends BasePermissionRulesTest<Documen
             }
         });
     }
-
-    @Test
-    public void monitoringOfficerCanApproveDocument() {
-        ProjectResource project = newProjectResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (SecurityRuleUtil.isMonitoringOfficer(user) && projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), user.getId())) {
-                assertTrue(rules.monitoringOfficerCanApproveDocument(project, user));
-            } else {
-                assertFalse(rules.monitoringOfficerCanApproveDocument(project, user));
-            }
-        });
-    }
 }
 
