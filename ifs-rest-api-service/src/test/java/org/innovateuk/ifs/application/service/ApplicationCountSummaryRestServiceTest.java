@@ -32,7 +32,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
-        String expectedUrl = "/application-count-summary/find-by-competition-id-and-assessor-id/1/10/10?page=2&filter=filter&sort=ASSESSORS";
+        String expectedUrl = "/application-count-summary/find-by-competition-id-and-assessor-id-and-assessment-period-id/1/10/10?page=2&filter=filter&sort=ASSESSORS";
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
@@ -43,7 +43,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationIdsByCompetitionIdAndAssessorId() {
-        String expectedUrl = "/application-count-summary/find-ids-by-competition-id-and-assessor-id/1/10/10?filter=filter";
+        String expectedUrl = "/application-count-summary/find-ids-by-competition-id-and-assessor-id-and-assessment-period-id/1/10/10?filter=filter";
         List<Long> list = asList(1L);
 
         setupGetWithRestResultExpectations(expectedUrl, longsListType(), list, OK);

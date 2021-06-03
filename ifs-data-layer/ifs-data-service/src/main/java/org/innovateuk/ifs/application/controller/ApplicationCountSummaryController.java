@@ -42,7 +42,7 @@ public class ApplicationCountSummaryController {
     }
 
 
-    @GetMapping("/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}/{assessmentPeriodId}")
+    @GetMapping("/find-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}")
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(@PathVariable long competitionId,
                                                                                                                     @PathVariable long assessorId,
                                                                                                                     @PathVariable long assessmentPeriodId,
@@ -53,7 +53,7 @@ public class ApplicationCountSummaryController {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId, page, size, sort, filter).toGetResponse();
     }
 
-    @GetMapping("/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}/{assessmentPeriodId}")
+    @GetMapping("/find-ids-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}")
     public RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(@PathVariable long competitionId,
                                                                                 @PathVariable long assessorId,
                                                                                 @PathVariable long assessmentPeriodId,

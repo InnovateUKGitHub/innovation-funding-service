@@ -38,7 +38,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
                                                                                                                     Sort sort,
                                                                                                                     String filter) {
 
-        String baseUrl = format("%s/%s/%d/%d/%d", APPLICATION_COUNT_REST_URL, "find-by-competition-id-and-assessor-id", competitionId, assessorId, assessmentPeriodId);
+        String baseUrl = format("%s/%s/%d/%d/%d", APPLICATION_COUNT_REST_URL, "find-by-competition-id-and-assessor-id-and-assessment-period-id", competitionId, assessorId, assessmentPeriodId);
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page)
                 .queryParam("filter", filter)
@@ -48,7 +48,7 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
 
     @Override
     public RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId, long assessorId, long assessmentPeriodId, String filter) {
-        String baseUrl = format("%s/%s/%d/%d/%d", APPLICATION_COUNT_REST_URL, "find-ids-by-competition-id-and-assessor-id", competitionId, assessorId, assessmentPeriodId);
+        String baseUrl = format("%s/%s/%d/%d/%d", APPLICATION_COUNT_REST_URL, "find-ids-by-competition-id-and-assessor-id-and-assessment-period-id", competitionId, assessorId, assessmentPeriodId);
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("filter", filter);
         return getWithRestResult(builder.toUriString(), longsListType());

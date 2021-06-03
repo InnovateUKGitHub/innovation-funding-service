@@ -73,7 +73,7 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, assessmentPeriodId, page, pageSize, sortField, filter)).thenReturn(serviceSuccess(pageResource));
 
-        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id/{competitionId}/{assessorId}/{assessmentPeriodId}?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, assessorId, assessmentPeriodId, page, pageSize, sortField, filter))
+        mockMvc.perform(get("/application-count-summary/find-by-competition-id-and-assessor-id-and-assessment-period-id/{competitionId}/{assessorId}/{assessmentPeriodId}?page={page}&size={pageSize}&sort={sortField}&filter={filter}", competitionId, assessorId, assessmentPeriodId, page, pageSize, sortField, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(pageResource)));
 
