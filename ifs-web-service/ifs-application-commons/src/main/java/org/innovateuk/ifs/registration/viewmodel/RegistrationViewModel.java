@@ -17,12 +17,12 @@ public class RegistrationViewModel {
     private final String postcodeGuidance;
     private final String buttonText;
     private final String organisation;
-    private final boolean inContextOfOrganisation;
+    private final boolean showBackLink;
     private final boolean phoneRequired;
     private final boolean termsRequired;
     private final boolean addressRequired;
 
-    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired, boolean inContextOfOrganisation) {
+    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired, boolean showBackLink) {
         this.pageTitle = pageTitle == null ? DEFAULT_PAGE_TITLE : pageTitle;
         this.subTitle = subTitle == null ? DEFAULT_SUB_TITLE : subTitle;
         this.invitee = invitee;
@@ -36,7 +36,7 @@ public class RegistrationViewModel {
         this.phoneRequired = phoneRequired;
         this.termsRequired = termsRequired;
         this.addressRequired = addressRequired;
-        this.inContextOfOrganisation = inContextOfOrganisation;
+        this.showBackLink = showBackLink;
     }
 
     public String getPageTitle() {
@@ -91,8 +91,8 @@ public class RegistrationViewModel {
         return organisation;
     }
 
-    public boolean isInContextOfOrganisation(){
-        return inContextOfOrganisation;
+    public boolean isShowBackLink(){
+        return showBackLink;
     }
 
     public static RegistrationViewModelBuilder anInvitedUserViewModelBuilder() {
@@ -117,7 +117,7 @@ public class RegistrationViewModel {
         private boolean termsRequired;
         private boolean addressRequired;
         private String organisation;
-        private boolean inContextOfOrganisation;
+        private boolean showBackLink;
 
         private RegistrationViewModelBuilder() {
         }
@@ -191,13 +191,13 @@ public class RegistrationViewModel {
             return this;
         }
 
-        public RegistrationViewModelBuilder withInContextOfOrganisation(boolean inContextOfOrganisation) {
-            this.inContextOfOrganisation = inContextOfOrganisation;
+        public RegistrationViewModelBuilder withShowBackLink(boolean showBackLink) {
+            this.showBackLink = showBackLink;
             return this;
         }
 
         public RegistrationViewModel build() {
-            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired, inContextOfOrganisation);
+            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired, showBackLink);
         }
     }
 }

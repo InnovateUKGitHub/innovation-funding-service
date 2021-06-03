@@ -61,7 +61,7 @@ public class ProjectRegistrationController {
                     if (errors.hasErrors()) {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
-                    model.addAttribute("model", anInvitedUserViewModelBuilder().withInContextOfOrganisation(true).build());
+                    model.addAttribute("model", anInvitedUserViewModelBuilder().withShowBackLink(true).build());
                     model.addAttribute("form", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
