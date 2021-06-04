@@ -2,6 +2,9 @@ package org.innovateuk.ifs.project.document.resource;
 
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+
+import java.util.Calendar;
 
 public class ProjectDocumentResource {
 
@@ -16,6 +19,10 @@ public class ProjectDocumentResource {
     private DocumentStatus status;
 
     private String statusComments;
+
+    private UserResource createdBy;
+
+    private Calendar createdDate;
 
     public Long getId() {
         return id;
@@ -63,5 +70,21 @@ public class ProjectDocumentResource {
 
     public void setStatusComments(String statusComments) {
         this.statusComments = statusComments;
+    }
+
+    public UserResource getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(UserResource createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Calendar getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Calendar createdDate) {
+        this.createdDate = createdDate;
     }
 }

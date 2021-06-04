@@ -4,17 +4,12 @@ import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
+import org.innovateuk.ifs.user.domain.User;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import java.util.Calendar;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -46,14 +41,22 @@ public class ProjectDocument {
 
     private String statusComments;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User createdBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar createdDate;
+
     public ProjectDocument() {
     }
 
-    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status) {
+    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status, User createdBy, Calendar createdDate) {
         this.project = project;
         this.competitionDocument = competitionDocument;
         this.fileEntry = fileEntry;
         this.status = status;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
     }
 
     public Long getId() {
@@ -102,5 +105,21 @@ public class ProjectDocument {
 
     public void setStatusComments(String statusComments) {
         this.statusComments = statusComments;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Calendar getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Calendar createdDate) {
+        this.createdDate = createdDate;
     }
 }
