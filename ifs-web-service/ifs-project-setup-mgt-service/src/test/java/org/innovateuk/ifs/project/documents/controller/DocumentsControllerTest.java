@@ -115,7 +115,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 documentConfigId, "Collaboration agreement", "Guidance for collaboration agreement",
                 null, DocumentStatus.UNSET, "", false, true, true, true);
 
-        when(populator.populateViewDocument(projectId, documentConfigId, ifsAdmin.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, ifsAdmin,  documentConfigId)).thenReturn(viewModel);
         mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
                 .andExpect(view().name("project/document"))
                 .andExpect(model().attribute("form", form))

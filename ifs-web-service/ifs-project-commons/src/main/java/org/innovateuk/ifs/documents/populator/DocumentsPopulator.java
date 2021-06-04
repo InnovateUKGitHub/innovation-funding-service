@@ -16,7 +16,6 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,7 +104,7 @@ public class DocumentsPopulator {
                 .orElse(null);
 
         // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin can approve.
-        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? userResource.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : userResource.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER);
+        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER);
 
         return new DocumentViewModel(project.getId(),
                 project.getName(),
