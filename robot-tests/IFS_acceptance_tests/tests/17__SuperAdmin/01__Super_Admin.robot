@@ -75,7 +75,7 @@ Super admin user cannot reject a document once the project is completed
     And compAdmin user approves the GOL
     When log in as a different user                   &{superAdminCredentials}
     And the user navigates to the page                ${SERVER}/project-setup-management/project/${projectID}/document/all
-    And the user clicks the button/link               link = Collaboration agreement
+    And the user clicks the button/link               link = Exploitation plan
     Then the user should not see the element          jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
 
 *** Keywords ***
@@ -112,7 +112,7 @@ internal user filters the assessor
 
 the user rejects the document
     the user navigates to the page          ${server}/project-setup-management/project/${projectID}/document/all
-    the user clicks the button/link         jQuery = a:contains("Collaboration agreement")
+    the user clicks the button/link         jQuery = a:contains("Exploitation plan")
     the user should see the element         jQuery = .govuk-heading-m:contains("Reject document") + div:contains("Reject")
     the user selects the radio button       approved   false
     the user enters text to a text field    id = document-reject-reason   Test string
@@ -122,11 +122,11 @@ the user rejects the document
 the applicant submits the document
     log in as a different user                                           &{leadApplicantCredentials}
     the user navigates to the page                                       ${server}/project-setup/project/${projectID}/document/all
-    the user clicks the button/link                                      jQuery = a:contains("Collaboration agreement")
+    the user clicks the button/link                                      jQuery = a:contains("Exploitation plan")
     the user clicks the button/link                                      jQuery = button:contains("Remove")
     Wait Until Page Does Not Contain Without Screenshots                 Removing
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user should see the element                                      jQuery = .upload-section:contains("Collaboration agreement") a:contains("${valid_pdf}")
+    the user should see the element                                      jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
     the user clicks the button/link                                      jQuery = button:contains("Submit"):nth(1)
     the user clicks the button/link                                      jQuery = .modal-configured-partner-document button:contains("Submit")
     the user should not see an error in the page
@@ -134,7 +134,7 @@ the applicant submits the document
 compAdmin user approves uploaded documents
     log in as a different user           &{Comp_admin1_credentials}
     the user navigates to the page       ${SERVER}/project-setup-management/project/${projectID}/document/all
-    the user clicks the button/link      link = Collaboration agreement
+    the user clicks the button/link      link = Exploitation plan
     the user selects the radio button    approved   true
     the user clicks the button/link      id = submit-button
     the user clicks the button/link      id = accept-document
