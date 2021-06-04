@@ -80,6 +80,7 @@ UPDATE knowledge_base SET address_id = LAST_INSERT_ID() WHERE (id = @knowledge_b
 
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('22 Castlewellan Road', '', '', 'Banbridge', 'BT32 4AY', 'County Down', 'United Kingdom');
 SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'Southern Regional College');
+UPDATE knowledge_base SET address_id = LAST_INSERT_ID() WHERE (id = @knowledge_base_id);
 
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('King\'s Buildings', 'West Mains Road', '', 'Edinburgh', 'EH9 3JG', '', 'United Kingdom');
 SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'SRUC (Scotland\'s Rural College)');
