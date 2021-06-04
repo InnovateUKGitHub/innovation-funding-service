@@ -54,64 +54,7 @@
             </th:block>
 
             <th:block th:if="${model.status.name() == 'SUBMITTED' and model.projectIsActive}">
-
-                <h2 class="govuk-heading-m govuk-!-margin-top-6">Review document</h2>
-                 <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                        </legend>
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input"
-                                       id="radio-review-approve"
-                                       name="approved"
-                                       type="radio"
-                                       value="true"
-                                       required="required"
-                                       data-switches-button-status="#submit-button"
-                                       data-switches-modal-target="#submit-button"
-                                       data-switches-modal-target-value="modal-accept-configured-doc">
-                                <label class="govuk-label govuk-radios__label" for="radio-review-approve">
-                                    Approve
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item" data-target="reject-document-panel">
-                                <input class="govuk-radios__input"
-                                       id="radio-review-reject"
-                                       name="approved"
-                                       type="radio"
-                                       value="false"
-                                       required="required"
-                                       data-switches-modal-target="#submit-button"
-                                       data-switches-modal-target-value="modal-reject-configured-doc">
-                                <label class="govuk-label govuk-radios__label" for="radio-review-reject">
-                                    Reject
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <div class="panel js-hidden govuk-!-margin-top-4" id="reject-document-panel">
-                        <div class="govuk-form-group">
-                            <label for="document-reject-reason"
-                                   class="govuk-label govuk-label--s">
-                                Reason for rejection
-                            </label>
-                            <p class="govuk-hint">This will not be visible to the applicant.</p>
-                            <textarea
-                                   class="govuk-textarea"
-                                   id="document-reject-reason"
-                                   name="rejectionReason"
-                                   th:errorclass="govuk-textarea--error"
-                                   required="required"
-                                   maxlength="255"
-                                   rows="3"
-                                   data-switches-button-status="#submit-button"
-                            ></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+                <th:block th:insert="project/fragments/document-decision-fragment :: review-document-fragment" />
             </th:block>
             <th:block th:if="${model.status.name() == 'REJECTED'}">
                 <h3 class="govuk-heading-s">Reason for rejection</h3>
@@ -123,6 +66,22 @@
                 </div>
             </th:block>
 
+            <th:block th:if="${model.isShowRejectDocumentButtonWhenDocumentIsApproved()}">
+                <th:block th:if="${model.status.name() == 'APPROVED' and model.projectIsActive}">
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Reject document</h2>
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            </legend>
+                            <div class="govuk-radios">
+                                <th:block th:insert="project/fragments/document-decision-fragment :: review-document-reject-fragment" />
+                            </div>
+                        </fieldset>
+                            <th:block th:insert="project/fragments/document-decision-fragment :: review-document-reject-reason-fragment" />
+                    </div>
+                    <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+                </th:block>
+            </th:block>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
