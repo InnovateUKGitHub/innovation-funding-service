@@ -50,7 +50,7 @@
                 </div>
                 <th:block th:unless="${model.userCanApproveOrRejectDocuments}">
                     <div th:if="${document.notSubmitted || document.rejected}"
-                         class="task-status-incomplete-no-action">
+                         class="task-status-incomplete">
                         <span>Incomplete</span>
                     </div>
                     <div th:if="${document.awaitingReview}"
