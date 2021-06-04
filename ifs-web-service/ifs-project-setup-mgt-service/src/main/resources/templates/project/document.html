@@ -28,11 +28,35 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
 
             <div class="success-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'APPROVED'}">
-                <p class="govuk-heading-s govuk-!-margin-top-0">You have approved this document.</p>
+                <p th:if="${(model.statusModifiedBy == null) or (model.statusModifiedDate == null)}"
+                    class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|You have approved this document.|"></p>
+
+                <p th:if="${model.isStatusModifiedByLoggedInUser}"
+                   class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|You have approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+
+                <p th:if="${!model.isStatusModifiedByLoggedInUser and model.statusModifiedByMO}"
+                   class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|${model.statusModifiedBy} (monitoring officer) approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+
+                <p th:if="${!model.isStatusModifiedByLoggedInUser and !model.statusModifiedByMO}"
+                   class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|Innovate UK have approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
             </div>
 
             <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
-                <p class="govuk-heading-s govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
+                <p th:if="${(model.statusModifiedBy == null) or (model.statusModifiedDate == null) or (model.isStatusModifiedByLoggedInUser)}"
+                   class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|You have rejected this document.|"></p>
+
+                <p th:if="${!model.isStatusModifiedByLoggedInUser and model.statusModifiedByMO}"
+                   class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|${model.statusModifiedBy} (monitoring officer) rejected this document.|"></p>
+
+                <p th:if="${!model.isStatusModifiedByLoggedInUser and !model.statusModifiedByMO}"
+                   class="govuk-heading-s govuk-!-margin-top-0"
+                   th:text="|Innovate UK rejected this document.|"></p>
             </div>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">

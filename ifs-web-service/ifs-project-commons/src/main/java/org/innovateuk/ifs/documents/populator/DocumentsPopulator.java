@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,6 +107,11 @@ public class DocumentsPopulator {
         // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin can approve.
         boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER);
 
+        String statusModifiedBy = projectDocument.map(this::statusModifiedBy).orElse(null);
+        LocalDate statusModifiedDate = projectDocument.map(document -> LocalDate.from(document.getModifiedDate())).orElse(null);
+        boolean isStatusModifiedByLoggedInUser = projectDocument.map(document -> isStatusModifiedByLoggedInUser(loggedInUser.getId(), document)).orElse(false);
+        boolean statusModifiedByMO = projectDocument.map(document -> statusModifiedByMO(document, projectId)).orElse(false);
+
         return new DocumentViewModel(project.getId(),
                 project.getName(),
                 project.getApplication(),
@@ -118,7 +124,24 @@ public class DocumentsPopulator {
                 isProjectManager(loggedInUser.getId(), projectId),
                 project.getProjectState().isActive(),
                 loggedInUser.hasAuthority(SUPER_ADMIN_USER),
-                userCanApproveOrRejectDocuments);
+                userCanApproveOrRejectDocuments,
+                statusModifiedBy,
+                statusModifiedDate,
+                isStatusModifiedByLoggedInUser,
+                statusModifiedByMO);
+    }
+
+    private boolean isStatusModifiedByLoggedInUser(long loggedInUser, ProjectDocumentResource projectDocumentResource) {
+
+        return loggedInUser == projectDocumentResource.getModifiedBy().getId();
+    }
+
+    private String statusModifiedBy(ProjectDocumentResource projectDocumentResource) {
+        return projectDocumentResource.getModifiedBy().getName();
+    }
+
+    private boolean statusModifiedByMO(ProjectDocumentResource projectDocumentResource, long projectId) {
+        return isMonitoringOfficer(projectDocumentResource.getModifiedBy().getId(), projectId);
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {
