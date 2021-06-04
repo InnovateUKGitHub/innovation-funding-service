@@ -32,15 +32,19 @@
                      class="task-status-info">
                     <span>No file uploaded</span>
                 </div>
-                <div th:if="${document.awaitingReview && model.userCanApproveOrRejectDocuments}"
+                <div th:if="${document.awaitingReview and model.userCanApproveOrRejectDocuments}"
                      class="task-status-incomplete">
                     <span>To be reviewed</span>
                 </div>
-                <div th:if="${document.awaitingReview && !model.userCanApproveOrRejectDocuments}"
+                <div th:if="${document.awaitingReview and !model.userCanApproveOrRejectDocuments}"
                      class="task-status-info">
                     <span>Awaiting review</span>
                 </div>
-                <div th:if="${document.approved}"
+                <div th:if="${document.approved and model.userCanApproveOrRejectDocuments}"
+                     class="task-status-complete">
+                    <span>Approved</span>
+                </div>
+                <div th:if="${document.approved and !model.userCanApproveOrRejectDocuments}"
                      class="task-status-complete">
                     <span>Complete</span>
                 </div>

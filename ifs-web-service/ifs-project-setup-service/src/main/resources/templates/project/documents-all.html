@@ -49,7 +49,7 @@
                     </span>
                 </div>
                 <th:block th:unless="${model.userCanApproveOrRejectDocuments}">
-                    <div th:if="${document.notSubmitted || document.rejected}"
+                    <div th:if="${document.notSubmitted or document.rejected}"
                          class="task-status-incomplete">
                         <span>Incomplete</span>
                     </div>
@@ -57,11 +57,7 @@
                          class="task-status-info">
                         <span>Awaiting review</span>
                     </div>
-                    <div th:if="${document.approved and model.projectManager}"
-                         class="task-status-complete">
-                        <span>Approved</span>
-                    </div>
-                    <div th:if="${document.approved and !model.projectManager}"
+                    <div th:if="${document.approved}"
                          class="task-status-complete">
                         <span>Complete</span>
                     </div>
