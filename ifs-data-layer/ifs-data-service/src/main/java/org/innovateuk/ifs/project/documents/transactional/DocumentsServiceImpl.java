@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -121,11 +120,10 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         return serviceSuccess();
     }
 
-    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails, User createdBy) {
+    private FileEntryResource createProjectDocument(Project project, CompetitionDocument competitionDocumentConfig, Pair<File, FileEntry> fileDetails, User modifiedBy) {
 
-        Calendar now = Calendar.getInstance();
         FileEntry fileEntry = fileDetails.getValue();
-        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED, createdBy, now);
+        ProjectDocument projectDocument = new ProjectDocument(project, competitionDocumentConfig, fileEntry, UPLOADED, modifiedBy, ZonedDateTime.now());
         projectDocumentRepository.save(projectDocument);
         return fileEntryMapper.mapToResource(fileEntry);
     }
@@ -249,8 +247,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (SUBMITTED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(decision.getApproved() ? APPROVED : REJECTED);
             projectDocument.setStatusComments(!decision.getApproved() ? decision.getRejectionReason() : null);
-            projectDocument.setCreatedBy(getCurrentlyLoggedInUser().getSuccess());
-            projectDocument.setCreatedDate(Calendar.getInstance());
+            projectDocument.setModifiedBy(getCurrentlyLoggedInUser().getSuccess());
+            projectDocument.setModifiedDate(ZonedDateTime.now());
             projectDocumentRepository.save(projectDocument);
             if (allDocumentsSubmitted(project)) {
                 setOtherDocsApproved(project);

@@ -4,6 +4,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 public class ProjectDocumentResource {
@@ -20,9 +22,9 @@ public class ProjectDocumentResource {
 
     private String statusComments;
 
-    private UserResource createdBy;
+    private UserResource modifiedBy;
 
-    private Calendar createdDate;
+    private ZonedDateTime modifiedDate;
 
     public Long getId() {
         return id;
@@ -72,19 +74,19 @@ public class ProjectDocumentResource {
         this.statusComments = statusComments;
     }
 
-    public UserResource getCreatedBy() {
-        return createdBy;
+    public UserResource getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setCreatedBy(UserResource createdBy) {
-        this.createdBy = createdBy;
+    public void setModifiedBy(UserResource modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    public Calendar getCreatedDate() {
-        return createdDate;
+    public ZonedDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setCreatedDate(Calendar createdDate) {
-        this.createdDate = createdDate;
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

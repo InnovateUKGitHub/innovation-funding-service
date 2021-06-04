@@ -5,11 +5,12 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.user.domain.User;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-import java.util.Calendar;
+import java.time.ZonedDateTime;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -41,22 +42,25 @@ public class ProjectDocument {
 
     private String statusComments;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User createdBy;
+    @LastModifiedBy
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="modifiedBy", referencedColumnName="id")
+    private User modifiedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar createdDate;
+    @LastModifiedDate
+    @Column(nullable = false, updatable = false)
+    private ZonedDateTime modifiedDate;
 
     public ProjectDocument() {
     }
 
-    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status, User createdBy, Calendar createdDate) {
+    public ProjectDocument(Project project, CompetitionDocument competitionDocument, FileEntry fileEntry, DocumentStatus status, User modifiedBy, ZonedDateTime modifiedDate) {
         this.project = project;
         this.competitionDocument = competitionDocument;
         this.fileEntry = fileEntry;
         this.status = status;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
     }
 
     public Long getId() {
@@ -107,19 +111,19 @@ public class ProjectDocument {
         this.statusComments = statusComments;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public User getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
-    public Calendar getCreatedDate() {
-        return createdDate;
+    public ZonedDateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setCreatedDate(Calendar createdDate) {
-        this.createdDate = createdDate;
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }
