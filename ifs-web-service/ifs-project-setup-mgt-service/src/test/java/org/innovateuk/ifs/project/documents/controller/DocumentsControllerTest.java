@@ -72,12 +72,22 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         long projectId = 1L;
         long documentConfigId = 2L;
         long applicationId = 3L;
+        DocumentViewModel viewModel = new DocumentViewModel(
+                projectId,
+                "Project 12",
+                applicationId,
+                documentConfigId,
+                "Risk Register",
+                "Guidance for Risk Register",
+                null,
+                DocumentStatus.UNSET,
+                "",
+                true,
+                true,
+                false,
+                false);
 
-        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
-                documentConfigId, "Risk Register", "Guidance for Risk Register",
-                null, DocumentStatus.UNSET, "",true, true, false);
-
-        when(populator.populateViewDocument(projectId, documentConfigId, loggedInUser.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
                 .andExpect(view().name("project/document"))
                 .andReturn();
@@ -103,7 +113,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Collaboration agreement", "Guidance for collaboration agreement",
-                null, DocumentStatus.UNSET, "", false, true, true);
+                null, DocumentStatus.UNSET, "", false, true, true, true);
 
         when(populator.populateViewDocument(projectId, documentConfigId, ifsAdmin.getId())).thenReturn(viewModel);
         mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
@@ -183,9 +193,9 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true, false);
+                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true, false, false);
 
-        when(populator.populateViewDocument(projectId, documentConfigId, loggedInUser.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)
