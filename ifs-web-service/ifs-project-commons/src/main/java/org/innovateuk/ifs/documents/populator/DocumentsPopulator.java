@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
+import static org.innovateuk.ifs.user.resource.Authority.SUPER_ADMIN_USER;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -73,7 +74,7 @@ public class DocumentsPopulator {
                 .orElse(DocumentStatus.UNSET);
     }
 
-    public DocumentViewModel populateViewDocument(long projectId, long documentConfigId, UserResource userResource) {
+    public DocumentViewModel populateViewDocument(long projectId, UserResource loggedInUser, long documentConfigId) {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
@@ -92,7 +93,7 @@ public class DocumentsPopulator {
                 .orElse(null);
 
         // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin can approve.
-        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? userResource.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : userResource.hasRole(IFS_ADMINISTRATOR);
+        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : loggedInUser.hasRole(IFS_ADMINISTRATOR);
 
         return new DocumentViewModel(project.getId(),
                 project.getName(),
@@ -103,8 +104,9 @@ public class DocumentsPopulator {
                 fileDetails,
                 projectDocument.map(ProjectDocumentResource::getStatus).orElse(DocumentStatus.UNSET),
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
-                isProjectManager(userResource.getId(), projectId),
+                isProjectManager(loggedInUser.getId(), projectId),
                 project.getProjectState().isActive(),
+                loggedInUser.hasAuthority(SUPER_ADMIN_USER),
                 userCanApproveOrRejectDocuments);
     }
 

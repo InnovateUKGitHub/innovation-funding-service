@@ -21,6 +21,7 @@ public class DocumentViewModel {
     private final String statusComments;
     private final boolean projectManager;
     private final boolean projectIsActive;
+    private final boolean isSuperAdminUser;
     private final boolean userCanApproveOrRejectDocuments;
 
     public DocumentViewModel(long projectId,
@@ -34,6 +35,7 @@ public class DocumentViewModel {
                              String statusComments,
                              boolean projectManager,
                              boolean projectIsActive,
+                             boolean isSuperAdminUser,
                              boolean userCanApproveOrRejectDocuments) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -46,6 +48,7 @@ public class DocumentViewModel {
         this.statusComments = statusComments;
         this.projectManager = projectManager;
         this.projectIsActive = projectIsActive;
+        this.isSuperAdminUser = isSuperAdminUser;
         this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
     }
 
@@ -93,6 +96,10 @@ public class DocumentViewModel {
         return projectIsActive;
     }
 
+    public boolean isSuperAdminUser() {
+        return isSuperAdminUser;
+    }
+
     public boolean isUserCanApproveOrRejectDocuments() {
         return userCanApproveOrRejectDocuments;
     }
@@ -103,6 +110,10 @@ public class DocumentViewModel {
 
     public boolean isShowDisabledSubmitDocumentsButton() {
         return projectManager && status == DocumentStatus.UNSET;
+    }
+
+    public boolean isShowRejectDocumentButtonWhenDocumentIsApproved() {
+        return isSuperAdminUser && projectIsActive;
     }
 
     @Override
