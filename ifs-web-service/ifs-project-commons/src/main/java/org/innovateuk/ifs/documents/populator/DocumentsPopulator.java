@@ -107,11 +107,6 @@ public class DocumentsPopulator {
         // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, only IFSAdmin can approve.
         boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER);
 
-        String statusModifiedBy = projectDocument.map(this::statusModifiedBy).orElse(null);
-        LocalDate statusModifiedDate = projectDocument.map(document -> LocalDate.from(document.getModifiedDate())).orElse(null);
-        boolean isStatusModifiedByLoggedInUser = projectDocument.map(document -> isStatusModifiedByLoggedInUser(loggedInUser.getId(), document)).orElse(false);
-        boolean statusModifiedByMO = projectDocument.map(document -> statusModifiedByMO(document, projectId)).orElse(false);
-
         return new DocumentViewModel(project.getId(),
                 project.getName(),
                 project.getApplication(),
@@ -125,23 +120,50 @@ public class DocumentsPopulator {
                 project.getProjectState().isActive(),
                 loggedInUser.hasAuthority(SUPER_ADMIN_USER),
                 userCanApproveOrRejectDocuments,
-                statusModifiedBy,
-                statusModifiedDate,
-                isStatusModifiedByLoggedInUser,
-                statusModifiedByMO);
+                getNameStatusModifiedBy(projectDocument),
+                getStatusModifiedDate(projectDocument),
+                isStatusModifiedByLoggedInUser(loggedInUser.getId(), projectDocument),
+                statusModifiedByMO(projectId, projectDocument));
     }
 
-    private boolean isStatusModifiedByLoggedInUser(long loggedInUser, ProjectDocumentResource projectDocumentResource) {
-
-        return loggedInUser == projectDocumentResource.getModifiedBy().getId();
+    private LocalDate getStatusModifiedDate(Optional<ProjectDocumentResource> projectDocumentResource) {
+        if (projectDocumentResource.isPresent()) {
+            if (projectDocumentResource.get().getModifiedDate() != null) {
+                return LocalDate.from(projectDocumentResource.get().getModifiedDate());
+            }
+            return null;
+        }
+        return null;
     }
 
-    private String statusModifiedBy(ProjectDocumentResource projectDocumentResource) {
-        return projectDocumentResource.getModifiedBy().getName();
+    private String getNameStatusModifiedBy(Optional<ProjectDocumentResource> projectDocumentResource) {
+        if (projectDocumentResource.isPresent()) {
+            if (projectDocumentResource.get().getModifiedBy().getName() != null) {
+                return projectDocumentResource.get().getModifiedBy().getName();
+            }
+            return null;
+        }
+        return null;
     }
 
-    private boolean statusModifiedByMO(ProjectDocumentResource projectDocumentResource, long projectId) {
-        return isMonitoringOfficer(projectDocumentResource.getModifiedBy().getId(), projectId);
+    private boolean isStatusModifiedByLoggedInUser(long loggedInUser, Optional<ProjectDocumentResource> projectDocumentResource) {
+        if (projectDocumentResource.isPresent()) {
+            if(projectDocumentResource.get().getModifiedBy().getId() != null) {
+                return projectDocumentResource.get().getModifiedBy().getId() == loggedInUser;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private boolean statusModifiedByMO(long projectId, Optional<ProjectDocumentResource> projectDocumentResource) {
+        if (projectDocumentResource.isPresent()) {
+            if (projectDocumentResource.get().getModifiedBy().getId() != null) {
+                return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, projectDocumentResource.get().getModifiedBy().getId()).getSuccess();
+            }
+            return false;
+        }
+        return false;
     }
 
     private boolean isProjectManager(long loggedInUserId, long projectId) {

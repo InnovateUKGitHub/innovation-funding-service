@@ -28,7 +28,7 @@ public class DocumentViewModel {
     private final String statusModifiedBy;
     private final LocalDate statusModifiedDate;
     private final boolean isStatusModifiedByLoggedInUser;
-    private boolean statusModifiedByMO;
+    private final boolean statusModifiedByMO;
 
     public DocumentViewModel(long projectId,
                              String projectName,
