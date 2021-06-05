@@ -69,7 +69,7 @@ public class DocumentsController {
 
     private String doViewDocument(long projectId, UserResource loggedInUser, long documentConfigId, Model model, DocumentForm form) {
 
-        model.addAttribute("model", populator.populateViewDocument(projectId, documentConfigId, loggedInUser));
+        model.addAttribute("model", populator.populateViewDocument(projectId, loggedInUser, documentConfigId));
         model.addAttribute(FORM_ATTR, form);
         return "project/document";
     }
