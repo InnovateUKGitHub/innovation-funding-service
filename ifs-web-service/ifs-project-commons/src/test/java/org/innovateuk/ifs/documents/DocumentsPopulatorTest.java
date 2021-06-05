@@ -19,7 +19,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
@@ -37,6 +36,7 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UNSET;
 import static org.innovateuk.ifs.project.document.resource.DocumentStatus.UPLOADED;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
@@ -74,17 +74,12 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     private String documentConfigGuidance1 = "Guidance Risk Register";
     private String documentConfigGuidance2 = "Guidance Plan Document";
     private String collaborationAgreement = COLLABORATION_AGREEMENT_TITLE;
-    private UserResource loggedInUser;
+    private UserResource userResource;
 
     @Before
     public void setup() {
 
         super.setup();
-
-        loggedInUser = UserResourceBuilder
-                .newUserResource()
-                .withId(loggedInUserId)
-                .build();
 
         List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
                 .newCompetitionDocumentResource()
@@ -110,8 +105,12 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .withStatus(UPLOADED)
                 .build();
 
+        userResource = newUserResource()
+                .withId(loggedInUserId)
+                .build();
+
         ProjectUserResource projectUserResource = newProjectUserResource()
-                .withUser(loggedInUserId)
+                .withUser(userResource.getId())
                 .build();
 
         PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
@@ -127,7 +126,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(userRestService.retrieveUserById(loggedInUserId)).thenReturn(restSuccess(loggedInUser));
+        when(userRestService.retrieveUserById(loggedInUserId)).thenReturn(restSuccess(userResource));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
@@ -138,7 +137,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateAllDocuments() {
 
-        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUser.getId());
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUserId);
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(applicationId, viewModel.getApplicationId());
@@ -154,7 +153,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateViewDocument() {
 
-        DocumentViewModel viewModel = populator.populateViewDocument(projectId, documentConfigId1, loggedInUser.getId());
+        DocumentViewModel viewModel = populator.populateViewDocument(projectId, userResource, documentConfigId1);
 
         assertEquals(projectId, viewModel.getProjectId());
         assertEquals(projectName, viewModel.getProjectName());

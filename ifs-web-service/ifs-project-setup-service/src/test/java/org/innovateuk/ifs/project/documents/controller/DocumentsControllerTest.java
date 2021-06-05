@@ -103,9 +103,9 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                null, DocumentStatus.UNSET, "",true, true, false);
+                null, DocumentStatus.UNSET, "",true, true, false, false);
 
-        when(populator.populateViewDocument(projectId, documentConfigId, loggedInUser.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
                 .andExpect(view().name("project/document"))
                 .andReturn();
@@ -132,9 +132,9 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                null, DocumentStatus.UNSET, "", true, true, false);
+                null, DocumentStatus.UNSET, "", true, true, false, false);
 
-        when(populator.populateViewDocument(projectId, documentConfigId, loggedInUser.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/document/config/" + documentConfigId).
@@ -234,9 +234,9 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.SUBMITTED, "",true, true, false);
+                fileDetailsViewModel, DocumentStatus.SUBMITTED, "",true, true, false, false);
 
-        when(populator.populateViewDocument(projectId, documentConfigId, loggedInUser.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)
@@ -284,9 +284,9 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
                 documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true, false);
+                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true, false, false);
 
-        when(populator.populateViewDocument(projectId, documentConfigId, loggedInUser.getId())).thenReturn(viewModel);
+        when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 
         MvcResult result = mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)
