@@ -26,6 +26,9 @@ import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.documents.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -69,6 +72,12 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
     private List<PartnerOrganisation> partnerOrganisations;
 
     @Mock
+    private User user;
+
+    @Mock
+    private UserResource userResource;
+
+    @Mock
     private ProjectRepository projectRepository;
 
     @Mock
@@ -85,6 +94,9 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
 
     @Mock
     private ActivityLogService activityLogService;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -132,6 +144,10 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         when(competitionDocumentConfigRepository.findById(documentConfigId)).thenReturn(Optional.of(configuredCompetitionDocument));
         when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(competitionDocumentConfigRepository.findByCompetitionId(competition.getId())).thenReturn(competitionDocuments);
+
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+        setLoggedInUser(userResource);
     }
 
     @Test
@@ -169,33 +185,33 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
-//    @Test
-//    public void createDocumentFileEntry() {
-//
-//        FileEntry fileEntry = newFileEntry().build();
-//        FileEntryResource fileEntryResource = FileEntryResourceBuilder.newFileEntryResource().build();
-//        Supplier<InputStream> inputStreamSupplier = () -> null;
-//        ServiceResult<Pair<File, FileEntry>> fileDetails = serviceSuccess(Pair.of(new File("newfile"), fileEntry));
-//
-//        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(fileDetails);
-//        when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(fileEntryResource);
-//
-//        ServiceResult<FileEntryResource> result = service.createDocumentFileEntry(projectId, documentConfigId, fileEntryResource, inputStreamSupplier);
-//
-//        assertTrue(result.isSuccess());
-//
-//        verify(projectDocumentRepository).save(any(ProjectDocument.class));
-//        ArgumentCaptor<ProjectDocument> captor = ArgumentCaptor.forClass(ProjectDocument.class);
-//        verify(projectDocumentRepository).save(captor.capture());
-//        ProjectDocument savedProjectDocument = captor.getValue();
-//
-//        assertEquals(project, savedProjectDocument.getProject());
-//        assertEquals(configuredCompetitionDocument, savedProjectDocument.getCompetitionDocument());
-//        assertEquals(fileEntry, savedProjectDocument.getFileEntry());
-//        assertEquals(UPLOADED, savedProjectDocument.getStatus());
-//
-//        assertEquals(fileEntryResource, result.getSuccess());
-//    }
+    @Test
+    public void createDocumentFileEntry() {
+
+        FileEntry fileEntry = newFileEntry().build();
+        FileEntryResource fileEntryResource = FileEntryResourceBuilder.newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+        ServiceResult<Pair<File, FileEntry>> fileDetails = serviceSuccess(Pair.of(new File("newfile"), fileEntry));
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(fileDetails);
+        when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(fileEntryResource);
+
+        ServiceResult<FileEntryResource> result = service.createDocumentFileEntry(projectId, documentConfigId, fileEntryResource, inputStreamSupplier);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectDocumentRepository).save(any(ProjectDocument.class));
+        ArgumentCaptor<ProjectDocument> captor = ArgumentCaptor.forClass(ProjectDocument.class);
+        verify(projectDocumentRepository).save(captor.capture());
+        ProjectDocument savedProjectDocument = captor.getValue();
+
+        assertEquals(project, savedProjectDocument.getProject());
+        assertEquals(configuredCompetitionDocument, savedProjectDocument.getCompetitionDocument());
+        assertEquals(fileEntry, savedProjectDocument.getFileEntry());
+        assertEquals(UPLOADED, savedProjectDocument.getStatus());
+
+        assertEquals(fileEntryResource, result.getSuccess());
+    }
 
     @Test
     public void getFileContents() {
@@ -363,36 +379,40 @@ public class DocumentsServiceImplTest extends BaseServiceUnitTest<DocumentsServi
         verify(projectDocumentRepository, never()).save(any(ProjectDocument.class));
     }
 
-//    @Test
-//    public void documentDecisionWhenRejected() {
-//
-//        String rejectionReason = "Missing details";
-//        projectDocument.setStatus(SUBMITTED);
-//        ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, rejectionReason);
-//
-//        ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
-//
-//        assertTrue(result.isSuccess());
-//        assertEquals(REJECTED, projectDocument.getStatus());
-//        assertEquals(rejectionReason, projectDocument.getStatusComments());
-//        verify(projectDocumentRepository).save(projectDocument);
-//    }
-//
-//    @Test
-//    public void documentDecisionWhenApproved() {
-//
-//        String rejectionReason = "Reason not used when approved";
-//        projectDocument.setStatus(SUBMITTED);
-//        ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(true, rejectionReason);
-//
-//        ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
-//
-//        assertTrue(result.isSuccess());
-//        assertEquals(APPROVED, projectDocument.getStatus());
-//        assertNull(projectDocument.getStatusComments());
-//        verify(projectDocumentRepository).save(projectDocument);
-//        verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
-//    }
+    @Test
+    public void documentDecisionWhenRejected() {
+
+        when(userResource.getId()).thenReturn(3L);
+        when(userRepository.findById(3L)).thenReturn(Optional.of(user));
+        setLoggedInUser(userResource);
+
+        String rejectionReason = "Missing details";
+        projectDocument.setStatus(SUBMITTED);
+        ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(false, rejectionReason);
+
+        ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
+
+        assertTrue(result.isSuccess());
+        assertEquals(REJECTED, projectDocument.getStatus());
+        assertEquals(rejectionReason, projectDocument.getStatusComments());
+        verify(projectDocumentRepository).save(projectDocument);
+    }
+
+    @Test
+    public void documentDecisionWhenApproved() {
+
+        String rejectionReason = "Reason not used when approved";
+        projectDocument.setStatus(SUBMITTED);
+        ProjectDocumentDecision documentDecision = new ProjectDocumentDecision(true, rejectionReason);
+
+        ServiceResult<Void> result = service.documentDecision(projectId, documentConfigId, documentDecision);
+
+        assertTrue(result.isSuccess());
+        assertEquals(APPROVED, projectDocument.getStatus());
+        assertNull(projectDocument.getStatusComments());
+        verify(projectDocumentRepository).save(projectDocument);
+        verify(activityLogService).recordDocumentActivityByProjectId(projectId, ActivityType.DOCUMENT_APPROVED, documentConfigId);
+    }
 
     @Test
     public void documentDecisionRejectedWhenAlreadyApproved() {

@@ -14,15 +14,14 @@ import org.innovateuk.ifs.documents.viewModel.DocumentViewModel;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentResourceBuilder;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,6 +29,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
@@ -60,6 +60,9 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
 
     private long competitionId = 18L;
     private long applicationId = 19L;
@@ -101,14 +104,16 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .withCompetition(competitionId)
                 .build();
 
+        userResource = newUserResource()
+                .withId(loggedInUserId)
+                .build();
+
         ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder
                 .newProjectDocumentResource()
                 .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
-                .build();
-
-        userResource = newUserResource()
-                .withId(loggedInUserId)
+                .withStatusModifiedBy(userResource)
+                .withStatusModifiedDate(now())
                 .build();
 
         ProjectUserResource projectUserResource = newProjectUserResource()
@@ -133,6 +138,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(projectUserResource));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, userResource.getId())).thenReturn(restSuccess(false));
 
     }
 
