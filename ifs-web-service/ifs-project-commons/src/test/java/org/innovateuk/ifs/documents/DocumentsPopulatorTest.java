@@ -83,10 +83,6 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
 
         super.setup();
 
-        userResource = newUserResource()
-                .withId(loggedInUserId)
-                .build();
-
         List<CompetitionDocumentResource> configuredProjectDocuments = CompetitionDocumentResourceBuilder
                 .newCompetitionDocumentResource()
                 .withId(documentConfigId1, documentConfigId2, collaborationAgreementId)
@@ -109,6 +105,10 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
                 .newProjectDocumentResource()
                 .withCompetitionDocument(configuredProjectDocuments.get(0))
                 .withStatus(UPLOADED)
+                .build();
+
+        userResource = newUserResource()
+                .withId(loggedInUserId)
                 .build();
 
         ProjectUserResource projectUserResource = newProjectUserResource()
@@ -139,7 +139,7 @@ public class DocumentsPopulatorTest extends BaseUnitTest {
     @Test
     public void populateAllDocuments() {
 
-        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, userResource.getId());
+        AllDocumentsViewModel viewModel = populator.populateAllDocuments(projectId, loggedInUserId);
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(applicationId, viewModel.getApplicationId());

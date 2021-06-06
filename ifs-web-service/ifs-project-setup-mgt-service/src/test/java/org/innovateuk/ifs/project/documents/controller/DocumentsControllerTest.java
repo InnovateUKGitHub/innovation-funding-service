@@ -72,6 +72,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         long projectId = 1L;
         long documentConfigId = 2L;
         long applicationId = 3L;
+
         DocumentViewModel viewModel = new DocumentViewModel(
                 projectId,
                 "Project 12",
@@ -84,6 +85,10 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 "",
                 true,
                 true,
+                false,
+                false,
+                null,
+                null,
                 false,
                 false);
 
@@ -111,9 +116,23 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         DocumentForm form = new DocumentForm();
 
-        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
-                documentConfigId, "Collaboration agreement", "Guidance for collaboration agreement",
-                null, DocumentStatus.UNSET, "", false, true, true, true);
+        DocumentViewModel viewModel = new DocumentViewModel(projectId,
+                "Project 12",
+                applicationId,
+                documentConfigId,
+                "Collaboration agreement",
+                "Guidance for collaboration agreement",
+                null,
+                DocumentStatus.UNSET,
+                "",
+                false,
+                true,
+                true,
+                true,
+                null,
+                null,
+                false,
+                false);
 
         when(populator.populateViewDocument(projectId, ifsAdmin,  documentConfigId)).thenReturn(viewModel);
         mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
@@ -191,9 +210,23 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
         FileEntryResource fileEntryDetails = newFileEntryResource().withName("Risk Register").build();
         FileDetailsViewModel fileDetailsViewModel = new FileDetailsViewModel(fileEntryDetails);
 
-        DocumentViewModel viewModel = new DocumentViewModel(projectId, "Project 12", applicationId,
-                documentConfigId, "Risk Register", "Guidance for Risk Register",
-                fileDetailsViewModel, DocumentStatus.UNSET, "",true, true, false, false);
+        DocumentViewModel viewModel = new DocumentViewModel(projectId,
+                "Project 12",
+                applicationId,
+                documentConfigId,
+                "Risk Register",
+                "Guidance for Risk Register",
+                fileDetailsViewModel,
+                DocumentStatus.UNSET,
+                "",
+                true,
+                true,
+                false,
+                false,
+                null,
+                null,
+                false,
+                false);
 
         when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 
