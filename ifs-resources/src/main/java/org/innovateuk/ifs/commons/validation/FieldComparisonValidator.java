@@ -13,6 +13,7 @@ import javax.validation.ConstraintValidatorContext;
  * Validator for the @{FieldComparison} annotation to compare two field with a provided @{BiPredicate}
  */
 
+@SuppressWarnings("unchecked")
 public class FieldComparisonValidator implements ConstraintValidator<FieldComparison, Object> {
     private static final Log LOG = LogFactory.getLog(FieldComparisonValidator.class);
 

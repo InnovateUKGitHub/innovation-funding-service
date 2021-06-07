@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
     private static final Log LOG = LogFactory.getLog(AbstractOrganisationFinanceHandler.class);
 

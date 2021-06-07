@@ -17,6 +17,7 @@ import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.util.NumberUtils.getBigDecimalFormatted;
 
+@SuppressWarnings("unchecked")
 public class AbstractYourFundingFormValidator {
 
     protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought) {

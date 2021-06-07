@@ -64,12 +64,12 @@ public class DocumentsController {
                                Model model,
                                UserResource loggedInUser) {
 
-        return doViewDocument(projectId, loggedInUser.getId(), documentConfigId, model, new DocumentForm());
+        return doViewDocument(projectId, loggedInUser, documentConfigId, model, new DocumentForm());
     }
 
-    private String doViewDocument(long projectId, long loggedInUserId, long documentConfigId, Model model, DocumentForm form) {
+    private String doViewDocument(long projectId, UserResource loggedInUser, long documentConfigId, Model model, DocumentForm form) {
 
-        model.addAttribute("model", populator.populateViewDocument(projectId, loggedInUserId, documentConfigId));
+        model.addAttribute("model", populator.populateViewDocument(projectId, loggedInUser, documentConfigId));
         model.addAttribute(FORM_ATTR, form);
         return "project/document";
     }
@@ -105,7 +105,7 @@ public class DocumentsController {
                                    UserResource loggedInUser) {
 
         Supplier<String> successView = () -> redirectToViewDocumentPage(projectId, documentConfigId);
-        Supplier<String> failureView = () -> doViewDocument(projectId, loggedInUser.getId(), documentConfigId, model, form);
+        Supplier<String> failureView = () -> doViewDocument(projectId, loggedInUser, documentConfigId, model, form);
 
         RestResult<Void> result = documentsRestService.documentDecision(projectId, documentConfigId,
                 new ProjectDocumentDecision(form.getApproved(), form.getRejectionReason()));

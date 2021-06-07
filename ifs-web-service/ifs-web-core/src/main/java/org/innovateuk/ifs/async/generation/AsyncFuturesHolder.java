@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * HttpServletRequest-handling Thread so that we can halt rendering of any templates from the Controllers until all
  * Futures have completed.
  */
+@SuppressWarnings("unchecked")
 public final class AsyncFuturesHolder {
 
     private static final Log LOG = LogFactory.getLog(AsyncFuturesGenerator.class);

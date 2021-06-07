@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings("unchecked")
 @Component
 public class ProjectYourFundingSaver extends AbstractYourFundingSaver {
 

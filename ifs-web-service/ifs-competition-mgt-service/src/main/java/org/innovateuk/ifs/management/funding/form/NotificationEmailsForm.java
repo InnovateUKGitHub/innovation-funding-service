@@ -3,11 +3,7 @@ package org.innovateuk.ifs.management.funding.form;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NotificationEmailsForm {
 
