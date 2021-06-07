@@ -18,6 +18,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.SUBCONTRAC
  * Handles the subcontracting costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
+@SuppressWarnings("unchecked")
 @Component
 public class SubContractingCostHandler extends FinanceRowHandler<SubContractingCost> {
     public static final String COST_FIELD_COUNTRY = "country";

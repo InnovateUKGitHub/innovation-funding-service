@@ -14,6 +14,7 @@ import javax.persistence.Id;
  * This is also used to choose a template in the web-service. Depending on the FormInputType we
  * can also implement extra behaviour like form / input validation.
  */
+@SuppressWarnings("unchecked")
 @Entity
 public class FormValidator {
 

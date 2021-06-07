@@ -49,6 +49,7 @@ public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<
         this.description.ifPresent(description::appendText);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> LambdaMatcher<T> lambdaMatches(Predicate<T> predicate) {
         return new LambdaMatcher(predicate);
     }

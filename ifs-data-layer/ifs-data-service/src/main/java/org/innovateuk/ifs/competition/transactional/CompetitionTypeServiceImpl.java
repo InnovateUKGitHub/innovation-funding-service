@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+@SuppressWarnings("unchecked")
 @Service
 public class CompetitionTypeServiceImpl extends BaseTransactionalService implements CompetitionTypeService {
 
