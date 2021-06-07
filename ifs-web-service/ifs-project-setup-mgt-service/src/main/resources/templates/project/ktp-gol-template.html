@@ -480,179 +480,184 @@
         <p>Partnership budget and government contribution</p>
         <br><br>
 
-        <p>Table 1 - fEC</p>
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th>Costs eligible for support</th>
-                <th>Partnership Budget</th>
-                <th>Business's Contribution</th>
-                <th>Government Contribution</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th></th>
-                <th>£</th>
-                <th>£</th>
-                <th>£</th>
-            </tr>
-            <tr>
-                <th>Directly incurred costs</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            <tr>
-                <td>a. Associate employment</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
-            </tr>
-            <tr>
-                <td>b. Associate development</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
-            </tr>
-            <tr>
-                <td>c. Travel and subsistence</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.travelAndSubsistence')"></th:block>
-            </tr>
-            <tr>
-                <td>d. Consumables</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.consumables')"></th:block>
-            </tr>
-            <tr>
-                <th>Directly Allocated Costs</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
+        <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
+            <p>Table 1 - fEC</p>
+            <table class="letter-table">
+                <thead>
                 <tr>
-                    <td>e. Knowledge base supervisor</td>
-                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.knowledgeBaseSupervisor')"></th:block>
+                    <th>Costs eligible for support</th>
+                    <th>Partnership Budget</th>
+                    <th>Business's Contribution</th>
+                    <th>Government Contribution</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th></th>
+                    <th>£</th>
+                    <th>£</th>
+                    <th>£</th>
                 </tr>
                 <tr>
-                    <td>f.  Associate estates costs</td>
-                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEstateCosts')"></th:block>
+                    <th>Directly incurred costs</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
-            </th:block>
-            <tr>
-                <td>g. Other costs</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
-            </tr>
-            <tr>
-                <th>Indirect Costs</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
                 <tr>
-                    <td>h. Additional associate support</td>
-                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.additionalSupportCosts')"></th:block>
+                    <td>a. Associate employment</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
                 </tr>
-            </th:block>
-            <tr>
-                <th>TOTAL</th>
-                <th th:text="${model.ktpFinanceModel.getTable1TotalCost()}">TOTAL</th>
-                <th th:text="${model.ktpFinanceModel.getTable1TotalContribution()}">TOTAL</th>
-                <th th:text="${model.ktpFinanceModel.getTable1TotalFunding()}">TOTAL</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th>Government Contribution(%)</th>
-                <th style="text-align:right;" colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
-            </tr>
-            </tbody>
-        </table>
+                <tr>
+                    <td>b. Associate development</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
+                </tr>
+                <tr>
+                    <td>c. Travel and subsistence</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.travelAndSubsistence')"></th:block>
+                </tr>
+                <tr>
+                    <td>d. Consumables</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.consumables')"></th:block>
+                </tr>
+                <tr>
+                    <th>Directly Allocated Costs</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <!--th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}"-->
+                    <tr>
+                        <td>e. Knowledge base supervisor</td>
+                        <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.knowledgeBaseSupervisor')"></th:block>
+                    </tr>
+                    <tr>
+                        <td>f.  Associate estates costs</td>
+                        <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEstateCosts')"></th:block>
+                    </tr>
+                <!--/th:block-->
+                <tr>
+                    <td>g. Other costs</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
+                </tr>
+                <tr>
+                    <th>Indirect Costs</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <!--th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}"-->
+                    <tr>
+                        <td>h. Additional associate support</td>
+                        <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.additionalSupportCosts')"></th:block>
+                    </tr>
+                <!--/th:block-->
+                <tr>
+                    <th>TOTAL</th>
+                    <th th:text="${model.ktpFinanceModel.getTable1TotalCost()}">TOTAL</th>
+                    <th th:text="${model.ktpFinanceModel.getTable1TotalContribution()}">TOTAL</th>
+                    <th th:text="${model.ktpFinanceModel.getTable1TotalFunding()}">TOTAL</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Government Contribution(%)</th>
+                    <th style="text-align:right;" colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
+                </tr>
+                </tbody>
+            </table>
 
-        <br><br>
-        <p>Table 2 – non-fEC</p>
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th>Costs eligible for support</th>
-                <th>Partnership Budget</th>
-                <th>Business's Contribution</th>
-                <th>Government Contribution</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th></th>
-                <th>£</th>
-                <th>£</th>
-                <th>£</th>
-            </tr>
-            <tr>
-                <th>Directly incurred costs</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            <tr>
-                <td>a. Associate employment</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
-            </tr>
-            <tr>
-                <td>b. Academic and secretarial support</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.academicAndSecretarialSupport')"></th:block>
-            </tr>
-            <tr>
-                <td>c. Associate development</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
-            </tr>
-            <tr>
-                <td>d. Travel and subsistence</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.travelAndSubsistence')"></th:block>
-            </tr>
-            <tr>
-                <td>e. Consumables</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.consumables')"></th:block>
-            </tr>
-            <tr>
-                <td>f. Other costs</td>
-                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
-            </tr>
-            <tr>
-                <th>TOTAL</th>
-                <th th:text="${model.ktpFinanceModel.getTable2TotalCost()}">TOTAL</th>
-                <th th:text="${model.ktpFinanceModel.getTable2TotalContribution()}">TOTAL</th>
-                <th th:text="${model.ktpFinanceModel.getTable2TotalFunding()}">TOTAL</th>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <th>Government Contribution(%)</th>
-                <th style="text-align:right;" colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
-            </tr>
-            </tbody>
-        </table>
+            <br><br>
+        </th:block>
 
-        <br><br>
-        <table class="letter-table">
-            <tbody>
-            <tr>
-                <td colspan="2">Contribution to the Knowledge Base Partner’s overheads calculated at 46% of the Government contribution to direct staff costs (column 3 figures at a. and b. above).</td>
-                <td th:text="${model.ktpFinanceModel.contributionToKbPartnerOverheads}"></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Maximum amount of Government Grant</strong>
-                    Total of Government contribution, including the ‘Indirect costs’ element</td>
-                <td th:text="${model.ktpFinanceModel.maximumAmountOfGovtGrant}"></td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
+        <th:block th:if="${model.ktpFinanceModel.fecModelDisabled}">
+            <p>Table 2 – non-fEC</p>
+            <table class="letter-table">
+                <thead>
+                <tr>
+                    <th>Costs eligible for support</th>
+                    <th>Partnership Budget</th>
+                    <th>Business's Contribution</th>
+                    <th>Government Contribution</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th></th>
+                    <th>£</th>
+                    <th>£</th>
+                    <th>£</th>
+                </tr>
+                <tr>
+                    <th>Directly incurred costs</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>a. Associate employment</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
+                </tr>
+                <tr>
+                    <td>b. Academic and secretarial support</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.academicAndSecretarialSupport')"></th:block>
+                </tr>
+                <tr>
+                    <td>c. Associate development</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
+                </tr>
+                <tr>
+                    <td>d. Travel and subsistence</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.travelAndSubsistence')"></th:block>
+                </tr>
+                <tr>
+                    <td>e. Consumables</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.consumables')"></th:block>
+                </tr>
+                <tr>
+                    <td>f. Other costs</td>
+                    <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
+                </tr>
+                <tr>
+                    <th>TOTAL</th>
+                    <th th:text="${model.ktpFinanceModel.getTable2TotalCost()}">TOTAL</th>
+                    <th th:text="${model.ktpFinanceModel.getTable2TotalContribution()}">TOTAL</th>
+                    <th th:text="${model.ktpFinanceModel.getTable2TotalFunding()}">TOTAL</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Government Contribution(%)</th>
+                    <th style="text-align:right;" colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
+                </tr>
+                </tbody>
+            </table>
+
+            <br><br>
+            <table class="letter-table">
+                <tbody>
+                <tr>
+                    <td colspan="2">Contribution to the Knowledge Base Partner’s overheads calculated at 46% of the Government contribution to direct staff costs (column 3 figures at a. and b. above).</td>
+                    <td th:text="${model.ktpFinanceModel.contributionToKbPartnerOverheads}"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Maximum amount of Government Grant</strong>
+                        Total of Government contribution, including the ‘Indirect costs’ element</td>
+                    <td th:text="${model.ktpFinanceModel.maximumAmountOfGovtGrant}"></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
 
         <p>NB Unless a case has been made in writing to the KTP programme manager and accepted and agreed by the programme manager, a maximum of £700 may be expended from the budget on fees associated with achievement of a higher degree.</p>
 
@@ -672,99 +677,105 @@
         <p>a.	the final claim dated [enter date] and the previously submitted claims dated [enter dates] have been made in accordance with the terms and conditions of the GOL; and</p>
         <p>b.	the <th:block th:text="${model.leadOrgName}" /> had during the period [enter date] to [enter date] defrayed expenditure, as defined in the GOL, on the categories of direct costs eligible for Government support as stated in Schedule 1 of the GOL as set out below:</p>
 
-        <p>Table 1 - fEC</p>
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th>Directly Incurred Costs</th>
-                <th>£</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>i Associate(s) employment costs</td>
-                <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
-            </tr>
-            <tr>
-                <td>ii Associate development</td>
-                <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
-            </tr>
-            <tr>
-                <td>iii Travel and subsistence</td>
-                <td th:text="${model.ktpFinanceModel.travelAndSubsistence.cost}"></td>
-            </tr>
-            <tr>
-                <td>iv Consumables</td>
-                <td th:text="${model.ktpFinanceModel.consumables.cost}"></td>
-            </tr>
-            <tr>
-                <th>Directly Allocated Costs</th>
-                <th></th>
-            </tr>
-            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
+        <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
+            <p>Table 1 - fEC</p>
+            <table class="letter-table">
+                <thead>
                 <tr>
-                    <td>v Knowledge base supervisor</td>
-                    <td th:text="${model.ktpFinanceModel.knowledgeBaseSupervisor.cost}"></td>
+                    <th>Directly Incurred Costs</th>
+                    <th>£</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>i Associate(s) employment costs</td>
+                    <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
                 </tr>
                 <tr>
-                    <td>vi Associate Estates provision</td>
-                    <td th:text="${model.ktpFinanceModel.associateEstateCosts.cost}"></td>
+                    <td>ii Associate development</td>
+                    <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
                 </tr>
-            </th:block>
-            <tr>
-                <td>vii Mentoring Support</td>
-                <td th:text="${model.ktpFinanceModel.otherCosts.cost}"></td>
-            </tr>
-            <tr>
-                <th>Indirect Costs</th>
-                <th></th>
-            </tr>
-            <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
                 <tr>
-                    <td>viii Additional Associate Support</td>
-                    <td th:text="${model.ktpFinanceModel.additionalSupportCosts.cost}"></td>
+                    <td>iii Travel and subsistence</td>
+                    <td th:text="${model.ktpFinanceModel.travelAndSubsistence.cost}"></td>
                 </tr>
-            </th:block>
-            </tbody>
-        </table>
+                <tr>
+                    <td>iv Consumables</td>
+                    <td th:text="${model.ktpFinanceModel.consumables.cost}"></td>
+                </tr>
+                <tr>
+                    <th>Directly Allocated Costs</th>
+                    <th></th>
+                </tr>
+                <!--th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}"-->
+                    <tr>
+                        <td>v Knowledge base supervisor</td>
+                        <td th:text="${model.ktpFinanceModel.knowledgeBaseSupervisor.cost}"></td>
+                    </tr>
+                    <tr>
+                        <td>vi Associate Estates provision</td>
+                        <td th:text="${model.ktpFinanceModel.associateEstateCosts.cost}"></td>
+                    </tr>
+                <!--/th:block-->
+                <tr>
+                    <td>vii Mentoring Support</td>
+                    <td th:text="${model.ktpFinanceModel.otherCosts.cost}"></td>
+                </tr>
+                <tr>
+                    <th>Indirect Costs</th>
+                    <th></th>
+                </tr>
+                <!--th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}"-->
+                    <tr>
+                        <td>viii Additional Associate Support</td>
+                        <td th:text="${model.ktpFinanceModel.additionalSupportCosts.cost}"></td>
+                    </tr>
+                <!--/th:block-->
+                </tbody>
+            </table>
 
-        <br><br>
-        <p>Table 2 – non-fEC</p>
-        <table class="letter-table">
-            <thead>
-            <tr>
-                <th></th>
-                <th>£</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>a. Associate(s) Employment Costs</td>
-                <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
-            </tr>
-            <tr>
-                <td>b. Academic and Secretarial Support</td>
-                <td th:text="${model.ktpFinanceModel.academicAndSecretarialSupport.cost}"></td>
-            </tr>
-            <tr>
-                <td>c. Associate(s) development</td>
-                <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
-            </tr>
-            <tr>
-                <td>d. Travel and Subsistence</td>
-                <td th:text="${model.ktpFinanceModel.travelAndSubsistence.cost}"></td>
-            </tr>
-            <tr>
-                <td>e. Equipment, consumables and other costs</td>
-                <td th:text="${model.ktpFinanceModel.consumables.cost + model.ktpFinanceModel.otherCosts.cost}"></td>
-            </tr>
-            <tr>
-                <th>TOTAL of expenditure defrayed on the Partnership</th>
-                <th th:text="${model.ktpFinanceModel.getTable2TotalCost()}">TOTAL</th>
-            </tr>
-            </tbody>
-        </table>
-        <br><br>
+            <br><br>
+        </th:block>
+
+        <th:block th:if="${model.ktpFinanceModel.fecModelDisabled}">
+            <p>Table 2 – non-fEC</p>
+            <table class="letter-table">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>£</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>a. Associate(s) Employment Costs</td>
+                    <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
+                </tr>
+                <tr>
+                    <td>b. Academic and Secretarial Support</td>
+                    <td th:text="${model.ktpFinanceModel.academicAndSecretarialSupport.cost}"></td>
+                </tr>
+                <tr>
+                    <td>c. Associate(s) development</td>
+                    <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
+                </tr>
+                <tr>
+                    <td>d. Travel and Subsistence</td>
+                    <td th:text="${model.ktpFinanceModel.travelAndSubsistence.cost}"></td>
+                </tr>
+                <tr>
+                    <td>e. Equipment, consumables and other costs</td>
+                    <td th:text="${model.ktpFinanceModel.consumables.cost + model.ktpFinanceModel.otherCosts.cost}"></td>
+                </tr>
+                <tr>
+                    <th>TOTAL of expenditure defrayed on the Partnership</th>
+                    <th th:text="${model.ktpFinanceModel.getTable2TotalCost()}">TOTAL</th>
+                </tr>
+                </tbody>
+            </table>
+            <br><br>
+        </th:block>
+
         <p>
             <strong>Signed:</strong> ______________________________________________ <br><br>
         </p>
