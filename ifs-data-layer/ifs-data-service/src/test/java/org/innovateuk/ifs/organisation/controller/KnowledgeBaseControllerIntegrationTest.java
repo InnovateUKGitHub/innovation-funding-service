@@ -51,7 +51,7 @@ public class KnowledgeBaseControllerIntegrationTest extends BaseControllerIntegr
     public void getKnowledgeBaseNames() {
         RestResult<List<String>> result = controller.getKnowledgeBaseNames();
         assertTrue(result.isSuccess());
-        assertEquals(445, result.getSuccess().size());
+        assertEquals(489, result.getSuccess().size());
     }
 
     @Test
