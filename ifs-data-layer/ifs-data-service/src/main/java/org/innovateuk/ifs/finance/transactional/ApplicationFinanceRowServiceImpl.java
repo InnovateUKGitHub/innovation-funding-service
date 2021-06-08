@@ -36,6 +36,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@SuppressWarnings("unchecked")
 @Service
 public class ApplicationFinanceRowServiceImpl extends BaseTransactionalService implements ApplicationFinanceRowService {
 

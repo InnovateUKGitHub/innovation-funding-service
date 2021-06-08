@@ -19,6 +19,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 
+@SuppressWarnings("unchecked")
 @Component
 public class FinanceValidationUtil {
     private final static Log LOG = LogFactory.getLog(FinanceValidationUtil.class);

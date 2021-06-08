@@ -38,6 +38,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
+@SuppressWarnings("unchecked")
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "YOUR_FUNDING_APPLICANT", description = "Applicants can all fill out the Your Funding section of the application.")

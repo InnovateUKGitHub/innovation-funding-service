@@ -80,6 +80,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SuppressWarnings("unchecked")
 public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMockMVCTest<ProjectFinanceChecksController> {
 
     private Long projectId = 123L;

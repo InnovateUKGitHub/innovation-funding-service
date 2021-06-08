@@ -22,6 +22,7 @@ public class DocumentViewModel {
     private final boolean projectManager;
     private final boolean projectIsActive;
     private final boolean isSuperAdminUser;
+    private final boolean userCanApproveOrRejectDocuments;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -34,7 +35,8 @@ public class DocumentViewModel {
                              String statusComments,
                              boolean projectManager,
                              boolean projectIsActive,
-                             boolean isSuperAdminUser) {
+                             boolean isSuperAdminUser,
+                             boolean userCanApproveOrRejectDocuments) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -47,6 +49,7 @@ public class DocumentViewModel {
         this.projectManager = projectManager;
         this.projectIsActive = projectIsActive;
         this.isSuperAdminUser = isSuperAdminUser;
+        this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
     }
 
     public long getProjectId() {
@@ -95,6 +98,10 @@ public class DocumentViewModel {
 
     public boolean isSuperAdminUser() {
         return isSuperAdminUser;
+    }
+
+    public boolean isUserCanApproveOrRejectDocuments() {
+        return userCanApproveOrRejectDocuments;
     }
 
     public boolean isEditable() {

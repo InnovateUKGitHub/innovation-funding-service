@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuil
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("unchecked")
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class CompetitionSearchPopulatorTest {
 
