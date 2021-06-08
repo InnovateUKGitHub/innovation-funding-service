@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGe
 import static org.innovateuk.ifs.finance.resource.cost.ProcurementCostCategoryGenerator.VAT;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 
+@SuppressWarnings("unchecked")
 @Component
 public class ProcurementMilestonesSpendProfileFigureDistributer {
 

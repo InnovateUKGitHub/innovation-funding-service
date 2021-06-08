@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_C
 import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
 import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
 
+@SuppressWarnings("unchecked")
 @Component
 public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<TermsAndConditionsReadOnlyViewModel> {
 

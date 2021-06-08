@@ -10,7 +10,11 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentDecision;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.MultipartFileAssertionUtil;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -30,7 +34,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_P
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +53,12 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
     @Mock
     private DocumentsRestService documentsRestService;
+
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Test
     public void viewAllDocuments() throws Exception {
@@ -367,7 +379,31 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
 
         mockMvc.perform(
                 post("/project/" + projectId + "/document/config/" + documentConfigId)
-                        .param("submitDocument", ""))
+                        .param("submitDocument", "")
+                        .param("isMOJourneyUpdateEnabled", "false"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
+
+        verify(documentsRestService).submitDocument(projectId, documentConfigId);
+    }
+
+
+    @Test
+    public void submitDocumentAndSendNotificationToMO() throws Exception {
+
+        long projectId = 1L;
+        long documentConfigId = 2L;
+        MonitoringOfficerResource monitoringOfficerResource = newMonitoringOfficerResource().build();
+        UserResource userResource = newUserResource().build();
+
+        when(documentsRestService.submitDocument(projectId, documentConfigId)).thenReturn(restSuccess());
+        when(monitoringOfficerRestService.findMonitoringOfficerForProject(projectId)).thenReturn(restSuccess(monitoringOfficerResource));
+        when(userRestService.findUserByEmail(monitoringOfficerResource.getEmail())).thenReturn(restSuccess(userResource));
+        when(monitoringOfficerRestService.sendDocumentReviewNotification(projectId, userResource.getId())).thenReturn(restSuccess());
+        mockMvc.perform(
+                post("/project/" + projectId + "/document/config/" + documentConfigId)
+                        .param("submitDocument", "")
+                        .param("isMOJourneyUpdateEnabled", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + projectId + "/document/config/" + documentConfigId));
 

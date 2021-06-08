@@ -13,6 +13,7 @@ public class GraphBuilderContext {
 
     private Map<Object, Object> refs = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public <T> T resource(Object domain, Supplier<T> constructor, Consumer<T> populator) {
         if (domain == null) {
             return null;

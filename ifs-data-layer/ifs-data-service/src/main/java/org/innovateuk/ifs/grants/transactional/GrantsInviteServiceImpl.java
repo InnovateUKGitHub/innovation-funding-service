@@ -56,6 +56,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@SuppressWarnings("unchecked")
 @Service
 public class GrantsInviteServiceImpl extends BaseTransactionalService implements GrantsInviteService {
 

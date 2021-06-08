@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.user.resource.Authority.SUPER_ADMIN_USER;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -74,9 +74,7 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        boolean userCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled && (loggedInUser.hasRole(IFS_ADMINISTRATOR) || isMonitoringOfficer(loggedInUserId, projectId));
-
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), userCanApproveOrRejectDocuments);
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement(), userCanApproveOrRejectDocuments(projectId, loggedInUser));
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -104,9 +102,6 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        // if isMOJourneyUpdateEnabled toggle is set to false, IFSAdmin CompAdmin and Finance user can approve (excluding MO). If set to True, MO can also approve.
-        boolean userCanApproveOrRejectDocuments = !isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR) : loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, MONITORING_OFFICER);
-
         return new DocumentViewModel(project.getId(),
                 project.getName(),
                 project.getApplication(),
@@ -118,50 +113,42 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUser.getId(), projectId),
                 project.getProjectState().isActive(),
-                loggedInUser.hasAuthority(SUPER_ADMIN_USER),
-                userCanApproveOrRejectDocuments,
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
+                userCanApproveOrRejectDocuments(projectId, loggedInUser),
                 getNameStatusModifiedBy(projectDocument),
                 getStatusModifiedDate(projectDocument),
                 isStatusModifiedByLoggedInUser(loggedInUser.getId(), projectDocument),
                 statusModifiedByMO(projectId, projectDocument));
     }
 
+    private boolean userCanApproveOrRejectDocuments(long projectId, UserResource loggedInUser) {
+        return isMOJourneyUpdateEnabled ? (loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPER_ADMIN_USER) || isMonitoringOfficer(loggedInUser.getId(), projectId)) : loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER);
+    }
+
     private LocalDate getStatusModifiedDate(Optional<ProjectDocumentResource> projectDocumentResource) {
-        if (projectDocumentResource.isPresent()) {
-            if (projectDocumentResource.get().getModifiedDate() != null) {
-                return LocalDate.from(projectDocumentResource.get().getModifiedDate());
-            }
-            return null;
+        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getModifiedDate() != null) {
+            return LocalDate.from(projectDocumentResource.get().getModifiedDate());
         }
         return null;
     }
 
     private String getNameStatusModifiedBy(Optional<ProjectDocumentResource> projectDocumentResource) {
-        if (projectDocumentResource.isPresent()) {
-            if (projectDocumentResource.get().getModifiedBy().getName() != null) {
-                return projectDocumentResource.get().getModifiedBy().getName();
-            }
-            return null;
+        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getModifiedBy().getName() != null) {
+            return projectDocumentResource.get().getModifiedBy().getName();
         }
         return null;
     }
 
     private boolean isStatusModifiedByLoggedInUser(long loggedInUser, Optional<ProjectDocumentResource> projectDocumentResource) {
-        if (projectDocumentResource.isPresent()) {
-            if(projectDocumentResource.get().getModifiedBy().getId() != null) {
-                return projectDocumentResource.get().getModifiedBy().getId() == loggedInUser;
-            }
-            return false;
+        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getModifiedBy().getId() != null) {
+            return projectDocumentResource.get().getModifiedBy().getId() == loggedInUser;
         }
         return false;
     }
 
     private boolean statusModifiedByMO(long projectId, Optional<ProjectDocumentResource> projectDocumentResource) {
-        if (projectDocumentResource.isPresent()) {
-            if (projectDocumentResource.get().getModifiedBy().getId() != null) {
-                return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, projectDocumentResource.get().getModifiedBy().getId()).getSuccess();
-            }
-            return false;
+        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getModifiedBy().getId() != null) {
+            return monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, projectDocumentResource.get().getModifiedBy().getId()).getSuccess();
         }
         return false;
     }
