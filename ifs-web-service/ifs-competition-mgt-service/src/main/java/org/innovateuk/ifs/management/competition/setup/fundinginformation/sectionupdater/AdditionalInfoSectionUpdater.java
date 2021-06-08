@@ -17,6 +17,7 @@ import java.util.ArrayList;
 /**
  * Competition setup section saver for the additional info section.
  */
+@SuppressWarnings("unchecked")
 @Service
 public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 

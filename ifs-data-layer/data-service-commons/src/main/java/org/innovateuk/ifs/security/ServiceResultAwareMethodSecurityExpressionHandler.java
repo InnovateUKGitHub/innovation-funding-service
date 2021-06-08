@@ -12,6 +12,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 /**
  *
  */
+@SuppressWarnings("unchecked")
 public class ServiceResultAwareMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
 
     @Override
