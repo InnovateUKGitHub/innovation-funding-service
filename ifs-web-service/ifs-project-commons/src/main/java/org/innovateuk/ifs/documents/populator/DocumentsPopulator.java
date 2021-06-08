@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
+import org.innovateuk.ifs.user.resource.Authority;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.user.resource.Authority.SUPER_ADMIN_USER;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -102,7 +102,7 @@ public class DocumentsPopulator {
                 .map(FileDetailsViewModel::new)
                 .orElse(null);
 
-        boolean userCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER) : loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
+        boolean userCanApproveOrRejectDocuments = isMOJourneyUpdateEnabled ? loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, MONITORING_OFFICER, SUPER_ADMIN_USER) : loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER);
 
         return new DocumentViewModel(project.getId(),
                 project.getName(),
@@ -115,7 +115,7 @@ public class DocumentsPopulator {
                 projectDocument.map(ProjectDocumentResource::getStatusComments).orElse(""),
                 isProjectManager(loggedInUser.getId(), projectId),
                 project.getProjectState().isActive(),
-                loggedInUser.hasAuthority(SUPER_ADMIN_USER),
+                loggedInUser.hasAuthority(Authority.SUPER_ADMIN_USER),
                 userCanApproveOrRejectDocuments);
     }
 
