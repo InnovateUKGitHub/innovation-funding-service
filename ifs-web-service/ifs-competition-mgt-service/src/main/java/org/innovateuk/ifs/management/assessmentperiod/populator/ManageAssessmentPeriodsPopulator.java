@@ -19,7 +19,7 @@ public class ManageAssessmentPeriodsPopulator {
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return new ManageAssessmentPeriodsViewModel(competitionResource, new PaginationViewModel(pageResult));
+        return new ManageAssessmentPeriodsViewModel(competitionResource, new PaginationViewModel(pageResult, false));
     }
 
 

@@ -12,6 +12,8 @@ public class ApplicationCountDocs {
             fieldWithPath("totalPages").description("The total number of pages of application counts"),
             fieldWithPath("number").description("Current page number"),
             fieldWithPath("size").description("The size of a page"),
+            fieldWithPath("lastPage").description("Is this the last page"),
+            fieldWithPath("lastPageFull").description("Is the last page full"),
             fieldWithPath("content").description("The list of application counts"),
             fieldWithPath("content.[].id").description("ID of the application"),
             fieldWithPath("content.[].name").description("Name of the application"),

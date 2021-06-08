@@ -28,11 +28,9 @@ import javax.naming.directory.DirContext;
 import javax.naming.ldap.LdapName;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+@SuppressWarnings("unchecked")
 @Service
 public class IdentityServices implements CreateIdentityService, FindIdentityService, UpdateIdentityService,
     DeleteIdentityService, ActivateUserService, UserAccountLockoutService {
@@ -246,14 +244,13 @@ public class IdentityServices implements CreateIdentityService, FindIdentityServ
     private Attributes getPwdAccountLockedTimeAttributes(final UUID uuid) {
         try {
             LdapName name = new LdapName("uid=" + uuid.toString());
-            Attributes attributes = (Attributes) ldapTemplate.lookup(name, new String[]{lockedUntilAttrib},
+            return (Attributes) ldapTemplate.lookup(name, new String[]{lockedUntilAttrib},
                     new AbstractContextMapper() {
                         @Override
                         protected Object doMapFromContext(DirContextOperations ctx) {
                             return ctx.getAttributes();
                         }
                     });
-            return attributes;
         } catch (InvalidNameException e) {
             LOG.error("Invalid LDAP name getting " + lockedUntilAttrib + " for user " + uuid.toString(), e);
             return null;

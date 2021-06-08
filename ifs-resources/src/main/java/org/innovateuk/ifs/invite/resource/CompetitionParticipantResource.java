@@ -35,6 +35,7 @@ public class CompetitionParticipantResource {
     private CompetitionStatus competitionStatus;
     private Boolean competitionAlwaysOpen;
     private AssessmentPeriodResource assessmentPeriod;
+    private long assessmentPeriodNumber;
     private Clock clock = Clock.systemDefaultZone();
 
     public CompetitionParticipantResource() {
@@ -44,7 +45,7 @@ public class CompetitionParticipantResource {
                                           RejectionReasonResource rejectionReason, String rejectionReasonComment, CompetitionParticipantRoleResource role,
                                           ParticipantStatusResource status, String competitionName, ZonedDateTime assessorAcceptsDate,
                                           ZonedDateTime assessorDeadlineDate, CompetitionStatus competitionStatus, Boolean competitionAlwaysOpen,
-                                          AssessmentPeriodResource assessmentPeriod) {
+                                          AssessmentPeriodResource assessmentPeriod, long assessmentPeriodNumber) {
         this.id = id;
         this.competitionId = competitionId;
         this.userId = userId;
@@ -59,6 +60,7 @@ public class CompetitionParticipantResource {
         this.competitionStatus = competitionStatus;
         this.competitionAlwaysOpen = competitionAlwaysOpen;
         this.assessmentPeriod = assessmentPeriod;
+        this.assessmentPeriodNumber = assessmentPeriodNumber;
     }
 
     public String getCompetitionName() {
@@ -197,6 +199,14 @@ public class CompetitionParticipantResource {
         this.assessmentPeriod = assessmentPeriod;
     }
 
+    public long getAssessmentPeriodNumber() {
+        return assessmentPeriodNumber;
+    }
+
+    public void setAssessmentPeriodNumber(long assessmentPeriodNumber) {
+        this.assessmentPeriodNumber = assessmentPeriodNumber;
+    }
+
     @JsonIgnore
     public boolean isAccepted() {
         return status == ParticipantStatusResource.ACCEPTED;
@@ -275,6 +285,7 @@ public class CompetitionParticipantResource {
                 .append(competitionStatus, that.competitionStatus)
                 .append(competitionAlwaysOpen, that.competitionAlwaysOpen)
                 .append(assessmentPeriod, that.assessmentPeriod)
+                .append(assessmentPeriodNumber, that.assessmentPeriodNumber)
                 .append(clock, that.clock)
                 .isEquals();
     }
@@ -299,6 +310,7 @@ public class CompetitionParticipantResource {
                 .append(competitionStatus)
                 .append(competitionAlwaysOpen)
                 .append(assessmentPeriod)
+                .append(assessmentPeriodNumber)
                 .append(clock)
                 .toHashCode();
     }

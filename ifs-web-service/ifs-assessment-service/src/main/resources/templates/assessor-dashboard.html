@@ -83,7 +83,7 @@
                             <li th:each="activeCompetition : ${model.activeCompetitions}">
                                 <div class="task">
                                     <th:block th:if="${activeCompetition.competitionAlwaysOpen}">
-                                        <strong class="govuk-heading-s govuk-!-margin-0 govuk-!-margin-bottom-2">Batch assessment</strong>
+                                        <strong class="govuk-heading-s govuk-!-margin-0 govuk-!-margin-bottom-2" th:text="|Batch assessment ${activeCompetition.batchIndex}|">Batch assessment 1</strong>
                                     </th:block>
                                     <h3 class="govuk-heading-s"><a class="govuk-link"
                                         th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"

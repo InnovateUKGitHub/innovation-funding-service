@@ -494,7 +494,7 @@ public class ExperianEndpointController {
     }
 
     private static Map<AccountDetails, SilExperianError> buildOtherErrorsDuringVerification() {
-        Map otherErrorsDuringVerification = new HashMap<>();
+        Map<AccountDetails, SilExperianError> otherErrorsDuringVerification = new HashMap<>();
         otherErrorsDuringVerification.put(
                 fromJson("{\n" +
                         "  \"sortcode\":\"404745\",\n" +

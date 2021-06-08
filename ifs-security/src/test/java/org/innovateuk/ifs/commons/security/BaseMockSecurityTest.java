@@ -54,6 +54,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected <T> T getMockPermissionRulesBean(Class<T> clazz) {
         return (T) mockPermissionRulesBeans.get(clazz);
     }
@@ -66,6 +67,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected <T> T getMockPermissionEntityLookupStrategiesBean(Class<T> clazz) {
         return (T) mockPermissionEntityLookupStrategies.get(clazz);
     }

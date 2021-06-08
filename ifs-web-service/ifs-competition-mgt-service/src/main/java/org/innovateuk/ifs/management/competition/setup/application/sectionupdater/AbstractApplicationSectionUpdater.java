@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 
-
+@SuppressWarnings("unchecked")
 public abstract class AbstractApplicationSectionUpdater<T extends AbstractQuestionForm> extends AbstractSectionUpdater {
 
     @Autowired
