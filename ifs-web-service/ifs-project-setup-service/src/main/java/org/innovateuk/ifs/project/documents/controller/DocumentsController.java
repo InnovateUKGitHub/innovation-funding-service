@@ -8,8 +8,12 @@ import org.innovateuk.ifs.documents.populator.DocumentsPopulator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.documents.form.DocumentForm;
 import org.innovateuk.ifs.project.documents.service.DocumentsRestService;
+import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +44,15 @@ public class DocumentsController {
     private DocumentsPopulator populator;
 
     private DocumentsRestService documentsRestService;
+
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
+    @Autowired
+    private UserRestService userRestService;
+
+    @Value("${ifs.monitoringofficer.journey.update.enabled}")
+    private boolean isMOJourneyUpdateEnabled;
 
     public DocumentsController() {
     }
@@ -156,9 +169,21 @@ public class DocumentsController {
         Supplier<String> failureView = () -> doViewDocument(projectId, documentConfigId, model, loggedInUser, form);
 
         RestResult<Void> result = documentsRestService.submitDocument(projectId, documentConfigId);
-
+        if(isMOJourneyUpdateEnabled && result.isSuccess()) {
+            sendDocumentReviewNotificationToMO(projectId);
+        }
         return validationHandler.addAnyErrors(result, asGlobalErrors()).
                 failNowOrSucceedWith(failureView, successView);
+    }
+
+    private void sendDocumentReviewNotificationToMO(long projectId) {
+            Optional<MonitoringOfficerResource> monitoringOfficer  = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();;
+            if (monitoringOfficer.isPresent()) {
+                  Optional<UserResource> moUser= userRestService.findUserByEmail(monitoringOfficer.get().getEmail()).getOptionalSuccessObject();
+                  if (moUser.isPresent()) {
+                      monitoringOfficerRestService.sendDocumentReviewNotification(projectId, moUser.get().getId());
+                  }
+               }
     }
 }
 
