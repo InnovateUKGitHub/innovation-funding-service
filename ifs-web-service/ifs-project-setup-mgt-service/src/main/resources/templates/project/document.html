@@ -60,11 +60,6 @@
                 <h3 class="govuk-heading-s">Reason for rejection</h3>
                 <p class="govuk-body" th:text="${model.statusComments}"></p>
             </th:block>
-            <th:block th:unless="${model.status.name() == 'SUBMITTED'}">
-                <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
-                </div>
-            </th:block>
 
             <th:block th:if="${model.isShowRejectDocumentButtonWhenDocumentIsApproved()}">
                 <th:block th:if="${model.status.name() == 'APPROVED' and model.projectIsActive}">
@@ -82,13 +77,9 @@
                     <button class="govuk-button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
                 </th:block>
             </th:block>
+
             <th:block th:unless="${model.status.name() == 'SUBMITTED'}">
-                <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
-                </div>
-            </th:block>
-            <th:block th:if="${model.status.name() == 'SUBMITTED' and !model.userCanApproveOrRejectDocuments}">
-                <div class="govuk-!-margin-top-6">
+                <div class="govuk-!-margin-top-9">
                     <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
                 </div>
             </th:block>
