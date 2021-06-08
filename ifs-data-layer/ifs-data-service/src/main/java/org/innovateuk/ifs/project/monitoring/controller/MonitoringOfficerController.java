@@ -73,4 +73,9 @@ public class MonitoringOfficerController {
         return monitoringOfficerService.isMonitoringOfficer(userId).toGetResponse();
     }
 
+    @PostMapping("/{projectId}/notify/{userId}")
+    public RestResult<Void> sendDocumentReviewNotification(@PathVariable long projectId, @PathVariable long userId) {
+        return monitoringOfficerService.sendDocumentReviewNotification(projectId, userId).toPostResponse();
+    }
+
 }
