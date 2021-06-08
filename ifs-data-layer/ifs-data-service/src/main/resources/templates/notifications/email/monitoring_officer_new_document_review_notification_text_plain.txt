@@ -1,0 +1,18 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+A new document has been uploaded by the project manager for this project:
+${applicationId} : ${applicationName}
+
+Please sign into your Innovate UK dashboard:${dashboardUrl} and review the
+document in the project setup section.
+
+The project cannot start until you approve this document.
+
+Yours sincerely
+
+Innovate UK, part of UK Research and Innovation
+Tel: 0300 321 4357
+Email: competitions@innovateuk.ukri.org
+</@layout.defaultPlainText>

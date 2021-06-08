@@ -61,6 +61,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * to the next chained Future being executed, leading to more consistent behaviour (at the slight cost of slightly less
  * available parallelisation)
  */
+@SuppressWarnings("unchecked")
 abstract class BaseCompletableFutureTupleHandler {
 
     private static final Log LOG = LogFactory.getLog(BaseCompletableFutureTupleHandler.class);

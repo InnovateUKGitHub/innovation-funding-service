@@ -29,4 +29,6 @@ public interface MonitoringOfficerRestService {
     RestResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId);
 
     RestResult<Boolean> isMonitoringOfficer(long userId);
+
+    RestResult<Void> sendDocumentReviewNotification(long projectId, long userId);
 }

@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 /**
  * Interceptor to add Google Analytics data layer to the Model.
  */
+@SuppressWarnings("unchecked")
 public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapter {
     static final String ANALYTICS_DATA_LAYER_NAME = "dataLayer";
 
