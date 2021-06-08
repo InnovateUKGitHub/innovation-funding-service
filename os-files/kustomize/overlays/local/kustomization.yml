@@ -1,12 +1,10 @@
 commonAnnotations:
   deployedWith: kustomize
   environment: local
-namePrefix: local-
 configMapGenerator:
   - name: spring-profile-env
     literals:
       - SPRING_PROFILES_ACTIVE=LOCAL
-
 bases:
   - ../../base
 
