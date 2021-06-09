@@ -16,7 +16,7 @@
               th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
     <th:block th:if="${model.isMOCanApproveOrRejectDocuments}"
               th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to Monitor project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+              th:with="linkTitle='Back to monitor project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
