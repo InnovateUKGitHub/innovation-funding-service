@@ -30,7 +30,8 @@ public enum Role implements Identifiable {
     EXTERNAL_FINANCE            (22, "External finance reviewer", Authority.EXTERNAL_FINANCE),
     KNOWLEDGE_TRANSFER_ADVISER  (23, "Knowledge transfer adviser", Authority.KNOWLEDGE_TRANSFER_ADVISER, Authority.ASSESSOR, Authority.MONITORING_OFFICER),
     SUPPORTER                   (24, "Supporter", Authority.SUPPORTER),
-    SUPER_ADMIN_USER            (25, "Super Admin User", Authority.SUPER_ADMIN_USER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN);
+    SUPER_ADMIN_USER            (25, "Super Admin User", Authority.SUPER_ADMIN_USER, Authority.IFS_ADMINISTRATOR, Authority.PROJECT_FINANCE, Authority.COMP_ADMIN),
+    AUDITOR                     (26, "Auditor", Authority.STAKEHOLDER, Authority.PROJECT_FINANCE);
 
     final long id;
     final String displayName;
@@ -70,20 +71,24 @@ public enum Role implements Identifiable {
         return this == SUPER_ADMIN_USER;
     }
 
+    public boolean isAuditor() {
+        return this == AUDITOR;
+    }
+
     public static Set<Role> internalRoles() {
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD, SUPER_ADMIN_USER);
     }
 
     public static Set<Role> inviteExternalRoles() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, AUDITOR);
     }
 
     public static Set<Role> externalRoles() {
-        return EnumSet.of(APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
+        return EnumSet.of(APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, AUDITOR);
     }
 
     public static List<Role> multiDashboardRoles() {
-        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
+        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER, AUDITOR);
     }
 
     public static boolean containsMultiDashboardRole(Collection<Role> roles) {
@@ -95,6 +100,6 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> externalRolesToInvite() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, AUDITOR);
     }
 }
