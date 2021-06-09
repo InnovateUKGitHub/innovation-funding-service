@@ -19,7 +19,7 @@ build:
     useDockerCLI: false
     useBuildkit: false
     tryImportMissing: true
-    push: true
+    push: false
 deploy:
   statusCheckDeadlineSeconds: 600
   kustomize:
