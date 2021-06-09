@@ -11,10 +11,16 @@
 <div class="govuk-width-container">
 
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+    <th:block th:unless="${model.isMOCanApproveOrRejectDocuments}"
+              th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+    <th:block th:if="${model.isMOCanApproveOrRejectDocuments}"
+              th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to monitor project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
-	<main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
 
         <th:block th:if="${model.projectManager}">
 	       <p class="govuk-body govuk-!-margin-top-6">You can upload and submit additional documents to support your application.</p>
@@ -34,18 +40,9 @@
             <li th:each="document : ${model.documents}">
                 <div class="task">
                     <span class="govuk-heading-s">
-                        <div th:unless="${model.userCanApproveOrRejectDocuments}">
-                            <a th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
-                               th:text=${document.title}
-                               class="govuk-link" />
-                        </div>
-                        <div th:if="${model.userCanApproveOrRejectDocuments}">
-                            <a th:unless="${document.notSubmitted}"
-                               th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
-                               th:text=${document.title}
-                               class="govuk-link" />
-                            <div th:if="${document.notSubmitted}" th:text=${document.title}></div>
-                        </div>
+                        <a th:href="@{/project/{id}/document/config/{documentConfigId}(id=${model.projectId}, documentConfigId=${document.documentConfigId})}"
+                           th:text=${document.title}
+                           class="govuk-link" />
                     </span>
                 </div>
                 <th:block th:unless="${model.userCanApproveOrRejectDocuments}">
