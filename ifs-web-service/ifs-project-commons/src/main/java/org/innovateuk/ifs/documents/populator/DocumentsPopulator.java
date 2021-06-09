@@ -26,8 +26,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.project.document.resource.DocumentStatus.APPROVED;
+import static org.innovateuk.ifs.user.resource.Authority.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindAny;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -122,18 +124,19 @@ public class DocumentsPopulator {
     }
 
     private boolean userCanApproveOrRejectDocuments(long projectId, UserResource loggedInUser) {
-        return isMOJourneyUpdateEnabled ? (loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPER_ADMIN_USER) || isMonitoringOfficer(loggedInUser.getId(), projectId)) : loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR, SUPER_ADMIN_USER);
+        return isMOJourneyUpdateEnabled ? (loggedInUser.hasAuthority(IFS_ADMINISTRATOR) || isMonitoringOfficer(loggedInUser.getId(), projectId)) : loggedInUser.hasAnyAuthority(asList(IFS_ADMINISTRATOR, COMP_ADMIN, PROJECT_FINANCE));
     }
 
+    // to handle historic documents
     private LocalDate getStatusModifiedDate(Optional<ProjectDocumentResource> projectDocumentResource) {
-        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getModifiedDate() != null) {
+        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getStatus() != APPROVED && projectDocumentResource.get().getModifiedDate() != null) {
             return LocalDate.from(projectDocumentResource.get().getModifiedDate());
         }
         return null;
     }
 
     private String getNameStatusModifiedBy(Optional<ProjectDocumentResource> projectDocumentResource) {
-        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getModifiedBy().getName() != null) {
+        if (projectDocumentResource.isPresent() && projectDocumentResource.get().getStatus() != APPROVED && projectDocumentResource.get().getModifiedBy().getName() != null) {
             return projectDocumentResource.get().getModifiedBy().getName();
         }
         return null;
