@@ -3680,8 +3680,7 @@
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
     <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Additional costs</h2>
-        <p class="govuk-body">These are not part of the proposed projects’ eligible costs.<br>
-            These must be completed by the business partner.</p>
+        <p class="govuk-body">These are not part of the proposed project’s eligible costs.</p>
         <div class="govuk-accordion" data-module="govuk-accordion">
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
@@ -3868,8 +3867,7 @@ ACADEMIC_AND_SECRETARIAL_SUPPORT
 
             <th:block th:unless="${model.isReadOnly()}">
                 <th:block th:unless="${model.internal}">
-                    <p class="govuk-body">You may enter up to £875 multiplied by the number of months your project will run.
-                    </p>
+                    <p class="govuk-body">You may enter up to £875 multiplied by the number of months your project will run.</p>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="academic-secretarial-costs-table">
