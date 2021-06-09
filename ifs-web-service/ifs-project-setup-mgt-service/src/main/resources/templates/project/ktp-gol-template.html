@@ -173,7 +173,7 @@
 
             <ol class="govuk-list ifs-list--number">
                 <li class="regular">
-                    I am pleased to inform you that Innovate UK, part of UK Research and Innovation (“Innovate UK”) acting on behalf of government funding organisations, is prepared to offer <th:block th:text="${model.leadOrgName}" />  ("the Knowledge Base Partner") a grant not exceeding [£<th:block th:text="${model.ktpFinanceModel.getTable1TotalFunding()}">table1</th:block> (fEC) or £<th:block th:text="${model.ktpFinanceModel.getTable2TotalFunding()}">table1</th:block> (non-fEC)] under Section 96 of the Higher Education and Research Act 2017. This is towards the Knowledge Base Partner’s costs of undertaking with <th:block th:text="${model.partnerOrgName}" /> (“the Business”) a Knowledge Transfer Partnership (“the Partnership”) in accordance with the application submitted to Innovate UK. This award is subject to the terms and conditions of this grant offer letter (GOL) and its Schedules.
+                    I am pleased to inform you that Innovate UK, part of UK Research and Innovation (“Innovate UK”) acting on behalf of government funding organisations, is prepared to offer <th:block th:text="${model.leadOrgName}" />  ("the Knowledge Base Partner") a grant not exceeding £<th:block th:text="${model.ktpFinanceModel.fecModelDisabled ? model.ktpFinanceModel.getTable2TotalFunding() : model.ktpFinanceModel.getTable1TotalFunding()}">table</th:block> under Section 96 of the Higher Education and Research Act 2017. This is towards the Knowledge Base Partner’s costs of undertaking with <th:block th:text="${model.partnerOrgName}" /> (“the Business”) a Knowledge Transfer Partnership (“the Partnership”) in accordance with the application submitted to Innovate UK. This award is subject to the terms and conditions of this grant offer letter (GOL) and its Schedules.
                 </li>
                 <li class="regular">
                     <p>The funding organisation(s) that have agreed to fund the grant to the Partnership at the time of issuing this GOL are identified above.  During the Partnership, some or all of the funding may be reallocated to other funding organisations.</p>
@@ -481,7 +481,6 @@
         <br><br>
 
         <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
-            <p>Table 1 - fEC</p>
             <table class="letter-table">
                 <thead>
                 <tr>
@@ -571,7 +570,6 @@
         </th:block>
 
         <th:block th:if="${model.ktpFinanceModel.fecModelDisabled}">
-            <p>Table 2 – non-fEC</p>
             <table class="letter-table">
                 <thead>
                 <tr>
@@ -674,7 +672,6 @@
         <p>b.	the <th:block th:text="${model.leadOrgName}" /> had during the period [enter date] to [enter date] defrayed expenditure, as defined in the GOL, on the categories of direct costs eligible for Government support as stated in Schedule 1 of the GOL as set out below:</p>
 
         <th:block th:unless="${model.ktpFinanceModel.fecModelDisabled}">
-            <p>Table 1 - fEC</p>
             <table class="letter-table">
                 <thead>
                 <tr>
@@ -730,7 +727,6 @@
         </th:block>
 
         <th:block th:if="${model.ktpFinanceModel.fecModelDisabled}">
-            <p>Table 2 – non-fEC</p>
             <table class="letter-table">
                 <thead>
                 <tr>
