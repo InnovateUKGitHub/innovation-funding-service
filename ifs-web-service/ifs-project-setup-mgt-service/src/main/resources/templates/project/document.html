@@ -107,6 +107,11 @@
                     <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
                 </div>
             </th:block>
+            <th:block th:if="${model.status.name() == 'SUBMITTED' and !model.userCanApproveOrRejectDocuments}">
+                <div class="govuk-!-margin-top-9">
+                    <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
+                </div>
+            </th:block>
 
         </form>
 
