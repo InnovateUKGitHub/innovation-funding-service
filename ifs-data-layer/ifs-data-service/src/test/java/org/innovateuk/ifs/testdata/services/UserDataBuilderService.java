@@ -78,7 +78,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber, role, organisation);
 
         UnaryOperator<S> verifyEmail = UnaryOperator.identity();
-        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, MONITORING_OFFICER, STAKEHOLDER).contains(role)) {
+        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, MONITORING_OFFICER, STAKEHOLDER, AUDITOR).contains(role)) {
             verifyEmail = BaseUserDataBuilder::verifyEmail;
         }
 
