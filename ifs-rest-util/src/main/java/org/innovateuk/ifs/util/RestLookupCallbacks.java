@@ -21,6 +21,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
  * Utility class to provide common use case wrappers that can be used to wrap callbacks that require either an entity or
  * some failure message if that entity cannot be found.
  */
+
+@SuppressWarnings("unchecked")
 public final class RestLookupCallbacks {
 
     private RestLookupCallbacks() {

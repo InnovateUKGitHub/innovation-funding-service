@@ -138,6 +138,7 @@ public class BaseBuilderAmendFunctions {
         return instance;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T addToList(String fieldName, Object value, T instance) {
 
         List<Object> existingList = (List<Object>) getField(instance, fieldName);
@@ -152,6 +153,7 @@ public class BaseBuilderAmendFunctions {
         return setField(fieldName, newList, instance);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T addListToList(String fieldName, List<?> value, T instance) {
 
         List<Object> existingList = (List<Object>) getField(instance, fieldName);

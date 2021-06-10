@@ -5,6 +5,8 @@ Documentation     IFS-6454  Ability to push projects through to ACC
 ...
 ...               IFS-8108  Default post award service to IFS PA
 ...
+...               IFS-9490  Content updated for Loans Project setup dashboard
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -95,9 +97,10 @@ Project Setup - view and update competition details link should not display for 
      Then the user should not see the element     link = ${viewAndUpdateCompetitionDetailsLink}
 
 Project Setup - Post award service link should not display for any other fund type except grant fund
-     [Documentation]   IFS-6454
+     [Documentation]   IFS-6454 IFS-9490
      Given log in as a different user             &{ifs_admin_user_credentials}
      And the user navigates to the page           ${NonPostAwardProjectSetupDashboard}
+     And The user should see the element          jQuery = th:contains("Complete project setup")
      When the user clicks the button/link         link = ${viewAndUpdateCompetitionDetailsLink}
      Then the user should not see the element     link = ${postAwardServiceLink}
 

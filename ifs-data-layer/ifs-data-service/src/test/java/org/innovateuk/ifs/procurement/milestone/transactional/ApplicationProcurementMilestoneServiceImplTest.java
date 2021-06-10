@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
 import org.innovateuk.ifs.procurement.milestone.mapper.ApplicationProcurementMilestoneMapper;
 import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
@@ -15,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +29,11 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneBuilder.newApplicationProcurementMilestone;
 import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneResourceBuilder.newApplicationProcurementMilestoneResource;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +53,9 @@ public class ApplicationProcurementMilestoneServiceImplTest {
 
     @Mock
     private ApplicationRepository applicationRepository;
+
+    @Mock
+    private ApplicationFinanceService applicationFinanceService;
 
     @Test
     public void getByApplicationIdAndOrganisationId() {
@@ -101,6 +110,46 @@ public class ApplicationProcurementMilestoneServiceImplTest {
 
         assertThat(result.isSuccess(), is(true));
         assertThat(result.getSuccess().getApplicationFinance(), is(finance));
+    }
+
+    @Test
+    public void arePaymentMilestonesEqualToFunding() {
+        long applicationId = 1L;
+        long organisationId = 2L;
+
+        ApplicationProcurementMilestone applicationProcurementMilestone =  newApplicationProcurementMilestone()
+                .withPayment(BigInteger.ZERO).build();
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
+
+        when(applicationFinanceService.financeDetails(applicationId, organisationId))
+                .thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId))
+                .thenReturn(Collections.singletonList(applicationProcurementMilestone));
+
+        ServiceResult<Boolean> result = service.arePaymentMilestonesEqualToFunding(applicationId, organisationId);
+
+        assertTrue(result.getSuccess());
+    }
+
+    @Test
+    public void arePaymentMilestonesEqualToFundingHandlesNullPaymentsForProcurementMilestone() {
+        long applicationId = 1L;
+        long organisationId = 2L;
+
+        ApplicationProcurementMilestone applicationProcurementMilestone =  newApplicationProcurementMilestone()
+                .build();
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
+
+        when(applicationFinanceService.financeDetails(applicationId, organisationId))
+                .thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId))
+                .thenReturn(Collections.singletonList(applicationProcurementMilestone));
+
+        ServiceResult<Boolean> result = service.arePaymentMilestonesEqualToFunding(applicationId, organisationId);
+
+        assertTrue(result.getSuccess());
     }
 
     @Test

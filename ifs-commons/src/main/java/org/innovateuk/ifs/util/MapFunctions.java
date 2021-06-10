@@ -30,6 +30,7 @@ public final class MapFunctions {
      * @param <R>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T, R> Map<T, R> asMap(Object... nameValuePairs) {
 
         if (nameValuePairs.length % 2 != 0) {

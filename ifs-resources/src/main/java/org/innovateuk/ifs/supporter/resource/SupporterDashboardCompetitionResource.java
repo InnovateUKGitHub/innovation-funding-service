@@ -71,8 +71,12 @@ public class SupporterDashboardCompetitionResource {
         this.supporterAcceptDate = supporterAcceptDate;
     }
 
-    public long getDaysLeft() {
-        return ChronoUnit.DAYS.between(ZonedDateTime.now(), supporterDeadlineDate);
+    public Long getDaysLeft() {
+        if (supporterDeadlineDate != null) {
+            return ChronoUnit.DAYS.between(ZonedDateTime.now(), supporterDeadlineDate);
+        } else {
+            return null;
+        }
     }
 
     public boolean hasPendingAssessments() {

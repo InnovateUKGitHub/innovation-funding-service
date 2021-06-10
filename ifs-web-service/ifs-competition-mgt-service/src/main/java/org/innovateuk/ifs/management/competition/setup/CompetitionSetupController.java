@@ -61,6 +61,7 @@ import static org.innovateuk.ifs.management.competition.setup.projectdocument.co
 /**
  * Controller for showing and handling the different competition setup sections
  */
+@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/competition/setup")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupController.class)

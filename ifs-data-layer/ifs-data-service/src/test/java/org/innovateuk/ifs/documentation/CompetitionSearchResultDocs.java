@@ -10,6 +10,8 @@ public class CompetitionSearchResultDocs {
             fieldWithPath("totalPages").description("The total number of pages the search query matched."),
             fieldWithPath("content").description("The list of competitions in this page of search results."),
             fieldWithPath("number").description("The page number of this search result."),
-            fieldWithPath("size").description("The size of a page of search results.")
+            fieldWithPath("size").description("The size of a page of search results."),
+            fieldWithPath("lastPage").description("Is this the last page."),
+            fieldWithPath("lastPageFull").description("Is the last page full.")
     };
 }
