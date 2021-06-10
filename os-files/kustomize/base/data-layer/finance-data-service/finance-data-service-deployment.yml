@@ -2,46 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: finance-data-service
+  annotations:
+    monitor: monitor
+    waitForDb: wait
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: finance-data-service
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1 #So Flyway runs on one thread at a time
-      maxUnavailable: 0
   template:
     metadata:
       labels:
         run: finance-data-service
   spec:
-    initContainers:
-      - name: init-wait-for-db
-        image: alpine
-        command: [ "/bin/sh", "-c", "for i in $(seq 1 300); do nc -zvw1 ifs-database 3306 && exit 0 || sleep 3; done; exit 1" ]
     containers:
     - image: innovateuk/finance-data-service
       name: finance-data-service
-      livenessProbe:
-        httpGet:
-          path: /monitoring/health
-          port: 8080
-        initialDelaySeconds: 100
-        periodSeconds: 31
-        timeoutSeconds: 5
-        successThreshold: 1
-        failureThreshold: 3
-      readinessProbe:
-        httpGet:
-          path: /monitoring/health
-          port: 8080
-        initialDelaySeconds: 100
-        periodSeconds: 5
-        timeoutSeconds: 5
-        successThreshold: 1
-        failureThreshold: 1
       imagePullPolicy: Always
       env:
         - name: SPRING_DATASOURCE_URL

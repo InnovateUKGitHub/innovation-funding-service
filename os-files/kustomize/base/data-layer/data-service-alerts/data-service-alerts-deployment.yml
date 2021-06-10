@@ -2,46 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: data-service-alerts
+  annotations:
+    monitor: monitor
+    waitForDb: wait
 spec:
   replicas: 1
   selector:
     matchLabels:
       run: data-service-alerts
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1 #So Flyway runs on one thread at a time
-      maxUnavailable: 0
-  template:
-    metadata:
-      labels:
-        run: data-service-alerts
   spec:
-    initContainers:
-      - name: init-wait-for-db
-        image: alpine
-        command: [ "/bin/sh", "-c", "for i in $(seq 1 300); do nc -zvw1 ifs-database 3306 && exit 0 || sleep 3; done; exit 1" ]
     containers:
     - image: innovateuk/data-service-alerts
       name: data-service-alerts
-      livenessProbe:
-        httpGet:
-          path: /monitoring/health
-          port: 8080
-        initialDelaySeconds: 100
-        periodSeconds: 31
-        timeoutSeconds: 5
-        successThreshold: 1
-        failureThreshold: 3
-      readinessProbe:
-        httpGet:
-          path: /monitoring/health
-          port: 8080
-        initialDelaySeconds: 100
-        periodSeconds: 5
-        timeoutSeconds: 5
-        successThreshold: 1
-        failureThreshold: 1
       imagePullPolicy: Always
       env:
         - name: JAVA_OPTS

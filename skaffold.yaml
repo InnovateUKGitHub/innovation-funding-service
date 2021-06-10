@@ -15,6 +15,27 @@ build:
         project: ifs-data-layer:ifs-data-service
         args:
           - "-DskipTests"
+    - image: innovateuk/data-service-alerts
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:data-service-alerts
+        args:
+          - "-DskipTests"
+    - image: innovateuk/finance-data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-finance-data-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/survey-data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-survey-data-service
+        args:
+          - "-DskipTests"
   local:
     useDockerCLI: false
     useBuildkit: false
