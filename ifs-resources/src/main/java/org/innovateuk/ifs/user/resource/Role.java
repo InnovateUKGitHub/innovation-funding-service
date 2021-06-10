@@ -80,15 +80,15 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> inviteExternalRoles() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, AUDITOR);
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     public static Set<Role> externalRoles() {
-        return EnumSet.of(APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, AUDITOR);
+        return EnumSet.of(APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
     }
 
     public static List<Role> multiDashboardRoles() {
-        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER, AUDITOR);
+        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
     }
 
     public static boolean containsMultiDashboardRole(Collection<Role> roles) {
@@ -100,6 +100,6 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> externalRolesToInvite() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, AUDITOR);
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
     }
 }
