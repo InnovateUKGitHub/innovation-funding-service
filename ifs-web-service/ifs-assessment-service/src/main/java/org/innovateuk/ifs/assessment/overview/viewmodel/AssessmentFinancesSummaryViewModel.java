@@ -101,6 +101,8 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(fundingType, that.fundingType)
                 .append(applicationFinanceSummaryViewModel, that.applicationFinanceSummaryViewModel)
                 .append(applicationFundingBreakdownViewModel, that.applicationFundingBreakdownViewModel)
+                .append(applicationProcurementMilestonesSummaryViewModel, that.applicationProcurementMilestonesSummaryViewModel)
+                .append(procurementMilestones, that.procurementMilestones)
                 .isEquals();
     }
 
@@ -115,6 +117,8 @@ public class AssessmentFinancesSummaryViewModel {
                 .append(fundingType)
                 .append(applicationFinanceSummaryViewModel)
                 .append(applicationFundingBreakdownViewModel)
+                .append(applicationProcurementMilestonesSummaryViewModel)
+                .append(procurementMilestones)
                 .toHashCode();
     }
 }
