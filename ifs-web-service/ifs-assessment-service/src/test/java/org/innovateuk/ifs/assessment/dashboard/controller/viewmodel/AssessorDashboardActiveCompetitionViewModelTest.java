@@ -16,6 +16,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
     private long progressAssessed;
     private long progressTotal;
     private long pendingAssessments;
+    private long batchIndex;
 
     @Test
     public void testNoAssessmentsForReview() {
@@ -24,6 +25,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 1L;
         progressTotal = 1L;
         pendingAssessments = 0L;
+        batchIndex = 0L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
         AssessorDashboardActiveCompetitionViewModel viewModel = new AssessorDashboardActiveCompetitionViewModel(
@@ -35,14 +37,16 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 submitDeadline.toLocalDate(),
                 0,
                 0,
-                false);
+                false,
+                batchIndex);
 
-        assertEquals((long) viewModel.getCompetitionId(), competitionId);
-        assertEquals(viewModel.getProgressAssessed(), progressAssessed);
-        assertEquals(viewModel.getProgressTotal(), progressTotal);
-        assertEquals(viewModel.getPendingAssessments(), pendingAssessments);
-        assertEquals(viewModel.hasApplicationsToAssess(), false);
-        assertEquals(viewModel.hasPendingAssessments(), false);
+        assertEquals(competitionId, (long) viewModel.getCompetitionId());
+        assertEquals(progressAssessed, viewModel.getProgressAssessed());
+        assertEquals(progressTotal, viewModel.getProgressTotal());
+        assertEquals(pendingAssessments, viewModel.getPendingAssessments());
+        assertEquals(false, viewModel.hasApplicationsToAssess());
+        assertEquals(false, viewModel.hasPendingAssessments());
+        assertEquals(batchIndex, viewModel.getBatchIndex());
     }
 
     @Test
@@ -52,6 +56,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 0L;
         progressTotal = 0L;
         pendingAssessments = 1L;
+        batchIndex = 1L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
         AssessorDashboardActiveCompetitionViewModel viewModel = new AssessorDashboardActiveCompetitionViewModel(
@@ -63,10 +68,12 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 submitDeadline.toLocalDate(),
                 0,
                 0,
-                false);
+                false,
+                batchIndex);
 
-        assertEquals(viewModel.hasApplicationsToAssess(), false);
-        assertEquals(viewModel.hasPendingAssessments(), true);
+        assertEquals(false, viewModel.hasApplicationsToAssess());
+        assertEquals(true, viewModel.hasPendingAssessments());
+        assertEquals(batchIndex, viewModel.getBatchIndex());
     }
 
     @Test
@@ -76,6 +83,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 1L;
         progressTotal = 0L;
         pendingAssessments = 0L;
+        batchIndex = 1L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
         AssessorDashboardActiveCompetitionViewModel viewModel = new AssessorDashboardActiveCompetitionViewModel(
@@ -87,10 +95,12 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 submitDeadline.toLocalDate(),
                 0,
                 0,
-                false);
+                false,
+                batchIndex);
 
-        assertEquals(viewModel.hasApplicationsToAssess(), true);
-        assertEquals(viewModel.hasPendingAssessments(), false);
+        assertEquals(true, viewModel.hasApplicationsToAssess());
+        assertEquals(false, viewModel.hasPendingAssessments());
+        assertEquals(batchIndex, viewModel.getBatchIndex());
     }
 
     @Test
@@ -100,6 +110,7 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
         progressAssessed = 1L;
         progressTotal = 0L;
         pendingAssessments = 1L;
+        batchIndex = 1L;
 
         ZonedDateTime submitDeadline = ZonedDateTime.now();
         AssessorDashboardActiveCompetitionViewModel viewModel = new AssessorDashboardActiveCompetitionViewModel(
@@ -111,9 +122,11 @@ public class AssessorDashboardActiveCompetitionViewModelTest {
                 submitDeadline.toLocalDate(),
                 0,
                 0,
-                false);
+                false,
+                batchIndex);
 
-        assertEquals(viewModel.hasApplicationsToAssess(), true);
-        assertEquals(viewModel.hasPendingAssessments(), true);
+        assertEquals(true, viewModel.hasApplicationsToAssess());
+        assertEquals(true, viewModel.hasPendingAssessments());
+        assertEquals(batchIndex, viewModel.getBatchIndex());
     }
 }

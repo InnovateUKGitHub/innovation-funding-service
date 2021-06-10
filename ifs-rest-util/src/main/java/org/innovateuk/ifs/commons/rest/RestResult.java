@@ -38,6 +38,7 @@ import static org.springframework.http.HttpStatus.*;
  * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new RestResults that either fail or succeed.
  */
+@SuppressWarnings("unchecked")
 public class RestResult<T> extends BaseFailingOrSucceedingResult<T, RestFailure> {
 
 	private static final Log LOG = LogFactory.getLog(RestResult.class);

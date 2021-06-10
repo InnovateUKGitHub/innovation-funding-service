@@ -52,4 +52,8 @@ compileJava {
     options.compilerArgs += '-parameters'
 }
 
+compileTestJava {
+    options.compilerArgs += '-parameters'
+}
+
 test.finalizedBy jacocoTestReport

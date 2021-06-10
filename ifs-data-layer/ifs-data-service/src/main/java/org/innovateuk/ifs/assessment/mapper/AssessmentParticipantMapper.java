@@ -38,6 +38,7 @@ public abstract class AssessmentParticipantMapper extends BaseMapper<AssessmentP
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "process.alwaysOpen", target = "competitionAlwaysOpen"),
             @Mapping(target = "assessmentPeriod", ignore = true),
+            @Mapping(target = "assessmentPeriodNumber", ignore = true),
     })
     @Override
     public abstract CompetitionParticipantResource mapToResource(AssessmentParticipant domain);
