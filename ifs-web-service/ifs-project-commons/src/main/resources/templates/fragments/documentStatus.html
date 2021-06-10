@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="status-external-old-banner(model)">
+    <p th:if="${(model.statusModifiedDate == null) or (model.statusModifiedBy == null)}"
+       class="govuk-heading-s govuk-!-margin-top-0"
+       th:text="|This document has been approved by us.|"></p>
+</th:block>
+
+<th:block th:fragment="status-banner(model)">
+    <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
+
+    <p th:if="${!model.statusModifiedByMO and model.statusModifiedDate != null}"
+   class="govuk-heading-s govuk-!-margin-top-0"
+   th:text="|Innovate UK approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+
+    <p th:if="${model.statusModifiedByMO and model.statusModifiedDate != null}"
+        class="govuk-heading-s govuk-!-margin-0"
+        th:text="|${model.statusModifiedBy} (monitoring officer) approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+    </div>
+</th:block>
