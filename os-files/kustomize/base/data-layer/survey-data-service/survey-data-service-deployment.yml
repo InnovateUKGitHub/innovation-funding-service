@@ -4,16 +4,20 @@ metadata:
   name: survey-svc
   annotations:
     monitor: monitor
-    waitForDb: wait
+    waitForDb: waitForDb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: survey-svc
+      app: survey-svc
+  template:
+    metadata:
+      labels:
+        app: survey-svc
     spec:
       containers:
-      - image: innovateuk/survey-service
-        name: survey-svc
+      - image: innovateuk/survey-data-service
+        name: spring-boot-service-container
         imagePullPolicy: IfNotPresent
         env:
           - name: NEW_RELIC_LICENSE_KEY

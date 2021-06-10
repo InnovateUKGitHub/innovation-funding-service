@@ -4,39 +4,43 @@ metadata:
   name: data-service-alerts
   annotations:
     monitor: monitor
-    waitForDb: wait
+    waitForDb: waitForDb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: data-service-alerts
-  spec:
-    containers:
-    - image: innovateuk/data-service-alerts
-      name: data-service-alerts
-      imagePullPolicy: Always
-      env:
-        - name: JAVA_OPTS
-          value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
-        - name: NEW_RELIC_APP_NAME
-          value: "ifs-data-service-alerts (${openshiftEnv})"
-        - name: NEW_RELIC_LICENSE_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: new-relic-config
-              key: NEW_RELIC_LICENSE_KEY
-        - name: NEW_RELIC_LOG
-          valueFrom:
-            configMapKeyRef:
-              name: new-relic-config
-              key: NEW_RELIC_LOG
-        - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-          value: "100"
-      ports:
-        - containerPort: 8080
-      resources:
-        limits:
-          cpu: 1000m
-        requests:
-          cpu: 200m
-          memory: 750M
+      app: data-service-alerts
+  template:
+    metadata:
+      labels:
+        app: data-service-alerts
+    spec:
+      containers:
+      - image: innovateuk/data-service-alerts
+        name: spring-boot-service-container
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: JAVA_OPTS
+            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-data-service-alerts (${openshiftEnv})"
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LICENSE_KEY
+          - name: NEW_RELIC_LOG
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LOG
+          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+            value: "100"
+        ports:
+          - containerPort: 8080
+        resources:
+          limits:
+            cpu: 1000m
+          requests:
+            cpu: 200m
+            memory: 750M

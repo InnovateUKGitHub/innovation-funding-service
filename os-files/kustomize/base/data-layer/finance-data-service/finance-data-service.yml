@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: finance-data-service
   labels:
-    run: finance-data-service
+    app: finance-data-service
 spec:
   ports:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
   selector:
-    run: finance-data-service
+    app: finance-data-service

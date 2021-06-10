@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: survey-svc
   labels:
-    run: survey-svc
+    app: survey-svc
 spec:
   ports:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
   selector:
-    run: survey-svc
+    app: survey-svc
