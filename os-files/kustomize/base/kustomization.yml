@@ -35,6 +35,7 @@ resources:
   - data-layer/data-service-alerts/data-service-alerts-deployment.yml
   # finance data service
   - data-layer/finance-data-service/finance-data-service.yml
+  - data-layer/finance-data-service/finance-data-service-config.yml
   - data-layer/finance-data-service/finance-data-service-deployment.yml
   # survey data service
   - data-layer/survey-data-service/survey-data-service.yml
