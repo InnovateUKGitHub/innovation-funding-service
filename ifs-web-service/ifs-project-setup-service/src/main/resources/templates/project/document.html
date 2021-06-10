@@ -11,7 +11,12 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to documents',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
+    <th:block th:unless="${model.userCanApproveOrRejectDocuments}"
+              th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to document overview',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
+    <th:block th:if="${model.userCanApproveOrRejectDocuments}"
+              th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to documents',linkUrl=@{/project/{projectId}/document/all/(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
