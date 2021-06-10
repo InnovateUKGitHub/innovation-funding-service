@@ -11,10 +11,10 @@ patches:
     kind: Deployment
     annotationSelector: "monitor=monitor"
 
-- path: data-layer/patches/waitdb-init-container.yml
+- path: patches/spring-profiles-active-env.yml
   target:
     kind: Deployment
-    annotationSelector: "waitForDb=waitForDb"
+    annotationSelector: "monitor=monitor"
 
 - path: data-layer/patches/db-rolling-update-patch.yml
   target:
@@ -61,7 +61,6 @@ resources:
   - cache-config.yml
   - feature-toggle-config.yml
   - new-relic-config.yml
-  - spring-config.yml
   - web-config.yml
   - docusign-config.yml
   - flyway-config.yml

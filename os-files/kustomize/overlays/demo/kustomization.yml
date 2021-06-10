@@ -1,15 +1,7 @@
 commonAnnotations:
   deployedWith: kustomize
   environment: demo
-namePrefix: demo-
-configMapGenerator:
-  - name: spring-profile-env
-    literals:
-      - SPRING_PROFILES_ACTIVE=DEMO
 
 bases:
   - ../../base
-
-patchesStrategicMerge:
-  - data-service-deployment.yml
 

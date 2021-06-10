@@ -1,14 +1,6 @@
 commonAnnotations:
   deployedWith: kustomize
   environment: prod
-namePrefix: prod-
-configMapGenerator:
-  - name: spring-profile-env
-    literals:
-      - SPRING_PROFILES_ACTIVE=PROD
 
 bases:
   - ../../base
-
-patchesStrategicMerge:
-  - data-service-deployment.yml
