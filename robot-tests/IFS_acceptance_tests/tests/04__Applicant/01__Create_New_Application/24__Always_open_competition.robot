@@ -35,6 +35,8 @@ Documentation     IFS-9009  Always open competitions: invite assessors to compet
 ...
 ...               IFS-9759 No assessment period state
 ...
+...               IFS-9836 Assigend assessment period 1 applications are displaying in assessment period 2 for assessors
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 
@@ -173,10 +175,19 @@ Internal user notify the assessors of their assigned applications
     Then the user reads his email and clicks the link        ${assessorEmail}  Applications assigned to you for competition '${webTestCompName}'  We have assigned applications for you to assess for this competition:   1
     And the assessor accepts an invite to an application
 
-Internal user closes assessment period one
-    [Documentation]  IFS-9008
+Internal user can not assign same application in two different assessment periods
+    [Documentation]  IFS-9836
     Given log in as a different user             &{ifs_admin_user_credentials}
     And the user navigates to the page           ${server}/management/assessment/competition/${webTestCompID}
+    When the user clicks the button/link         link = Manage assessors
+    And the user clicks the button twice         jQuery = label:contains("Assessment period 2")
+    And the user clicks the button/link          jQuery = button:contains("Save and continue")
+    And the user clicks the button/link          jQuery = td:contains("Another Person") ~ td a:contains("View progress")
+    Then the user should not see the element     jQuery = td:contains('Always open application decision pending')
+
+Internal user closes assessment period one
+    [Documentation]  IFS-9008
+    Given the user navigates to the page         ${server}/management/assessment/competition/${webTestCompID}
     When the user clicks the button/link         jQuery = button:contains("Close assessment")
     Then the user should not see the element     jQuery = button:contains("Close assessment")
     And the user should see the element          jQuery = button:contains("Notify assessors")
