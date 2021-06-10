@@ -147,7 +147,7 @@
                 <p class="govuk-heading-s govuk-!-margin-top-0">You have approved this document.</p>
             </div>
 
-            <div class="warning-alert govuk-!-margin-bottom-9" th:if="${model.status.name() == 'REJECTED'}">
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
                 <p class="govuk-body govuk-!-margin-top-0">You have rejected this document. Please contact the Project Manager to explain your decision.</p>
             </div>
 
