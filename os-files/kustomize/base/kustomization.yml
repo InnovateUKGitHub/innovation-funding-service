@@ -64,11 +64,14 @@ resources:
 ############### Web Layer #####################################################
 ###############################################################################
   # application service
-  - web-layer/application-service/application-service.yml
-  - web-layer/application-service/application-service-deployment.yml
-  # application service
+  - web-layer/application-service/competition-mgt-service.yml
+  - web-layer/application-service/competition-mgt-service-deployment.yml
+  # assessment service
   - web-layer/assessment-service/assessment-service.yml
   - web-layer/assessment-service/assessment-service-deployment.yml
+  # competition management service
+  - web-layer/competition-mgt-service/competition-mgt-service.yml
+  - web-layer/competition-mgt-service/competition-mgt-service-deployment.yml
 ################################################################################
 ################################################################################
 
