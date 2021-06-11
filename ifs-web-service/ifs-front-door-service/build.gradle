@@ -1,17 +1,7 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-afterEvaluate {
-    ext {
-        dockerDir = file("$project.parent.projectDir/docker/")
-    }
-}
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'
 version project.version
@@ -19,45 +9,6 @@ version project.version
 apply plugin: 'idea'
 
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.front-door-service.pull.nexus.image') ? project.property('ifs.front-door-service.pull.nexus.image').toBoolean() : false
-if (enabled && pullNexusImage) {
-    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
-        task.enabled = true
-    }
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = false
-    }
-
-    assemble.dependsOn deployNexusLocal
-} else {
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = enabled
-    }
-}
-
-createContainer.hostName="front-door-svc"
-createContainer.containerName="front-door-svc"
-createContainer.containerId="front-door-svc"
-createContainer.portBindings = ['9008:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-pullImageAndCreateContainer.hostName="front-door-svc"
-pullImageAndCreateContainer.containerName="front-door-svc"
-pullImageAndCreateContainer.containerId="front-door-svc"
-pullImageAndCreateContainer.portBindings = ['9008:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-
-prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
-    dependsOn ":ifs-web-service:ifs-web-core:build"
-}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
