@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: data-service
   labels:
-    run: data-service
+    app: data-service
 spec:
   ports:
     - name: 8080-tcp
