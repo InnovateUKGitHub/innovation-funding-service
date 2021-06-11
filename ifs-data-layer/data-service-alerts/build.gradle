@@ -5,6 +5,7 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/profile-handler.gradle")
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 apply plugin: 'idea'
 

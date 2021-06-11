@@ -16,10 +16,7 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 apply plugin: 'idea'
 
-apply plugin: 'com.google.cloud.tools.jib'
-
-jib.to.auth.username = project.findProperty("nexus_username")
-jib.to.auth.password = project.findProperty("nexus_password")
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 group 'innovateuk'
 version project.version

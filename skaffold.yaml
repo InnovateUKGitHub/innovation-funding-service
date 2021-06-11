@@ -100,7 +100,6 @@ build:
         project: ifs-sil-stub
         args:
           - "-DskipTests"
-
   local:
     useDockerCLI: false
     useBuildkit: false

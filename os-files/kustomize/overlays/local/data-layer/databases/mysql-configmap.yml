@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    CREATE DATABASE ifs;
+    CREATE DATABASE ifs_test;
+    CREATE DATABASE ifs_finance;
+    CREATE DATABASE ifs_finance_test;
+    CREATE DATABASE ifs_survey;
+    CREATE DATABASE ifs_survey_test;
