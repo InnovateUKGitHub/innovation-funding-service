@@ -90,7 +90,8 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 null,
                 null,
                 false,
-                false);
+                false,
+                true);
 
         when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
@@ -132,7 +133,8 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 null,
                 null,
                 false,
-                false);
+                false,
+                true);
 
         when(populator.populateViewDocument(projectId, ifsAdmin,  documentConfigId)).thenReturn(viewModel);
         mockMvc.perform(get("/project/" + projectId + "/document/config/" + documentConfigId))
@@ -226,7 +228,8 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 null,
                 null,
                 false,
-                false);
+                false,
+                true);
 
         when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
 

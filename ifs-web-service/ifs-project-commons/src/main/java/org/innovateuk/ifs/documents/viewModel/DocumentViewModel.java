@@ -29,6 +29,7 @@ public class DocumentViewModel {
     private final LocalDate statusModifiedDate;
     private final boolean isStatusModifiedByLoggedInUser;
     private final boolean statusModifiedByMO;
+    private final boolean isInternalUser;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -46,7 +47,8 @@ public class DocumentViewModel {
                              String statusModifiedBy,
                              LocalDate statusModifiedDate,
                              boolean isStatusModifiedByLoggedInUser,
-                             boolean statusModifiedByMO) {
+                             boolean statusModifiedByMO,
+                             boolean isInternalUser) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -64,6 +66,7 @@ public class DocumentViewModel {
         this.statusModifiedDate = statusModifiedDate;
         this.isStatusModifiedByLoggedInUser = isStatusModifiedByLoggedInUser;
         this.statusModifiedByMO = statusModifiedByMO;
+        this.isInternalUser = isInternalUser;
     }
 
     public long getProjectId() {
@@ -132,6 +135,14 @@ public class DocumentViewModel {
 
     public boolean isStatusModifiedByMO() {
         return statusModifiedByMO;
+    }
+
+    public boolean isInternalUser() {
+        return isInternalUser;
+    }
+
+    public boolean isHistoricDocument() {
+        return statusModifiedDate == null && statusModifiedBy == null;
     }
 
     public boolean isEditable() {

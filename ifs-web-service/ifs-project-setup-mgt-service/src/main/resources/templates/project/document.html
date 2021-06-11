@@ -22,45 +22,22 @@
 
         <form th:object="${form}" id="other-documents-form" th:action="@{/project/{projectId}/document/config/{documentConfigId}(projectId=${model.projectId}, documentConfigId=${model.documentConfigId})}" method="post" novalidate="novalidate">
 
-            <th:block th:insert="fragments/modals :: modal-accept-configured-doc" />
-            <th:block th:insert="fragments/modals :: modal-reject-configured-doc" />
+            <th:block th:insert="fragments/modals :: modal-accept-configured-doc"/>
+            <th:block th:insert="fragments/modals :: modal-reject-configured-doc"/>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
             <div class="success-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'APPROVED'}">
-                <p th:if="${(model.statusModifiedDate == null) or (model.statusModifiedBy == null)}"
-                    class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|You have approved this document.|"></p>
-
-                <p th:if="${model.statusModifiedDate != null and model.isStatusModifiedByLoggedInUser}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|You have approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
-
-                <p th:if="${(model.statusModifiedDate != null) and !model.isStatusModifiedByLoggedInUser and model.statusModifiedByMO}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|${model.statusModifiedBy} (monitoring officer) approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
-
-                <p th:if="${(model.statusModifiedDate != null) and !model.isStatusModifiedByLoggedInUser and !model.statusModifiedByMO}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|Innovate UK have approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+                <th:block th:insert="fragments/documentStatus :: banner-messages-document-approved(model=${model})"/>
             </div>
 
             <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED'}">
-                <p th:if="${(model.statusModifiedDate == null and model.statusModifiedBy == null) or (model.isStatusModifiedByLoggedInUser)}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|You have rejected this document.|"></p>
-
-                <p th:if="${(model.statusModifiedBy != null) and !model.isStatusModifiedByLoggedInUser and model.statusModifiedByMO}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|${model.statusModifiedBy} (monitoring officer) rejected this document.|"></p>
-
-                <p th:if="${(model.statusModifiedBy != null) and !model.isStatusModifiedByLoggedInUser and !model.statusModifiedByMO}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|Innovate UK rejected this document.|"></p>
+                <th:block th:insert="fragments/documentStatus :: banner-messages-document-rejected(model=${model})"/>
             </div>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">
-                <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
+                <th:block th:insert="fragments/documentStatus :: banner-message-team-change-rejected(model=${model})"/>
             </div>
 
             <th:block th:unless="${model.fileDetails == null}">

@@ -129,6 +129,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 null,
                 null,
                 false,
+                false,
                 false);
 
         when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
@@ -171,6 +172,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 false,
                 null,
                 null,
+                false,
                 false,
                 false);
 
@@ -288,6 +290,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 null,
                 null,
                 false,
+                false,
                 false);
 
         when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);
@@ -351,6 +354,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 false,
                 null,
                 null,
+                false,
                 false,
                 false);
         when(populator.populateViewDocument(projectId, loggedInUser, documentConfigId)).thenReturn(viewModel);

@@ -33,18 +33,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${model.status.name() == 'APPROVED'}" class="success-alert">
-            <!-- if document info are null-->
-            <h2 th:if="${(model.statusModifiedDate == null) or (model.statusModifiedBy == null) }"
-            class="govuk-heading-s govuk-!-margin-0"
-            th:text="|This document has been approved by us.|"></h2>
-            <!-- if approved by IUK, text for participants and MO-->
-            <h2 th:if="${!model.statusModifiedByMO and model.statusModifiedDate != null}"
-                class="govuk-heading-s govuk-!-margin-0"
-                th:text="|Innovate UK approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></h2>
-            <!-- if approved by MO, text for participants-->
-            <h2 th:if="${model.statusModifiedByMO and model.statusModifiedDate != null}"
-                class="govuk-heading-s govuk-!-margin-0"
-                th:text="|${model.statusModifiedBy} (monitoring officer) approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></h2>
+            <th:block th:insert="fragments/documentStatus :: banner-messages-document-approved(model=${model})" />
         </div>
 
         <div th:if="${model.status.name() == 'REJECTED'}" class="warning-alert">
@@ -151,43 +140,22 @@
               method="post"
               novalidate="novalidate">
 
-            <th:block th:insert="fragments/modals :: modal-accept-configured-doc" />
-            <th:block th:insert="fragments/modals :: modal-reject-configured-doc" />
+            <th:block th:insert="fragments/modals :: modal-accept-configured-doc"/>
+            <th:block th:insert="fragments/modals :: modal-reject-configured-doc"/>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle=${model.title},subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'"/>
 
             <div class="success-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'APPROVED'}">
-                <!-- if document info are null-->
-                <p th:if="${(model.statusModifiedDate == null) or (model.statusModifiedBy == null)}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|This document has been approved by us.|"></p>
-                <!-- if approved by IUK, text for participants and MO-->
-                <p th:if="${!model.statusModifiedByMO and model.statusModifiedDate != null}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|Innovate UK approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
-                <!-- if approved by MO, text for MO-->
-                <p th:if="${model.isStatusModifiedByLoggedInUser and model.statusModifiedDate != null}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|You approved this document on ${#temporals.format(model.statusModifiedDate, 'd MMMM yyyy')}.|"></p>
+                <th:block th:insert="fragments/documentStatus :: banner-messages-document-approved(model=${model})"/>
             </div>
 
-            <div class="warning-alert govuk-!-margin-bottom-9" th:if="${model.status.name() == 'REJECTED'}">
-                <!-- if document info are null-->
-                <p th:if="${(model.statusModifiedDate == null and model.statusModifiedBy == null)}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|You have rejected this document. Please contact the Project Manager to explain your decision.|"></p>
-                <!-- if rejected by IUK, text for MO-->
-                <p th:if="${model.statusModifiedBy != null and !model.isStatusModifiedByLoggedInUser}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|Innovate UK rejected this document.|"></p>
-                <!-- rejected by MO, text for MO-->
-                <p th:if="${model.statusModifiedBy != null and model.isStatusModifiedByLoggedInUser}"
-                   class="govuk-heading-s govuk-!-margin-top-0"
-                   th:text="|${model.statusModifiedBy} (monitoring officer) rejected this document.|"></p>
+            <div class="message-alert govuk-!-margin-bottom-9" th:if="${model.status.name() == 'REJECTED'}">
+                <th:block th:insert="fragments/documentStatus :: banner-messages-document-rejected(model=${model})"/>
             </div>
 
             <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.status.name() == 'REJECTED_DUE_TO_TEAM_CHANGE'}">
-                <p class="govuk-body govuk-!-margin-top-0">This document is now marked as incomplete.</p>
+                <th:block th:insert="fragments/documentStatus :: banner-message-team-change-rejected(model=${model})"/>
             </div>
 
             <th:block th:unless="${model.fileDetails == null}">
