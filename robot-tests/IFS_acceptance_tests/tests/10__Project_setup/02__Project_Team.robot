@@ -37,6 +37,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...
 ...             IFS-7724 Input organisation details manually
 ...
+...             IFS-9579 MO documents: Change of internal approve/reject authority
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/common/PS_Common.robot
@@ -352,7 +354,7 @@ The internal users checks for activity logs after partner added/removed
     And internal user should see entries in activity log after partner org added/removed
 
 lead able to submit only exploitation plan when all partners removed from project
-    [Documentation]  IFS-6891
+    [Documentation]  IFS-6891  IFS-9579
     Given lead submits project documents          ${project_ids["PSC application 20"]}
     When the internal user removed all partners
     And lead uploads the exploitation plan
@@ -660,7 +662,7 @@ lead uploads the exploitation plan
     the user should see the element     jQuery = li:contains("Documents") span:contains("Awaiting review")
 
 the internal user approves the exploitation plan
-    log in as a different user          &{internal_finance_credentials}
+    log in as a different user          &{ifs_admin_user_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${project_ids["PSC application 20"]}/document/all
     the user clicks the button/link     link = Exploitation plan
     internal user approve uploaded documents

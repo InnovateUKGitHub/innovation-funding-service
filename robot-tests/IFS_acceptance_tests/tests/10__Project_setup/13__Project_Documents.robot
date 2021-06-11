@@ -39,6 +39,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9575 MO documents: MO notification of submission
 ...
+...               IFS-9579 MO documents: Change of internal approve/reject authority
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -297,9 +299,9 @@ IfsAdmin adds a partner organisation and all partners can see rejected documents
     [Teardown]  the user removes and reuploads project files
 
 CompAdmin rejects both documents
-    [Documentation]    INFUND-4620
+    [Documentation]    INFUND-4620   IFS-9579
     [Tags]  HappyPath
-    [Setup]  Log in as a different user   &{Comp_admin1_credentials}
+    [Setup]  Log in as a different user         &{Comp_admin1_credentials}
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then compAdmin reject uploaded documents
