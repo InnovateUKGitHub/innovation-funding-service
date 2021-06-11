@@ -29,10 +29,10 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
           - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+            valueFrom:
+              configMapKeyRef:
+                name: web-config
+                key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
           - name: IFS_WEB_SYSTEM_USER_UID
             valueFrom:
               configMapKeyRef:

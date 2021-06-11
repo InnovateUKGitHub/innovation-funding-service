@@ -77,6 +77,14 @@ build:
         project: ifs-web-service:ifs-project-setup-mgt-service
         args:
           - "-DskipTests"
+          -
+    - image: innovateuk/project-setup-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-project-setup-service
+        args:
+          - "-DskipTests"
 
   local:
     useDockerCLI: false

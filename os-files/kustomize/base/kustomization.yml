@@ -75,6 +75,9 @@ resources:
   # project-setup-mgt service
   - web-layer/project-setup-mgt-service/project-setup-mgt-service.yml
   - web-layer/project-setup-mgt-service/project-setup-mgt-service-deployment.yml
+  # project-setup service
+  - web-layer/project-setup-service/project-setup-service.yml
+  - web-layer/project-setup-service/project-setup-service-deployment.yml
 ################################################################################
 ################################################################################
 
