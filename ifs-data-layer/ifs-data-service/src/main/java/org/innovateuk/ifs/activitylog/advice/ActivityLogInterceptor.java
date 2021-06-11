@@ -19,6 +19,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
+@SuppressWarnings("unchecked")
 @Component
 public class ActivityLogInterceptor implements MethodInterceptor {
 

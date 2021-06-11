@@ -21,6 +21,8 @@ public class DocumentViewModel {
     private final String statusComments;
     private final boolean projectManager;
     private final boolean projectIsActive;
+    private final boolean isSuperAdminUser;
+    private final boolean userCanApproveOrRejectDocuments;
 
     public DocumentViewModel(long projectId,
                              String projectName,
@@ -32,7 +34,9 @@ public class DocumentViewModel {
                              DocumentStatus status,
                              String statusComments,
                              boolean projectManager,
-                             boolean projectIsActive) {
+                             boolean projectIsActive,
+                             boolean isSuperAdminUser,
+                             boolean userCanApproveOrRejectDocuments) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -44,6 +48,8 @@ public class DocumentViewModel {
         this.statusComments = statusComments;
         this.projectManager = projectManager;
         this.projectIsActive = projectIsActive;
+        this.isSuperAdminUser = isSuperAdminUser;
+        this.userCanApproveOrRejectDocuments = userCanApproveOrRejectDocuments;
     }
 
     public long getProjectId() {
@@ -90,12 +96,24 @@ public class DocumentViewModel {
         return projectIsActive;
     }
 
+    public boolean isSuperAdminUser() {
+        return isSuperAdminUser;
+    }
+
+    public boolean isUserCanApproveOrRejectDocuments() {
+        return userCanApproveOrRejectDocuments;
+    }
+
     public boolean isEditable() {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
 
     public boolean isShowDisabledSubmitDocumentsButton() {
         return projectManager && status == DocumentStatus.UNSET;
+    }
+
+    public boolean isShowRejectDocumentButtonWhenDocumentIsApproved() {
+        return isSuperAdminUser && projectIsActive;
     }
 
     @Override

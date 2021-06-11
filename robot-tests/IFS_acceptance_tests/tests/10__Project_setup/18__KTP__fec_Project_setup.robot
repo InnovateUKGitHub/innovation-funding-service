@@ -11,6 +11,8 @@ Documentation     IFS-9305  KTP fEC/Non-fEC: display correct finance table if fE
 ...
 ...               IFS-9633  Funding sought calculated incorrectly
 ...
+...               IFS-9818 KTP fEC/non-fEC: display only selected fEC table in GOL
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -158,7 +160,7 @@ Lead applicant can view their non-FEC project finances in the Eligibility sectio
     And the user should see the element                                        jQuery = p:contains("The partner's finance eligibility has been approved by ")
 
 IFS admin can see the approved non-FEC cost categories in the GOL
-    [Documentation]  IFS-9306
+    [Documentation]  IFS-9306  IFS-9818
     [Setup]  internal user releases the feedback
     Given the user views the grant offer letter page
     When Select Window                                                 NEW
@@ -166,7 +168,7 @@ IFS admin can see the approved non-FEC cost categories in the GOL
     [Teardown]  the user closes the last opened tab
 
 Competition admin can see the approved non-FEC cost categories in the GOL
-    [Documentation]  IFS-9306
+    [Documentation]  IFS-9306  IFS-9818
     Given log in as a different user                                   &{Comp_admin1_credentials}
     And The user clicks the button/link                                jQuery = a:contains("Project setup")
     When the user views the grant offer letter page
@@ -175,7 +177,7 @@ Competition admin can see the approved non-FEC cost categories in the GOL
     [Teardown]  the user closes the last opened tab
 
 Project finance user can see the approved non-FEC cost categories in the GOL
-    [Documentation]  IFS-9306
+    [Documentation]  IFS-9306  IFS-9818
     Given log in as a different user                                   &{internal_finance_credentials}
     And The user clicks the button/link                                jQuery = a:contains("Project setup")
     When the user views the grant offer letter page
@@ -346,8 +348,10 @@ the user views the grant offer letter page
     the user clicks the button/link     link = View the grant offer letter page (opens in a new window)
 
 the user should see the non-FEC cost categories in the GOL
-    the user should see the element     xpath = //td[text()="b. Academic and secretarial support"]/..//td[text()="${academicCostValue}"]
-    the user should see the element     xpath = //td[text()="b. Academic and Secretarial Support"]/..//td[text()="${academicCostValue}"]
+    the user should see the element         xpath = //td[text()="b. Academic and secretarial support"]/..//td[text()="${academicCostValue}"]
+    the user should see the element         xpath = //td[text()="b. Academic and Secretarial Support"]/..//td[text()="${academicCostValue}"]
+    the user should not see the element     xpath = //td[text()="e. Knowledge base supervisor"]
+    the user should not see the element     xpath = //td[text()="viii Additional Associate Support"]
 
 Custom suite teardown
     Close browser and delete emails

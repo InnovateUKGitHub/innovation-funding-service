@@ -11,6 +11,7 @@ import java.util.Map;
 /**
  * Contains the information required when sending an email to notify of an application funding decision.
  */
+@SuppressWarnings("unchecked")
 public class FundingNotificationResource {
     private String messageBody;
     private Map<Long, FundingDecision> fundingDecisions;

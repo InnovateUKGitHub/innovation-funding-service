@@ -104,6 +104,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      * to then marry up the service call to any subsequent permission rule method invocations
      */
     @Before
+    @SuppressWarnings("unchecked")
     public void setup() {
         Class<?>[] interfaces = getClassUnderTest().getInterfaces();
         targetClass = (Class<T>) (interfaces.length >= 1 ? interfaces[0] : getClassUnderTest());
@@ -256,6 +257,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      * @return
      */
     @Override
+    @SuppressWarnings("unchecked")
     protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
         return createRecordingProxy(
                 mockClass,
