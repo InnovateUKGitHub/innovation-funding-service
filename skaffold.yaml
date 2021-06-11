@@ -94,6 +94,14 @@ build:
         args:
           - "-DskipTests"
 
+    - image: innovateuk/registration-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-registration-service
+        args:
+          - "-DskipTests"
+
   local:
     useDockerCLI: false
     useBuildkit: false
