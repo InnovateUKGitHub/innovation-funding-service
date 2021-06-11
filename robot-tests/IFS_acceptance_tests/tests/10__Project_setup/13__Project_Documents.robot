@@ -301,7 +301,7 @@ IfsAdmin adds a partner organisation and all partners can see rejected documents
 IfsAdmin rejects both documents
     [Documentation]    INFUND-4620  IFS-9579
     [Tags]  HappyPath
-    #[Setup]  Log in as a different user         &{Comp_admin1_credentials}
+    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
     Then ifs admin reject uploaded documents
