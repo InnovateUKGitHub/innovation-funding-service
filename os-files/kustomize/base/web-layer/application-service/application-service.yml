@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: application-svc
   labels:
-    run: application-svc
+    app: application-svc
 spec:
   ports:
     - name: 8080-tcp
@@ -13,4 +13,4 @@ spec:
       port: 8009
       targetPort: 8009
   selector:
-    run: application-svc
+    app: application-svc
