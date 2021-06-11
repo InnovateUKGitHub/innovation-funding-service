@@ -83,7 +83,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         }
 
         UnaryOperator<S> activateUser = UnaryOperator.identity();
-        if (newArrayList(MONITORING_OFFICER, STAKEHOLDER).contains(role)){
+        if (newArrayList(MONITORING_OFFICER, STAKEHOLDER, AUDITOR).contains(role)){
             activateUser = BaseUserDataBuilder::activateUser;
         }
 
