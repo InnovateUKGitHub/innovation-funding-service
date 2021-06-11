@@ -64,11 +64,17 @@ resources:
 ############### Web Layer #####################################################
 ###############################################################################
   # application service
-  - web-layer/application-service/competition-mgt-service.yml
-  - web-layer/application-service/competition-mgt-service-deployment.yml
+  - web-layer/application-service/application-service.yml
+  - web-layer/application-service/application-service-deployment.yml
   # assessment service
   - web-layer/assessment-service/assessment-service.yml
   - web-layer/assessment-service/assessment-service-deployment.yml
+  # front-door service
+  - web-layer/front-door-service/front-door-service.yml
+  - web-layer/front-door-service/front-door-service-deployment.yml
+  # project-setup-mgt service
+  - web-layer/project-setup-mgt-service/project-setup-mgt-service.yml
+  - web-layer/project-setup-mgt-service/project-setup-mgt-service-deployment.yml
   # competition management service
   - web-layer/competition-mgt-service/competition-mgt-service.yml
   - web-layer/competition-mgt-service/competition-mgt-service-deployment.yml

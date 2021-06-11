@@ -1,21 +1,11 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 buildscript {
     ext {
         serverContext = '/project-setup-management'
-    }
-}
-
-afterEvaluate {
-    ext {
-        dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
 
@@ -25,47 +15,6 @@ version project.version
 apply plugin: 'idea'
 
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "project-setup-mgt-svc"
-createContainer.containerName = "project-setup-mgt-svc"
-createContainer.containerId = "project-setup-mgt-svc"
-createContainer.portBindings = ['9004:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-pullImageAndCreateContainer.hostName = "project-setup-mgt-svc"
-pullImageAndCreateContainer.containerName = "project-setup-mgt-svc"
-pullImageAndCreateContainer.containerId = "project-setup-mgt-svc"
-pullImageAndCreateContainer.portBindings = ['9004:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-def enabled = project.hasProperty('ifs.project-setup-mgt-service.enabled') ? project.property('ifs.project-setup-mgt-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.project-setup-mgt-service.pull.nexus.image') ? project.property('ifs.project-setup-mgt-service.pull.nexus.image').toBoolean() : false
-if (enabled && pullNexusImage) {
-
-    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
-        task.enabled = true
-    }
-
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = false
-    }
-
-    assemble.dependsOn deployNexusLocal
-
-} else {
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = enabled
-    }
-}
-
-prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
-    dependsOn ":ifs-web-service:ifs-web-core:build"
-}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

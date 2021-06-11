@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: front-door-svc
+  name: project-setup-mgt-svc
   annotations:
     monitor: monitor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: front-door-svc
+      app: project-setup-mgt-svc
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,18 +17,13 @@ spec:
   template:
     metadata:
       labels:
-        app: front-door-svc
+        app: project-setup-mgt-svc
     spec:
       containers:
-        - image: innovateuk/front-door-service
+        - image: innovateuk/project-setup-mgt-service
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
           env:
-            - name: SPRING_APPLICATION_JSON
-              valueFrom:
-                configMapKeyRef:
-                  name: web-config
-                  key: SPRING_APPLICATION_JSON
             - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
               valueFrom:
                 configMapKeyRef:
@@ -39,6 +34,11 @@ spec:
                 configMapKeyRef:
                   name: web-config
                   key: IFS_WEB_SYSTEM_USER_UID
+            - name: SPRING_APPLICATION_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: SPRING_APPLICATION_JSON
             - name: NEW_RELIC_LICENSE_KEY
               valueFrom:
                 configMapKeyRef:
@@ -49,20 +49,25 @@ spec:
                 configMapKeyRef:
                   name: new-relic-config
                   key: NEW_RELIC_LOG
-            - name: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: feature-toggle-config
-                  key: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
                   name: spring-config
                   key: SPRING_PROFILES_ACTIVE
-            - name: NEW_RELIC_APP_NAME
-              value: "ifs-front-door-service (${openshiftEnv})"
+            - name: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: feature-toggle-config
+                  key: IFS_SUBSIDY_CONTROL_NORTHERN_IRELAND_ENABLED
+            - name: IFS_MONITORINGOFFICER_JOURNEY_UPDATE_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: feature-toggle-config
+                  key: IFS_MONITORINGOFFICER_JOURNEY_UPDATE_ENABLED
             - name: JAVA_OPTS
               value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
+            - name: NEW_RELIC_APP_NAME
+              value: "ifs-project-setup-mgt-service (${openshiftEnv})"
           ports:
             - containerPort: 8080
           resources:
