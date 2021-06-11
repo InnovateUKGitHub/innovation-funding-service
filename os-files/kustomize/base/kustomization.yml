@@ -61,6 +61,10 @@ resources:
   # survey data service
   - data-layer/survey-data-service/survey-data-service.yml
   - data-layer/survey-data-service/survey-data-service-deployment.yml
+  # application service
+  - data-layer/application-service/application-service.yml
+  - data-layer/application-service/application-service-deployment.yml
+
 ################################################################################
 ################################################################################
 
