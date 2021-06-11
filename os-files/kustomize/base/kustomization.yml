@@ -66,6 +66,9 @@ resources:
   # application service
   - web-layer/application-service/application-service.yml
   - web-layer/application-service/application-service-deployment.yml
+  # application service
+  - web-layer/assessment-service/assessment-service.yml
+  - web-layer/assessment-service/assessment-service-deployment.yml
 ################################################################################
 ################################################################################
 

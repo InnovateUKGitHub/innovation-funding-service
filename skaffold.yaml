@@ -62,6 +62,13 @@ build:
         project: ifs-web-service:ifs-front-door-service
         args:
           - "-DskipTests"
+    - image: innovateuk/assessment-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-assessment-service
+        args:
+          - "-DskipTests"
 
   local:
     useDockerCLI: false
