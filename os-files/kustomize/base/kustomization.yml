@@ -78,6 +78,9 @@ resources:
   # project-setup service
   - web-layer/project-setup-service/project-setup-service.yml
   - web-layer/project-setup-service/project-setup-service-deployment.yml
+  # competition management service
+  - web-layer/competition-mgt-service/competition-mgt-service.yml
+  - web-layer/competition-mgt-service/competition-mgt-service-deployment.yml
 ################################################################################
 ################################################################################
 
