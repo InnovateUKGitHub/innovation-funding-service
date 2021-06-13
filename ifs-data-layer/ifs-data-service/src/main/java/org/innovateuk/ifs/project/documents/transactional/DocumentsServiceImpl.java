@@ -259,6 +259,8 @@ public class DocumentsServiceImpl extends AbstractProjectServiceImpl implements 
         if (APPROVED.equals(projectDocument.getStatus())) {
             projectDocument.setStatus(REJECTED);
             projectDocument.setStatusComments(decision.getRejectionReason());
+            projectDocument.setModifiedBy(getCurrentlyLoggedInUser().getSuccess());
+            projectDocument.setModifiedDate(ZonedDateTime.now());
             projectDocumentRepository.save(projectDocument);
 
             return serviceSuccess();
