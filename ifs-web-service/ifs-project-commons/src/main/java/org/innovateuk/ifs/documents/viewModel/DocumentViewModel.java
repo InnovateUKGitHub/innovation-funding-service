@@ -141,10 +141,6 @@ public class DocumentViewModel {
         return isInternalUser;
     }
 
-    public boolean isHistoricDocument() {
-        return statusModifiedDate == null && statusModifiedBy == null;
-    }
-
     public boolean isEditable() {
         return projectManager && status != DocumentStatus.APPROVED && status != DocumentStatus.SUBMITTED;
     }
