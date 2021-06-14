@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: survey-svc
+  labels:
+    app: survey-svc
+spec:
+  ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: survey-svc

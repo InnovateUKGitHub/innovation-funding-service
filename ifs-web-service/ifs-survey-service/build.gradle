@@ -1,21 +1,11 @@
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
-
-buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+apply from: rootProject.file("gradle-support/jib.gradle")
 
 buildscript {
     ext {
         serverContext = '/survey'
-    }
-}
-
-afterEvaluate {
-    ext {
-        dockerDir = file("$project.parent.projectDir/docker/")
     }
 }
 
@@ -24,50 +14,10 @@ version project.version
 
 apply plugin: 'idea'
 
-def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.survey-service.pull.nexus.image') ? project.property('ifs.survey-service.pull.nexus.image').toBoolean() : false
-if (enabled && pullNexusImage) {
-
-    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
-        task.enabled = true
-    }
-
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = false
-    }
-
-    assemble.dependsOn deployNexusLocal
-
-} else {
-    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
-        task.enabled = enabled
-    }
-}
 
 ext.ifsSurveyDataServiceRestBaseURL = "http://survey-data-service:8080"
 
 project.version = nexusVersion
-tagDocker.tag = nexusVersion
-osStageRemote.tag = nexusVersion
-tagDockerLocal.tag = nexusVersion
-osStageLocal.tag = nexusVersion
-
-createContainer.hostName = "survey-svc"
-createContainer.containerName = "survey-svc"
-createContainer.containerId = "survey-svc"
-createContainer.portBindings = ['9007:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-pullImageAndCreateContainer.hostName = "survey-svc"
-pullImageAndCreateContainer.containerName = "survey-svc"
-pullImageAndCreateContainer.containerId = "survey-svc"
-pullImageAndCreateContainer.portBindings = ['9007:8000']
-createContainer.env = ["SPRING_PROFILES_ACTIVE=debug"]
-
-prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
-    dependsOn ":ifs-web-service:ifs-web-core:build"
-}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

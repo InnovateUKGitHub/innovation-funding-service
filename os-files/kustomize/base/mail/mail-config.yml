@@ -1,0 +1,6 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mail-config
+data:
+  DB_URL: "${MAIL_ADDRESS}"

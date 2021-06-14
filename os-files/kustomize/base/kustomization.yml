@@ -4,22 +4,110 @@ kind: Kustomization
 commonAnnotations:
   deployedWith: kustomize
   environment: base
-namePrefix: base-
+
+patches:
+- path: patches/health-check-patch.yml
+  target:
+    kind: Deployment
+    annotationSelector: "monitor=monitor"
+
+- path: patches/spring-profiles-active-env.yml
+  target:
+    kind: Deployment
+    annotationSelector: "monitor=monitor"
+
+- path: data-layer/patches/db-rolling-update-patch.yml
+  target:
+    kind: Deployment
+    annotationSelector: "waitForDb=waitForDb"
 
 resources:
+###############################################################################
+############### Auth ##########################################################
+###############################################################################
+  - auth/idp/idp.yml
+  - auth/idp/idp-deployment.yml
+  - auth/idp/sp-secrets.yml
+  - auth/idp/idp-keys-secrets.yml
+  - auth/idp/idp-config.yml
+  - auth/idp/shibboleth-config.yml
+  - auth/ldap/ldap.yml
+  - auth/ldap/ldap-deployment.yml
+  - auth/ldap/ldap-config.yml
+  - auth/ldap/ldap-keys-secrets.yml
+  - auth/sp/sp.yml
+  - auth/sp/sp-deployment.yml
+  - auth/sp/sp-keys-secrets.yml
+###############################################################################
+
+###############################################################################
+############### Data Services #################################################
+###############################################################################
+  - data-layer/db-config.yml
+  # data service
+  - data-layer/data-service/data-service.yml
+  - data-layer/data-service/data-service-config.yml
+  - data-layer/data-service/data-service-deployment.yml
+  # data service alerts
+  - data-layer/data-service-alerts/data-service-alerts.yml
+  - data-layer/data-service-alerts/data-service-alerts-deployment.yml
+  # finance data service
+  - data-layer/finance-data-service/finance-data-service.yml
+  - data-layer/finance-data-service/finance-data-service-config.yml
+  - data-layer/finance-data-service/finance-data-service-deployment.yml
+  # survey data service
+  - data-layer/survey-data-service/survey-data-service.yml
+  - data-layer/survey-data-service/survey-data-service-deployment.yml
+################################################################################
+
+###############################################################################
+############### Web Layer #####################################################
+###############################################################################
+  # application service
+  - web-layer/application-service/application-service.yml
+  - web-layer/application-service/application-service-deployment.yml
+  # assessment service
+  - web-layer/assessment-service/assessment-service.yml
+  - web-layer/assessment-service/assessment-service-deployment.yml
+  # front-door service
+  - web-layer/front-door-service/front-door-service.yml
+  - web-layer/front-door-service/front-door-service-deployment.yml
+  # project-setup-mgt service
+  - web-layer/project-setup-mgt-service/project-setup-mgt-service.yml
+  - web-layer/project-setup-mgt-service/project-setup-mgt-service-deployment.yml
+  # project-setup service
+  - web-layer/project-setup-service/project-setup-service.yml
+  - web-layer/project-setup-service/project-setup-service-deployment.yml
+  # competition management service
+  - web-layer/competition-mgt-service/competition-mgt-service.yml
+  - web-layer/competition-mgt-service/competition-mgt-service-deployment.yml
+  # registration service
+  - web-layer/registration-service/registration-service.yml
+  - web-layer/registration-service/registration-service-deployment.yml
+  # registration service
+  - web-layer/survey-service/survey-service.yml
+  - web-layer/survey-service/survey-service-deployment.yml
+
+
+###############################################################################
+############### Mail Services #################################################
+###############################################################################
+  # mail service
+  - mail/mail-service.yml
+  - mail/mail-config.yml
+  - mail/mail-service-deployment.yml
+
+################################################################################
+
+################################################################################
+################################################################################
+
   # config-maps
   - cache-config.yml
-  - db-config.yml
-  - data-service-config.yml
   - feature-toggle-config.yml
   - new-relic-config.yml
-  - spring-config.yml
   - web-config.yml
   - docusign-config.yml
   - flyway-config.yml
-
-  # services
-  - data-service.yml
-  - data-service-deployment.yml
 
 

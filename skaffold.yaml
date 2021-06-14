@@ -1,0 +1,121 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+metadata:
+  name: innovation-funding-service
+build:
+  artifacts:
+
+    - image: ldap
+      context: ifs-auth-service/ifs-ldap-service/src/main/docker
+      docker:
+        dockerfile: Dockerfile-template
+    - image: sp
+      context: ifs-auth-service/ifs-sp-service/src/main/docker
+      docker:
+        dockerfile: Dockerfile-template
+    - image: idp
+      context: ifs-auth-service/ifs-idp-service/src/main/docker
+      docker:
+        dockerfile: Dockerfile-skaffold
+
+    - image: innovateuk/data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-data-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/finance-data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-finance-data-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/survey-data-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:ifs-survey-data-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/data-service-alerts
+      context: .
+      jib:
+        type: gradle
+        project: ifs-data-layer:data-service-alerts
+        args:
+          - "-DskipTests"
+    - image: innovateuk/survey-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-survey-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/project-setup-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-project-setup-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/project-setup-mgt-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-project-setup-mgt-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/front-door-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-front-door-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/competition-mgt-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-competition-mgt-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/assessment-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-assessment-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/application-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-web-service:ifs-application-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/registration-service
+      context: .
+      jib:
+        type: gradle
+        project: ifs-registration-service
+        args:
+          - "-DskipTests"
+    - image: innovateuk/sil-stub
+      context: .
+      jib:
+        type: gradle
+        project: ifs-sil-stub
+        args:
+          - "-DskipTests"
+  local:
+    useDockerCLI: false
+    useBuildkit: false
+    tryImportMissing: true
+    push: false
+deploy:
+  statusCheckDeadlineSeconds: 600
+  kustomize:
+    paths:
+      - os-files/kustomize/overlays/local
