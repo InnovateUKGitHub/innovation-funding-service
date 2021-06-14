@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: survey-svc
+  name: survey-data-svc
   annotations:
     monitor: monitor
     waitForDb: waitForDb
@@ -9,11 +9,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: survey-svc
+      app: survey-data-svc
   template:
     metadata:
       labels:
-        app: survey-svc
+        app: survey-data-svc
     spec:
       containers:
       - image: innovateuk/survey-data-service

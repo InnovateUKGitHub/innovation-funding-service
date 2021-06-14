@@ -84,7 +84,7 @@ resources:
   # registration service
   - web-layer/registration-service/registration-service.yml
   - web-layer/registration-service/registration-service-deployment.yml
-  # registration service
+  # survey service
   - web-layer/survey-service/survey-service.yml
   - web-layer/survey-service/survey-service-deployment.yml
 ################################################################################
