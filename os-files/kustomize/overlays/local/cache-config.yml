@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: cache-config
 data:
-  IFS_DATA_SERVICE_CACHE_TYPE: "redis "
+  IFS_DATA_SERVICE_CACHE_TYPE: "redis"
   IFS_DATA_SERVICE_CACHE_PREFIX: "local:"
   IFS_DATA_SERVICE_REDIS_SSL: "false"
   IFS_DATA_SERVICE_REDIS_PASSWORD: ""
