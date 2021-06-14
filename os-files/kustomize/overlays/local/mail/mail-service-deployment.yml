@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mail
   annotations:
-    monitor: monitor
+    pullSecrets: pullSecrets
 spec:
   replicas: 1
   selector:
@@ -20,8 +20,8 @@ spec:
         app: mail
     spec:
       containers:
-        - image: releases/mail-sink:1.0.0
-          name: spring-boot-service-container
+        - image: docker-ifs.devops.innovateuk.org/releases/mail-sink:1.0.0
+          name: mail-container
           imagePullPolicy: IfNotPresent
           env:
             - name: FQDN

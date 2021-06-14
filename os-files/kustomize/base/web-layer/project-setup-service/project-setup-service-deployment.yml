@@ -4,6 +4,7 @@ metadata:
   name: project-setup-svc
   annotations:
     monitor: monitor
+    pullSecrets: pullSecrets
 spec:
   replicas: 1
   selector:
