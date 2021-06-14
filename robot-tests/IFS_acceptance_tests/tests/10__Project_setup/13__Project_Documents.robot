@@ -39,6 +39,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-9575 MO documents: MO notification of submission
 ...
+...               IFS-9579 MO documents: Change of internal approve/reject authority
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -289,22 +291,22 @@ CompAdmin can see uploaded files
 IfsAdmin adds a partner organisation and all partners can see rejected documents
     [Documentation]  IFS-6728  IFS-7723
     [Setup]  Log in as a different user  &{ifs_admin_user_credentials}
-    Given compAdmin approves all documents
+    Given ifsadmin approves all documents
     And the user clicks the button/link                      jQuery = a:contains("Add a partner organisation")
     When the user adds a new partner organisation            Testing Errors Organisation  FName Surname  testErrMsg@gmail.com
     And a new organisation is able to accept project invite  FName  Surname  testErrMsg@gmail.com  FIRSTGROUP  FIRSTGROUP PLC  ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
     Then partners can see rejected documents due to new organisation
     [Teardown]  the user removes and reuploads project files
 
-CompAdmin rejects both documents
-    [Documentation]    INFUND-4620
+IfsAdmin rejects both documents
+    [Documentation]    INFUND-4620  IFS-9579
     [Tags]  HappyPath
-    [Setup]  Log in as a different user   &{Comp_admin1_credentials}
+    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
     Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     When the user clicks the button/link        link = Collaboration agreement
-    Then compAdmin reject uploaded documents
+    Then ifs admin reject uploaded documents
     When the user goes to documents page        Return to documents  Exploitation plan
-    Then compAdmin reject uploaded documents
+    Then ifs admin reject uploaded documents
 
 Partners can see the documents rejected
     [Documentation]    INFUND-5559, INFUND-5424, INFUND-7342, IFS-218
@@ -368,14 +370,14 @@ Stakeholder is unable to view the documents before approval
     Given log in as a different user   &{stakeholder_user}
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all   ${403_error_message}
 
-CompAdmin approves both documents
-    [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345
+ifsAdmin approves both documents
+    [Documentation]    INFUND-4621, INFUND-5507, INFUND-7345  IFS-9579
     [Tags]  HappyPath
-    [Setup]    Log in as a different user       &{Comp_admin1_credentials}
-    Given the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
-    When the user clicks the button/link        link = Collaboration agreement
+    [Setup]    Log in as a different user             &{ifs_admin_user_credentials}
+    Given the user navigates to the page              ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
+    When the user clicks the button/link              link = Collaboration agreement
     Then internal user approve uploaded documents
-    When the user goes to documents page        Return to documents  Exploitation plan
+    When the user goes to documents page              Return to documents  Exploitation plan
     Then internal user approve uploaded documents
 
 Partners can see the documents approved
@@ -428,10 +430,10 @@ Sole applicant uploads only exploitation plan and submits
     When the user goes to documents page        Return to documents  Set up your project
     Then the user should see the element        jQuery = li:contains("Documents") span:contains("Awaiting review")
 
-CompAdmin sees uploaded file and approves it
-    [Documentation]    IFS-1864
+IfsAdmin sees uploaded file and approves it
+    [Documentation]    IFS-1864  IFS-9579
     [Tags]
-    [Setup]    Log in as a different user       &{Comp_admin1_credentials}
+    [Setup]    Log in as a different user       &{ifs_admin_user_credentials}
     Given the user navigates to the page        ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/document/all
     Then the user should not see the element    link = Collaboration agreement
     And the user clicks the button/link         link = Exploitation plan
@@ -482,18 +484,18 @@ partners can see rejected documents due to new organisation
     log in as a different user                &{collaborator2_credentials_bd}
     Partners can see both documents rejected  ${newOrgRejectedDocumentMessagePartner}
 
-compAdmin approves all documents
+ifsadmin approves all documents
     the user navigates to the page        ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     the user clicks the button/link        link = Collaboration agreement
-    compAdmin approves uploaded documents
+    ifs admin approves uploaded documents
     the user goes to documents page        Return to documents  Exploitation plan
-    compAdmin approves uploaded documents
+    ifs admin approves uploaded documents
     the user navigates to the page        ${SERVER}/project-setup-management/competition/${PS_Competition_Id}/project/${Grade_Crossing_Project_Id}/team
 
 the user navigates to the competition
     the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
 
-compAdmin reject uploaded documents
+ifs admin reject uploaded documents
     the user selects the radio button           approved   false
     the user enters text to a text field        id = document-reject-reason   Rejected
     the user clicks the button/link             id = submit-button
@@ -503,7 +505,7 @@ compAdmin reject uploaded documents
     the user clicks the button/link             id = reject-document
     the user should see the element             jQuery = p:contains("You have rejected this document. Please contact the Project Manager to explain your decision.")
 
-compAdmin approves uploaded documents
+ifs admin approves uploaded documents
     the user selects the radio button           approved   true
     the user clicks the button/link             id = submit-button
     the user clicks the button/link             id = accept-document

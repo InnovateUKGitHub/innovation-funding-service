@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     IFS-6062 Activity Log front-end
+...
+...               IFS-9579 MO documents: Change of internal approve/reject authority
+...
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
 Resource          ../../resources/defaultResources.robot
@@ -55,8 +58,8 @@ Documents added log entry
     And the admin is able to navigate to log entry link   View exploitation plan   Exploitation plan
 
 Documents approved log entry
-    [Documentation]  IFS-6062
-    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
+    [Documentation]  IFS-6062  IFS-9579
+    [Setup]  log in as a different user                   &{ifs_admin_user_credentials}
     Given the user navigates to the page                  ${AdminPsActivityLogCompUrl}
     When the user approves documents
     Then the admin is able to see log entry               Document approved
