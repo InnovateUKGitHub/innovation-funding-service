@@ -26,8 +26,6 @@ spec:
         - name: shibboleth-volume
           secret:
             secretName: sp-secrets
-      imagePullSecrets:
-        - name: imagePullSecretsName
       containers:
         - image: idp
           name: idp

@@ -22,8 +22,6 @@ spec:
         - name: sp-keys-volume
           secret:
             secretName: sp-keys-secrets
-      imagePullSecrets:
-        - name: imagePullSecretsName
       containers:
         - image: sp
           name: shib

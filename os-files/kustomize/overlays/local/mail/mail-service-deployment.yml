@@ -20,7 +20,7 @@ spec:
         app: mail
     spec:
       containers:
-        - image: innovateuk/mail-sink
+        - image: releases/mail-sink:1.0.0
           name: spring-boot-service-container
           imagePullPolicy: IfNotPresent
           env:

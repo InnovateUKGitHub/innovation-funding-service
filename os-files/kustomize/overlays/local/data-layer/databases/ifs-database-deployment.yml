@@ -12,8 +12,6 @@ spec:
       labels:
         app: ifs-database
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - env:
             - name: MYSQL_ROOT_PASSWORD
