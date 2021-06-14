@@ -284,7 +284,7 @@ MO can now view payment milestones in SBRI application
 
 Internal finance cannot approve Exploitation or Collaboration documents
     [Documentation]   IFS-9579
-    Given Log in as a different user                     ${PS_LP_Application_Academic_Email}
+    Given Log in as a different user                     ${PS_LP_Application_Academic_Email}  ${short_password}
     And the user navigates to the page                   ${server}/project-setup/project/${correlation_projectID}/document/all
     When the user uploads the exploitation plan
     And the user uploads the Collaboration agreement     
